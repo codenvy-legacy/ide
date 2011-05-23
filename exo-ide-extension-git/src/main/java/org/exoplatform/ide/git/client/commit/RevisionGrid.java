@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.git.client.commit;
 
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-
-import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 
@@ -65,7 +62,7 @@ public class RevisionGrid extends ListGrid<Revision>
    /**
     * Date column.
     */
-   Column<Revision, Date> dateColumn;
+   Column<Revision, String> dateColumn;
 
    /**
     * Commiter column.
@@ -91,13 +88,13 @@ public class RevisionGrid extends ListGrid<Revision>
    {
       CellTable<Revision> cellTable = getCellTable();
       
-      dateColumn = new Column<Revision, Date>(new DateCell(DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT)))
+      dateColumn = new Column<Revision, String>(new TextCell())
       {
 
          @Override
-         public Date getValue(Revision revision)
+         public String getValue(Revision revision)
          {
-            return new Date(revision.getCommitTime());
+            return DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(revision.getCommitTime()));
          }
       };
 

@@ -68,12 +68,22 @@ public class DiffRequestMarshaller implements Marshallable, Constants
          jsonObject.put(FILE_FILTER, array);
       }
       jsonObject.put(NO_RENAMES, JSONBoolean.getInstance(diffRequest.isNoRenames()));
+      jsonObject.put(CACHED, JSONBoolean.getInstance(diffRequest.isCached()));
 
       if (diffRequest.getType() != null)
       {
          jsonObject.put(TYPE, new JSONString(diffRequest.getType().name()));
       }
-
+      
+      if (diffRequest.getCommitA() !=null)
+      {
+         jsonObject.put(COMMIT_A, new JSONString(diffRequest.getCommitA()));
+      }
+      
+      if (diffRequest.getCommitB() !=null)
+      {
+         jsonObject.put(COMMIT_B, new JSONString(diffRequest.getCommitB()));
+      }
       return jsonObject.toString();
    }
 }

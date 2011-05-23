@@ -118,6 +118,9 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/controls/pull_Disabled.png")
    ImageResource pullDisabled();
 
+   @Source("org/exoplatform/ide/git/images/history/arrows.png")
+   ImageResource arrows();
+   
    @Source("org/exoplatform/ide/git/images/history/history.png")
    ImageResource history();
    
@@ -135,6 +138,24 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/history/resource_level_Disabled.png")
    ImageResource resourceLevelDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_index.png")
+   ImageResource diffIndex();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_index_Disabled.png")
+   ImageResource diffIndexDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_working_dir.png")
+   ImageResource diffWorkTree();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_working_dir_Disabled.png")
+   ImageResource diffWorTreeDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_prev_version.png")
+   ImageResource diffPrevVersion();
+   
+   @Source("org/exoplatform/ide/git/images/history/diff_prev_version_Disabled.png")
+   ImageResource diffPrevVersionDisabled();
 
    @Source("org/exoplatform/ide/git/images/history/refresh.png")
    ImageResource refresh();

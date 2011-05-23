@@ -33,7 +33,13 @@ public interface Constants
    
    public static final String ID = "id";
    
+   public static final String CACHED = "cached";
+   
    public static final String COMMIT = "commit";
+   
+   public static final String COMMIT_A = "commitA";
+   
+   public static final String COMMIT_B = "commitB";
    
    public static final String COMMITS = "commits";
    

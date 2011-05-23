@@ -184,7 +184,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          @Override
          protected void onSuccess(String result)
          {
-            Dialogs.getInstance().showInfo("Repository initialization", Messages.INIT_SUCCESS);
+            eventBus.fireEvent(new OutputEvent(Messages.INIT_SUCCESS, Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 

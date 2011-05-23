@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.git.client.commit;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -174,8 +177,9 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
          @Override
          protected void onSuccess(Revision result)
          {
-            Date date = new Date(result.getCommitTime());
-            String message = "Commited with revision # <b>" + result.getId() + "</b> at time " + date.toString();
+            DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+            String date = formatter.format(new Date(result.getCommitTime()));
+            String message = "Commited with revision # <b>" + result.getId() + "</b> at time " + date;
             message +=
                (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
                   .getName().length() > 0) ? " by user " + result.getCommitter().getName() : "";

@@ -44,6 +44,8 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.Revision;
 
+import java.util.List;
+
 /**
  * Presenter for history view.
  * The view must be pointed in Views.gwt.xml.
@@ -54,6 +56,10 @@ import org.exoplatform.ide.git.shared.Revision;
  */
 public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandler, ViewClosedHandler
 {
+   private enum DiffWith {
+      DIFF_WITH_INDEX, DIFF_WITH_WORK_TREE, DIFF_WITH_PREV_VERSION;
+   }
+
    interface Display extends IsView
    {
       /**
@@ -62,13 +68,6 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
        * @return {@link ListGridItem}
        */
       ListGridItem<Revision> getRevisionGrid();
-
-      /**
-       * Get diff text field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getDiffText();
 
       /**
        * Get click handler of the refresh button.
@@ -92,6 +91,27 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       HasClickHandlers getResourceChangesButton();
 
       /**
+       * Get click handler of the diff with index button.
+       * 
+       * @return {@link HasValue} click handler
+       */
+      HasClickHandlers getDiffWithIndexButton();
+
+      /**
+      * Get click handler of the diff with working tree button.
+      * 
+      * @return {@link HasValue} click handler
+      */
+      HasClickHandlers getDiffWithWorkingTreeButton();
+
+      /**
+      * Get click handler of the diff with previous version button.
+      * 
+      * @return {@link HasValue} click handler
+      */
+      HasClickHandlers getDiffWithPrevVersionButton();
+
+      /**
        * Change the selected state of the changes in project button.
        * 
        * @param selected selected state
@@ -104,6 +124,33 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
        * @param selected selected state
        */
       void selectResourceChangesButton(boolean selected);
+
+      /**
+       * Change the selected state of the diff with index button.
+       * 
+       * @param selected selected state
+       */
+      void selectDiffWithIndexButton(boolean selected);
+
+      /**
+       * Change the selected state of the diff with working tree button.
+       * 
+       * @param selected selected state
+       */
+      void selectDiffWithWorkingTreeButton(boolean selected);
+
+      /**
+       * Change the selected state of the diff with previous version button.
+       * 
+       * @param selected selected state
+       */
+      void selectDiffWithPrevVersionButton(boolean selected);
+
+      void displayDiffContent(String diffContent);
+
+      void displayCompareText(Revision revision, String text);
+
+      void displayCompareVersion(Revision revisionA, Revision revisionB);
    }
 
    /**
@@ -116,6 +163,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
     * if <code>false</code> then show changes of the selected resource.
     */
    private boolean showChangesInProject;
+
+   private DiffWith diffType;
 
    /**
     * @param eventBus event handler
@@ -184,6 +233,51 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             getCommitsLog();
          }
       });
+
+      display.getDiffWithIndexButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (DiffWith.DIFF_WITH_INDEX.equals(diffType))
+               return;
+            diffType = DiffWith.DIFF_WITH_INDEX;
+            display.selectDiffWithIndexButton(true);
+            display.selectDiffWithPrevVersionButton(false);
+            display.selectDiffWithWorkingTreeButton(false);
+            getCommitsLog();
+         }
+      });
+
+      display.getDiffWithWorkingTreeButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (DiffWith.DIFF_WITH_WORK_TREE.equals(diffType))
+               return;
+            diffType = DiffWith.DIFF_WITH_WORK_TREE;
+            display.selectDiffWithIndexButton(false);
+            display.selectDiffWithPrevVersionButton(false);
+            display.selectDiffWithWorkingTreeButton(true);
+            getCommitsLog();
+         }
+      });
+
+      display.getDiffWithPrevVersionButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (DiffWith.DIFF_WITH_PREV_VERSION.equals(diffType))
+               return;
+            diffType = DiffWith.DIFF_WITH_PREV_VERSION;
+            display.selectDiffWithIndexButton(false);
+            display.selectDiffWithPrevVersionButton(true);
+            display.selectDiffWithWorkingTreeButton(false);
+            getCommitsLog();
+         }
+      });
    }
 
    /**
@@ -218,10 +312,13 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             if (display == null)
             {
                display = GWT.create(Display.class);
-               bindDisplay();
+
                IDE.getInstance().openView(display.asView());
+               bindDisplay();
                display.selectProjectChangesButton(true);
                showChangesInProject = true;
+               display.selectDiffWithPrevVersionButton(true);
+               diffType = DiffWith.DIFF_WITH_PREV_VERSION;
             }
             display.getRevisionGrid().setValue(result.getCommits());
          }
@@ -229,6 +326,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          @Override
          protected void onFailure(Throwable exception)
          {
+            exception.printStackTrace();
+            nothingToDisplay(null);
             String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.LOG_FAILED;
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
@@ -265,22 +364,96 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          }
       }
 
-      GitClientService.getInstance().diff(workDir, filePatterns, DiffType.RAW, false,
+      if (DiffWith.DIFF_WITH_INDEX.equals(diffType) || DiffWith.DIFF_WITH_WORK_TREE.equals(diffType))
+      {
+         boolean isCached = DiffWith.DIFF_WITH_INDEX.equals(diffType);
+         doDiffWithNotCommited(filePatterns, revision, isCached);
+      }
+      else
+      {
+         doDiffWithPrevVersion(filePatterns, revision);
+      }
+   }
+
+   /**
+    * Perform diff between pointed revision and index or working tree.
+    * 
+    * @param filePatterns patterns for which to show diff
+    * @param revision revision to compare with
+    * @param isCached if <code>true</code> compare with index, else - with working tree
+    */
+   protected void doDiffWithNotCommited(String[] filePatterns, final Revision revision, final boolean isCached)
+   {
+      GitClientService.getInstance().diff(workDir, filePatterns, DiffType.RAW, false, 0, revision.getId(), isCached,
          new AsyncRequestCallback<DiffResponse>()
          {
 
             @Override
             protected void onSuccess(DiffResponse result)
             {
-               display.getDiffText().setValue(result.getDiffText());
+               display.displayDiffContent(result.getDiffText());
+               String text = (isCached) ? "<b>index state</b>" : "<b>working tree state</b>";
+               display.displayCompareText(revision, text);
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
+               nothingToDisplay(revision);
                String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.DIFF_FAILED;
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
+   }
+
+   /**
+    * Perform diff between selected commit and previous one.
+    * 
+    * @param filePatterns patterns for which to show diff
+    * @param revision selected commit
+    */
+   protected void doDiffWithPrevVersion(String[] filePatterns, final Revision revision)
+   {
+      List<Revision> revisions = display.getRevisionGrid().getValue();
+      int index = revisions.indexOf(revision);
+      if (index + 1 < revisions.size())
+      {
+         final Revision revisionB = revisions.get(index + 1);
+         GitClientService.getInstance().diff(workDir, filePatterns, DiffType.RAW, false, 0, revision.getId(),
+            revisionB.getId(), new AsyncRequestCallback<DiffResponse>()
+            {
+
+               @Override
+               protected void onSuccess(DiffResponse result)
+               {
+                  display.displayDiffContent(result.getDiffText());
+                  display.displayCompareVersion(revision, revisionB);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  nothingToDisplay(revision);
+                  String errorMessage =
+                     (exception.getMessage() != null) ? exception.getMessage() : Messages.DIFF_FAILED;
+                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      else
+      {
+         nothingToDisplay(revision);
+      }
+   }
+
+   /**
+    * Clear the comparance result, when there is nothing to compare.
+    * 
+    * @param revision
+    */
+   protected void nothingToDisplay(Revision revision)
+   {
+      display.displayCompareText(revision, "<b>nothing for comparance</b>");
+      display.displayDiffContent(" ");
    }
 }

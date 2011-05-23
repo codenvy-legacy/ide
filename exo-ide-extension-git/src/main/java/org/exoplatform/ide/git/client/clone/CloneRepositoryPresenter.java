@@ -207,7 +207,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          @Override
          protected void onSuccess(String result)
          {
-            Dialogs.getInstance().showInfo("Clone remote repository", Messages.CLONE_SUCCESS);
+            eventBus.fireEvent(new OutputEvent(Messages.CLONE_SUCCESS, Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 

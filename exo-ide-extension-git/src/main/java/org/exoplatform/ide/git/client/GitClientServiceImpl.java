@@ -93,7 +93,7 @@ import java.util.List;
 public class GitClientServiceImpl extends GitClientService
 {
    public static final String ADD = "/ide/git/add";
-   
+
    public static final String BRANCH_LIST = "/ide/git/branch-list";
 
    public static final String BRANCH_CHECKOUT = "/ide/git/branch-checkout";
@@ -119,7 +119,7 @@ public class GitClientServiceImpl extends GitClientService
    public static final String GET_WORKDIR = "/ide/git-repo/workdir";
 
    public static final String PUSH = "/ide/git/push";
-   
+
    public static final String PULL = "/ide/git/pull";
 
    public static final String REMOTE_LIST = "/ide/git/remote-list";
@@ -598,24 +598,47 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void diff(String href, String[] fileFilter, DiffType type, boolean noRenames,
-      AsyncRequestCallback<DiffResponse> callback)
+   public void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
+      String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback)
+   {
+      DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, commitB);
+      diff(diffRequest, workDir, callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
+      String commitA, boolean cached, AsyncRequestCallback<DiffResponse> callback)
+   {
+      DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, cached);
+      diff(diffRequest, workDir, callback);
+   }
+
+   /**
+    * Make diff request.
+    * 
+    * @param diffRequest request for diff
+    * @param href working directory's href
+    * @param callback callback
+    */
+   protected void diff(DiffRequest diffRequest, String href, AsyncRequestCallback<DiffResponse> callback)
    {
       String url = restServiceContext + DIFF;
       String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
-      
-      DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, 0);
+
       DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
-      
+
       DiffResponse diffResponse = new DiffResponse();
       DiffResponseUnmarshaller unmarshaller = new DiffResponseUnmarshaller(diffResponse);
       callback.setResult(diffResponse);
       callback.setPayload(unmarshaller);
-      
+
       String params = "workdir=" + workDir;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)

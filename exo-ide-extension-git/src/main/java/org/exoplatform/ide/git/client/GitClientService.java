@@ -261,16 +261,37 @@ public abstract class GitClientService
    public abstract void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback);
 
    /**
-    * Get the diff for pointed file(s) or for the whole project in text format.
+    * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.
     * 
     * @param workDir location of Git repository working directory
     * @param fileFilter files for which to show changes
     * @param type type of diff format
     * @param noRenames don't show renamed files
+    * @param renameLimit the limit of shown renamed files
+    * @param commitA first commit to compare
+    * @param commitB second commit to be compared
     * @param callback callback
     */
-   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, AsyncRequestCallback<DiffResponse> callback);
-   
+   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
+      String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback);
+
+   /**
+    * Compare commit with index or working tree (depends on {@link #cached}), 
+    * get the diff for pointed file(s) or for the whole project in text format.
+    * 
+    * @param workDir location of Git repository working directory
+    * @param fileFilter files for which to show changes
+    * @param type type of diff format
+    * @param noRenames don't show renamed files
+    * @param renameLimit the limit of shown renamed files
+    * @param commitA commit to compare
+    * @param cached if <code>true</code> then compare commit with index, 
+    * if <code>false</code>, then compare with working tree.
+    * @param callback callback
+    */
+   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit, String commitA,
+      boolean cached, AsyncRequestCallback<DiffResponse> callback);
+
    /**
     * Get log of commits.
     * The result is the list of {@link Revision},  which is returned
