@@ -68,7 +68,7 @@ public class OutlineClosingTest extends BaseTest
       assertEquals("Outline", selenium.getText(OUTLINE_TAB_LABEL));
 
       IDE.OUTLINE.closeOutline();
-
+      waitForElementNotPresent("ideOutlineTreeGrid");
       IDE.OUTLINE.assertOutlineTreeNotPresent();
    }
 

@@ -143,7 +143,7 @@ public class CodeOutLineHtmlTest extends BaseTest
       //check script tag and subnodes script
       IDE.OUTLINE.assertElmentPresentById("script:TAG:27");
       IDE.OUTLINE.assertElmentPresentById("prefs:VARIABLE:28");
-      IDE.OUTLINE.assertElmentPresentById("displayGreeting():FUNCTION:30");
+      IDE.OUTLINE.assertElmentPresentById("displayGreeting:FUNCTION:30");
       IDE.OUTLINE.assertElmentPresentById("today:VARIABLE:31");
       IDE.OUTLINE.assertElmentPresentById("html:VARIABLE:33");
 

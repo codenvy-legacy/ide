@@ -22,7 +22,6 @@ import org.exoplatform.ide.operation.edit.outline.CodeOutLineGroovyTemplateTest;
 import org.exoplatform.ide.operation.edit.outline.CodeOutLineHtmlTest;
 import org.exoplatform.ide.operation.edit.outline.CodeOutlineGoogleGadgetTest;
 import org.exoplatform.ide.operation.edit.outline.CodeOutlineJavaScriptTest;
-import org.exoplatform.ide.operation.edit.outline.ClosingOutlinePanelTest;
 import org.exoplatform.ide.operation.edit.outline.CodeOutlineXmlTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -34,10 +33,11 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({CodeOutLineBaseOperationTest.class, CodeOutlineGoogleGadgetTest.class, CodeOutLineGroovyTemplateTest.class, CodeOutLineHtmlTest.class,
-   CodeOutlineJavaScriptTest.class, CodeOutlineXmlTest.class, ClosingOutlinePanelTest.class,
-   CodeOutLineGroovyTest.class, CodeOutLineRESTServiceTest.class, OutlineWithSeveralOpenedFilesTest.class,
-   CodeOutLineRubyTest.class, CodeOutLineJavaTest.class, CodeOutLineNetvibesTest.class, CodeOutlineJspTest.class, OutlineClosingTest.class,
+@SuiteClasses({CodeOutLineBaseOperationTest.class, CodeOutlineGoogleGadgetTest.class,
+   CodeOutLineGroovyTemplateTest.class, CodeOutLineHtmlTest.class, CodeOutlineJavaScriptTest.class,
+   CodeOutlineXmlTest.class, CodeOutLineGroovyTest.class, CodeOutLineRESTServiceTest.class,
+   OutlineWithSeveralOpenedFilesTest.class, CodeOutLineRubyTest.class, CodeOutLineJavaTest.class,
+   CodeOutLineNetvibesTest.class, CodeOutlineJspTest.class, OutlineClosingTest.class,
    OutlineWithOtherTabsInPanelTest.class, ShowOutlineButtonTest.class})
 public class CodeOutlineTestSuite
 {

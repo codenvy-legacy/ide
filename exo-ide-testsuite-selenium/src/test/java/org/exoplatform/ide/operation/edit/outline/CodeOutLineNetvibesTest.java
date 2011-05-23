@@ -132,8 +132,8 @@ public class CodeOutLineNetvibesTest extends BaseTest
       //check script tag and subnodes script
       IDE.OUTLINE.assertElmentPresentById("script:TAG:26");
       IDE.OUTLINE.assertElmentPresentById("YourWidgetName:VARIABLE:31");
-      IDE.OUTLINE.assertElmentPresentById("function():FUNCTION:37");
-      IDE.OUTLINE.assertElmentPresentById("function():FUNCTION:44");
+      IDE.OUTLINE.assertElmentPresentById("function:FUNCTION:37");
+      IDE.OUTLINE.assertElmentPresentById("function:FUNCTION:44");
 
       //check body tag and subnodes body
       IDE.OUTLINE.assertElmentPresentById("body:TAG:50");
