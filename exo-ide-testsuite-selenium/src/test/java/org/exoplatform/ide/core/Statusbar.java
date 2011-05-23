@@ -31,8 +31,9 @@ import org.exoplatform.ide.TestConstants;
 public class Statusbar extends AbstractTestModule
 {
 
-   public static String STATUSBAR_LOCATOR ="//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr";
-   
+   public static String STATUSBAR_LOCATOR =
+      "//div[@id='exoIDEStatusbar']//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']";
+
    /**
     * get text on statusbar
     * @return
@@ -49,9 +50,12 @@ public class Statusbar extends AbstractTestModule
     */
    public String getStatusbarText()
    {
-      return selenium().getText("//table[@class='exo-statusText-table']");
+      
+      return selenium()
+         .getText(
+            "//div[@id='exoIDEStatusbar']//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']");
    }
-   
+
    /**
     * click on statusbar and check appear GoToLine form
     * @throws InterruptedException
@@ -63,6 +67,5 @@ public class Statusbar extends AbstractTestModule
       IDE().GOTOLINE.checkAppearGoToLineForm();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
-   
+
 }

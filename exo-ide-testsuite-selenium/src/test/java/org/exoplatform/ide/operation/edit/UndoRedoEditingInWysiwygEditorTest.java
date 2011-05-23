@@ -53,10 +53,10 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
          BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FolderName + "/";
 
       IDE.WORKSPACE.waitForRootItem();
-
       VirtualFileSystemUtils.mkcol(URL);
 
       //step 1
+      IDE.WORKSPACE.waitForRootItem();
       checkNoFileOpened();
 
       //step 2
@@ -284,7 +284,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //step 25
       saveCurrentFile();
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeFile(1);
 
       //step 26
       //     //TODO must be set id in upload meme type form 
@@ -310,19 +310,14 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
          waitForElementNotPresent("exoAskDialog");
       }
       saveCurrentFile();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeFile(0);
       IDE.WORKSPACE.selectItem(URL + htmlFile);
       IDE.NAVIGATION.deleteSelectedItems();
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + googleGadgetFile, false);
-      //TODO may be remove after fix ask dialog after reopen file
-      if (selenium.isElementPresent("exoAskDialog"))
-      {
-         selenium.click("exoAskDialogYesButton");
-         waitForElementNotPresent("exoAskDialog");
-      }
+      
       saveCurrentFile();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeFile(0);
 
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);

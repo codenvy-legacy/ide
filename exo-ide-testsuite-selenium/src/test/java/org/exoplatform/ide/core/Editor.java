@@ -228,7 +228,7 @@ public class Editor extends AbstractTestModule
        * Closing tab
        */
       selenium().click(tabLocator);
-      Thread.sleep(1);
+      Thread.sleep(500);
 
       /*
        * Closing ask dialogs if them is appears.

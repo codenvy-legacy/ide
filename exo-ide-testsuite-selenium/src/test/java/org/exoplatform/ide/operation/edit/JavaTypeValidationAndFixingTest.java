@@ -173,13 +173,15 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       */
    }
 
-   private void firstTestErrorMarks()
+   private void firstTestErrorMarks() throws InterruptedException
    {
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(4)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(6)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(7)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(8)));
 
+      //timeout for parsing text
+      Thread.sleep(3000);
       assertTrue(selenium
          .isElementPresent(getCodeErrorMarkLocator(
             9,
@@ -225,6 +227,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + TEMPLATE_FILE_NAME, false);
 
       // test error marks
+      Thread.sleep(3000);
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(6, "'Path' cannot be resolved to a type; ")));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(7)));
       assertFalse(selenium.isElementPresent(getCodeErrorMarkLocator(8)));
@@ -276,7 +279,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    {
       //IDE.EDITOR.closeFileTabIgnoreChanges(1);
       IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
       try
       {
