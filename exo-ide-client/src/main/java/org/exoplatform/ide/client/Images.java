@@ -221,6 +221,8 @@ public interface Images
       public static final String INSTANCE_VARIABLE_ITEM = IMAGE_URL + "outline/instance-variable-item.png";
 
       public static final String CONSTANT_ITEM = IMAGE_URL + "outline/constant-item.png";
+
+      public static final String PHP_TAG_ICON = IMAGE_URL + "outline/php-tag.png";;
    }
 
    public interface Versioning

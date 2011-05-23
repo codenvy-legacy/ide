@@ -98,6 +98,8 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    private static final String INSTANCE_VARIABLE_ICON = Images.Outline.INSTANCE_VARIABLE_ITEM;
 
    private static final String CONSTANT_ICON = Images.Outline.CONSTANT_ITEM;
+   
+   private static final String PHP_TAG_ICON = Images.Outline.PHP_TAG_ICON;
 
    public OutlineTreeGrid()
    {
@@ -250,6 +252,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          }
          String annotationList = getAnnotationList(token);
          String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
+ 
          name = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + annotationList
                   + "\">" + name + "</span>";            
  
@@ -279,6 +282,51 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()) && token.getElementType() != null)
       {
          name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+      }
+      
+      // display php code
+      else if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
+      {
+         //icon, that displays in right bottom corner, if token is CLASS, 
+         //and shows access modifier
+         String modfImg = "";
+
+         if (TokenType.CLASS.equals(token.getType()))
+         {
+            if (isPrivate(token))
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
+                     + "\" />";
+            }
+            else if (isProtected(token))
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
+                     + "\" />";
+            }
+            else if (isPublic(token))
+            {
+            }
+            else
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
+                     + "\" />";
+            }
+         }
+
+         name = getModifiersContainer(token) + modfImg + "<span class='item-name' style='margin-left: 5px;'>" + name + "</span>"; 
+         
+         if (TokenType.METHOD.equals(token.getType())
+              || TokenType.FUNCTION.equals(token.getType())
+            )
+         {
+            name += getParametersList(token);
+         }
       }
       
       else
@@ -362,6 +410,9 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          case INTERFACE :
             return INTERFACE_ICON;
 
+         case PHP_TAG:
+            return PHP_TAG_ICON;            
+            
          default :
             return "";
       }
@@ -464,23 +515,32 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
    /**
     * @param token {@link TokenBeenImpl} 
-    * @return html element with modifers
+    * @return html element with modifiers and annotation sign
     */
    private String getModifiersContainer(TokenBeenImpl token)
    {
-      //Get annotation list like string:
-      String annotationList = getAnnotationList(token);
-
-      String span =
-         "<span style = \"position: relative; top: -5px; margin-left: -10px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
-      span += (isTransient(token)) ? "<span class='item-modifier' color ='#6d0000'>t</span>" : "";
-      span += (isVolative(token)) ? "<span class='item-modifier' color ='#6d0000'>v</span>" : "";
-      span += (isStatic(token)) ? "<span class='item-modifier' color ='#6d0000'>s</span>" : "";
-      span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";      
-      span += (isAbstract(token)) ? "<span class='item-modifier' color ='#004e00'>a</span>" : "";
-      span += (annotationList.length() > 0) ? "<span color ='#000000'>@</span>" : "";
-      span += "</span>";
-      return span;
+      if (isTransient(token)
+          || isVolative(token)
+          || isStatic(token)
+          || isFinal(token)
+          || isAbstract(token)
+          || getAnnotationList(token).length() > 0)
+      {
+      
+         String span =
+            "<span style = \"position: relative; top: -5px; margin-left: -3px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
+         span += (isTransient(token)) ? "<span class='item-modifier' color ='#6d0000'>t</span>" : "";
+         span += (isVolative(token)) ? "<span class='item-modifier' color ='#6d0000'>v</span>" : "";
+         span += (isStatic(token)) ? "<span class='item-modifier' color ='#6d0000'>s</span>" : "";
+         span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";      
+         span += (isAbstract(token)) ? "<span class='item-modifier' color ='#004e00'>a</span>" : "";
+         span += (getAnnotationList(token).length() > 0) ? "<span color ='#000000'>@</span>" : "";
+         span += "</span>";
+         
+         return span;
+      }
+      
+      return "";
    }
 
    private boolean isFinal(TokenBeenImpl token)
@@ -601,7 +661,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    /**
     * Return parameters list from token.getParameters()
     * @param token
-    * @return parameters list like '(String, int)', or '()' if there are no parameters
+    * @return parameters list like '(String, int)', or ($a, $b) for PHP-code, or '()' if there are no parameters
     */
    private String getParametersList(TokenBeenImpl token)
    {
@@ -620,11 +680,19 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
                parametersDescription += ", ";
             }
 
-            String annotationList = getAnnotationList(parameter);
-
-            parametersDescription +=
-               "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                  + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
+            if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
+            {
+               parametersDescription +=
+                  "<span class='item-parameter'>" + parameter.getName() + "</span>";               
+            }
+            else
+            {
+               String annotationList = getAnnotationList(parameter);
+   
+               parametersDescription +=
+                  "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
+                     + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
+            }
          }
       }
 
