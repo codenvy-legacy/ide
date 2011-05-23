@@ -82,7 +82,7 @@ public interface MenuCommands
 
       public static final String DEPLOY_SANDBOX = "Deploy to Sandbox";
 
-      public static final String DEPLOY_UWA_WIDGET = "Deploy widget";
+      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
 
       public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
 

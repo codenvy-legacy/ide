@@ -121,11 +121,12 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
       //Create new UWA widget
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.EDITOR.waitTabPresent(0);
       checkDeployWidgetControlState(true, false);
 
       //Save file:
       saveAsUsingToolbarButton(FILE_NAME1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME1);
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:
@@ -149,7 +150,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
       //Click "Next" button and go to step 2:
       selenium.click(NEXT_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent(TITLE_FIELD_NAME);
       
       checkStepTwoLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
@@ -166,7 +167,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
       //Click "Next" button and go to step 3:
       selenium.click(NEXT_BUTTON_ID);
-      Thread.sleep(TestConstants.SLEEP);
+      waitForElementPresent(LOGIN_FIELD_NAME);
       checkStepThreeLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
@@ -187,9 +188,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(DEPLOY_BUTTON_ID, true, true);
 
       selenium.click(CANCEL_BUTTON_ID);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
       waitForElementNotPresent(DEPLOY_WIDGET_FORM_ID);
-
       checkDeployFormPresent(false);
    }
 
@@ -206,11 +205,12 @@ public class DeployNetvibesWidgetTest extends BaseTest
       
       //Create new UWA widget
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.EDITOR.waitTabPresent(0);
       checkDeployWidgetControlState(true, false);
 
       //Save file:
       saveAsUsingToolbarButton(FILE_NAME2);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME2);
       checkDeployWidgetControlState(true, true);
 
       //Call deploy widget control:

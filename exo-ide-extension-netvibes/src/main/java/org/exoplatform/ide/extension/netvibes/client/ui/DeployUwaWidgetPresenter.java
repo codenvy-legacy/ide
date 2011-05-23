@@ -410,9 +410,18 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
 
       int languagesSize = Languages.getLanguagesMap().values().size();
       int regionsSize = Regions.getRegionsMap().values().size();
-      
+
       display.setLanguageValues(Languages.getLanguagesMap().values().toArray(new String[languagesSize]));
+      if (languagesSize > 0)
+      {
+         display.getLanguage().setValue(Languages.getLanguagesMap().values().iterator().next());
+      }
+
       display.setRegionValues(Regions.getRegionsMap().values().toArray(new String[regionsSize]));
+      if (regionsSize > 0)
+      {
+         display.getRegion().setValue(Regions.getRegionsMap().values().iterator().next());
+      }
    }
 
    /**
@@ -503,6 +512,10 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
                categories = result;
                int categoriesSize = result.getCategoryMap().size();
                display.setCategoryValues(result.getCategoryMap().values().toArray(new String[categoriesSize]));
+               if (categoriesSize > 0)
+               {
+                  display.getCategory().setValue(result.getCategoryMap().values().iterator().next(), true);
+               }
             }
 
             @Override
@@ -522,6 +535,10 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       {
          int categoriesSize = categories.getCategoryMap().values().size();
          display.setCategoryValues(categories.getCategoryMap().values().toArray(new String[categoriesSize]));
+         if (categoriesSize > 0)
+         {
+            display.getCategory().setValue(categories.getCategoryMap().values().iterator().next(), true);
+         }
       }
    }
 
@@ -584,10 +601,11 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       String region = display.getRegion().getValue();
       //Check region, language and category values are not null and exist in defined list of values:
       return (language != null && category != null && region != null
-         && Languages.getLanguagesMap().values().contains(language) && Regions.getRegionsMap().values().contains(region) && categories
-         .getCategoryMap().values().contains(category));
+         && Languages.getLanguagesMap().values().contains(language)
+         && Regions.getRegionsMap().values().contains(region) && categories.getCategoryMap().values()
+         .contains(category));
    }
-   
+
    protected String getKeyByValue(LinkedHashMap<String, String> map, String value)
    {
       for (String key : map.keySet())
