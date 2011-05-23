@@ -177,7 +177,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
       this.workspace = workspace;
       if (keyStore != null)
       {
-         this.keyStore = keyStore + "/";
+         this.keyStore = keyStore;
          if (!this.keyStore.endsWith("/"))
             this.keyStore += "/";
       }
