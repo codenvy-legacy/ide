@@ -149,7 +149,10 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      HotKeyManager.getInstance().setHotKeyPressedListener(this);      
+      if (event.getView() instanceof Display)
+      {
+         HotKeyManager.getInstance().setHotKeyPressedListener(this);   
+      }
    }
 
    @Override
