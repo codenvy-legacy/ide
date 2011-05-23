@@ -78,7 +78,6 @@ import org.picocontainer.Startable;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-//@Path("/ide/class-info-storage")
 public class ClassInfoStrorage implements Startable
 {
 
@@ -158,139 +157,10 @@ public class ClassInfoStrorage implements Startable
       }
    }
 
-   //   /**
-   //    * Save information about classes in jar. Can be filtering by package name 
-   //    * 
-   //    * @param jarPath the path to jar
-   //    * @param packageName the package name for filtering classes if set to null save
-   //    *        info about all classes in jar 
-   //    * @return true if save info successfully
-   //    * @throws SaveClassInfoException
-   //    */
-   //   @POST
-   //   @Path("/jar")
-   //   public void addClassesFromJar(@QueryParam("jar-path") String jarPath, @QueryParam("package") String packageName)
-   //      throws SaveClassInfoException
-   //   {
-   //      try
-   //      {
-   //         Thread thread = Thread.currentThread();
-   //         ClassLoader classLoader = thread.getContextClassLoader();
-   //         List<String> fqns = ClassNamesExtractor.getCompiledClassesFromJar(jarPath, packageName);
-   //         for (String fqn : fqns)
-   //         {
-   //            putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
-   //         }
-   //      }
-   //      catch (Exception e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //
-   //      }
-   //   }
-
-   //   /**
-   //    * Save information about class. 
-   //    * 
-   //    * @param fqn the Canonical Name of classes
-   //    * @return
-   //    * @throws SaveClassInfoException
-   //    */
-   //   @POST
-   //   @Path("/class")
-   //   public void addClass(@QueryParam("fqn") String fqn) throws SaveClassInfoException
-   //   {
-   //      try
-   //      {
-   //         Thread thread = Thread.currentThread();
-   //         ClassLoader classLoader = thread.getContextClassLoader();
-   //         putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
-   //      }
-   //      catch (Exception e)
-   //      {
-   //         e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //   }
-
-   //   /**
-   //    * Save information about classes in source. Can be filtering by package name 
-   //    * Can be used for save information about classes from jdk source (src.zip) 
-   //    * 
-   //    * @param javaSrcPath the path to jar
-   //    * @param packageName the package name for filtering classes if set to null save
-   //    *        info about all classes in jar 
-   //    * @return true if save info successfully
-   //    * @throws SaveClassInfoException
-   //    */
-   //   @POST
-   //   @Path("/java")
-   //   public void addClassesFromJavaSource(@QueryParam("java-source-path") String javaSrcPath,
-   //      @QueryParam("package") String packageName) throws SaveClassInfoException
-   //   {
-   //      try
-   //      {
-   //         Thread thread = Thread.currentThread();
-   //         ClassLoader classLoader = thread.getContextClassLoader();
-   //         List<String> fqns = ClassNamesExtractor.getSourceClassesFromJar(javaSrcPath, packageName);
-   //         for (String fqn : fqns)
-   //         {
-   //            putClass(classLoader, JcrUtils.getSession(repositoryService, sessionProviderService, wsName), fqn);
-   //         }
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //      catch (IncompatibleClassChangeError e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //      catch (JsonException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //      catch (RepositoryConfigurationException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //      catch (ClassNotFoundException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO: need think about status
-   //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-   //      }
-   //   }
-
    /**
     * {@inheritDoc}
     */
 
-   //TODO:for prototype client side
    public void addClassesOnStartUp(List<JarEntry> jars) throws SaveClassInfoException
    {
       try
@@ -331,8 +201,15 @@ public class ClassInfoStrorage implements Startable
                   }
                   catch (Exception e)
                   {
-                     LOG.error("Could not ad class " + fqn);
-                     e.printStackTrace();
+                     LOG.warn("Could not ad class " + fqn);
+                     if (LOG.isDebugEnabled())
+                        e.printStackTrace();
+                  }
+                  catch (NoClassDefFoundError e)
+                  {
+                     LOG.warn(e.getMessage());
+                     if (LOG.isDebugEnabled())
+                        e.printStackTrace();
                   }
                }
             }
@@ -355,7 +232,6 @@ public class ClassInfoStrorage implements Startable
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
       catch (IncompatibleClassChangeError e)
@@ -364,36 +240,16 @@ public class ClassInfoStrorage implements Startable
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
-      //      catch (JsonException e)
-      //      {
-      //         e.printStackTrace();
-      //
-      //         if (LOG.isDebugEnabled())
-      //            e.printStackTrace();
-      //         //TODO: need think about status
-      //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      //      }
       catch (RepositoryConfigurationException e)
       {
          e.printStackTrace();
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         //TODO: need think about status
          throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
-      //      catch (ClassNotFoundException e)
-      //      {
-      //         e.printStackTrace();
-      //
-      //         if (LOG.isDebugEnabled())
-      //            e.printStackTrace();
-      //         //TODO: need think about status
-      //         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      //      }
    }
 
    private void putClass(ClassLoader classLoader, Session session, String fqn) throws RepositoryException,
@@ -409,7 +265,7 @@ public class ClassInfoStrorage implements Startable
       base = session.getRootNode().getNode("classpath");
 
       String clazz = fqn;
-      
+
       Class<?> cls = classLoader.loadClass(clazz);
       TypeInfo cd = TypeInfoExtractor.extract(cls);
       Node child = base;
