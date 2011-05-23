@@ -156,7 +156,7 @@ public class CodeOutlineJavaScriptTest extends BaseTest
       outlineTreeHelper.addOutlineItem("g : String", 37, false, TokenType.VARIABLE, "g");  // false, because with same line in file, like previous node
       outlineTreeHelper.addOutlineItem("e : Object", 39, TokenType.VARIABLE, "e");
       outlineTreeHelper.addOutlineItem("k : Object", 40, TokenType.VARIABLE, "k");
-      outlineTreeHelper.addOutlineItem("i : Object", 43, TokenType.VARIABLE, "i");
+      outlineTreeHelper.addOutlineItem("i : Object", 43, false, TokenType.VARIABLE, "i"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("j : Array", 44, false, TokenType.VARIABLE, "j"); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // expand outline tree
