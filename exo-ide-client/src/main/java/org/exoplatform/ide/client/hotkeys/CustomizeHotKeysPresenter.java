@@ -31,8 +31,12 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -59,19 +63,14 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:
  *
  */
-public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler, ViewOpenedHandler, ViewClosedHandler
+public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler, ViewOpenedHandler,
+   ViewClosedHandler, ApplicationSettingsReceivedHandler, ControlsUpdatedHandler
 {
 
-   public interface LabelStyle 
-   {
-      static final String INFO = "exo-cutomizeHotKey-label-info";
-      
-      static final String ERROR = "exo-cutomizeHotKey-label-error";
-   }
-   
    public interface Display extends IsView
    {
-      HasClickHandlers getSaveButton();
+
+      HasClickHandlers getOkButton();
 
       HasClickHandlers getCancelButton();
 
@@ -82,20 +81,20 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       ListGridItem<HotKeyItem> getHotKeyItemListGrid();
 
       HasValue<String> getHotKeyField();
-      
+
       HotKeyItem getSelectedItem();
 
-      void setSaveButtonEnabled(boolean enabled);
-      
+      void setOkButtonEnabled(boolean enabled);
+
       void setBindButtonEnabled(boolean enabled);
-      
+
       void setUnbindButtonEnabled(boolean enabled);
-      
+
       void setHotKeyFieldEnabled(boolean enabled);
 
       void focusOnHotKeyField();
 
-      void showError(String style, String text);
+      void showError(String text);
 
    }
 
@@ -116,49 +115,53 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    public CustomizeHotKeysPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
       
       eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    @Override
    public void onCustomizeHotKeys(CustomizeHotKeysEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
-      
+      bindDisplay();
    }
 
-   
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
+      if (event.getView() instanceof Display) {
+         display = null;
+         HotKeyManager.getInstance().setHotKeyPressedListener(null);         
+      }
    }
 
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (event.getView() instanceof Display) {
-         display = null;
-      }
-   }   
-   
-   
-   
-   
-   public CustomizeHotKeysPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
-      List<Control> controls)
-   {
-      this.eventBus = eventBus;
-      this.applicationSettings = applicationSettings;
-      this.controls = controls;
+      HotKeyManager.getInstance().setHotKeyPressedListener(this);      
+   }
 
-      HotKeyManager.getInstance().setHotKeyPressedListener(this);
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      applicationSettings = event.getApplicationSettings();
+   }
+   
+   @Override
+   public void onControlsUpdated(ControlsUpdatedEvent event)
+   {
+      controls = event.getControls();
    }
 
    public void bindDisplay()
@@ -171,9 +174,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       });
 
-      display.getSaveButton().addClickHandler(new ClickHandler()
+      display.getOkButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent event)
          {
             saveHotKeys();
@@ -185,6 +187,10 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          public void onSelection(SelectionEvent<HotKeyItem> event)
          {
             selectedItem = display.getSelectedItem();
+            System.out.println("selected item > " + selectedItem);
+            
+            System.out.println("selectedItem.getGroup() > " + selectedItem.getGroup());
+            
             if (selectedItem.getGroup().equals(EDITOR_GROUP))
             {
                selectedItem = null;
@@ -192,18 +198,17 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                display.setBindButtonEnabled(false);
                display.setUnbindButtonEnabled(false);
                display.setHotKeyFieldEnabled(false);
-               display.showError(null, null);
+               display.showError(null);
                display.getHotKeyField().setValue("");
                return;
             }
             hotKeySelected(selectedItem);
-            display.showError(null, null);
+            display.showError(null);
          }
       });
 
       display.getBindButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent event)
          {
             bindHotKey();
@@ -212,7 +217,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       display.getUnbindButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent event)
          {
             unbindHotKey();
@@ -223,7 +227,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       display.setHotKeyFieldEnabled(false);
    }
-   
+
    /**
     * Fill hotkey list grid with hotkey items.
     * 
@@ -263,7 +267,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
             hotKeys.add(new HotKeyItem(command, command.getHotKey(), groupName));
          }
       }
-      
+
       /*
        * fill default hotkeys
        */
@@ -276,7 +280,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
          hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
       }
-      
+
       display.getHotKeyItemListGrid().setValue(hotKeys);
 
    }
@@ -382,11 +386,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       final String pressControlKeyThenKey = "Holt Ctrl or Alt, then press key";
 
       final String boundToAnotherCommand = "Such hotkey already bound to another command";
-      
+
       final String tryToBindTheSameHotKey = "Such hotkey already bound to this command";
-      
+
       final String tryAnotherKey = "Undefined key. Please, use another key";
-      
+
       //--- check is control key pressed first ---
       //
       //17 - key code of Ctrl
@@ -401,7 +405,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          if (keyCode == 17 || keyCode == 18)
          {
             display.getHotKeyField().setValue(HotKeyHelper.getKeyName(String.valueOf(keyCode)) + "+");
-            display.showError(LabelStyle.INFO, pressControlKeyThenKey);
+            display.showError(pressControlKeyThenKey);
             return false;
          }
          //if keyCode is not Ctrl or Alt
@@ -409,11 +413,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          else
          {
             display.getHotKeyField().setValue("");
-            display.showError(LabelStyle.ERROR, firstKeyCtrlOrAltMsg);
+            display.showError(firstKeyCtrlOrAltMsg);
             return false;
          }
       }
-      
+
       //--- controlKey must be Ctrl or Alt ---
       String controlKey = null;
       if (isCtrl)
@@ -424,53 +428,53 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       {
          controlKey = "Alt";
       }
-      
+
       //if control key is correct, but keyCode is not pressed yet
       if (keyCode == 0 || keyCode == 17 || keyCode == 18)
       {
          display.getHotKeyField().setValue(controlKey + "+");
-         display.showError(LabelStyle.INFO, pressControlKeyThenKey);
+         display.showError(pressControlKeyThenKey);
          return false;
       }
-      
+
       //control key is correct, keyCode is pressed
       String keyString = HotKeyHelper.getKeyName(String.valueOf(keyCode));
       //--- check, is keyCode correct (maybe pressed not standard key on keyboard) ---
       if (keyString == null)
       {
          display.getHotKeyField().setValue(controlKey + "+");
-         display.showError(LabelStyle.INFO, tryAnotherKey);
+         display.showError(tryAnotherKey);
          return false;
       }
-      
+
       String stringHotKey = controlKey + "+" + keyString;
-      
+
       //show hotkey in text field
       display.getHotKeyField().setValue(stringHotKey);
-      
+
       //--- check, is stringHotKey is reserved by editor ---
       if (ReservedHotKeys.getHotkeys().containsKey(controlKey + "+" + keyCode))
       {
-         display.showError(LabelStyle.ERROR, hotkeyIsUsedInCkEditorMsg);
+         display.showError(hotkeyIsUsedInCkEditorMsg);
          return false;
       }
-      
+
       //--- check, if you try to bind the same hotkey ---
       if (stringHotKey.equals(selectedItem.getHotKey()))
       {
-         display.showError(LabelStyle.ERROR, tryToBindTheSameHotKey);
+         display.showError(tryToBindTheSameHotKey);
          return false;
       }
-      
+
       //--- check, is hotkey alread bound to another command ---
       String controlId = selectedItem.getCommand().getId();
-      
+
       for (HotKeyItem hotKeyIdentifier : hotKeys)
       {
          if (hotKeyIdentifier.getHotKey() != null && hotKeyIdentifier.getHotKey().equals(stringHotKey)
             && !hotKeyIdentifier.getCommand().getId().equals(controlId))
          {
-            display.showError(LabelStyle.ERROR, boundToAnotherCommand);
+            display.showError(boundToAnotherCommand);
             return false;
          }
       }
@@ -500,10 +504,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
          new AsyncRequestCallback<ApplicationSettings>()
          {
-
             @Override
             protected void onSuccess(ApplicationSettings result)
             {
@@ -529,14 +532,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       display.setBindButtonEnabled(false);
       display.setUnbindButtonEnabled(false);
       display.getHotKeyField().setValue("", true);
-      display.setSaveButtonEnabled(true);
+      display.setOkButtonEnabled(true);
       display.setHotKeyFieldEnabled(false);
       display.getHotKeyItemListGrid().setValue(hotKeys);
-   }
-
-   public void destroy()
-   {
-      HotKeyManager.getInstance().setHotKeyPressedListener(null);
    }
 
    /**
@@ -552,7 +550,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       }
       if (validateHotKey(isCtrl, isAlt, keyCode))
       {
-         display.showError(null, null);
+         display.showError(null);
          display.setBindButtonEnabled(true);
       }
       else
@@ -560,7 +558,5 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          display.setBindButtonEnabled(false);
       }
    }
-
-
 
 }

@@ -19,14 +19,18 @@
 package org.exoplatform.ide.client.hotkeys;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -44,18 +48,39 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    /**
     * Initial width of this view
     */
-   private static int WIDTH = 550;
+   private static int WIDTH = 600;
 
    /**
     * Initial height of this view
     */
-   private static int HEIGHT = 350;   
+   private static int HEIGHT = 300;   
 
    private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
 
    interface CustomizeHotKeysViewUiBinder extends UiBinder<Widget, CustomizeHotKeysView>
    {
    }
+   
+   @UiField
+   ImageButton bindButton;
+   
+   @UiField
+   ImageButton unbindButton;   
+
+   @UiField
+   ImageButton okButton;
+   
+   @UiField
+   ImageButton cancelButton;
+   
+   @UiField
+   HotKeyItemListGrid hotKeyItemListGrid;
+   
+   @UiField
+   TextField hotKeyField;
+   
+   @UiField
+   Label messageLabel;
 
    public CustomizeHotKeysView()
    {
@@ -64,94 +89,81 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
    }
 
    @Override
-   public HasClickHandlers getSaveButton()
+   public HasClickHandlers getOkButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return okButton;
    }
 
    @Override
    public HasClickHandlers getCancelButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return cancelButton;
    }
 
    @Override
    public HasClickHandlers getBindButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return bindButton;
    }
 
    @Override
    public HasClickHandlers getUnbindButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return unbindButton;
    }
 
    @Override
    public ListGridItem<HotKeyItem> getHotKeyItemListGrid()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return hotKeyItemListGrid;
    }
 
    @Override
    public HasValue<String> getHotKeyField()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return hotKeyField;
    }
 
    @Override
    public HotKeyItem getSelectedItem()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return hotKeyItemListGrid.getSelectedItems().get(0);
    }
 
    @Override
-   public void setSaveButtonEnabled(boolean enabled)
+   public void setOkButtonEnabled(boolean enabled)
    {
-      // TODO Auto-generated method stub
-      
+      okButton.setEnabled(enabled);
    }
 
    @Override
    public void setBindButtonEnabled(boolean enabled)
    {
-      // TODO Auto-generated method stub
-      
+      bindButton.setEnabled(enabled);
    }
 
    @Override
    public void setUnbindButtonEnabled(boolean enabled)
    {
-      // TODO Auto-generated method stub
-      
+      unbindButton.setEnabled(enabled);
    }
 
    @Override
    public void setHotKeyFieldEnabled(boolean enabled)
    {
-      // TODO Auto-generated method stub
-      
+      hotKeyField.setEnabled(enabled);
    }
 
    @Override
    public void focusOnHotKeyField()
    {
-      // TODO Auto-generated method stub
-      
+      hotKeyField.focusInItem();
    }
 
    @Override
-   public void showError(String style, String text)
+   public void showError(String text)
    {
-      // TODO Auto-generated method stub
-      
+      messageLabel.setText(text);
    }
 
 }
