@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.impl.storage;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS .
@@ -83,7 +83,8 @@ public class FileFinder
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
       }
 
    }
@@ -92,14 +93,26 @@ public class FileFinder
    {
       if (fileMask.contains("/"))
       {
-         String directory = fileMask.substring(0, fileMask.lastIndexOf("/"));
-         String fileNamePattern = fileMask.substring(fileMask.lastIndexOf("/") + 1);
-
-         File directoryContent = new File(directory);
-         String[] files = directoryContent.list(new Filter(fileNamePattern));
-         for (String f : files)
+         try
          {
-            fileList.add(directory + File.separator + f);
+            String directory = fileMask.substring(0, fileMask.lastIndexOf("/"));
+            String fileNamePattern = fileMask.substring(fileMask.lastIndexOf("/") + 1);
+
+            File directoryContent = new File(directory);
+            String[] files = directoryContent.list(new Filter(fileNamePattern));
+
+            if (files == null)
+               return;
+
+            for (String f : files)
+            {
+               fileList.add(directory + File.separator + f);
+            }
+         }
+         catch (Exception e)
+         {
+            if (LOG.isDebugEnabled())
+               e.printStackTrace();
          }
       }
       else
