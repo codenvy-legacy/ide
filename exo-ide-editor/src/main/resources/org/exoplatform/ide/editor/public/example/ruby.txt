@@ -1,379 +1,80 @@
 =begin
  This is about ClassName.
 =end
+
+TOPLEVEL_CONSTANT = "Test"
+
+@@n2 = [    
+     :"blocks with params",
+       "indentation"
+]
+$global
+@n1
+string
+@@class_variable
+CLASS_CONSTANT
+
 class ClassName < SuperClass::SomeOther::NameSpace
-   include Comparable
-   
-   CLASS_CONSTANT = 123 
-   $global = $global1 = 'around the world'
-   # This comment may span only this line
-   @@class_variable = "some string"
+  include Comparable
+  
+  CLASS_CONSTANT = 123
+  $global = 'around the world'
+  $global1 = cons.new
+  @@class_variable = /[a-z0-9!]?/i   # example of regexp
+  @field = value
 
-   def initialize(value) 
-      @field = value
-      @char = ?a
-   end
-    
-   # TASK: refactor
-   def foo(parameter)
-      abstract_method()
-      string = 'Blah blah blah'
-      string.gsub!(/ah/, 'eet')
-      local = 42 * hash_code()
-      static_method()
-      hash = {:name => 'foo'}
-      return bar(local) + parameter
-   end
-   
-   $myFile = File.new("example.txt", "w")
-   
-   def params param1, param2 = PI
-      method
-      param1
-      param2 = 'abc'
-   end
-   
-   def block_scope
-      myvar = 'value'
-      ['a', 'b'].each do |letter|
-         myvar << letter
-      end
-      ['a', 'b'].each { |letter|
-        myvar << letter
-      }
-   end
-   
-   
-   # Conditions and Loops
-   scale = "C"
-   case scale
-      when "C", "c"
-         f = 1/8*temp + 32
-      when "F", "f"
-         c -= (5.0/9.0)*(temp - 32)
-   else
-      raise argumentError, "Wrong Data", caller[0]
-      [2,1].sort
-      abort "C ?"
-   end
-  
-   t = case a
-      when 0..3
-         "low"
-   else
-      "high"
-   end
-  
-   if (f.nil? Object) or c.nil and not f
-      print "#{c} C\n"
-   else
-      print "#{f} F\n"
-   end
-
-   unless (f.nil != nil)
-      print "#{c} C\n"
-   else
-      x = if (true) then f end
-   end
-    
-   i = 0
-   while i < list.size do
-      print list[i]
-      i +- 1
-   end
-   
-   i = 0
-   until i == list.size do
-      str = sprintf("%-20s %3d", list[i])
-      str = "%-20s %3d" % [list[i]]
-      i += 1
-   end
-    
-   i = 0
-   n = list.size - 1
-   loop do  
-      print list[i]
-      i += 1
-      break if i > n
-   end
-   
-   n.times do |i|
-      print list[i]
-   end
-   
-   0.upto(n) do |i|
-      print list[i]
-   end
-   
-   for
-      i in 0..n do
-      print list[i]
-   end
-
-   list.each do |x|
-      print list[x]
-   end
-  
-   (3..6).each_index do |x|
-      print list[x]
-   end
-   
-   # inheritance modifiers etc.
-  
-   private
-   def test_classes
-     ClassName
-     CONSTANT_NAME
-     test(InsideBraces)
-   end
-  
-   def global_variables
-     $global_vars
-     begin
-       do_something_dangerous
-     rescue
-       puts "the exception was #{$!}."      
-     end  
-   end
-  
-   protected
-   # example of regexp
-   def regexps
-     email =~ /[a-z0-9!#\$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#\$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i   
-   end
-     
-    # GET /diners
-   def index
-     @diners = Diner.all
-
-     respond_to do |format|
-        format.html # index.html.erb
-        format.xml  { render :xml => @diners }
-     end
-  end
-
-  def highlights_question_marks?
-    exclamation_marks_too!
-  end
-
-  def operators? year
-    array = []
-    array << 'item' 
-    str = "Marlow".length.to_s
-    str << 101 << ", Cris"
-    # ranges
-    15..15      #.to_a == [12, 13, 14, 15]
-    12...15.to_a     #.to_a == [12, 13, 14]
-    %w[1 2 3 4]
-    'a'..'z'
-  end
-
-  A, B = :A, :B
-  I, IV = 1, 4
-  T, A = true, false
-  
-  # Strings
-  
-  def string
-    'type \'h\' for help'                 #single quotes
-    "this \"is\" a string expression\n"   #double quotes
-    "string #{ with(:ruby).inside } ex"      #double quotes with ruby
-    "The answer is #{factorial(3) * 7}, and #@classVar, so." #double quotes with @classVar       
-    'concat#{foobar}'                     #no ruby here
-    "here are some random numbers #{(0..10).collect {(100*rand).to_i}.sort.inspect}"
+  def initialize(value)
+    @field = value
+    @@class_variable = "some string"
+    @@char = ?a
+    METHOD_CONSTANT = "Test"
   end
   
-  def special_string
-    %w{apple #{ 123 } cherry}                       #array of words
-    %W{apple #{ 0x00E9.to_f } cherry}                       #array of words
-    %q!I said, "You said, 'She said #{123}.'"!      #q
-    %Q('This is #{ 123 }.'\n)                       #Q
-    %!I said, "You said, 'She said it.'"!           #custom char
-    %!I said, "You said, 'She said #{ 123 }.'"!     #custom char
-    'exec #{create_options}'
+  $myFile = File.new("example.txt", "w")   
+  
+  scale = "C"
+  case scale
+    when "C", "c"
+    f = temp
+    # Strings
+    @str4 = "string #{ with(:ruby).inside } ex"      #double quotes with ruby
+  else
+    raise argumentError, "Wrong Data", caller[0]
   end
   
-  def number_literals
-    123       #integer
-    -123      #integer(signed)
-    1_234     #integer(underscore within decimal numbers ignored)
-    123.45    #floating point number
-    1.2e-3    #floating point number
-    0xffff    #hexadecimal integer
-    0b01011   #binary integer
-    0377      #octal integer
-    ?a        #ASCII code for character `a'(97)
-    ?\C-a     #Control-a(1)
-    ?\M-a     #Meta-a(225)
-    ?\M-\C-a  #Meta-Control-a(129)
-    :symbol   #Integer corresponding identifiers, variable names, and operators.
+  loop do  
+    print list[i]
+    i += 1
+    @str4 = "The answer is #{factorial(3) * 7}, and #@classVar, so." #double quotes with @classVar       
   end
-
-  # constant - array of symbols
-  TODO = [
-    :"blocks with params",
-    "indentation",
-    :cleanup,
-    :@indentation
-  ]
-
-  ROADMAP = [
-    '0.2 milestone' => [
-        :overall_ruby_highlighting_support,
-        :indentation
-      ],
-    '0.3 milestone' => [
-        :mark_some_syntax_errors,
-      ]
-    ]
-    
-    # attribute of class
-    attrAccessor :gamma, :delta
+      
+  # Numbers
+  @n1 = 123.45    #floating point number
+  @@n2 = 1.2e-3    #floating point number
 end
 
-=begin
-  Singlet class example
-=end
-class << ex
-   def power(exponent)
-      proc {|base| base**exponent} # closure example
-   end
-end
-
-square = ex.power(2)
-a = square.call(11)  # a = 121
-
-=begin
-  Example of new class Time
-=end
-class Time < Qt::Widget
-  def Time.validate(year, month=1, day=1, hour=0, min=0, sec=0, usec=0)
-     require "date"
-     begin
-        d = Date.new(year, month, day)
-     rescue
-        return nil
-     end
-     Time.local(year, month, day, hour, min, sec, usec)
-  end  
-end
-
-t1 = Time.validate 2000, 11, 30
-
-now = Time.now   # current time
-
-# Arrays
-
-=begin
-   Redefine array operators
-=end
-class Array
-  # comparison operator "<"
-  def <(other)
-     (self <=> other) == -1
-  end
-
-  # index of array, started from 1
-  def [] (index, obj)
-     if index > 0
-        super(index-1, obl)
-     else
-        raise IndexError
-     end
-  end
-end
-
-if a < b 
-   print "a < b"
-end
-
-x[1] = 5
-x[0] = 1   # Error 
-
-a = ["January", "February"]
-a.grep(/ary/) {|m| m.length}
-a.regect!
-a.slice!(2, 3)
-
-m1 = Matrix[[1, 3 >> 2],[0b001]]
-
-list.collect! { |x| x.chomp }
-
-# Hash (page 242)
-a1 = Hash.[]("flat"=>3, "curved"=>2)
-a2 = {}
-a2["flat"] = 3        # {"flat"=>3}
-a2.[]=("curved", 5)   # {"flat"=>3, "curved"=>5}
-# a2.[] =("curved", 5)   # error
-(a2 ||= {})["flat"] = 3
-
-names = {"fred"=>"jones", "jane"=>"tucker"}
-names.detect {|k,v| v=="tucker"}   # ["jane"]
-
-# Quantifiers (page 254)
-nums = [1,3,5]
-flag1 = nums.any? {|x| x % 2 == 0}   # true
-flag2 = nums.all? {|x| x % 2 == 0}   # false
-flag3 = nums.all?    # the same as flag3 = nums.all? {|x| x}
-
-# Module (page 255, 342)
-module Enumerable
-   def classify(&block)
-      hash = {}
-      self.each do |x|
-         result = block.call(x)
-         (hash[result] ||= []) << x
-     end
-     hash
-   end
-end
-
-nums2 = [1,2,3,4,5,6,7,8,9]
-mod3 = nums.classify {|x| x % 3}   # {0=>[3,6,9], 1=>[1,4,7], 2=>[2,5,8]}
-
-Set[1,2,3].member?(4)  # false
-  
-  
-def inorder()
-   @left.inorfer {|y| yield y} if @left != nil
-   for e in edges
-     e[0], e[1] = e[1], e[0] if [e[0], e[1]].max > e[3]
-   end
-end
-
-# File operations (page 292)
-flag6 = FileTest::size?("file2")
-  
-  
-# OOP (page 340)
-s2 = "some string"
-var = s2.class       # String
-
-x2 = [1,2,3]
-flag20 = x2.is_a? Enumerable   # true
-
-array_parent = Array.superclass   # Object
-fn_parent = 327.class.superclass  # Integer
-obj_parent = Object.superclass    # nil
-
-seat_box = Gtk::VBox.new("2.0") 
-
- 
-head1 = puts <<EOF
-MIME-Version: 1.0
-EOF
-
-# Test Unit (page 532)
+a = ClassName.new
 
 class TC_MyTest < Test::Unit::TestCase
-   def test_001
-      #
+  # TASK: refactor
+   def foo parameter1, parameter2
+     abstract_method()
+     @@class_variable = {:name => 'foo'}
+     @field = 0b01011   #binary integer
+     return bar(local) + parameter
    end
+
+   CLASS_CONSTANT = 0xffff    #hexadecimal integer
+   a = 0377      #octal integer
 end
 
-next if head +~ %r{^X-rubimirror:}
-
-
-# Directives
-if $0 == __FILE__
+module TestModule
+  def method
+    @@t = true
+    $global = "test"
+  end
+  A = :symbol #Integer corresponding identifiers, variable names, and operators.
+  ascii1 = ?a        #ASCII code for character `a'(97)
+  @field
 end
+

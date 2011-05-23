@@ -51,5 +51,8 @@ public enum TokenType {
    JSP_TAG,
    
    /** Property type for Ruby code **/
-   ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT;
+   ROOT, MODULE, LOCAL_VARIABLE, GLOBAL_VARIABLE, CLASS_VARIABLE, INSTANCE_VARIABLE, CONSTANT,
+   
+   /** Propperty type for Php code **/
+   PHP_TAG;
 }

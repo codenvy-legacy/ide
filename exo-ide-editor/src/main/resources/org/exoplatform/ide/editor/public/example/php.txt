@@ -93,7 +93,8 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
     $row[attributes()][$attribute_name] = $attribute_value;
     $row[attributes(5)][$attribute_name] = $attribute_value;
     $row[$attributes()][$attribute_name] = $attribute_value;
-    abstract class test extends foo implements test {
+    abstract class test extends foo implements test 
+    {
         private function domainObjectBuilder($var2) {
          $test;
             return $this->use_domain_object_builder
@@ -114,7 +115,8 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
         func($b,$c);        
         mike(A::func(param));
 
-        public abstract function loadPageXML(util_FilePath $filename, $merge=0, $x, $y=3) {
+        public final function loadPageXML(util_FilePath $filename, $merge=0, $x, $y=3) 
+        {
             $newrow[$key] = $val;
             $newresult[] = $row;
             $state = $row['c'] == 1;
@@ -151,7 +153,8 @@ EOSTRING
             echo "a = ".$this ->a[2+3*$array["foo"]]."";
             echo "b = {$this->b}";  // FIXME: highlight interpolation in strings
         }
-        final function makecoffee_error($types = array("cappuccino"), $coffeeMaker = NULL) {
+        
+        function makecoffee_error($types = array(), $coffeeMaker = NULL) {
             $out_of_way_amount = $max - $child->left() + 1;
             $absolute_pos = $child->left() - $move->width();
             $varfunc(1, 'x');

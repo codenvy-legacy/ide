@@ -110,5 +110,5 @@ span.syntax-error {
 }
 
 span.deprecated {
-  text-decoration: line-through;
+/*  text-decoration: line-through;*/
 }

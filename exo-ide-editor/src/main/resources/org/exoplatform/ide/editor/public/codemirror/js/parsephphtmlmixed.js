@@ -9,7 +9,7 @@ Based on parsehtmlmixed.js by Marijn Haverbeke.
 */
 
 var PHPHTMLMixedParser = Editor.Parser = (function() {
-  var processingInstructions = ["<?php"];
+  var processingInstructions = ["<?php", "<?"];
 
   if (!(PHPParser && CSSParser && JSParser && XMLParser))
     throw new Error("PHP, CSS, JS, and XML parsers must be loaded for PHP+HTML mixed mode to work.");
