@@ -85,8 +85,9 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
 
       // Open groovy file with test content
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
       // test error marks
       firstTestErrorMarks();
 
