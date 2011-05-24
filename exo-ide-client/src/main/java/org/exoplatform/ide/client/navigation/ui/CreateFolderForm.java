@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
-import org.exoplatform.ide.client.navigation.CreateFolderPresenter;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -72,8 +71,6 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
 
    private String submitButtonTitle;
 
-   private CreateFolderPresenter presenter;
-
    /**
     * @param eventBus
     * @param selectedItem
@@ -105,9 +102,6 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       });
 
       folderNameField.focusInItem();
-
-      //      presenter = new CreateFolderPresenter(eventBus, selectedItem, href);
-      //      presenter.bindDisplay(this);
    }
 
    private void createFieldForm()
@@ -137,18 +131,6 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
-
-      //      createButton = new IButton(submitButtonTitle);
-      //      createButton.setID(ID_CREATE_BUTTON);
-      //      createButton.setWidth(BUTTON_WIDTH);
-      //      createButton.setHeight(BUTTON_HEIGHT);
-      //      createButton.setIcon(Images.Buttons.OK);
-      //
-      //      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      //      cancelButton.setID(ID_CANCEL_BUTTON);
-      //      cancelButton.setWidth(BUTTON_WIDTH);
-      //      cancelButton.setHeight(BUTTON_HEIGHT);
-      //      cancelButton.setIcon(Images.Buttons.NO);
 
       createButton = new ImageButton(submitButtonTitle, "ok");
       createButton.setId(ID_CREATE_BUTTON);
@@ -186,16 +168,6 @@ public class CreateFolderForm extends DialogWindow implements CreateFolderDispla
    public HasKeyPressHandlers getFolderNameFiledKeyPressed()
    {
       return (HasKeyPressHandlers)folderNameField;
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
-    */
-   @Override
-   public void destroy()
-   {
-      //      presenter.destroy();
-      super.destroy();
    }
 
 }

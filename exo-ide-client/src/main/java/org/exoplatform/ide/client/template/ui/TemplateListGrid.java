@@ -166,7 +166,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
 
       };
       
-      getCellTable().addColumn(entryNameColumn, "Entry Point");
+      getCellTable().addColumn(entryNameColumn, "Description");
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
    }
 

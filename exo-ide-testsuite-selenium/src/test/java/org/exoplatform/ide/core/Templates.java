@@ -49,7 +49,7 @@ public class Templates extends AbstractTestModule
 
    public static final String FILE_NAME_INPUT_LOCATOR = "//input[@name='ideCreateFileFromTemplateFormFileNameField']";
 
-   private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']";
+   private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']";
    
    //------Create project from template form elements------------------
    public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "ide-project";
@@ -60,11 +60,25 @@ public class Templates extends AbstractTestModule
    
    public void waitForFileFromTemplateForm() throws Exception
    {
-      waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR VIEW");
+      
+      String viewLocator = "//div[@view-id='ideCreateFileFromTemplateForm']";
+      //waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
+      waitForElementPresent(viewLocator);
+      
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR LIST GRID");
       waitForElementPresent(TEMPLATES_LIST_GRID_ID);
+      
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR DELETE BUTTON");
       waitForElementPresent(DELETE_BUTTON_ID);
+      
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR CREATE BUTTON");
       waitForElementPresent(CREATE_BUTTON_ID);
+      
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR CANCEL BUTTON");
       waitForElementPresent(CANCEL_BUTTON_ID);
+      
+      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR INPUT FIELD");
       waitForElementPresent(FILE_NAME_INPUT_LOCATOR);
    }
    
@@ -85,7 +99,7 @@ public class Templates extends AbstractTestModule
     */
    public void selectFileTemplate(String templateName) throws InterruptedException
    {
-      selenium().click(FILE_FROM_TEMPLATE_DIALOG_LOCATOR + "//span[@title='" + templateName + "']");
+      selenium().click(FILE_FROM_TEMPLATE_DIALOG_LOCATOR + "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[@title='" + templateName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    
@@ -142,7 +156,11 @@ public class Templates extends AbstractTestModule
     */
    public void checkCreateFileFromTemplateWindow()
    {
-      assertEquals("Create file", selenium().getText("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']//div[@class='Caption']/span"));
+      String locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/div[@class='Caption']/span";
+      String text = selenium().getText(locator);
+      assertEquals("Create file", text);
+      
+      //assertEquals("Create file", selenium().getText("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']//div[@class='Caption']/span"));
       checkCreateFileFromTemplateWindowComponents();
    }
    
@@ -152,7 +170,8 @@ public class Templates extends AbstractTestModule
     */
    public void checkCreateFileFromTemplateWindowComponents()
    {
-      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
+      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID + "-window"));
+      assertTrue(selenium().isElementPresent("//div[@view-id='" + FILE_FROM_TEMPLATE_FORM_ID + "']"));
       assertTrue(selenium().isElementPresent(INPUT_FIELD_NAME));
       assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
       assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
@@ -160,9 +179,9 @@ public class Templates extends AbstractTestModule
       assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
       //check that Delete and Create buttons are disabled and Cancel is enabled
       checkButtonState(DELETE_BUTTON_ID, false);
-      checkButtonState(CREATE_BUTTON_ID, false);
+      checkButtonState(CREATE_BUTTON_ID, true);
       checkButtonState(CANCEL_BUTTON_ID, true);
-      checkInputFieldState(false);
+      checkInputFieldState(true);
    }
    
    public void checkProjectCreateForm()

@@ -75,7 +75,7 @@ public class Toolbar extends AbstractTestModule
       }
       else if (menuItemName.equals(MenuCommands.New.FILE_FROM_TEMPLATE))
       {
-         waitForElementPresent("ideCreateFileFromTemplateForm");
+         waitForElementPresent("//div[@view-id='ideCreateFileFromTemplateForm']");
       }
       else if (menuItemName.equals(MenuCommands.New.GOOGLE_GADGET_FILE) ||
                menuItemName.equals(MenuCommands.New.REST_SERVICE_FILE) ||

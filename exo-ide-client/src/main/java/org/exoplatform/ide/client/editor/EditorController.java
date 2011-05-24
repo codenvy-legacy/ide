@@ -722,7 +722,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       {
          eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
       }
-
    }
 
    /**

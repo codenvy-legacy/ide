@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -100,7 +105,7 @@ import org.exoplatform.ide.client.navigation.handler.PasteItemsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.TemplateCommandHandler;
+import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigation.ui.CreateFolderForm;
 import org.exoplatform.ide.client.navigation.ui.RenameItemForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
@@ -117,11 +122,6 @@ import org.exoplatform.ide.client.versioning.control.ViewVersionListControl;
 import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -233,11 +233,8 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
 
-      //      handlers.addHandler(ItemLockedEvent.TYPE, this);
-      //      handlers.addHandler(ItemUnlockedEvent.TYPE, this);
-
       new CreateFileCommandHandler(eventBus);
-      new TemplateCommandHandler(eventBus);
+      new CreateFileFromTemplatePresenter(eventBus);
       new OpenFileCommandHandler(eventBus);
       new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandHandler(eventBus);

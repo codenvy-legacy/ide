@@ -93,4 +93,9 @@
 		<when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
+		<when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
+	</replace-with>
+
+
 </module>

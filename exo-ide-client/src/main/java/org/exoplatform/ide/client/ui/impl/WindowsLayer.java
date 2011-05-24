@@ -166,8 +166,10 @@ public class WindowsLayer extends Layer
       views.put(view.getId(), view);
 
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
+      
+      window.getElement().setAttribute("id", view.getId() + "-window");
+      window.getElement().getStyle().setProperty("zIndex", "auto");
 
-      DOM.setStyleAttribute(window.getElement(), "zIndex", "auto");
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
       window.center();

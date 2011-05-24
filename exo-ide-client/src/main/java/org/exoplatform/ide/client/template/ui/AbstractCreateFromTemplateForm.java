@@ -138,6 +138,7 @@ implements CreateFromTemplateDisplay<T>
       nameField = new TextField("Name", getNameFieldLabel());
       nameField.setName(FILE_NAME_FIELD);
       nameField.setWidth(150);
+      
       actionsLayout.add(nameField);
 
       actionsLayout.add(getButtonsForm());

@@ -16,9 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client;
+package org.exoplatform.ide.client.navigation.template;
 
-import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,16 +28,6 @@ import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
  * @version $
  */
 
-public class IDEIconSet
+public class FileTemplateListGrid extends TemplateListGrid<FileTemplate>
 {
-   
-   public static void init() {
-      ImageFactory.addImage("ok", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
-      ImageFactory.addImage("cancel", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
-      ImageFactory.addImage("yes", IDEImageBundle.INSTANCE.ok(), IDEImageBundle.INSTANCE.okDisabled());
-      ImageFactory.addImage("no", IDEImageBundle.INSTANCE.cancel(), IDEImageBundle.INSTANCE.cancelDisabled());
-      ImageFactory.addImage("search", IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
-      ImageFactory.addImage("delete", IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
-   }
-
 }

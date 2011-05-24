@@ -121,10 +121,16 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       file = event.getFile();
-
       if (display != null)
       {
-         display.showProperties(file);
+         if (file == null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         else
+         {
+            display.showProperties(file);
+         }
       }
    }
 
