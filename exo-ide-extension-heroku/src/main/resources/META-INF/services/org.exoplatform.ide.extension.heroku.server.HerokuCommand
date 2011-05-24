@@ -1,0 +1,13 @@
+org.exoplatform.ide.extension.heroku.server.commands.Apps
+org.exoplatform.ide.extension.heroku.server.commands.AppsCreate
+org.exoplatform.ide.extension.heroku.server.commands.AppsInfo
+org.exoplatform.ide.extension.heroku.server.commands.AppsDestroy
+org.exoplatform.ide.extension.heroku.server.commands.AppsRename
+
+org.exoplatform.ide.extension.heroku.server.commands.Keys
+org.exoplatform.ide.extension.heroku.server.commands.KeysClear
+org.exoplatform.ide.extension.heroku.server.commands.KeysRemove
+org.exoplatform.ide.extension.heroku.server.commands.KeysAdd
+
+org.exoplatform.ide.extension.heroku.server.commands.AuthLogin
+org.exoplatform.ide.extension.heroku.server.commands.AuthLogout
