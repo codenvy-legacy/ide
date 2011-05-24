@@ -880,7 +880,7 @@ public class CodeMirror extends Editor
       replaceFoundedText(editorObject, find, replace, caseSensitive);
    }
 
-   private native void replaceFoundedText(JavaScriptObject rditor, String find, String replace, boolean caseSensitive) /*-{
+   private native void replaceFoundedText(JavaScriptObject editor, String find, String replace, boolean caseSensitive) /*-{
         if (editor == null)
             return;
         var selected = editor.selection();
