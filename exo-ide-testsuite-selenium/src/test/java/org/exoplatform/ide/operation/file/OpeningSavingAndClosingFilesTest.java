@@ -33,6 +33,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -111,31 +112,34 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testOpeningSavingAndClosingTabsWithFile() throws Exception
    {
       // Refresh Workspace:
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.WORKSPACE.selectItem(WS_URL);
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+
+      //      IDE.WORKSPACE.selectItem(WS_URL);
+      //      
+      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      //      
+      //      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
+      //      
+      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       // ----------5--------------
       reopenFiles();
-     // clickTabAndCheckSaveButton();
+      // clickTabAndCheckSaveButton();
 
       //------------6-------------      
       changeFiles();
       saveAndCloseFile();
 
       //--------------8------------
-      reopenFiles();
-      chekSaveInFiles();
+      //reopenFiles();
+      //chekSaveInFiles();
    }
 
    public void chekSaveInFiles() throws InterruptedException
@@ -209,13 +213,13 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // Open Css:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
-      
+
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-//      Thread.sleep(TestConstants.SLEEP);
-      
+
+      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -231,10 +235,10 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[6]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-//      Thread.sleep(TestConstants.SLEEP);
-      
+      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -250,10 +254,10 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-//      Thread.sleep(TestConstants.SLEEP);
-      
+      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -269,11 +273,11 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[9]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      
-//      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-//      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
-//      Thread.sleep(TestConstants.SLEEP);
-      
+
+      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       assertTrue(selenium.isTextPresent("Open File With"));
       assertTrue(selenium.isTextPresent("Name"));
       assertTrue(selenium.isTextPresent("Code Editor [Default]"));
@@ -290,214 +294,158 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    public void saveAndCloseFile() throws InterruptedException, Exception
    {
       // Save and closeCssFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(0);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.closeFile(0);
 
+     
       // Save and closeGoogleGadgetFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(0);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.closeFile(0);
 
       // Save and close HTMLFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(1);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.closeFile(1);
 
+      
       // Save and closeJsFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(1);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=1]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.closeFile(1);
 
-      // Save and closeXMLFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=2]/");
-      Thread.sleep(TestConstants.SLEEP);
+      //
+      //      // Save and closeXMLFile
+      IDE.EDITOR.selectTab(2);
       saveCurrentFile();
-      Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=2]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.closeFile(2);
 
-      // close GroovyFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(500);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
-      //**********TODO**********
-      checkSaveDialog();
       
-      // close TXTFile
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/");
-      Thread.sleep(500);
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
-      //*****TODO************
-      checkSaveDialog();
-      assertFalse(selenium.isElementPresent("//body[@class='editbox']"));
-      
+      //      // close GroovyFile
+      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.closeFile(0);
+      //      Thread.sleep(500);
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+      //      //**********TODO**********
+      //      checkSaveDialog();
+      //
+      //      // close TXTFile
+      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.closeFile(0);
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+      //      //*****TODO************
+      //      checkSaveDialog();
+      //      assertFalse(selenium.isElementPresent("//body[@class='editbox']"));
+
    }
 
-   public void changeFiles() throws InterruptedException
+   public void changeFiles() throws Exception
    {
       // changeCssFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[2]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      assertTrue(selenium.isTextPresent(CSS_FILE_NAME + "*"));
-      Thread.sleep(3000);
+      IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.typeTextIntoEditor(0, "Change file");
+      IDE.EDITOR.pressEnter();
+      assertEquals(IDE.EDITOR.getTabTitle(0), CSS_FILE_NAME + " *");
 
       // changeGoogleGadgetFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      Thread.sleep(3000);
-
-      // changeGoogleGadgetFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      Thread.sleep(3000);
-      assertTrue(selenium.isTextPresent(GADGET_FILE_NAME + "*"));
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.typeTextIntoEditor(1, "Change file");
+      //Don't work IDE.EDITOR.pressEnter();
+      IDE.EDITOR.runHotkeyWithinEditor(1, false, false, 13);
+      assertEquals(IDE.EDITOR.getTabTitle(1), GADGET_FILE_NAME + " *");
 
       // changeHTMLFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[5]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      Thread.sleep(3000);
-      assertTrue(selenium.isTextPresent(HTML_FILE_NAME + "*"));
+      IDE.EDITOR.selectTab(3);
+      IDE.EDITOR.typeTextIntoEditor(3, "Change file");
+      IDE.EDITOR.runHotkeyWithinEditor(3, false, false, 13);
+      assertEquals(IDE.EDITOR.getTabTitle(3), HTML_FILE_NAME + " *");
 
       // changeJavaScriptFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[6]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      Thread.sleep(3000);
-      assertTrue(selenium.isTextPresent(JS_FILE_NAME + "*"));
+      IDE.EDITOR.selectTab(4);
+      IDE.EDITOR.typeTextIntoEditor(4, "Change file");
+      IDE.EDITOR.runHotkeyWithinEditor(4, false, false, 13);
+      assertEquals(IDE.EDITOR.getTabTitle(4), JS_FILE_NAME + " *");
 
       // changeXMLFile
-      selenium.selectFrame("//div[@class='tabSetContainer']/div/div[8]//iframe");
-      selenium.typeKeys("//body[@class='editbox']", "Change file");
-      selenium.keyDown("//body[@class='editbox']", "13");
-      selenium.keyUp("//body[@class='editbox']", "13");
-      Thread.sleep(500);
-      selenium.selectFrame("relative=top");
-      Thread.sleep(3000);
-      assertTrue(selenium.isTextPresent(XML_FILE_NAME + "*"));
-      Thread.sleep(500);
+      IDE.EDITOR.selectTab(6);
+      IDE.EDITOR.typeTextIntoEditor(6, "Change file");
+      IDE.EDITOR.runHotkeyWithinEditor(6, false, false, 13);
+      assertEquals(IDE.EDITOR.getTabTitle(6), XML_FILE_NAME + " *");
+
    }
 
    protected void clickTabAndCheckSaveButton() throws Exception
    {
-     IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.selectTab(0);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
 
-     IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.selectTab(1);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      
-     IDE.EDITOR.selectTab(2);
+
+      IDE.EDITOR.selectTab(2);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      
-     IDE.EDITOR.selectTab(3);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);      
-      
-     IDE.EDITOR.selectTab(4);
+
+      IDE.EDITOR.selectTab(3);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      
-     IDE.EDITOR.selectTab(5);
+
+      IDE.EDITOR.selectTab(4);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
-      
-     IDE.EDITOR.selectTab(6);
+
+      IDE.EDITOR.selectTab(5);
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
+
+      IDE.EDITOR.selectTab(6);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.SAVE, false);
    }
 
    public void openXML() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + XML_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(6);
    }
 
    public void openTXT() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(TXT_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + TXT_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(5);
    }
 
    public void openJavaScript() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //  runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(JS_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + JS_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(4);
    }
 
    public void openHtml() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //    runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
-      Thread.sleep(3000);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + HTML_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(3);
    }
 
    public void openGroovy() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      //runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GROOVY_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + GROOVY_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(2);
    }
 
    public void openGooglegadget() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.WORKSPACE.selectItem(WS_URL);
-      // runTopMenuCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(GADGET_FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + GADGET_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(1);
    }
 
    public void openCss() throws InterruptedException, Exception
    {
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(CSS_FILE_NAME, false);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(STORAGE_URL + CSS_FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
+      //Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+
    }
 
    //****************TODO fix  Task IDE-445

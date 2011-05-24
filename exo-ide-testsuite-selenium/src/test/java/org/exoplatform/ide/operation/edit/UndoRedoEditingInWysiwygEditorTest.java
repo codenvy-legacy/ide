@@ -287,7 +287,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.EDITOR.closeFile(1);
 
       //step 26
-      //     //TODO must be set id in upload meme type form 
+      //     //TODO must be set id in upload mime type form 
       //     String filePath =
       //         "src/test/resources/org/exoplatform/ide/operation/edit/undoRedoEditingInWysiwygEditorTest/Example.html";
       //      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.TEXT_HTML);

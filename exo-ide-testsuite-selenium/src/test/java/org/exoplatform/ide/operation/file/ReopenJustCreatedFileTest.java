@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,13 +44,13 @@ import java.io.IOException;
  */
 public class ReopenJustCreatedFileTest extends BaseTest
 {
-   private static final String FOLDER_NAME = ReopenJustCreatedFileTest.class.getSimpleName() ;
+   private static final String FOLDER_NAME = ReopenJustCreatedFileTest.class.getSimpleName();
 
    private static final String STORAGE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME + "/";
-   
+
    private static final String NETVIBES_FILE_NAME = "file-" + ReopenJustCreatedFileTest.class.getSimpleName();
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -66,7 +67,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -83,7 +84,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @Test
    public void testReopenJustCreatedFile() throws Exception
    {
@@ -91,23 +92,26 @@ public class ReopenJustCreatedFileTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
-      
-      String fileName =IDE.EDITOR.getTabTitle(0);
-      
+
+      String fileName = IDE.EDITOR.getTabTitle(0);
+
       assertEquals("Untitled file.html *", fileName);
-      
+
       saveAsUsingToolbarButton(NETVIBES_FILE_NAME);
-      
+
       Thread.sleep(TestConstants.SLEEP);
-      
-     IDE.EDITOR.closeFile(0);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(NETVIBES_FILE_NAME, false);
-      
-      fileName =IDE.EDITOR.getTabTitle(0);
-      
+
+      IDE.EDITOR.closeFile(0);
+
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + NETVIBES_FILE_NAME);
+
+      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
+
+      fileName = IDE.EDITOR.getTabTitle(0);
+
       assertEquals(NETVIBES_FILE_NAME, fileName);
    }
 

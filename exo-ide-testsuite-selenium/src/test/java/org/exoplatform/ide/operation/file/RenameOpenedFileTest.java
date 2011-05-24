@@ -75,6 +75,9 @@ public class RenameOpenedFileTest extends BaseTest
    @Test
    public void testRenameClosedFile() throws Exception
    {
+     
+      
+      //TODO fix problem see issue 805
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
 
       /*
@@ -95,6 +98,7 @@ public class RenameOpenedFileTest extends BaseTest
       assertEquals("Can't change mime-type to opened file", IDE.RENAME_DIALOG.getWarningMessage());
 
       IDE.RENAME_DIALOG.setFileName(FILE2);
+
       IDE.RENAME_DIALOG.clickRenameButton();
 
       /*

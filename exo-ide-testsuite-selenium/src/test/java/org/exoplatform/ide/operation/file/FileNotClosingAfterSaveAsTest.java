@@ -42,15 +42,16 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
 {
 
    private static final String FOLDER_NAME = FileNotClosingAfterSaveAsTest.class.getSimpleName();
-   
+
    private static final String FILE_NAME_1 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
       + System.currentTimeMillis();
 
    private static final String FILE_NAME_2 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
       + System.currentTimeMillis() + "5";
-   
-   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME + "/";
-   
+
+   private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER_NAME + "/";
+
    @BeforeClass
    public static void setUp()
    {
@@ -67,7 +68,7 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    //http://jira.exoplatform.com/browse/IDE-404
    @Test
    public void testFileNotClosingAfterSaveAs() throws Exception
@@ -75,30 +76,31 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      
+
       createSaveAndCloseFile(MenuCommands.New.REST_SERVICE_FILE, FILE_NAME_1, 0);
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_1, false);
-      
-     IDE.EDITOR.typeTextIntoEditor(0, "test test test");
-      
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);     
-      
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME_1, false);
+
+      IDE.EDITOR.typeTextIntoEditor(0, "test test test");
+
+      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      
+
       saveAsUsingToolbarButton(FILE_NAME_2);
-      
+
       IDE.EDITOR.checkCodeEditorOpened(0);
-      
+
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" +FOLDER_NAME);
+         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+            + "/" + FOLDER_NAME);
       }
       catch (IOException e)
       {

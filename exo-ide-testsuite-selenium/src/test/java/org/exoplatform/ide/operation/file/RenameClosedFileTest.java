@@ -80,11 +80,13 @@ public class RenameClosedFileTest extends BaseTest
    public void testRenameClosedFile() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      
 
       /*
        * 1. Refresh test folder and select file
        */
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
 
       /*

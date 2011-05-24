@@ -563,6 +563,7 @@ public class Editor extends AbstractTestModule
    public void pressEnter()
    {
       selenium().keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyUp("//body[@class='editbox']", "\\13");
    }
 
    /**
