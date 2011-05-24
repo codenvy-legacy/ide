@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Messages;
@@ -75,7 +76,10 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
    public void onInitializeServices(InitializeServicesEvent event)
    {
       CodeMirrorConfiguration phpCodeMirrorConfiguration = new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
-         "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" // code styles
+         "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']",// code styles
+         true, // can be outlined
+         true, // can be autocompleted
+         new PhpParser() // exoplatform code parser
       );
       
       IDE.getInstance().addEditor(

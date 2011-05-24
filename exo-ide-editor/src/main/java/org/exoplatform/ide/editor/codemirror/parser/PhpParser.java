@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.codemirror.parser;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -40,6 +41,8 @@ public class PhpParser extends CodeMirrorParserImpl
 
    String currentContentMimeType;
 
+   private HashMap<TokenType, LinkedList<String>> variables = new HashMap<TokenType, LinkedList<String>>();
+   
    private Stack<Node> nodeStack = new Stack<Node>();
    
    /**
@@ -53,6 +56,12 @@ public class PhpParser extends CodeMirrorParserImpl
       super.init();
       currentContentMimeType = MimeType.TEXT_HTML;    
       nodeStack.clear();
+      enclosers.clear();
+      
+      // initialize variable lists
+      variables.put(TokenType.PHP_TAG, new LinkedList<String>());
+      variables.put(TokenType.CLASS, new LinkedList<String>());       
+      variables.put(TokenType.METHOD, new LinkedList<String>()); 
    }   
 
    @Override
@@ -104,13 +113,21 @@ public class PhpParser extends CodeMirrorParserImpl
          {
             addSubToken(currentToken, newToken);
             currentToken = newToken;
+            enclosers.push(TokenType.CLASS);
          }
          
-         // recognize function declaration like "public static function a(arg1, ...) .. {"         
+         // recognize function/method declaration like "public static function a(arg1, ...) .. {"         
          else if ((newToken = isFunctionDeclaration((Stack<Node>) nodeStack.clone(), lineNumber, currentToken.getType())) != null)
          {
             addSubToken(currentToken, newToken);
             currentToken = newToken;
+            enclosers.push(newToken.getType());
+         }
+
+         // recognize first variable and property declaration like "$a = True;", "private $p1;" or "private $p1 = 2;"
+         else if ((newToken = isFirstVariableDefinition((Stack<Node>) nodeStack.clone(), currentToken)) != null)
+         {
+            addSubToken(lineNumber, currentToken, newToken);
          }
          
          // recognize open brace "{"
@@ -135,8 +152,6 @@ public class PhpParser extends CodeMirrorParserImpl
                enclosers.pop();
             }
          }
-         
-         
       }
       
       if (javaScriptNode == null || Node.getName(javaScriptNode).equals("BR")) 
@@ -145,6 +160,112 @@ public class PhpParser extends CodeMirrorParserImpl
       }
          
       return parseLine(Node.getNext(javaScriptNode), lineNumber, currentToken, false);  // call itself
+   }
+
+   /**
+    * Recognize first field declaration like "$a;", "private $a", 
+    * or field or variable declaration like "$a = 1;", "private $a = True". 
+    * @param non-safe node stack
+    * @param currentToken
+    * @return
+    */
+   private TokenBeenImpl isFirstVariableDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   {
+      TokenBeenImpl newToken = null;
+      
+      if (nodeStack.size() > 1)
+      {         
+         if (isSemicolonNode(nodeStack.pop()))
+         {            
+            
+            // recognize field declaration like "$a;"
+            if (TokenType.CLASS.equals(currentToken.getType())
+                     && isVariable(nodeStack.lastElement().getType())
+                     && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())                        
+                )
+            {  
+                 newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.FIELD, 0, MimeType.APPLICATION_PHP);  
+            }
+            
+            // recognize field or variable declaration like "$a = 1;"
+            else if (nodeStack.size() > 2)
+            {
+            
+               Node lastNode = nodeStack.pop();
+               
+               String possibleElementType = null;
+               // test if this is string value
+               if (isString(lastNode.getType()))
+               {
+                  possibleElementType = "String";
+               }
+   
+               // recognize variable assignment statement like "$a ="               
+               if (nodeStack.size() > 1)
+               {
+                  if (isEqualSign(nodeStack.get(nodeStack.size() - 1))
+                           && isVariable(nodeStack.get(nodeStack.size() - 2).getType())
+                           && isFirstVariableOccurance(currentToken, nodeStack.get(nodeStack.size() - 2).getContent())
+                     )
+                  {   
+                     String variableName = nodeStack.get(nodeStack.size() - 2).getContent();
+                     
+                     newToken = new TokenBeenImpl(variableName, TokenType.VARIABLE, 0, MimeType.APPLICATION_PHP);
+                     newToken.setElementType("Object");
+   
+                     if (possibleElementType != null)
+                     {
+                        newToken.setElementType(possibleElementType);
+                     }
+                     
+                     // replace VARIABLE on FIELD
+                     if (TokenType.CLASS.equals(currentToken.getType()))
+                     {
+                        newToken.setType(TokenType.FIELD);
+                     }
+                  }
+               }
+            }
+
+            if (newToken != null)
+            {
+               updateVariableList(currentToken, newToken.getName());
+               
+               // remove "$a =" nodes
+               nodeStack.setSize(nodeStack.size() - 2);
+   
+               checkModifiers(newToken, nodeStack);
+            }
+         } 
+      }
+            
+      return newToken;
+   }
+
+   private boolean isFirstVariableOccurance(TokenBeenImpl currentToken, String variableName)
+   {
+      // find variable in the toplevel local variable list
+      if (TokenType.PHP_TAG.equals(currentToken.getType()))
+      {
+         if (variables.get(TokenType.PHP_TAG).contains(variableName))
+               return false;
+      }
+
+      // find variable in the method's local variable list
+      if (TokenType.METHOD.equals(currentToken.getType()))
+      {
+         if (variables.get(TokenType.METHOD).contains(variableName))
+            return false;
+      }       
+      
+      // find variable in the class's local variable list
+      else if (TokenType.CLASS.equals(currentToken.getType()))
+      {
+         if (variables.get(TokenType.CLASS).contains(variableName))
+            return false;
+      }
+      
+      return true;
    }
 
    /**
@@ -196,7 +317,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isOpenBrace(Node node)
    {
-      return "php-punctuation".equals(node.getType()) && "{".equals(node.getContent());
+      return isPunctuation(node) && "{".equals(node.getContent());
    }
 
    /**
@@ -204,7 +325,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isCloseBrace(Node node)
    {
-      return "php-punctuation".equals(node.getType()) && "}".equals(node.getContent());
+      return isPunctuation(node) && "}".equals(node.getContent());
    }
    
    /**
@@ -297,7 +418,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private Modifier isModifier(Node lastNode)
    {
-      if ("php-keyword".equals(lastNode.getType())
+      if (isKeyword(lastNode)
              && ("abstract".equals(lastNode.getContent())
                  || "final".equals(lastNode.getContent())
                  || "private".equals(lastNode.getContent())
@@ -461,7 +582,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isVariable(String nodeType)
    {
-      return "php-variable".equals(nodeType);
+      return (nodeType != null) && (nodeType.startsWith("php-variable"));
    }
 
    /**
@@ -471,7 +592,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isOpenBracket(Node node)
    {
-      return "php-punctuation".equals(node.getType()) && "(".equals(node.getContent());
+      return isPunctuation(node) && "(".equals(node.getContent());
    }
 
    /**
@@ -481,7 +602,12 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isCloseBracket(Node node)
    {
-      return "php-punctuation".equals(node.getType()) && ")".equals(node.getContent());
+      return isPunctuation(node) && ")".equals(node.getContent());
+   }
+
+   private boolean isPunctuation(Node node)
+   {
+      return (node.getType() != null) && (node.getType().startsWith("php-punctuation"));
    }
 
    /**
@@ -491,17 +617,22 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isWhitespace(Node node)
    {
-      return "whitespace".equals(node.getType());
+      return (node.getType() != null) && (node.getType().startsWith("whitespace"));
    }
    
    private boolean isClassNode(Node node)
    {
-      return "php-keyword".equals(node.getType()) && "class".equals(node.getContent());
+      return isKeyword(node) && "class".equals(node.getContent());
    }
 
    private boolean isFunctionNode(Node node)
    {
-      return "php-keyword".equals(node.getType()) && "function".equals(node.getContent());
+      return isKeyword(node) && "function".equals(node.getContent());
+   }
+
+   private boolean isKeyword(Node node)
+   {
+      return (node.getType() != null) && (node.getType().startsWith("php-keyword"));
    }
    
    /**
@@ -511,7 +642,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isPhpElementName(String nodeType)
    {
-      return "php-t_string".equals(nodeType);
+      return (nodeType != null) && (nodeType.startsWith("php-t_string"));
    }
      
    /**
@@ -533,20 +664,19 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private void addSubToken(TokenBeenImpl currentToken, TokenBeenImpl newToken)
    {
-      enclosers.push(newToken.getType());
       currentToken.addSubToken(newToken);
       nodeStack.clear();
    }
    
    /**
-    * Set lastLineNumber property, clear nodeStack
+    * Clear context variables, set lastLineNumber property, clear nodeStack
     * @param lineNumber
     * @param currentToken
     * @return parent token of currentToken
     */
    private TokenBeenImpl closeToken(int lineNumber, TokenBeenImpl currentToken)
    {
-//      clearVariables(currentToken.getType());
+      clearVariables(currentToken.getType());
       currentToken.setLastLineNumber(lineNumber);
       nodeStack.clear();
       return currentToken.getParentToken();
@@ -560,5 +690,76 @@ public class PhpParser extends CodeMirrorParserImpl
    private boolean isSyntaxError(String nodeType)
    {
       return (nodeType != null) && nodeType.endsWith(" syntax-error");
+   }
+   
+   /**
+    * Recognize ";" node
+    * @param node
+    * @return
+    */
+   private boolean isSemicolonNode(Node node)
+   {
+      return (node.getType() != null) && (node.getType().startsWith("php-punctuation")) && ";".equals(node.getContent());
+   };
+   
+   /**
+    * @param type
+    * @return true if this is string value
+    */
+   private boolean isString(String nodeType)
+   {
+      return (nodeType != null) && nodeType.startsWith("php-string");
+   }
+   
+   /**
+    * Recognize "=" operation
+    * @param node
+    * @return
+    */
+   private boolean isEqualSign(Node node)
+   {
+      return "php-operator".equals(node.getType()) && "=".equals(node.getContent());
+   }
+   
+   /**
+    * Clear variable list within the method, or module, or class
+    * @param currentTokenType
+    */
+   private void clearVariables(TokenType tokenType)
+   {
+      switch (tokenType)
+      {
+         case CLASS:
+            variables.get(TokenType.CLASS).clear();
+            
+            break;
+            
+         case METHOD:
+            variables.get(TokenType.METHOD).clear();
+            break;
+            
+         default:
+      }
+   }
+   
+   private void updateVariableList(TokenBeenImpl currentToken, String variableName)
+   {
+      // update toplevel variable list
+      if (TokenType.PHP_TAG.equals(currentToken.getType()))
+      {
+         variables.get(TokenType.PHP_TAG).add(variableName);
+      }
+      
+      // update method's local variable list
+      else if (TokenType.METHOD.equals(currentToken.getType()))
+      {
+         variables.get(TokenType.METHOD).add(variableName);
+      }
+      
+      // update class's local variable list
+      else if (TokenType.CLASS.equals(currentToken.getType()))
+      {
+         variables.get(TokenType.CLASS).add(variableName);
+      }
    }
 }
