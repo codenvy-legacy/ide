@@ -23,7 +23,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,200 +33,232 @@ import org.exoplatform.ide.Utils;
 
 public class FindReplace extends AbstractTestModule
 {
+   private final static String FIND_REPLACE_VIEW_ID = "ideFindReplaceTextView";
 
+   private final static String FIND_REPLACE_VIEW_LOCATOR = "//div[@view-id='" + FIND_REPLACE_VIEW_ID + "']";
+
+   private final static String FIND_BUTTON_ID = "ideFindReplaceTextFormFindButton";
+
+   private final static String REPLACE_BUTTON_ID = "ideFindReplaceTextFormReplaceButton";
+
+   private final static String REPLACE_FIND_BUTTON_ID = "ideFindReplaceTextFormReplaceFindButton";
+
+   private final static String REPLACE_ALL_BUTTON_ID = "ideFindReplaceTextFormReplaceAllButton";
+
+   private final static String CANCEL_BUTTON_ID = "ideFindReplaceTextFormCancelButton";
+
+   private final static String FIND_FIELD_ID = "ideFindReplaceTextFormFindField";
+
+   private final static String REPLACE_FIELD_ID = "ideFindReplaceTextFormReplaceField";
+
+   private final static String CASE_SENSITIVE_FIELD_ID = "ideFindReplaceTextFormCaseSensitiveField";
+
+   private final static String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
+
+   private final static String NOT_FOUND_RESULT = "String not found.";
+
+   public void waitForFindReplaceViewOpened() throws Exception
+   {
+      waitForElementPresent(FIND_REPLACE_VIEW_LOCATOR);
+   }
+
+   public void waitForFindReplaceViewClosed() throws Exception
+   {
+      waitForElementNotPresent(FIND_REPLACE_VIEW_LOCATOR);
+   }
+
+   /**
+    * Check the state of the find replace form: all elements to be present and the state of buttons.
+    */
    public void checkFindReplaceFormAppeared()
    {
-      assertTrue(selenium().isElementPresent("//div[@view-id='ideFindReplaceTextView']"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormFindButton"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceButton"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceFindButton"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceAllButton"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormCancelButton"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormFindField"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormReplaceField"));
-      assertTrue(selenium().isElementPresent("ideFindReplaceTextFormCaseSensitiveField"));
+      assertTrue(selenium().isElementPresent(FIND_REPLACE_VIEW_LOCATOR));
+      assertTrue(selenium().isElementPresent(FIND_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(REPLACE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(REPLACE_FIND_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(REPLACE_ALL_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(FIND_FIELD_ID));
+      assertTrue(selenium().isElementPresent(REPLACE_FIELD_ID));
+      assertTrue(selenium().isElementPresent(CASE_SENSITIVE_FIELD_ID));
       // Check buttons state
 
-      checkStateButtonReplaseFind(false);
-      checkStateButtonReplaseFind(false);
-      checkStateButtonReplace(false);
-      checkStateButtonReplaceAll(false);
-      checkStateButtonCancel(true);
-
-      //      assertFalse(isButtonEnabled("Find"));
-      //      assertFalse(isButtonEnabled("Replace/Find"));
-      //      assertFalse(isButtonEnabled("Replace"));
-      //      assertFalse(isButtonEnabled("Replace All"));
-      //      assertTrue(isButtonEnabled("Cancel"));
+      assertFalse(isReplaceButtonEnabled());
+      assertFalse(isReplaceFindButtonEnabled());
+      assertFalse(isFindButtonEnabled());
+      assertFalse(isReplaceAllButtonEnabled());
+      assertTrue(isCancelButtonEnabled());
    }
 
    /**
-    * check state Find button. If param true button enabled. If param false button disabled. 
-    * @param state
+    * Get enabled state of cancel button.
+    * 
+    * @return boolean enabled state of cancel button
     */
-   public void checkStateButtonEnabledFind(boolean state)
+   public boolean isCancelButtonEnabled()
    {
-      if (state == false)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='false']"));
-      }
-      else if (state == true)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormFindButton' and @button-enabled='true']"));
-      }
-      else
-      {
-         assertTrue(false);
-      }
-
+      String attribute = selenium().getAttribute("//div[@id=\"" + CANCEL_BUTTON_ID + "\"]/@button-enabled");
+      return Boolean.parseBoolean(attribute);
    }
 
    /**
-    * check state Replace button. If param true button enabled. If param false button disabled. 
-    * @param state
+    * Get enabled state of find button.
+    * 
+    * @return boolean enabled state of find button
     */
-   public void checkStateButtonReplace(boolean state)
+   public boolean isFindButtonEnabled()
    {
-      if (state == false)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceButton' and @button-enabled='false']"));
-      }
-      else if (state == true)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceButton' and @button-enabled='true']"));
-      }
-      else
-      {
-         assertTrue(false);
-      }
+      String attribute = selenium().getAttribute("//div[@id=\"" + FIND_BUTTON_ID + "\"]/@button-enabled");
+      return Boolean.parseBoolean(attribute);
    }
 
    /**
-    * check state Find button. If param true button enabled. If param false button disabled. 
-    * @param state
+    * Get enabled state of replace button.
+    * 
+    * @return boolean enabled state of replace button
     */
-   public void checkStateButtonReplaseFind(boolean state)
+   public boolean isReplaceButtonEnabled()
    {
-      if (state == false)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceFindButton' and @button-enabled='false']"));
-      }
-      else if (state == true)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceFindButton' and @button-enabled='true']"));
-      }
-      else
-      {
-         assertTrue(false);
-      }
-
+      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_BUTTON_ID + "\"]/@button-enabled");
+      return Boolean.parseBoolean(attribute);
    }
 
    /**
-    * check state ReplaceAll button. If param true button enabled. If param false button disabled. 
-    * @param state
+    * Get enabled state of replace/find button.
+    * 
+    * @return boolean enabled state of replace/find button
     */
-   public void checkStateButtonReplaceAll(boolean state)
+   public boolean isReplaceFindButtonEnabled()
    {
-      if (state == false)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceAllButton' and @button-enabled='false']"));
-      }
-      else if (state == true)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormReplaceAllButton' and @button-enabled='true']"));
-      }
-      else
-      {
-         assertTrue(false);
-      }
-
+      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_FIND_BUTTON_ID + "\"]/@button-enabled");
+      return Boolean.parseBoolean(attribute);
    }
 
    /**
-    * check state Cancel button. If param true button enabled. If param false button disabled. 
-    * @param state
+    * Get enabled state of replace all button.
+    * 
+    * @return boolean enabled state of replace all button
     */
-   public void checkStateButtonCancel(boolean state)
+   public boolean isReplaceAllButtonEnabled()
    {
-      if (state == false)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormCancelButton' and @button-enabled='false']"));
-      }
-      else if (state == true)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//div[@id='ideFindReplaceTextFormCancelButton' and @button-enabled='true']"));
-      }
-      else
-      {
-         assertTrue(false);
-      }
-
+      String attribute = selenium().getAttribute("//div[@id=\"" + REPLACE_ALL_BUTTON_ID + "\"]/@button-enabled");
+      return Boolean.parseBoolean(attribute);
    }
 
-   public void typeWordInFindField(String type) throws InterruptedException
+   public void typeInFindField(String text) throws InterruptedException
    {
-      selenium().typeKeys("ideFindReplaceTextFormFindField", type);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+
+      if (text == "")
+      {
+         selenium().click(FIND_FIELD_ID);
+         selenium().controlKeyDown();
+         selenium().keyPress(FIND_FIELD_ID, "A");
+         selenium().controlKeyUp();
+         selenium().keyDown(FIND_FIELD_ID, "\b");
+         selenium().keyUp(FIND_FIELD_ID, "\b");
+         return;
+      }
+      selenium().type(FIND_FIELD_ID, "");
+      selenium().typeKeys(FIND_FIELD_ID, text);
+   }
+
+   public void typeInReplaceField(String text) throws InterruptedException
+   {
+      if (text == "")
+      {
+         selenium().click(REPLACE_FIELD_ID);
+         selenium().controlKeyDown();
+         selenium().keyPress(REPLACE_FIELD_ID, "A");
+         selenium().controlKeyUp();
+         selenium().keyPress(REPLACE_FIELD_ID, "\b");
+         return;
+      }
+      selenium().type(REPLACE_FIELD_ID, "");
+      selenium().typeKeys(REPLACE_FIELD_ID, text);
    }
 
    public void checkFindFieldNotEmptyState()
    {
-      checkStateButtonEnabledFind(true);
-      checkStateButtonReplaceAll(true);
-      checkStateButtonReplace(false);
-      checkStateButtonReplaseFind(false);
-      checkStateButtonCancel(true);
+      assertTrue(isFindButtonEnabled());
+      assertTrue(isReplaceAllButtonEnabled());
+      assertFalse(isReplaceButtonEnabled());
+      assertFalse(isReplaceFindButtonEnabled());
+      assertTrue(isCancelButtonEnabled());
+   }
+   
+   public void checkFindFieldEmptyState()
+   {
+      assertTrue(isFindButtonEnabled());
+      assertTrue(isReplaceAllButtonEnabled());
+      assertFalse(isReplaceButtonEnabled());
+      assertFalse(isReplaceFindButtonEnabled());
+      assertTrue(isCancelButtonEnabled());
    }
 
-   public void clickOnFindButton() throws InterruptedException
+   public void clickFindButton() throws InterruptedException
    {
-      selenium().click("ideFindReplaceTextFormFindButton");
+      selenium().click(FIND_BUTTON_ID);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+
+   public void clickReplaceButton() throws InterruptedException
+   {
+      selenium().click(REPLACE_BUTTON_ID);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+
+   public void clickReplaceFindButton() throws InterruptedException
+   {
+      selenium().click(REPLACE_FIND_BUTTON_ID);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+
+   public void clickReplaceAllButton() throws InterruptedException
+   {
+      selenium().click(REPLACE_ALL_BUTTON_ID);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+   }
+
+   public void clickCancelButton() throws InterruptedException
+   {
+      selenium().click(CANCEL_BUTTON_ID);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
    /**
     * Check buttons when text is found.
     */
-   private void checkTextFoundState()
+   public void checkStateWhenTextFound()
    {
-      checkStateButtonEnabledFind(true);
-      checkStateButtonReplaceAll(true);
-      checkStateButtonReplace(true);
-      checkStateButtonReplaseFind(true);
-      checkStateButtonCancel(true);
+      assertTrue(isFindButtonEnabled());
+      assertTrue(isReplaceAllButtonEnabled());
+      assertTrue(isReplaceButtonEnabled());
+      assertTrue(isReplaceFindButtonEnabled());
+      assertTrue(isCancelButtonEnabled());
+      assertEquals("", getFindResultText());
    }
-      
-      
-      //      assertTrue(isButtonEnabled("Find"));
-      //      assertTrue(isButtonEnabled("Replace All"));
-      //      assertTrue(isButtonEnabled("Replace"));
-      //      assertTrue(isButtonEnabled("Replace/Find"));
-      //      assertTrue(isButtonEnabled("Cancel"));
-      //      assertEquals("", getFindResultText());
-   
 
    /**
     * Check buttons when text is not found.
     */
-   private void checkTextNotFoundState()
+   public void checkStateWhenTextNotFound()
    {
-      //      assertTrue(isButtonEnabled("Find"));
-      //      assertTrue(isButtonEnabled("Replace All"));
-      //      assertFalse(isButtonEnabled("Replace"));
-      //      assertFalse(isButtonEnabled("Replace/Find"));
-      //      assertTrue(isButtonEnabled("Cancel"));
-      //      assertEquals(NOT_FOUND, getFindResultText());
+      assertTrue(isFindButtonEnabled());
+      assertTrue(isReplaceAllButtonEnabled());
+      assertFalse(isReplaceButtonEnabled());
+      assertFalse(isReplaceFindButtonEnabled());
+      assertTrue(isCancelButtonEnabled());
+      assertEquals(NOT_FOUND_RESULT, getFindResultText());
+   }
+
+   public String getFindResultText()
+   {
+      return selenium().getText(FIND_RESULT_LABEL_ID);
+   }
+
+   public void clickCaseSensitiveField()
+   {
+      selenium().click(CASE_SENSITIVE_FIELD_ID);
    }
 
 }

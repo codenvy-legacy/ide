@@ -28,7 +28,6 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -42,8 +41,6 @@ import org.junit.Test;
  */
 public class FindReplaceTest extends BaseTest
 {
-   private final String NOT_FOUND = "String not found.";
-
    private final static String FILE_CONTENT_FOR_FIND =
       "IDEall gadget operates with repository folders and files, which are displayed in Workspace Panel,\n"
          + " which - represents repository folders and files in the tree view, and Content Panels,\n"
@@ -134,130 +131,102 @@ public class FindReplaceTest extends BaseTest
    @Test
    public void testFindTextInFile() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.selectRootItem();
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
 
+      //Open file
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME_TXT);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_TXT, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
-      Thread.sleep(TestConstants.SLEEP);
+
+      IDE.FINDREPLACE.waitForFindReplaceViewOpened();
       IDE.FINDREPLACE.checkFindReplaceFormAppeared();
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       // Type what to find
-
-      IDE.FINDREPLACE.typeWordInFindField(wordToFind1);
+      IDE.FINDREPLACE.typeInFindField(wordToFind1);
       IDE.FINDREPLACE.checkFindFieldNotEmptyState();
 
       // Step 5. Put cursor at the start of the document and click "Find"
       // button.
       selenium.fireEvent("ideFindReplaceTextFormFindField", "blur");
       selenium.fireEvent("//", "focus");
-      Thread.sleep(TestConstants.SLEEP);
 
       // Make system mouse click on editor space
       IDE.EDITOR.clickOnEditor();
-      IDE.FINDREPLACE.clickOnFindButton();
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals(wordToFind1, getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
 
-      //TODO method don't work see issue IDE-767
-      //      checkTextFoundState();
-      //
-      // Step 6
-      IDE.FINDREPLACE.clickOnFindButton();
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      Thread.sleep(TestConstants.SLEEP);
-      assertEquals("Gadget", getSelectedText());
-      //      // Check buttons enabled
-      IDE.selectMainFrame();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
-      //TODO method don't work see issue IDE-767
-      //      checkTextFoundState();
+      // Step 6
+      IDE.FINDREPLACE.clickFindButton();
+      IDE.EDITOR.selectIFrameWithEditor(0);
+      assertEquals("Gadget", getSelectedText());
+      // Check buttons enabled
+      IDE.selectMainFrame();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 7
-      IDE.FINDREPLACE.clickOnFindButton();
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals("Gadget", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      //TODO method don't work see issue IDE-767
-      // checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 8
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals("Gadget", getSelectedText());
       IDE.selectMainFrame();
 
       // Check buttons enabled
-      //      checkTextNotFoundState();
-      //
-      //      // Step 9
-      //      selenium
-      //         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox");
-      //     IDE.EDITOR.clickOnEditor();
-      //
-      //      IDE.FINDREPLACE.clickOnFindButton();
-      //      Thread.sleep(TestConstants.SLEEP);
-      //     IDE.EDITOR.selectIFrameWithEditor(0);
-      //      assertEquals(wordToFind1, getSelectedText());
-      //      // Check buttons enabled
-      //      IDE.selectMainFrame();
-      //      checkTextFoundState();
-      //
-      //      // Step 10
-      //      IDE.FINDREPLACE.clickOnFindButton();
-      //      Thread.sleep(TestConstants.SLEEP);
-      //     IDE.EDITOR.selectIFrameWithEditor(0);
-      //      assertEquals(wordToFind1, getSelectedText());
-      //      IDE.selectMainFrame();
-      //      // Check buttons enabled
-      //      checkTextNotFoundState();
-      //
-      //      // Step 11
-      //      selenium
-      //         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element");
-      //      selenium
-      //         .focus("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element");
-      //
-      //      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      //      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      //      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
-      //      Thread.sleep(TestConstants.SLEEP_SHORT);
-      //      checkFindFieldEmptyState();
-      //
-      //      // Step 12
-      //      selenium
-      //         .type(
-      //            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-      //            "");
-      //      selenium
-      //         .typeKeys(
-      //            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-      //            wordToFind2);
-      //      checkFindFieldNotEmptyState();
-      //      IDE.FINDREPLACE.clickOnFindButton();
-      //      checkTextNotFoundState();
-      //
-      //      // Step 13 Close "Find/Replace" dialog window.
-      //      selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
-      //     IDE.EDITOR.closeTab(0);
+      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+
+      // Step 9
+      IDE.FINDREPLACE.clickCaseSensitiveField();
+      IDE.EDITOR.clickOnEditor();
+
+      IDE.FINDREPLACE.clickFindButton();
+
+      IDE.EDITOR.selectIFrameWithEditor(0);
+      assertEquals(wordToFind1, getSelectedText());
+      // Check buttons enabled
+      IDE.selectMainFrame();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
+
+      // Step 10
+      IDE.FINDREPLACE.clickFindButton();
+      IDE.EDITOR.selectIFrameWithEditor(0);
+      assertEquals(wordToFind1, getSelectedText());
+      IDE.selectMainFrame();
+      // Check buttons enabled
+      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+
+      // Step 11
+      IDE.FINDREPLACE.typeInFindField("");
+      IDE.FINDREPLACE.checkFindFieldEmptyState();
+
+      // Step 12
+      IDE.FINDREPLACE.typeInFindField(wordToFind2);
+      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
+      IDE.FINDREPLACE.clickFindButton();
+      IDE.FINDREPLACE.checkStateWhenTextNotFound();
+
+      // Step 13 Close "Find/Replace" dialog window.
+      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.waitForFindReplaceViewClosed();
+      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -265,438 +234,240 @@ public class FindReplaceTest extends BaseTest
     * 
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testReplaceTextInFile() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME, false);
+      IDE.EDITOR.waitTabPresent(0);
       // Step 3 Click "Find/Replace" button on toolbar
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
-      Thread.sleep(TestConstants.SLEEP);
-      checkFindReplaceFormAppeared();
+
+      IDE.FINDREPLACE.waitForFindReplaceViewOpened();
+      IDE.FINDREPLACE.checkFindReplaceFormAppeared();
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       // Step 4
       // Print "panel" to find field
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            wordToFind3);
-      checkFindFieldNotEmptyState();
+      IDE.FINDREPLACE.typeInFindField(wordToFind3);
+      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
       // Check "Case sensitive"
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox");
-
+      IDE.FINDREPLACE.clickCaseSensitiveField();
       // Put cursor at the start of file and click "Find" button.
       IDE.EDITOR.clickOnEditor();
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals(wordToFind3, getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 5 Print "form" to replace field and click replace.
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element",
-            wordToReplace);
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.typeInReplaceField(wordToReplace);
+      IDE.FINDREPLACE.clickReplaceButton();
 
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      // TODO check replaced
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
+      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      System.out.println("FindReplaceTest.testReplaceTextInFile()" + content);
+      assertTrue(content.contains(wordToReplace));
 
       // Step 6 Click find button
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals(wordToFind3, getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 7 Clear replace field and click replace button
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-      selenium
-         .focus("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
-
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
+      IDE.FINDREPLACE.typeInReplaceField("");
+      IDE.FINDREPLACE.clickReplaceButton();
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
 
       // Step 8
       // Make "Case sensitive" not checked
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox");
+      IDE.FINDREPLACE.clickCaseSensitiveField();
       // Text in find field is "panel", print "box" in replace field.
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element",
-            "box");
+      IDE.FINDREPLACE.typeInReplaceField("box");
 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element");
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "panel");
+      IDE.FINDREPLACE.typeInFindField("panel");
 
       // Put cursor at the start of file and click "Find" button.
       IDE.EDITOR.clickOnEditor();
       // Step 9 Click find button
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 10 Click "Replace/Find" button
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
+      IDE.FINDREPLACE.clickReplaceFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
       // Step 11 Click "Replace/Find" again
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
+      IDE.FINDREPLACE.clickReplaceFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
       assertEquals("Panel", getSelectedText());
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       // Step 12 Put cursor position at the start of document and make
       // "Case sensitive" not checked, text in find field is "panel", make
       // replace field empty.
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-      selenium
-         .focus("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
+      IDE.FINDREPLACE.typeInReplaceField("");
 
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       // Put cursor at the start of file and click "Find" button.
       IDE.EDITOR.clickOnEditor();
       // Step 13 Click "Replace All" button.
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceAllButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickReplaceAllButton();
 
       // Step 14
       IDE.EDITOR.clickOnEditor();
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       // Check buttons enabled
-      checkTextNotFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextNotFound();
 
       // Step 15 Close "Find/Replace" dialog window.
-      selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.waitForFindReplaceViewClosed();
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
     * IDE-166:Find/Replace in few documents
     * @throws Exception 
     */
-   //@Test
+   @Test
    public void testfindReplaceInFewFiles() throws Exception
    {
       selenium.refresh();
-      selenium.waitForPageToLoad(String.valueOf(TestConstants.IDE_LOAD_PERIOD));
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      //      Thread.sleep(TestConstants.SLEEP);
 
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_HTML, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_1, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(FILE_NAME_GROOVY_2, false);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME_HTML);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_HTML, false);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_GROOVY_1, false);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_GROOVY_2, false);
+      IDE.EDITOR.waitTabPresent(2);
 
       //Create first rest fileIDE.EDITOR.with content
       IDE.EDITOR.selectTab(0);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.FIND_REPLACE);
-      Thread.sleep(TestConstants.SLEEP);
-      checkFindReplaceFormAppeared();
+      IDE.FINDREPLACE.waitForFindReplaceViewOpened();
+      IDE.FINDREPLACE.checkFindReplaceFormAppeared();
+
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, false);
 
       //Step 4 Print "html" word in "Find" field, put cursot at start of document and click "Find"
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "html");
-      checkFindFieldNotEmptyState();
+      IDE.FINDREPLACE.typeInFindField("html");
+      IDE.FINDREPLACE.checkFindFieldNotEmptyState();
       // Make system mouse click on editor space
       IDE.EDITOR.clickOnEditor();
 
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("html", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       //Step 5 Go to "rest2.groovy" file.
       IDE.EDITOR.selectTab(2);
       //Step 6 Click "Find" button.
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(2);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextNotFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextNotFound();
 
       //Step 7 Go to "rest.groovy" file.
       IDE.EDITOR.selectTab(1);
       //Step 8 
       //Print "import" in find field
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element");
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "import");
+      IDE.FINDREPLACE.typeInFindField("import");
       //Print "define" in replace field, 
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element",
-            "define");
+      IDE.FINDREPLACE.typeInReplaceField("define");
       //Put cursor at start and click on "Find" button
       IDE.EDITOR.clickOnEditor();
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(1);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("import", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       //Step 9 Go to "rest2.groovy" file.
       IDE.EDITOR.selectTab(2);
       //Step 10 
       //Print "java" into the find field
-      selenium
-         .click("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element");
-      selenium
-         .type(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "");
-      selenium
-         .typeKeys(
-            "scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element",
-            "java");
+      IDE.FINDREPLACE.typeInFindField("java");
 
       //Put cursor at start and click on "Find" button
       IDE.EDITOR.clickOnEditor();
-      IDE.FINDREPLACE.clickOnFindButton();
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.FINDREPLACE.clickFindButton();
       IDE.EDITOR.selectIFrameWithEditor(2);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("java", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       //Step 11 Click "Replace" button
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceButton\"]");
+      IDE.FINDREPLACE.clickReplaceButton();
       //TODO check replaced text
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
+      assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
+      assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
 
       //Step 12 Go to "test.html" file
       IDE.EDITOR.selectTab(0);
       //Step 13 Click "Replace/Find"
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
+      IDE.FINDREPLACE.clickReplaceFindButton();
       //TODO check replaced
-      Thread.sleep(TestConstants.SLEEP);
       IDE.EDITOR.selectIFrameWithEditor(0);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertEquals("html", getSelectedText());
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
       //Step 14 Click "Replace/Find" again
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]");
+      IDE.FINDREPLACE.clickReplaceFindButton();
       //TODO Check replaced
-      Thread.sleep(TestConstants.SLEEP);
       // Check buttons enabled
       IDE.selectMainFrame();
-      checkTextNotFoundState();
+      IDE.FINDREPLACE.checkStateWhenTextFound();
 
       //Step 15 Go to "rest.groovy" file
       IDE.EDITOR.selectTab(1);
       //Step 16 Click "Replace All" button
-      selenium.click("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceAllButton\"]");
+      IDE.FINDREPLACE.clickReplaceAllButton();
       //TODO check replaced
       // Step 17 Close "Find/Replace" dialog window.
-      selenium.click("scLocator=//Window[ID=\"ideFindReplaceForm\"]/closeButton");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+      IDE.FINDREPLACE.clickCancelButton();
+      IDE.FINDREPLACE.waitForFindReplaceViewClosed();
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE, true);
-   }
-
-   /**
-    * Check buttons when text is found.
-    */
-   private void checkTextFoundState()
-   {
-      assertTrue(isButtonEnabled("Find"));
-      assertTrue(isButtonEnabled("Replace All"));
-      assertTrue(isButtonEnabled("Replace"));
-      assertTrue(isButtonEnabled("Replace/Find"));
-      assertTrue(isButtonEnabled("Cancel"));
-      assertEquals("", getFindResultText());
-   }
-
-   /**
-    * Check buttons when text is not found.
-    */
-   private void checkTextNotFoundState()
-   {
-      assertTrue(isButtonEnabled("Find"));
-      assertTrue(isButtonEnabled("Replace All"));
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      assertTrue(isButtonEnabled("Cancel"));
-      assertEquals(NOT_FOUND, getFindResultText());
-   }
-
-   /**
-    * Check the buttons state when "Find" field is empty.
-    */
-   private void checkFindFieldEmptyState()
-   {
-      assertFalse(isButtonEnabled("Find"));
-      assertFalse(isButtonEnabled("Replace All"));
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      assertTrue(isButtonEnabled("Cancel"));
-   }
-
-   //--------------------------------------------------
-   /**
-    * Check the buttons state when "Find" field is not empty.
-    */
-   private void checkFindFieldNotEmptyState()
-   {
-      assertTrue(isButtonEnabled("Find"));
-      assertTrue(isButtonEnabled("Replace All"));
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      assertTrue(isButtonEnabled("Cancel"));
-   }
-   //--------------------------------------------------
-
-
-   
-   //--------------------------------------------------
-   private void checkFindReplaceFormAppeared()
-   {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideFindReplaceTextFormFindButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceFindButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceAllButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideFindReplaceTextFormReplaceButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideFindReplaceTextFormCancelButton\"]"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormFindField]/element"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormReplaceField]/element"));
-      assertTrue(selenium
-         .isElementPresent("scLocator=//DynamicForm[ID=\"ideFindReplaceTextFormDynamicForm\"]/item[name=ideFindReplaceTextFormCaseSensitiveField]/textbox"));
-      // Check buttons state
-      assertFalse(isButtonEnabled("Find"));
-      assertFalse(isButtonEnabled("Replace/Find"));
-      assertFalse(isButtonEnabled("Replace"));
-      assertFalse(isButtonEnabled("Replace All"));
-      assertTrue(isButtonEnabled("Cancel"));
-   }
-
-   //--------------------------------------------------
-
-   //--------------------------------------------------   
-   private boolean isButtonEnabled(String title)
-   {
-      if (selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='" + title + "']"))
-      {
-         return true;
-      }
-      else if (selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleOver' and text()='" + title
-         + "']"))
-      {
-         return true;
-      }
-      else if (selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='"
-         + title + "']"))
-      {
-         return false;
-      }
-      return false;
-   }
-
-   //--------------------------------------------------
-   /**
-    * Get the find result's text.
-    * 
-    * @return {@link String} find result text
-    */
-   private String getFindResultText()
-   {
-      return selenium.getText("scLocator=//Label[ID=\"ideFindReplaceTextFormFindResult\"]");
    }
 
    @AfterClass
