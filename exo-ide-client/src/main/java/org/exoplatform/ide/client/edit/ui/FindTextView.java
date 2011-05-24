@@ -48,7 +48,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int DEFAULT_WIDTH = 470;
 
-   private static final int DEFAULT_HEIGHT = 220;
+   private static final int DEFAULT_HEIGHT = 230;
 
    private final int BUTTON_WIDTH = 100;
 
@@ -331,6 +331,15 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    public HasValue<String> getResultLabel()
    {
       return findResultLabel;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.edit.FindTextPresenter.Display#focusInFindField()
+    */
+   @Override
+   public void focusInFindField()
+   {
+      findField.focusInItem();
    }
 
 }

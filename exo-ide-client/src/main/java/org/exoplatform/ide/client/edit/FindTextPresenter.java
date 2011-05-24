@@ -89,6 +89,8 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       void enableReplaceButton(boolean isEnable);
 
       void enableReplaceAllButton(boolean isEnable);
+      
+      void focusInFindField();
 
    }
 
@@ -111,6 +113,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(FindTextEvent.TYPE, this);
+      eventBus.addHandler(EditorTextFoundEvent.TYPE, this);
    }
 
    /**
@@ -165,6 +168,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
+         display.focusInFindField();
       }
 
    }
