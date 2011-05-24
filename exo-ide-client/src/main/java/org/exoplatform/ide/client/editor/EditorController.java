@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -42,8 +42,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLine
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
@@ -54,6 +52,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
@@ -94,12 +94,12 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -110,7 +110,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
    EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler,
    EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
-   EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorFindAndReplaceTextHandler,
+   EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
    ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler
 {
@@ -157,7 +157,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
 
       handlerRegistrations.put(EditorFindTextEvent.TYPE, eventBus.addHandler(EditorFindTextEvent.TYPE, this));
       handlerRegistrations.put(EditorReplaceTextEvent.TYPE, eventBus.addHandler(EditorReplaceTextEvent.TYPE, this));
-      handlerRegistrations.put(EditorFindAndReplaceTextEvent.TYPE, eventBus.addHandler(EditorFindAndReplaceTextEvent.TYPE, this));
+      handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE, eventBus.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
 
       handlerRegistrations.put(EditorContentChangedEvent.TYPE, eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
       handlerRegistrations.put(EditorCursorActivityEvent.TYPE, eventBus.addHandler(EditorCursorActivityEvent.TYPE, this));
@@ -668,16 +668,15 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       }
    }
 
+   
    /**
-    * @see org.exoplatform.ide.client.editor.event.EditorFindReplaceTextHandler#onEditorFindAndReplaceText(org.exoplatform.ide.client.editor.event.EditorFindReplaceTextEvent)
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
     */
-   public void onEditorFindAndReplaceText(EditorFindAndReplaceTextEvent event)
+   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
    {
       Editor editor = editors.get(event.getPath());
+      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
       boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
-      if (isFound)
-         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-
       eventBus.fireEvent(new EditorTextFoundEvent(isFound));
    }
 

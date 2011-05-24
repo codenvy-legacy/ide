@@ -18,26 +18,6 @@
  */
 package org.exoplatform.ide.client.edit;
 
-import java.util.HashMap;
-
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.edit.event.FindTextEvent;
-import org.exoplatform.ide.client.edit.event.FindTextHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindAndReplaceTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -47,6 +27,26 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.edit.event.FindTextEvent;
+import org.exoplatform.ide.client.edit.event.FindTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -287,7 +287,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
       String path = activeFile.getHref();
-      eventBus.fireEvent(new EditorFindAndReplaceTextEvent(findText, replaceText, caseSensitive, path));
+      eventBus.fireEvent(new EditorReplaceAndFindTextEvent(findText, replaceText, caseSensitive, path));
    }
 
    private void doReplaceAll()

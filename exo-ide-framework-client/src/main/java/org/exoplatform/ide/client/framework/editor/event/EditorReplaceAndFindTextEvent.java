@@ -27,11 +27,11 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id:   ${date} ${time}
  *
  */
-public class EditorFindAndReplaceTextEvent extends GwtEvent<EditorFindAndReplaceTextHandler>
+public class EditorReplaceAndFindTextEvent extends GwtEvent<EditorReplaceAndFindTextHandler>
 {
    
-   public static final GwtEvent.Type<EditorFindAndReplaceTextHandler> TYPE =
-      new GwtEvent.Type<EditorFindAndReplaceTextHandler>();
+   public static final GwtEvent.Type<EditorReplaceAndFindTextHandler> TYPE =
+      new GwtEvent.Type<EditorReplaceAndFindTextHandler>();
 
    private String findText;
 
@@ -47,7 +47,7 @@ public class EditorFindAndReplaceTextEvent extends GwtEvent<EditorFindAndReplace
     * @param caseSensitive is case sensitive
     * @param path path to file
     */
-   public EditorFindAndReplaceTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
+   public EditorReplaceAndFindTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
    {
       this.findText = findText;
       this.replaceText = replaceText;
@@ -59,16 +59,16 @@ public class EditorFindAndReplaceTextEvent extends GwtEvent<EditorFindAndReplace
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(EditorFindAndReplaceTextHandler handler)
+   protected void dispatch(EditorReplaceAndFindTextHandler handler)
    {
-      handler.onEditorFindAndReplaceText(this);
+      handler.onEditorReplaceAndFindText(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFindAndReplaceTextHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorReplaceAndFindTextHandler> getAssociatedType()
    {
       return TYPE;
    }
