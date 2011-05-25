@@ -130,6 +130,20 @@ public class PhpParser extends CodeMirrorParserImpl
             addSubToken(lineNumber, currentToken, newToken);
          }
          
+         // recognize class constant definition like "const MYCONST = 'some string';" within the class, not within the method of class
+         else if ((TokenType.CLASS == currentToken.getType())
+                  && ((newToken = isFirstClassConstantDefinition((Stack<Node>)nodeStack.clone(), currentToken)) != null)
+                  )
+         {
+            addSubToken(lineNumber, currentToken, newToken);
+         }
+         
+         // recognize constant definition like 'define(A, "example", false)'
+         else if ((newToken = isFirstConstantDefinition((Stack<Node>) nodeStack.clone(), currentToken)) != null)
+         {
+            addSubToken(lineNumber, currentToken, newToken);
+         }         
+         
          // recognize open brace "{"
          else if (isOpenBrace(nodeStack.lastElement()))
          {
@@ -163,6 +177,83 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
+    * Recognize class constant definition like "const MYCONST = 'some string';"
+    * @param non-safe nodeStack
+    * @param currentToken
+    * @return
+    */
+   private TokenBeenImpl isFirstClassConstantDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   {
+      TokenBeenImpl newToken = null;
+      
+      if (nodeStack.size() > 4)
+      {         
+         if (isSemicolonNode(nodeStack.pop()))
+         {            
+            String possibleElementType = analyseTypeOfAssignment((Stack<Node>) nodeStack.clone());
+
+            // pass nodes before "="
+            while ((nodeStack.size() > 2) 
+                     && !isEqualSign(nodeStack.lastElement())) {
+               nodeStack.pop();
+            }
+            
+            // recognize variable assignment statement like "const MYCONST ="               
+            if (nodeStack.size() > 2)
+            {
+               if (isEqualSign(nodeStack.pop())
+                        && isClassConstantName(nodeStack) 
+                        && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())
+                  )
+               {   
+                  String constName = nodeStack.lastElement().getContent();
+                  
+                  newToken = new TokenBeenImpl(constName, TokenType.CLASS_CONSTANT, 0, MimeType.APPLICATION_PHP);
+
+                  updateVariableList(currentToken, constName);
+                  
+                  if (possibleElementType != null)
+                  {
+                     newToken.setElementType(possibleElementType);
+                  }
+               }
+            }
+         } 
+      }
+            
+      return newToken;      
+   }
+
+
+   /**
+    * Recognize class constant statement like "const MYCONST".
+    * @param safe nodeStack
+    * @return
+    */
+   private boolean isClassConstantName(Stack<Node> nodeStack)
+   {
+      return (nodeStack.size() > 1)
+             && isPhpElementName(nodeStack.get(nodeStack.size() - 1).getType())
+             && isConstKeyword(nodeStack.get(nodeStack.size() - 2));
+   }
+
+   /**
+    * Recognize "const" keyword.
+    * @param node
+    * @return
+    */
+   private boolean isConstKeyword(Node node)
+   {
+      return isKeyword(node) && "const".equals(node.getContent());
+   }
+
+   private TokenBeenImpl isFirstConstantDefinition(Stack<Node> clone, TokenBeenImpl currentToken)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+   
+   /**
     * Recognize first field declaration like "$a;", "private $a", 
     * or field or variable declaration like "$a = 1;", "private $a = True". 
     * @param non-safe node stack
@@ -189,17 +280,15 @@ public class PhpParser extends CodeMirrorParserImpl
             
             // recognize field or variable declaration like "$a = 1;"
             else if (nodeStack.size() > 2)
-            {
-            
-               Node lastNode = nodeStack.pop();
-               
-               String possibleElementType = null;
-               // test if this is string value
-               if (isString(lastNode.getType()))
-               {
-                  possibleElementType = "String";
-               }
+            {              
+               String possibleElementType = analyseTypeOfAssignment((Stack<Node>) nodeStack.clone());
    
+               // pass nodes before "="
+               while ((nodeStack.size() > 1) 
+                        && !isEqualSign(nodeStack.lastElement())) {
+                  nodeStack.pop();
+               }
+               
                // recognize variable assignment statement like "$a ="               
                if (nodeStack.size() > 1)
                {
@@ -239,6 +328,180 @@ public class PhpParser extends CodeMirrorParserImpl
       }
             
       return newToken;
+   }
+
+   /**
+    * Trying to predict possible type of variable by analysing of assignment from nodeStack
+    * @param non-safe nodeStack
+    * @return
+    */
+   private String analyseTypeOfAssignment(Stack<Node> nodeStack)
+   {
+      Node lastNode = nodeStack.lastElement();
+      
+      String possibleClassName = null;
+      
+      if (isString(lastNode.getType()))
+      {
+         return "String";
+      }
+
+      else if (isBoolean(lastNode))
+      {
+         return "Boolean";   
+      }
+
+      else if (isInteger(lastNode))
+      {
+         return "Integer";   
+      }
+
+      else if (isDouble(lastNode))
+      {
+         return "Double";   
+      }
+
+      else if (isNull(lastNode))
+      {
+         return "Null";   
+      }
+
+      else if (isArray((Stack<Node>) nodeStack.clone()))
+      {
+         return "Array";   
+      }
+
+      else if ((possibleClassName = isObject((Stack<Node>) nodeStack.clone())) != null)
+      {
+         return possibleClassName;   
+      }
+      
+      return null;
+   }
+
+   /**
+    * Recognize "True", "false", "TRUE" etc... case-insensitive variants of boolean keywords.
+    * @param node
+    * @return
+    */   
+   private boolean isBoolean(Node node)
+   {
+      return ("php-predefined-constant".startsWith(node.getType()) 
+               || "php-atom".startsWith(node.getType()) 
+               || "php-t_string".startsWith(node.getType())
+             )
+             && ("true".equalsIgnoreCase(node.getContent())
+               || "false".equalsIgnoreCase(node.getContent().toLowerCase())
+             );
+   }
+
+   /**
+    * Recognize double numbers like "-123.45" or "1.2e-3"
+    * @param node
+    * @return
+    */
+   private boolean isDouble(Node node)
+   {
+      return "php-atom".startsWith(node.getType()) 
+             && (node.getContent().toLowerCase().matches("^[-+]?[0-9]+[.]([0-9]+)?|[.][0-9]+$")  // matches a floating point number like "-123.45" with optional integer as well as optional fractional part.
+                  || node.getContent().toLowerCase().matches("^[-+]?([0-9]+?[.])?[0-9]+([e][-+]?[0-9]+)?$")  // matches a number in scientific notation like "1.2e-3". The mantissa can be an integer or floating point number with optional integer part. The exponent is optional.
+                );
+   }
+
+   /**
+    * Recognize integer type like "-1" or hexadecimal integer numbers like "0xa34"
+    * @param node
+    * @return
+    */
+   private boolean isInteger(Node node)
+   {
+      return "php-atom".startsWith(node.getType()) 
+             && (node.getContent().toLowerCase().matches("^[-+]?[0-9]+$")  // integer like "-1"
+                 || node.getContent().toLowerCase().matches("^0x[0-9a-f]+$")  // hexadecimal integer like "0xa34" 
+             );
+   }
+   
+   /**
+    * Recognize "NULL", "Null", "null" etc... case-insensitive variants of keyword null.
+    * @param node
+    * @return
+    */
+   private boolean isNull(Node node)
+   {
+      return ("php-predefined-constant".startsWith(node.getType()) 
+               || "php-atom".startsWith(node.getType()) 
+               || "php-t_string".startsWith(node.getType())
+             ) 
+             && "null".equalsIgnoreCase(node.getContent());
+   }
+
+   /**
+    * Recognize array creation like "array(1=>1, 'a'=>2, 3)" 
+    * @param non-safe nodeStack
+    * @return
+    */
+   private boolean isArray(Stack<Node> nodeStack)
+   {
+      if (nodeStack.size() > 2 && isCloseBracket(nodeStack.pop()))
+      {
+         // pass nodes before code like "array(" 
+         while ((nodeStack.size() > 2) && !isOpenBracket(nodeStack.pop()))
+         {
+         }
+         
+         // test if there is array keyword         
+         if (isArrayKeyword(nodeStack.lastElement()))
+         {
+            return true;
+         }
+      }
+      
+      return false;
+   }
+
+   /**
+    * Recognize "array" keyword.
+    * @param node
+    * @return
+    */
+   private boolean isArrayKeyword(Node node)
+   {
+      return "php-reserved-language-construct".startsWith(node.getType()) && "array".equals(node.getContent());
+   }
+
+   /**
+    * Recognize object creation like "new Data($a, null)"
+    * @param nodeStack
+    * @return
+    */
+   private String isObject(Stack<Node> nodeStack)
+   {
+      if (nodeStack.size() > 3 && isCloseBracket(nodeStack.pop()))
+      {
+         // pass nodes before code like "new Data(" 
+         while ((nodeStack.size() > 2) && !isOpenBracket(nodeStack.pop()))
+         {
+         }
+         
+         // get class name before "new" keyword like "new Data"         
+         if (isPhpElementName(nodeStack.lastElement().getType())
+              && isNewKeyword(nodeStack.get(nodeStack.size() - 2)))
+         {
+            return nodeStack.lastElement().getContent();
+         }
+      }
+      
+      return null;
+   }
+
+   /**
+    * Recognize "new" keyword.
+    * @param node
+    * @return
+    */
+   private boolean isNewKeyword(Node node)
+   {
+      return isKeyword(node) && "new".equals(node.getContent());
    }
 
    private boolean isFirstVariableOccurance(TokenBeenImpl currentToken, String variableName)
