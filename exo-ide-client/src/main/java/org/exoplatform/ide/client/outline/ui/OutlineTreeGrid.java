@@ -338,6 +338,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
             else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType())
                      || MimeType.APPLICATION_PHP.equals(token.getMimeType())
+                     || MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
                     )
             {
                return PUBLIC_METHOD_ICON;
@@ -370,7 +371,9 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
                return PROPERTY_ICON;
             }
             
-            else if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
+            else if (MimeType.APPLICATION_PHP.equals(token.getMimeType())
+                     || MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
+                    )
             {
                return PUBLIC_FIELD_ICON;
             }
