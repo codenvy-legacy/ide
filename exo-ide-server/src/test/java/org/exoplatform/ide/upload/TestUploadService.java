@@ -70,7 +70,7 @@ public class TestUploadService extends BaseTest
    private CredentialsImpl credentials;
 
    private RepositoryService repositoryService;
-   
+
    private MultivaluedMap<String, String> headers;
 
    @Before
@@ -83,19 +83,19 @@ public class TestUploadService extends BaseTest
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      
+
       SessionProviderService sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
       assertNotNull(sessionProviderService);
-      
+
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-      
+
       headers = new MultivaluedMapImpl();
       headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
-      
+
    }
-   
+
    @Test
    public void testUploadFile() throws Exception
    {
@@ -105,27 +105,28 @@ public class TestUploadService extends BaseTest
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
-      
-      String source = getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", 
-         WS_URL + "test.txt");
-      
+
+      String source =
+         getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", WS_URL
+            + "test.txt");
+
       w.write(source);
       w.flush();
-      
+
       byte[] data = out.toByteArray();
-      
+
       HttpServletRequest httpRequest =
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
-            data, null, ctx);
-      
+      ContainerResponse response =
+         launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
+
       assertEquals(HTTPStatus.CREATED, response.getStatus());
-      
+
       session.refresh(false);
    }
-   
+
    @Test
    public void testUploadFileCantFindFileError() throws Exception
    {
@@ -135,30 +136,30 @@ public class TestUploadService extends BaseTest
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
-      
+
       String source = getRequestSource("", WS_URL + "test.txt");
-      
+
       w.write(source);
       w.flush();
-      
+
       byte[] data = out.toByteArray();
-      
+
       HttpServletRequest httpRequest =
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
-            data, null, ctx);
-      
+      ContainerResponse response =
+         launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
+
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
-      
+
       assertTrue(response.getEntity() instanceof String);
-      
+
       assertEquals("<error>Can't find input file</error>", (String)response.getEntity());
-      
+
       session.refresh(false);
    }
-   
+
    @Test
    public void testUploadFileIncorrectPathError() throws Exception
    {
@@ -168,29 +169,30 @@ public class TestUploadService extends BaseTest
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
-      
-      String source = getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", 
-         "http://localhost/ide-webdav-jcr/db1/dev-monit/test.txt");
-      
+
+      String source =
+         getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n",
+            "http://localhost/ide-webdav-jcr/db1/dev-monit/test.txt");
+
       w.write(source);
       w.flush();
-      
+
       byte[] data = out.toByteArray();
-      
+
       HttpServletRequest httpRequest =
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
-            data, null, ctx);
-      
+      ContainerResponse response =
+         launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
+
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
       assertTrue(response.getEntity() instanceof String);
       assertEquals("<error>Invalid path, where to upload file</error>", (String)response.getEntity());
-      
+
       session.refresh(false);
    }
-   
+
    @Test
    public void testUploadFileInternalError() throws Exception
    {
@@ -200,54 +202,45 @@ public class TestUploadService extends BaseTest
 
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
-      
-      String invalidSource = "-------abcdef\r\n" 
-         +"Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n"
-         +"Content-Type: text/plain\r\n\r\ntest file content\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n"
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n" 
-         +"-------abcdef--\r\n";
-      
+
+      String invalidSource =
+         "-------abcdef\r\n" + "Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n"
+            + "Content-Type: text/plain\r\n\r\ntest file content\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n" + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n"
+            + "-------abcdef--\r\n";
+
       w.write(invalidSource);
       w.flush();
-      
+
       byte[] data = out.toByteArray();
-      
+
       HttpServletRequest httpRequest =
          new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
-      ContainerResponse response = launcher.service("POST", "/ide/upload", "http://localhost", headers,
-            data, null, ctx);
-      
+      ContainerResponse response =
+         launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
+
       assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
-      
+
       session.refresh(false);
    }
-   
+
    private String getRequestSource(String fileContentDisposition, String location)
    {
-      String source = "-------abcdef\r\n" 
-         + fileContentDisposition
-         +"Content-Type: text/plain\r\n\r\ntest file content\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"location\"\r\n\r\n"
-         + location + "\r\n"
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n" 
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n"
-         +"-------abcdef\r\n"
-         +"Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n" 
-         +"-------abcdef--\r\n";
-      
+      String source =
+         "-------abcdef\r\n" + fileContentDisposition + "Content-Type: text/plain\r\n\r\ntest file content\r\n"
+            + "-------abcdef\r\n" + "Content-Disposition: form-data; name=\"location\"\r\n\r\n" + location + "\r\n"
+            + "-------abcdef\r\n" + "Content-Disposition: form-data; name=\"mimeType\"\r\n\r\ntext/plain\r\n"
+            + "-------abcdef\r\n" + "Content-Disposition: form-data; name=\"nodeType\"\r\n\r\n\r\n"
+            + "-------abcdef\r\n"
+            + "Content-Disposition: form-data; name=\"jcrContentNodeType\"\r\n\r\nnt:resource\r\n"
+            + "-------abcdef--\r\n";
+
       return source;
    }
-   
 
    @After
    protected void tearDown() throws Exception
@@ -265,7 +258,7 @@ public class TestUploadService extends BaseTest
                for (NodeIterator children = rootNode.getNodes(); children.hasNext();)
                {
                   Node node = children.nextNode();
-                  if (!node.getPath().startsWith("/jcr:system"))
+                  if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:registry"))
                   {
                      node.remove();
                   }

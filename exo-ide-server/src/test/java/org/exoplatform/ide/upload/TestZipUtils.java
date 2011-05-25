@@ -244,7 +244,7 @@ public class TestZipUtils extends BaseTest
                for (NodeIterator children = rootNode.getNodes(); children.hasNext();)
                {
                   Node node = children.nextNode();
-                  if (!node.getPath().startsWith("/jcr:system"))
+                  if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:registry"))
                   {
                      node.remove();
                   }

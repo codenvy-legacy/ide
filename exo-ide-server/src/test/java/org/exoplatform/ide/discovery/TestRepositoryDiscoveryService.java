@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.discovery;
 
-import static org.junit.Assert.assertEquals;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.rest.RequestHandler;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
@@ -31,7 +29,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import javax.jcr.Repository;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**

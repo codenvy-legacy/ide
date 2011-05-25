@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
-
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.download.DownloadContentService;
@@ -33,6 +27,13 @@ import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.registry.RegistryService;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
@@ -45,34 +46,40 @@ public class IDEServiceApplication extends Application
 {
 
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
-   
+
    private final Set<Object> objects = new HashSet<Object>();
-   
-   public IDEServiceApplication(RepositoryService repositoryService, InitParams initParams)
+
+   public IDEServiceApplication(RepositoryService repositoryService, RegistryService registryService,
+      ThreadLocalSessionProviderService sessionProviderService, InitParams initParams)
    {
       String entryPoint = null;
       boolean discoverable = true;
-      if (initParams != null) 
+      if (initParams != null)
       {
-         if (initParams.getValueParam("entry-point") != null) {
-            entryPoint = initParams.getValueParam("entry-point").getValue();
+         if (initParams.getValueParam("defaultEntryPoint") != null)
+         {
+            entryPoint = initParams.getValueParam("defaultEntryPoint").getValue();
          }
 
-         if (initParams.getValueParam("discoverable") != null) {
+         if (initParams.getValueParam("discoverable") != null)
+         {
             discoverable = Boolean.parseBoolean(initParams.getValueParam("discoverable").getValue());
          }
       }
-      
+
       objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
-      
+
+      objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,
+         discoverable));
+
       classes.add(LoopbackContentService.class);
       classes.add(DownloadContentService.class);
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
       classes.add(TemplatesRestService.class);
    }
-   
+
    /**
     * @see javax.ws.rs.core.Application#getClasses()
     */
@@ -81,7 +88,7 @@ public class IDEServiceApplication extends Application
    {
       return classes;
    }
-   
+
    /**
     * @see javax.ws.rs.core.Application#getSingletons()
     */
