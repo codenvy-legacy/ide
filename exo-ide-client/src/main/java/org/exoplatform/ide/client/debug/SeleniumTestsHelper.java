@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.client.debug;
 
+import java.util.List;
+
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, EditorOpenFileHandler
+public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, EditorOpenFileHandler, ItemsSelectedHandler
 {
 
    /**
@@ -53,16 +58,22 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
     * Widget for storing the URL of active file in editor.
     */
    private Widget editorActiveFile;
-   
+
    /**
     * Widget for storing the URL of previous active file.
     */
    private Widget editorPreviousActiveFile;
 
+   /**
+    * Widget for storing the URL of selected file in Workspace or Search Result views. 
+    */
+   private Widget selectedFile;
+
    public SeleniumTestsHelper(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorOpenFileEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
 
       debugPanel = new AbsolutePanel();
       debugPanel.getElement().setId("debug-panel");
@@ -74,6 +85,7 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
       editorActiveFile = createDebugEntry("debug-editor-active-file-url");
       editorActiveFile.addDomHandler(editorActiveFileClickHandler, ClickEvent.getType());
       editorPreviousActiveFile = createDebugEntry("debug-editor-previous-active-file-url");
+      selectedFile = createDebugEntry("debug-navigation-selected-file");
    }
 
    private ClickHandler editorActiveFileClickHandler = new ClickHandler()
@@ -102,7 +114,7 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
    {
       String previousActiveFile = editorActiveFile.getElement().getInnerText();
       editorPreviousActiveFile.getElement().setInnerText(previousActiveFile);
-      
+
       if (event.getFile() == null)
       {
          editorActiveFile.getElement().setInnerText("");
@@ -117,6 +129,20 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       editorActiveFile.getElement().setInnerText("");
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      List<Item> selectedItems = event.getSelectedItems();
+      if (selectedItems.size() == 0)
+      {
+         selectedFile.getElement().setInnerText("");
+      }
+      else
+      {
+         selectedFile.getElement().setInnerText(selectedItems.get(0).getHref());
+      }
    }
 
 }

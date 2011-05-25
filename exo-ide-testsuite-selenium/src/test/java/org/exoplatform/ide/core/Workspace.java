@@ -41,7 +41,7 @@ public class Workspace extends AbstractTestModule
    public void selectItem(String itemHref) throws Exception
    {
       selenium().clickAt(getItemId(itemHref), "0");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      waitForElementTextEquals("debug-navigation-selected-file", itemHref);
    }
 
    /**

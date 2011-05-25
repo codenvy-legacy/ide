@@ -24,6 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -49,6 +50,20 @@ public class SaveAllFilesTest extends BaseTest
 
    private static final String NEW_TEXT = "Untitled file.txt";
 
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_2);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @AfterClass
    public static void tearDown()
    {
@@ -71,76 +86,64 @@ public class SaveAllFilesTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       /*
-       * 1. Create Folder1 and Folder2 in root folder. 
-       */
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(FOLDER_1);
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(FOLDER_2);
-
-      /*
-       * 2. Create file "Saved File.xml" in "Folder1"
+       * 1. Create file "Saved File.xml" in "Folder1"
        */
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      saveAsUsingToolbarButton(SAVED_XML);
+      IDE.NAVIGATION.saveFileAs(SAVED_XML);
       IDE.EDITOR.closeFile(0);
 
       /*
-       * 3. Create "Saved File.groovy" in "Folder2"
+       * 2. Create "Saved File.groovy" in "Folder2"
        */
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
-      saveAsByTopMenu(SAVED_GROOVY);
+      IDE.NAVIGATION.saveFileAs(SAVED_GROOVY);
       IDE.EDITOR.closeFile(0);
 
       /*
-       * 4. Save All command must be disabled
+       * 3. Save All command must be disabled
        */
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
 
       /*
-       * 5. Create HTML file from template "Empty HTML" and does not save it.
+       * 4. Create HTML file from template "Empty HTML" and does not save it.
        */
       IDE.TEMPLATES.createFileFromTemplate("Empty HTML", NEW_HTML);
 
       /*
-       * 6. Create TEXT from from template "Empty TEXT" and does not save it.
+       * 5. Create TEXT from from template "Empty TEXT" and does not save it.
        */
       IDE.TEMPLATES.createFileFromTemplate("Empty TEXT", NEW_TEXT);
 
       /*
-       * 7. Save All command must be disabled
+       * 6. Save All command must be disabled
        */
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
 
       /*
-       * 8. Open and change content of files "Saved File.xml" and "Saved File.groovy"
+       * 7. Open and change content of files "Saved File.xml" and "Saved File.groovy"
        */
-      //IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_1 + "/");
-      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + SAVED_XML, false);
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + SAVED_XML);
       IDE.EDITOR.typeTextIntoEditor(2, "<root>admin</root>");
 
-      //IDE.NAVIGATION.selectAndRefreshFolder(WS_URL + FOLDER_2 + "/");
-      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_2 + "/" + SAVED_GROOVY, false);
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_2 + "/" + SAVED_GROOVY);
       IDE.EDITOR.typeTextIntoEditor(3, "changed content of file");
 
       /*
-       * 9. Save All command must be enabled.
+       * 8. Save All command must be enabled.
        */
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, true);
 
       /*
-       * 10. Run command "Save All" from menu 
+       * 9. Run command "Save All" from menu 
        */
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
+      IDE.NAVIGATION.saveAllFiles();
 
       /*
-       * 11. Files "Untitled file.html" and  "Untitled file.txt" must have marker "*" in editor
+       * 10. Files "Untitled file.html" and  "Untitled file.txt" must have marker "*" in editor
        *      Files "Saved File.xml" and "Saved File.groovy" must be without marker "*" in editor.
        */
       assertEquals(NEW_HTML + " *", IDE.EDITOR.getTabTitle(0));
@@ -149,29 +152,29 @@ public class SaveAllFilesTest extends BaseTest
       assertEquals(SAVED_GROOVY, IDE.EDITOR.getTabTitle(3));
 
       /*
-       * 12. Save "Untitled file.html" to Folder1
+       * 11. Save "Untitled file.html" to Folder1
        */
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.EDITOR.selectTab(0);
-      saveAsUsingToolbarButton(NEW_HTML);
+      IDE.NAVIGATION.saveFileAs(NEW_HTML);
       IDE.EDITOR.closeFile(0);
 
       /*
-       * 13. Save "Untitled file.txt" to Folder2
+       * 12. Save "Untitled file.txt" to Folder2
        */
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_2 + "/");
       IDE.EDITOR.selectTab(0);
-      saveAsUsingToolbarButton(NEW_TEXT);
+      IDE.NAVIGATION.saveFileAs(NEW_TEXT);
       IDE.EDITOR.closeFile(0);
 
       /*
-       * 14. Open "Untitled file.groovy" and "Untitled file.xml"
+       * 13. Open "Untitled file.groovy" and "Untitled file.xml"
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + NEW_HTML);
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_2 + "/" + NEW_TEXT);
 
       /*
-       * 15. Now Save As command must be disabled and all files in editor must does not have a marker "*"
+       * 14. Now Save As command must be disabled and all files in editor must does not have a marker "*"
        */
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL, false);
       assertEquals(SAVED_XML, IDE.EDITOR.getTabTitle(0));

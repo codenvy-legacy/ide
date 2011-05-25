@@ -103,8 +103,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       IDE.EDITOR.waitTabPresent(0);
 
       //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
       checkPreviewNodeTypeButton(true, true);
       checkDeployNodeTypeButton(true, true);
 
@@ -157,8 +157,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //Wait while buttons will be enabled
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
@@ -194,8 +194,8 @@ public class DeployNodeTypeTest extends AbstractDataObjectTest
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);

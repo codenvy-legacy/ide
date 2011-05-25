@@ -358,6 +358,10 @@ public abstract class BaseTest
     * @param name file name
     * @throws Exception
     */
+   @Deprecated
+   /*
+    * Use IDE.NAVIGATION.saveFileAs(...) against this method
+    */
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
       IDE.TOOLBAR.runCommand("Save As...");
@@ -371,6 +375,10 @@ public abstract class BaseTest
     * 
     * @param name file name to save
     * @throws Exception
+    */
+   @Deprecated
+   /*
+    * Use IDE.NAVIGATION.saveFileAs(...) against this method
     */
    protected void saveAsByTopMenu(String name) throws Exception
    {
@@ -520,7 +528,7 @@ public abstract class BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuCommand);
       IDE.EDITOR.waitTabPresent(tabIndex);
 
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true, TestConstants.EDITOR_OPEN_PERIOD * 2);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
       saveAsUsingToolbarButton(fileName);
 
       IDE.EDITOR.closeFile(tabIndex);
@@ -1004,7 +1012,7 @@ public abstract class BaseTest
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
@@ -1016,16 +1024,20 @@ public abstract class BaseTest
     */
    public void waitForElementPresent(String locator) throws Exception
    {
-      for (int second = 0;; second++)
-      {
-         if (second >= TestConstants.WAIT_PERIOD * 20)
-            fail("timeout for element " + locator);
-
-         if (selenium.isElementPresent(locator))
-            break;
-
-         Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
-      }
+      long startTime = System.currentTimeMillis();
+      
+      while (true) {
+         if (selenium.isElementPresent(locator)) {
+            break;            
+         }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT) {
+            fail("timeout for element " + locator);            
+         }
+         
+         Thread.sleep(1);
+      }      
    }
 
    /**

@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.versioning;
 
-import org.exoplatform.common.http.client.ModuleException;
+import java.awt.event.KeyEvent;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -27,9 +28,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -68,11 +66,7 @@ public class ViewVersionHistoryTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -206,7 +200,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
 
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text);
@@ -220,7 +214,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       //Close file:
       IDE.EDITOR.closeFile(0);
@@ -266,7 +260,7 @@ public class ViewVersionHistoryTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
 
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
@@ -277,7 +271,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open again with button
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
 
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text);
@@ -298,7 +292,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open again with button
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
       //Close file
@@ -363,7 +357,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Open version history for second file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(1));
 
@@ -374,7 +368,7 @@ public class ViewVersionHistoryTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
@@ -384,7 +378,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkVersionPanelState(false);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(1));
 
@@ -418,7 +412,7 @@ public class ViewVersionHistoryTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text);
 
@@ -434,11 +428,7 @@ public class ViewVersionHistoryTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

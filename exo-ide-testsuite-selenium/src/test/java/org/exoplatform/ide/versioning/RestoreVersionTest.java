@@ -148,7 +148,7 @@ public class RestoreVersionTest extends BaseTest
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       //View older version button is enabled: 
       IDE.VERSIONS.checkOlderVersionButtonState(true);
@@ -261,7 +261,7 @@ public class RestoreVersionTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       IDE.VERSIONS.checkVersionPanelState(true);
       //View older version button is enabled: 
       IDE.VERSIONS.checkOlderVersionButtonState(true);

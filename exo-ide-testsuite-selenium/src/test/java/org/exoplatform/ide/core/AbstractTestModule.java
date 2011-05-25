@@ -61,7 +61,7 @@ public abstract class AbstractTestModule
          {
             break;
          }
-         
+
          long time = System.currentTimeMillis() - startTime;
          if (time > TestConstants.TIMEOUT)
          {
@@ -70,24 +70,23 @@ public abstract class AbstractTestModule
 
          Thread.sleep(1);
       }
-      
-      
-//      int WAITING_MAX_SECONDS = 10;
-//
-//      for (int second = 0;; second++)
-//      {
-//         if (second >= WAITING_MAX_SECONDS * 10)
-//         {
-//            fail("timeout for element " + locator);
-//         }
-//
-//         if (selenium().isElementPresent(locator))
-//         {
-//            break;
-//         }
-//
-//         Thread.sleep(100);
-//      }
+
+      //      int WAITING_MAX_SECONDS = 10;
+      //
+      //      for (int second = 0;; second++)
+      //      {
+      //         if (second >= WAITING_MAX_SECONDS * 10)
+      //         {
+      //            fail("timeout for element " + locator);
+      //         }
+      //
+      //         if (selenium().isElementPresent(locator))
+      //         {
+      //            break;
+      //         }
+      //
+      //         Thread.sleep(100);
+      //      }
    }
 
    protected void waitForElementTextIsNotEmpty(String locator) throws Exception
@@ -95,7 +94,7 @@ public abstract class AbstractTestModule
       long startTime = System.currentTimeMillis();
       while (true)
       {
-         String text = selenium().getText("debug-editor-active-file-url");
+         String text = selenium().getText(locator);
          if (text != null && !text.isEmpty())
          {
             break;
@@ -105,6 +104,27 @@ public abstract class AbstractTestModule
          if (time > TestConstants.TIMEOUT)
          {
             fail("Timeout in waitEditorFileOpened");
+         }
+
+         Thread.sleep(1);
+      }
+   }
+
+   protected void waitForElementTextEquals(String locator, String text) throws Exception
+   {
+      long startTime = System.currentTimeMillis();
+      while (true)
+      {
+         String existedText = selenium().getText(locator);
+         if (existedText != null && existedText.equals(text))
+         {
+            break;
+         }
+
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("TimeOut");
          }
 
          Thread.sleep(1);
@@ -126,7 +146,7 @@ public abstract class AbstractTestModule
          {
             break;
          }
-         
+
          long time = System.currentTimeMillis() - startTime;
          if (time > TestConstants.TIMEOUT)
          {
@@ -134,24 +154,24 @@ public abstract class AbstractTestModule
          }
 
          Thread.sleep(1);
-      }      
-      
-//      int WAITING_MAX_SECONDS = 10;
-//
-//      for (int second = 0;; second++)
-//      {
-//         if (second >= WAITING_MAX_SECONDS * 10)
-//         {
-//            fail("timeout for element " + locator);
-//         }
-//
-//         if (selenium().isVisible(locator))
-//         {
-//            break;
-//         }
-//
-//         Thread.sleep(100);
-//      }
+      }
+
+      //      int WAITING_MAX_SECONDS = 10;
+      //
+      //      for (int second = 0;; second++)
+      //      {
+      //         if (second >= WAITING_MAX_SECONDS * 10)
+      //         {
+      //            fail("timeout for element " + locator);
+      //         }
+      //
+      //         if (selenium().isVisible(locator))
+      //         {
+      //            break;
+      //         }
+      //
+      //         Thread.sleep(100);
+      //      }
    }
 
    /**
@@ -169,7 +189,7 @@ public abstract class AbstractTestModule
          {
             break;
          }
-         
+
          long time = System.currentTimeMillis() - startTime;
          if (time > TestConstants.TIMEOUT)
          {
@@ -177,24 +197,24 @@ public abstract class AbstractTestModule
          }
 
          Thread.sleep(1);
-      }      
-      
-//      int WAITING_MAX_SECONDS = 10;
-//
-//      for (int second = 0;; second++)
-//      {
-//         if (second >= WAITING_MAX_SECONDS * 10)
-//         {
-//            fail("timeout for element " + locator);
-//         }
-//
-//         if (!selenium().isElementPresent(locator))
-//         {
-//            break;
-//         }
-//
-//         Thread.sleep(100);
-//      }
+      }
+
+      //      int WAITING_MAX_SECONDS = 10;
+      //
+      //      for (int second = 0;; second++)
+      //      {
+      //         if (second >= WAITING_MAX_SECONDS * 10)
+      //         {
+      //            fail("timeout for element " + locator);
+      //         }
+      //
+      //         if (!selenium().isElementPresent(locator))
+      //         {
+      //            break;
+      //         }
+      //
+      //         Thread.sleep(100);
+      //      }
    }
 
    /**
@@ -212,7 +232,7 @@ public abstract class AbstractTestModule
          {
             break;
          }
-         
+
          long time = System.currentTimeMillis() - startTime;
          if (time > TestConstants.TIMEOUT)
          {
@@ -221,23 +241,23 @@ public abstract class AbstractTestModule
 
          Thread.sleep(1);
       }
-      
-//      int WAITING_MAX_SECONDS = 10;
-//
-//      for (int second = 0;; second++)
-//      {
-//         if (second >= WAITING_MAX_SECONDS * 10)
-//         {
-//            fail("timeout for text " + text);
-//         }
-//
-//         if (selenium().isTextPresent(text))
-//         {
-//            break;
-//         }
-//
-//         Thread.sleep(100);
-//      }
+
+      //      int WAITING_MAX_SECONDS = 10;
+      //
+      //      for (int second = 0;; second++)
+      //      {
+      //         if (second >= WAITING_MAX_SECONDS * 10)
+      //         {
+      //            fail("timeout for text " + text);
+      //         }
+      //
+      //         if (selenium().isTextPresent(text))
+      //         {
+      //            break;
+      //         }
+      //
+      //         Thread.sleep(100);
+      //      }
    }
 
    /**
@@ -253,7 +273,7 @@ public abstract class AbstractTestModule
       assertTrue(selenium().isElementPresent(
          "//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
    }
-   
+
    /**
     * Get the state of button (enabled, disabled) by button id.
     * @param buttonId - the id of button
@@ -268,7 +288,7 @@ public abstract class AbstractTestModule
          return false;
       throw new Exception("Can't determine is button enabled or disabled");
    }
-   
+
    /**
     * To check the title of gwt dialog.
     * 
@@ -279,6 +299,5 @@ public abstract class AbstractTestModule
    {
       return "//div[@class='gwt-DialogBox']//div[@class='Caption']/span[text()='" + title + "']";
    }
-
 
 }

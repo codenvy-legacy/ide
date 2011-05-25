@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 
 /**
  * 
@@ -125,7 +126,7 @@ public class Toolbar extends AbstractTestModule
       }
    }
 
-   public void waitForButtonEnabled(String name, boolean enabled, int waitPeriod)
+   public void waitForButtonEnabled(String name, boolean enabled) throws Exception
    {
       String locator = null;
       if (enabled)
@@ -140,13 +141,19 @@ public class Toolbar extends AbstractTestModule
             "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
                + "\"]";
       }
-      for (int second = 0;; second++)
-      {
-         if (second >= waitPeriod)
-            fail("timeout for element " + locator);
-
-         if (selenium().isElementPresent(locator))
+      
+      long startTime = System.currentTimeMillis();
+      while (true) {
+         if (selenium().isElementPresent(locator)) {
             break;
+         }
+         
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT) {
+            fail("timeout for element " + locator);
+         }
+         
+         Thread.sleep(1000);
       }
    }
 

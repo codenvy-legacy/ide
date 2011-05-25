@@ -25,97 +25,90 @@ package org.exoplatform.ide;
  */
 public interface ToolbarCommands
 {
-   public interface Main
-   {
-
-   }
 
    public interface Editor
    {
-      public static final String FIND_REPLACE = "Find/Replace...";
+      String FIND_REPLACE = "Find/Replace...";
 
-      public static final String UNDO = "Undo Typing";
+      String UNDO = "Undo Typing";
 
-      public static final String REDO = "Redo Typing";
+      String REDO = "Redo Typing";
 
-      public static final String LOCK_FILE = "Lock File";
+      String LOCK_FILE = "Lock File";
 
-      public static final String UNLOCK_FILE = "Unlock File";
+      String UNLOCK_FILE = "Unlock File";
    }
 
    public interface File
    {
-      public static final String SAVE = "Save";
+      String SAVE = "Save";
 
-      public static final String SAVE_AS = "Save As...";
+      String SAVE_AS = "Save As...";
+      
+      String DELETE = "Delete Item(s)...";
 
-      public static final String DELETE = "Delete Item(s)...";
+      String REFRESH = "Refresh Selected Folder";
 
-      public static final String REFRESH = "Refresh Selected Folder";
+      String CUT_SELECTED_ITEM = "Cut Selected Item(s)";
 
-      public static final String CUT_SELECTED_ITEM = "Cut Selected Item(s)";
+      String COPY_SELECTED_ITEM = "Copy Selected Item(s)";
 
-      public static final String COPY_SELECTED_ITEM = "Copy Selected Item(s)";
-
-      //      public static final String NEW = "New";
-
-      public static final String SEARCH = "Search...";
+      final String SEARCH = "Search...";
    }
 
    public interface View
    {
-      public static final String SHOW_OUTLINE = "Show Outline";
+      String SHOW_OUTLINE = "Show Outline";
 
-      public static final String HIDE_OUTLINE = "Hide Outline";
+      String HIDE_OUTLINE = "Hide Outline";
 
-      final String SHOW_DOCUMENTATION = "Show Documentation";
+      String SHOW_DOCUMENTATION = "Show Documentation";
 
-      final String HIDE_DOCUMENTATION = "Hide Documentation";
+      String HIDE_DOCUMENTATION = "Hide Documentation";
 
-      public static final String SHOW_PROPERTIES = "Show Properties";
+      String SHOW_PROPERTIES = "Show Properties";
 
-      public static final String VIEW_VERSION_HISTORY = "View Item Version History";
+      String VIEW_VERSION_HISTORY = "View Item Version History";
 
-      public static final String HIDE_VERSION_HISTORY = "Hide Item Version History";
+      String HIDE_VERSION_HISTORY = "Hide Item Version History";
 
-      public static final String VIEW_VERSION = "View Item Version...";
+      String VIEW_VERSION = "View Item Version...";
 
-      public static final String VIEW_NEWER_VERSION = "View Newer Version";
+      String VIEW_NEWER_VERSION = "View Newer Version";
 
-      public static final String VIEW_OLDER_VERSION = "View Older Version";
-
+      String VIEW_OLDER_VERSION = "View Older Version";
    }
 
    public interface Run
    {
-      public static final String SHOW_PREVIEW = "Show Preview";
+      String SHOW_PREVIEW = "Show Preview";
 
-      public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
+      String DEPLOY_GADGET = "Deploy Gadget to GateIn";
 
-      public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
+      String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
 
-      public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
+      String RUN_GROOVY_SERVICE = "Run in Sandbox";
 
-      public static final String VALIDATE_GROOVY_SERVICE = "Validate REST Service";
+      String VALIDATE_GROOVY_SERVICE = "Validate REST Service";
 
-      public static final String DEPLOY_GROOVY_SERVICE = "Deploy REST Service";
+      String DEPLOY_GROOVY_SERVICE = "Deploy REST Service";
 
-      public static final String UNDEPLOY_GROOVY_SERVICE = "Undeploy REST Service";
+      String UNDEPLOY_GROOVY_SERVICE = "Undeploy REST Service";
 
-      public static final String DEPLOY_SANDBOX = "Deploy REST Service to Sandbox";
+      String DEPLOY_SANDBOX = "Deploy REST Service to Sandbox";
 
-      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget to Ecosystem";
+      String DEPLOY_UWA_WIDGET = "Deploy UWA widget to Ecosystem";
 
-      public static final String UNDEPLOY_SANDBOX = "Undeploy REST Service from Sandbox";
+      String UNDEPLOY_SANDBOX = "Undeploy REST Service from Sandbox";
 
-      public static final String SET_AUTOLOAD = "Set REST Service Autoload";
+      String SET_AUTOLOAD = "Set REST Service Autoload";
 
-      public static final String PREVIEW_NODE_TYPE = "Preview node type";
+      String PREVIEW_NODE_TYPE = "Preview node type";
 
-      public static final String DEPLOY_NODE_TYPE = "Deploy node type";
+      String DEPLOY_NODE_TYPE = "Deploy node type";
       
-      public static final String LAUNCH_REST_SERVICE = "Launch REST Service...";
+      String LAUNCH_REST_SERVICE = "Launch REST Service...";
       
-      public static final String UNSET_AUTOLOAD ="Unset REST Service Autoload";
+      String UNSET_AUTOLOAD ="Unset REST Service Autoload";
    }
 }

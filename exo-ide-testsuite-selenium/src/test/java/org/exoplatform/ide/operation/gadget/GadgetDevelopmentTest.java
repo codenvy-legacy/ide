@@ -63,7 +63,7 @@ public class GadgetDevelopmentTest extends BaseTest
    @Test
    public void createGadgetFromTemplate() throws Exception
    {
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
       IDE.WORKSPACE.selectItem(URL);

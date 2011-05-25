@@ -72,7 +72,7 @@ public class OpenHtmlLocalFileTest extends BaseTest
    public void testOpenHtml() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(URL);
 

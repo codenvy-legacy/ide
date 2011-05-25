@@ -20,6 +20,7 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -328,15 +329,82 @@ public class Navigation extends AbstractTestModule
 
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
-   
+
    /**
-    * Saves currently edited file.
+    * Saves current file.
     * 
     * @throws Exception
     */
-   public void saveCurrentFile() throws Exception {
+   public void saveFile() throws Exception
+   {
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      String locator =
+         "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='false' @title='"
+            + ToolbarCommands.File.SAVE + "']";
+      waitForElementPresent(locator);
+   }
+
+   /**
+    * Saves all files.
+    * 
+    * @throws Exception
+    */
+   public void saveAllFiles() throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
+
+      long startTime = System.currentTimeMillis();
+      while (true)
+      {
+         selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + MenuCommands.File.FILE + "']");
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+         String locator =
+            "//div[@class='exo-popupMenuMain']//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='"
+               + MenuCommands.File.SAVE_ALL + "']";
+         boolean saveAllDisabled = selenium().isElementPresent(locator);
+
+         String lockLayerLocator = "//div[@class='exo-lockLayer']";
+         selenium().mouseDown(lockLayerLocator);
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+         if (saveAllDisabled)
+         {
+            break;
+         }
+
+         long time = System.currentTimeMillis() - startTime;
+         if (time > TestConstants.TIMEOUT)
+         {
+            fail("TimeOut!!!");
+         }
+      }
+   }
+
+   /**
+    * Saves file with new name.
+    * 
+    * @param fileName new name of the file
+    * @throws Exception
+    */
+   public void saveFileAs(String fileName) throws Exception
+   {
+      IDE().TOOLBAR.runCommand("Save As...");
+
+      IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
+
+      if (fileName != null)
+      {
+         IDE().ASK_FOR_VALUE_DIALOG.setValue(fileName);
+      }
+
+      IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE().ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
+
+      String locator =
+         "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='false' and @title='"
+            + ToolbarCommands.File.SAVE + "']";
+      waitForElementPresent(locator);
    }
 
    public enum Editor {

@@ -83,7 +83,6 @@ public class PreviewHtmlFileTest extends BaseTest
        * 1. create HTML file
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       /*
        * 2. "Preview" button must be disabled

@@ -138,7 +138,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
    public void testCreateProjectFromTemplate() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       //----- 1 ----------------
       //open create project from template form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);

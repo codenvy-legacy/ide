@@ -26,50 +26,52 @@ package org.exoplatform.ide;
 public interface TestConstants
 {
    
-   public static final int IDE_INITIALIZATION_PERIOD = 3000;
+   int IDE_INITIALIZATION_PERIOD = 3000;
    
-   public static final int REDRAW_PERIOD = 500;
+   int REDRAW_PERIOD = 500;
 
-   public static final int TYPE_DELAY_PERIOD = 50;
+   int TYPE_DELAY_PERIOD = 10;
 
-   public static final int ANIMATION_PERIOD = 10;
+   int ANIMATION_PERIOD = 10;
 
-   public static final int FOLDER_REFRESH_PERIOD = 1000;
+   int FOLDER_REFRESH_PERIOD = 1000;
    
-   public static final int PAGE_LOAD_PERIOD = 2000;
+   int PAGE_LOAD_PERIOD = 2000;
 
-   public static final int EDITOR_OPEN_PERIOD = 2000;
-
-   public static final int IDE_LOAD_PERIOD = 20000;
+   int EDITOR_OPEN_PERIOD = 2000;
    
-   public static final int SLEEP = 3000;
+   int CODEMIRROR_PARSING_PERIOD = 1000;
 
-   public static final int SLEEP_SHORT = 500;
+   int IDE_LOAD_PERIOD = 20000;
+   
+   int SLEEP = 3000;
+
+   int SLEEP_SHORT = 500;
    
    /**
     * Timeout in milliseconds to wait for element present.
     */
-   public static final int TIMEOUT = 10000;
+   int TIMEOUT = 10000;
    
-   /**
-    * Period to wait for element present.
-    */
-   public static final int WAIT_PERIOD = 60;
+//   /**
+//    * Period to wait for element present.
+//    */
+//   int WAIT_PERIOD = 60;
          
    /**
     *Realm for GateIn gatein-domain
     */
-   public static final String REALM_GATEIN_DOMAIN = "exo-domain";
+   String REALM_GATEIN_DOMAIN = "exo-domain";
    
    /**
     * root
     */
-   public static final String USER = "root";
+   String USER = "root";
    
    /**
     * gtn
     */
-   public static final String PASSWD = "gtn";
+   String PASSWD = "gtn";
 
    public interface NodeTypes
    {

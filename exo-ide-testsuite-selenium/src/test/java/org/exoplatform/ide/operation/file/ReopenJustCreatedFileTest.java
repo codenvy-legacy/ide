@@ -58,11 +58,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
       {
          VirtualFileSystemUtils.mkcol(STORAGE_URL);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -75,11 +71,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
       {
          VirtualFileSystemUtils.delete(STORAGE_URL);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

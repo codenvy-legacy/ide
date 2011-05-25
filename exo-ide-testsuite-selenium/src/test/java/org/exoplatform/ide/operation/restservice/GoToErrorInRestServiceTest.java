@@ -300,7 +300,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    @After
    public void afterMethod() throws Exception
    {
-      if (!IDE.EDITOR.isNewFile(0))
+      if (!IDE.EDITOR.isFileContentChanged(0))
       {
          IDE.EDITOR.closeFile(0);
       }

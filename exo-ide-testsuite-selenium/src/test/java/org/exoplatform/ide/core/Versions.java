@@ -66,7 +66,7 @@ public class Versions extends AbstractTestModule
    {
       waitForElementPresent(VERSION_CONTENT_VIEW_LOCATOR);
       waitForElementVisible(VERSION_CONTENT_VIEW_LOCATOR);
-      IDE().TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true, 5000);
+      IDE().TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
    }
 
    /**

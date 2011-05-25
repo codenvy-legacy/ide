@@ -87,7 +87,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    @Test
    public void testOpenFileWithNonDefaultEditor() throws Exception
    {
-   //TODO fix problem in issue IDE-804
+      //TODO fix problem in issue IDE-804
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
 
       /*
@@ -185,7 +185,15 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 18. Close editor
        */
-      IDE.EDITOR.closeFile(0);
+      if (IDE.EDITOR.isFileContentChanged(0))
+      {
+         IDE.EDITOR.closeTabIgnoringChanges(0);
+      }
+      else
+      {
+         IDE.EDITOR.closeFile(0);
+      }
+
    }
 
 }

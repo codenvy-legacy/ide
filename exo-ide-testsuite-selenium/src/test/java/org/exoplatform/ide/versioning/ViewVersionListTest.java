@@ -93,13 +93,13 @@ public class ViewVersionListTest extends BaseTest
       //Edit and save file
      IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
 
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
 
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text);
@@ -157,7 +157,7 @@ public class ViewVersionListTest extends BaseTest
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
       IDE.VERSIONS.checkOlderVersionButtonState(true);
       IDE.VERSIONS.checkNewerVersionButtonState(true);
       IDE.VERSIONS.checkViewVersionListButtonState(true);
@@ -220,7 +220,7 @@ public class ViewVersionListTest extends BaseTest
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
 
       IDE.VERSIONS.checkVersionPanelState(true);
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));

@@ -45,7 +45,7 @@ public class OpenLocalFileTest extends BaseTest
    public void testOpenFileWithoutExtention() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.WORKSPACE.selectItem(WS_URL);
 
       //call Open Local File form

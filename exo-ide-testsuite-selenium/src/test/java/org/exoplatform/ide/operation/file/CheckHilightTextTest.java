@@ -20,9 +20,6 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -93,13 +90,14 @@ public class CheckHilightTextTest extends BaseTest
    @Test
    public void checkXML() throws InterruptedException, Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       
       /*
        *1. Check highlighting XML
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightXML();
       IDE.EDITOR.closeFile(0);
       
@@ -107,6 +105,7 @@ public class CheckHilightTextTest extends BaseTest
        * 2. Check highlighting TXT
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + TXT_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHiligtTXT();
       IDE.EDITOR.closeFile(0);
       
@@ -114,6 +113,7 @@ public class CheckHilightTextTest extends BaseTest
        * 3. Check highlighting JavaScript
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + JS_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightJavaScript();
       IDE.EDITOR.closeFile(0);
       
@@ -121,6 +121,7 @@ public class CheckHilightTextTest extends BaseTest
        * 4. Check highlighting HTML
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightHTML();
       IDE.EDITOR.closeFile(0);
       
@@ -128,6 +129,7 @@ public class CheckHilightTextTest extends BaseTest
        * 5. Check highlighting GROOVY
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GROOVY_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHilightGroovy();
       IDE.EDITOR.closeFile(0);
       
@@ -135,6 +137,7 @@ public class CheckHilightTextTest extends BaseTest
        * 6. Check highlighting CSS
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + CSS_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       chekHilightingInCssFile();
       IDE.EDITOR.closeFile(0);
       
@@ -142,6 +145,7 @@ public class CheckHilightTextTest extends BaseTest
        * 7. Check highlighting CSS
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
+      Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
       checkHiligtGoogleGadget();
       IDE.EDITOR.closeFile(0);
    }

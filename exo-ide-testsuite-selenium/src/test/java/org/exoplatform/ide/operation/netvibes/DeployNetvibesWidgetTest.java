@@ -113,7 +113,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
    public void testDeployFormSteps() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -198,7 +198,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       refresh();
       
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

@@ -73,7 +73,7 @@ public class BigTemplateTest extends BaseTest
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.WORKSPACE.selectRootItem();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");

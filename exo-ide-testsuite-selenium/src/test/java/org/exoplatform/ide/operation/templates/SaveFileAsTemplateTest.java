@@ -100,7 +100,7 @@ public class SaveFileAsTemplateTest extends BaseTest
    public void testSaveFileAsTemplate() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");

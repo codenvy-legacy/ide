@@ -53,7 +53,7 @@ public class CreateProjectTemplateTest extends BaseTest
    public void testCreateProjectTemplate() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       //=================== Check adding folder ====================
       //----- 1 ----------------
       //open Create Project Template Form
@@ -167,7 +167,7 @@ public class CreateProjectTemplateTest extends BaseTest
    {
       refresh();
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
 
       //----- 1 ----------------
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_TEMPLATE);

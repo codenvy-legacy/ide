@@ -261,81 +261,18 @@ public class Editor extends AbstractTestModule
       return Locators.EDITOR_TABSET_LOCATOR + "//td[@tab-bar-index='" + index + "']//div[@button-name='close-tab']";
    }
 
-   //   /**
-   //    * Close unsaved file without saving it.
-   //    * 
-   //    * Close tab with tabIndex. Check is warning dialog appears.
-   //    * Click No (Discard) button if file is new.
-   //    * 
-   //    * @param tabIndex index of tab to close
-   //    * @throws Exception
-   //    */
-   //   public void closeUnsavedFileAndDoNotSave(int tabIndex) throws Exception
-   //   {
-   //      //check, that file is unsaved
-   //      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
-   //      assertTrue(tabName.endsWith("*"));
-   //
-   //      String previousActiveFile = selenium().getText(EditorLocators.DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL);
-   //      System.out.println("PREVIOUS ACTIVE FILE [" + previousActiveFile + "]");
-   //      if (previousActiveFile == null) {
-   //         previousActiveFile = "";
-   //      }
-   //      selenium().click(EditorLocators.DEBUG_EDITOR_ACTIVE_FILE_URL);
-   //      
-   //      closeTab(tabIndex);
-   //      
-   //      if (IDE().ASK_DIALOG.isOpened()) {
-   //         IDE().ASK_DIALOG.clickNo();
-   //      } else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened()) {
-   //         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
-   //      } else {
-   //         fail("I don't understand why!");
-   //      }
-   //      
-   //      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   //   }
-
    /**
     * 
     * 
     * @param tabIndex index of tab, starts at 0
     * @return
     */
-   public boolean isNewFile(int tabIndex)
+   public boolean isFileContentChanged(int tabIndex)
    {
       //check, that file is unsaved
       final String tabName = getTabTitle(Integer.valueOf(tabIndex));
       return tabName.endsWith("*");
    }
-
-   //   /**
-   //    * Close file tab, and don't see into file has changes or no.
-   //    * 
-   //    * If tab's title doesn't ends with *, simple close tab.
-   //    * Otherwise, waits for warning dialog window and click No button.
-   //    * 
-   //    * @param tabIndex - index of tab with file to close
-   //    * @throws Exception
-   //    */
-   //   public void closeFileTabIgnoreChanges(int tabIndex) throws Exception
-   //   {
-   //      if (isNewFile(tabIndex)) {
-   //         
-   //      }
-   //      
-   //      //check, is file was changed
-   //      final String tabName = getTabTitle(Integer.valueOf(tabIndex));
-   //
-   //      if (tabName.endsWith("*"))
-   //      {
-   //         closeUnsavedFileAndDoNotSave(tabIndex);
-   //      }
-   //      else
-   //      {
-   //         closeTab(tabIndex);
-   //      }
-   //   }
 
    /**
     * Close new file. 

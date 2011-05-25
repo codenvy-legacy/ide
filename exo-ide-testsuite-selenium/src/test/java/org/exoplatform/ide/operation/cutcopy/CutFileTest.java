@@ -164,7 +164,7 @@ public class CutFileTest extends BaseTest
 
       final String oldText = IDE.EDITOR.getTextFromCodeEditor(0);
 
-      IDE.NAVIGATION.saveCurrentFile();
+      IDE.NAVIGATION.saveFile();
       
       IDE.EDITOR.closeFile(0);
 

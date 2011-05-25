@@ -29,7 +29,7 @@ import org.exoplatform.ide.TestConstants;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
+@Deprecated
 public class SaveAs extends AbstractTestModule
 {
    public static final String SAVE_AS_DIALOG_LOCATOR =

@@ -59,7 +59,7 @@ public class NetvibesDocumentationTest extends BaseTest
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.NETVIBES_WIDGET);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.SHOW_DOCUMENTATION, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.SHOW_DOCUMENTATION, true);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);

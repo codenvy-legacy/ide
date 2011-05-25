@@ -59,7 +59,7 @@ public class GadgetDeployUndeployTest extends BaseTest
    @Test
    public void testGadgetDeployUndeploy() throws Exception
    {
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       //open gadget with required text
       String filePath =
          "src/test/resources/org/exoplatform/ide/operation/gadget/gadgetDeployUndeployTest/GoogleMapsGadget.xml";
@@ -86,8 +86,8 @@ public class GadgetDeployUndeployTest extends BaseTest
       IDE.SAVE_AS.clickYes();
       waitForLoaderDissapeared();
 
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true, TestConstants.WAIT_PERIOD);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true, TestConstants.WAIT_PERIOD);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.UNDEPLOY_GADGET, true);
 
       // gadget deploy/undeploy command should become enabled
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Run.DEPLOY_GADGET, true);

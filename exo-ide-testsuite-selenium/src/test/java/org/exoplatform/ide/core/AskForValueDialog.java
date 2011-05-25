@@ -55,6 +55,15 @@ public class AskForValueDialog extends AbstractTestModule
    {
       return selenium().isElementPresent(Locator.DIALOG_LOCATOR);
    }
+   
+   /**
+    * Waits until AskForValue dialog will be present.
+    * 
+    * @throws Exception
+    */
+   public void waitForPresent() throws Exception {
+      waitForElementPresent(Locator.DIALOG_LOCATOR);
+   }
 
    /**
     * Waits until AskForValue dialog closes.
@@ -129,6 +138,20 @@ public class AskForValueDialog extends AbstractTestModule
    public void setValue(String value) throws Exception
    {
       AbstractTextUtil.getInstance().typeToInput(Locator.TEXT_FIELD_LOCATOR, value, true);
+//      if (value == "")
+//      {
+//         selenium().click(Locator.TEXT_FIELD_LOCATOR);
+//         selenium().controlKeyDown();
+//         selenium().keyPress(Locator.TEXT_FIELD_LOCATOR, "A");
+//         selenium().controlKeyUp();
+//         selenium().keyPress(Locator.TEXT_FIELD_LOCATOR, "\b");
+//         return;
+//      }
+//      
+//      selenium().type(Locator.TEXT_FIELD_LOCATOR, "");
+//      selenium().typeKeys(Locator.TEXT_FIELD_LOCATOR, value);
+      
+      
    }
 
 }

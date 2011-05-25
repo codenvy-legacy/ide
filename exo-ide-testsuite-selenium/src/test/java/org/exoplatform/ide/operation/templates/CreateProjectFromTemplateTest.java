@@ -132,7 +132,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
    public void testCreateProjectFromTemplate() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       /*
        * 1. Open Create Project From Template form
        */

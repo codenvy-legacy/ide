@@ -139,12 +139,10 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       //save as file
 
       saveAsUsingToolbarButton(NEW_XML_FILE);
-      IDE.PROPERTIES.openProperties();
-
       IDE.WORKSPACE.waitForItem(WS_URL + NEW_XML_FILE);
 
       assertEquals(NEW_XML_FILE, IDE.EDITOR.getTabTitle(0));
-
+      IDE.PROPERTIES.openProperties();
       checkProperties(String.valueOf(XML_CONTENT_2.length() + 1), MimeType.TEXT_XML, NEW_XML_FILE);
 
       IDE.EDITOR.closeFile(0);

@@ -134,7 +134,7 @@ public class NavigateVersionsTest extends BaseTest
       /*
        * Version History button is present, but disabled
        */
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, false);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
@@ -147,7 +147,7 @@ public class NavigateVersionsTest extends BaseTest
       /*
        * Version History button is enabled
        */
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(true);
 
@@ -335,7 +335,7 @@ public class NavigateVersionsTest extends BaseTest
       saveCurrentFile();
 
       // Version History button is enabled.
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true, 2000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
 
       //3. Create versions.
       IDE.EDITOR.typeTextIntoEditor(0, version3Text);
@@ -362,8 +362,8 @@ public class NavigateVersionsTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_OLDER_VERSION);
 
       // Check buttons state and text in version panel.
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true, 2000);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true, 2000);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_OLDER_VERSION, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text);
 
       // 6. View newer version.
@@ -633,7 +633,7 @@ public class NavigateVersionsTest extends BaseTest
       //Open version panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
-      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false, 5000);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
       
       IDE.VERSIONS.checkVersionPanelState(true);
       //View older version button is enabled: 

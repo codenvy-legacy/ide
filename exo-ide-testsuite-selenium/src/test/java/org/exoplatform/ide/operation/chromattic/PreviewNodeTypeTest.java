@@ -134,8 +134,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       IDE.EDITOR.waitTabPresent(0);
 
       //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
@@ -182,7 +182,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
       
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
@@ -228,7 +228,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true, TestConstants.WAIT_PERIOD * 10);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
