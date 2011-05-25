@@ -56,8 +56,6 @@ public class CutFoldersAndFilesTest extends BaseTest
    
    private static final String FILE_3 = "gadget1.xml";
    
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
    private static final String RANDOM_CONTENT_1 = UUID.randomUUID().toString();
    
    private static final String RANDOM_CONTENT_2 = UUID.randomUUID().toString();
@@ -80,13 +78,13 @@ public class CutFoldersAndFilesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_2);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_1 + "/" + FOLDER_3);
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_2 + "/" + FOLDER_3);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_1 + "/" + FILE_1);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, URL + FOLDER_1 + "/" + FILE_2);
-         VirtualFileSystemUtils.put(RANDOM_CONTENT_3.getBytes(), MimeType.GOOGLE_GADGET, URL + FOLDER_2 + "/" + FILE_3);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_2);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" + FOLDER_3);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_2 + "/" + FOLDER_3);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_1.getBytes(), MimeType.GOOGLE_GADGET, WS_URL + FOLDER_1 + "/" + FILE_1);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_2.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/" + FILE_2);
+         VirtualFileSystemUtils.put(RANDOM_CONTENT_3.getBytes(), MimeType.GOOGLE_GADGET, WS_URL + FOLDER_2 + "/" + FILE_3);
       }
       catch (Exception e)
       {
@@ -208,19 +206,19 @@ public class CutFoldersAndFilesTest extends BaseTest
    
    private void checkFilesAndFoldersOnServer() throws Exception
    {
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_1).getStatusCode());
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_3).getStatusCode());
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_2).getStatusCode());
-      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(URL + FILE_1);
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FOLDER_1).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FOLDER_3).getStatusCode());
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FOLDER_2).getStatusCode());
+      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(WS_URL + FILE_1);
       assertEquals(HTTPStatus.OK, fileResponse1.getStatusCode());
       assertEquals(RANDOM_CONTENT_1, new String(fileResponse1.getData()));
-      final HTTPResponse fileResponse2 = VirtualFileSystemUtils.get(URL + FILE_2);
+      final HTTPResponse fileResponse2 = VirtualFileSystemUtils.get(WS_URL + FILE_2);
       assertEquals(HTTPStatus.OK, fileResponse2.getStatusCode());
       assertEquals(RANDOM_CONTENT_2, new String(fileResponse2.getData()));
       
       //children of FOLDER_2
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FOLDER_3).getStatusCode());
-      final HTTPResponse fileResponse3 = VirtualFileSystemUtils.get(URL + FOLDER_2 + "/" + FILE_3);
+      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_3).getStatusCode());
+      final HTTPResponse fileResponse3 = VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FILE_3);
       assertEquals(HTTPStatus.OK, fileResponse3.getStatusCode());
       assertEquals(RANDOM_CONTENT_3, new String(fileResponse3.getData()));
    }
@@ -263,17 +261,13 @@ public class CutFoldersAndFilesTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_1);
-         VirtualFileSystemUtils.delete(URL + FOLDER_2);
-         VirtualFileSystemUtils.delete(URL + FOLDER_3);
-         VirtualFileSystemUtils.delete(URL + FILE_1);
-         VirtualFileSystemUtils.delete(URL + FILE_2);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_2);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_3);
+         VirtualFileSystemUtils.delete(WS_URL + FILE_1);
+         VirtualFileSystemUtils.delete(WS_URL + FILE_2);
       }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
+      catch (Exception e)
       {
          e.printStackTrace();
       }

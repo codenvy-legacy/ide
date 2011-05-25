@@ -328,6 +328,16 @@ public class Navigation extends AbstractTestModule
 
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
+   
+   /**
+    * Saves currently edited file.
+    * 
+    * @throws Exception
+    */
+   public void saveCurrentFile() throws Exception {
+      IDE().TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+   }
 
    public enum Editor {
       CODEMIRROR("CodeMirror"), CKEDITOR("CKEditor");

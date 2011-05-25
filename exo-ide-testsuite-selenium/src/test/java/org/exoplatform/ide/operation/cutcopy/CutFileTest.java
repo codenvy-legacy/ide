@@ -88,13 +88,13 @@ public class CutFileTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
-      
-//      waitForRootElement();
-//      IDE.WORKSPACE.selectRootItem();
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-//      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
+
+      //      waitForRootElement();
+      //      IDE.WORKSPACE.selectRootItem();
+      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      //      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+      //      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
 
       //Open files "test 1/gadget.xml".
@@ -102,9 +102,9 @@ public class CutFileTest extends BaseTest
 
       checkPasteCommands(false);
       checkCutCopyCommands(true);
-      
+
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      
+
       checkPasteCommands(false);
       checkCutCopyCommands(true);
 
@@ -135,39 +135,42 @@ public class CutFileTest extends BaseTest
       assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
       IDE.dialogs().clickOkButton();
       */
-      
+
       IDE.WARNING_DIALOG.checkIsOpened();
       IDE.WARNING_DIALOG.clickOk();
-      
+
       checkPasteCommands(true);
 
       //Select root item and then click on "Paste" toolbar button.
       IDE.WORKSPACE.selectRootItem();
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-      
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1).getStatusCode());
+
+      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1)
+         .getStatusCode());
       assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME_1);
-      
-      assertEquals(RANDOM_CONTENT,IDE.EDITOR.getTextFromCodeEditor(0));
+
+      assertEquals(RANDOM_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
 
       checkPasteCommands(false);
 
       //Change content of opened file "gadget.xml" in Content Panel, click on "Ctrl+S" hot key, 
       //close file tab and open file "gadget.xml".
-     IDE.EDITOR.typeTextIntoEditor(0, "IT`s CHANGE!!!");
+      IDE.EDITOR.typeTextIntoEditor(0, "IT`s CHANGE!!!");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      final String oldText =IDE.EDITOR.getTextFromCodeEditor(0);
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-     IDE.EDITOR.closeFile(0);
+      final String oldText = IDE.EDITOR.getTextFromCodeEditor(0);
+
+      IDE.NAVIGATION.saveCurrentFile();
+      
+      IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME_1, false);
-      assertEquals(oldText,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(oldText, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.closeFile(0);
    }
 
    /**

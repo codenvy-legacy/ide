@@ -23,14 +23,22 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
-import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;
@@ -43,17 +51,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
@@ -139,55 +138,59 @@ public abstract class BaseTest
             new TextUtil(selenium);
       }
 
-//      testsCounter++;
-//      if (testsCounter % maxRunTestsOnOneSession == 1)
-//      {
-//         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
-//         selenium.start();
-//         selenium.windowFocus();
-//         selenium.windowMaximize();
-//         selenium.open(APPLICATION_URL);
-//         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-//         standaloneLogin(USER_NAME);
-//      }
-//      
-//      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
-//      selenium.open(APPLICATION_URL);
-//      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
-
-      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
-      selenium.start();
-      selenium.windowFocus();
-      selenium.windowMaximize();
-      selenium.open(APPLICATION_URL);
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      standaloneLogin(USER_NAME);      
-      
-      System.out.println("isRunIdeUnderPortal() >>> " + isRunIdeUnderPortal());
-      if (isRunIdeUnderPortal())
-      {
-         loginInPortal();
-         selenium.open(APPLICATION_URL);
-         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-         Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-         // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-         // selenium.selectFrame("remote_iframe_0");
-
-         // selectMainForm()
-         if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
-         {
-            selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-         }
-         else
-         {
-            selenium.selectFrame("relative=top");
-         }
-      }
-
-      //      else if (isRunIdeAsStandalone())
+      //      testsCounter++;
+      //      if (testsCounter % maxRunTestsOnOneSession == 1)
       //      {
+      //         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
+      //         selenium.start();
+      //         selenium.windowFocus();
+      //         selenium.windowMaximize();
+      //         selenium.open(APPLICATION_URL);
+      //         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       //         standaloneLogin(USER_NAME);
       //      }
+      //      
+      //      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
+      //      selenium.open(APPLICATION_URL);
+      //      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
+
+      try
+      {
+         selenium.start();
+         selenium.windowFocus();
+         selenium.windowMaximize();
+         selenium.open(APPLICATION_URL);
+         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+
+         System.out.println("isRunIdeUnderPortal() >>> " + isRunIdeUnderPortal());
+         if (isRunIdeUnderPortal())
+         {
+            loginInPortal();
+            selenium.open(APPLICATION_URL);
+            selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+            // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+            // selenium.selectFrame("remote_iframe_0");
+
+            // selectMainForm()
+            if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
+            {
+               selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+            }
+            else
+            {
+               selenium.selectFrame("relative=top");
+            }
+         }
+         else if (isRunIdeAsStandalone())
+         {
+            standaloneLogin(USER_NAME);
+         }
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
 
       IDE.setWorkspaceURL(WS_URL);
    }
@@ -200,10 +203,10 @@ public abstract class BaseTest
          //log out from ide
          fail("Can't logout under portal. Fix it!!!");
       }
-            else if (isRunIdeAsStandalone())
-            {
-               standaloneLogout();
-            }
+      else if (isRunIdeAsStandalone())
+      {
+         standaloneLogout();
+      }
    }
 
    private static void standaloneLogout() throws Exception
@@ -245,13 +248,13 @@ public abstract class BaseTest
    @AfterClass
    public static void stopSelenium()
    {
-//      if (testsCounter % maxRunTestsOnOneSession == 0)
-//      {
-//         selenium.stop();
-//      }
-      
+      //      if (testsCounter % maxRunTestsOnOneSession == 0)
+      //      {
+      //         selenium.stop();
+      //      }
+
       selenium.stop();
-      
+
       //      try
       //      {
       //         standaloneLogout();
@@ -485,8 +488,8 @@ public abstract class BaseTest
    }
 
    /* *//**
-         * Select "Search Result" tab in navigation panel
-         */
+          * Select "Search Result" tab in navigation panel
+          */
    /*
    protected void selectSearchResultTab()
    {
@@ -1054,14 +1057,14 @@ public abstract class BaseTest
       }
    }
 
-//   /**
-//    * Wait while root element of navigation tree appears.
-//    */
-//   public void waitForRootElement() throws Exception
-//   {
-//      waitForElementPresent(Navigation.NAVIGATION_TREE);
-//      Thread.sleep(TestConstants.REDRAW_PERIOD);
-//   }
+   //   /**
+   //    * Wait while root element of navigation tree appears.
+   //    */
+   //   public void waitForRootElement() throws Exception
+   //   {
+   //      waitForElementPresent(Navigation.NAVIGATION_TREE);
+   //      Thread.sleep(TestConstants.REDRAW_PERIOD);
+   //   }
 
    @AfterFailure
    public void captureScreenShotOnFailure(Throwable failure)
