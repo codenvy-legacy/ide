@@ -738,7 +738,11 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
                @Override
                public void run()
                {
-                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
+                  try {
+                     eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));                     
+                  } catch (Exception e) {
+                     e.printStackTrace();
+                  }
                }
             };
             

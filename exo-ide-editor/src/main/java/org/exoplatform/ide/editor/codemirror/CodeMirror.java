@@ -23,14 +23,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -39,7 +38,6 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
@@ -903,7 +901,15 @@ public class CodeMirror extends Editor
    @Override
    public boolean hasUndoChanges()
    {
-      return hasUndoChanges(editorObject);
+      try
+      {
+         return hasUndoChanges(editorObject);
+      }
+      catch (Exception e)
+      {
+         System.out.println("Can't retrieve Editor's UNDO changes. Reason: " + e.getMessage());
+      }
+      return false;
    }
 
    private native boolean hasUndoChanges(JavaScriptObject editor)/*-{
@@ -933,7 +939,15 @@ public class CodeMirror extends Editor
    @Override
    public boolean hasRedoChanges()
    {
-      return hasRedoChanges(editorObject);
+      try
+      {
+         return hasRedoChanges(editorObject);
+      }
+      catch (Exception e)
+      {
+         System.out.println("Can't retrieve Editor's REDO changes. Reason: " + e.getMessage());
+      }
+      return false;
    }
 
    private native boolean hasRedoChanges(JavaScriptObject editor)/*-{
@@ -964,7 +978,16 @@ public class CodeMirror extends Editor
     * @see org.exoplatform.ide.editor.api.Editor#getCursorRow()
     */
    @Override
-   public native int getCursorRow() /*-{
+   public int getCursorRow() {
+      try {
+         return getCursorRowJS();
+      } catch (Exception e) {
+         System.out.println("Can't get Cursor's ROW. Reason: " + e.getMessage());
+      }
+      return 1;
+   }
+   
+   public native int getCursorRowJS() /*-{
         var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
         if (editor == null)
             return 1;
@@ -988,7 +1011,17 @@ public class CodeMirror extends Editor
     * @see org.exoplatform.ide.editor.api.Editor#getCursorCol()
     */
    @Override
-   public native int getCursorCol() /*-{
+   public int getCursorCol() {
+      try {
+         getCursorColJS();
+      } catch (Exception e) {
+         System.out.println("Can't get Cursor's COL. Reason: " + e.getMessage());
+      }
+      
+      return 1;
+   }
+   
+   public native int getCursorColJS() /*-{
         var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
         if (editor == null)
             return 1;
