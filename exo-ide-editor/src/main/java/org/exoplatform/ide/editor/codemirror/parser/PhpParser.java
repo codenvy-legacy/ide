@@ -184,7 +184,7 @@ public class PhpParser extends CodeMirrorParserImpl
                      && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())                        
                 )
             {  
-                 newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.FIELD, 0, MimeType.APPLICATION_PHP);  
+                 newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.PROPERTY, 0, MimeType.APPLICATION_PHP);  
             }
             
             // recognize field or variable declaration like "$a = 1;"
@@ -211,17 +211,16 @@ public class PhpParser extends CodeMirrorParserImpl
                      String variableName = nodeStack.get(nodeStack.size() - 2).getContent();
                      
                      newToken = new TokenBeenImpl(variableName, TokenType.VARIABLE, 0, MimeType.APPLICATION_PHP);
-                     newToken.setElementType("Object");
    
                      if (possibleElementType != null)
                      {
                         newToken.setElementType(possibleElementType);
                      }
                      
-                     // replace VARIABLE on FIELD
+                     // replace VARIABLE on PROPERTY
                      if (TokenType.CLASS.equals(currentToken.getType()))
                      {
-                        newToken.setType(TokenType.FIELD);
+                        newToken.setType(TokenType.PROPERTY);
                      }
                   }
                }
