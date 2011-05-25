@@ -190,7 +190,7 @@ public class PhpParser extends CodeMirrorParserImpl
       {         
          if (isSemicolonNode(nodeStack.pop()))
          {            
-            String possibleElementType = analyseTypeOfAssignment((Stack<Node>) nodeStack.clone());
+            String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone());
 
             // pass nodes before "="
             while ((nodeStack.size() > 2) 
@@ -281,7 +281,7 @@ public class PhpParser extends CodeMirrorParserImpl
             // recognize field or variable declaration like "$a = 1;"
             else if (nodeStack.size() > 2)
             {              
-               String possibleElementType = analyseTypeOfAssignment((Stack<Node>) nodeStack.clone());
+               String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone());
    
                // pass nodes before "="
                while ((nodeStack.size() > 1) 
@@ -335,7 +335,7 @@ public class PhpParser extends CodeMirrorParserImpl
     * @param non-safe nodeStack
     * @return
     */
-   private String analyseTypeOfAssignment(Stack<Node> nodeStack)
+   private String analyzeTypeOfAssignment(Stack<Node> nodeStack)
    {
       Node lastNode = nodeStack.lastElement();
       
