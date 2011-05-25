@@ -19,33 +19,29 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ide.extension.heroku.server.Arg;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
-import org.exoplatform.ide.extension.heroku.server.Default;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * Add SSH key for current user. If command executed successfully method {@link #execute()} returns <code>null</code>.
+ * {@link SshKeyProvider} must have registered public key for host' hiroku.com', see method
+ * {@link SshKeyProvider#getPublicKey(String)}.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class KeysAdd extends HerokuCommand
 {
-   @Arg(index = 0)
-   @Default("heroku.com")
-   private String host;
-
-   public KeysAdd(File gitWorkDir)
+   public KeysAdd()
    {
-      super(gitWorkDir);
    }
 
    /**
@@ -58,7 +54,7 @@ public class KeysAdd extends HerokuCommand
          (SshKeyProvider)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SshKeyProvider.class);
       try
       {
-         org.exoplatform.ide.extension.ssh.server.Key publicKey = keyProvider.getPublicKey(host);
+         org.exoplatform.ide.extension.ssh.server.Key publicKey = keyProvider.getPublicKey("heroku.com");
          byte[] bytes = publicKey.getBytes();
          if (bytes != null)
          {
@@ -82,10 +78,10 @@ public class KeysAdd extends HerokuCommand
                {
                   output.close();
                }
-               
+
                if (http.getResponseCode() != 200)
                   throw fault(http);
-               
+
                return null;
             }
             finally

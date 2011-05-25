@@ -45,20 +45,32 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
+ * Provide detailed information about application. Result of execution of {@link #execute()} depends to {@link #raw}
+ * field. If {@link #raw} is <code>false</code> (default) then method returns {@link HerokuApplicationInfo} otherwise
+ * method returns raw Map that contains set of attributes.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see HerokuApplicationInfo
+ * @see Option
  */
 public class AppsInfo extends HerokuCommand
 {
+   /**
+    * Application name to get information. If <code>null</code> then try to determine application name from git
+    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code> at
+    * least.
+    */
    @Option(name = "--app")
    private String app;
 
+   /** If <code>true</code> then get result as raw Map. */
    @Option(name = "--raw")
    private boolean raw;
 
-   public AppsInfo(File gitWorkDir)
+   public AppsInfo(File workDir)
    {
-      super(gitWorkDir);
+      super(workDir);
    }
 
    /**
@@ -83,7 +95,7 @@ public class AppsInfo extends HerokuCommand
          http.setRequestMethod("GET");
          authenticate(http);
          http.setRequestProperty("Accept", "application/xml, */*");
-         
+
          if (http.getResponseCode() != 200)
             throw fault(http);
 
@@ -124,7 +136,7 @@ public class AppsInfo extends HerokuCommand
          {
             NodeList appNodes = (NodeList)xPath.evaluate("/app/*", xmlDoc, XPathConstants.NODESET);
             int appLength = appNodes.getLength();
-            Map<String, String> info = new HashMap<String, String>();
+            Map<String, String> info = new HashMap<String, String>(appLength);
             for (int i = 0; i < appLength; i++)
             {
                Node item = appNodes.item(i);

@@ -30,17 +30,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * Permanently destroy an application. If command executed successfully method {@link #execute()} returns
+ * <code>null</code>.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see Option
  */
 public class AppsDestroy extends HerokuCommand
 {
+   /**
+    * Application name to destroy. If <code>null</code> then try to determine application name from git configuration.
+    * To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    */
    @Option(name = "--app")
    private String app;
 
-   public AppsDestroy(File gitWorkDir)
+   public AppsDestroy(File workDir)
    {
-      super(gitWorkDir);
+      super(workDir);
    }
 
    /**
@@ -64,10 +72,10 @@ public class AppsDestroy extends HerokuCommand
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
          authenticate(http);
-         
+
          if (http.getResponseCode() != 200)
             throw fault(http);
-         
+
          return null;
       }
       catch (IOException ioe)
@@ -80,5 +88,4 @@ public class AppsDestroy extends HerokuCommand
             http.disconnect();
       }
    }
-
 }

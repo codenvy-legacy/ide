@@ -34,8 +34,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * REST interface to {@link Heroku}.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see Heroku#execute(String, java.util.Map, java.util.List)
  */
 @Path("ide/heroku")
 public class HerokuService
@@ -48,9 +51,11 @@ public class HerokuService
       Heroku heroku = Heroku.getInstance();
       try
       {
-         Object result =
-            heroku.execute(request.getCommand(), request.getOptions(), request.getArgs(),
-               new File(request.getGitWorkDir()));
+         Object result = heroku.execute( //
+            request.getCommand(), //
+            request.getOptions(), //
+            request.getArgs(), //
+            request.getWorkDir() != null ? new File(request.getWorkDir()) : null);
          return Response.ok(result).type(MediaType.APPLICATION_JSON).build();
       }
       catch (CommandException e)

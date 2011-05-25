@@ -23,20 +23,21 @@ import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * Remove all SSH keys for current user. If command executed successfully method {@link #execute()} returns
+ * <code>null</code>.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class KeysClear extends HerokuCommand
 {
-   public KeysClear(File gitWorkDir)
+   public KeysClear()
    {
-      super(gitWorkDir);
    }
 
    /**
@@ -53,7 +54,7 @@ public class KeysClear extends HerokuCommand
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
          authenticate(http);
-         
+
          if (http.getResponseCode() != 200)
             throw fault(http);
 

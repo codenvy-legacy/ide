@@ -59,10 +59,10 @@ public class Heroku
             throw new RuntimeException(e.getMessage());
          }
       }
-      
+
       protected abstract Object convertValue(String source);
    }
-   
+
    static class StringFieldSetter extends FieldSetter
    {
       @Override
@@ -71,7 +71,7 @@ public class Heroku
          return source;
       }
    }
-   
+
    static class BooleanFieldSetter extends FieldSetter
    {
       @Override
@@ -80,6 +80,8 @@ public class Heroku
          return Boolean.parseBoolean(source);
       }
    }
+
+   // TODO : Add 'setters' for other Java types, such as int, long, etc.
 
    private static Map<Class<?>, Heroku.Setter> setters = new HashMap<Class<?>, Heroku.Setter>();
 
@@ -100,6 +102,7 @@ public class Heroku
       return HerokuHolder.INSTANCE;
    }
 
+   /** Base URL of heroku REST API. */
    public static final String HEROKU_API = "https://api.heroku.com";
 
    private final Map<String, Class<? extends HerokuCommand>> commands;
@@ -187,6 +190,13 @@ public class Heroku
       return result;
    }
 
+   public Object execute(String name, Map<String, String> opts, List<String> args) throws HerokuException,
+      CommandException
+   {
+      return execute(name, opts, args, null);
+   }
+
+   @SuppressWarnings("rawtypes")
    private static HerokuCommand init(Class<? extends HerokuCommand> c, Map<String, String> opts, List<String> args,
       File workDir)
    {
@@ -196,24 +206,35 @@ public class Heroku
          Constructor<? extends HerokuCommand> constr = c.getDeclaredConstructor(File.class);
          command = constr.newInstance(workDir);
       }
-      catch (NoSuchMethodException e)
+      catch (NoSuchMethodException nme)
       {
-         throw new RuntimeException(e.getMessage(), e);
+         // Some commands not need git repository. 
+         try
+         {
+            command = c.newInstance();
+         }
+         catch (InstantiationException ie)
+         {
+            throw new RuntimeException(ie.getMessage(), ie);
+         }
+         catch (IllegalAccessException iae)
+         {
+            throw new RuntimeException(iae.getMessage(), iae);
+         }
       }
-      catch (InstantiationException e)
+      catch (InstantiationException ie)
       {
-         throw new RuntimeException(e.getMessage(), e);
+         throw new RuntimeException(ie.getMessage(), ie);
       }
-      catch (IllegalAccessException e)
+      catch (IllegalAccessException iae)
       {
-         throw new RuntimeException(e.getMessage(), e);
+         throw new RuntimeException(iae.getMessage(), iae);
       }
-      catch (InvocationTargetException e)
+      catch (InvocationTargetException ite)
       {
-         throw new RuntimeException(e.getMessage(), e);
+         throw new RuntimeException(ite.getMessage(), ite);
       }
-      for (@SuppressWarnings("rawtypes")
-      Class k = c; k != Object.class; k = k.getSuperclass())
+      for (Class k = c; k != Object.class; k = k.getSuperclass())
       {
          Field[] fields = k.getDeclaredFields();
          for (int i = 0; i < fields.length; i++)
@@ -230,7 +251,7 @@ public class Heroku
                      value = def.value();
                }
                if (value == null && option.required())
-                  throw new RuntimeException("Required option " + option.name() + " is not initialized. ");
+                  throw new IllegalArgumentException("Required option " + option.name() + " is not initialized. ");
                initField(command, field, value);
             }
             else if (field.isAnnotationPresent(Arg.class))

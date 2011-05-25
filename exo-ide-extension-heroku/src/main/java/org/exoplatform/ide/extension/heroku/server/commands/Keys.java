@@ -29,7 +29,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -45,17 +44,22 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
+ * Get SSH keys for current user.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class Keys extends HerokuCommand
 {
+   /**
+    * If <code>true</code> then display info about each key in long format. In other words full content of public key
+    * provided. By default public key displayed in truncated form.
+    */
    @Option(name = "--long")
    private boolean inLongFormat;
 
-   public Keys(File gitWorkDir)
+   public Keys()
    {
-      super(gitWorkDir);
    }
 
    /**

@@ -30,14 +30,14 @@ public class HerokuRequest
    private String command;
    private Map<String, String> options;
    private List<String> args;
-   private String gitWorkDir;
+   private String workDir;
 
-   public HerokuRequest(String command, Map<String, String> options, List<String> args, String gitWorkDir)
+   public HerokuRequest(String command, Map<String, String> options, List<String> args, String workDir)
    {
       this.command = command;
       this.options = options;
       this.args = args;
-      this.gitWorkDir = gitWorkDir;
+      this.workDir = workDir;
    }
 
    public HerokuRequest()
@@ -74,13 +74,13 @@ public class HerokuRequest
       this.args = args;
    }
 
-   public String getGitWorkDir()
+   public String getWorkDir()
    {
-      return gitWorkDir;
+      return workDir;
    }
 
-   public void setGitWorkDir(String gitWorkDir)
+   public void setWorkDir(String workDir)
    {
-      this.gitWorkDir = gitWorkDir;
+      this.workDir = workDir;
    }
 }

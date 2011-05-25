@@ -31,17 +31,24 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
+ * Remove SSH key for current user. If command executed successfully method {@link #execute()} returns <code>null</code>
+ * .
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class KeysRemove extends HerokuCommand
 {
+   /**
+    * Key name to remove. If <code>null</code> then all keys for current user removed.
+    * @see KeysClear
+    */
    @Arg(index = 0)
-   private String user;
+   private String keyName;
 
-   public KeysRemove(File gitWorkDir)
+   public KeysRemove(File workDir)
    {
-      super(gitWorkDir);
+      super(workDir);
    }
 
    /**
@@ -53,14 +60,14 @@ public class KeysRemove extends HerokuCommand
       HttpURLConnection http = null;
       try
       {
-         URL url = new URL(Heroku.HEROKU_API + ((user != null) //
-            ? ("/user/keys/" + URLEncoder.encode(user, "utf-8")) //
+         URL url = new URL(Heroku.HEROKU_API + ((keyName != null) //
+            ? ("/user/keys/" + URLEncoder.encode(keyName, "utf-8")) //
             : "/user/keys"));
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
          authenticate(http);
-         
+
          if (http.getResponseCode() != 200)
             throw fault(http);
 

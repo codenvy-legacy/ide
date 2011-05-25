@@ -19,15 +19,25 @@
 package org.exoplatform.ide.extension.heroku.server;
 
 /**
+ * If heroku server return unexpected or error status for request.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
 public class HerokuException extends Exception
 {
+   /** HTTP status of response from heroku server. */
    private final int responseStatus;
+
+   /** Content type of response from heroku server. */
    private final String contentType;
 
+   /**
+    * @param responseStatus HTTP status of response from heroku server
+    * @param message text message
+    * @param contentType content type of response from heroku server
+    */
    public HerokuException(int responseStatus, String message, String contentType)
    {
       super(message);

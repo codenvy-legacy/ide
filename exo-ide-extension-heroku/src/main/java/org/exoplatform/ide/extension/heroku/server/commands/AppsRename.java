@@ -23,6 +23,7 @@ import org.exoplatform.ide.extension.heroku.server.CommandException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
+import org.exoplatform.ide.extension.heroku.server.Option;
 import org.exoplatform.ide.extension.heroku.shared.HerokuApplicationInfo;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
@@ -35,26 +36,41 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Rename application. If command executed successfully method {@link #execute()} returns information about renamed
+ * application. Minimal set of application attributes:
+ * <ul>
+ * <li>New name</li>
+ * <li>New git URL of repository</li>
+ * <li>New HTTP URL of application</li>
+ * </ul>
+ * <p>
+ * Remote configuration updated.
+ * </p>
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class AppsRename extends HerokuCommand
 {
+   /** New name for application. If <code>null</code> then method {@link #execute()} throws {@link CommandException}. */
    @Arg(index = 0)
    private String newname;
 
    /**
-    * @param gitWorkDir
+    * Current name of application. If <code>null</code> then try to determine application name from git configuration.
+    * To be able determine application name <code>workDir</code> must not be <code>null</code> at least.
     */
-   public AppsRename(File gitWorkDir)
+   @Option(name = "--app")
+   private String app;
+
+   public AppsRename(File workDir)
    {
-      super(gitWorkDir);
+      super(workDir);
    }
 
    /**
@@ -66,10 +82,13 @@ public class AppsRename extends HerokuCommand
       if (newname == null && newname.isEmpty())
          throw new CommandException("New name may not be null or empty string. ");
 
-      String app = detectAppName();
-      if (app == null || app.isEmpty())
-         throw new CommandException(
-            "Cannot detect application to be renamed. Probably git working directory is not specified. ");
+      if (this.app == null)
+      {
+         String detectedApp = detectAppName();
+         if (detectedApp == null || detectedApp.isEmpty())
+            throw new CommandException("Application name is not defined. ");
+         this.app = detectedApp;
+      }
 
       HttpURLConnection http = null;
       GitConnection git = null;
@@ -97,6 +116,7 @@ public class AppsRename extends HerokuCommand
          if (http.getResponseCode() != 200)
             throw fault(http);
 
+         // Get updated info about application.
          HerokuApplicationInfo info =
             (HerokuApplicationInfo)Heroku.getInstance().execute("apps:info",
                Collections.singletonMap("--app", newname), null, null);
@@ -104,29 +124,22 @@ public class AppsRename extends HerokuCommand
          String gitUrl = info.getGitUrl();
 
          RemoteListRequest listRequest = new RemoteListRequest(null, true);
-         git = GitConnectionFactory.getInstance().getConnection(gitWorkDir, null);
+         git = GitConnectionFactory.getInstance().getConnection(workDir, null);
          List<Remote> remoteList = git.remoteList(listRequest);
          for (Remote r : remoteList)
          {
             // Update remote.
             if (r.getUrl().startsWith("git@heroku.com:"))
             {
-               try
+               String rname = extractAppName(r);
+               if (rname != null && rname.equals(app))
                {
-                  String rname = extractAppName(r);
-                  if (app.equals(rname))
-                  {
-                     git.remoteUpdate(new RemoteUpdateRequest(r.getName(), null, false, new String[]{gitUrl},
-                        new String[]{r.getUrl()}, null, null));
-                     break;
-                  }
-               }
-               catch (URISyntaxException ignored)
-               {
+                  git.remoteUpdate(new RemoteUpdateRequest(r.getName(), null, false, new String[]{gitUrl},
+                     new String[]{r.getUrl()}, null, null));
+                  break;
                }
             }
          }
-
          return info;
       }
       catch (IOException ioe)

@@ -36,6 +36,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 /**
+ * Abstraction for all 'heroku commands'.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -87,13 +89,31 @@ public abstract class HerokuCommand
       return error;
    }
 
-   protected final File gitWorkDir;
+   /**
+    * Git working directory. May be <code>null</code> if command executed out of git repository.
+    */
+   protected final File workDir;
 
-   public HerokuCommand(File gitWorkDir)
+   protected HerokuCommand()
    {
-      this.gitWorkDir = gitWorkDir;
+      this(null);
    }
 
+   /**
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository
+    */
+   protected HerokuCommand(File workDir)
+   {
+      this.workDir = workDir;
+   }
+
+   /**
+    * Execute command.
+    * 
+    * @return command execution result
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CommandException if any errors occurs when invoke command
+    */
    public abstract Object execute() throws HerokuException, CommandException;
 
    protected void authenticate(HttpURLConnection http) throws IOException
@@ -105,44 +125,37 @@ public abstract class HerokuCommand
       herokuAuthenticator.authenticate(http);
    }
 
-   protected String detectAppName() throws CommandException
+   /**
+    * Extract heroku application name from git configuration. If {@link #workDir} is <code>null</code> or does not
+    * contain <code>.git<code> sub-directory method always return <code>null</code>.
+    * 
+    * @return application name or <code>null</code> if name can't be determined since command invoked outside of git
+    *         repository
+    */
+   protected String detectAppName()
    {
-      if (gitWorkDir != null && new File(gitWorkDir, Constants.DOT_GIT).exists())
+      if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
       {
          GitConnection git = null;
          try
          {
-            git = GitConnectionFactory.getInstance().getConnection(gitWorkDir, null);
-            RemoteListRequest request = new RemoteListRequest("heroku", true);
+            git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            RemoteListRequest request = new RemoteListRequest(null, true);
             List<Remote> remoteList = git.remoteList(request);
             String detectedApp = null;
-            if (remoteList.size() > 0)
+            for (Remote r : remoteList)
             {
-               detectedApp = extractAppName(remoteList.get(0));
-            }
-            else
-            {
-               // Probably remote name different than 'heroku'.
-               request.setRemote(null);
-               remoteList = git.remoteList(request);
-               for (Remote r : remoteList)
+               if (r.getUrl().startsWith("git@heroku.com:"))
                {
-                  if (r.getUrl().startsWith("git@heroku.com:"))
-                  {
-                     detectedApp = extractAppName(r);
+                  if ((detectedApp = extractAppName(r)) != null)
                      break;
-                  }
                }
             }
             return detectedApp;
          }
          catch (GitException ge)
          {
-            throw new CommandException(ge.getMessage(), ge);
-         }
-         catch (URISyntaxException use)
-         {
-            throw new CommandException(use.getMessage(), use);
+            throw new RuntimeException(ge.getMessage(), ge);
          }
          finally
          {
@@ -153,8 +166,17 @@ public abstract class HerokuCommand
       return null;
    }
 
-   protected String extractAppName(Remote gitRemote) throws URISyntaxException
+   protected String extractAppName(Remote gitRemote)
    {
-      return new URIish(gitRemote.getUrl()).getHumanishName();
+      String name = null;
+      try
+      {
+         name = new URIish(gitRemote.getUrl()).getHumanishName();
+      }
+      catch (URISyntaxException e)
+      {
+         // Invalid URL is not a problem for us, just say we can't determine name from wrong URL.
+      }
+      return name;
    }
 }

@@ -34,6 +34,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * Heroku API authenticator. Default implementation saves authentication key on file system in file
+ * {$HOME}/.heroku/credentials .
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -144,7 +147,7 @@ public class DefaultHerokuAuthenticator implements HerokuAuthenticator
    {
       File herokuCredentials = new File(getUserHome(), ".heroku/credentials");
       if (!herokuCredentials.exists())
-         throw new RuntimeException("Credentials file not found. Use method 'login' first. ");
+         throw new IllegalStateException("Credentials file not found. Use method 'login' first. ");
       BufferedReader credentialsReader = new BufferedReader(new FileReader(herokuCredentials));
       try
       {

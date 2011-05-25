@@ -25,24 +25,29 @@ import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.Option;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
+ * Log in with specified email/password.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see HerokuAuthenticator
+ * @see HerokuAuthenticator#login(String, String)
+ * @see HerokuAuthenticator#logout()
  */
 public class AuthLogin extends HerokuCommand
 {
+   /** Email address that used when create account at heroku.com. */
    @Option(name = "email", required = true)
    private String email;
 
+   /** Password. */
    @Option(name = "password", required = true)
    private String password;
 
-   public AuthLogin(File gitWorkDir)
+   public AuthLogin()
    {
-      super(gitWorkDir);
    }
 
    /**

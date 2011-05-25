@@ -100,12 +100,12 @@ public class JcrHerokuAuthenticator extends DefaultHerokuAuthenticator
          }
 
          if (item == null)
-            throw new RuntimeException("Credentials not found. Use method 'login' first. ");
+            throw new IllegalStateException("Credentials not found. Use method 'login' first. ");
 
          Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
          String[] source = property.getString().split("\n");
          if (source.length != 2)
-            throw new RuntimeException("Credentials corrupted. Use method 'login' first. ");
+            throw new IllegalStateException("Credentials corrupted. Use method 'login' first. ");
 
          return new HerokuCredentials(source[0], source[1]);
       }

@@ -24,12 +24,40 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Annotation of heroku command option. Fields of instance {@link HerokuCommand} initialized by values supplied in Map
+ * passed to {@link Heroku#execute(String, java.util.Map, java.util.List, java.io.File)}. Value from {@link #name()}
+ * used to obtain correct value from Map. If option is required but not provided then IllegalArgumentException thrown by
+ * method {@link Heroku#execute(String, java.util.Map, java.util.List, java.io.File)}.
+ * <p>
+ * Example:
+ * 
+ * <pre>
+ * public class MyCommand extends HerokuCommand
+ * {
+ *    &#064;Option(name = "option0", required = true)
+ *    private String option0;
+ * 
+ *    ...
+ * }
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Option {
+   /**
+    * Option name
+    * 
+    * @return option name
+    */
    String name();
+
+   /**
+    * @return <code>true</code> if option required and <code>false</code> otherwise
+    */
    boolean required() default false;
 }

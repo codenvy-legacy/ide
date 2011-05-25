@@ -22,14 +22,38 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
+ * Heroku API authenticator.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface HerokuAuthenticator
 {
+   /**
+    * Obtain heroku API key and store it somewhere (it is dependent to implementation) for next usage. Key should be
+    * used by {@link #authenticate(HttpURLConnection)} instead of password for any request to heroku service.
+    * 
+    * @param email email address that used when create account at heroku.com
+    * @param password password
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException if any i/o errors occurs
+    */
    void login(String email, String password) throws HerokuException, IOException;
 
+   /**
+    * Remove local saved credentials.
+    * 
+    * @see #login(String, String)
+    */
    void logout();
 
+   /**
+    * Add Basic authentication headers to HttpURLConnection. Typically key obtained with {@link #login(String, String)}
+    * should be used instead of password.
+    * 
+    * @param http HttpURLConnection
+    * @throws IOException if any i/o errors occurs
+    * @throws IllegalStateException if credentials is not available (user do not login yet) or corrupted
+    */
    void authenticate(HttpURLConnection http) throws IOException;
 }

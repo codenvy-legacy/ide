@@ -26,7 +26,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,14 +41,16 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
+ * List of heroku applications for current user. If command executed successfully method {@link #execute()} returns list
+ * of application names.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class Apps extends HerokuCommand
 {
-   public Apps(File gitWorkDir)
+   public Apps()
    {
-      super(gitWorkDir);
    }
 
    /**
@@ -66,10 +67,10 @@ public class Apps extends HerokuCommand
          http.setRequestMethod("GET");
          authenticate(http);
          http.setRequestProperty("Accept", "application/xml, */*");
-         
+
          if (http.getResponseCode() != 200)
             throw fault(http);
-         
+
          InputStream input = http.getInputStream();
          Document xmlDoc;
          try

@@ -24,6 +24,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Provide default value for fields annotated with {@link Arg} or {@link Option} annotation. Default value used if there
+ * is no corresponded values passed to {@link Heroku#execute(String, java.util.Map, java.util.List, java.io.File)}.
+ * <p>
+ * Example:
+ * 
+ * <pre>
+ * public class MyCommand extends HerokuCommand
+ * {
+ *    &#064;Arg(index = 0)
+ *    &#064;Default("value")
+ *    private String arg0;
+ *    
+ *    ...
+ * }
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */

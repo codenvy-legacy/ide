@@ -24,17 +24,19 @@ import org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
-import java.io.File;
-
 /**
+ * Remove locally save authentication credentials.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see HerokuAuthenticator
+ * @see HerokuAuthenticator#logout()
+ * @see HerokuAuthenticator#login(String, String)
  */
 public class AuthLogout extends HerokuCommand
 {
-   public AuthLogout(File gitWorkDir)
+   public AuthLogout()
    {
-      super(gitWorkDir);
    }
 
    /**

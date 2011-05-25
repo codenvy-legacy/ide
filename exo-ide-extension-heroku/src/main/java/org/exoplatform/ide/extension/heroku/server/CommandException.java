@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.heroku.server;
 
 /**
+ * Should be thrown if any error occurs when invoke request to Heroku API.
+ * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
