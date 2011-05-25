@@ -69,5 +69,17 @@ public class Output extends AbstractTestModule
       String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
       waitForElementPresent(locator);
    }
-
+   
+   /**
+    * Click on error message, pointed by its position in output panel.
+    * The index starts from 1.
+    * 
+    * @param messageNumber number of the message
+    */
+   public void clickOnErrorMessage(int messageNumber)
+   {
+      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageNumber) + "/font/span";
+      selenium().click(locator);
+   }
+   
 }

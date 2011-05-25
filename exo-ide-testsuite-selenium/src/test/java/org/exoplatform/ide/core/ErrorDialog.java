@@ -46,6 +46,11 @@ public class ErrorDialog extends AbstractTestModule
    {
       waitForElementPresent(WARNING_DIALOG_ID);
    }
+   
+   public void waitIsClosed() throws Exception
+   {
+      waitForElementNotPresent(WARNING_DIALOG_ID);
+   }
 
    /**
     * @param message
@@ -73,7 +78,7 @@ public class ErrorDialog extends AbstractTestModule
    public void checkMessageContains(String message)
    {
       String text = selenium().getText(WARNING_MESSAGE_LOCATOR);
-      assertTrue(message.contains(text));
+      assertTrue(text.contains(message));
    }
 
    /**

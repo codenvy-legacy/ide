@@ -567,6 +567,7 @@ public abstract class BaseTest
     * 
     * @return {@link String}
     */
+   @Deprecated
    protected String getCursorPositionUsingStatusBar()
    {
       //      return selenium
