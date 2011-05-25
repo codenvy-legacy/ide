@@ -203,138 +203,69 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
     */
    private String getTokenDisplayTitle(TokenBeenImpl token)
    {
-      String name = token.getName();
-      boolean isDeprecated = isDeprecated(token);
-      // add info about java type, parameters and annotations
-      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()))
+      String label = token.getName();
+
+      //icon, that displays in right bottom corner, if token is CLASS, 
+      //and shows access modifier
+      String modfImg = "";
+      
+      if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
+      {      
+         if (isPrivate(token))
+         {
+            modfImg =
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
+                  + "\" />";
+         }
+         else if (isProtected(token))
+         {
+            modfImg =
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
+                  + "\" />";
+         }
+         else if (isPublic(token))
+         {
+         }
+         else
+         {
+            modfImg =
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
+                  + "\" />";
+         }
+      }
+
+      String synchImg = "";
+      if (isSynchronized(token))
       {
-         //icon, that displays in right bottom corner, if token is CLASS, 
-         //and shows access modifier
-         String modfImg = "";
-
-         if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
-         {
-            if (isPrivate(token))
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
-                     + "\" />";
-            }
-            else if (isProtected(token))
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
-                     + "\" />";
-            }
-            else if (isPublic(token))
-            {
-            }
-            else
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
-                     + "\" />";
-            }
-         }
-
-         String synchImg = "";
-         if (isSynchronized(token))
-         {
-            final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
-            synchImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
-                  + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
-                  + "outline/clock.png" + "\" />";
-         }
-         String annotationList = getAnnotationList(token);
-         String deprecateSign = (isDeprecated) ? "style='text-decoration:line-through;'" : "";
+         final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
+         synchImg =
+            "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
+               + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
+               + "outline/clock.png" + "\" />";
+      }
+      
+      String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";
  
-         name = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + annotationList
-                  + "\">" + name + "</span>";            
- 
-         if (TokenType.METHOD.equals(token.getType()))
-         {
-            name += getParametersList(token);
-         }
-         //Field type or method return type:
-         name += "<span style='color:#644a17;' class='item-type' title=\"" + annotationList + "\">" + getElementType(token) + "</span>";
-      }
+      label = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + getAnnotationList(token)
+            + "\">" + label + "</span>";            
 
-      // display type of javascript variables
-      else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
+      // Add parameter list 
+      if (TokenType.FUNCTION.equals(token.getType())
+               || TokenType.METHOD.equals(token.getType()))
       {
-         if (TokenType.FUNCTION.equals(token.getType()))
-         {
-            name = "<span class='item-name'>" + name + "()</span>"; 
-         }
-         
-         else if (token.getElementType() != null)
-         {
-            name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
-         }
-      }
-
-      // display type of RUBY variables
-      else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()) && token.getElementType() != null)
-      {
-         name = "<span class='item-name'>" + name + "</span><span style='color:#644a17;' class='item-type' style='margin-left: 5px;'>" + getElementType(token) + "</span>";
+         label += getParametersList(token); 
       }
       
-      // display php code
-      else if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
+      // Add field type or method return type
+      if (token.getElementType() != null)
       {
-         //icon, that displays in right bottom corner, if token is CLASS, 
-         //and shows access modifier
-         String modfImg = "";
-
-         if (TokenType.CLASS.equals(token.getType()))
-         {
-            if (isPrivate(token))
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
-                     + "\" />";
-            }
-            else if (isProtected(token))
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
-                     + "\" />";
-            }
-            else if (isPublic(token))
-            {
-            }
-            else
-            {
-               modfImg =
-                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
-                     + "\" />";
-            }
-         }
-
-         name = getModifiersContainer(token) + modfImg + "<span class='item-name' style='margin-left: 5px;'>" + name + "</span>"; 
-         
-         if (TokenType.METHOD.equals(token.getType())
-              || TokenType.FUNCTION.equals(token.getType())
-            )
-         {
-            name += getParametersList(token);
-         }
+         label += "<span style='color:#644a17;' class='item-type' title=\"" + getAnnotationList(token) + "\">" + getElementType(token) + "</span>";
       }
       
-      else
-      {
-         name = "<span class='item-name'>" + name + "</span>";
-      }
-      
-      return name;
+      return label;
    }
 
    /**
@@ -366,17 +297,6 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
     */
    private String getTokenIcon(TokenBeenImpl token)
    {
-      if (MimeType.APPLICATION_GROOVY.equals(token.getMimeType()) && !TokenType.GROOVY_TAG.equals(token.getType())
-         || MimeType.APPLICATION_JAVA.equals(token.getMimeType()) && !TokenType.JSP_TAG.equals(token.getType()))
-      {
-         return getIconForJavaFiles(token);
-      }
-
-      else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType()))
-      {
-         return getIconForRubyFile(token);
-      }
-
       switch (token.getType())
       {
          case FUNCTION :
@@ -384,12 +304,6 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
 
          case VARIABLE :
             return VAR_ICON;
-
-         case METHOD :
-            return METHOD_ICON;
-
-         case PROPERTY :
-            return PROPERTY_ICON;
 
          case TAG :
             return TAG_ICON;
@@ -401,91 +315,70 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          case GROOVY_TAG :
             return GROOVY_TAG_ICON;
 
-         case CLASS :
-            return CLASS_ICON;
-
-         case ARRAY :
-            return ARRAY_ICON;
-
-         case INTERFACE :
-            return INTERFACE_ICON;
-
-         case PHP_TAG:
-            return PHP_TAG_ICON;            
-            
-         default :
-            return "";
-      }
-   }
-
-   /**
-    * Forms the icon for java files (groovy, POJO, java, etc)
-    * 
-    * @return {@link String} icon
-    */
-   private String getIconForJavaFiles(TokenBeenImpl token)
-   {
-      switch (token.getType())
-      {
-         case VARIABLE :
          case METHOD :
             if (isPrivate(token))
             {
                return PRIVATE_METHOD_ICON;
             }
+            
             else if (isProtected(token))
             {
                return PROTECTED_METHOD_ICON;
             }
+
             else if (isPublic(token))
             {
                return PUBLIC_METHOD_ICON;
             }
+
+            else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
+            {
+               return METHOD_ICON;
+            }
+
+            else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType())
+                     || MimeType.APPLICATION_PHP.equals(token.getMimeType())
+                    )
+            {
+               return PUBLIC_METHOD_ICON;
+            }
+            
             else
             {
                return DEFAULT_METHOD_ICON;
             }
 
          case PROPERTY :
+         case FIELD :            
             if (isPrivate(token))
             {
                return PRIVATE_FIELD_ICON;
             }
+            
             else if (isProtected(token))
             {
                return PROTECTED_FIELD_ICON;
             }
+            
             else if (isPublic(token))
             {
                return PUBLIC_FIELD_ICON;
             }
+
+            else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
+            {
+               return PROPERTY_ICON;
+            }
+            
+            else if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
+            {
+               return PUBLIC_FIELD_ICON;
+            }
+
             else
             {
                return DEFAULT_FIELD_ICON;
             }
-
-         case CLASS :
-            return CLASS_ICON;
-
-         case INTERFACE :
-            return INTERFACE_ICON;
-
-         default :
-            return "";
-      }
-   }
-
-   /**
-    * Forms the icon for ruby file
-    * 
-    * @return {@link String} icon
-    */
-   private String getIconForRubyFile(TokenBeenImpl token)
-   {
-      switch (token.getType())
-      {
-         case METHOD :
-            return PUBLIC_METHOD_ICON;
 
          case LOCAL_VARIABLE :
             return LOCAL_VARIABLE_ICON;
@@ -502,12 +395,21 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
          case CONSTANT :
             return CONSTANT_ICON;
 
+         case MODULE :
+            return MODULE_ICON;
+            
          case CLASS :
             return CLASS_ICON;
 
-         case MODULE :
-            return MODULE_ICON;
+         case INTERFACE :
+            return INTERFACE_ICON;            
+            
+         case ARRAY :
+            return ARRAY_ICON;
 
+         case PHP_TAG:
+            return PHP_TAG_ICON;            
+            
          default :
             return "";
       }
