@@ -271,7 +271,7 @@ function test($test){
  * @deprecated
  */
 class Foo extends ReflactionClass implements Foo\IBar{
-    const E_ERROR = 45;
+    const E_USER1_ERROR = 45;
     var $test;
     public static $my_static = 'foo';
     public function test($test){
