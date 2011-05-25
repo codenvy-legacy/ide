@@ -61,7 +61,7 @@ public class Templates extends AbstractTestModule
    {
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR VIEW");
 
-      String viewLocator = "//div[@id='ideCreateFileFromTemplateForm']";
+      String viewLocator = "//div[@view-id='ideCreateFileFromTemplateForm']";
       //waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
       waitForElementPresent(viewLocator);
 
