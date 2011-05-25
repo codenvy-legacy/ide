@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import javax.swing.text.html.CSS;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -112,7 +114,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       }
    }
 
-   @Ignore
    @Test
    public void testOpeningSavingAndClosingTabsWithFile() throws Exception
    {
@@ -138,48 +139,67 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       saveAndCloseFile();
 
       //--------------8------------
-      //reopenFiles();
-      //chekSaveInFiles();
+      reopenFiles();
+      clickTabAndCheckSaveButton();
+
+      chekSaveInFiles();
    }
 
-   public void chekSaveInFiles() throws InterruptedException
+   public void chekSaveInFiles() throws Exception
    {
       // check changed string in CSS file
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.selectTab(0);
       String CSS =
          "Change file\n/*Some example CSS*/\n\n@import url (\"something.css\")\nbody {\n  margin 0;\n  padding 3em 6em;\n  font-family: tahoma, arial, sans-serif;\n  color #000;\n}\n  #navigation a {\n    font-weigt: bold;\n  text-decoration: none !important;\n}\n}";
-      assertEquals(CSS, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+
+      assertEquals(CSS, IDE.EDITOR.getTextFromCodeEditor(0));
+
       // check changed string in Google Gadget file
+      IDE.EDITOR.selectTab(1);
       String GG =
-         "Change file\nChange file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[ \n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
-      assertEquals(GG, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
-      // check changed string in Groovy file
+         "Change file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[ \n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
+      assertEquals(GG, IDE.EDITOR.getTextFromCodeEditor(1));
+      //      assertEquals(GG, selenium.getText("//body[@class='editbox']"));
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+
+      //      // check changed string in Groovy file
+      IDE.EDITOR.selectTab(2);
       String Groovy =
          "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
-      assertEquals(Groovy, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(Groovy, IDE.EDITOR.getTextFromCodeEditor(2));
+
+      //      assertEquals(Groovy, selenium.getText("//body[@class='editbox']"));
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       // check changed string in HTML file
+      IDE.EDITOR.selectTab(3);
+
       String HTML =
          "Change file\n<html>\n<head>\n  <title>HTML Example</title>\n  <script type='text/javascript'>\n    function foo(bar, baz) {\n      alert('quux');\n      return bar + baz + 1;\n    }\n  </script>\n  <style type='text/css'>\n    div.border {\n      border: 1px solid black;\n      padding: 3px;\n    }\n    #foo code {\n      font-family: courier, monospace;\n      font-size: 80%;\n      color: #448888;\n    }\n  </style>\n</head>\n<body>\n  <p>Hello</p>\n</body>\n</html>";
-      assertEquals(HTML, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(HTML, IDE.EDITOR.getTextFromCodeEditor(3));
+      //      assertEquals(HTML, selenium.getText("//body[@class='editbox']"));
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       // check changed string in JS file
+      IDE.EDITOR.selectTab(4);
+
       String JS =
          "Change file\n  //Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will \n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
-      assertEquals(JS, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(JS, IDE.EDITOR.getTextFromCodeEditor(4));
+      //      assertEquals(JS, selenium.getText("//body[@class='editbox']"));
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
+
       // check changed string in TXT file
+      IDE.EDITOR.selectTab(5);
       String TXT = "text content";
-      assertEquals(TXT, selenium.getText("//body[@class='editbox']"));
-      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
-      Thread.sleep(TestConstants.SLEEP);
+      assertEquals(TXT, IDE.EDITOR.getTextFromCodeEditor(5));
+      //      assertEquals(TXT, selenium.getText("//body[@class='editbox']"));
+      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      Thread.sleep(TestConstants.SLEEP);
    }
 
    public void reopenFiles() throws InterruptedException, Exception
@@ -298,7 +318,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       saveCurrentFile();
       IDE.EDITOR.closeFile(0);
 
-     
       // Save and closeGoogleGadgetFile
       IDE.EDITOR.selectTab(0);
       saveCurrentFile();
@@ -309,7 +328,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       saveCurrentFile();
       IDE.EDITOR.closeFile(1);
 
-      
       // Save and closeJsFile
       IDE.EDITOR.selectTab(1);
       saveCurrentFile();
@@ -321,7 +339,6 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       saveCurrentFile();
       IDE.EDITOR.closeFile(2);
 
-      
       //      // close GroovyFile
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.closeFile(0);

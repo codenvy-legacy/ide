@@ -109,6 +109,7 @@ public class GoToFolderTest extends BaseTest
       IDE.TOOLBAR.runCommand("Refresh Selected Folder");
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + FOLDER_2 + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_2 + "/" + FILE_2);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2, false);
 
       //Go to folder with first file
@@ -152,7 +153,7 @@ public class GoToFolderTest extends BaseTest
       openFileFromSearchResultsWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with second file
       IDE.WORKSPACE.waitForRootItem();
-      
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.MENU.checkCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER, true);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       IDE.WORKSPACE.waitForRootItem();

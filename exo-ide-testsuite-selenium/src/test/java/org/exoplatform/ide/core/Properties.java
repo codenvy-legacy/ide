@@ -28,7 +28,7 @@ import org.exoplatform.ide.ToolbarCommands;
 public class Properties extends AbstractTestModule
 {
 
-   private final String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyName='%1s']";
+   private final String PROPERTY_LOCATOR = "//div[@view-id='ideFilePropertiesView']//td[@propertyname='%1s']";
    
    public static final String PROPERTIES_FORM_LOCATOR = "//div[@view-id=\"ideFilePropertiesView\"]";
    

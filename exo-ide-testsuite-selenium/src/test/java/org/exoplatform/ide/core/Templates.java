@@ -38,7 +38,7 @@ public class Templates extends AbstractTestModule
    private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
 
    private static final String TEMPLATES_LIST_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
-   
+
    private static final String INPUT_FIELD_NAME = "ideCreateFileFromTemplateFormFileNameField";
 
    public static final String DELETE_BUTTON_ID = "ideCreateFileFromTemplateFormDeleteButton";
@@ -49,39 +49,38 @@ public class Templates extends AbstractTestModule
 
    public static final String FILE_NAME_INPUT_LOCATOR = "//input[@name='ideCreateFileFromTemplateFormFileNameField']";
 
-   private static final String FILE_FROM_TEMPLATE_DIALOG_LOCATOR = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']";
-   
    //------Create project from template form elements------------------
    public static final String DEFAULT_PROJECT_TEMPLATE_NAME = "ide-project";
-   
+
    public static final String EMPTY_PROJECT_TEMPLATE_NAME = "new-project";
-   
-   private static final String PROJECT_CREATE_FORM_LOCATOR = "//div[@class='gwt-DialogBox']//div[@view-id='ideCreateProjectFromTemplateView']";
-   
+
+   private static final String PROJECT_CREATE_FORM_LOCATOR =
+      "//div[@class='gwt-DialogBox']//div[@view-id='ideCreateProjectFromTemplateView']";
+
    public void waitForFileFromTemplateForm() throws Exception
    {
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR VIEW");
-      
-      String viewLocator = "//div[@view-id='ideCreateFileFromTemplateForm']";
+
+      String viewLocator = "//div[@id='ideCreateFileFromTemplateForm']";
       //waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
       waitForElementPresent(viewLocator);
-      
+
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR LIST GRID");
       waitForElementPresent(TEMPLATES_LIST_GRID_ID);
-      
+
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR DELETE BUTTON");
       waitForElementPresent(DELETE_BUTTON_ID);
-      
+
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR CREATE BUTTON");
       waitForElementPresent(CREATE_BUTTON_ID);
-      
+
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR CANCEL BUTTON");
       waitForElementPresent(CANCEL_BUTTON_ID);
-      
+
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR INPUT FIELD");
       waitForElementPresent(FILE_NAME_INPUT_LOCATOR);
    }
-   
+
    /**
     * Wait, while Project From Template form appears.
     * @throws Exception
@@ -90,7 +89,7 @@ public class Templates extends AbstractTestModule
    {
       waitForElementPresent(PROJECT_CREATE_FORM_LOCATOR);
    }
-   
+
    /**
     * Select template in list grid.
     * 
@@ -99,10 +98,22 @@ public class Templates extends AbstractTestModule
     */
    public void selectFileTemplate(String templateName) throws InterruptedException
    {
-      selenium().click(FILE_FROM_TEMPLATE_DIALOG_LOCATOR + "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[@title='" + templateName + "']");
+      String locator = null;
+      if (selenium().isElementPresent("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']"))
+      {
+         locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']";
+      }
+      else
+      {
+         locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']";
+      }
+
+      selenium().click(locator + "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[@title='" + templateName + "']");
+
+      selenium().click(locator + "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[@title='" + templateName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Select project template in list grid.
     * @param templateName
@@ -113,7 +124,7 @@ public class Templates extends AbstractTestModule
       selenium().click(PROJECT_CREATE_FORM_LOCATOR + "//span[@title='" + templateName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Type new name to input name field.
     * 
@@ -125,7 +136,7 @@ public class Templates extends AbstractTestModule
       selenium().type(FILE_NAME_INPUT_LOCATOR, name);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
-   
+
    /**
     * Click create button and wait until templates form disappeared.
     * 
@@ -137,41 +148,43 @@ public class Templates extends AbstractTestModule
 
       waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
    }
-   
+
    public void clickDeleteButton() throws Exception
    {
       selenium().click(DELETE_BUTTON_ID);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
    }
-   
+
    public void clickCancelButton() throws Exception
    {
       selenium().click(CANCEL_BUTTON_ID);
 
       waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
    }
-   
+
    /**
     * Check, that form "Create file from template" appeared and displayed correctly.
     */
    public void checkCreateFileFromTemplateWindow()
    {
-      String locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/div[@class='Caption']/span";
+      String locator =
+         "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID
+            + "-window']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/div[@class='Caption']/span";
       String text = selenium().getText(locator);
       assertEquals("Create file", text);
-      
+
       //assertEquals("Create file", selenium().getText("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']//div[@class='Caption']/span"));
       checkCreateFileFromTemplateWindowComponents();
    }
-   
+
    /**
     * The same, as checkCreateFileFromTemplateWindow() method,
     * but doesn't check the title of window.
     */
    public void checkCreateFileFromTemplateWindowComponents()
    {
-      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID + "-window"));
-      assertTrue(selenium().isElementPresent("//div[@view-id='" + FILE_FROM_TEMPLATE_FORM_ID + "']"));
+      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
+      assertTrue(selenium().isElementPresent("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']"));
       assertTrue(selenium().isElementPresent(INPUT_FIELD_NAME));
       assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
       assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
@@ -179,16 +192,16 @@ public class Templates extends AbstractTestModule
       assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
       //check that Delete and Create buttons are disabled and Cancel is enabled
       checkButtonState(DELETE_BUTTON_ID, false);
-      checkButtonState(CREATE_BUTTON_ID, true);
+      checkButtonState(CREATE_BUTTON_ID, false);
       checkButtonState(CANCEL_BUTTON_ID, true);
-      checkInputFieldState(true);
+      checkInputFieldState(false);
    }
-   
+
    public void checkProjectCreateForm()
    {
       assertTrue(selenium().isElementPresent(PROJECT_CREATE_FORM_LOCATOR));
    }
-   
+
    /**
     * Check the state of button (enabled, disabled) by button id.
     * 
@@ -197,9 +210,12 @@ public class Templates extends AbstractTestModule
     */
    public void checkButtonState(String buttonId, boolean isEnabled)
    {
-      assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+      System.out.print("\n" + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<       :" + "//div[@id='" + buttonId
+         + "' and @button-enabled='" + String.valueOf(isEnabled) + "']");
    }
-   
+
    /**
     * Check, is input field enabled or disabled.
     * 
@@ -217,7 +233,7 @@ public class Templates extends AbstractTestModule
          assertTrue(selenium().isElementPresent("//input[@name='" + INPUT_FIELD_NAME + "' and @disabled='']"));
       }
    }
-   
+
    /**
     * Create project from template using "Create Project" (from template) form.
     * 1. Call "Project From Template" form
@@ -234,7 +250,7 @@ public class Templates extends AbstractTestModule
       IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
       waitForProjectCreateForm();
       checkProjectCreateForm();
-      
+
       selectProjectTemplate(templateName);
       if (projectName != null)
       {
@@ -242,7 +258,7 @@ public class Templates extends AbstractTestModule
       }
       clickCreateButton();
    }
-   
+
    /**
     * Creates new file from template
     * 
@@ -250,21 +266,22 @@ public class Templates extends AbstractTestModule
     * @param fileName name of created file
     * @throws Exception
     */
-   public void createFileFromTemplate(String templateName, String fileName) throws Exception {
+   public void createFileFromTemplate(String templateName, String fileName) throws Exception
+   {
       IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       //wait for File from template form appeared
       IDE().TEMPLATES.waitForFileFromTemplateForm();
-      
+
       //Select "Google Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
       IDE().TEMPLATES.selectFileTemplate(templateName);
 
       IDE().TEMPLATES.typeNameToInputField(fileName);
       IDE().TEMPLATES.clickCreateButton();
-      
+
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
+
    /**
     * Check, is template name present in list grid.
     * @param templateName
@@ -282,7 +299,7 @@ public class Templates extends AbstractTestModule
          assertFalse(selenium().isElementPresent(locator));
       }
    }
-   
+
    /**
     * Wait, while template name dissapears from list grid.
     * 
@@ -294,7 +311,7 @@ public class Templates extends AbstractTestModule
       final String locator = getTemplateRowLocatorByName(templateName);
       waitForElementNotPresent(locator);
    }
-   
+
    /**
     * Get the locator of row in list grid by template name.
     * 
@@ -306,5 +323,5 @@ public class Templates extends AbstractTestModule
       final String locator = "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[text()='" + templateName + "']";
       return locator;
    }
-   
+
 }

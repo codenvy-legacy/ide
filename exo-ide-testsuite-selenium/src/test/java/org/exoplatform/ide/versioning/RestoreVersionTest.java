@@ -282,8 +282,11 @@ public class RestoreVersionTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.File.RESTORE_VERSION);
 
       IDE.ASK_DIALOG.waitForAskDialogOpened();
+      
       IDE.ASK_DIALOG.clickYes();
+      
       IDE.ASK_DIALOG.waitForAskDialogClosed();
+      IDE.EDITOR.waitTabPresent(0);
       assertEquals(version1Text + version2Text, IDE.EDITOR.getTextFromCodeEditor(0));
       IDE.VERSIONS.checkOlderVersionButtonState(true);
       IDE.VERSIONS.checkNewerVersionButtonState(true);
