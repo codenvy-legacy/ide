@@ -60,7 +60,7 @@ public class LoadRegistryConfigurationPhase extends Phase implements Configurati
    @Override
    protected void execute()
    {
-      new IDEConfigurationLoader(eventBus, IDELoader.getInstance()).loadConfiguration(new IDEConfiguration());
+//      new IDEConfigurationLoader(eventBus, IDELoader.getInstance()).loadConfiguration(new IDEConfiguration());
    }
 
    /**

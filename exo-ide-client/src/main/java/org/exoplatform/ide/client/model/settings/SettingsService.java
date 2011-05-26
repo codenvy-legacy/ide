@@ -63,5 +63,10 @@ public abstract class SettingsService
     */
    public abstract void saveSettingsToCookies(ApplicationSettings applicationSettings);
 
+   /**
+    * Restore application settings from cookies.
+    * @param applicationSettings
+    */
+   public abstract void restoreFromCookies(ApplicationSettings applicationSettings);
 
 }

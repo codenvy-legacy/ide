@@ -31,11 +31,25 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.impl.BeanBuilder;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.exoplatform.ws.frameworks.json.value.impl.ArrayValue;
+import org.exoplatform.ws.frameworks.json.value.impl.ObjectValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
@@ -146,8 +160,8 @@ public class IDEConfigurationService
             result.put("user", user);
             try
             {
-               String userConfiguration = getUserConfiguration();
-               result.put("userSettings", userConfiguration);
+               final Map<String, Object> userSettings = getUserSettings();
+               result.put("userSettings", userSettings);
             }
             catch (PathNotFoundException e)
             {
@@ -170,10 +184,61 @@ public class IDEConfigurationService
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          throw new WebApplicationException(e);
       }
 
+   }
+
+   /**
+    * @return
+    * @throws PathNotFoundException
+    * @throws RepositoryException
+    * @throws JsonException
+    */
+   public Map<String, Object> getUserSettings() throws PathNotFoundException, RepositoryException, JsonException
+   {
+      String userConfiguration = getUserConfiguration();
+      final Map<String, Object> userSettings = new HashMap<String, Object>();
+
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(userConfiguration.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+
+      Iterator<String> iterator = jsonValue.getKeys();
+      while (iterator.hasNext())
+      {
+         String key = iterator.next();
+         if (jsonValue.getElement(key).isObject())
+         {
+            ObjectValue ob = (ObjectValue)jsonValue.getElement(key);
+            Map<String, String> map = new HashMap<String, String>();
+            Iterator<String> obIterator = ob.getKeys();
+            while (obIterator.hasNext())
+            {
+               String k = obIterator.next();
+               map.put(k, ob.getElement(k).getStringValue());
+            }
+            userSettings.put(key, map);
+         }
+         else if (jsonValue.getElement(key).isArray())
+         {
+            List<String> list = new ArrayList<String>();
+            ArrayValue ar = (ArrayValue)jsonValue.getElement(key);
+            Iterator<JsonValue> arrIterator = ar.getElements();
+
+            while (arrIterator.hasNext())
+            {
+               list.add(arrIterator.next().getStringValue());
+
+            }
+            userSettings.put(key, list);
+         }
+      }
+      return userSettings;
    }
 
    @GET
@@ -241,7 +306,8 @@ public class IDEConfigurationService
       }
       catch (PathNotFoundException e)
       {
-         e.printStackTrace();
+         if (LOG.isDebugEnabled())
+            e.printStackTrace();
          return null;
       }
       catch (Exception e)

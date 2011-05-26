@@ -94,7 +94,8 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
          {
             //activate default view
             //eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
-            new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
+//            new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
+            new IDEConfigurationInitializer(controlsRegistration).loadConfiguration();
          }
       }.schedule(500);
    }

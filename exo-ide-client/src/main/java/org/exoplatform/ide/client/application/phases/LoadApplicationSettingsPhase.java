@@ -75,7 +75,7 @@ public class LoadApplicationSettingsPhase extends Phase implements ApplicationSe
    protected void execute()
    {
       new SettingsServiceImpl(eventBus, applicationConfiguration.getRegistryURL(), userInfo.getName(),
-         IDELoader.getInstance());
+         IDELoader.getInstance(), applicationConfiguration.getContext());
 
       SettingsService.getInstance().getApplicationSettings(applicationSettings,
          new AsyncRequestCallback<ApplicationSettings>()

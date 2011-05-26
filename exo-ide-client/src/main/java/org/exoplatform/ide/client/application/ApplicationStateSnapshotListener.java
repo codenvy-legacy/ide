@@ -142,7 +142,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    private void storeActiveFile(File file)
    {
       String activeFile = "";
-      if (file != null)
+      if (null != file)
       {
          activeFile = file.getHref();
       }
@@ -151,6 +151,9 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
       applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);

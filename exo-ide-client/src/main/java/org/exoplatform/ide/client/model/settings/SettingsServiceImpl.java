@@ -23,7 +23,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Random;
 
-import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
@@ -76,22 +74,27 @@ public class SettingsServiceImpl extends SettingsService
 
    private String userName;
 
+   private String restContext;
+
    private ApplicationSettings applicationSettings = new ApplicationSettings();
 
-   public SettingsServiceImpl(HandlerManager eventBus, String registryServiceURL, String userName, Loader loader)
+   public SettingsServiceImpl(HandlerManager eventBus, String registryServiceURL, String userName, Loader loader,
+      String restContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
       this.registryServiceURL = registryServiceURL;
       this.userName = userName;
-
+      this.restContext = restContext;
    }
 
    private String getURL()
    {
-      String url =
-         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
-            + IDEConfigurationLoader.APPLICATION_NAME;
+      //      String url =
+      //         registryServiceURL + "/" + RegistryConstants.EXO_USERS + "/" + userName + "/"
+      //            + IDEConfigurationLoader.APPLICATION_NAME;
+      String url = restContext + "/ide/configuration";
+
       return url;
    }
 
@@ -152,14 +155,14 @@ public class SettingsServiceImpl extends SettingsService
    public void saveSettingsToRegistry(ApplicationSettings applicationSettings,
       AsyncRequestCallback<ApplicationSettings> callback)
    {
-      String url = getURL() + "/?createIfNotExist=true";
+      String url = getURL();
 
       ApplicationSettingsMarshaller marshaller = new ApplicationSettingsMarshaller(applicationSettings);
 
       callback.setResult(applicationSettings);
       callback.setEventBus(eventBus);
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, "PUT")
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_XML).data(marshaller).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(marshaller).send(callback);
 
    }
 
@@ -291,7 +294,7 @@ public class SettingsServiceImpl extends SettingsService
       return cookies;
    }
 
-   private void restoreFromCookies(ApplicationSettings applicationSettings)
+   public void restoreFromCookies(ApplicationSettings applicationSettings)
    {
       for (String name : getCookieNames())
       {

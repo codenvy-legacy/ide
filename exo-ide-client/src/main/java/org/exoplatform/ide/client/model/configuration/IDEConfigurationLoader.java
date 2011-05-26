@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
+import com.google.gwt.http.client.RequestBuilder;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window.Location;
@@ -28,9 +32,11 @@ import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
 import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.model.configuration.marshal.IDEConfigurationUnmarshaller;
 
 /**
  * Created by The eXo Platform SAS        .
@@ -58,7 +64,7 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
 
    private HandlerManager eventBus;
 
-   private IDEConfiguration configuration;
+   //   private IDEConfiguration configuration;
 
    private Loader loader;
 
@@ -69,72 +75,78 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
    }
 
-//   public void loadConfiguration()
-//   {
-//      loadConfiguration(new IDEConfiguration());
-//   }
+   //   public void loadConfiguration()
+   //   {
+   //      loadConfiguration(new IDEConfiguration());
+   //   }
 
-   public void loadConfiguration(IDEConfiguration configuration)
+   public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback)
    {
-      this.configuration = configuration;
-      configuration.setRegistryURL(getRegistryURL());
-      final ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME,
-         new AsyncRequestCallback<ApplicationConfiguration>()
-         {
+      IDEInitializationConfiguration conf = new IDEInitializationConfiguration();
+      String url = getConfigurationURL();
+      IDEConfigurationUnmarshaller unmarshaller = new IDEConfigurationUnmarshaller(conf, new JSONObject(getAppConfig()));
+      callback.setPayload(unmarshaller);
+      callback.setResult(conf);
+      callback.setEventBus(eventBus);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      //            final ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
+      //            applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME,
+      //               new AsyncRequestCallback<ApplicationConfiguration>()
+      //               {
+      //      
+      //                  @Override
+      //                  protected void onSuccess(ApplicationConfiguration result)
+      //                  {
+      //                     configurationReceived(result);
+      //                  }
+      //      
+      //                  @Override
+      //                  protected void onFailure(Throwable exception)
+      //                  {
+      //                     applicationInitializer.getConfigurationFromRegistry();
+      //                  }
+      //               });
 
-            @Override
-            protected void onSuccess(ApplicationConfiguration result)
-            {
-               configurationReceived(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               applicationInitializer.getConfigurationFromRegistry();
-            }
-         });
    }
 
-   private void configurationReceived(ApplicationConfiguration appConfiguration)
-   {
-      JSONObject jsonConfiguration = appConfiguration.getConfiguration().isObject();
-
-      if (jsonConfiguration.containsKey(CONTEXT))
-      {
-         configuration.setContext(jsonConfiguration.get(IDEConfigurationLoader.CONTEXT).isString().stringValue());
-         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
-      }
-      else
-      {
-         showErrorMessage(CONTEXT);
-         return;
-      }
-
-      if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
-         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString()
-            .stringValue());
-      else
-      {
-         showErrorMessage(PUBLIC_CONTEXT);
-         return;
-      }
-
-      if (jsonConfiguration.containsKey(GADGET_SERVER))
-         //TODO: now we can load gadget only from current host
-         configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
-            + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
-      else
-      {
-         showErrorMessage(GADGET_SERVER);
-         return;
-      }
-
-      loaded = true;
-      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(configuration));
-   }
+   //   private void configurationReceived(ApplicationConfiguration appConfiguration)
+   //   {
+   //      JSONObject jsonConfiguration = appConfiguration.getConfiguration().isObject();
+   //
+   //      if (jsonConfiguration.containsKey(CONTEXT))
+   //      {
+   //         configuration.setContext(jsonConfiguration.get(IDEConfigurationLoader.CONTEXT).isString().stringValue());
+   //         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
+   //         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
+   //      }
+   //      else
+   //      {
+   //         showErrorMessage(CONTEXT);
+   //         return;
+   //      }
+   //
+   //      if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
+   //         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString()
+   //            .stringValue());
+   //      else
+   //      {
+   //         showErrorMessage(PUBLIC_CONTEXT);
+   //         return;
+   //      }
+   //
+   //      if (jsonConfiguration.containsKey(GADGET_SERVER))
+   //         //TODO: now we can load gadget only from current host
+   //         configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
+   //            + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
+   //      else
+   //      {
+   //         showErrorMessage(GADGET_SERVER);
+   //         return;
+   //      }
+   //
+   //      loaded = true;
+   //      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(configuration));
+   //   }
 
    public boolean isLoaded()
    {
@@ -147,9 +159,17 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
       Dialogs.getInstance().showError("Invalid configuration", m);
    }
 
+   private static native String getConfigurationURL()/*-{
+		return $wnd.configurationURL;
+   }-*/;
+
    private static native String getRegistryURL() /*-{
-                                                 return $wnd.registryURL;
-                                                 }-*/;
+		return $wnd.registryURL;
+   }-*/;
+
+   private static native JavaScriptObject getAppConfig() /*-{
+		return $wnd.appConfig;
+   }-*/;
 
    /**
     * @see org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler#onConfigurationReceived(org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent)
@@ -157,7 +177,7 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    @Override
    public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
    {
-      configurationReceived(event.getApplicationConfiguration());
+      //      configurationReceived(event.getApplicationConfiguration());
    }
 
 }

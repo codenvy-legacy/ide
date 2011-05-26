@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ide.client.model.settings.marshal;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.JsonUtils;
 
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,19 +46,18 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
    }
 
    private static native String javaScriptEncodeURIComponent(String text) /*-{
-       return encodeURIComponent(text);
-     }-*/;
+                                                                          return encodeURIComponent(text);
+                                                                          }-*/;
 
    public String marshal()
    {
-      String xml = "<" + SETTINGS + ">";
-
+      String xml = "{";
       Map<String, Object> valueMap = applicationSettings.getValues();
       Iterator<String> keyIter = valueMap.keySet().iterator();
       while (keyIter.hasNext())
       {
          String key = keyIter.next();
-         
+
          if (applicationSettings.getStore(key) != Store.REGISTRY)
          {
             continue;
@@ -85,52 +86,61 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
             xml += getMapNode(key, value);
          }
       }
-
-      xml += "</" + SETTINGS + ">";
+      if (xml.endsWith(","))
+         xml = xml.substring(0, xml.length() - 1);
+      xml += "}";
       return xml;
    }
 
    private String getStringNode(String key, Object value)
    {
-      String xmlNodeName = key + "_str";
-      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      return "\"" + key + "\":\"" + value + "\",";
    }
 
    private String getIntegerNode(String key, Object value)
    {
-      String xmlNodeName = key + "_int";
-      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      return "\"" + key + "\":" + value + ",";
    }
 
    private String getBooleanNode(String key, Object value)
    {
-      String xmlNodeName = key + "_bool";
-      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
+      return "\"" + key + "\":" + value + ",";
    }
 
    @SuppressWarnings("unchecked")
    private String getListNode(String key, Object value)
    {
-      String xmlNodeName = key + "_list";
-      String xml = "<" + xmlNodeName + ">";
-
+      String xml = "\"" + key + "\":[";
       List<String> values = (List<String>)value;
       for (String v : values)
       {
-         String subXML = "<item>" + javaScriptEncodeURIComponent(v) + "</item>";
-         xml += subXML;
+         xml +=  JsonUtils.escapeValue(v) + ",";
       }
+      if (xml.endsWith(","))
+         xml = xml.substring(0, xml.length() - 1);
+      xml += "],";
+      
 
-      xml += "</" + xmlNodeName + ">";
-
+      //      String xml = "<" + xmlNodeName + ">";
+      //
+      //      List<String> values = (List<String>)value;
+      //      for (String v : values)
+      //      {
+      //         String subXML = "<item>" + javaScriptEncodeURIComponent(v) + "</item>";
+      //         xml += subXML;
+      //      }
+      //
+      //      xml += "</" + xmlNodeName + ">";
       return xml;
    }
 
    @SuppressWarnings("unchecked")
    private String getMapNode(String key, Object value)
    {
-      String xmlNodeName = key + "_map";
-      String xml = "<" + xmlNodeName + ">";
+      String xml = "\"" + key + "\":{";
 
       Map<String, String> values = (Map<String, String>)value;
       Iterator<String> keyIter = values.keySet().iterator();
@@ -138,18 +148,32 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       {
          String k = keyIter.next();
          String v = values.get(k);
-
-         String subXML = "<item>";
-
-         subXML += "<key>" + javaScriptEncodeURIComponent(k) + "</key>";
-         subXML += "<value>" + javaScriptEncodeURIComponent(v) + "</value>";
-
-         subXML += "</item>";
-
-         xml += subXML;
+         xml += JsonUtils.escapeValue(k) + ":" + JsonUtils.escapeValue(v)+ ",";
       }
 
-      xml += "</" + xmlNodeName + ">";
+      if (xml.endsWith(","))
+         xml = xml.substring(0, xml.length() - 1);
+      xml += "},";
+      //      String xml = "<" + xmlNodeName + ">";
+      //
+      //      Map<String, String> values = (Map<String, String>)value;
+      //      Iterator<String> keyIter = values.keySet().iterator();
+      //      while (keyIter.hasNext())
+      //      {
+      //         String k = keyIter.next();
+      //         String v = values.get(k);
+      //
+      //         String subXML = "<item>";
+      //
+      //         subXML += "<key>" + javaScriptEncodeURIComponent(k) + "</key>";
+      //         subXML += "<value>" + javaScriptEncodeURIComponent(v) + "</value>";
+      //
+      //         subXML += "</item>";
+      //
+      //         xml += subXML;
+      //      }
+      //
+      //      xml += "</" + xmlNodeName + ">";
       return xml;
    }
 
