@@ -100,6 +100,10 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    private static final String CONSTANT_ICON = Images.Outline.CONSTANT_ITEM;
    
    private static final String PHP_TAG_ICON = Images.Outline.PHP_TAG_ICON;
+   
+   private static final String CLASS_CONSTANT_ICON = Images.Outline.CLASS_CONSTANT_ICON;   
+   
+   private static final String NAMESPACE_ICON = Images.Outline.NAMESPACE_ICON;
 
    public OutlineTreeGrid()
    {
@@ -343,11 +347,8 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
             {
                return PUBLIC_METHOD_ICON;
             }
-            
-            else
-            {
-               return DEFAULT_METHOD_ICON;
-            }
+
+            return DEFAULT_METHOD_ICON;
 
          case PROPERTY :
          case FIELD :            
@@ -378,10 +379,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
                return PUBLIC_FIELD_ICON;
             }
 
-            else
-            {
-               return DEFAULT_FIELD_ICON;
-            }
+            return DEFAULT_FIELD_ICON;
 
          case LOCAL_VARIABLE :
             return LOCAL_VARIABLE_ICON;
@@ -411,7 +409,13 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
             return ARRAY_ICON;
 
          case PHP_TAG:
-            return PHP_TAG_ICON;            
+            return PHP_TAG_ICON;  
+            
+         case CLASS_CONSTANT:
+            return CLASS_CONSTANT_ICON;
+
+         case NAMESPACE:
+            return NAMESPACE_ICON;
             
          default :
             return "";

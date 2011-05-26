@@ -222,7 +222,11 @@ public interface Images
 
       public static final String CONSTANT_ITEM = IMAGE_URL + "outline/constant-item.png";
 
-      public static final String PHP_TAG_ICON = IMAGE_URL + "outline/php-tag.png";;
+      public static final String PHP_TAG_ICON = IMAGE_URL + "outline/php-tag.png";
+
+      public static final String CLASS_CONSTANT_ICON = IMAGE_URL + "outline/class-constant-item.png";
+
+      public static final String NAMESPACE_ICON = IMAGE_URL + "outline/namespace-item.png";
    }
 
    public interface Versioning
