@@ -405,6 +405,7 @@ public class Navigation extends AbstractTestModule
          "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='false' and @title='"
             + ToolbarCommands.File.SAVE + "']";
       waitForElementPresent(locator);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public enum Editor {
