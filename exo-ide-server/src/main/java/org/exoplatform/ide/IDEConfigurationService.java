@@ -134,7 +134,7 @@ public class IDEConfigurationService
    }
 
    @GET
-   @Path("/initialization")
+   @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo)

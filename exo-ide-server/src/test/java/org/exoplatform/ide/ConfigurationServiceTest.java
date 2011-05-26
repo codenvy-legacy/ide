@@ -101,7 +101,7 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/configuration/initialization", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
 
       assertNotNull(cres.getEntity());
@@ -121,7 +121,7 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/configuration/initialization", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
@@ -144,7 +144,7 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
-         launcher.service("GET", "/ide/configuration/initialization", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
 
       assertNotNull(cres.getEntity());
@@ -198,7 +198,7 @@ public class ConfigurationServiceTest extends BaseTest
       assertEquals(HTTPStatus.OK, cres.getStatus());
       
       cres =
-         launcher.service("GET", "/ide/configuration/initialization", "", headers, null, null, ctx);
+         launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
