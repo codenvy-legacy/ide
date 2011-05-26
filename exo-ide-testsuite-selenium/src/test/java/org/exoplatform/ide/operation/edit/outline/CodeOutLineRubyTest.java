@@ -108,7 +108,7 @@ public class CodeOutLineRubyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("$global1 : Object", 22, TokenType.GLOBAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("@@class_variable : Regexp", 23, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("@field : Object", 24, TokenType.INSTANCE_VARIABLE);
-      outlineTreeHelper.addOutlineItem("initialize", 26, TokenType.METHOD);      
+      outlineTreeHelper.addOutlineItem("initialize()", 26, TokenType.METHOD);      
       outlineTreeHelper.addOutlineItem("@@char : Ascii", 29, false, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("$myFile : File", 33, TokenType.GLOBAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("scale : String", 35, TokenType.LOCAL_VARIABLE);
@@ -118,12 +118,12 @@ public class CodeOutLineRubyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("@@n2 : Float", 53, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("a : ClassName", 56, TokenType.LOCAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("TC_MyTest", 58, TokenType.CLASS);
-      outlineTreeHelper.addOutlineItem("foo", 60, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("foo()", 60, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("@@class_variable : Hash", 62, false, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("@field : Number", 63, false, TokenType.INSTANCE_VARIABLE);
       outlineTreeHelper.addOutlineItem("a : Fixnum", 68, TokenType.LOCAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("TestModule", 71, TokenType.MODULE);
-      outlineTreeHelper.addOutlineItem("method", 72, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("method()", 72, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("@@t : TrueClass", 73, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("A : Symbol", 76, TokenType.CONSTANT);
       outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
