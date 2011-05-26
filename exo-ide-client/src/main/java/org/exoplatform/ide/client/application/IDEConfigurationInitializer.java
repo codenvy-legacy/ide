@@ -95,15 +95,13 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
-                  
+
                   eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
-                  
-                  
-                  
+
                   new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
                   new SettingsServiceImpl(eventBus, applicationConfiguration.getRegistryURL(), result.getUserInfo()
                      .getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
-                  
+
                   SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
                   if (TemplateService.getInstance() == null)
@@ -215,45 +213,27 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       }
 
       initServices();
-//      new Timer()
-//      {
-//         @Override
-//         public void run()
-//         {
-//         }
-//      }.schedule(Phase.DELAY_BETWEEN_PHASES);
    }
 
    private void initServices()
    {
       eventBus.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
 
-//      new Timer()
-//      {
-//         @Override
-//         public void run()
-//         {
-            /*
-             * Updating top menu
-             */
-            eventBus.fireEvent(new RefreshMenuEvent());
+      /*
+       * Updating top menu
+       */
+      eventBus.fireEvent(new RefreshMenuEvent());
 
-            List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
-            if (toolbarItems == null)
-            {
-               toolbarItems = new ArrayList<String>();
-               toolbarItems.addAll(controls.getToolbarDefaultControls());
-            }
+      List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
+      if (toolbarItems == null)
+      {
+         toolbarItems = new ArrayList<String>();
+         toolbarItems.addAll(controls.getToolbarDefaultControls());
+      }
 
-            eventBus
-               .fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
-            eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
-               .getRegisteredControls()));
-
-            //            new LoadDefaultEntryPointPhase(eventBus, applicationConfiguration, applicationSettings);
-
-//         }
-//      }.schedule(Phase.DELAY_BETWEEN_PHASES);
+      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
+      eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
+         .getRegisteredControls()));
    }
 
 }

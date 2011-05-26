@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
-import org.exoplatform.ide.client.application.phases.LoadRegistryConfigurationPhase;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -35,9 +37,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
 import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -94,7 +93,6 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
          {
             //activate default view
             //eventBus.fireEvent(new ActivateViewEvent(BrowserPanel.ID));
-//            new LoadRegistryConfigurationPhase(eventBus, controlsRegistration);
             new IDEConfigurationInitializer(controlsRegistration).loadConfiguration();
          }
       }.schedule(500);

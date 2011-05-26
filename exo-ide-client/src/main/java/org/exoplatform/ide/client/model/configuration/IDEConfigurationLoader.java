@@ -18,24 +18,18 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.JavaScriptObject;
-
-import com.google.gwt.http.client.RequestBuilder;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.initializer.ApplicationConfiguration;
-import org.exoplatform.gwtframework.commons.initializer.ApplicationInitializer;
-import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent;
-import org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.model.configuration.marshal.IDEConfigurationUnmarshaller;
 
 /**
@@ -43,28 +37,14 @@ import org.exoplatform.ide.client.model.configuration.marshal.IDEConfigurationUn
  * @version $Id: $
  */
 
-public class IDEConfigurationLoader implements ApplicationConfigurationReceivedHandler
+public class IDEConfigurationLoader
 {
 
-   public final static String APPLICATION_NAME = "IDE";
-
-   private static final String CONFIG_NODENAME = "configuration";
-
-   private final static String CONTEXT = "context";
-
-   private final static String GADGET_SERVER = "gadgetServer";
-
-   private final static String PUBLIC_CONTEXT = "publicContext";
-
-   public static final String LOOPBACK_SERVICE_CONTEXT = "/ide/loopbackcontent";
-
-   public static final String UPLOAD_SERVICE_CONTEXT = "/ide/upload";
+   public static final String APPLICATION_NAME = "IDE"; //$NON-NLS-1$
 
    private boolean loaded = false;
 
    private HandlerManager eventBus;
-
-   //   private IDEConfiguration configuration;
 
    private Loader loader;
 
@@ -72,81 +52,26 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    {
       this.eventBus = eventBus;
       this.loader = loader;
-      eventBus.addHandler(ApplicationConfigurationReceivedEvent.TYPE, this);
    }
-
-   //   public void loadConfiguration()
-   //   {
-   //      loadConfiguration(new IDEConfiguration());
-   //   }
 
    public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback)
    {
-      IDEInitializationConfiguration conf = new IDEInitializationConfiguration();
-      String url = getConfigurationURL();
-      IDEConfigurationUnmarshaller unmarshaller = new IDEConfigurationUnmarshaller(conf, new JSONObject(getAppConfig()));
-      callback.setPayload(unmarshaller);
-      callback.setResult(conf);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-      //            final ApplicationInitializer applicationInitializer = new ApplicationInitializer(eventBus, APPLICATION_NAME, loader);
-      //            applicationInitializer.getApplicationConfiguration(CONFIG_NODENAME,
-      //               new AsyncRequestCallback<ApplicationConfiguration>()
-      //               {
-      //      
-      //                  @Override
-      //                  protected void onSuccess(ApplicationConfiguration result)
-      //                  {
-      //                     configurationReceived(result);
-      //                  }
-      //      
-      //                  @Override
-      //                  protected void onFailure(Throwable exception)
-      //                  {
-      //                     applicationInitializer.getConfigurationFromRegistry();
-      //                  }
-      //               });
-
+      try
+      {
+         IDEInitializationConfiguration conf = new IDEInitializationConfiguration();
+         String url = getConfigurationURL();
+         IDEConfigurationUnmarshaller unmarshaller =
+            new IDEConfigurationUnmarshaller(conf, new JSONObject(getAppConfig()));
+         callback.setPayload(unmarshaller);
+         callback.setResult(conf);
+         callback.setEventBus(eventBus);
+         AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      }
+      catch (Exception e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e, "Can't read initialization configuration!"));
+      }
    }
-
-   //   private void configurationReceived(ApplicationConfiguration appConfiguration)
-   //   {
-   //      JSONObject jsonConfiguration = appConfiguration.getConfiguration().isObject();
-   //
-   //      if (jsonConfiguration.containsKey(CONTEXT))
-   //      {
-   //         configuration.setContext(jsonConfiguration.get(IDEConfigurationLoader.CONTEXT).isString().stringValue());
-   //         configuration.setLoopbackServiceContext(configuration.getContext() + LOOPBACK_SERVICE_CONTEXT);
-   //         configuration.setUploadServiceContext(configuration.getContext() + UPLOAD_SERVICE_CONTEXT);
-   //      }
-   //      else
-   //      {
-   //         showErrorMessage(CONTEXT);
-   //         return;
-   //      }
-   //
-   //      if (jsonConfiguration.containsKey(PUBLIC_CONTEXT))
-   //         configuration.setPublicContext(jsonConfiguration.get(IDEConfigurationLoader.PUBLIC_CONTEXT).isString()
-   //            .stringValue());
-   //      else
-   //      {
-   //         showErrorMessage(PUBLIC_CONTEXT);
-   //         return;
-   //      }
-   //
-   //      if (jsonConfiguration.containsKey(GADGET_SERVER))
-   //         //TODO: now we can load gadget only from current host
-   //         configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
-   //            + jsonConfiguration.get(GADGET_SERVER).isString().stringValue());
-   //      else
-   //      {
-   //         showErrorMessage(GADGET_SERVER);
-   //         return;
-   //      }
-   //
-   //      loaded = true;
-   //      eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(configuration));
-   //   }
 
    public boolean isLoaded()
    {
@@ -155,8 +80,8 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
 
    private void showErrorMessage(String message)
    {
-      String m = "Invalid configuration:  missing " + message + " item";
-      Dialogs.getInstance().showError("Invalid configuration", m);
+      String mes = "Invalid configuration:  missing " + message + " item"; //$NON-NLS-1$ //$NON-NLS-2$
+      Dialogs.getInstance().showError("Invalid configuration", mes);
    }
 
    private static native String getConfigurationURL()/*-{
@@ -170,14 +95,5 @@ public class IDEConfigurationLoader implements ApplicationConfigurationReceivedH
    private static native JavaScriptObject getAppConfig() /*-{
 		return $wnd.appConfig;
    }-*/;
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedHandler#onConfigurationReceived(org.exoplatform.gwtframework.commons.initializer.event.ApplicationConfigurationReceivedEvent)
-    */
-   @Override
-   public void onConfigurationReceived(ApplicationConfigurationReceivedEvent event)
-   {
-      //      configurationReceived(event.getApplicationConfiguration());
-   }
 
 }
