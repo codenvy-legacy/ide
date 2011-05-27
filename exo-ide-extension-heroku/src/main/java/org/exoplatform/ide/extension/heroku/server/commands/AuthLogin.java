@@ -24,9 +24,9 @@ import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 
@@ -51,15 +51,12 @@ public class AuthLogin extends HerokuCommand
     * @throws CommandException if any other exception occurs
     */
    @POST
-   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-   public void login( //
-      @FormParam("email") String email, //
-      @FormParam("password") String password //
-   ) throws HerokuException, CommandException
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws HerokuException, CommandException
    {
       try
       {
-         HerokuAuthenticator.getInstance().login(email, password);
+         HerokuAuthenticator.getInstance().login(credentials.get("email"), credentials.get("password"));
       }
       catch (IOException ioe)
       {
