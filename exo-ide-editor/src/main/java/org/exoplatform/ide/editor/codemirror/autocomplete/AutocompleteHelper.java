@@ -47,6 +47,7 @@ public abstract class AutocompleteHelper
       put(MimeType.APPLICATION_JAVA, new JavaAutocompleteHelper());      
       put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptAutocompleteHelper());
       put(MimeType.APPLICATION_JSP, new JspAutocompleteHelper());
+      put(MimeType.APPLICATION_PHP, new PhpAutocompleteHelper());      
    }};  
    
    protected static AutocompleteHelper getAutocompleteHelper(String mimeType)

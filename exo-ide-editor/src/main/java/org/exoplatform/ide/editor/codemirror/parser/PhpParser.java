@@ -42,8 +42,10 @@ public class PhpParser extends CodeMirrorParserImpl
    String currentContentMimeType;
 
    private HashMap<TokenType, LinkedList<String>> variables = new HashMap<TokenType, LinkedList<String>>();
+
+   private LinkedList<String> constants = new LinkedList<String>();   
    
-   private Stack<Node> nodeStack = new Stack<Node>();
+   private Stack<Node> mainNodeStack = new Stack<Node>();
    
    /**
     * Stack of blocks "{... {...} ...}"
@@ -55,13 +57,15 @@ public class PhpParser extends CodeMirrorParserImpl
    {
       super.init();
       currentContentMimeType = MimeType.TEXT_HTML;    
-      nodeStack.clear();
+      mainNodeStack.clear();
       enclosers.clear();
       
       // initialize variable lists
       variables.put(TokenType.PHP_TAG, new LinkedList<String>());
       variables.put(TokenType.CLASS, new LinkedList<String>());       
-      variables.put(TokenType.METHOD, new LinkedList<String>()); 
+      variables.put(TokenType.METHOD, new LinkedList<String>());
+      
+      constants.clear();
    }   
 
    @Override
@@ -75,7 +79,7 @@ public class PhpParser extends CodeMirrorParserImpl
       String nodeType = Node.getType(javaScriptNode);       
       
       // recognize "<?" open tag within the TEXT_HTML content
-      if (isPhpOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
+      if (isPhpOpenTag(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
          TokenBeenImpl newToken = new TokenBeenImpl("php code", TokenType.PHP_TAG, lineNumber, MimeType.APPLICATION_PHP);
          if (currentToken != null)
@@ -88,7 +92,7 @@ public class PhpParser extends CodeMirrorParserImpl
       }
 
       // recognize "?>" close tag
-      else if (isPhpCloseNode(nodeType, nodeContent) && !MimeType.TEXT_HTML.equals(currentContentMimeType))
+      else if (isPhpCloseTag(nodeType, nodeContent) && !MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
          currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
@@ -104,58 +108,76 @@ public class PhpParser extends CodeMirrorParserImpl
       else
       {
          // parse php code
-         nodeStack.push(new Node(javaScriptNode));
+         mainNodeStack.push(new Node(javaScriptNode));
          
          TokenBeenImpl newToken;
 
          // recognize class declaration like "final class testClass extends parentClass {..." or "class testClass \n {..." 
-         if ((newToken = isClassDeclaration((Stack<Node>) nodeStack.clone(), lineNumber)) != null)
+         if ((newToken = isClassDeclaration((Stack<Node>) mainNodeStack.clone(), lineNumber)) != null)
          {
             addSubToken(currentToken, newToken);
             currentToken = newToken;
             enclosers.push(TokenType.CLASS);
          }
-         
-         // recognize function/method declaration like "public static function a(arg1, ...) .. {"         
-         else if ((newToken = isFunctionDeclaration((Stack<Node>) nodeStack.clone(), lineNumber, currentToken.getType())) != null)
+
+         // recognize interface declaration like "interface test extends foo {..." or "interface test \n {..." 
+         else if ((newToken = isInterfaceDeclaration((Stack<Node>) mainNodeStack.clone(), lineNumber)) != null)
          {
             addSubToken(currentToken, newToken);
             currentToken = newToken;
-            enclosers.push(newToken.getType());
+            enclosers.push(TokenType.INTERFACE);
+         }
+         
+         // recognize function/method declaration like "public static function a(arg1, ...) .. {"         
+         else if ((newToken = isFunctionDeclaration((Stack<Node>) mainNodeStack.clone(), lineNumber, currentToken.getType())) != null)
+         {
+            addSubToken(currentToken, newToken);
+            
+            // do not add method declaration within the interface to encloser list and such set method token as currentToken
+            if (! TokenType.INTERFACE.equals(currentToken.getType()))
+            {
+               currentToken = newToken;
+               enclosers.push(newToken.getType());
+            }
          }
 
          // recognize first variable and property declaration like "$a = True;", "private $p1;" or "private $p1 = 2;"
-         else if ((newToken = isFirstVariableDefinition((Stack<Node>) nodeStack.clone(), currentToken)) != null)
+         else if ((newToken = isFirstVariableDefinition((Stack<Node>) mainNodeStack.clone(), currentToken, lineNumber)) != null)
          {
-            addSubToken(lineNumber, currentToken, newToken);
+            addSubToken(currentToken, newToken);
          }
          
          // recognize class constant definition like "const MYCONST = 'some string';" within the class, not within the method of class
-         else if ((TokenType.CLASS == currentToken.getType())
-                  && ((newToken = isFirstClassConstantDefinition((Stack<Node>)nodeStack.clone(), currentToken)) != null)
-                  )
+         else if ((newToken = isFirstClassConstantDefinition((Stack<Node>) mainNodeStack.clone(), currentToken, lineNumber)) != null)
          {
-            addSubToken(lineNumber, currentToken, newToken);
+            addSubToken(currentToken, newToken);
          }
          
-         // recognize constant definition like 'define(A, "example", false)'
-         else if ((newToken = isFirstConstantDefinition((Stack<Node>) nodeStack.clone(), currentToken)) != null)
+         // recognize constant definition like 'define("CONSTANT_EX", False);' outside the class
+         else if ((newToken = isFirstConstantDefinition((Stack<Node>) mainNodeStack.clone(), currentToken, lineNumber)) != null)
+         {
+            addSubToken(currentToken, newToken);
+         }         
+         
+         // recognize namespace declaration like 'namespace \my\name;' outside the class
+         else if ((newToken = isNamespaceDeclaration((Stack<Node>) mainNodeStack.clone(), currentToken)) != null)
          {
             addSubToken(lineNumber, currentToken, newToken);
          }         
          
          // recognize open brace "{"
-         else if (isOpenBrace(nodeStack.lastElement()))
+         else if (isOpenBrace(mainNodeStack.lastElement()))
          {
             enclosers.push(TokenType.BLOCK);
          }
                
          // recognize close brace "}"      
-         else if (isCloseBrace(nodeStack.lastElement()))
+         else if (isCloseBrace(mainNodeStack.lastElement()))
          {         
             if (! enclosers.isEmpty())
             {
                if (TokenType.CLASS.equals(enclosers.lastElement())
+                     || TokenType.INTERFACE.equals(enclosers.lastElement())
                      || TokenType.FUNCTION.equals(enclosers.lastElement())
                      || TokenType.METHOD.equals(enclosers.lastElement())
                    )
@@ -177,45 +199,155 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize class constant definition like "const MYCONST = 'some string';"
-    * @param non-safe nodeStack
+    * Recognize interface declaration like "interface test extends foo {..." or "interface test \n {..."
+    * @param nodeStack non-safe
+    * @param lineNumber
+    * @return
+    */
+   private TokenBeenImpl isInterfaceDeclaration(Stack<Node> nodeStack, int lineNumber)
+   {
+      if (nodeStack.size() > 2)
+      {
+         if (isOpenBrace(nodeStack.pop()))
+         {
+            // pass BR or whitespace between "interface foo ....  {"
+            while (nodeStack.size() > 1) {
+               // decrease line number if there is BR node between "foo ....  {"
+               if (nodeStack.lastElement().isLineBreak())
+               {
+                  lineNumber--;
+               }
+               
+               // break if there is non-BR or non-whitespace node between "foo ....  {"
+               else if (!nodeStack.lastElement().isLineBreak() 
+                        && !isWhitespace(nodeStack.lastElement())
+                       )
+               {
+                  break;
+               }
+               
+               nodeStack.pop();
+            }
+            
+            // parse class name and class modifiers
+            while (nodeStack.size() > 1) {
+               // pass "extends" and test if this is interface name
+               if (isInterfaceName(nodeStack))
+               {
+                  TokenBeenImpl newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.INTERFACE, lineNumber, MimeType.APPLICATION_PHP);                  
+                                    
+                  return newToken;
+               }
+               
+               nodeStack.pop();
+            }
+         } 
+      }
+    
+      return null;
+   }
+
+   /**
+    * Recognize interface name like "\n interface foo"
+    * @param nodeStack safe
+    * @return
+    */
+   private boolean isInterfaceName(Stack<Node> nodeStack)
+   {
+      return (nodeStack.size() > 1)
+         && isPhpElementName(nodeStack.get(nodeStack.size() - 1).getType())
+         && isInterfaceKeyword(nodeStack.get(nodeStack.size() - 2));
+   }
+
+   /**
+    * Recognize "interface" keyword.
+    * @param node
+    * @return
+    */
+   private boolean isInterfaceKeyword(Node node)
+   {
+      return isKeyword(node) && "interface".equals(node.getContent());
+   }
+
+   /**
+    * Recognize namespace declaration like '\n namespace \my\name;' outside the class
+    * @param nodeStack non-safe
     * @param currentToken
     * @return
     */
-   private TokenBeenImpl isFirstClassConstantDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   private TokenBeenImpl isNamespaceDeclaration(Stack<Node> nodeStack, TokenBeenImpl currentToken)
    {
+      if (isInsideTheClassOrInterface(currentToken))
+         return null;
+      
+      if (nodeStack.size() > 2)
+      {         
+         if (isSemicolonNode(nodeStack.pop())           
+              && isPhpElementName(nodeStack.lastElement().getType())
+              && isNamespaceKeyword(nodeStack.get(nodeStack.size() - 2))
+            )
+         {                     
+            return new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.NAMESPACE, 0, MimeType.APPLICATION_PHP);
+         }
+      }
+            
+      return null; 
+   }
+
+   /**
+    * Recognize class constant single-line or multi-line definition like "const MYCONST = 'some string';" inside the class, not within the method of class
+    * @param currentToken
+    * @param lineNumber
+    * @param non-safe nodeStack
+    * @return
+    */
+   private TokenBeenImpl isFirstClassConstantDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken, int lineNumber)
+   {
+      // class constants should be defined inside the class or interface
+      if (!isInsideTheClassOrInterface(currentToken))
+         return null;
+      
       TokenBeenImpl newToken = null;
+      int lastLineNumber = lineNumber;      
       
       if (nodeStack.size() > 4)
       {         
          if (isSemicolonNode(nodeStack.pop()))
          {            
-            String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone());
+            String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone(), false);
 
             // pass nodes before "="
-            while ((nodeStack.size() > 2) 
-                     && !isEqualSign(nodeStack.lastElement())) {
-               nodeStack.pop();
+            while ((nodeStack.size() > 3) 
+                     && !isEqualSign(nodeStack.lastElement())) 
+            {
+               // taking into account multi-line definition
+               if (nodeStack.pop().isLineBreak())
+               {
+                  lineNumber--;
+               }
             }
             
             // recognize variable assignment statement like "const MYCONST ="               
-            if (nodeStack.size() > 2)
-            {
-               if (isEqualSign(nodeStack.pop())
-                        && isClassConstantName(nodeStack) 
-                        && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())
-                  )
-               {   
-                  String constName = nodeStack.lastElement().getContent();
-                  
-                  newToken = new TokenBeenImpl(constName, TokenType.CLASS_CONSTANT, 0, MimeType.APPLICATION_PHP);
+            if (isEqualSign(nodeStack.pop())
+                     && isClassConstantName(nodeStack) 
+                     && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())
+               )
+            {   
+               String constName = nodeStack.lastElement().getContent();
+               
+               newToken = new TokenBeenImpl(constName, TokenType.CLASS_CONSTANT, lineNumber, MimeType.APPLICATION_PHP);
 
-                  updateVariableList(currentToken, constName);
-                  
-                  if (possibleElementType != null)
-                  {
-                     newToken.setElementType(possibleElementType);
-                  }
+               updateVariableList(currentToken, constName);
+               
+               if (possibleElementType != null)
+               {
+                  newToken.setElementType(possibleElementType);
+               }
+   
+               // taking into account multi-line definition 
+               if (lastLineNumber != lineNumber)
+               {
+                  newToken.setLastLineNumber(lastLineNumber);
                }
             }
          } 
@@ -224,10 +356,9 @@ public class PhpParser extends CodeMirrorParserImpl
       return newToken;      
    }
 
-
    /**
     * Recognize class constant statement like "const MYCONST".
-    * @param safe nodeStack
+    * @param nodeStack safe
     * @return
     */
    private boolean isClassConstantName(Stack<Node> nodeStack)
@@ -247,70 +378,182 @@ public class PhpParser extends CodeMirrorParserImpl
       return isKeyword(node) && "const".equals(node.getContent());
    }
 
-   private TokenBeenImpl isFirstConstantDefinition(Stack<Node> clone, TokenBeenImpl currentToken)
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-   
    /**
-    * Recognize first field declaration like "$a;", "private $a", 
-    * or field or variable declaration like "$a = 1;", "private $a = True". 
-    * @param non-safe node stack
+    * Recognize first definition of constant with only scalar data (boolean, integer, float and string) like 'define("CONSTANT_EX", "test");'. Also constants should be defined outside the class.   
+    * @param nodeStack non-safe
     * @param currentToken
     * @return
     */
-   private TokenBeenImpl isFirstVariableDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken)
+   private TokenBeenImpl isFirstConstantDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken, int lineNumber)
    {
+      // constants should be defined outside the class
+      if (isInsideTheClassOrInterface(currentToken))
+         return null;
+      
+      TokenBeenImpl newToken = null; 
+      int lastLineNumber = lineNumber;       
+      
+      if (nodeStack.size() > 6)
+      {         
+         // check on ");"
+         if (isSemicolonNode(nodeStack.pop()) && isCloseBracket(nodeStack.pop()))
+         {            
+            String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone(), true);
+
+            // pass nodes before "," within the brackets 'define("CONSTANT_EX", "test");'
+            while ((nodeStack.size() > 4) 
+                     && !isComma(nodeStack.lastElement())) 
+            {
+               // taking into account multi-line definition
+               if (nodeStack.pop().isLineBreak())
+               {
+                  lineNumber--;
+               }
+            }
+            
+            // recognize variable assignment statement like 'define("CONSTANT_EX",'               
+            if (isComma(nodeStack.pop()))
+            {
+               String constName = nodeStack.lastElement().getContent().replaceAll("[\'\"]", "");  // remove " and ' enclosers
+               // recognize variable assignment statement like 'define("CONSTANT_EX"'
+               if (isConstantName(nodeStack) 
+                     && !constants.contains(constName)   // check if this is first occurrence of constant
+                  )
+               {                        
+                  newToken = new TokenBeenImpl(constName, TokenType.CONSTANT, lineNumber, MimeType.APPLICATION_PHP);
+
+                  constants.add(constName);
+                  
+                  if (possibleElementType != null)
+                  {
+                     newToken.setElementType(possibleElementType);
+                  }
+                  
+                  // taking into account multi-line definition 
+                  if (lastLineNumber != lineNumber)
+                  {
+                     newToken.setLastLineNumber(lastLineNumber);
+                  }                  
+               }
+            }
+         } 
+      }
+            
+      return newToken; 
+   }
+
+   /**
+    * Test if current token is class or the token inside the class or inside the interface.
+    * @param currentToken
+    * @return
+    */
+   private boolean isInsideTheClassOrInterface(TokenBeenImpl currentToken)
+   {
+      return TokenType.CLASS == currentToken.getType()
+             || TokenType.INTERFACE == currentToken.getType()
+             || (currentToken.getParentToken() != null   // check constants within the method 
+               && TokenType.CLASS == currentToken.getParentToken().getType());
+   }
+   
+   /**
+    * Recognize start of constant definition like 'define("CONST_NAME"'
+    * @param nodeStack safe
+    * @return
+    */
+   private boolean isConstantName(Stack<Node> nodeStack)
+   {
+      return (nodeStack.size() > 2)
+               && isString(nodeStack.get(nodeStack.size() - 1).getType())
+               && isOpenBracket(nodeStack.get(nodeStack.size() - 2))
+               && isDefineKeyword(nodeStack.get(nodeStack.size() - 3));
+   }
+
+   /**
+    * Recognize "define" function keyword
+    * @param node
+    * @return
+    */
+   private boolean isDefineKeyword(Node node)
+   {
+      return "php-predefined-function".equals(node.getType()) && "define".equals(node.getContent());
+   }
+
+   /**
+    * Recognize first field declaration like "$a;", "private $a", 
+    * or field or variable single-line or multi-line declaration like "$a = 1;", "private $a = True", not inside the interface. 
+    * @param currentToken
+    * @param lineNumber
+    * @param non-safe node stack
+    * @return
+    */
+   private TokenBeenImpl isFirstVariableDefinition(Stack<Node> nodeStack, TokenBeenImpl currentToken, int lineNumber)
+   {
+      if (TokenType.INTERFACE.equals(currentToken))
+         return null;
+      
       TokenBeenImpl newToken = null;
+      int lastLineNumber = lineNumber;
       
       if (nodeStack.size() > 1)
       {         
          if (isSemicolonNode(nodeStack.pop()))
          {            
-            
-            // recognize field declaration like "$a;"
+            // recognize field declaration like "$a"
             if (TokenType.CLASS.equals(currentToken.getType())
                      && isVariable(nodeStack.lastElement().getType())
                      && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())                        
                 )
             {  
-                 newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.PROPERTY, 0, MimeType.APPLICATION_PHP);  
+                 newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.PROPERTY, lineNumber, MimeType.APPLICATION_PHP);
+                 
+                 nodeStack.setSize(nodeStack.size() - 1);  // remove property name "$a" node
+                 checkModifiers(newToken, nodeStack);
             }
             
-            // recognize field or variable declaration like "$a = 1;"
+            // recognize field or variable declaration like "$a = 1"
             else if (nodeStack.size() > 2)
             {              
-               String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone());
+               String possibleElementType = analyzeTypeOfAssignment((Stack<Node>) nodeStack.clone(), false);
    
                // pass nodes before "="
-               while ((nodeStack.size() > 1) 
+               while ((nodeStack.size() > 2) 
                         && !isEqualSign(nodeStack.lastElement())) {
-                  nodeStack.pop();
+
+                  // taking into account multi-line definition
+                  if (nodeStack.pop().isLineBreak())
+                  {
+                     lineNumber--;
+                  }
                }
                
                // recognize variable assignment statement like "$a ="               
-               if (nodeStack.size() > 1)
-               {
-                  if (isEqualSign(nodeStack.get(nodeStack.size() - 1))
-                           && isVariable(nodeStack.get(nodeStack.size() - 2).getType())
-                           && isFirstVariableOccurance(currentToken, nodeStack.get(nodeStack.size() - 2).getContent())
-                     )
-                  {   
-                     String variableName = nodeStack.get(nodeStack.size() - 2).getContent();
+               if (isEqualSign(nodeStack.get(nodeStack.size() - 1))
+                        && isVariable(nodeStack.get(nodeStack.size() - 2).getType())
+                        && isFirstVariableOccurance(currentToken, nodeStack.get(nodeStack.size() - 2).getContent())
+                  )
+               {   
+                  String variableName = nodeStack.get(nodeStack.size() - 2).getContent();
+                  
+                  newToken = new TokenBeenImpl(variableName, TokenType.VARIABLE, lineNumber, MimeType.APPLICATION_PHP);
+
+                  if (possibleElementType != null)
+                  {
+                     newToken.setElementType(possibleElementType);
+                  }
+
+                  // taking into account multi-line definition
+                  if (lastLineNumber != lineNumber)
+                  {
+                     newToken.setLastLineNumber(lastLineNumber);
+                  }
+                  
+                  // replace VARIABLE on PROPERTY
+                  if (TokenType.CLASS.equals(currentToken.getType()))
+                  {
+                     newToken.setType(TokenType.PROPERTY);
                      
-                     newToken = new TokenBeenImpl(variableName, TokenType.VARIABLE, 0, MimeType.APPLICATION_PHP);
-   
-                     if (possibleElementType != null)
-                     {
-                        newToken.setElementType(possibleElementType);
-                     }
-                     
-                     // replace VARIABLE on PROPERTY
-                     if (TokenType.CLASS.equals(currentToken.getType()))
-                     {
-                        newToken.setType(TokenType.PROPERTY);
-                     }
+                     nodeStack.setSize(nodeStack.size() - 1); // remove property name "$a" node
+                     checkModifiers(newToken, nodeStack);
                   }
                }
             }
@@ -331,11 +574,12 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Trying to predict possible type of variable by analysing of assignment from nodeStack
-    * @param non-safe nodeStack
+    * Trying to predict possible type of variable by analyzing of assignment from nodeStack
+    * @param onlyScalarDataType if true, then will be analyze only scalar data (boolean, integer, float, string, null) 
+    * @param nodeStack non-safe 
     * @return
     */
-   private String analyzeTypeOfAssignment(Stack<Node> nodeStack)
+   private String analyzeTypeOfAssignment(Stack<Node> nodeStack, boolean onlyScalarDataType)
    {
       Node lastNode = nodeStack.lastElement();
       
@@ -356,9 +600,9 @@ public class PhpParser extends CodeMirrorParserImpl
          return "Integer";   
       }
 
-      else if (isDouble(lastNode))
+      else if (isFloat(lastNode))
       {
-         return "Double";   
+         return "Float";   
       }
 
       else if (isNull(lastNode))
@@ -366,12 +610,12 @@ public class PhpParser extends CodeMirrorParserImpl
          return "Null";   
       }
 
-      else if (isArray((Stack<Node>) nodeStack.clone()))
+      else if (!onlyScalarDataType && isArray((Stack<Node>) nodeStack.clone()))
       {
          return "Array";   
       }
 
-      else if ((possibleClassName = isObject((Stack<Node>) nodeStack.clone())) != null)
+      else if (!onlyScalarDataType && ((possibleClassName = isObject((Stack<Node>) nodeStack.clone())) != null))
       {
          return possibleClassName;   
       }
@@ -396,11 +640,11 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize double numbers like "-123.45" or "1.2e-3"
+    * Recognize floating point numbers like "-123.45" or "1.2e-3"
     * @param node
     * @return
     */
-   private boolean isDouble(Node node)
+   private boolean isFloat(Node node)
    {
       return "php-atom".startsWith(node.getType()) 
              && (node.getContent().toLowerCase().matches("^[-+]?[0-9]+[.]([0-9]+)?|[.][0-9]+$")  // matches a floating point number like "-123.45" with optional integer as well as optional fractional part.
@@ -536,7 +780,7 @@ public class PhpParser extends CodeMirrorParserImpl
     * @param nodeContent
     * @return
     */
-   private boolean isPhpOpenNode(String nodeType, String nodeContent)
+   private boolean isPhpOpenTag(String nodeType, String nodeContent)
    {
       return "xml-processing".equals(nodeType) 
                && ("&lt;?".equals(nodeContent)
@@ -550,21 +794,21 @@ public class PhpParser extends CodeMirrorParserImpl
     * @param nodeContent
     * @return
     */
-   private boolean isPhpCloseNode(String nodeType, String nodeContent)
+   private boolean isPhpCloseTag(String nodeType, String nodeContent)
    {
       return "xml-processing".equals(nodeType) && "?&gt;".equals(nodeContent);
    };
    
    /**
-    * Return true if there is "class className" pattern at the top of nodeStack
-    * @param nodeStack
+    * Return true if there is "\n class className" pattern at the top of nodeStack
+    * @param nodeStack safe
     * @return
     */
    private boolean isClassName(Stack<Node> nodeStack)
    {
       if (nodeStack.size() > 1
-               && isClassNode(nodeStack.get(nodeStack.size() - 2))
                && isPhpElementName(nodeStack.lastElement().getType())
+               && isClassKeyword(nodeStack.get(nodeStack.size() - 2))
           )
       {
          return true;
@@ -598,7 +842,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private TokenBeenImpl isClassDeclaration(Stack<Node> nodeStack, int lineNumber)
    {
-      if (nodeStack.size() > 3)
+      if (nodeStack.size() > 2)
       {
          if (isOpenBrace(nodeStack.pop()))
          {
@@ -674,19 +918,19 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Check on 'abstract', 'final', 'private', 'protected', 'public', 'static' modifiers
+    * Check on supported by PHP 'abstract', 'final', 'private', 'protected', 'public', 'static' modifiers.
     * @param lastNode
     * @return
     */
    private Modifier isModifier(Node lastNode)
    {
       if (isKeyword(lastNode)
-             && ("abstract".equals(lastNode.getContent())
-                 || "final".equals(lastNode.getContent())
-                 || "private".equals(lastNode.getContent())
-                 || "protested".equals(lastNode.getContent())
-                 || "public".equals(lastNode.getContent())
-                 || "static".equals(lastNode.getContent())
+             && (Modifier.ABSTRACT.toString().toLowerCase().equals(lastNode.getContent())
+                 || Modifier.FINAL.toString().toLowerCase().equals(lastNode.getContent())
+                 || Modifier.PRIVATE.toString().toLowerCase().equals(lastNode.getContent())
+                 || Modifier.PROTECTED.toString().toLowerCase().equals(lastNode.getContent())
+                 || Modifier.PUBLIC.toString().toLowerCase().equals(lastNode.getContent())
+                 || Modifier.STATIC.toString().toLowerCase().equals(lastNode.getContent())
              )
          )
       {
@@ -704,7 +948,8 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize function declaration like "public static function a(arg1, ...) .. {" and return its token with preset modifiers and parameters
+    * Recognize function declaration like "\n public static function a($arg1, ...) .. {" and return its token with preset modifiers and parameters.
+    * Recognize function declaration like "\n public static function a(arg1, ...);" inside the interface
     * @param lineNumber 
     * @param non-safe nodeStack
     * @return new function token
@@ -713,54 +958,74 @@ public class PhpParser extends CodeMirrorParserImpl
    {
       if (nodeStack.size() > 4)
       {
-         if (isOpenBrace(nodeStack.pop()))
+         // test if this is inside the interface
+         if (TokenType.INTERFACE.equals(currentTokenType))
          {
-            // pass BR or whitespace between ") ....  {"
-            while (nodeStack.size() > 3) {
-               Node node = nodeStack.pop();
-               if (isCloseBracket(node))
-               {
-                  break;
-               }
-               
-               // decrease line number if there is BR node between ") ....  {"
-               else if (node.isLineBreak())
+            // recognize function declaration like "public static function a(arg1, ...);" inside the interface 
+            if (!isSemicolonNode(nodeStack.pop()))
+               return null;
+         }
+         else 
+         {
+            // recognize function declaration like "public static function a($arg1, ...) .. {" and return its token with preset modifiers and parameters.
+            if (!isOpenBrace(nodeStack.pop()))
+               return null;
+         }
+         
+         // pass BR or whitespace between ") ....  {"
+         while (nodeStack.size() > 4
+                 && !isCloseBracket(nodeStack.lastElement())
+                ) 
+         {
+            Node node = nodeStack.pop();
+            
+            // decrease line number if there is BR node between ") ....  {"
+            if (node.isLineBreak())
+            {
+               lineNumber--;
+            }
+            // return if there is non-BR or non-whitespace node between ") ....  {"
+            else if (!(node.isLineBreak() || isWhitespace(node)))
+            {
+               return null;
+            }
+         }
+         
+         // test if this is code like "function a(...)"
+         if (isCloseBracket(nodeStack.pop()))
+         {
+            // read function parameters
+            List<TokenBeenImpl> parameters = readFunctionParameters((Stack<Node>) nodeStack.clone(), lineNumber);
+            
+            // parse function name and function modifiers
+            while (nodeStack.size() > 1) {
+
+               // taking into consideration multi-line parameters definition like "($a, \n $b, ...)"
+               if (nodeStack.lastElement().isLineBreak())
                {
                   lineNumber--;
                }
-               // return if there is non-BR or non-whitespace node between ") ....  {"
-               else if (!(node.isLineBreak() || isWhitespace(node)))
-               {
-                  return null;
-               }
-            }
-
-            // read function parameters
-            List<TokenBeenImpl> parameters = readFunctionParameters(nodeStack, lineNumber);
-            
-            // parse class name and class modifiers
-            while (nodeStack.size() > 1) {
-               // test if this is class name
+               
+               // test if this is function name
                if (isFunctionName(nodeStack))
                {
                   TokenBeenImpl newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.FUNCTION, lineNumber, MimeType.APPLICATION_PHP);
              
-                  if (TokenType.CLASS.equals(currentTokenType))
+                  if (TokenType.CLASS.equals(currentTokenType)
+                       || TokenType.INTERFACE.equals(currentTokenType))
                   {
                      // replace FUNCTION on METHOD
                      newToken.setType(TokenType.METHOD);
-                  }
-                  
-                  // remove "function funcName" nodes
-                  nodeStack.setSize(nodeStack.size() - 2);
 
-                  checkModifiers(newToken, nodeStack);
+                     nodeStack.setSize(nodeStack.size() - 2); // remove "function funcName" nodes
+                     checkModifiers(newToken, nodeStack);
+                  }
 
                   if ((parameters != null) && !parameters.isEmpty())
                   {
                      newToken.setParameters(parameters);
                   }
-                  
+
                   return newToken;
                }
                
@@ -773,27 +1038,21 @@ public class PhpParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Return true if there is "function functionName" pattern at the top of nodeStack
+    * Return true if there is "\n function functionName" pattern at the top of nodeStack
     * @param nodeStack
     * @return
     */
    private boolean isFunctionName(Stack<Node> nodeStack)
    {
-      if (nodeStack.size() > 1
-               && isFunctionNode(nodeStack.get(nodeStack.size() - 2))
+      return (nodeStack.size() > 1)
                && isPhpElementName(nodeStack.lastElement().getType())
-          )
-      {
-         return true;
-      }
-
-      return false;
+               && isFunctionKeyword(nodeStack.get(nodeStack.size() - 2));               
    }
 
    /**
     * Recognize parameters like '(util_FilePath $filename, $x, $types = array(), $coffeeMaker = NULL'.
     * Return empty list if there are no parameters or null, if there is syntax error.
-    * @param non-safe nodeStack
+    * @param nodeStack non-safe 
     * @return parameters list
     */
    private List<TokenBeenImpl> readFunctionParameters(Stack<Node> nodeStack, int lineNumber)
@@ -882,12 +1141,22 @@ public class PhpParser extends CodeMirrorParserImpl
       return (node.getType() != null) && (node.getType().startsWith("whitespace"));
    }
    
-   private boolean isClassNode(Node node)
+   /**
+    * Recognize "class" keyword.
+    * @param node
+    * @return
+    */
+   private boolean isClassKeyword(Node node)
    {
       return isKeyword(node) && "class".equals(node.getContent());
    }
 
-   private boolean isFunctionNode(Node node)
+   /**
+    * Recognize "function" keyword
+    * @param node
+    * @return
+    */
+   private boolean isFunctionKeyword(Node node)
    {
       return isKeyword(node) && "function".equals(node.getContent());
    }
@@ -898,8 +1167,8 @@ public class PhpParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Verify name of class, or function, or method
-    * @param nodeContent
+    * Verify name of class, or function, or method, or interface, or namespace, or class constant
+    * @param nodeType
     * @return
     */
    private boolean isPhpElementName(String nodeType)
@@ -927,7 +1196,7 @@ public class PhpParser extends CodeMirrorParserImpl
    private void addSubToken(TokenBeenImpl currentToken, TokenBeenImpl newToken)
    {
       currentToken.addSubToken(newToken);
-      nodeStack.clear();
+      mainNodeStack.clear();
    }
    
    /**
@@ -940,7 +1209,7 @@ public class PhpParser extends CodeMirrorParserImpl
    {
       clearVariables(currentToken.getType());
       currentToken.setLastLineNumber(lineNumber);
-      nodeStack.clear();
+      mainNodeStack.clear();
       return currentToken.getParentToken();
    }
    
@@ -982,6 +1251,26 @@ public class PhpParser extends CodeMirrorParserImpl
    {
       return "php-operator".equals(node.getType()) && "=".equals(node.getContent());
    }
+ 
+   /**
+    * Recognize sign ","
+    * @param node
+    * @return
+    */
+   private boolean isComma(Node node)
+   {
+      return "php-punctuation".equals(node.getType()) && ",".equals(node.getContent());
+   }
+
+   /**
+    * Recognize "namespace" keyword
+    * @param node
+    * @return
+    */
+   private boolean isNamespaceKeyword(Node node)
+   {
+      return isKeyword(node) && "namespace".equals(node.getContent());
+   }   
    
    /**
     * Clear variable list within the method, or module, or class

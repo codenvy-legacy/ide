@@ -63,6 +63,7 @@ import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.RubyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
@@ -403,8 +404,10 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']" ,// code styles
          true, // can be outlined
          true, // can be autocompleted
-         new PhpParser() // exoplatform code parser
-      )));   
+         new PhpParser(), // exoplatform code parser
+         new PhpAutocompleteHelper(), // autocomplete helper
+         new HtmlCodeAssistant(),  // TODO should be replaced on PhpCodeAssistant 
+         true)));   
 
       addEditor(new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff", "", true,
          new CodeMirrorConfiguration("['parsediff.js']", // generic code parsers

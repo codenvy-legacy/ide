@@ -170,7 +170,7 @@ public class CodeMirrorConfiguration
     * @param parser
     * @param helper
     * @param codeAssistant
-    * @param types
+    * @param canHaveSeveralMimeTypes
     */
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutocompleteHelper helper, CodeAssistant codeAssistant,
