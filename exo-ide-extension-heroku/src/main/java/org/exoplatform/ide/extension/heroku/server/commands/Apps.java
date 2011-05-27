@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
@@ -33,6 +34,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -41,23 +45,23 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
- * List of heroku applications for current user. If command executed successfully method {@link #execute()} returns list
- * of application names.
+ * List of heroku applications for current user.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class Apps extends HerokuCommand
 {
-   public Apps()
-   {
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * @return List of names of applications for current user
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> list() throws HerokuException, CredentialsNotFoundException, CommandException
    {
       HttpURLConnection http = null;
       try

@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.extension.heroku.server.commands;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
 import org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
+import javax.ws.rs.POST;
+
 /**
- * Remove locally save authentication credentials.
+ * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -35,21 +36,13 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
  */
 public class AuthLogout extends HerokuCommand
 {
-   public AuthLogout()
-   {
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   public void logout() throws HerokuException, CommandException
    {
-      /*HerokuAuthenticator herokuAuthenticator = new DefaultHerokuAuthenticator();*/
-      HerokuAuthenticator herokuAuthenticator =
-         (HerokuAuthenticator)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
-            HerokuAuthenticator.class);
-      herokuAuthenticator.logout();
-      return null;
+      HerokuAuthenticator.getInstance().logout();
    }
 }

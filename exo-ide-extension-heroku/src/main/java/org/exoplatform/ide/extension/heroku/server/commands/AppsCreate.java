@@ -19,14 +19,11 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.eclipse.jgit.lib.Constants;
-import org.exoplatform.ide.extension.heroku.server.Arg;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
-import org.exoplatform.ide.extension.heroku.server.Default;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
-import org.exoplatform.ide.extension.heroku.shared.HerokuApplicationInfo;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -40,7 +37,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -49,49 +53,36 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
- * Create new application. If command executed successfully method {@link #execute()} returns information about newly
- * created application. Minimal set of application attributes:
- * <ul>
- * <li>Name</li>
- * <li>Git URL of repository</li>
- * <li>HTTP URL of application</li>
- * </ul>
- * <p>
- * Remote configuration added in git repository configuration if <code>workDir</code> is not null and contains git
- * repository.
- * </p>
+ * Create new application.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see HerokuApplicationInfo
- * @see Arg
- * @see Option
- * @see Default
  */
 public class AppsCreate extends HerokuCommand
 {
-   /** Application name. If <code>null</code> then application got random name. */
-   @Arg(index = 0)
-   private String name;
-
-   /** Git remote name, default 'heroku'. */
-   @Option(name = "--remote")
-   @Default("heroku")
-   private String remote;
-
-   /*@Option("--stack")
-   private String stack;*/
-
-   public AppsCreate(File workDir)
-   {
-      super(workDir);
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * @param name application name. If <code>null</code> then application got random name
+    * @param remote git remote name, default 'heroku'
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository. If
+    *           <code>workDir</code> exists and is git repository folder then remote configuration added
+    * @return Map with information about newly created application. Minimal set of application attributes:
+    *         <ul>
+    *         <li>Name</li>
+    *         <li>Git URL of repository</li>
+    *         <li>HTTP URL of application</li>
+    *         </ul>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> create( //
+      @QueryParam("name") String name, //
+      @QueryParam("remote") @DefaultValue("heroku") String remote, //
+      @QueryParam("workDir") File workDir //
+   ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
       HttpURLConnection http = null;
       try
@@ -133,7 +124,8 @@ public class AppsCreate extends HerokuCommand
          }
 
          XPath xPath = XPathFactory.newInstance().newXPath();
-         String name = (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING);
+
+         name = (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING);
          String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
          String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
 
@@ -149,7 +141,13 @@ public class AppsCreate extends HerokuCommand
                git.close();
             }
          }
-         return new HerokuApplicationInfo(name, webUrl, null, gitUrl, 0, 0, null, null, null, null, null);
+
+         Map<String, String> info = new HashMap<String, String>(3);
+         info.put("name", name);
+         info.put("gitUrl", gitUrl);
+         info.put("webUrl", webUrl);
+
+         return info;
       }
       catch (IOException ioe)
       {

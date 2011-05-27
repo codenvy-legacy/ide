@@ -18,50 +18,46 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
-import org.exoplatform.ide.extension.heroku.server.CommandException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
-import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.shared.HerokuRequest;
+import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 
-import java.io.File;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.PathParam;
 
 /**
  * REST interface to {@link Heroku}.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see Heroku#execute(String, java.util.Map, java.util.List)
  */
 @Path("ide/heroku")
 public class HerokuService
 {
-   @POST
-   @Consumes({MediaType.APPLICATION_JSON})
-   @Produces({MediaType.APPLICATION_JSON})
-   public Response execute(HerokuRequest request) throws HerokuException
+   @Path("login")
+   public HerokuCommand login()
    {
-      Heroku heroku = Heroku.getInstance();
-      try
-      {
-         Object result = heroku.execute( //
-            request.getCommand(), //
-            request.getOptions(), //
-            request.getArgs(), //
-            request.getWorkDir() != null ? new File(request.getWorkDir()) : null);
-         return Response.ok(result).type(MediaType.APPLICATION_JSON).build();
-      }
-      catch (CommandException e)
-      {
-         throw new WebApplicationException(Response.serverError().entity(e.getMessage()).type(MediaType.TEXT_PLAIN)
-            .build());
-      }
+      return Heroku.getInstance().getCommand("auth:login");
+   }
+
+   @Path("logout")
+   public HerokuCommand logout()
+   {
+      return Heroku.getInstance().getCommand("auth:logout");
+   }
+
+   @Path("apps{sl:(/)?}{command:.*}")
+   public HerokuCommand appsSub(@PathParam("command") String command)
+   {
+      if (command != null & !command.isEmpty())
+         return Heroku.getInstance().getCommand("apps:" + command);
+      return Heroku.getInstance().getCommand("apps");
+   }
+
+   @Path("keys{sl:(/)?}{command:.*}")
+   public HerokuCommand keysSub(@PathParam("command") String command)
+   {
+      if (command != null & !command.isEmpty())
+         return Heroku.getInstance().getCommand("keys:" + command);
+      return Heroku.getInstance().getCommand("keys");
    }
 }

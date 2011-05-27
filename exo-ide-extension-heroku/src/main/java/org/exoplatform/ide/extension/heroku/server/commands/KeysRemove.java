@@ -18,21 +18,22 @@
  */
 package org.exoplatform.ide.extension.heroku.server.commands;
 
-import org.exoplatform.ide.extension.heroku.server.Arg;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.QueryParam;
+
 /**
- * Remove SSH key for current user. If command executed successfully method {@link #execute()} returns <code>null</code>
- * .
+ * Remove SSH key for current user.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -40,22 +41,19 @@ import java.net.URLEncoder;
 public class KeysRemove extends HerokuCommand
 {
    /**
-    * Key name to remove. If <code>null</code> then all keys for current user removed.
+    * Remove all SSH keys for current user.
+    * 
+    * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for
+    *           current user removed
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     * @see KeysClear
     */
-   @Arg(index = 0)
-   private String keyName;
-
-   public KeysRemove(File workDir)
-   {
-      super(workDir);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
-    */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   public void remove(@QueryParam("keyName") String keyName) throws HerokuException, CredentialsNotFoundException,
+      CommandException
    {
       HttpURLConnection http = null;
       try
@@ -70,8 +68,6 @@ public class KeysRemove extends HerokuCommand
 
          if (http.getResponseCode() != 200)
             throw fault(http);
-
-         return null;
       }
       catch (IOException ioe)
       {

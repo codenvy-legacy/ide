@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
@@ -27,24 +28,26 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.ws.rs.POST;
+
 /**
- * Remove all SSH keys for current user. If command executed successfully method {@link #execute()} returns
- * <code>null</code>.
+ * Remove all SSH keys for current user.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class KeysClear extends HerokuCommand
 {
-   public KeysClear()
-   {
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * Remove all SSH keys for current user.
+    * 
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   public void clear() throws HerokuException, CredentialsNotFoundException, CommandException
    {
       HttpURLConnection http = null;
       try
@@ -57,8 +60,6 @@ public class KeysClear extends HerokuCommand
 
          if (http.getResponseCode() != 200)
             throw fault(http);
-
-         return null;
       }
       catch (IOException ioe)
       {

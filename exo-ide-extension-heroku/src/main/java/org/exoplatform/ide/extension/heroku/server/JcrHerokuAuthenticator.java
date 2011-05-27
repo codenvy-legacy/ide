@@ -26,8 +26,11 @@ import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
+import org.picocontainer.Startable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 
 import javax.jcr.Item;
@@ -41,7 +44,7 @@ import javax.jcr.Session;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JcrHerokuAuthenticator extends DefaultHerokuAuthenticator
+public class JcrHerokuAuthenticator extends HerokuAuthenticator implements Startable
 {
    private RepositoryService repositoryService;
    private String workspace;
@@ -100,14 +103,20 @@ public class JcrHerokuAuthenticator extends DefaultHerokuAuthenticator
          }
 
          if (item == null)
-            throw new IllegalStateException("Credentials not found. Use method 'login' first. ");
+            return null;
 
          Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-         String[] source = property.getString().split("\n");
-         if (source.length != 2)
-            throw new IllegalStateException("Credentials corrupted. Use method 'login' first. ");
-
-         return new HerokuCredentials(source[0], source[1]);
+         BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
+         try
+         {
+            String email = credentialsReader.readLine();
+            String apiKey = credentialsReader.readLine();
+            return new HerokuCredentials(email, apiKey);
+         }
+         finally
+         {
+            credentialsReader.close();
+         }
       }
       catch (RepositoryException re)
       {
@@ -211,5 +220,23 @@ public class JcrHerokuAuthenticator extends DefaultHerokuAuthenticator
          if (session != null)
             session.logout();
       }
+   }
+
+   /**
+    * @see org.picocontainer.Startable#start()
+    */
+   @Override
+   public void start()
+   {
+      HerokuAuthenticator.setInstance(this);
+   }
+
+   /**
+    * @see org.picocontainer.Startable#stop()
+    */
+   @Override
+   public void stop()
+   {
+      HerokuAuthenticator.setInstance(null);
    }
 }

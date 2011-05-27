@@ -19,55 +19,55 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.QueryParam;
+
 /**
- * Permanently destroy an application. If command executed successfully method {@link #execute()} returns
- * <code>null</code>.
+ * Permanently destroy an application.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see Option
  */
 public class AppsDestroy extends HerokuCommand
 {
    /**
-    * Application name to destroy. If <code>null</code> then try to determine application name from git configuration.
-    * To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    * @param name application name to destroy. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>
+    *           at least
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Option(name = "--app")
-   private String app;
-
-   public AppsDestroy(File workDir)
+   @POST
+   public void destroy( //
+      @QueryParam("name") String name, //
+      @QueryParam("workDir") File workDir //
+   ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
-      super(workDir);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
-    */
-   @Override
-   public Object execute() throws HerokuException, CommandException
-   {
-      if (this.app == null)
+      if (name == null || name.isEmpty())
       {
-         String detectedApp = detectAppName();
-         if (detectedApp == null || detectedApp.isEmpty())
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
-         this.app = detectedApp;
       }
+
       HttpURLConnection http = null;
       try
       {
-         URL url = new URL(Heroku.HEROKU_API + "/apps/" + app);
+         URL url = new URL(Heroku.HEROKU_API + "/apps/" + name);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
@@ -75,8 +75,6 @@ public class AppsDestroy extends HerokuCommand
 
          if (http.getResponseCode() != 200)
             throw fault(http);
-
-         return null;
       }
       catch (IOException ioe)
       {

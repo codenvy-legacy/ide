@@ -19,10 +19,10 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -36,6 +36,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -52,21 +56,18 @@ import javax.xml.xpath.XPathFactory;
 public class Keys extends HerokuCommand
 {
    /**
-    * If <code>true</code> then display info about each key in long format. In other words full content of public key
-    * provided. By default public key displayed in truncated form.
+    * @param inLongFormat if <code>true</code> then display info about each key in long format. In other words full
+    *           content of public key provided. By default public key displayed in truncated form
+    * @return List with all SSH keys for current user
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Option(name = "--long")
-   private boolean inLongFormat;
-
-   public Keys()
-   {
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
-    */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<HerokuKey> list(@QueryParam("long") boolean inLongFormat) throws HerokuException,
+      CredentialsNotFoundException, CommandException
    {
       HttpURLConnection http = null;
       try

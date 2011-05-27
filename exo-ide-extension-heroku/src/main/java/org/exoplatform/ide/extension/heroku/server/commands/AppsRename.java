@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.server.commands;
 
-import org.exoplatform.ide.extension.heroku.server.Arg;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
-import org.exoplatform.ide.extension.heroku.shared.HerokuApplicationInfo;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -37,64 +35,63 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
- * Rename application. If command executed successfully method {@link #execute()} returns information about renamed
- * application. Minimal set of application attributes:
- * <ul>
- * <li>New name</li>
- * <li>New git URL of repository</li>
- * <li>New HTTP URL of application</li>
- * </ul>
- * <p>
- * Remote configuration updated.
- * </p>
+ * Rename application.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class AppsRename extends HerokuCommand
 {
-   /** New name for application. If <code>null</code> then method {@link #execute()} throws {@link CommandException}. */
-   @Arg(index = 0)
-   private String newname;
-
    /**
-    * Current name of application. If <code>null</code> then try to determine application name from git configuration.
-    * To be able determine application name <code>workDir</code> must not be <code>null</code> at least.
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>
+    * @param newname new name for application. If <code>null</code> CommandException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>. If not <code>null</code> and is git
+    *           folder then remote configuration update
+    * @return information about renamed application. Minimal set of application attributes:
+    *         <ul>
+    *         <li>New name</li>
+    *         <li>New git URL of repository</li>
+    *         <li>New HTTP URL of application</li>
+    *         </ul>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Option(name = "--app")
-   private String app;
-
-   public AppsRename(File workDir)
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> rename( //
+      @QueryParam("name") String name, //
+      @QueryParam("newname") String newname, //
+      @QueryParam("workDir") File workDir //
+   ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
-      super(workDir);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
-    */
-   @Override
-   public Object execute() throws HerokuException, CommandException
-   {
-      if (newname == null && newname.isEmpty())
+      if (newname == null || newname.isEmpty())
          throw new CommandException("New name may not be null or empty string. ");
 
-      if (this.app == null)
+      if (name == null || name.isEmpty())
       {
-         String detectedApp = detectAppName();
-         if (detectedApp == null || detectedApp.isEmpty())
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
-         this.app = detectedApp;
       }
 
       HttpURLConnection http = null;
       GitConnection git = null;
       try
       {
-         URL url = new URL(Heroku.HEROKU_API + "/apps/" + app);
+         URL url = new URL(Heroku.HEROKU_API + "/apps/" + name);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("PUT");
          http.setRequestProperty("Accept", "application/xml, */*");
@@ -117,11 +114,10 @@ public class AppsRename extends HerokuCommand
             throw fault(http);
 
          // Get updated info about application.
-         HerokuApplicationInfo info =
-            (HerokuApplicationInfo)Heroku.getInstance().execute("apps:info",
-               Collections.singletonMap("--app", newname), null, null);
+         Map<String, String> info =
+            ((AppsInfo)Heroku.getInstance().getCommand("apps:info")).info(newname, false, workDir);
 
-         String gitUrl = info.getGitUrl();
+         String gitUrl = (String)info.get("gitUrl");
 
          RemoteListRequest listRequest = new RemoteListRequest(null, true);
          git = GitConnectionFactory.getInstance().getConnection(workDir, null);
@@ -132,7 +128,7 @@ public class AppsRename extends HerokuCommand
             if (r.getUrl().startsWith("git@heroku.com:"))
             {
                String rname = extractAppName(r);
-               if (rname != null && rname.equals(app))
+               if (rname != null && rname.equals(name))
                {
                   git.remoteUpdate(new RemoteUpdateRequest(r.getName(), null, false, new String[]{gitUrl},
                      new String[]{r.getUrl()}, null, null));

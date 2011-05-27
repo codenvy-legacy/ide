@@ -18,38 +18,15 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Annotation of heroku command argument. Fields of instance {@link HerokuCommand} initialized by values supplied in
- * List passed to {@link Heroku#execute(String, java.util.Map, java.util.List, java.io.File)}. Value from
- * {@link #index()} used to obtain correct value from List.
- * <p>
- * Example:
- * 
- * <pre>
- * public class MyCommand extends HerokuCommand
- * {
- *    &#064;Arg(index = 0)
- *    private String arg0;
- * 
- *    &#064;Arg(index = 1)
- *    private String arg1;
- *    
- *    ...
- * }
- * </pre>
- * 
- * </p>
- * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Arg {
-   int index();
+@SuppressWarnings("serial")
+public class CredentialsNotFoundException extends Exception
+{
+   public CredentialsNotFoundException(String message)
+   {
+      super(message);
+   }
 }

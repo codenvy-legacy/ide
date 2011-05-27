@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.heroku.server;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -89,40 +88,9 @@ public abstract class HerokuCommand
       return error;
    }
 
-   /**
-    * Git working directory. May be <code>null</code> if command executed out of git repository.
-    */
-   protected final File workDir;
-
-   protected HerokuCommand()
+   protected void authenticate(HttpURLConnection http) throws IOException, CredentialsNotFoundException
    {
-      this(null);
-   }
-
-   /**
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository
-    */
-   protected HerokuCommand(File workDir)
-   {
-      this.workDir = workDir;
-   }
-
-   /**
-    * Execute command.
-    * 
-    * @return command execution result
-    * @throws HerokuException if heroku server return unexpected or error status for request
-    * @throws CommandException if any errors occurs when invoke command
-    */
-   public abstract Object execute() throws HerokuException, CommandException;
-
-   protected void authenticate(HttpURLConnection http) throws IOException
-   {
-      /*HerokuAuthenticator herokuAuthenticator = new DefaultHerokuAuthenticator();*/
-      HerokuAuthenticator herokuAuthenticator =
-         (HerokuAuthenticator)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
-            HerokuAuthenticator.class);
-      herokuAuthenticator.authenticate(http);
+      HerokuAuthenticator.getInstance().authenticate(http);
    }
 
    /**
@@ -132,7 +100,7 @@ public abstract class HerokuCommand
     * @return application name or <code>null</code> if name can't be determined since command invoked outside of git
     *         repository
     */
-   protected String detectAppName()
+   protected String detectAppName(File workDir)
    {
       if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
       {

@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
@@ -30,25 +31,29 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+
 /**
- * Add SSH key for current user. If command executed successfully method {@link #execute()} returns <code>null</code>.
- * {@link SshKeyProvider} must have registered public key for host' hiroku.com', see method
- * {@link SshKeyProvider#getPublicKey(String)}.
+ * Add SSH key for current user.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class KeysAdd extends HerokuCommand
 {
-   public KeysAdd()
-   {
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * Uppload SSH key to heroku.com. {@link SshKeyProvider} must have registered public key for host' hiroku.com', see
+    * method {@link SshKeyProvider#getPublicKey(String)}
+    * 
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   @Consumes("text/ssh-authkey")
+   public void add() throws HerokuException, CredentialsNotFoundException, CommandException
    {
       SshKeyProvider keyProvider =
          (SshKeyProvider)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SshKeyProvider.class);
@@ -81,8 +86,6 @@ public class KeysAdd extends HerokuCommand
 
                if (http.getResponseCode() != 200)
                   throw fault(http);
-
-               return null;
             }
             finally
             {

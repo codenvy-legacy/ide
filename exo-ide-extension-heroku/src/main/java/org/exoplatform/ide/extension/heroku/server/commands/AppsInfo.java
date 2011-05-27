@@ -19,11 +19,10 @@
 package org.exoplatform.ide.extension.heroku.server.commands;
 
 import org.exoplatform.ide.extension.heroku.server.CommandException;
+import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
-import org.exoplatform.ide.extension.heroku.shared.HerokuApplicationInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,6 +36,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -45,52 +48,48 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 /**
- * Provide detailed information about application. Result of execution of {@link #execute()} depends to {@link #raw}
- * field. If {@link #raw} is <code>false</code> (default) then method returns {@link HerokuApplicationInfo} otherwise
- * method returns raw Map that contains set of attributes.
+ * Provide detailed information about application.
  * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see HerokuApplicationInfo
- * @see Option
  */
 public class AppsInfo extends HerokuCommand
 {
    /**
-    * Application name to get information. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code> at
-    * least.
+    * @param name application name to get information. If <code>null</code> then try to determine application name from
+    *           git configuration. To be able determine application name <code>workDir</code> must not be
+    *           <code>null</code> at least
+    * @param inRawFormat if <code>true</code> then get result as raw Map. If <code>false</code> (default) result
+    *           is Map that contains predefined set of key-value pair
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>
+    * @return result of execution of {@link #execute()} depends to {@link #inRawFormat} parameter. If
+    *         {@link #inRawFormat} is <code>false</code> (default) then method returns with predefined set of attributes
+    *         otherwise method returns raw Map that contains all attributes
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CredentialsNotFoundException if cannot get access to heroku.com server since user is not login yet and has
+    *            not credentials. Must use {@link AuthLogin#execute(String, String)} first.
+    * @throws CommandException if any other exception occurs
     */
-   @Option(name = "--app")
-   private String app;
-
-   /** If <code>true</code> then get result as raw Map. */
-   @Option(name = "--raw")
-   private boolean raw;
-
-   public AppsInfo(File workDir)
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> info( //
+      @QueryParam("name") String name, //
+      @QueryParam("raw") boolean inRawFormat, //
+      @QueryParam("workDir") File workDir //
+   ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
-      super(workDir);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
-    */
-   @Override
-   public Object execute() throws HerokuException, CommandException
-   {
-      if (this.app == null)
+      if (name == null || name.isEmpty())
       {
-         String detectedApp = detectAppName();
-         if (detectedApp == null || detectedApp.isEmpty())
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
-         this.app = detectedApp;
       }
 
       HttpURLConnection http = null;
       try
       {
-         URL url = new URL(Heroku.HEROKU_API + "/apps/" + app);
+         URL url = new URL(Heroku.HEROKU_API + "/apps/" + name);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          authenticate(http);
@@ -112,31 +111,28 @@ public class AppsInfo extends HerokuCommand
 
          // TODO : Add 'addons', 'collaborators' to be conform to ruby implementation.
          XPath xPath = XPathFactory.newInstance().newXPath();
-         if (!raw)
+
+         Map<String, String> info = new HashMap<String, String>();
+
+         if (!inRawFormat)
          {
-            HerokuApplicationInfo info = new HerokuApplicationInfo();
-            info.setName((String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
-            info.setWebUrl((String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING));
-            info.setDomainName((String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
-            info.setGitUrl((String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING));
-            info.setDynos(((Double)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.NUMBER)).intValue());
-            info.setWorkers(((Double)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.NUMBER)).intValue());
-            String nilOrValue = ((Node)xPath.evaluate("/app/repo-size", xmlDoc, XPathConstants.NODE)).getTextContent();
-            if (nilOrValue != null && !nilOrValue.isEmpty())
-               info.setRepoSize(new Integer(nilOrValue));
-            nilOrValue = ((Node)xPath.evaluate("/app/slug-size", xmlDoc, XPathConstants.NODE)).getTextContent();
-            if (nilOrValue != null && !nilOrValue.isEmpty())
-               info.setSlugSize(new Integer(nilOrValue));
-            info.setStack((String)xPath.evaluate("/app/stack", xmlDoc, XPathConstants.STRING));
-            info.setOwner((String)xPath.evaluate("/app/owner", xmlDoc, XPathConstants.STRING));
-            info.setDatabaseSize((String)xPath.evaluate("/app/database_size", xmlDoc, XPathConstants.STRING));
+            info.put("name", (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
+            info.put("webUrl", (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING));
+            info.put("domainName", (String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
+            info.put("gitUrl", (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING));
+            info.put("dynos", (String)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.STRING));
+            info.put("workers", (String)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.STRING));
+            info.put("repoSize", (String)xPath.evaluate("/app/repo-size", xmlDoc, XPathConstants.STRING));
+            info.put("slugSize", (String)xPath.evaluate("/app/slug-size", xmlDoc, XPathConstants.STRING));
+            info.put("stack", (String)xPath.evaluate("/app/stack", xmlDoc, XPathConstants.STRING));
+            info.put("owner", (String)xPath.evaluate("/app/owner", xmlDoc, XPathConstants.STRING));
+            info.put("databaseSize", (String)xPath.evaluate("/app/database_size", xmlDoc, XPathConstants.STRING));
             return info;
          }
          else
          {
             NodeList appNodes = (NodeList)xPath.evaluate("/app/*", xmlDoc, XPathConstants.NODESET);
             int appLength = appNodes.getLength();
-            Map<String, String> info = new HashMap<String, String>(appLength);
             for (int i = 0; i < appLength; i++)
             {
                Node item = appNodes.item(i);

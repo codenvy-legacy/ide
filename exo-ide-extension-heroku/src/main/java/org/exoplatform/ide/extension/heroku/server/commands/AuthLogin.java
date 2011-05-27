@@ -18,14 +18,17 @@
  */
 package org.exoplatform.ide.extension.heroku.server.commands;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.heroku.server.CommandException;
 import org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.Option;
 
 import java.io.IOException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Log in with specified email/password.
@@ -38,32 +41,25 @@ import java.io.IOException;
  */
 public class AuthLogin extends HerokuCommand
 {
-   /** Email address that used when create account at heroku.com. */
-   @Option(name = "email", required = true)
-   private String email;
-
-   /** Password. */
-   @Option(name = "password", required = true)
-   private String password;
-
-   public AuthLogin()
-   {
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.heroku.server.HerokuCommand#execute()
+    * Result of command execution is saved 'heroku API key', see {@link HerokuAuthenticator#login(String, String)} for
+    * details.
+    * 
+    * @param email email address that used when create account at heroku.com
+    * @param password password
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws CommandException if any other exception occurs
     */
-   @Override
-   public Object execute() throws HerokuException, CommandException
+   @POST
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   public void login( //
+      @FormParam("email") String email, //
+      @FormParam("password") String password //
+   ) throws HerokuException, CommandException
    {
-      /*HerokuAuthenticator herokuAuthenticator = new DefaultHerokuAuthenticator();*/
-      HerokuAuthenticator herokuAuthenticator =
-         (HerokuAuthenticator)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
-            HerokuAuthenticator.class);
       try
       {
-         herokuAuthenticator.login(email, password);
-         return null;
+         HerokuAuthenticator.getInstance().login(email, password);
       }
       catch (IOException ioe)
       {
