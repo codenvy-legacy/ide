@@ -18,21 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.navigation.RenameItemPresenter;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -41,6 +26,19 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.navigation.RenameItemPresenter;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Form for renaming files and folders.
@@ -67,8 +65,6 @@ public class RenameItemForm extends DialogWindow implements
    public static final int HEIGHT_SMALL = 150;
 
    private static final String ID = "ideRenameItemForm";
-
-   private static final String ID_DYNAMIC_FORM = "ideRenameItemFormDynamicForm";
 
    private static final String ID_RENAME_BUTTON = "ideRenameItemFormRenameButton";
 

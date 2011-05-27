@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;

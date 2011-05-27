@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.vfs.callback;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -39,6 +41,11 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
 
       private String oldHref;
 
+      /**
+       * Store item, that will be moved and old href of item
+       * @param item - moved item (after moving properties must be updated: href and name)
+       * @param href - old href of item (to find and update properties in client)
+       */
       public MoveItemData(Item item, String href)
       {
          this.item = item;
@@ -61,6 +68,16 @@ public abstract class MoveItemCallback extends AsyncRequestCallback<MoveItemData
          return oldHref;
       }
 
+   }
+   
+   public MoveItemCallback()
+   {
+      super();
+   }
+   
+   public MoveItemCallback(HandlerManager eventBus)
+   {
+      super(eventBus);
    }
 
    /**

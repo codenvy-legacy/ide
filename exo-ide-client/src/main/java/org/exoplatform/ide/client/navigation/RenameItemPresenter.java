@@ -131,8 +131,6 @@ public class RenameItemPresenter
       {
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            System.out
-               .println("RenameItemPresenter.bindDisplay(...).new ValueChangeHandler<String>() {...}.onValueChange()");
             if (wasItemPropertiesChanged())
             {
                display.enableRenameButton();
@@ -377,9 +375,15 @@ public class RenameItemPresenter
       });
    }
    
+   /**
+    * Mote item.
+    * 
+    * @param item - the item to move (with old properties: href and name)
+    * @param destination - the location of new item
+    */
    private void moveItem(Item item, String destination)
    {
-      MoveItemCallback moveItemCallback = new MoveItemCallback()
+      MoveItemCallback moveItemCallback = new MoveItemCallback(eventBus)
       {
          @Override
          protected void onSuccess(MoveItemData result)
@@ -387,7 +391,6 @@ public class RenameItemPresenter
             itemMoved(result.getItem(), result.getOldHref());
          }
       };
-      moveItemCallback.setEventBus(eventBus);
       VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), moveItemCallback);
    }
    
