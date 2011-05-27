@@ -27,8 +27,10 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
 
 import com.google.gwt.core.client.GWT;
@@ -79,7 +81,10 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
          "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']",// code styles
          true, // can be outlined
          true, // can be autocompleted
-         new PhpParser() // exoplatform code parser
+         new PhpParser(), // exoplatform code parser
+         new PhpAutocompleteHelper(), // autocomplete helper
+         new HtmlCodeAssistant(),  // TODO should be replaced on PhpCodeAssistant  
+         true
       );
       
       IDE.getInstance().addEditor(
