@@ -213,7 +213,9 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       //and shows access modifier
       String modfImg = "";
       
-      if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
+      // add special images at the bottom right part of icon to mark access modificators
+      if ((MimeType.APPLICATION_JAVA.equals(token.getMimeType()) || MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
+          && (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType())))
       {      
          if (isPrivate(token))
          {
