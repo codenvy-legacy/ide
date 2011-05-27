@@ -112,76 +112,76 @@ public class CreateFileFromTemplateTest extends BaseTest
       testTemplate(EMPTY_TEXT, TEXT_FILE_NAME);
    }
    
-//   /**
-//    * IDE-573: If create new file from template and on opened files exist file with name "Untitled file.html" 
-//    * content of open file replaced on template content 
-//    * @throws Exception
-//    */
-//   @Test
-//   public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
-//   {
-//      refresh();
-//      IDE.WORKSPACE.selectRootItem();
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-//      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-//      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
-//      /*
-//       * 1. Open two html files. 
-//       * They will have names: Untitled file.html, Untitled file 1.html
-//       */
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-//      IDE.EDITOR.waitTabPresent(0);
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-//      IDE.EDITOR.waitTabPresent(1);
-//
-//      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *", IDE.EDITOR.getTabTitle(0));
-//      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *", IDE.EDITOR.getTabTitle(1));
-//
-//      /*
-//       * 2. Open "Create file from template" form.
-//       */
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-//      IDE.TEMPLATES.waitForFileFromTemplateForm();
-//
-//      /*
-//       * 3. Select "Empty HTML" template and click "Create" button
-//       */
-//      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-//      IDE.TEMPLATES.clickCreateButton();
-//      IDE.EDITOR.waitTabPresent(2);
-//
-//      /*
-//       * Check, new file opened with name "Untitled file 2.html"
-//       */
-//      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *", IDE.EDITOR.getTabTitle(2));
-//
-//      /*
-//       * 4. Go to file in second tab "Untitled file 1.html" and save file
-//       */
-//      IDE.EDITOR.selectTab(1);
-//      saveAsUsingToolbarButton(null);
-//
-//      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html", IDE.EDITOR.getTabTitle(1));
-//
-//      /*
-//       * 5. Create new Netvibes widget from template:
-//       */
-//      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-//      IDE.TEMPLATES.waitForFileFromTemplateForm();
-//      IDE.TEMPLATES.selectFileTemplate(NETVIBES_WIDGET);
-//      IDE.TEMPLATES.clickCreateButton();
-//      IDE.EDITOR.waitTabPresent(3);
-//
-//      /*
-//       * Check, new file opened with name "Untitled file 3.html"
-//       */
-//      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *", IDE.EDITOR.getTabTitle(3));
-//
-//      /*
-//       * Close saved file
-//       */
-//      IDE.EDITOR.closeFile(1);
-//   }
+   /**
+    * IDE-573: If create new file from template and on opened files exist file with name "Untitled file.html" 
+    * content of open file replaced on template content 
+    * @throws Exception
+    */
+   @Test
+   public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
+   {
+      refresh();
+      IDE.WORKSPACE.selectRootItem();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
+      /*
+       * 1. Open two html files. 
+       * They will have names: Untitled file.html, Untitled file 1.html
+       */
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + ".html *", IDE.EDITOR.getTabTitle(0));
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html *", IDE.EDITOR.getTabTitle(1));
+
+      /*
+       * 2. Open "Create file from template" form.
+       */
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TEMPLATES.waitForFileFromTemplateForm();
+
+      /*
+       * 3. Select "Empty HTML" template and click "Create" button
+       */
+      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
+      IDE.TEMPLATES.clickCreateButton();
+      IDE.EDITOR.waitTabPresent(2);
+
+      /*
+       * Check, new file opened with name "Untitled file 2.html"
+       */
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 2.html *", IDE.EDITOR.getTabTitle(2));
+
+      /*
+       * 4. Go to file in second tab "Untitled file 1.html" and save file
+       */
+      IDE.EDITOR.selectTab(1);
+      IDE.NAVIGATION.saveFileAs(null);
+
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 1.html", IDE.EDITOR.getTabTitle(1));
+
+      /*
+       * 5. Create new Netvibes widget from template:
+       */
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
+      IDE.TEMPLATES.waitForFileFromTemplateForm();
+      IDE.TEMPLATES.selectFileTemplate(NETVIBES_WIDGET);
+      IDE.TEMPLATES.clickCreateButton();
+      IDE.EDITOR.waitTabPresent(3);
+
+      /*
+       * Check, new file opened with name "Untitled file 3.html"
+       */
+      assertEquals(TestConstants.UNTITLED_FILE_NAME + " 3.html *", IDE.EDITOR.getTabTitle(3));
+
+      /*
+       * Close saved file
+       */
+      IDE.EDITOR.closeFile(1);
+   }
    
 //   //TODO fix problem in issue GWTX-100
 //   //@Test

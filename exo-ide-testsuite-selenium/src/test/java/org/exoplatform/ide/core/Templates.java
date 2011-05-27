@@ -35,8 +35,11 @@ import org.exoplatform.ide.TestConstants;
 public class Templates extends AbstractTestModule
 {
    //------Create file from template form elements-------------------
-   private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
+   private static final String ADD_FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
 
+   private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm-window";
+   
+   
    private static final String TEMPLATES_LIST_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";
 
    private static final String INPUT_FIELD_NAME = "ideCreateFileFromTemplateFormFileNameField";
@@ -61,7 +64,7 @@ public class Templates extends AbstractTestModule
    {
       System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> WAIT FOR VIEW");
 
-      String viewLocator = "//div[@view-id='ideCreateFileFromTemplateForm']";
+      String viewLocator = "//div[@id='ideCreateFileFromTemplateForm']";
       //waitForElementPresent(FILE_FROM_TEMPLATE_FORM_ID);
       waitForElementPresent(viewLocator);
 
@@ -99,13 +102,13 @@ public class Templates extends AbstractTestModule
    public void selectFileTemplate(String templateName) throws InterruptedException
    {
       String locator = null;
-      if (selenium().isElementPresent("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']"))
+      if (selenium().isElementPresent("//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID + "-window']"))
       {
-         locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "-window']";
+         locator = "//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID + "-window']";
       }
       else
       {
-         locator = "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']";
+         locator = "//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID + "']";
       }
 
       selenium().click(locator + "//table[@id='" + TEMPLATES_LIST_GRID_ID + "']//span[@title='" + templateName + "']");
@@ -146,7 +149,7 @@ public class Templates extends AbstractTestModule
    {
       selenium().click(CREATE_BUTTON_ID);
 
-      waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
+      waitForElementNotPresent(ADD_FILE_FROM_TEMPLATE_FORM_ID);
    }
 
    public void clickDeleteButton() throws Exception
@@ -159,7 +162,7 @@ public class Templates extends AbstractTestModule
    {
       selenium().click(CANCEL_BUTTON_ID);
 
-      waitForElementNotPresent(FILE_FROM_TEMPLATE_FORM_ID);
+      waitForElementNotPresent(ADD_FILE_FROM_TEMPLATE_FORM_ID);
    }
 
    /**
@@ -168,8 +171,8 @@ public class Templates extends AbstractTestModule
    public void checkCreateFileFromTemplateWindow()
    {
       String locator =
-         "//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID
-            + "-window']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/div[@class='Caption']/span";
+         "//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID
+            + "']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/div[@class='Caption']/span";
       String text = selenium().getText(locator);
       assertEquals("Create file", text);
 
@@ -181,10 +184,10 @@ public class Templates extends AbstractTestModule
     * The same, as checkCreateFileFromTemplateWindow() method,
     * but doesn't check the title of window.
     */
-   public void checkCreateFileFromTemplateWindowComponents()
+   public void checkAddCreateFileFromTemplateWindowComponents()
    {
-      assertTrue(selenium().isElementPresent(FILE_FROM_TEMPLATE_FORM_ID));
-      assertTrue(selenium().isElementPresent("//div[@id='" + FILE_FROM_TEMPLATE_FORM_ID + "']"));
+      assertTrue(selenium().isElementPresent(ADD_FILE_FROM_TEMPLATE_FORM_ID));
+      assertTrue(selenium().isElementPresent("//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID + "']"));
       assertTrue(selenium().isElementPresent(INPUT_FIELD_NAME));
       assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
       assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
@@ -326,4 +329,37 @@ public class Templates extends AbstractTestModule
       return locator;
    }
 
+   
+   
+   
+   
+   
+   
+   /**
+    * The same, as checkCreateFileFromTemplateWindow() method,
+    * but doesn't check the title of window.
+    */
+   public void checkCreateFileFromTemplateWindowComponents()
+   {
+      assertTrue(selenium().isElementPresent(ADD_FILE_FROM_TEMPLATE_FORM_ID));
+      assertTrue(selenium().isElementPresent("//div[@id='" + ADD_FILE_FROM_TEMPLATE_FORM_ID + "']"));
+      assertTrue(selenium().isElementPresent(INPUT_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(TEMPLATES_LIST_GRID_ID));
+      assertTrue(selenium().isElementPresent(DELETE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(CREATE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
+      //check that Delete and Create buttons are disabled and Cancel is enabled
+      checkButtonState(DELETE_BUTTON_ID, false);
+      checkButtonState(CREATE_BUTTON_ID, false);
+      checkButtonState(CANCEL_BUTTON_ID, true);
+      checkInputFieldState(false);
+   }
+   
+   
+   public void checkAddFormFromTemplateButtonState(String buttonId, boolean isEnabled)
+   {
+      assertTrue(selenium().isElementPresent(
+         "//div[@id='" + buttonId + "' and @button-enabled='" + String.valueOf(isEnabled) + "']"));
+      }
+   
 }

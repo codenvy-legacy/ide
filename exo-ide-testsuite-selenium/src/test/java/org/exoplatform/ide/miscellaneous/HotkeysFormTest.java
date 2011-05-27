@@ -225,7 +225,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
     * ----- 21-25 ------------
     * @throws Exception
     */
-   @Ignore
+   
    @Test
    public void testTryToBindForbiddenHotkeys() throws Exception
    {

@@ -24,6 +24,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.core.CreateProjectTemplate;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -49,6 +50,7 @@ public class CreateProjectTemplateTest extends BaseTest
       cleanRegistry();
    }
 
+   @Ignore
    @Test
    public void testCreateProjectTemplate() throws Exception
    {
@@ -197,7 +199,7 @@ public class CreateProjectTemplateTest extends BaseTest
       //click add file button
       IDE.PROJECT_TEMPLATE.clickAddFileButton();
       //add file form appeared
-      IDE.TEMPLATES.checkCreateFileFromTemplateWindowComponents();
+      IDE.TEMPLATES.checkAddCreateFileFromTemplateWindowComponents();
       //select file template
       IDE.TEMPLATES.selectFileTemplate(templateName);
       //type file name to name field

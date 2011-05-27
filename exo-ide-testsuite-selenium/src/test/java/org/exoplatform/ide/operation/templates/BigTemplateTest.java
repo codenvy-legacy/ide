@@ -28,6 +28,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class BigTemplateTest extends BaseTest
       }
    }
 
+  
+   @Ignore
    @Test
    public void testBigTemplate() throws Exception
    {

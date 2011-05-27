@@ -29,6 +29,7 @@ import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.net.URL;
 
 /**
  * Test for creating project from template.
- *	
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:   ${date} ${time}
  *
@@ -134,6 +135,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       }
    }
 
+   @Ignore
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
@@ -147,6 +149,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
 
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
+      
       IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME);
       IDE.TEMPLATES.typeNameToInputField(PROJECT_NAME);
       IDE.TEMPLATES.clickCreateButton();
