@@ -31,7 +31,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ExploringWorkspacePanelTest.class, GetItemUrlTest.class, GoToFolderTest.class, OpeningFilesTest.class,
    WorkspaceTest.class, UsingKeyboardTest.class, ItemOrderingTest.class, OpenFileByPathTest.class,
-   MoveCursorInEditBox.class, CloseSelectedItemTest.class})
+   MoveCursorInEditBox.class
+   })
 public class BrowseTestSuite
 {
 

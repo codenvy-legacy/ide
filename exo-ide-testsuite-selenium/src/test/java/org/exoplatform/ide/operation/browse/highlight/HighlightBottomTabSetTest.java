@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.browse.highlight;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -63,8 +64,8 @@ public class HighlightBottomTabSetTest extends BaseTest
    public void testHighlightBottopTabSet() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL);
-      
+      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL+FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
@@ -82,22 +83,15 @@ public class HighlightBottomTabSetTest extends BaseTest
       IDE.EDITOR.clickOnEditor();
       
 
-      //TODO should be compled should be completed after fix problem highlighting in codeeditor after setting cursor in text
-      
-      
-      //border: 3px solid rgb(122, 173, 224)
-//      assertFalse(selenium
-//         .isElementPresent("//div[@eventproxy='isc_OutputForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+      //TODO should be completed after fix problem highlighting in codeeditor after setting cursor in text
 //
-//      assertTrue(selenium
-//         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+//      IDE.PERSPECTIVE.checkViewIsNotActive("ideFilePropertiesView");
+//      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+//      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
 //
 //      IDE.EDITOR.typeTextIntoEditor(0, "test test");
-//
-//      assertTrue(selenium
-//         .isElementPresent("//div[@eventproxy='isc_EditorTab$EditorView_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-//
-//      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");
+
    }
 
    @AfterClass

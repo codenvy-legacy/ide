@@ -33,8 +33,7 @@ import org.junit.runners.Suite.SuiteClasses;
    CopyFoldersAndFilesTest.class,
    CopyFolderTest.class,
    CutFileTest.class,
-   CutFolderTest.class,
-   CutFoldersAndFilesTest.class
+   CutFolderTest.class
    })
 public class CutCopyTestSuite
 {

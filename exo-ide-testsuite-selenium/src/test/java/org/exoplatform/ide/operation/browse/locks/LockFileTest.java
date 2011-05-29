@@ -105,7 +105,7 @@ public class LockFileTest extends LockFileAbstract
       //----- 3 ------------
       //lock XML file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-
+Thread.sleep(10000);
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
