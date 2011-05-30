@@ -594,7 +594,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
             if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
             {
                parametersDescription +=
-                  "<span class='item-parameter'>" + parameter.getName() + "</span>";               
+                  "<span class='item-parameter'>" + parameter.getName() + "<span style='color:#644a17;' class='item-type'>" + getElementType(parameter) + "</span></span>";               
             }
             else
             {
@@ -602,7 +602,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    
                parametersDescription +=
                   "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                     + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
+                     + "<span class='item-parameter'>" + getElementType(parameter) + "</span></span>";
             }
          }
       }
