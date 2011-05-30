@@ -22,7 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.Utils;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,6 +45,11 @@ public class GoToLine extends AbstractTestModule
       assertTrue(selenium().isElementPresent("ideGoToLineFormCancelButton"));
    }
 
+   public void checkGoToLineFormNotAppeared()
+   {
+      assertFalse(selenium().isElementPresent("ideGoToLineForm"));
+   }
+
    /**
     * check warning message with label of message. If input invalid parameter
     * @param warnmessage
@@ -54,7 +58,8 @@ public class GoToLine extends AbstractTestModule
    {
 
       assertTrue(selenium().isElementPresent("exoWarningDialog"));
-      assertTrue(selenium().isElementPresent("//div[@id='exoWarningDialog']//div[@class='Caption']/span[text()=\"Error\"]"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@id='exoWarningDialog']//div[@class='Caption']/span[text()=\"Error\"]"));
       assertTrue(selenium().isElementPresent(
          "//div[@id='exoWarningDialog']//table//td//div[@class='gwt-Label' and text()=" + "\"" + warnmessage + "\""
             + "]"));
@@ -69,7 +74,8 @@ public class GoToLine extends AbstractTestModule
       selenium().click("exoWarningDialogOkButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(selenium().isElementPresent("exoWarningDialog"));
-      assertFalse(selenium().isElementPresent("//div[@id='exoWarningDialog']//div[@class='Caption']/span[text()=\"Error\"]"));
+      assertFalse(selenium().isElementPresent(
+         "//div[@id='exoWarningDialog']//div[@class='Caption']/span[text()=\"Error\"]"));
       assertFalse(selenium().isElementPresent("exoWarningDialogOkButton"));
    }
 

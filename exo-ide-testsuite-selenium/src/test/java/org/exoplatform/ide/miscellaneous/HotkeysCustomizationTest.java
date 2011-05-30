@@ -20,8 +20,6 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
@@ -33,7 +31,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.

@@ -89,6 +89,12 @@ public class FindReplace extends AbstractTestModule
       assertFalse(isReplaceAllButtonEnabled());
       assertTrue(isCancelButtonEnabled());
    }
+   
+   public void checkFindReplaceFormNotAppeared()
+   {
+      assertFalse(selenium().isElementPresent(FIND_REPLACE_VIEW_LOCATOR));
+   }
+   
 
    /**
     * Get enabled state of cancel button.

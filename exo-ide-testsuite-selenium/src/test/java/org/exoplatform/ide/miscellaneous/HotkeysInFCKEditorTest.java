@@ -22,8 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
@@ -31,8 +29,10 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.
@@ -91,7 +91,6 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
     * ----- 3-5 ------------
     * @throws Exception
     */
-   @Ignore
    @Test
    public void testSpecifiedHotkeysForFCKEditor() throws Exception
    {
@@ -116,7 +115,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium.keyDown("//", "B");
       selenium.keyUp("//", "B");
       selenium.controlKeyUp();
-      Thread.sleep(TestConstants.SLEEP_SHORT*60);
+      Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became bold
       assertTrue(selenium.isElementPresent("//body/strong[text()='Hello, world! ']"));
       
@@ -138,21 +137,22 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check text became underline
       assertTrue(selenium.isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
       IDE.selectMainFrame();
-      Thread.sleep(TestConstants.SLEEP);
+//      Thread.sleep(TestConstants.SLEEP);
       
       //----- 4 ------------
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
       assertEquals(GOOGLE_GADGET_FILE + " *",IDE.EDITOR.getTabTitle(0));
-      selenium.controlKeyDown();
-      selenium.keyDown("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
-      selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
-      selenium.controlKeyUp();
+//      selenium.controlKeyDown();
+//      selenium.keyDown("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
+//      selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
+//      selenium.controlKeyUp();
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
       assertEquals(GOOGLE_GADGET_FILE,IDE.EDITOR.getTabTitle(0));
       //close file      
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeFile(0);
    }
    
    /**
@@ -160,7 +160,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
     * ----- 13 ------------
     * @throws Exception
     */
-   //@Test
+   @Test
    public void testTypicalHotkeysInFCKEditor() throws Exception
    {
       refresh();
@@ -169,7 +169,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
+      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //check Ctrl+F
      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -182,7 +182,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       
       //check find-replace form doesn't appear
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+//      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+      IDE.FINDREPLACE.checkFindReplaceFormNotAppeared();
       
       //check Ctrl+D
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
@@ -206,7 +207,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideGoToLineForm\"]/"));
+      IDE.GOTOLINE.checkGoToLineFormNotAppeared();
       
       assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
@@ -220,13 +221,12 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       
-      Thread.sleep(TestConstants.SLEEP);
 
-      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeFile(0);
    }
    
-   //@Test
+   @Test
    public void testCopyPasteUndoRedo() throws Exception
    {
       refresh();
@@ -235,7 +235,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
+      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //select all
      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium.click("//body");
@@ -333,7 +333,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
-   //@Test
+   @Test
    public void testHotkeysRunFromFCKEditor() throws Exception
    {
       refresh();
@@ -351,7 +351,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       checkCreateFileFromTemplateFormAndClose();
       
       //open FCK editor
-      openFileFromNavigationTreeWithCkEditor(GOOGLE_GADGET_FILE, "Google Gadget" ,false);
+      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       
      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
