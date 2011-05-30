@@ -231,12 +231,10 @@ public class CodeMirror extends Editor
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
       this.needRevalidateCode = true;
       
-      setText(content);
-      
       eventBus.fireEvent(new EditorInitializedEvent(editorId));
       
       //       turn on code validation timer
-
+      setText(content);
       if (configuration.canBeValidated())
       {
          this.codeValidateTimer.scheduleRepeating(2000);
@@ -533,7 +531,11 @@ public class CodeMirror extends Editor
    {
       if (configuration.canBeAutocompleted())
       {
-         validateCode(); // to update token's FQNs        
+         if (configuration.canBeValidated())
+         {
+            validateCode(); // to update token's FQNs
+         }
+         
          return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
             (List<Token>) getTokenList(), getCurrentLineMimeType());
       }

@@ -1,6 +1,6 @@
 <?php
   namespace A;
-  namespace my\name; 
+  namespace my\name;
   
   interface test extends a {
     static function test_interface_static($var1, $var2);
@@ -12,76 +12,20 @@
   echo test::b;
   
 ?>
-The "root" parser is XML in HTML mode.
-Next, we can switch into PHP mode, for example. This is
 <?php echo 'text output by';
 ?>
-PHP. </b>
-On the line above, we just had an XML syntax error due to the </b> tag not being opened.
-
-<?xml version='1.0' encoding='UTF-8' standalone='yes'?>   HTML text will follow
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <html>
   <head>
-    <title>Similarly, the 'script' tag will switch to the JavaScript parser:</title>
     <script type="text/javascript">
-       // Press enter inside the object and your new line will be suitably
-       // indented.
-       var keyBindings = {
-         enter: "newline-and-indent",
-         tab: "reindent-selection",
-         ctrl_enter: "reparse-buffer",
-         ctrl_z: "undo",
-         ctrl_y: "redo",
-         ctrl_backspace: "undo-for-safari-which-stupidly-enough-blocks-ctrl-z"
-       };
+      var regex = /foo|bar/i;
 
-       // Press tab on the next line and the wrong indentation will be fixed.
-             var regex = /foo|bar/i;
-
-       function example(x) {
-         // Local variables get a different colour than global ones.
+       function x(a) {
          var y = 44.4;
-         return x + y - z;
        }
     </script>
-    <style>
-      /* Some example CSS */
-
-      @import url("something.css");
-
-      body {
-        margin: 0;
-        padding: 3em 6em;
-        font-family: tahoma, arial, sans-serif;
-        color: #000;
-      }
-
-      #navigation a {
-        font-weight: bold;
-        text-decoration: none !important;
-      }
-
-      h1 {
-        font-size: 2.5em;
-      }
-
-      h1:before, h2:before {
-        content: "::";
-      }
-
-      code {
-        font-family: courier, monospace;
-        font-size: 80%;
-        color: #418A8A;
-      }
-    </style>
   </head>
-
   <body>
-
-  The PHP code below contains some deliberate errors. Play with the editor by fixing them
-  and observing how the highlight changes.
-
     <?php    
     define("CONSTANT_EX",
      "text");
@@ -102,7 +46,7 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
     
     $t2 = -1;  // integer type
     $t3 = 01011; // octal integer
-    $t4 = 0xa34; // hexadecimal integer 
+    $t4 = 0xa34; // hexadecimal integer
 
     $t5 = 1.2e-3;    # double number
     $t6 = -123.45;    # double number
@@ -112,25 +56,21 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
     
     $t9 = NULL;
     
-    $t10 = new C(1, $b);  // object
+    $t10 = new SimpleXMLElement;  // object
     $t11 = new \my\name\MyClass();  // object from namespace
-  $t12 = new \Exception('error'); // instantiates global class Exception
-    $t121 = new \my\name\MyClass;  // missed "()"      
+    $t12 = new \Exception('error'); // instantiates global class Exception
+     
       
     /* Access to global classes, functions and constants from within a namespace */
   $t13 = \strlen('hi'); // calls global function strlen
   $t14 = \INI_ALL; // accesses global constant INI_ALL
     
     $t15 = array(1=>1, 'a'=>2, 3);  // array
-    
-    
+        
     self::$var;
     $parent = self::range($max + 1, $max + 1);
-    $row[attributes][$attribute_name] = $attribute_value;
-    $row[attributes()][$attribute_name] = $attribute_value;
-    $row[attributes(5)][$attribute_name] = $attribute_value;
     $row[$attributes()][$attribute_name] = $attribute_value;
-    abstract class test extends foo implements test 
+    abstract class test extends foo implements test
     {
         private function domainObjectBuilder($var2) {
             $test = 1;
@@ -155,15 +95,11 @@ On the line above, we just had an XML syntax error due to the </b> tag not being
         func($b,$c);        
         mike(A::func(param));
 
-        protected final function loadPageXML(util_FilePath $filename, 
-                                              $merge=0, $x, $y=3) 
-        {
-            $newrow[$key] = $val;
-            $newresult[] = $row;
+         protected final function loadPageXML(UnderflowException $filename,
+                                               array $merge,
+                                              ArrayObject $x=0, $y=3)
+         {
             $state = $row['c'] == 1;
-            $attribute_values[$attribute_name] = null;
-            $row['attributes'][$attribute_name] = $attribute_value;
-            $result[$row['element']][$row['attribute']] = $row['value'];
             $sql = "multiline string
 line2 is special - it'll interpolate variables like $state and method calls
 {$this->cache->add($key, 5)} and maybe \"more\"
@@ -175,10 +111,6 @@ single quoting means no \'interpolation\' like "$start" or method call
 
 line5';
             $bitpattern = 1 << 2;
-            $bitpattern <<= 3;
-            $incorrect =<<<EOSTRING
-error: the identifier must conform to the identifier rules
-EOSTRING;
             $sql = <<< EOSQL
                 SELECT attribute, element, value
                 FROM attribute_values
@@ -189,24 +121,12 @@ EOSQL;
 some lines here
 EOSTRING
 . 'something extra';
-            $page_lft = ($domain->name() == 'page') ? $start + 1 : $page_start + 1;
-            echo "This is class foo";
-            echo "a = ".$this ->a[2+3*$array["foo"]]."";
-            echo "b = {$this->b}";  // FIXME: highlight interpolation in strings
         }
-        
+
+      /*
+        echo 'This is a test';
+        */
         function makecoffee_error($types = array(), $coffeeMaker = NULL) {
-            $out_of_way_amount = $max - $child->left() + 1;
-            $absolute_pos = $child->left() - $move->width();
-            $varfunc(1, 'x');
-            $varfunc(1, 'x') + foo() - 5;
-            $funcarray[$i]('param1', $param2);
-                $lr[$domain_name] = $this->get_left_and_right($domain,
-                                                              $dimension_name,
-                                                              $element_name);
-            $domain_list = is_null($domain) ?
-                           r3_Domain::names() :
-                           array($domain->name());
             foreach (r3_Domain::names() as $domain_name) {
                 $placeholders = 'distance LIKE '
                             . implode(array_fill(1, $num_distances, '?'),
@@ -214,17 +134,10 @@ EOSTRING
 
             }
             return $this->target*$this->trans+myfunc(__METHOD__);
-            /*
-            echo 'This is a test';
-            */
         }
     }
 
-    switch( $type ) {
-       case "r3core_AddTemplateToTargetEvent":
-           $this->notifyAddTemplateToTarget( $genevent );
-           break;
-               
+    switch( $type ) {             
        case "r3core_GenerateTargetEvent":
            for($i=0; $i<=$this->method(); $i++) {
                echo 'Syntax "highlighting"';
@@ -237,18 +150,14 @@ EOSTRING
                /** restore the backup
                */
                $this->loadAll($tmp, $event, true);
-               // `php -l` doesn't complain at all at this (it assumes string constants):
-               this + makes * no - sense;
            }
 
            break;
-
-        default:
-           throw new r3_util_Exception( get_class( $genevent ) . " does not map" );
     }
     
     if($something==true):
       $test = 'something';
+      $q1 = 1;     
     endif;
     
     for($i=0;$i<2000;$i++):
@@ -260,12 +169,6 @@ EOSTRING
       echo $number . ' = '. $key;
     endforeach;
 
-    /* fails if nested */
-    if($nested < 0):
-      if($fail > 1):
-        echo 'This fails....';
-      endif;
-    endif;
     ?>
 
     <r3:cphp>
@@ -282,30 +185,19 @@ EOSTRING
 
   <h1>This is an <?php # echo 'simple';?> example.</h1>
   <p>The header above will say 'This is an  example'.</p>
-  <h1>This is an <?php // echo 'simple';?> example.</h1>
+  <h1>This is an <?php echo 'simple';?> example.</h1>
 
-    <body>
-
-<?php echo "<html>
-  <head>
-    <script>
+<?php echo "<script>
     var foo = 'bar';
     </script>
-    <style>
-      span.test {font-family: arial, 'lucida console', sans-serif}
-    </style>
-  </head>
-  <body>
-    <!-- comment -->
-  </body>
-</html>"; ?>
-
+    <!-- comment -->"; ?>
 
 <?php
 define('TEST', "");
 echo $GLOBALS['test'];
 echo __LINE__;
-function test($test){
+public function test($a,
+                    $b = new C(true)){
     return false;
 }
 /**
@@ -314,6 +206,7 @@ function test($test){
 class Foo extends ReflactionClass implements Foo\IBar{
     const E_USER1_ERROR = 45;
     var $test;
+    &$c = 3;
     public static $my_static = 'foo';
     private function test($test){
        return $this->test;

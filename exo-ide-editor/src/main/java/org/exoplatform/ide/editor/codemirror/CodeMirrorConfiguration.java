@@ -159,7 +159,7 @@ public class CodeMirrorConfiguration
       boolean canBeAutocompleted, Parser parser, CodeAssistant codeAssistant)
    {
       this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper(),
-         canBeAutocompleted, new DefaultCodeValidator(), codeAssistant);
+         false, null, codeAssistant);
    }
 
    /**
@@ -176,8 +176,8 @@ public class CodeMirrorConfiguration
       boolean canBeAutocompleted, Parser parser, AutocompleteHelper helper, CodeAssistant codeAssistant,
       Boolean canHaveSeveralMimeTypes)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, canBeAutocompleted,
-         new DefaultCodeValidator(), codeAssistant, canHaveSeveralMimeTypes);
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, false,
+         null, codeAssistant, canHaveSeveralMimeTypes);
    }
 
 
@@ -193,8 +193,8 @@ public class CodeMirrorConfiguration
    public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
       boolean canBeAutocompleted, Parser parser, AutocompleteHelper helper, CodeAssistant codeAssistant)
    {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, canBeAutocompleted,
-         new DefaultCodeValidator(), codeAssistant);
+      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, false,
+         null, codeAssistant);
    }
 
    public String getCodeParsers()

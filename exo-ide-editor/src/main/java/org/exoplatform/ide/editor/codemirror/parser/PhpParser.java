@@ -501,7 +501,8 @@ public class PhpParser extends CodeMirrorParserImpl
             // recognize field declaration like "$a"
             if (TokenType.CLASS.equals(currentToken.getType())
                      && isVariable(nodeStack.lastElement().getType())
-                     && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())                        
+                     && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())
+                     && !isReference(nodeStack)   // pass reference on variables like '&$a'                     
                 )
             {  
                  newToken = new TokenBeenImpl(nodeStack.lastElement().getContent(), TokenType.PROPERTY, lineNumber, MimeType.APPLICATION_PHP);
@@ -527,12 +528,13 @@ public class PhpParser extends CodeMirrorParserImpl
                }
                
                // recognize variable assignment statement like "$a ="               
-               if (isEqualSign(nodeStack.get(nodeStack.size() - 1))
-                        && isVariable(nodeStack.get(nodeStack.size() - 2).getType())
-                        && isFirstVariableOccurance(currentToken, nodeStack.get(nodeStack.size() - 2).getContent())
+               if (isEqualSign(nodeStack.pop())
+                        && isVariable(nodeStack.lastElement().getType())
+                        && isFirstVariableOccurance(currentToken, nodeStack.lastElement().getContent())
+                        && !isReference(nodeStack)   // pass reference on variables like '&$a'                        
                   )
                {   
-                  String variableName = nodeStack.get(nodeStack.size() - 2).getContent();
+                  String variableName = nodeStack.lastElement().getContent();
                   
                   newToken = new TokenBeenImpl(variableName, TokenType.VARIABLE, lineNumber, MimeType.APPLICATION_PHP);
 
@@ -551,9 +553,6 @@ public class PhpParser extends CodeMirrorParserImpl
                   if (TokenType.CLASS.equals(currentToken.getType()))
                   {
                      newToken.setType(TokenType.PROPERTY);
-                     
-                     nodeStack.setSize(nodeStack.size() - 1); // remove property name "$a" node
-                     checkModifiers(newToken, nodeStack);
                   }
                }
             }
@@ -561,11 +560,6 @@ public class PhpParser extends CodeMirrorParserImpl
             if (newToken != null)
             {
                updateVariableList(currentToken, newToken.getName());
-               
-               // remove "$a =" nodes
-               nodeStack.setSize(nodeStack.size() - 2);
-   
-               checkModifiers(newToken, nodeStack);
             }
          } 
       }
@@ -714,25 +708,22 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
-    * Recognize object creation like "new Data($a, null)"
+    * Recognize object creation like "new Data($a, null)" or "new SimpleXMLElement"
     * @param nodeStack
     * @return
     */
    private String isObject(Stack<Node> nodeStack)
    {
-      if (nodeStack.size() > 3 && isCloseBracket(nodeStack.pop()))
+      while (nodeStack.size() > 1) 
       {
-         // pass nodes before code like "new Data(" 
-         while ((nodeStack.size() > 2) && !isOpenBracket(nodeStack.pop()))
-         {
-         }
-         
          // get class name before "new" keyword like "new Data"         
          if (isPhpElementName(nodeStack.lastElement().getType())
               && isNewKeyword(nodeStack.get(nodeStack.size() - 2)))
          {
             return nodeStack.lastElement().getContent();
          }
+         
+         nodeStack.pop();
       }
       
       return null;
@@ -1089,7 +1080,9 @@ public class PhpParser extends CodeMirrorParserImpl
          
          else if (isVariable(node.getType()))
          {
-            parameters.add(new TokenBeenImpl(node.getContent(), TokenType.PARAMETER, lineNumber, MimeType.APPLICATION_PHP));
+            TokenBeenImpl newParameter = new TokenBeenImpl(node.getContent(), TokenType.PARAMETER, lineNumber, MimeType.APPLICATION_PHP);            
+            checkTypeHinting((Stack<Node>) nodeStack.clone(), newParameter);
+            parameters.add(0, newParameter); // insert parameter at the top of list
          }
       }
       
@@ -1097,12 +1090,58 @@ public class PhpParser extends CodeMirrorParserImpl
    }
 
    /**
+    * Recognize parameter type hinting like "function test(OtherClass $otherclass, /n array $inputArray)" and set elementType of parameter.
+    * @param nodeStack non-safe
+    * @param parameter
+    */
+   private void checkTypeHinting(Stack<Node> nodeStack, TokenBeenImpl parameter)
+   {
+      Node possibleTypeNode = null; 
+      
+      // pass BR or whitespace between ", .... Type $par"
+      while (nodeStack.size() > 2
+              && !(isComma(nodeStack.lastElement()) 
+                   || isOpenBracket(nodeStack.lastElement())) 
+            ) 
+      {        
+         Node node = nodeStack.pop();
+         
+         if (!(node.isLineBreak() || isWhitespace(node)))
+         {
+            possibleTypeNode = node;
+         }
+      }
+
+      // check case like "(OtherClass" or ", OtherClass" or "(array" or ", array" 
+      if (possibleTypeNode != null 
+           && (isPhpElementName(possibleTypeNode.getType()) || isArrayKeyword(possibleTypeNode)) 
+           && (isComma(nodeStack.lastElement()) || isOpenBracket(nodeStack.lastElement()))
+          )
+      {
+         parameter.setElementType(possibleTypeNode.getContent());
+         return;
+      }
+   }
+
+   /**
+    * Recognize PHP reference on variable like "&$a"
+    * @param nodeStack safe
+    * @return
+    */
+   private boolean isReference(Stack<Node> nodeStack)
+   {     
+      return (nodeStack.size() > 1)
+              && isVariable(nodeStack.lastElement().getType())
+              && isAmpersant(nodeStack.get(nodeStack.size() - 2));
+   }
+   
+   /**
     * Recognize PHP variable node with class name "php-variable"
     * @param nodeType
     * @return
     */
    private boolean isVariable(String nodeType)
-   {
+   {      
       return (nodeType != null) && (nodeType.startsWith("php-variable"));
    }
 
@@ -1167,13 +1206,16 @@ public class PhpParser extends CodeMirrorParserImpl
    }
    
    /**
-    * Verify name of class, or function, or method, or interface, or namespace, or class constant
+    * Verify name of class, or function, or method, or interface, or namespace, or class constant (including predefined)
     * @param nodeType
     * @return
     */
    private boolean isPhpElementName(String nodeType)
    {
-      return (nodeType != null) && (nodeType.startsWith("php-t_string"));
+      return (nodeType != null) && 
+         (nodeType.startsWith("php-t_string")
+          || nodeType.startsWith("php-predefined-class")
+          || nodeType.startsWith("php-predefined-function"));
    }
      
    /**
@@ -1271,6 +1313,16 @@ public class PhpParser extends CodeMirrorParserImpl
    {
       return isKeyword(node) && "namespace".equals(node.getContent());
    }   
+ 
+   /**
+    * Recognize "&" symbol
+    * @param node
+    * @return
+    */
+   private boolean isAmpersant(Node node)
+   {
+      return "php-operator".startsWith(node.getType()) && "&amp;".equals(node.getContent());
+   }
    
    /**
     * Clear variable list within the method, or module, or class
