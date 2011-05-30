@@ -44,7 +44,9 @@ public class IDEConfiguration
    private String gadgetURL = GWT.getModuleBaseURL();
 
    private String gadgetServer;
-
+   
+   private int httpsPort;
+   
    public IDEConfiguration()
    {
    }
@@ -133,5 +135,15 @@ public class IDEConfiguration
    {
       this.gadgetServer = gadgetServer;
    }
-
+   
+   public int getHttpsPort()
+   {
+      return httpsPort;
+   }
+   
+   public void setHttpsPort(int httpsPort)
+   {
+      this.httpsPort = httpsPort;
+   }
+   
 }
