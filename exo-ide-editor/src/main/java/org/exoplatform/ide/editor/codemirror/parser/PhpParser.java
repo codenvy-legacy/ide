@@ -553,6 +553,9 @@ public class PhpParser extends CodeMirrorParserImpl
                   if (TokenType.CLASS.equals(currentToken.getType()))
                   {
                      newToken.setType(TokenType.PROPERTY);
+                     
+                     nodeStack.setSize(nodeStack.size() - 1);  // remove property name "$a" node
+                     checkModifiers(newToken, nodeStack);
                   }
                }
             }
@@ -1055,11 +1058,6 @@ public class PhpParser extends CodeMirrorParserImpl
       
       while (nodeStack.size() > 0) {
          Node node = nodeStack.pop();
-
-         if (isSyntaxError(node.getType()))
-         {
-            return null;
-         }
          
          // recognize close bracket ")"
          if (isCloseBracket(node))
