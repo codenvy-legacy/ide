@@ -9,93 +9,86 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
-   
+
    <dependencies>
-   
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
-   
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.gwt.google-apis</groupId>
          <artifactId>gwt-gadgets</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
          <artifactId>gwt-log</artifactId>
          <version>3.0.4</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-webdav-client</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
-      
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-gadget</artifactId>
-               <!-- 
-               <exclusions>
-                  <exclusion>
-                     <groupId>pull-parser</groupId>
-                     <artifactId>pull-parser</artifactId>
-                  </exclusion>
-               </exclusions>
-                -->
-            </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-gadget</artifactId>
+         <!-- <exclusions> <exclusion> <groupId>pull-parser</groupId> <artifactId>pull-parser</artifactId> </exclusion> </exclusions> -->
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-gadget</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-groovy</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-java</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-jsp</artifactId>
       </dependency>
-      
-       <dependency>
+
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-gtmpl</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-chromattic</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-netvibes</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-ruby</artifactId>
@@ -104,13 +97,13 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-php</artifactId>
-      </dependency>      
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-java</artifactId>
@@ -120,37 +113,42 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-netvibes</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-ssh</artifactId>
       </dependency>
-            
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-heroku</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
          <scope>test</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
    </dependencies>
-   
+
    <build>
-   
+
       <resources>
          <resource>
             <directory>src/main/java</directory>
@@ -159,9 +157,9 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
-   
+
       <plugins>
-   
+
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -169,7 +167,7 @@
                <skipTests>true</skipTests>
             </configuration>
          </plugin>
-   
+
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>buildnumber-maven-plugin</artifactId>
@@ -187,7 +185,7 @@
                </execution>
             </executions>
          </plugin>
-   
+
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -209,7 +207,7 @@
                </execution>
             </executions>
          </plugin>
-         
+
       </plugins>
    </build>
    <profiles>
@@ -220,10 +218,10 @@
          </activation>
 
          <properties>
-             <jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
+            <jre.lib>${env.JAVA_HOME}${file.separator}jre${file.separator}lib</jre.lib>
          </properties>
-         
-        <dependencies>        
+
+         <dependencies>
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
@@ -296,7 +294,7 @@
                <artifactId>exo-ide-server</artifactId>
                <scope>runtime</scope>
             </dependency>
-            
+
             <dependency>
                <groupId>org.hsqldb</groupId>
                <artifactId>hsqldb</artifactId>
@@ -409,7 +407,7 @@
                      </execution>
                   </executions>
                </plugin>
-               
+
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
@@ -424,7 +422,7 @@
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
                   </configuration>
                </plugin>
-               
+
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-compiler-plugin</artifactId>
@@ -437,7 +435,7 @@
                      </excludes>
                   </configuration>
                </plugin>
-               
+
             </plugins>
          </build>
       </profile>
