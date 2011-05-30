@@ -270,6 +270,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    public void onError(ExceptionThrownEvent event)
    {
       errFileHref = "";
+      goToPositionAfterOpen = false;
    }
 
    /**
