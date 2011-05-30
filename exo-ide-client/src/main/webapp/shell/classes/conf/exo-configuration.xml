@@ -59,7 +59,7 @@
       <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
       <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler</type>
    </component>
@@ -99,7 +99,7 @@
    <component>
       <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
    </component>
@@ -111,12 +111,12 @@
             <name>defaultEntryPoint</name>
             <value>dev-monit</value>
          </value-param>
-         
+
          <value-param>
-         	<name>discoverable</name>
-         	<value>true</value>
+            <name>discoverable</name>
+            <value>true</value>
          </value-param>
-         
+
       </init-params>
    </component>
 
@@ -132,9 +132,27 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.heroku.server.JcrHerokuAuthenticator</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>heroku-api-keys</name>
+            <value>/key-store</value>
+         </value-param>
+      </init-params>
    </component>
 
    <component>
@@ -260,7 +278,7 @@
       </init-params>
    </component>
 
- <component>
+   <component>
       <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
       <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
    </component>
@@ -299,7 +317,7 @@
                         </object>
                      </value>
                       -->
-                  
+
                   </collection>
                </field>
             </object>
@@ -331,7 +349,7 @@
                         </object>
                      </value>
                       -->
-                  
+
                   </collection>
                </field>
             </object>
@@ -367,7 +385,7 @@
             </values-param>
          </init-params>
       </component-plugin>
-      
+
       <component-plugin>
          <name>add.namespaces</name>
          <set-method>addPlugin</set-method>
@@ -427,7 +445,7 @@
          <set-method>addPlugin</set-method>
          <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
       </component-plugin>
-      
+
       <component-plugin>
          <name>ws.rs.entity.provider</name>
          <set-method>addPlugin</set-method>
@@ -439,7 +457,7 @@
             </value-param>
          </init-params>
       </component-plugin>
-      
+
       <component-plugin>
          <name>ws.rs.request.filter</name>
          <set-method>addPlugin</set-method>

@@ -60,6 +60,7 @@
    <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
    <inherits name='org.exoplatform.ide.git.GitExtension' />
    <inherits name='org.exoplatform.ide.extension.ssh.SshExtension' />
+   <inherits name='org.exoplatform.ide.extension.heroku.HerokuExtension' />
 
 	<inherits name='org.exoplatform.ide.Views' />
 
