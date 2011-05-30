@@ -231,10 +231,11 @@ public class CodeMirror extends Editor
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
       this.needRevalidateCode = true;
       
+      setText(content);
+      
       eventBus.fireEvent(new EditorInitializedEvent(editorId));
       
-      //       turn on code validation timer
-      setText(content);
+      //       turn on code validation time
       if (configuration.canBeValidated())
       {
          this.codeValidateTimer.scheduleRepeating(2000);
