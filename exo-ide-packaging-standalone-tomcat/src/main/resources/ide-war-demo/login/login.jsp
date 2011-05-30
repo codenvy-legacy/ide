@@ -1,5 +1,5 @@
 <html>
-<%
+<!-- %
    if(!request.isSecure())
    {
       String location = "https://" + request.getServerName() + ":8443" + "/IDE/Application.html";
@@ -7,7 +7,7 @@
       return;
    } 
    
-%>
+% -->
 <head>
 <title>eXo IDE Login Page</title>
 <body bgcolor="white">

@@ -36,6 +36,24 @@
       <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>
    </component>
 
+  <component>
+   <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
+</component>
+
+<component>
+   <type>org.exoplatform.ide.extension.heroku.server.JcrHerokuAuthenticator</type>
+   <init-params>
+      <value-param>
+         <name>workspace</name>
+         <value>dev-monit</value>
+      </value-param>
+      <value-param>
+         <name>heroku-api-keys</name>
+         <value>/key-store</value>
+      </value-param>
+   </init-params>
+</component>
+
  <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>

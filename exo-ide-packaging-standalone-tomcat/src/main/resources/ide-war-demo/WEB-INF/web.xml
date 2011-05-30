@@ -66,31 +66,7 @@
       <filter-class>org.exoplatform.ide.extension.gadget.server.filter.MakeRequestHeaderFilter</filter-class>
    </filter> 
    
-  <filter>
-      <filter-name>RevertFromHttpsToHttpFilter</filter-name>
-      <filter-class>org.exoplatform.ide.authentication.RevertFromHttpsToHttpFilter</filter-class>
-        <init-param>
-            <param-name>HTTP_PORT</param-name>
-            <param-value>8080</param-value>
-        </init-param>
-
-        <init-param>                                                                                                                                                                                           
-            <param-name>HTTPS_PORT</param-name>                                                                                                                                                                
-            <param-value>8443</param-value>                                                                                                                                                                    
-        </init-param>
-
-        <init-param>                                                                                                                                                                                           
-            <param-name>SSL_SERVLET_PATH</param-name>                                                                                                                                                                
-            <param-value>/rest/ssl</param-value>                                                                                                                                                                    
-        </init-param>
-  </filter>
-
-  <filter-mapping>
-      <filter-name>RevertFromHttpsToHttpFilter</filter-name>
-            <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-    <filter-mapping>                                                                                                                                                                                            
+  <filter-mapping>                                                                                                                                                                                            
     <filter-name>SetCurrentIdentityFilter</filter-name>                                                                                                                                                        
     <url-pattern>/rest/*</url-pattern>                                                                                                                                                                         
   </filter-mapping>

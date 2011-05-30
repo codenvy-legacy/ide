@@ -65,6 +65,44 @@
 
 
    <component>
+      <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</key>
+      <type>org.exoplatform.ide.extension.ssh.server.JcrSshKeyProvider</type>
+      <init-params>
+      <value-param>
+         <name>workspace</name>
+         <value>dev-monit</value>                                                                                                                                                                              
+      </value-param>                                                                                                                                                                                           
+      <value-param>                                                                                                                                                                                            
+         <name>key-store</name>                                                                                                                                                                          
+         <value>/ssh_keys</value>                                                                                                                                                                             
+      </value-param>                                                                                                                                                                                           
+   </init-params>
+   </component>
+
+   <component>
+     <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
+   </component>
+
+  <component>
+   <type>org.exoplatform.ide.extension.heroku.server.JcrHerokuAuthenticator</type>
+   <init-params>
+      <value-param>
+         <name>workspace</name>
+         <value>dev-monit</value>
+      </value-param>
+      <value-param>
+         <name>heroku-api-keys</name>
+         <value>/key-store</value>
+      </value-param>
+   </init-params>
+  </component>
+
+
+   <component>
       <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
    </component>
 
