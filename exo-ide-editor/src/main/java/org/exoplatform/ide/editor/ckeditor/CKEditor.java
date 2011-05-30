@@ -450,19 +450,17 @@ public class CKEditor extends Editor
     * replace window.alert() function on org.exoplatform.gwtframework.ui.client.dialogs.Dialogs.showError() and hide window.confirm() function
     * */
    private native void overrideNativeAlertAndConfirm() /*-{ 
-      if ($wnd.isc) {    // test if there is smartgwt library
-         (function(){
-            var proxied = $wnd.alert;
-            $wnd.alert = function(message){
-               // test if this is a in context of ckeditor
-               if (typeof $wnd.CKEDITOR !== "undefined" ) {
-                  @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error",message);
-               } else {
-                  return proxied(message);
-               }
-            };
-         })(this);
-      }
+      (function(){
+         var proxied = $wnd.alert;
+         $wnd.alert = function(message){
+            // test if this is a in context of ckeditor
+            if (typeof $wnd.CKEDITOR !== "undefined" ) {
+               @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error",message);
+            } else {
+               return proxied(message);
+            }
+         };
+      })(this);
      
       (function(){
          var proxied = $wnd.confirm;
