@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 
 /**
@@ -35,54 +35,54 @@ import org.junit.After;
  */
 public abstract class AbstractHotkeysTest extends BaseTest
 {
+   static final String MESSAGE_LABEL = "ideCustomizeHotKeysMessageLabel";
+
    static final int NUMBER_OF_COMMANDS = 500;
-   
+
    static final String GOOGLE_GADGET_FILE = "GoogleGadget.xml";
-   
+
    static final String DEFAULT_TEXT_IN_GADGET = "Hello, world!";
 
    static String FOLDER_NAME;
-   
+
    static final String INFO_MESSAGE_STYLE = "exo-cutomizeHotKey-label-info";
-   
+
    static final String ERROR_MESSAGE_STYLE = "exo-cutomizeHotKey-label-error";
-   
-   static final String BIND_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormBindButton\"]/";
 
-   static final String SAVE_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormSaveButton\"]/";
+   static final String BIND_BUTTON_LOCATOR = "ideCustomizeHotKeysViewBindButton";
 
-   static final String CUSTOMIZE_HOTKEYS_FORM_LOCATOR = "scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/";
+   static final String SAVE_BUTTON_LOCATOR = "ideCustomizeHotKeysViewOkButton";
 
-   static final String UNBIND_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormUnbindButton\"]/";
+   static final String CUSTOMIZE_HOTKEYS_FORM_LOCATOR = "ideCustomizeHotKeysView-window";
 
-   static final String CANCEL_BUTTON_LOCATOR = "scLocator=//IButton[ID=\"ideCustomizeHotKeysFormCancelButton\"]/";
-   
-   static final String TEXT_FIELD_LOCATOR = "scLocator=//DynamicForm[ID=\"ideCustomizeHotKeysFormDynamicFormHotKeyField\"]" 
-      + "/item[name=ideCustomizeHotKeysFormHotKeyField]/element";
-   
-   static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" 
-   + WS_NAME + "/";
+   static final String UNBIND_BUTTON_LOCATOR = "ideCustomizeHotKeysViewUnbindButton";
+
+   static final String CANCEL_BUTTON_LOCATOR = "ideCustomizeHotKeysViewCancelButton";
+
+   static final String TEXT_FIELD_LOCATOR = "ideCustomizeHotKeysViewHotKeyField";
+
+   static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
 
    String locator;
-   
+
    interface Commands
    {
       public static final String CREATE_FILE_FROM_TEMPLATE = "Create File From Template...";
-      
+
       public static final String NEW_CSS_FILE = "New CSS";
-      
+
       public static final String NEW_TEXT_FILE = "New TEXT";
-      
+
       public static final String NEW_HTML_FILE = "New HTML";
    }
-   
+
    @After
    public void tearDown()
    {
       cleanRegistry();
       deleteCookies();
    }
-   
+
    void selectRow(String rowTitle) throws Exception
    {
       String locator = getRowLocator(rowTitle);
@@ -93,7 +93,7 @@ public abstract class AbstractHotkeysTest extends BaseTest
       selenium.click(locator);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    void deselectRow(String rowTitle) throws Exception
    {
       locator = getRowLocator(Commands.NEW_CSS_FILE);
@@ -106,19 +106,19 @@ public abstract class AbstractHotkeysTest extends BaseTest
       selenium.controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    String getRowLocator(String name) throws Exception
    {
       String locator = null;
-      
-      for (int rowNumber = 0; rowNumber < NUMBER_OF_COMMANDS; rowNumber++)
+
+      for (int rowNumber = 1; rowNumber <= NUMBER_OF_COMMANDS; rowNumber++)
       {
-         locator = "scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]/body/row[" 
-            + String.valueOf(rowNumber) + "]/col[0]";
-         
+         locator = "//table[@id='ideCustomizeHotKeysListGrid']/tbody/tr[" + rowNumber + "]/td";
+         System.out.println(locator);
          if (selenium.isElementPresent(locator))
          {
             String text = selenium.getText(locator);
+            System.out.println(text);
             if (text.equals(name))
             {
                return locator;
@@ -131,20 +131,14 @@ public abstract class AbstractHotkeysTest extends BaseTest
       }
       return null;
    }
-   
-//   void openFolder() throws Exception
-//   {
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-//      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-//   }
-   
+
+
    void clickButton(String buttonLocator) throws Exception
    {
       selenium.click(buttonLocator);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
-   
+
    void checkNoMessage() throws Exception
    {
       String msgLocator = "//div[@class='windowBody']//div[@class='exo-cutomizeHotKey-label-error']";
@@ -158,97 +152,66 @@ public abstract class AbstractHotkeysTest extends BaseTest
          assertEquals("", selenium.getText(msgLocator));
       }
    }
-   
+
    void checkCreateFileFromTemplateFormAndClose() throws Exception
    {
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCancelButton\"]/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideCreateFileFromTemplateForm\"]/"));
-      Thread.sleep(TestConstants.SLEEP);
+      assertTrue(selenium.isElementPresent(Templates.FILE_FROM_TEMPLATE_FORM_ID));
+      IDE.TEMPLATES.clickCancelButton();
    }
-   
+
    void checkCustomizeHotkeyDialogWindow()
    {
       assertTrue(selenium.isElementPresent(CUSTOMIZE_HOTKEYS_FORM_LOCATOR));
-      assertTrue(selenium.isElementPresent("scLocator=//ListGrid[ID=\"ideCustomizeHotKeysFormListGrid\"]"));
+      assertTrue(selenium.isElementPresent("ideCustomizeHotKeysListGrid"));
       checkTextFieldEnabled(false);
       checkBindButtonEnabled(false);
       checkUnbindButtonEnabled(false);
       checkSaveButtonEnabled(false);
       checkCancelButtonEnabled(true);
    }
-   
+
    void checkNoCustomizeHotkeyDialogWindow()
    {
       assertFalse(selenium.isElementPresent(CUSTOMIZE_HOTKEYS_FORM_LOCATOR));
    }
-   
+
    void checkBindButtonEnabled(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
-      }
-      else
-      {
-         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Bind']"));
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Bind']"));
-      }
+      assertTrue(selenium.isElementPresent("//div[@id='ideCustomizeHotKeysViewBindButton' and @button-enabled='"
+         + isEnabled + "']"));
    }
-   
+
    void checkUnbindButtonEnabled(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Unbind']"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Unbind']"));
-      }
+      assertTrue(selenium.isElementPresent("//div[@id='ideCustomizeHotKeysViewUnbindButton' and @button-enabled='"
+         + isEnabled + "']"));
    }
-   
+
    void checkSaveButtonEnabled(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Save']"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Save']"));
-      }
+      assertTrue(selenium.isElementPresent("//div[@id='ideCustomizeHotKeysViewOkButton' and @button-enabled='"
+         + isEnabled + "']"));
    }
-   
+
    void checkCancelButtonEnabled(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitle' and text()='Cancel']"));
-      }
-      else
-      {
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//td[@class='buttonTitleDisabled' and text()='Cancel']"));
-      }
+      assertTrue(selenium.isElementPresent("//div[@id='ideCustomizeHotKeysViewCancelButton' and @button-enabled='"
+         + isEnabled + "']"));
    }
-   
+
    void checkTextFieldEnabled(boolean isEnabled)
    {
+
       if (isEnabled)
       {
-         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//input[@class='textItemDisabled']"));
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//input[@class='textItemFocused']")
-            || selenium.isElementPresent("//div[@class='windowBody']//input[@class='textItem']"));
+         assertTrue(selenium.isEditable(TEXT_FIELD_LOCATOR));
       }
       else
       {
-         assertFalse(selenium.isElementPresent("//div[@class='windowBody']//input[@class='textItem']"));
-         assertTrue(selenium.isElementPresent("//div[@class='windowBody']//input[@class='textItemDisabled']"));
+         assertFalse(selenium.isEditable(TEXT_FIELD_LOCATOR));
       }
    }
-   
+
    /**
     * Check is message present.
     * 
@@ -261,17 +224,17 @@ public abstract class AbstractHotkeysTest extends BaseTest
    void checkMessage(String style, String message, boolean isPresent)
    {
       //check is no message present
+      String messageId = MESSAGE_LABEL;
       if (!isPresent)
       {
          if (style.equals(INFO_MESSAGE_STYLE))
          {
             assertFalse(selenium
-               .isElementPresent("//div[@class='windowBody']//div[@class='exo-cutomizeHotKey-label-info' and text()='" + message + "']"));
+               .isElementPresent("//div[@id='" + messageId + "' and text()='" + message + "']"));
          }
          if (style.equals(ERROR_MESSAGE_STYLE))
          {
-            assertFalse(selenium
-               .isElementPresent("//div[@class='windowBody']//div[@class='exo-cutomizeHotKey-label-error' and text()='" + message + "']"));
+            assertFalse(selenium.isElementPresent("//div[@id='" + messageId + "' and text()='" + message + "']"));
          }
       }
       //check displayed message
@@ -279,29 +242,28 @@ public abstract class AbstractHotkeysTest extends BaseTest
       {
          if (style.equals(INFO_MESSAGE_STYLE))
          {
-            assertEquals(message, selenium
-               .getText("//div[@class='windowBody']//div[@class='exo-cutomizeHotKey-label-info']"));
+            assertEquals(message,
+               selenium.getText(messageId));
          }
          if (style.equals(ERROR_MESSAGE_STYLE))
          {
-            assertEquals(message, selenium
-               .getText("//div[@class='windowBody']//div[@class='exo-cutomizeHotKey-label-error']"));
+            assertEquals(message,
+               selenium.getText(messageId));
          }
       }
    }
-   
+
    void closeHotkeysWindow() throws Exception
    {
-      selenium.click("scLocator=//Window[ID=\"ideCustomizeHotKeysForm\"]/closeButton/");
-      Thread.sleep(TestConstants.SLEEP);
+      selenium.click(CANCEL_BUTTON_LOCATOR);
+      waitForElementNotPresent(CUSTOMIZE_HOTKEYS_FORM_LOCATOR);
    }
-   
+
    String getTextFromTextField()
    {
-      return selenium.getValue("scLocator=//DynamicForm[ID=\"ideCustomizeHotKeysFormDynamicFormHotKeyField\"]/item[0]" 
-         + "[name=\"ideCustomizeHotKeysFormHotKeyField\"]/element");
+      return selenium.getValue(TEXT_FIELD_LOCATOR);
    }
-   
+
    /**
     * Get text from Bind column in list grid by row title.
     * 
@@ -313,13 +275,13 @@ public abstract class AbstractHotkeysTest extends BaseTest
    String getTextFromBindColumn(String rowTitle) throws Exception
    {
       String rowLocator = getRowLocator(rowTitle);
-      
+
       if (!selenium.isElementPresent(rowLocator))
       {
          fail("Can't find row locator: " + rowLocator);
       }
-      String bindLocator = rowLocator.replace("col[0]", "col[1]");
-      
+      String bindLocator = rowLocator + "[2]";//.replace("col[0]", "col[1]");
+
       return selenium.getText(bindLocator);
    }
 

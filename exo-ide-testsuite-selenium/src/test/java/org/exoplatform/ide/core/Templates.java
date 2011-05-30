@@ -37,7 +37,7 @@ public class Templates extends AbstractTestModule
    //------Create file from template form elements-------------------
    private static final String ADD_FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm";
 
-   private static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm-window";
+   public static final String FILE_FROM_TEMPLATE_FORM_ID = "ideCreateFileFromTemplateForm-window";
    
    
    private static final String TEMPLATES_LIST_GRID_ID = "ideCreateFileFromTemplateFormTemplateListGrid";

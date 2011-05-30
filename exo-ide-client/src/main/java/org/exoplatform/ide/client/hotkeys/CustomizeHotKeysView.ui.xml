@@ -18,7 +18,7 @@
 	
 	<c:VPanel>
 		<c:Border margin="5">
-			<hk:HotKeyItemListGrid ui:field="hotKeyItemListGrid"></hk:HotKeyItemListGrid>
+			<hk:HotKeyItemListGrid ui:field="hotKeyItemListGrid" ></hk:HotKeyItemListGrid>
 		</c:Border>
 
 			<g:HTMLPanel height="50px">
@@ -39,19 +39,19 @@
 
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 
-						<td><c:ImageButton text="Bind" imageName="yes" ui:field="bindButton"></c:ImageButton></td>
+						<td><c:ImageButton text="Bind" imageName="yes" ui:field="bindButton" enabled="false" buttonId="ideCustomizeHotKeysViewBindButton"></c:ImageButton></td>
 
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 
-						<td><c:ImageButton text="Unbind" imageName="no" ui:field="unbindButton"></c:ImageButton></td>
+						<td><c:ImageButton text="Unbind" imageName="no" ui:field="unbindButton" enabled="false" buttonId="ideCustomizeHotKeysViewUnbindButton"></c:ImageButton></td>
 						
 						<td style="width:100%;"><div style="width:1px; height:1px;"></div></td>
 						
-						<td><c:ImageButton text="Ok" imageName="ok" ui:field="okButton"></c:ImageButton></td>
+						<td><c:ImageButton text="Ok" imageName="ok" ui:field="okButton" enabled="false" buttonId="ideCustomizeHotKeysViewOkButton"></c:ImageButton></td>
 						
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 						
-						<td><c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton"></c:ImageButton></td>
+						<td><c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideCustomizeHotKeysViewCancelButton"></c:ImageButton></td>
 						
 						<td style="width:2px;"><div style="width:2px; height:1px;"></div></td>						
 					</tr>

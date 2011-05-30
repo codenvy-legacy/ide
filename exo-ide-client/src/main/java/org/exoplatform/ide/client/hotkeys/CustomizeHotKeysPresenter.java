@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -118,7 +124,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-      
+
       eventBus.addHandler(CustomizeHotKeysEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -140,9 +146,10 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView() instanceof Display) {
+      if (event.getView() instanceof Display)
+      {
          display = null;
-         HotKeyManager.getInstance().setHotKeyPressedListener(null);         
+         HotKeyManager.getInstance().setHotKeyPressedListener(null);
       }
    }
 
@@ -151,7 +158,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    {
       if (event.getView() instanceof Display)
       {
-         HotKeyManager.getInstance().setHotKeyPressedListener(this);   
+         HotKeyManager.getInstance().setHotKeyPressedListener(this);
       }
    }
 
@@ -160,7 +167,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    {
       applicationSettings = event.getApplicationSettings();
    }
-   
+
    @Override
    public void onControlsUpdated(ControlsUpdatedEvent event)
    {
@@ -190,10 +197,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          public void onSelection(SelectionEvent<HotKeyItem> event)
          {
             selectedItem = display.getSelectedItem();
-            System.out.println("selected item > " + selectedItem);
-            
-            System.out.println("selectedItem.getGroup() > " + selectedItem.getGroup());
-            
             if (selectedItem.getGroup().equals(EDITOR_GROUP))
             {
                selectedItem = null;
@@ -329,11 +332,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    {
       String newHotKey = display.getHotKeyField().getValue();
 
+      final String selectedCommandId =
+         selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
       for (HotKeyItem hotKey : hotKeys)
       {
          final String commandId = hotKey.getCommand() == null ? hotKey.getTitle() : hotKey.getCommand().getId();
-         final String selectedCommandId =
-            selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
          if (commandId.equals(selectedCommandId))
          {
             hotKey.setHotKey(newHotKey);
@@ -530,10 +533,13 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     */
    private void updateState()
    {
-      selectedItem = null;
+      //      selectedItem = null;
 
       display.setBindButtonEnabled(false);
-      display.setUnbindButtonEnabled(false);
+      if (selectedItem.getHotKey() != null && !"".equals(selectedItem.getHotKey()))
+         display.setUnbindButtonEnabled(true);
+      else
+         display.setUnbindButtonEnabled(false);
       display.getHotKeyField().setValue("", true);
       display.setOkButtonEnabled(true);
       display.setHotKeyFieldEnabled(false);

@@ -48,9 +48,12 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
    private final static String TITLE = "Command";
 
    private final static String CONTROL = "Binding";
+   
+   private final static String ID = "ideCustomizeHotKeysListGrid";
 
    public HotKeyItemListGrid()
    {
+      setID(ID);
       initColumns();
    }
    
