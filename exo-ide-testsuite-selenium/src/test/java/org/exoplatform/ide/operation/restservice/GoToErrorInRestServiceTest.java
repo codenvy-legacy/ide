@@ -80,11 +80,16 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
       openAndValidateRestService();
+      //check, validation fails
+      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      assertTrue(validationMsg.contains("validation failed"));
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check, cursor go to position
       assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
+      
+      IDE.EDITOR.closeFile(0);
    }
 
    @Test
@@ -95,23 +100,32 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
+      //check, validation fails
+      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      assertTrue(validationMsg.contains("validation failed"));
       //close tab
       IDE.EDITOR.closeFile(0);
 
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.EDITOR.waitTabPresent(0);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //file must be opened and cursor must stay on error
       assertEquals(FILE_WITH_ERROR, IDE.EDITOR.getTabTitle(0));
-
+      
       assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
 
       //---- 3 -----------------
       //open new rest service file and check, that cursor doesn't go to position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeFile(0);
    }
 
    @Test
@@ -122,13 +136,17 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
+      //check, validation fails
+      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      assertTrue(validationMsg.contains("validation failed"));
+      
       //open another tab
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
 
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
       //check, tab with rest service must be opened
       IDE.EDITOR.checkEditorTabSelected(FILE_WITH_ERROR, true);
@@ -143,6 +161,9 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.EDITOR.waitTabPresent(1);
 
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeFile(0);
    }
 
    @Test
@@ -153,8 +174,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
+      //check, validation fails
+      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+      assertTrue(validationMsg.contains("validation failed"));
+      
       //close tab
       IDE.EDITOR.closeFile(0);
+      Thread.sleep(TestConstants.SLEEP);
 
       //---- 2 -----------------
       //delete file
@@ -178,6 +204,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
 
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
    }
 
@@ -187,12 +214,13 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //refresh, to clear console and close it
       selenium.refresh();
       IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
       //---- 1 -----------------
       //open file    
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_WITH_ERROR_FOR_CHANGING);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_WITH_ERROR_FOR_CHANGING, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + TEST_FOLDER + "/" + FILE_WITH_ERROR_FOR_CHANGING);
       IDE.EDITOR.waitTabPresent(0);
       
       //---- 2 -----------------
@@ -207,9 +235,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //---- 3 -----------------
       //click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       //fix validation error
       IDE.EDITOR.clickOnEditor(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
       //go to error
       for (int i = 0; i < 6; i++)
       {
@@ -219,8 +249,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //delete# unnecessary  space
       selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
       IDE.selectMainFrame();
+      Thread.sleep(TestConstants.SLEEP * 2);
 
       //---- 4 -----------------
       //press validate button
@@ -279,12 +309,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       //---- 1 -----------------
       //open file
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
+//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_WITH_ERROR, false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + FILE_WITH_ERROR);
       IDE.EDITOR.waitTabPresent(0);
       
       //---- 2 -----------------
@@ -293,8 +322,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(1);
       
       //check, validation fails
-      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
-      assertTrue(validationMsg.contains("validation failed"));
+//      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
+//      assertTrue(validationMsg.contains("validation failed"));
    }
 
    @After
@@ -311,8 +340,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FILE_WITH_ERROR);
-         VirtualFileSystemUtils.delete(URL + FILE_WITH_ERROR_FOR_CHANGING);
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
       {
