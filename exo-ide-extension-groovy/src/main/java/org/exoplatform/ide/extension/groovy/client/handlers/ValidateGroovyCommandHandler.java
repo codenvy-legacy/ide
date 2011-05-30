@@ -36,6 +36,8 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
@@ -53,7 +55,7 @@ import java.util.Map;
  */
 
 public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler, EditorActiveFileChangedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ExceptionThrownHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ExceptionThrownHandler, EditorInitializedHandler
 {
 
    private HandlerManager eventBus;
@@ -66,6 +68,8 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
     * Is need to go to position in active file.
     */
    private boolean isGoToPosition;
+   
+   private boolean goToPositionAfterOpen;
 
    /**
     * Number of line, where to after,
@@ -105,6 +109,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
+      eventBus.addHandler(EditorInitializedEvent.TYPE, this);
 
       initGoToErrorFunction();
    }
@@ -134,12 +139,6 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-
-      if (errFileHref.equals(event.getFile().getHref()))
-      {
-         errFileHref = "";
-         eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
-      }
    }
 
    /**
@@ -234,6 +233,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
       else
       {
          errFileHref = fileHref;
+         goToPositionAfterOpen = true;
          eventBus.fireEvent(new OpenFileEvent(fileHref));
       }
    }
@@ -270,6 +270,19 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    public void onError(ExceptionThrownEvent event)
    {
       errFileHref = "";
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.event.EditorInitializedHandler#onEditorInitialized(org.exoplatform.ide.editor.api.event.EditorInitializedEvent)
+    */
+   @Override
+   public void onEditorInitialized(EditorInitializedEvent event)
+   {
+      if (goToPositionAfterOpen)
+      {
+         goToPositionAfterOpen = false;
+         eventBus.fireEvent(new EditorGoToLineEvent(lineNumberToGo, columnNumberToGo));
+      }
    }
 
 }
