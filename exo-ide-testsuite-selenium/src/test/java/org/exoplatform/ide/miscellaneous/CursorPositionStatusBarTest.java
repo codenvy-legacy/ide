@@ -20,18 +20,16 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>
@@ -74,14 +72,10 @@ public class CursorPositionStatusBarTest extends BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      saveAsUsingToolbarButton(FILE_1);
+      IDE.EDITOR.waitTabPresent(0);
+      IDE.NAVIGATION.saveFileAs(FILE_1);
 
-      IDE.WORKSPACE.waitForRootItem();
-      //TODO****try****fix
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForRootItem();
-      //****************
+//      IDE.WORKSPACE.waitForRootItem();
 
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
@@ -131,7 +125,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 //
 //      //			check status bar
 //      assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-     IDE.EDITOR.closeTabIgnoringChanges(0);
+     IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
