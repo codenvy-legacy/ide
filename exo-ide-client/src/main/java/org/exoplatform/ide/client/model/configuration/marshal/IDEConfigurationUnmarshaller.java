@@ -62,8 +62,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER = "user";
 
-//   private static final String HTTPS_PORT = "httpsPort";
-   
+   //   private static final String HTTPS_PORT = "httpsPort";
+
    private IDEInitializationConfiguration initializationConfiguration;
 
    private IDEConfiguration configuration;
@@ -80,6 +80,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
       this.initializationConfiguration = initializationConfiguration;
       this.defaultAppConfiguration = defaultAppConfiguration;
       configuration = new IDEConfiguration();
+      configuration.setRegistryURL(getRegistryURL());
       this.initializationConfiguration.setIdeConfiguration(configuration);
    }
 
@@ -163,14 +164,14 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
          return;
       }
 
-//      if (jsonConfiguration.containsKey(HTTPS_PORT))
-//         configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
-//      else
-//      {
-//         showErrorMessage(HTTPS_PORT);
-//         return;
-//      }
-      
+      //      if (jsonConfiguration.containsKey(HTTPS_PORT))
+      //         configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
+      //      else
+      //      {
+      //         showErrorMessage(HTTPS_PORT);
+      //         return;
+      //      }
+
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host
          configuration.setGadgetServer(Location.getProtocol() + "//" + Location.getHost()
@@ -188,5 +189,9 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
       String m = "Invalid configuration:  missing " + message + " item";
       Dialogs.getInstance().showError("Invalid configuration", m);
    }
+
+   private static native String getRegistryURL() /*-{
+		return $wnd.registryURL;
+   }-*/;
 
 }
