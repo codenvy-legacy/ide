@@ -45,7 +45,7 @@ public class IDEConfiguration
 
    private String gadgetServer;
    
-   private int httpsPort;
+   private int httpsPort = 0;
    
    public IDEConfiguration()
    {

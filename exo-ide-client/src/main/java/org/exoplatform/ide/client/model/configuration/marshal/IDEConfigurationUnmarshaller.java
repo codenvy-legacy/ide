@@ -62,7 +62,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private static final String USER = "user";
 
-   private static final String HTTPS_PORT = "httpsPort";
+//   private static final String HTTPS_PORT = "httpsPort";
    
    private IDEInitializationConfiguration initializationConfiguration;
 
@@ -163,13 +163,13 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
          return;
       }
 
-      if (jsonConfiguration.containsKey(HTTPS_PORT))
-         configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
-      else
-      {
-         showErrorMessage(HTTPS_PORT);
-         return;
-      }
+//      if (jsonConfiguration.containsKey(HTTPS_PORT))
+//         configuration.setHttpsPort((int)jsonConfiguration.get(HTTPS_PORT).isNumber().doubleValue());
+//      else
+//      {
+//         showErrorMessage(HTTPS_PORT);
+//         return;
+//      }
       
       if (jsonConfiguration.containsKey(GADGET_SERVER))
          //TODO: now we can load gadget only from current host
