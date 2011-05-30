@@ -139,7 +139,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       
       //------ 3 --------
       //Click on button "Yes".
-      IDE.ASK_DIALOG.clickYes();
+      selenium.click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
       
       //------ 4 --------
       //check warn dialog, that this template is used in project template

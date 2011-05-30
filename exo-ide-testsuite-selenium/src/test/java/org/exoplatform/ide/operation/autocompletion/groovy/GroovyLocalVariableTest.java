@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
+import junit.framework.Assert;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -138,7 +140,15 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-      IDE.EDITOR.closeFile(0);
+      
+     //TODO this block should be remove after fix problem in issue IDE-804. File does not should be modified  
+     if (IDE.EDITOR.isFileContentChanged(0)){
+      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
+     }
+     else
+       IDE.EDITOR.closeFile(0);
+
    }
 
    /**

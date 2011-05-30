@@ -50,7 +50,6 @@ public class CreateProjectTemplateTest extends BaseTest
       cleanRegistry();
    }
 
-   @Ignore
    @Test
    public void testCreateProjectTemplate() throws Exception
    {

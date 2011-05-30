@@ -69,8 +69,6 @@ public class BigTemplateTest extends BaseTest
       }
    }
 
-  
-   @Ignore
    @Test
    public void testBigTemplate() throws Exception
    {
@@ -109,11 +107,11 @@ public class BigTemplateTest extends BaseTest
       IDE.TEMPLATES.selectFileTemplate("Calc");
       //click Create button
       IDE.TEMPLATES.clickCreateButton();
-      
+
       IDE.EDITOR.waitTabPresent(0);
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @AfterClass

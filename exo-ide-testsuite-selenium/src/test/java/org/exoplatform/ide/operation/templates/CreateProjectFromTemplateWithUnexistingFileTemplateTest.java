@@ -75,6 +75,9 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       + "<file><template-file-name>Not%20Empty%20HTML</template-file-name>"
       + "<file-name>Index-test.html</file-name></file>" + "</items></folder></items></folder></items></template>";
 
+   private static final String PROJECT_CREATE_FORM_LOCATOR =
+      "//div[@class='gwt-DialogBox']//div[@view-id='ideCreateProjectFromTemplateView']";
+
    @BeforeClass
    public static void setUp()
    {
@@ -135,7 +138,6 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       }
    }
 
-   @Ignore
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
@@ -145,11 +147,12 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       //open create project from template form
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.PROJECT_FROM_TEMPLATE);
 
+      waitForElementPresent(PROJECT_CREATE_FORM_LOCATOR);
       IDE.TEMPLATES.checkProjectCreateForm();
 
       //----- 2 ----------------
       //select project template from list, type project name, click Create button
-      
+
       IDE.TEMPLATES.selectProjectTemplate(PROJECT_TEMPLATE_NAME);
       IDE.TEMPLATES.typeNameToInputField(PROJECT_NAME);
       IDE.TEMPLATES.clickCreateButton();
@@ -161,7 +164,7 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       //----- 3 ----------------
       //check new project created
       IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/");
-      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/"); 
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/");
 
       IDE.WORKSPACE.selectItem(PROJECT_FOLDER_URL + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -177,9 +180,12 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
       IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
-      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_GROOVY);
-      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + FILE_HTML);
-      IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/" + UNEXISTING_FILE_HTML);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/"
+         + FILE_GROOVY);
+      IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/"
+         + FILE_HTML);
+      IDE.NAVIGATION.assertItemNotVisible(PROJECT_FOLDER_URL + "/" + FOLDER_ORG + "/" + FOLDER_EXOPLATFORM + "/"
+         + UNEXISTING_FILE_HTML);
    }
 
 }
