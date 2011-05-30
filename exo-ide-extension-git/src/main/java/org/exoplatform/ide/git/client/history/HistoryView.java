@@ -177,7 +177,11 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    {
       super(ID, TYPE, TITLE, new Image(GitClientBundle.INSTANCE.history()), 400, 250, true);
       add(uiBinder.createAndBindUi(this));
-
+      
+      comitADate.setHeight(20);
+      comitARevision.setHeight(20);
+      comitBDate.setHeight(20);
+      comitARevision.setHeight(20);
       createControls();
    }
 

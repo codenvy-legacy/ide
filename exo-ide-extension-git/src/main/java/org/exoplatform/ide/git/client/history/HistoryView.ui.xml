@@ -32,7 +32,7 @@
          <g:center>
             <f:StretchPanel>
                <f:VPanel>
-                  <f:Border margin="5" height="60px" borderColor="transparent">
+                  <f:Border margin="5" borderColor="transparent" height="70">
                      <g:HTMLPanel>
                         <table width="100%">
                            <tr>
