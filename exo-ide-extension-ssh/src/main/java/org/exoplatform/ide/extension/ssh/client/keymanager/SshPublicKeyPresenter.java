@@ -19,10 +19,13 @@
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -31,7 +34,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.ssh.client.SshService;
+import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
+import org.exoplatform.ide.extension.ssh.client.SshKeyService;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
 /**
@@ -84,18 +88,21 @@ public class SshPublicKeyPresenter implements ViewClosedHandler
     */
    private void showPublicKey()
    {
-      SshService.get().getPublicKey(keyItem, new AsyncRequestCallback<String>()
+      SshKeyService.get().getPublicKey(keyItem, new JsonpAsyncCallback<JavaScriptObject>()
       {
 
          @Override
-         protected void onSuccess(String result)
+         public void onSuccess(JavaScriptObject result)
          {
-            display.getKeyField().setValue(result);
+            getLoader().hide();
+            JSONObject key = new JSONObject(result);
+            display.getKeyField().setValue(key.get("key").isString().stringValue());
          }
 
          @Override
-         protected void onFailure(Throwable exception)
+         public void onFailure(Throwable exception)
          {
+            getLoader().hide();
             IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
          }
       });

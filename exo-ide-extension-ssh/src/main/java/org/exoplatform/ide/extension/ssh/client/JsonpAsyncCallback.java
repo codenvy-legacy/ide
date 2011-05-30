@@ -16,44 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.ssh.server;
+package org.exoplatform.ide.extension.ssh.client;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 
-import javax.ws.rs.core.Application;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class KeyApplication extends Application
+ * @param <T>
+*/
+public abstract class JsonpAsyncCallback<T> implements AsyncCallback<T>
 {
-   private Set<Class<?>> classes;
    
-   private Set<Object> singletons;
-
-   public KeyApplication()
+   private Loader loader;
+   
+   public void setLoader(Loader loader)
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(KeyService.class);
-      
-      singletons = new HashSet<Object>();
-      singletons.add(new JsonpEntityProvider());
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
+      this.loader = loader;
    }
    
-   @Override
-   public Set<Object> getSingletons()
+   public Loader getLoader()
    {
-      return singletons;
+      if (loader == null)
+         new EmptyLoader();
+      return loader;
    }
+
 }

@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKe
  * @version $Id: SshExtension May 17, 2011 5:00:33 PM evgen $
  *
  */
-public class SshExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
+public class SshKeyExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
 {
 
    /**
@@ -55,7 +55,7 @@ public class SshExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new SshService(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new SshKeyService(event.getApplicationConfiguration().getContext(), event.getApplicationConfiguration().getHttpsPort(), event.getLoader());
    }
 
    /**

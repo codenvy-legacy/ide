@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -27,39 +25,42 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ssh.client.marshaller.GenerateSshKeysMarshaller;
-import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
-import org.exoplatform.ide.extension.ssh.client.marshaller.SshPublicKeyUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
  *
  */
-public class SshService
+public class SshKeyService
 {
 
-   private static SshService instance;
+   private static SshKeyService instance;
 
-   private String restContext;
+   private final String restContext;
 
-   private Loader loader;
+   private final Loader loader;
+   
+//   private final int httpsPort;
+   
 
    /**
     * 
     */
-   public SshService(String restContext, Loader loader)
+   public SshKeyService(String restContext,int httpsPort, Loader loader)
    {
       this.restContext = restContext;
       this.loader = loader;
+  //    this.httpsPort = httpsPort;
       instance = this;
    }
 
-   public static SshService get()
+   public static SshKeyService get()
    {
       return instance;
    }
@@ -68,16 +69,18 @@ public class SshService
     * Receive all ssh key, stored on server
     * @param callback
     */
-   public void getAllKeys(AsyncRequestCallback<List<KeyItem>> callback)
-   {
-      List<KeyItem> keyItems = new ArrayList<KeyItem>();
-      SshKeysUnmarshaller unmarshaller = new SshKeysUnmarshaller(keyItems);
-
-      callback.setEventBus(IDE.EVENT_BUS);
-      callback.setResult(keyItems);
-      callback.setPayload(unmarshaller);
-      String url = restContext + "/ide/ssh-keys/all";
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback)
+   { 
+//      UrlBuilder builder = new UrlBuilder();
+//      String url =
+//         builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
+//            .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
+      
+      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+      loader.setMessage("Getting SSH keys....");
+      loader.show();
+      callback.setLoader(loader);
+      jsonp.requestObject(restContext + "/ide/ssh-keys/all", callback);
    }
 
    /**
@@ -91,6 +94,7 @@ public class SshService
       callback.setResult(genKey);
       String url = restContext + "/ide/ssh-keys/gen";
       GenerateSshKeysMarshaller marshaller = new GenerateSshKeysMarshaller(genKey);
+      loader.setMessage("Generate keys for " + genKey.getHost());
       AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -100,11 +104,13 @@ public class SshService
     * @param keyItem to get public key
     * @param callback
     */
-   public void getPublicKey(KeyItem keyItem, AsyncRequestCallback<String> callback)
+   public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback)
    {
-      callback.setEventBus(IDE.EVENT_BUS);
-      callback.setPayload(new SshPublicKeyUnmarshaller(callback));
-      AsyncRequest.build(RequestBuilder.GET, keyItem.getPublicKeyURL(), loader).send(callback);
+      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+      loader.setMessage("Getting public SSH key for " + keyItem.getHost());
+      loader.show();
+      callback.setLoader(loader);
+      jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
    }
 
    /**
@@ -112,11 +118,13 @@ public class SshService
     * @param keyItem to delete
     * @param callback
     */
-   public void deleteKey(KeyItem keyItem, AsyncRequestCallback<KeyItem> callback)
+   public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback)
    {
-      callback.setEventBus(IDE.EVENT_BUS);
-      callback.setResult(keyItem);
-      AsyncRequest.build(RequestBuilder.POST, keyItem.getRemoveKeyURL(), loader).send(callback);
+      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+      loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
+      loader.show();
+      callback.setLoader(loader);
+      jsonp.send(keyItem.getRemoveKeyURL(), callback);
    }
 
 }

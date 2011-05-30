@@ -16,44 +16,59 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.ssh.server;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+package org.exoplatform.ide.extension.ssh.shared;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- */
-public class KeyApplication extends Application
+*/
+public class PublicKey
 {
-   private Set<Class<?>> classes;
-   
-   private Set<Object> singletons;
+   /** Host name. */
+   private String host;
 
-   public KeyApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(KeyService.class);
-      
-      singletons = new HashSet<Object>();
-      singletons.add(new JsonpEntityProvider());
-   }
+   /** SSH key as text.   */
+   private String key;
+   
 
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * 
     */
-   @Override
-   public Set<Class<?>> getClasses()
+   public PublicKey()
    {
-      return classes;
    }
    
-   @Override
-   public Set<Object> getSingletons()
+   
+   /**
+    * @param host
+    * @param key
+    */
+   public PublicKey(String host, String key)
    {
-      return singletons;
+      super();
+      this.host = host;
+      this.key = key;
    }
+
+   public String getHost()
+   {
+      return host;
+   }
+
+   public String getKey()
+   {
+      return key;
+   }
+
+   public void setHost(String host)
+   {
+      this.host = host;
+   }
+
+   public void setKey(String key)
+   {
+      this.key = key;
+   }
+
 }

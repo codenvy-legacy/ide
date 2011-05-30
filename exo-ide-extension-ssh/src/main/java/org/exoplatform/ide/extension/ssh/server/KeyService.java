@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.ssh.server;
 
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
+import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,11 +65,8 @@ public class KeyService
    @Path("gen")
    @RolesAllowed({"users"})
    @Consumes(MediaType.APPLICATION_JSON)
-   public Response genKeyPair(@Context SecurityContext security, GenKeyRequest request)
+   public Response genKeyPair(GenKeyRequest request)
    {
-      if (!security.isSecure())
-         throw new WebApplicationException(Response.status(400)
-            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
          delegate.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
@@ -112,18 +110,20 @@ public class KeyService
     */
    @GET
    @RolesAllowed({"users"})
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_JSON)
    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host)
    {
-      if (!security.isSecure())
-         throw new WebApplicationException(Response.status(400)
-            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      
+// Temporary turn-off don't work on demo site      
+//      if (!security.isSecure())
+//         throw new WebApplicationException(Response.status(400)
+//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
          Key publicKey = delegate.getPublicKey(host);
          byte[] bytes = publicKey.getBytes();
          if (bytes != null)
-            return Response.ok().entity(bytes).type(MediaType.TEXT_PLAIN).build();
+            return Response.ok().entity(new PublicKey(host, new String(bytes))).type(MediaType.APPLICATION_JSON).build();
          throw new WebApplicationException(Response.status(404).entity("Public key for host " + host + " not found. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
@@ -137,12 +137,13 @@ public class KeyService
    /**
     * Remove SSH keys.
     */
-   @POST
+   @GET
    @Path("remove")
    @RolesAllowed({"users"})
-   public void removeKeys(@QueryParam("host") String host)
+   public String removeKeys(@QueryParam("host") String host,@QueryParam("callback") String calback)
    {
       delegate.removeKeys(host);
+      return calback+ "();";
    }
 
    @GET
