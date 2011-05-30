@@ -256,6 +256,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-heroku</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -687,7 +693,7 @@
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
-
+      <module>exo-ide-extension-heroku</module>
 
       <module>exo-ide-docs</module>
 
