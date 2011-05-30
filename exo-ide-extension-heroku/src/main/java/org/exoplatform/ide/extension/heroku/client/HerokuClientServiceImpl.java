@@ -105,7 +105,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String workDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
       String url = restServiceContext + CREATE_APPLICATION;
       String params = "name=" + applicationName;
-      params += (remoteName != null) ? "&remote=" + remoteName : "";
+      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "&remote=" + remoteName : "";
       params += "&workDir=" + workDir;
 
       HashMap<String, String> applicationInfo = new HashMap<String, String>();

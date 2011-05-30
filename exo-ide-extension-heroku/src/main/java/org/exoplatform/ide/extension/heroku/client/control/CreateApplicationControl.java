@@ -36,7 +36,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    /**
     * Control ID.
     */
-   public static final String ID = "Heroku/Create application...";
+   public static final String ID = "PaaS/Heroku/Create application...";
 
    /**
     * Control's title.

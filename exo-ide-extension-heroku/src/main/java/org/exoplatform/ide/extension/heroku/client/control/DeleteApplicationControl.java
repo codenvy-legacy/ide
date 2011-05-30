@@ -36,7 +36,7 @@ public class DeleteApplicationControl extends SimpleControl implements IDEContro
    /**
     * Control ID.
     */
-   public static final String ID = "Heroku/Delete application...";
+   public static final String ID = "PaaS/Heroku/Delete application...";
 
    /**
     * Control's title.
