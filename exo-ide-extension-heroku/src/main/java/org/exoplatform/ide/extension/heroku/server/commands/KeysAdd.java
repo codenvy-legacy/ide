@@ -31,7 +31,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 
 /**
@@ -52,7 +51,6 @@ public class KeysAdd extends HerokuCommand
     * @throws CommandException if any other exception occurs
     */
    @POST
-   @Consumes("text/ssh-authkey")
    public void add() throws HerokuException, CredentialsNotFoundException, CommandException
    {
       SshKeyProvider keyProvider =
