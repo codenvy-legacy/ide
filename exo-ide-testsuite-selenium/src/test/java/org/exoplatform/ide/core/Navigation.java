@@ -321,7 +321,7 @@ public class Navigation extends AbstractTestModule
    {
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       String locator =
-         "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='false' @title='"
+         "//div[@id='exoIDEToolbar']//div[@class='exoIconButtonPanel' and @enabled='true' and @title='"
             + ToolbarCommands.File.SAVE + "']";
       waitForElementPresent(locator);
    }
