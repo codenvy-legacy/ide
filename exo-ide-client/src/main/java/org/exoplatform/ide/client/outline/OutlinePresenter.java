@@ -514,7 +514,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          currentRow = event.getRow();
 
          selectOutlineTimer.cancel();
-         selectOutlineTimer.schedule(500);
+         selectOutlineTimer.schedule(100);
       }
       else 
       {
