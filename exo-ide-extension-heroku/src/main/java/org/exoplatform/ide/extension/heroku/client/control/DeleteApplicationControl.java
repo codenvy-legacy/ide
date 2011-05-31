@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent;
 
 /**
@@ -58,6 +59,7 @@ public class DeleteApplicationControl extends SimpleControl implements IDEContro
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new DeleteApplicationEvent());
+      setImages(HerokuClientBundle.INSTANCE.destroyApplication(), HerokuClientBundle.INSTANCE.destroyApplicationDisabled());
    }
 
    /**

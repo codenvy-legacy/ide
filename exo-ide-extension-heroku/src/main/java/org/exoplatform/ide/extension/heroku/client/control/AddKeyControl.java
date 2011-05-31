@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
 
 /**
@@ -54,6 +55,7 @@ public class AddKeyControl extends SimpleControl implements IDEControl
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new AddKeyEvent());
+      setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
       setDelimiterBefore(true);
    }
 

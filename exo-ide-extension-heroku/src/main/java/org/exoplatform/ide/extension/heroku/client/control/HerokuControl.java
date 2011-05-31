@@ -23,39 +23,37 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
-import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
 
 /**
- * Control for creating new application on Heroku.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:27:45 PM anya $
+ * @version $Id:  May 31, 2011 3:32:33 PM anya $
  *
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl
+public class HerokuControl extends SimpleControl implements IDEControl 
 {
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku/Create application...";
+   public static final String ID = "PaaS/Heroku";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Create application...";
+   public static final String TITLE = "Heroku";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Create application on Heroku...";
+   public static final String PROMPT = "Heroku";
    
-   public CreateApplicationControl()
+   public HerokuControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new CreateApplicationEvent());
-      setImages(HerokuClientBundle.INSTANCE.createApplication(), HerokuClientBundle.INSTANCE.createApplicationDisabled());
+      setEvent(new AddKeyEvent());
+      setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
    }
 
 
@@ -68,5 +66,4 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       setVisible(true);
       setEnabled(true);
    }
-
 }

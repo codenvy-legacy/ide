@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.key.ClearKeysEvent;
 
 /**
@@ -53,6 +54,7 @@ public class ClearKeysControl extends SimpleControl implements IDEControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
+      setImages(HerokuClientBundle.INSTANCE.clearKeys(), HerokuClientBundle.INSTANCE.clearKeysDisabled());
       setEvent(new ClearKeysEvent());
    }
 

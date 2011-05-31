@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
 import org.exoplatform.ide.extension.heroku.client.control.ClearKeysControl;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
+import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
@@ -67,6 +68,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls
+      IDE.getInstance().addControl(new HerokuControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
