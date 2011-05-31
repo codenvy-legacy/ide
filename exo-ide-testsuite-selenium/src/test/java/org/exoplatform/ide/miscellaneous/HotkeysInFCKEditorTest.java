@@ -29,6 +29,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -137,22 +138,15 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check text became underline
       assertTrue(selenium.isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
       IDE.selectMainFrame();
-//      Thread.sleep(TestConstants.SLEEP);
       
       //----- 4 ------------
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
       assertEquals(GOOGLE_GADGET_FILE + " *",IDE.EDITOR.getTabTitle(0));
-//      selenium.controlKeyDown();
-//      selenium.keyDown("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
-//      selenium.keyUp("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[0]", "S");
-//      selenium.controlKeyUp();
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
       assertEquals(GOOGLE_GADGET_FILE,IDE.EDITOR.getTabTitle(0));
-      //close file      
-      IDE.EDITOR.closeFile(0);
    }
    
    /**
@@ -220,10 +214,6 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       }
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
-      
-
-//      IDE.EDITOR.closeTabIgnoringChanges(0);
-      IDE.EDITOR.closeFile(0);
    }
    
    @Test
@@ -312,25 +302,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       assertEquals(textForCopyPaste, selenium.getText("//body"));
-      
       IDE.selectMainFrame();
       
-      //check Ctrl+Home, Ctrl+End
-     IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      Thread.sleep(TestConstants.SLEEP);
-      
-      IDE.selectMainFrame();
-      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    @Test
@@ -356,8 +329,6 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
       
       checkCreateFileFromTemplateFormAndClose();
-      //IDE.EDITOR.closeFileTabIgnoreChanges(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
    
    private String getTextFromCkEditor(int tabIndex) throws Exception
