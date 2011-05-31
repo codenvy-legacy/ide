@@ -241,7 +241,6 @@ public class OulineTreeHelper extends BaseTest
       int fileLineNumbers = fileContent.split("\\r?\\n").length;   
       
       goToLine(1);
-      goToLine(1);
       IDE.EDITOR.clickOnEditor(0);
            
       // go to the end of file
