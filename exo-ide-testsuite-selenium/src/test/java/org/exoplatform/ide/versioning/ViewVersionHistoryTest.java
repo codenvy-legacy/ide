@@ -418,7 +418,14 @@ public class ViewVersionHistoryTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.closeFile(0);
-      IDE.EDITOR.closeFile(0);
+      //TODO this block should be remove after fix problem in issue IDE-804. File does not should be modified  
+      if (IDE.EDITOR.isFileContentChanged(0))
+      {
+
+         IDE.EDITOR.closeTabIgnoringChanges(0);
+      }
+      else
+         IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
