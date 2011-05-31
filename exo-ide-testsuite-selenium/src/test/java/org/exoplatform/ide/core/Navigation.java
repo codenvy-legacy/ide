@@ -298,36 +298,18 @@ public class Navigation extends AbstractTestModule
    public void createFolder(String folderName) throws Exception
    {
       IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      //      IDE.TOOLBAR.runCommand("New");
-      //      
-      //      selenium.mouseDownAt("//td[@class=\"exo-popupMenuTitleField\"]//nobr[contains(text(), \"Folder\")]", "");
+      waitForElementPresent("ideCreateFolderForm");
 
       //Check creation form elements
-      assertTrue(selenium().isElementPresent("ideCreateFolderForm"));
-      assertTrue(selenium().isTextPresent("Name of new folder:"));
-      assertTrue(selenium().isElementPresent("ideCreateFolderFormNameField"));
-      assertTrue(selenium().isElementPresent("ideCreateFolderFormCreateButton"));
-      assertTrue(selenium().isElementPresent("ideCreateFolderFormCancelButton"));
+      waitForElementPresent("ideCreateFolderFormNameField");
+      waitForElementPresent("ideCreateFolderFormCreateButton");
+      waitForElementPresent("ideCreateFolderFormCancelButton");
 
-      //clearFocus();
-
-      String locator = "ideCreateFolderFormNameField";
-
-      //selenium.select(locator, optionLocator)
-
-      AbstractTextUtil.getInstance().typeToInput(locator, folderName, true);
+      AbstractTextUtil.getInstance().typeToInput("ideCreateFolderFormNameField", folderName, true);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       selenium().click("ideCreateFolderFormCreateButton");
-
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-      //Check creation form is not shown
-      assertFalse(selenium().isElementPresent("ideCreateFolderForm"));
-      //      assertElementPresentInWorkspaceTree(folderName);
-
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      waitForElementNotPresent("ideCreateFolderForm");
    }
 
    /**

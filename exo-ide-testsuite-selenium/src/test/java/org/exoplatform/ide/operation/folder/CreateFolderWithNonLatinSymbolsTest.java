@@ -19,19 +19,15 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Created by The eXo Platform SAS.
@@ -42,35 +38,22 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
 {
    private static String FOLDER_NAME = "Папка з кирилічними символами";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
-
-   @Ignore
    @Test
    public void testCreateFolderWithNonLatinSymbols() throws Exception
    {
-      Thread.sleep(3000);
+      IDE.WORKSPACE.waitForRootItem();
       // Create folder with Cyrillic name
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      //Chek in repository
-      assertEquals(200, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
-      Thread.sleep(120000);
-      //TODO will be possible check nonlatin folders name in navigator; ((further code is not working))
-      IDE.NAVIGATION.assertItemVisible(URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      //Check in repository
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
 
-      selenium.mouseDownAt("//div[@title='Delete Item(s)...']//img", "");
-      selenium.mouseUpAt("//div[@title='Delete Item(s)...']//img", "");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertTrue(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]"));
-      assertTrue(selenium.isElementPresent("scLocator=//IButton[ID=\"ideDeleteItemFormCancelButton\"]"));
-      assertTrue(selenium.isTextPresent("exact:Do you want to delete " + FOLDER_NAME + " ?"));
-      selenium.click("scLocator=//IButton[ID=\"ideDeleteItemFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideDeleteItemForm\"]"));
+      IDE.NAVIGATION.deleteSelectedItems();
+      
+      IDE.WORKSPACE.waitForItemNotPresent(WS_URL + FOLDER_NAME + "/");
+      
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8") + "/");
-      assertEquals(404, VirtualFileSystemUtils.get(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
    }
 
    @AfterClass
@@ -78,7 +61,7 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
+         VirtualFileSystemUtils.delete(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
       }
       catch (IOException e)
       {
