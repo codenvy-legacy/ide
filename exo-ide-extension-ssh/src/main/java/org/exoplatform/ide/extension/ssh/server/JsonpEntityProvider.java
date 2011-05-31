@@ -35,14 +35,9 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
 /**
- * 
- * 
- * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
- * 
-*/
-
+ */
 @Provider
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
@@ -59,16 +54,17 @@ public class JsonpEntityProvider extends JsonEntityProvider
       String callback = queryParameters.getFirst(CALLBACK);
       if (callback != null)
       {
-         entityStream.write(new String(queryParameters.getFirst(CALLBACK) + "(").getBytes(Charset.forName("UTF-8")));
+         entityStream.write(callback.getBytes(Charset.forName("UTF-8")));
+         entityStream.write('(');
          entityStream.flush();
          super.writeTo(t, type, genericType, annotations, mediaType, httpHeaders, entityStream);
-         entityStream.write(");".getBytes(Charset.forName("UTF-8")));
+         entityStream.write(')');
+         entityStream.write(';');
          entityStream.flush();
-      } 
+      }
       else
       {
          super.writeTo(t, type, genericType, annotations, mediaType, httpHeaders, entityStream);
       }
    }
-
 }
