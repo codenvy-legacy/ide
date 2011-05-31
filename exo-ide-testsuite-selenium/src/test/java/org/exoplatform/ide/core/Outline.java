@@ -33,7 +33,7 @@ import org.exoplatform.ide.TestConstants;
  */
 public class Outline extends AbstractTestModule
 {
-   interface Locators
+   public interface Locators
    {
       static final String TREE_ID = "ideOutlineTreeGrid";
 
@@ -47,6 +47,8 @@ public class Outline extends AbstractTestModule
 
       static final String scrollTopLocator =
          "document.getElementById('ideOutlineTreeGrid').parentNode.parentNode.parentNode.scrollTop";
+      
+      static final int SELECT_OUTLINE_DELAY = 100;  // msec
    }
 
    private static final String LINE_HIGHLIGHTER_LOCATOR = Locators.TREE + "/div[@class='ide-Tree-item-selected']";

@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Outline.TokenType;
 
 /**
@@ -248,11 +249,9 @@ public class OulineTreeHelper extends BaseTest
       {
          // Press down key on keyboard.         
          selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.SLEEP);
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+         Thread.sleep(Outline.Locators.SELECT_OUTLINE_DELAY * 2);
       } 
-      while ((fileLineNumbers -= 2) > 0);
+      while ((fileLineNumbers -= 1) > 0);
       
       goToLine(1);
 
@@ -270,7 +269,7 @@ public class OulineTreeHelper extends BaseTest
    {
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertEquals(fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());      
    }
    
@@ -284,7 +283,7 @@ public class OulineTreeHelper extends BaseTest
    private void checkOutlineItemFromFile(int itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
       goToLine(fileLineNumber);
-      Thread.sleep(TestConstants.SLEEP);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.OUTLINE.checkOutlineTreeNodeSelected(itemRowNumber, itemLabel, true);
    }
    
