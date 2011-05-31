@@ -602,7 +602,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    
                parametersDescription +=
                   "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                     + "<span class='item-parameter'>" + getElementType(parameter) + "</span></span>";
+                     + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
             }
          }
       }
