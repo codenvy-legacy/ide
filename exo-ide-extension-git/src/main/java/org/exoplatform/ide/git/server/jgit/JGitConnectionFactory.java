@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.CredentialsProvider;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -29,10 +28,6 @@ import org.exoplatform.ide.git.shared.GitUser;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -41,67 +36,6 @@ import java.util.Properties;
  */
 public class JGitConnectionFactory extends GitConnectionFactory
 {
-   /*
-    * XXX : Temporary solution to get access to remote Git Repository.
-    * Need find appropriate place for it at least.
-    * *****************************************************************
-    * File GitCredentials.properties must be accessible to context
-    * class-loader. File may contains: 1. username, password for
-    * authentication over HTTP 2. ssh.host, ssh.passphrase for authentication
-    * over SSH. If key is not protected by passphrase this parameters may be
-    * omitted. Set up SSH keys described here
-    * http://help.github.com/linux-set-up-git/.
-    * 
-    * Example of GitCredentials.properties file:
-    * 
-    * username=andrew00x
-    * password=secret
-    * ssh.hosts=git@github.com
-    * ssh.git@github.com.passphrase=secret phrase
-    */
-   static
-   {
-      InputStream ins = Thread.currentThread().getContextClassLoader().getResourceAsStream("GitCredentials.properties");
-      if (ins != null)
-      {
-         Properties credentialProperties = new Properties();
-         try
-         {
-            credentialProperties.load(ins);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         finally
-         {
-            try
-            {
-               ins.close();
-            }
-            catch (IOException e)
-            {
-            }
-         }
-         String username = credentialProperties.getProperty("username");
-         String password = credentialProperties.getProperty("password");
-         String sshHosts = credentialProperties.getProperty("ssh.hosts");
-         Map<String, String> hostToPassphrase = null;
-         if (sshHosts != null)
-         {
-            String[] hosts = sshHosts.split(",");
-            hostToPassphrase = new HashMap<String, String>(hosts.length);
-            for (int i = 0; i < hosts.length; i++)
-            {
-               String host = hosts[i].trim();
-               String passphrase = credentialProperties.getProperty("ssh." + host + ".passphrase");
-               hostToPassphrase.put(host, passphrase);
-            }
-         }
-         CredentialsProvider.setDefault(new CredentialsProviderImpl(username, password, hostToPassphrase));
-      }
-   }
-
    /**
     * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
     *      org.exoplatform.ide.git.shared.GitUser)
