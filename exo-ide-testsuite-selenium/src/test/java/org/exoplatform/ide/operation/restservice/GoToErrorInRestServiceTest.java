@@ -28,7 +28,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,8 +47,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
 
    private final static String FILE_WITH_ERROR_FOR_CHANGING = "RestServiceWithErrorForChanging.grs";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
+   private final static String URL = WS_URL + TEST_FOLDER + "/";
 
    @BeforeClass
    public static void setUp()
@@ -303,13 +301,14 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //when 3d line is deleted, try to go to it
       IDE.OUTPUT.clickOnErrorMessage(2);
       assertEquals("1 : 24", IDE.STATUSBAR.getCursorPosition());
+      
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    private void openAndValidateRestService() throws Exception
    {
       //---- 1 -----------------
       //open file
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(URL + FILE_WITH_ERROR);
@@ -320,19 +319,6 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //press validate button
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       IDE.OUTPUT.waitForMessageShow(1);
-      
-      //check, validation fails
-//      final String validationMsg = IDE.OUTPUT.getOutputMessageText(1);
-//      assertTrue(validationMsg.contains("validation failed"));
-   }
-
-   @After
-   public void afterMethod() throws Exception
-   {
-      if (!IDE.EDITOR.isFileContentChanged(0))
-      {
-         IDE.EDITOR.closeFile(0);
-      }
    }
 
    @AfterClass
@@ -340,7 +326,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
       {
