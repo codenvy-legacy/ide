@@ -35,14 +35,20 @@ import org.exoplatform.ide.TestConstants;
 public class WarningDialog extends AbstractTestModule
 {
 
+   public static final String WARNING_DIALOG_ID = "exoWarningDialog";
+   
+   public static final String OK_BUTTON_ID = "exoWarningDialog";
    
    /**
+    * <b>Use instead assert methods in your test.</b>
+    * <p/>
     * Check whether the Warning dialog is opened.
     */
+   @Deprecated
    public void checkIsOpened()
    {
-      assertTrue(selenium().isElementPresent("exoWarningDialog"));
-      assertTrue(selenium().isElementPresent("exoWarningDialogOkButton"));
+      assertTrue(selenium().isElementPresent(WARNING_DIALOG_ID));
+      assertTrue(selenium().isElementPresent(OK_BUTTON_ID));
    }
 
    /**
@@ -62,7 +68,7 @@ public class WarningDialog extends AbstractTestModule
     */
    public void waitForWarningDialogOpened() throws Exception
    {
-      waitForElementPresent("exoWarningDialog");
+      waitForElementPresent(WARNING_DIALOG_ID);
    }
 
    /**
@@ -83,7 +89,7 @@ public class WarningDialog extends AbstractTestModule
 
    public void clickOk() throws Exception
    {
-      selenium().click("//div[@id='exoWarningDialog']//div[@id='exoWarningDialogOkButton']");
+      selenium().click("//div[@id='" + WARNING_DIALOG_ID + "']//div[@id='" + OK_BUTTON_ID + "']");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.operation.chromattic;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Editor;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Test for Chromattic generated node type preview.
@@ -42,9 +38,18 @@ import java.io.IOException;
  * @version $Id: Dec 13, 2010 $
  *
  */
-public class PreviewNodeTypeTest extends AbstractDataObjectTest
+public class PreviewNodeTypeTest extends BaseTest
 {
+   //---- Locators ------------
+   public static final String GENERATE_NODE_TYPE_DIALOG_ID = "ideGenerateNodeTypeForm";
    
+   public static final String GENERATE_NODE_TYPE_FORMAT_FIELD = "ideGenerateNodeTypeFormFormatField";
+   
+   public static final String GENERATE_NODE_TYPE_GENERATE_BUTTON_ID = "ideGenerateNodeTypeFormGenerateButton";
+   
+   public static final String GENERATE_NODE_TYPE_CANCEL_BUTTON_ID = "ideGenerateNodeTypeFormCancelButton";
+   
+   //---- Variables ------------
    private final static String FOLDER_NAME = PreviewNodeTypeTest.class.getSimpleName();
 
    private static final String FILE_NAME = PreviewNodeTypeTest.class.getSimpleName() + ".groovy";
@@ -111,35 +116,23 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    }
 
    /**
-    * Clean result of each test.
-    * 
-    * @throws Exception
-    */
-   @After
-   public void cleanTest() throws Exception
-   {
-     IDE.EDITOR.closeFile(0);
-   }
-
-   /**
     * Tests the appearance of preview node type dialog window.
     */
    @Test
    public void testGenerateNodeTypeForm() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(0);
 
       //Check controls are present and enabled:
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForGenerateNodeTypeDialog();
+      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //check dialog
       assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_DIALOG_ID));
@@ -149,23 +142,23 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
 
       //Click "Cancel" button
       selenium.click(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID);
-      waitForGenerateNodeTypeDialogNotPresent();
+      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForGenerateNodeTypeDialog();
+      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click "Generate" button
       selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForGenerateNodeTypeDialogNotPresent();
+      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
-      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertTrue(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertTrue(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       //Close file and check view with generated code is closed.
       IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -174,11 +167,11 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateExoFormat() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.waitForRootItem();
+      selenium.refresh();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled
@@ -186,14 +179,14 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForGenerateNodeTypeDialog();
+      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click "Generate" button
       selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForGenerateNodeTypeDialogNotPresent();
+      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Check generated code:
-      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
 
       String text = getTextFromNodeTypePreviewTab();
       
@@ -207,8 +200,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       assertEquals(generatedEXOFormat, text);
 
       IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -219,12 +212,12 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
    @Test
    public void testGenerateCndFormat() throws Exception
    {
-      refresh();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      selenium.refresh();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(0);
 
       //Wait while buttons will be enabled
@@ -232,14 +225,14 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
 
       //Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
-      waitForGenerateNodeTypeDialog();
+      waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
       
       selenium.select(GENERATE_NODE_TYPE_FORMAT_FIELD, "label=CND");
 
       //Click "Generate" button
       selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
-      waitForGenerateNodeTypeDialogNotPresent();
-      waitForElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
+      waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
 
       //Check generated code:
 
@@ -255,8 +248,8 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
       assertEquals(generatedCNDFormat, text);
 
       IDE.EDITOR.closeFile(0);
-      waitForElementNotPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
+      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
    
    /**
@@ -266,7 +259,7 @@ public class PreviewNodeTypeTest extends AbstractDataObjectTest
     */
    public String getTextFromNodeTypePreviewTab() throws Exception
    {
-      final String iframeLocator = IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
+      final String iframeLocator = DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
       selenium.selectFrame(iframeLocator);
       waitForElementPresent(Editor.Locators.CODE_MIRROR_EDITOR);
       final String text = selenium.getText(Editor.Locators.CODE_MIRROR_EDITOR);
