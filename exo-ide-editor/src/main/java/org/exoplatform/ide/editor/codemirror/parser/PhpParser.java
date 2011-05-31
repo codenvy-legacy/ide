@@ -48,6 +48,16 @@ public class PhpParser extends CodeMirrorParserImpl
    private Stack<Node> mainNodeStack = new Stack<Node>();
    
    /**
+    * Dynamic calling operator name.
+    */
+   public static String dynamicCallingOperator = "-&gt;";
+
+   /**
+    * Static calling operator name.
+    */
+   public static String staticCallingOperator = "::"; 
+   
+   /**
     * Stack of blocks "{... {...} ...}"
     */
    private Stack<TokenType> enclosers = new Stack<TokenType>();
@@ -1138,7 +1148,7 @@ public class PhpParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isVariable(String nodeType)
+   public static boolean isVariable(String nodeType)
    {      
       return (nodeType != null) && (nodeType.startsWith("php-variable"));
    }
@@ -1208,7 +1218,7 @@ public class PhpParser extends CodeMirrorParserImpl
     * @param nodeType
     * @return
     */
-   private boolean isPhpElementName(String nodeType)
+   public static boolean isPhpElementName(String nodeType)
    {
       return (nodeType != null) && 
          (nodeType.startsWith("php-t_string")
@@ -1362,5 +1372,25 @@ public class PhpParser extends CodeMirrorParserImpl
       {
          variables.get(TokenType.CLASS).add(variableName);
       }
+   }
+
+   /**
+    * Recognize dynamic calling operator "->"
+    * @param node
+    * @return
+    */
+   public static boolean isDynamicCallingOperator(Node node)
+   {
+      return node.getType().startsWith("php-operator") && dynamicCallingOperator.equals(node.getContent());
+   }
+   
+   /**
+    * Recognize static calling operator "::"
+    * @param node
+    * @return
+    */
+   public static boolean isStaticCallingOperator(Node node)
+   {
+      return node.getType().startsWith("php-operator") && staticCallingOperator.equals(node.getContent());
    }
 }

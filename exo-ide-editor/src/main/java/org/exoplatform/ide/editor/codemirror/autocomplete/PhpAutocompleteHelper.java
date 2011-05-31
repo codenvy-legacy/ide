@@ -18,15 +18,22 @@
  */
 package org.exoplatform.ide.editor.codemirror.autocomplete;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codemirror.Node;
+import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
+import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: DefaultAutocomleteHelper Feb 10, 2011 9:49:35 AM evgen $
+ * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
+ * @version $Id
  *
  */
 public class PhpAutocompleteHelper extends AutocompleteHelper
@@ -39,8 +46,171 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
       List<? extends Token> tokenList, String currentLineMimeType)
    {
-      // TODO Auto-generated method stub
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
+         return AutocompleteHelper.getAutocompleteHelper(MimeType.TEXT_HTML).getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+
+      else if (MimeType.APPLICATION_PHP.equals(currentLineMimeType))
+      {
+         List<? extends Token> phpCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_PHP);
+         return getTokenBeforeCursor(node, lineNumber, cursorPosition, phpCode);
+      }
+      
       return null;
    }
 
+   /**
+    * Recognize dynamic calling of method or property like "$obj->_" and return $obj generic token, or static calling like "Handler::_" and return "Handler" token of class type.
+    * @param javaScriptNode
+    * @param lineNumber 
+    * @param cursorPosition
+    * @param tokenList
+    * @return
+    */
+   public Token getTokenBeforeCursor(JavaScriptObject javaScriptNode, int lineNumber, int cursorPosition, List<? extends Token> tokenList)
+   {
+      // interrupt at the end of the line or content
+      if ((javaScriptNode == null) || Node.isLineBreak(javaScriptNode))
+      {
+         return null;
+      }
+
+      // check dynamic calling
+      String nodeContent = getLastElementName(javaScriptNode, cursorPosition, PhpParser.dynamicCallingOperator);
+      
+      TokenBeenImpl tokenBeforeCursor;
+      
+      if (nodeContent != null && !nodeContent.isEmpty())
+      {    
+         // search token for variables like "$name->_" or "$name->ch_"
+         tokenBeforeCursor = GroovyAutocompleteHelper.getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList);            
+         if (tokenBeforeCursor != null) 
+         {
+            return new TokenBeenImpl(
+               tokenBeforeCursor.getName(), 
+               tokenBeforeCursor.getType(), 
+               lineNumber, 
+               tokenBeforeCursor.getMimeType(), 
+               tokenBeforeCursor.getElementType(),
+               tokenBeforeCursor.getModifiers()
+            );
+         }
+      }
+      
+      // check static calling
+      else 
+      {
+         nodeContent = getLastElementName(javaScriptNode, cursorPosition, PhpParser.staticCallingOperator);
+         
+         if (nodeContent != null && !nodeContent.isEmpty())
+         {    
+            // return class name before token like "Handler" in case like "Handler::_"
+            return new TokenBeenImpl(
+               nodeContent, 
+               TokenType.CLASS, 
+               lineNumber, 
+               MimeType.APPLICATION_PHP
+            );
+         }
+
+         // if this is "name_" or " _" cases, return Token of parent element, like method or class
+         else
+         {
+            return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
+         }  
+      }      
+      
+      return null;
+   }
+
+   /**
+    * Recognize object name like "$obj" in case like "$obj->_"
+    * @param javaScriptNode
+    * @param cursorPosition
+    * @param delimiter
+    * @return
+    */
+   private String getLastElementName(JavaScriptObject javaScriptNode, int cursorPosition, String delimiter)
+   {
+      String nodeContent;
+      String nodeType;
+      
+      String statement = "";
+      
+      while (javaScriptNode != null && !(javaScriptNode).equals("BR"))
+      {         
+         // pass nodes after the cursor
+         if (Node.getNodePositionInLine(javaScriptNode) >= cursorPosition) 
+         {
+            // get previous token
+            javaScriptNode = Node.getPrevious(javaScriptNode);
+         }
+         else
+         {
+            nodeContent = Node.getContent(javaScriptNode);
+            nodeType = Node.getType(javaScriptNode);
+   
+            if ((!PhpParser.isVariable(nodeType) && !PhpParser.isPhpElementName(nodeType) && !isDelimiter(nodeType, nodeContent.trim(), delimiter))  // filter part with non-variable and non-point symbols, not "<delimiter> " symbol
+                   || (
+                         nodeContent.indexOf(" ") != -1  // filter nodes like "String " in sentence "String name<delimiter>_", or like "<delimiter> " in sentence "<delimiter> String_", or like "<delimiter> _" in sentence like "String<delimiter> _", or like "ch " in sentence like "name<delimiter>ch _"  
+                         && (statement.length() > 0  // filter nodes like "name <delimiter>_" or "name<delimiter> ch<delimiter>_"
+                               || (Node.getNodePositionInLine(javaScriptNode) + nodeContent.length()) <= cursorPosition  // filter nodes like "name<delimiter> _" or "name<delimiter>ch _"
+                             )
+                      )
+               )
+            {
+               break;
+            }
+   
+            statement = nodeContent + statement;
+            
+            // get previous token
+            javaScriptNode = Node.getPrevious(javaScriptNode);
+         }
+      }      
+      
+      if (statement.lastIndexOf(delimiter) == -1)
+      {
+         // return "" for statement like "name_"
+         return "";
+      }
+      else
+      {
+         // clear last chain like "<delimiter>ch_" in javaScriptNode "java<delimiter>lang<delimiter>String<delimiter>ch_", or "<delimiter>" in javaScriptNode "name<delimiter>", or statement without point like "name_"         
+         return statement.substring(0, statement.lastIndexOf(delimiter));
+      }
+   }
+
+   /**
+    * Recognize delimiter
+    * @param nodeType
+    * @param nodeContent
+    * @param delimiter
+    * @return
+    */
+   private boolean isDelimiter(String nodeType, String nodeContent, String delimiter)
+   { 
+      if (PhpParser.dynamicCallingOperator.equals(delimiter))
+      {
+         return PhpParser.isDynamicCallingOperator(new Node(nodeType, nodeContent));
+      }
+      
+      if (PhpParser.staticCallingOperator.equals(delimiter))
+      {
+         return PhpParser.isStaticCallingOperator(new Node(nodeType, nodeContent));
+      }
+      
+      return nodeContent.equals(delimiter);
+   }
+
+   /**
+    * Recognize class name like "Handler" in case like "Handler::_"
+    * @param javaScriptNode
+    * @param cursorPosition
+    * @return
+    */
+   private String getClassName(JavaScriptObject javaScriptNode, int cursorPosition)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }   
 }
