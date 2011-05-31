@@ -28,7 +28,6 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -91,12 +90,11 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * @throws Exception
     */
 
-   @Ignore
    @Test
    public void testDefaultHotkeys() throws Exception
    {
 
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       //----- 1 ------------
       //Press Ctrl+N
       //TODO 1 step not work, shold be fix call template form; see issue 729
@@ -129,8 +127,6 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 15-19 ------------
     * @throws Exception
     */
-
-   @Ignore
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
@@ -235,16 +231,16 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      Thread.sleep(TestConstants.SLEEP);
+//      IDE.EDITOR.closeTabIgnoringChanges(3);
+//      Thread.sleep(TestConstants.SLEEP);
 
       //close all tabs
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(0);
+//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+//      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -252,12 +248,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
     * ----- 20 ------------
     * @throws Exception
     */
-   @Ignore
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
 
       refresh();
+      IDE.WORKSPACE.waitForRootItem();
       //----- 1 ------------
       //prepare hotkeys
       //Open "Customize Hotkeys" window (Window->Customize Hotkeys)
