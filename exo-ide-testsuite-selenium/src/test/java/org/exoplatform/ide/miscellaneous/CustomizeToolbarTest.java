@@ -27,6 +27,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z aheritier $
@@ -82,7 +85,7 @@ public class CustomizeToolbarTest extends BaseTest
          .getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td"));
       selenium.click("ideCustomizeToolbarFormOkButton");
       checkDisAppearCustomizeToolbarForm();
-      
+
       // ---------5--------
       //run customize toolbar
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -175,34 +178,35 @@ public class CustomizeToolbarTest extends BaseTest
    }
 
    /**
- * chek main elements on TollbarItem
+   * check main elements on TollbarItem
     * @throws InterruptedException 
- */
-public void chekToollbarItemExListGrid() throws InterruptedException
+   */
+   public void chekToollbarItemExListGrid() throws InterruptedException
    {
-      checkIdeCommandItemExListGrid("New * [Popup]", 2);
-      checkIdeCommandItemExListGrid("Upload Zipped Folder...", 6);
-      checkIdeCommandItemExListGrid("Download File...", 9);
-      checkIdeCommandItemExListGrid("Save As...", 12);
-      checkIdeCommandItemExListGrid("Delete...", 16);
-      checkIdeCommandItemExListGrid("Cut Item(s)", 21);
-      checkIdeCommandItemExListGrid("Find-Replace...", 27);
-      checkIdeCommandItemExListGrid("Lock / Unlock File", 31);
-      checkIdeCommandItemExListGrid("Version History...", 33);
-      checkIdeCommandItemExListGrid("Get URL...", 38);
-      checkIdeCommandItemExListGrid("Show / Hide Documentation", 41);
-      checkIdeCommandItemExListGrid("Show Preview", 43);
-      checkIdeCommandItemExListGrid("Run in Sandbox", 50);
-      checkIdeCommandItemExListGrid("Launch REST Service", 53);
-      checkIdeCommandItemExListGrid("Preview node type", 58);
-      checkIdeCommandItemExListGrid("Initialize repository", 61);
-      checkIdeCommandItemExListGrid("Push...", 72);
-      checkIdeCommandItemExListGrid("Workspace...", 77);
-      checkIdeCommandItemExListGrid("REST Services Discovery", 82);
-      checkIdeCommandItemExListGrid("New POGO", 88);
-      checkIdeCommandItemExListGrid("Project Template...", 84);
-      checkIdeCommandItemExListGrid("New Data Object", 89);
-      checkIdeCommandItemExListGrid("New Netvibes Widget", 98);
+      List<String> items = getCommands("ideCommandItemExListGrid");
+      assertTrue(items.contains("New * [Popup]"));
+      assertTrue(items.contains("Upload Zipped Folder..."));
+      assertTrue(items.contains("Download File..."));
+      assertTrue(items.contains("Save As..."));
+      assertTrue(items.contains("Delete..."));
+      assertTrue(items.contains("Cut Item(s)"));
+      assertTrue(items.contains("Find-Replace..."));
+      assertTrue(items.contains("Lock / Unlock File"));
+      assertTrue(items.contains("Version History..."));
+      assertTrue(items.contains("Get URL..."));
+      assertTrue(items.contains("Show / Hide Documentation"));
+      assertTrue(items.contains("Show Preview"));
+      assertTrue(items.contains("Run in Sandbox"));
+      assertTrue(items.contains("Launch REST Service"));
+      assertTrue(items.contains("Preview node type"));
+      assertTrue(items.contains("Initialize repository"));
+      assertTrue(items.contains("Push..."));
+      assertTrue(items.contains("Workspace..."));
+      assertTrue(items.contains("REST Services Discovery"));
+      assertTrue(items.contains("New POGO"));
+      assertTrue(items.contains("Project Template..."));
+      assertTrue(items.contains("New Data Object"));
+      assertTrue(items.contains("New Netvibes Widget"));
    }
 
    /**
@@ -211,31 +215,33 @@ public void chekToollbarItemExListGrid() throws InterruptedException
     */
    public void chekIdeToolbarItemListGrid()
    {
-      checkElementPresentInItemListGrid("Delimiter", 1);
-      checkElementPresentInItemListGrid("New * [Popup]", 2);
-      checkElementPresentInItemListGrid("Delimiter", 3);
-      checkElementPresentInItemListGrid("Save", 4);
-      checkElementPresentInItemListGrid("Cut Item(s)", 7);
-      checkElementPresentInItemListGrid("Undo Typing", 14);
-      checkElementPresentInItemListGrid("Redo Typing", 15);
-      checkElementPresentInItemListGrid("Format", 16);
-      checkElementPresentInItemListGrid("Find-Replace...", 18);
-      checkElementPresentInItemListGrid("Lock / Unlock File", 20);
-      checkElementPresentInItemListGrid("Show / Hide Outline", 22);
-      checkElementPresentInItemListGrid("Show / Hide Documentation", 24);
-      checkElementPresentInItemListGrid("Version History...", 26);
-      checkElementPresentInItemListGrid("Restore to Version", 30);
-      checkElementPresentInItemListGrid("Set / Unset Autoload", 35);
-      checkElementPresentInItemListGrid("Deploy", 37);
-      checkElementPresentInItemListGrid("Undeploy from Sandbox", 41);
-      checkElementPresentInItemListGrid("Deploy Gadget", 44);
-      checkElementPresentInItemListGrid("Deploy node type", 48);
+      List<String> items = getCommands("ideToolbarItemListGrid");
+
+      assertTrue(items.contains("Delimiter"));
+      assertTrue(items.contains("New * [Popup]"));
+      assertTrue(items.contains("Delimiter"));
+      assertTrue(items.contains("Save"));
+      assertTrue(items.contains("Cut Item(s)"));
+      assertTrue(items.contains("Undo Typing"));
+      assertTrue(items.contains("Redo Typing"));
+      assertTrue(items.contains("Format"));
+      assertTrue(items.contains("Find-Replace..."));
+      assertTrue(items.contains("Lock / Unlock File"));
+      assertTrue(items.contains("Show / Hide Outline"));
+      assertTrue(items.contains("Show / Hide Documentation"));
+      assertTrue(items.contains("Version History..."));
+      assertTrue(items.contains("Restore to Version"));
+      assertTrue(items.contains("Set / Unset Autoload"));
+      assertTrue(items.contains("Deploy"));
+      assertTrue(items.contains("Undeploy from Sandbox"));
+      assertTrue(items.contains("Deploy Gadget"));
+      assertTrue(items.contains("Deploy node type"));
    }
 
    /**
- * @throws Exception
- */
-public void checkAppearCustomizeToolbarForm() throws Exception
+   * @throws Exception
+   */
+   public void checkAppearCustomizeToolbarForm() throws Exception
    {
       waitForElementPresent("ideCustomizeToolbarForm");
       assertTrue(selenium.isElementPresent("ideCustomizeToolbarForm"));
@@ -247,9 +253,9 @@ public void checkAppearCustomizeToolbarForm() throws Exception
    }
 
    /**
- * @throws InterruptedException
- */
-public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
+   * @throws InterruptedException
+   */
+   public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       assertFalse(selenium.isElementPresent("ideCustomizeToolbarForm"));
@@ -261,9 +267,9 @@ public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
    }
 
    /**
- * @param indexElement
- */
-public void clickOnComandToolbarElement(int indexElement)
+   * @param indexElement
+   */
+   public void clickOnComandToolbarElement(int indexElement)
    {
 
       selenium.click("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]/td");
@@ -280,6 +286,18 @@ public void clickOnComandToolbarElement(int indexElement)
       selenium.click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]/td");
    }
 
+   private List<String> getCommands(String tableId)
+   {
+      List<String> res = new ArrayList<String>();
+      Number count = selenium.getXpathCount("//table[@id=\"" + tableId + "\"]/tbody/tr");
+      for (int i = 1; i < count.intValue(); i++)
+      {
+         String text = selenium.getText("//table[@id=\"" + tableId + "\"]//tr[position()=" + i + "]");
+         res.add(text);
+      }
+      return res;
+   }
+
    /**
     * 
     * 
@@ -293,10 +311,10 @@ public void clickOnComandToolbarElement(int indexElement)
    }
 
    /**
- * @param elementTitle
- * @param indexElement
- */
-public void checkElementPresentInItemListGrid(String elementTitle, int indexElement)
+   * @param elementTitle
+   * @param indexElement
+   */
+   public void checkElementPresentInItemListGrid(String elementTitle, int indexElement)
    {
       assertEquals(elementTitle,
          selenium.getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]//div"));
