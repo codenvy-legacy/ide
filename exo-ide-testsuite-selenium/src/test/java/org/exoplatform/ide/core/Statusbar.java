@@ -50,10 +50,9 @@ public class Statusbar extends AbstractTestModule
     */
    public String getStatusbarText()
    {
-      
       return selenium()
          .getText(
-            "//div[@id='exoIDEStatusbar']//div[@control-id='__editor_cursor_position']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']");
+            "//div[@id='exoIDEStatusbar']//div[@class='exoToolbarElementLeft']//table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']");
    }
 
    /**

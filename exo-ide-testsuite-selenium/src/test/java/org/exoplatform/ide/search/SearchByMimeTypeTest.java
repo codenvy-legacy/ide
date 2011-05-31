@@ -20,11 +20,11 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.utils.AbstractTextUtil;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -35,23 +35,40 @@ import org.junit.Test;
 public class SearchByMimeTypeTest extends BaseTest
 {
 
-   private final String folder1Name = "Users";
+   private static final String FOLDER_NAME_1 = "Users";
 
-   private final String jsFileName = "Example.js";
+   private static final String FILE_NAME_1 = "Example.js";
 
-   private final String folder2Name = "Test";
+   private static final String FOLDER_NAME_2 = "Test";
 
-   private final String jsFileMimeType = "application/javascript";
+   private static final String FILE_NAME_2 = "Copy Of Example.js";
 
-   private final String copyJsFileName = "Copy Of Example.js";
-
-   private final String jsFileContent = "// CodeMirror main module"
+   private static final String FILE_CONTENT = "// CodeMirror main module"
       + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n"
 
       + "var CodeMirror = (function(){\n" + "function setDefaults(object, defaults) {\n"
       + "for (var option in defaults) {\n" + "if (!object.hasOwnProperty(option))\n"
       + "object[option] = defaults[option];\n" + "}\n" + "}\n" + "function forEach(array, action) {\n"
       + "for (var i = 0; i < array.length; i++)\n" + "action(array[i]);\n" + "}";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_JAVASCRIPT, WS_URL + FOLDER_NAME_1
+            + "/" + FILE_NAME_1);
+         
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME_2);
+         VirtualFileSystemUtils.put(FILE_CONTENT.getBytes(), MimeType.APPLICATION_JAVASCRIPT, WS_URL + FOLDER_NAME_2
+            + "/" + FILE_NAME_2);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    /**
     * IDE-32:Searching file by Mime Type from subfolder test.
@@ -60,35 +77,19 @@ public class SearchByMimeTypeTest extends BaseTest
    @Test
    public void testSearchByMimeType() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.NAVIGATION.createFolder(folder1Name);
-
-      //Create and save 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, jsFileContent);
-      saveAsByTopMenu(jsFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folder1Name + "/" + jsFileName);
-
-      IDE.WORKSPACE.selectRootItem();
-      IDE.NAVIGATION.createFolder(folder2Name);
-
-      saveAsUsingToolbarButton(copyJsFileName);
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.EDITOR.closeFile(0);
-
-      IDE.WORKSPACE.selectItem(WS_URL + folder2Name + "/");
-
-      IDE.SEARCH.performSearch("/" + folder2Name + "/", "", jsFileMimeType);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME_2 + "/");
+      final String rootFolderName = IDE.NAVIGATION.getRowTitle(1);
+      
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
+      IDE.SEARCH.performSearch("/" + FOLDER_NAME_2 + "/", "", MimeType.APPLICATION_JAVASCRIPT);
       IDE.SEARCH.waitSearchResultsPresent();
-      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + copyJsFileName);
-      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + folder1Name + "/" + jsFileName);
+      
+      IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
+      IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
-      openFileFromSearchResultsWithCodeEditor(WS_URL + folder2Name + "/" + copyJsFileName);
+      IDE.SEARCH.doubleClickOnFile(WS_URL + FOLDER_NAME_2 + "/" + FILE_NAME_2);
       IDE.EDITOR.waitTabPresent(0);
-      assertEquals(IDE.NAVIGATION.getRowTitle(1) + "/" + folder2Name, IDE.STATUSBAR.getStatusbarText());
+      assertEquals(rootFolderName + "/" + FOLDER_NAME_2, IDE.STATUSBAR.getStatusbarText());
    }
 
    @AfterClass

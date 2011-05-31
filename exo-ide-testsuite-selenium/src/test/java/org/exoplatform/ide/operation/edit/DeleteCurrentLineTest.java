@@ -20,14 +20,9 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -115,13 +110,13 @@ public class DeleteCurrentLineTest extends BaseTest
       currentTextInEditor = Lines.DEFAULT_TEXT;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 1 -----------
       // Click on "Edit->Delete Current Line" top menu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       currentTextInEditor = Lines.LINE_2 + Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -130,7 +125,7 @@ public class DeleteCurrentLineTest extends BaseTest
       //Press "Ctrl+D" keys.
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
@@ -147,7 +142,7 @@ public class DeleteCurrentLineTest extends BaseTest
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_6 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("3 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 5 -----------
       //Click on "Edit->Delete Current Line" top menu command
@@ -155,7 +150,7 @@ public class DeleteCurrentLineTest extends BaseTest
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("3 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 6 -----------
       //Click on "Edit->Delete Current Line" top menu command
@@ -163,14 +158,14 @@ public class DeleteCurrentLineTest extends BaseTest
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("3 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 7 -----------
       //Open empty text file
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + FILE_NAME_2, false);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR + "[text()='1 : 1']");
 
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       IDE.EDITOR.typeTextIntoEditor(1, Lines.TEXT_LINE_1);
 
       //----- 8 -----------
@@ -186,12 +181,12 @@ public class DeleteCurrentLineTest extends BaseTest
 
       IDE.EDITOR.selectTab(1);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
 
       IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
-      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
    }
 

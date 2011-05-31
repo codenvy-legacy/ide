@@ -22,7 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.Utils;
 
 /**
  * Search component.
@@ -33,6 +35,8 @@ import org.exoplatform.ide.ToolbarCommands;
  */
 public class Search extends AbstractTestModule
 {
+   private static final String TREE_PREFIX_ID = "search-";
+   
    private static final String SEARCH_VIEW_ID = "ideSearchView";
 
    private static final String SEARCH_RESULTS_VIEW_ID = "ideSearchResultView";
@@ -195,5 +199,27 @@ public class Search extends AbstractTestModule
    {
       return selenium().getXpathCount("//div[@id='" + SEARCH_RESULT_TREE + "']//div[@class='ide-Tree-label']")
          .intValue() - 1;
+   }
+   
+   /**
+    * Generate item id in search tree 
+    * @param href of item 
+    * @return id of item
+    */
+   public String getItemId(String href) throws Exception
+   {
+      return TREE_PREFIX_ID + Utils.md5(href);
+   }
+   
+   public void doubleClickOnFile(String fileURL) throws Exception
+   {
+      String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
+
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium().doubleClick(locator);
+      IDE().EDITOR.waitEditorFileOpened();
    }
 }
