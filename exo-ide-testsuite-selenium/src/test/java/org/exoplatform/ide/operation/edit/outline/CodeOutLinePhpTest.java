@@ -106,7 +106,7 @@ public class CodeOutLinePhpTest extends BaseTest
       // create opened outline tree map
       outlineTreeHelper.clearOutlineTreeInfo();      
       OulineTreeHelper.init();
-      outlineTreeHelper.addOutlineItem("php code", 1, TokenType.PHP_TAG, "php code");
+      outlineTreeHelper.addOutlineItem("php code", 1, false, TokenType.PHP_TAG, "php code");  // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       outlineTreeHelper.addOutlineItem("A", 2, TokenType.NAMESPACE, "A");
       outlineTreeHelper.addOutlineItem("my\\name", 3, TokenType.NAMESPACE, "my\\name");         
       outlineTreeHelper.addOutlineItem("test", 5, TokenType.INTERFACE, "test");
