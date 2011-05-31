@@ -31,9 +31,6 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * SSH session factory that use SshKeyProvider to get access to private keys. Factory does not support user
@@ -44,8 +41,8 @@ import java.util.Map.Entry;
  */
 public class IdeSshSessionFactory extends SshConfigSessionFactory implements Startable
 {
-   /** Cached JSch instances. */
-   private Map<String, JSch> jschCache;
+   //   /** Cached JSch instances. */
+   //   private Map<String, JSch> jschCache;
 
    private SshKeyProvider keyProvider;
 
@@ -58,19 +55,18 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    /**
     * Initial this SshSessionFactory. By default turn of using "know-hosts" file.
     */
-   @SuppressWarnings("serial")
+   //@SuppressWarnings("serial")
    protected void init()
    {
       JSch.setConfig("StrictHostKeyChecking", "no");
-      // TODO : improve. At the moment simple solution that limit number of instances JSch at 256. 
-      jschCache = new LinkedHashMap<String, JSch>()
+      /*jschCache = new LinkedHashMap<String, JSch>()
       {
          @Override
          protected boolean removeEldestEntry(Entry<String, JSch> eldest)
          {
             return size() > 256;
          }
-      };
+      };*/
    }
 
    /**
@@ -89,7 +85,7 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    @Override
    protected final JSch getJSch(OpenSshConfig.Host hc, FS fs) throws JSchException
    {
-      String host = hc.getHostName();
+      /*String host = hc.getHostName();
       Key key;
       try
       {
@@ -117,7 +113,22 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
          }
          jschCache.put(keyIdentifier, jsch);
       }
-      return jsch;
+      return jsch;*/
+      try
+      {
+         String host = hc.getHostName();
+         Key key = keyProvider.getPrivateKey(host);
+         byte[] bytes = key.getBytes();
+         if (bytes == null)
+            throw new JSchException("SSH connection failed. Key file not found. ");
+         JSch jsch = new JSch();
+         jsch.addIdentity(key.getIdentifier(), bytes, null, null);
+         return jsch;
+      }
+      catch (IOException ioe)
+      {
+         throw new JSchException(ioe.getMessage(), ioe);
+      }
    }
 
    /**

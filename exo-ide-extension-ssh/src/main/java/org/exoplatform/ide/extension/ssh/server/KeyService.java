@@ -113,17 +113,18 @@ public class KeyService
    @Produces(MediaType.APPLICATION_JSON)
    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host)
    {
-      
-// Temporary turn-off don't work on demo site      
-//      if (!security.isSecure())
-//         throw new WebApplicationException(Response.status(400)
-//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+
+      // XXX : Temporary turn-off don't work on demo site      
+      //      if (!security.isSecure())
+      //         throw new WebApplicationException(Response.status(400)
+      //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
          Key publicKey = delegate.getPublicKey(host);
          byte[] bytes = publicKey.getBytes();
          if (bytes != null)
-            return Response.ok().entity(new PublicKey(host, new String(bytes))).type(MediaType.APPLICATION_JSON).build();
+            return Response.ok().entity(new PublicKey(host, new String(bytes))).type(MediaType.APPLICATION_JSON)
+               .build();
          throw new WebApplicationException(Response.status(404).entity("Public key for host " + host + " not found. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
@@ -140,10 +141,10 @@ public class KeyService
    @GET
    @Path("remove")
    @RolesAllowed({"users"})
-   public String removeKeys(@QueryParam("host") String host,@QueryParam("callback") String calback)
+   public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback)
    {
       delegate.removeKeys(host);
-      return calback+ "();";
+      return calback + "();";
    }
 
    @GET
@@ -168,9 +169,12 @@ public class KeyService
             throw new WebApplicationException(Response.serverError().entity(ioe.getMessage())
                .type(MediaType.TEXT_PLAIN).build());
          }
-         result.add((bytes != null) //
-            ? new KeyItem(host, uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString(), uriInfo.getBaseUriBuilder().path(getClass(),"removeKeys").queryParam("host", host).build().toString()) //
-            : new KeyItem(host, null, uriInfo.getBaseUriBuilder().path(getClass(),"removeKeys").queryParam("host", host).build().toString()));
+         String getPublicKeyUrl = null;
+         if (bytes != null)
+            getPublicKeyUrl = uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
+         String removeKeysUrl =
+            uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build().toString();
+         result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
       }
       return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
    }
