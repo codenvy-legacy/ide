@@ -75,4 +75,8 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void deleteApplication(String gitWorkDir, String applicationName, HerokuAsyncRequestCallback callback);
+
+   public abstract void addKey(HerokuAsyncRequestCallback callback);
+   
+   public abstract void clearKeys(HerokuAsyncRequestCallback callback);
 }

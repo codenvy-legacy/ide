@@ -48,6 +48,10 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
 
+   private static final String ADD_KEY = "/ide/heroku/keys/add";
+
+   private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
+
    /**
     * Events handler.
     */
@@ -136,5 +140,25 @@ public class HerokuClientServiceImpl extends HerokuClientService
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#addKey()
+    */
+   @Override
+   public void addKey(HerokuAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + ADD_KEY;
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#clearKeys(org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    */
+   @Override
+   public void clearKeys(HerokuAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + CLEAR_KEYS;
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 }

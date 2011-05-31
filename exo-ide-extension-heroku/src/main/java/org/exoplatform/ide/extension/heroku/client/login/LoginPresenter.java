@@ -54,7 +54,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getLoginButton();
-      
+
       /**
        * Get cancel button click handler.
        * 
@@ -68,7 +68,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasValue}
        */
       HasValue<String> getEmailField();
-      
+
       /**
        * Get password field.
        * 
@@ -191,6 +191,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             IDE.getInstance().closeView(display.asView().getId());
             eventBus.fireEvent(new OutputEvent(org.exoplatform.ide.extension.heroku.client.Messages.LOGIN_SUCCESS,
                Type.INFO));
+            eventBus.fireEvent(new LoggedInEvent(false));
+         }
+         
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new LoggedInEvent(true));
+            super.onFailure(exception);
          }
       });
    }

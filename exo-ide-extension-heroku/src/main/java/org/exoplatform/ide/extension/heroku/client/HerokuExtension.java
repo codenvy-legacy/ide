@@ -25,10 +25,13 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
+import org.exoplatform.ide.extension.heroku.client.control.ClearKeysControl;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
 
 /**
@@ -52,7 +55,6 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new HerokuClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
-      new LoginPresenter(eventBus);
    }
 
    /**
@@ -67,10 +69,14 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       //Add controls
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters
       new CreateApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
+      new LoginPresenter(eventBus);
+      new KeysPresenter(eventBus);
    }
 
 }

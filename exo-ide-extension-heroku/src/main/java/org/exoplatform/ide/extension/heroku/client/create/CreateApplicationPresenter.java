@@ -40,6 +40,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
@@ -55,7 +57,8 @@ import java.util.List;
  * @version $Id:  May 26, 2011 2:37:21 PM anya $
  *
  */
-public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelectedHandler, CreateApplicationHandler
+public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelectedHandler, CreateApplicationHandler,
+   LoggedInHandler
 {
    interface Display extends IsView
    {
@@ -65,7 +68,7 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCreateButton();
-      
+
       /**
        * Get cancel button's click handler.
        * 
@@ -79,7 +82,7 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
        * @return {@link HasValue}
        */
       HasValue<String> getApplicationNameField();
-      
+
       /**
        * Get remote repository name field.
        * 
@@ -250,7 +253,7 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
       String applicationName = display.getApplicationNameField().getValue();
       String remoteName = display.getRemoteNameField().getValue();
       HerokuClientService.getInstance().createApplication(applicationName, workDir, remoteName,
-         new HerokuAsyncRequestCallback(eventBus)
+         new HerokuAsyncRequestCallback(eventBus, this)
          {
 
             @Override
@@ -258,6 +261,15 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
             {
                IDE.getInstance().closeView(display.asView().getId());
                eventBus.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+            }
+
+            /**
+             * @see org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               super.onFailure(exception);
             }
          });
    }
@@ -282,5 +294,18 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
       message += "] ";
       message += "is successfully created.";
       return message;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
+    */
+   @Override
+   public void onLoggedIn(LoggedInEvent event)
+   {
+      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      if (!event.isFailed())
+      {
+         doCreateApplication();
+      }
    }
 }

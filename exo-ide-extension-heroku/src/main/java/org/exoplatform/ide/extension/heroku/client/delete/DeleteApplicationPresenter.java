@@ -30,6 +30,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
@@ -44,7 +46,7 @@ import java.util.List;
  * @version $Id:  May 26, 2011 5:24:52 PM anya $
  *
  */
-public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteApplicationHandler
+public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteApplicationHandler, LoggedInHandler
 {
    /**
     * Events handler.
@@ -138,7 +140,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
             {
                if (value != null && value)
                {
-                  doDelete(gitWorkDir);
+                  doDelete();
                }
             }
          });
@@ -149,11 +151,11 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     * 
     * @param gitWorkDir
     */
-   protected void doDelete(String gitWorkDir)
+   protected void doDelete()
    {
-      HerokuClientService.getInstance().deleteApplication(gitWorkDir, null, new HerokuAsyncRequestCallback(eventBus)
+      HerokuClientService.getInstance().deleteApplication(workDir, null, new HerokuAsyncRequestCallback(eventBus, this)
       {
-         
+
          @Override
          protected void onSuccess(HashMap<String, String> result)
          {
@@ -161,5 +163,18 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
                org.exoplatform.ide.extension.heroku.client.Messages.DESTROY_APPLICATION_SUCCESS, Type.INFO));
          }
       });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
+    */
+   @Override
+   public void onLoggedIn(LoggedInEvent event)
+   {
+      eventBus.removeHandler(LoggedInEvent.TYPE, this);
+      if (!event.isFailed())
+      {
+         doDelete();
+      }
    }
 }

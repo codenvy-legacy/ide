@@ -16,22 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client;
+package org.exoplatform.ide.extension.heroku.client.key;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link AddKeyEvent} event.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:13:50 PM anya $
+ * @version $Id:  May 31, 2011 10:14:19 AM anya $
  *
  */
-public interface Messages
+public interface AddKeyHandler extends EventHandler
 {
-   public static final String LOGIN_SUCCESS = "Logged in Heroku successfully.";
-   
-   public static final String ADD_KEYS_SUCCESS = "Public keys are successfully deployed on Heroku.";
-   
-   public static final String CLEAR_KEYS_SUCCESS = "Keys are successfully removed from Heroku.";
-   
-   public static final String LOGIN_FAILED = "Log in Heroku failed.";
-   
-   public static final String DESTROY_APPLICATION_SUCCESS = "Application is successfully destroyed on Heroku.";
+   /**
+    * Performs actions, when user tries to add keys on Heroku.
+    * 
+    * @param event
+    */
+   void onAddKey(AddKeyEvent event);
 }

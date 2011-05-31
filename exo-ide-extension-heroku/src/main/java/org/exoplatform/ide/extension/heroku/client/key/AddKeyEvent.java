@@ -16,22 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client;
+package org.exoplatform.ide.extension.heroku.client.key;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to add(deploy) keys on Heroku.
+ * Implement {@link AddKeyHandler} to handle event.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 26, 2011 2:13:50 PM anya $
+ * @version $Id:  May 31, 2011 10:14:10 AM anya $
  *
  */
-public interface Messages
+public class AddKeyEvent extends GwtEvent<AddKeyHandler>
 {
-   public static final String LOGIN_SUCCESS = "Logged in Heroku successfully.";
    
-   public static final String ADD_KEYS_SUCCESS = "Public keys are successfully deployed on Heroku.";
+   /**
+    * Type used to register this event.
+    */
+   public static final GwtEvent.Type<AddKeyHandler> TYPE = new GwtEvent.Type<AddKeyHandler>();
    
-   public static final String CLEAR_KEYS_SUCCESS = "Keys are successfully removed from Heroku.";
-   
-   public static final String LOGIN_FAILED = "Log in Heroku failed.";
-   
-   public static final String DESTROY_APPLICATION_SUCCESS = "Application is successfully destroyed on Heroku.";
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<AddKeyHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(AddKeyHandler handler)
+   {
+      handler.onAddKey(this);
+   }
+
 }

@@ -22,6 +22,8 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
+import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
 
 import java.util.HashMap;
@@ -41,13 +43,16 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Ha
     * Events handler.
     */
    private HandlerManager eventbus;
+   
+   private LoggedInHandler loggedInHandler;
 
    /**
     * @param eventBus events handler
     */
-   public HerokuAsyncRequestCallback(HandlerManager eventBus)
+   public HerokuAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
       this.eventbus = eventBus;
+      this.loggedInHandler = handler;
       setEventBus(eventBus);
    }
 
@@ -63,6 +68,7 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Ha
          //TODO check is not authorized
          if (serverException.getMessage() != null && serverException.getMessage().contains("Credentials not found"))
          {
+            eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
             eventbus.fireEvent(new LoginEvent());
             return;
          }
