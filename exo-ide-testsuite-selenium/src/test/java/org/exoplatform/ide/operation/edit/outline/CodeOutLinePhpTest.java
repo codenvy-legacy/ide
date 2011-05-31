@@ -172,7 +172,7 @@ public class CodeOutLinePhpTest extends BaseTest
       outlineTreeHelper.addOutlineItem("test($test)", 207, TokenType.METHOD, "test");
       outlineTreeHelper.addOutlineItem("sfoo()", 210, TokenType.METHOD, "foo");
       outlineTreeHelper.addOutlineItem("foo($a)", 223, TokenType.FUNCTION, "foo");
-      outlineTreeHelper.addOutlineItem("$args : Exception", 228, TokenType.VARIABLE, "$args");
+      outlineTreeHelper.addOutlineItem("$args : Exception", 228, false, TokenType.VARIABLE, "$args");   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
