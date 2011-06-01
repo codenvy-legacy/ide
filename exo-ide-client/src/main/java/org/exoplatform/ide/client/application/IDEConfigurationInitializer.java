@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
@@ -119,6 +120,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      controls.initControls(result.getUserInfo().getRoles());
                      eventBus.fireEvent(new ApplicationSettingsReceivedEvent(result.getSettings()));
                      eventBus.fireEvent(new IsDiscoverableResultReceivedEvent(result.isDiscoverable()));
+                     eventBus.fireEvent(new UserInfoReceivedEvent(result.getUserInfo()));
                      checkEntryPoint();
                   }
                   else
