@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Stack;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 
@@ -53,14 +53,19 @@ public class GroovyParser extends CodeMirrorParserImpl
    private boolean wereMethodBrackets;   
    
    /**
-    * Position within the statement like "import java.lang.String;"
+    * Position within the statement like "import java.lang.String"
     */
    private boolean inImportStatement;
 
    /**
-    * Position within the statement like "package java.lang.String;"
+    * Position within the statement like "package java.lang.String"
     */
-   private boolean inPackageStatement; 
+   private boolean inPackageStatement;
+   
+   /**
+    * Position within the statement like "def String a"
+    */
+   private boolean inDefStatement; 
 
    /**
     * Stack of blocks "{... {...} ...}"
@@ -100,7 +105,7 @@ public class GroovyParser extends CodeMirrorParserImpl
    {
       super.init();
 
-      inImportStatement = inPackageStatement = inMethodBrackets = wereMethodBrackets = false;
+      inImportStatement = inPackageStatement = inMethodBrackets = wereMethodBrackets = inDefStatement = false;
       lastNodeType = lastNodeContent = null;
       enclosers.clear();
       methodParameter = null;
@@ -121,12 +126,8 @@ public class GroovyParser extends CodeMirrorParserImpl
          
          modifiers = new LinkedList<Modifier>();
          
-         // clear variables after the end of the import or package statement 
-         if (inImportStatement || inPackageStatement)
-         {
-            inImportStatement = false;
-            inPackageStatement = false;
-         }
+         // clear variables after the end of line 
+         inImportStatement = inPackageStatement = inDefStatement = false;
          
          lastNodeContent = lastNodeType = null;
          
@@ -386,31 +387,51 @@ public class GroovyParser extends CodeMirrorParserImpl
                else if (isGroovyDef(lastNodeType, lastNodeContent))
                {
                   currentToken
-                     .addSubToken(new TokenBeenImpl(nodeContent, TokenType.PROPERTY, lineNumber, MimeType.APPLICATION_GROOVY));
+                     .addSubToken(new TokenBeenImpl(nodeContent, 
+                        (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
+                        lineNumber, 
+                        MimeType.APPLICATION_GROOVY)
+                     );
 
                   // set collected earlier annotations in case of '@Mandatory @MappedBy("product") def Product product'
-                  setPossibleAnnotations(currentToken.getLastSubToken());                   
+                  setPossibleAnnotations(currentToken.getLastSubToken());
+                  inDefStatement = true;
                }
       
                // recognize variable/method declaration like "String hello(..." or "boolean hello"
                else if (isGroovyVariable(lastNodeType) || isJavaType(lastNodeType))
                {
                   currentJavaType += lastNodeContent;
-                  currentToken.addSubToken(new TokenBeenImpl(
-                     nodeContent, 
-                     (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
-                     lineNumber,
-                     MimeType.APPLICATION_GROOVY, 
-                     currentJavaType,
-                     modifiers
-                  ));
                   
+                  // update property token in case like "def String a"; so, the currentToken.lastSubToken() should be with name "String" and type of PROPERTY or VARIABLE 
+                  if (inDefStatement)
+                  {
+                     if (currentToken.getLastSubToken() != null 
+                          && (currentToken.getLastSubToken().getType() == TokenType.PROPERTY
+                              || currentToken.getLastSubToken().getType() == TokenType.VARIABLE)
+                        )
+                     {
+                        currentToken.getLastSubToken().setName(nodeContent);
+                        currentToken.getLastSubToken().setElementType(currentJavaType);
+                     }                     
+                  }
+                  else
+                  {
+                     currentToken.addSubToken(new TokenBeenImpl(
+                        nodeContent, 
+                        (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
+                        lineNumber,
+                        MimeType.APPLICATION_GROOVY, 
+                        currentJavaType,
+                        modifiers
+                     ));
+                     
+                     // set collected earlier annotations in case of '@Mandatory @MappedBy("product") Product product'
+                     setPossibleAnnotations(currentToken.getLastSubToken());
+                  }
+                                 
                   lastJavaType = currentJavaType;
-   
                   currentJavaType = "";
-                  
-                  // set collected earlier annotations in case of '@Mandatory @MappedBy("product") Product product'
-                  setPossibleAnnotations(currentToken.getLastSubToken());                  
                }
       
                // recognize variables like this "String a, b, c;" 
