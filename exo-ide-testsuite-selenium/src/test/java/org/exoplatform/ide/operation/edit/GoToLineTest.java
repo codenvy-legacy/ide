@@ -19,12 +19,10 @@
 package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Statusbar;
 import org.junit.Test;
 
 /**
@@ -35,28 +33,25 @@ import org.junit.Test;
 public class GoToLineTest extends BaseTest
 {
    //IDE-152
-   //TODO doesn't work on Windows
    @Test
    public void goToLine() throws Exception
    {
-      //      Open new Groovy file in editor.
+      //Open new Groovy file in editor.
 
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitTabPresent(0);
 
-      String text = IDE.STATUSBAR.getCursorPosition();
-      System.out.println("cursor position > [" + text + "]");
-
-      //     Open new HTML file in editor.
+      //Open new HTML file in editor.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
+      IDE.EDITOR.waitTabPresent(1);
 
-      //      Select Groovy file.
+      //Select Groovy file.
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.waitTabPresent(0);
-      selenium.selectFrame("relative=top");
+      IDE.selectMainFrame();
 
-      //  Go to menu and click "View->Go To Line".
+      //Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.checkAppearGoToLineForm();
       IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..13):");
@@ -81,7 +76,7 @@ public class GoToLineTest extends BaseTest
       // Type "2" and click "Go" button.
       IDE.GOTOLINE.typeIntoGoToLineFormField("2");
       IDE.GOTOLINE.pressGoButton();
-      waitForElementPresent(IDE.STATUSBAR.STATUSBAR_LOCATOR);
+      waitForElementPresent(Statusbar.STATUSBAR_LOCATOR);
       assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
 
       // Select HTML file's tab.
