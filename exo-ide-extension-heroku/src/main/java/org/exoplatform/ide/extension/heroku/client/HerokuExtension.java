@@ -72,7 +72,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
+      //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters
       new CreateApplicationPresenter(eventBus);

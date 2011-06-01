@@ -37,7 +37,7 @@ public class AddKeyControl extends SimpleControl implements IDEControl
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku/Deploy public key...";
+   public static final String ID = "PaaS/Heroku/Deploy public key";
 
    /**
     * Control's title.
