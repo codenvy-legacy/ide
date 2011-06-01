@@ -52,10 +52,13 @@ public class WarningDialog extends AbstractTestModule
    }
 
    /**
+    * <b>Use instead assert methods in your test.</b>
+    * <p/>
     * Check whether the Warning dialog is opened and contains specified message.
     * 
     * @param message message
     */
+   @Deprecated
    public void checkIsOpened(String message)
    {
       checkIsOpened();
@@ -69,6 +72,15 @@ public class WarningDialog extends AbstractTestModule
    public void waitForWarningDialogOpened() throws Exception
    {
       waitForElementPresent(WARNING_DIALOG_ID);
+   }
+   
+   /**
+    * Wait for Warning dialog closed
+    * @throws Exception
+    */
+   public void waitForWarningDialogClosed() throws Exception
+   {
+      waitForElementNotPresent(WARNING_DIALOG_ID);
    }
 
    /**

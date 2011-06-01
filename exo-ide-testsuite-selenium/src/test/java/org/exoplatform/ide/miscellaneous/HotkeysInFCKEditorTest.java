@@ -26,10 +26,10 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.event.KeyEvent;
@@ -201,7 +201,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
-      IDE.GOTOLINE.checkGoToLineFormNotAppeared();
+      assertFalse(selenium.isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
       
       assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       

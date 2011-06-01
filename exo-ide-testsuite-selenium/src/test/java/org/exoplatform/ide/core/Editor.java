@@ -638,10 +638,10 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-   * wait present tab editor element 
-   * @param tabIndex - index of tab, starts at 0
-   * @throws Exception
-   */
+    * Wait while tab appears in editor 
+    * @param tabIndex - index of tab, starts at 0
+    * @throws Exception
+    */
    public void waitTabPresent(int tabIndex) throws Exception
    {
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");

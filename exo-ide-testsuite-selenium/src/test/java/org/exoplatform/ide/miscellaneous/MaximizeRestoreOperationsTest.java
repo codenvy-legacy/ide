@@ -112,7 +112,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    
    //IDE-97:One-click maximize/restore for editor and actions view
 
-@Test
+   @Test
    public void maximizeRestoreForEditorAndActionsView() throws Exception
    {
       //prepare file
@@ -519,8 +519,5 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       {
       }
    }
-
-
-
 
 }
