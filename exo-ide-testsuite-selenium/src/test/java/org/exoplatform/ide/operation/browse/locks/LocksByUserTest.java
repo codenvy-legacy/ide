@@ -73,11 +73,11 @@ public class LocksByUserTest extends LockFileAbstract
    @Test
    public void testLocksByUser() throws Exception
    {
-      //fix for run tests where new session start after 7 testcases passes  
+      //fix for run tests where new session starts after 7 testcases passed  
       logout();
       standaloneLogin(TestConstants.Users.ROOT);
+      
       IDE.WORKSPACE.waitForRootItem();
-
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
       //----- 1 --------

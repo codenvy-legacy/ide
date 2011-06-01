@@ -79,8 +79,7 @@ public class LockFileTest extends LockFileAbstract
    @Test
    public void testLockFileManually() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, false);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.LOCK_FILE, false);
@@ -97,7 +96,7 @@ public class LockFileTest extends LockFileAbstract
 
       //----- 2 ------------
       //save XML file
-      saveAsUsingToolbarButton(FILE_NAME_1);
+      IDE.NAVIGATION.saveFileAs(FILE_NAME_1);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
       checkFileLocking(FILE_NAME_1, false);
@@ -105,7 +104,6 @@ public class LockFileTest extends LockFileAbstract
       //----- 3 ------------
       //lock XML file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-Thread.sleep(10000);
       IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
@@ -141,7 +139,7 @@ Thread.sleep(10000);
       //----- 7 ------------
       //select HTML file, save file, lock
       IDE.EDITOR.selectTab(1);
-      saveAsUsingToolbarButton(FILE_NAME_2);
+      IDE.NAVIGATION.saveFileAs(FILE_NAME_2);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
@@ -182,7 +180,7 @@ Thread.sleep(10000);
 
       //----- 11 ------------
       //check, that HTML file is locked
-      //      checkIsEditorTabSelected(FILE_NAME_2, true);
+      // checkIsEditorTabSelected(FILE_NAME_2, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNLOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
 

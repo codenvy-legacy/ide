@@ -211,7 +211,7 @@ public abstract class BaseTest
 
    private static void standaloneLogout() throws Exception
    {
-      selenium.clickAt("//a[@href='login/logout.jsp']", "");
+      selenium.clickAt("//a[contains(@href, 'login/logout.jsp')]", "");
       selenium.waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 
