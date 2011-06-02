@@ -59,7 +59,7 @@ public class ShowApplicationInfoControl extends SimpleControl implements IDECont
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new ShowApplicationInfoEvent());
-      setImages(HerokuClientBundle.INSTANCE.destroyApplication(), HerokuClientBundle.INSTANCE.destroyApplicationDisabled());
+      setImages(HerokuClientBundle.INSTANCE.applicationInfo(), HerokuClientBundle.INSTANCE.applicationInfoDisabled());
    }
 
    /**

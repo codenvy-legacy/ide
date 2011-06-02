@@ -41,7 +41,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
 {
    public static final String ID = "ideApplicationInfoView";
 
-   private static final int HEIGHT = 300;
+   private static final int HEIGHT = 345;
 
    private static final int WIDTH = 460;
 

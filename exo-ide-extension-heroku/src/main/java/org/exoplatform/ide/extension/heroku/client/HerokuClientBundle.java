@@ -44,35 +44,46 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/cancel_Disabled.png")
    ImageResource cancelButtonDisabled();
-   
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku.png")
    ImageResource heroku();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_Disabled.png")
    ImageResource herokuDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/addKeys.png")
    ImageResource addKeys();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/addKeys_Disabled.png")
    ImageResource addKeysDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/clearKeys.png")
    ImageResource clearKeys();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/clearKeys_Disabled.png")
    ImageResource clearKeysDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/createApp.png")
    ImageResource createApplication();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/createApp_Disabled.png")
    ImageResource createApplicationDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/destroyApp.png")
    ImageResource destroyApplication();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/destroyApp_Disabled.png")
    ImageResource destroyApplicationDisabled();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/renameApp.png")
+   ImageResource renameApplication();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/renameApp_Disabled.png")
+   ImageResource renameApplicationDisabled();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/appInfo.png")
+   ImageResource applicationInfo();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/appInfo_Disabled.png")
+   ImageResource applicationInfoDisabled();
 }

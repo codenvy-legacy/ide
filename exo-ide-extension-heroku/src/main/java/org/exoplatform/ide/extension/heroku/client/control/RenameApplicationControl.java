@@ -54,8 +54,8 @@ public class RenameApplicationControl extends SimpleControl implements IDEContro
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new RenameApplicationEvent());
-      setImages(HerokuClientBundle.INSTANCE.createApplication(),
-         HerokuClientBundle.INSTANCE.createApplicationDisabled());
+      setImages(HerokuClientBundle.INSTANCE.renameApplication(),
+         HerokuClientBundle.INSTANCE.renameApplicationDisabled());
    }
 
    /**

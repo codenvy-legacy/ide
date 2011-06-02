@@ -42,9 +42,9 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
 {
    private static final String ID = "ideRenameApplicationView";
 
-   private static final int WIDTH = 350;
+   private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 155;
+   private static final int HEIGHT = 160;
 
    private static final String TYPE = "modal";
 
