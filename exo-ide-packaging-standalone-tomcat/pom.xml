@@ -41,26 +41,14 @@
                      <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
                   </configuration>
                </execution>
-            </executions>
-         </plugin>
-
-
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-
                <execution>
-                  <id>copy-dependencies2</id>
+                  <id>copy-dependencies-source</id>
                   <phase>process-resources</phase>
                   <goals>
                      <goal>copy</goal>
                   </goals>
-
                   <configuration>
-
                      <artifactItems>
-
                         <artifactItem>
                            <groupId>javax.jcr</groupId>
                            <artifactId>jcr</artifactId>
@@ -251,14 +239,11 @@
                         </artifactItem>
 
                      </artifactItems>
-
                      <outputDirectory>${project.build.directory}/tomcat-ide/lib-docs</outputDirectory>
-
                   </configuration>
                </execution>
             </executions>
          </plugin>
-
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
@@ -297,7 +282,6 @@
                </execution>
             </executions>
          </plugin>
-
          <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
@@ -317,124 +301,77 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>prepare-war</id>
+                  <phase>process-resources</phase>
+                  <configuration>
+                     <tasks>
+                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                        <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
+                           <fileset dir="${basedir}/src/main/resources/ide-war-demo">
+                              <exclude name="**/conf/exo-jcr-config-mysql.xml" />
+                           </fileset>
+                        </copy>
+                        <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
+                           <fileset dir="${basedir}/src/main/resources/tomcat/demo-site" />
+                        </copy>
+                        <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
+                        <move todir="${project.build.directory}/tomcat-ide/lib">
+                           <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
+                        </move>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>build-war</id>
+                  <phase>prepare-package</phase>
+                  <configuration>
+                     <tasks>
+                        <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
+                           <fileset dir="${project.build.directory}/packager-conf/unwar" />
+                        </war>
+                        <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
+                           <fileset dir="${basedir}/src/main/resources/rest-war" />
+                        </war>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+               <!-- Create the distribution zip and attach it to maven -->
+               <execution>
+                  <id>tomcat-zip</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+                  <configuration>
+                     <appendAssemblyId>false</appendAssemblyId>
+                     <updateOnly>false</updateOnly>
+                     <descriptors>
+                        <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
+                     </descriptors>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
    </build>
    <profiles>
       <profile>
-         <id>pkg-demo-site</id>
-         <activation>
-            <activeByDefault>true</activeByDefault>
-         </activation>
-         <dependencies>
-            <dependency>
-               <groupId>org.hsqldb</groupId>
-               <artifactId>hsqldb</artifactId>
-            </dependency>
-         </dependencies>
-         <build>
-            <plugins>
-             <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-dependency-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                           <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                           <includeTypes>jar</includeTypes>
-                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <artifactId>maven-antrun-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>unwar-ide</id>
-                        <phase>compile</phase>
-                        <configuration>
-                           <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
-                                 <patternset>
-                                    <exclude name="**/exo-configuration.xml" />
-                                    <exclude name="**/exo-jcr-config.xml" />
-                                 </patternset>
-                              </unwar>
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                     <execution>
-                        <id>copy-war</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                           <tasks>
-                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo">
-                                    <exclude name="**/conf/exo-jcr-config-mysql.xml" />
-                                    <exclude name="**/exo-configuration.xml" />
-                                    <exclude name="**/exo-jcr-config.xml" />
-                                 </fileset>
-                              </copy>
-                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/tomcat/demo-site" />
-                              </copy>
-                              <copy file="${basedir}/src/main/resources/exo-configuration-hsql.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
-                              <move todir="${project.build.directory}/tomcat-ide/lib">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
-                              </move>
-                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false"> <fileset dir="${project.build.directory}/packager-conf/unwar" 
-                                 /> </war -->
-                              <!-- copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </copy-->
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </war>
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
-                                 <fileset dir="${basedir}/src/main/resources/rest-war" />
-                              </war>
-
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <artifactId>maven-assembly-plugin</artifactId>
-                  <executions>
-                     <!-- Create the distribution zip and attach it to maven -->
-                     <execution>
-                        <id>tomcat-zip</id>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>single</goal>
-                        </goals>
-                        <configuration>
-                           <appendAssemblyId>false</appendAssemblyId>
-                           <updateOnly>false</updateOnly>
-                           <descriptors>
-                              <descriptor>${project.basedir}/src/main/assembly/tomcat-archive.xml</descriptor>
-                           </descriptors>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>pkg-mysql-demo-site</id>
+         <id>mysql</id>
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
@@ -453,8 +390,8 @@
                   <artifactId>maven-dependency-plugin</artifactId>
                   <executions>
                      <execution>
-                        <id>copy-dependencies</id>
-                        <phase>process-resources</phase>
+                        <id>copy-dependencies-mysql</id>
+                        <phase>generate-resources</phase>
                         <goals>
                            <goal>copy-dependencies</goal>
                         </goals>
@@ -469,47 +406,12 @@
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
                      <execution>
-                        <id>unwar-ide</id>
+                        <id>copy-mysql-config</id>
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
-                                 <patternset>
-                                    <exclude name="**/exo-configuration.xml" />
-                                    <exclude name="**/exo-jcr-config.xml" />
-                                 </patternset>
-                              </unwar>
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                     <execution>
-                        <id>copy-war</id>
-                        <phase>install</phase>
-                        <configuration>
-                           <tasks>
-                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war-demo">
-                                    <exclude name="**/conf/exo-jcr-config-hsql.xml" />
-                                    <exclude name="**/exo-configuration.xml" />
-                                    <exclude name="**/exo-jcr-config.xml" />
-                                 </fileset>
-                              </copy>
-                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/tomcat/demo-site" />
-                              </copy>
-                              <copy file="${basedir}/src/main/resources/exo-configuration-mysql.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
-                              <move todir="${project.build.directory}/tomcat-ide/lib">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
-                              </move>
-                              <!-- war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false"> <fileset dir="${project.build.directory}/packager-conf/unwar" 
-                                 /> </war -->
-                              <copy todir="${project.build.directory}/tomcat-ide/webapps/IDE">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </copy>
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -522,115 +424,23 @@
          </build>
       </profile>
       <profile>
-         <id>selenium-test</id>
+         <id>selenium</id>
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
-         <dependencies>
-            <dependency>
-               <groupId>org.hsqldb</groupId>
-               <artifactId>hsqldb</artifactId>
-            </dependency>
-         </dependencies>
          <build>
             <plugins>
-             <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-dependency-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                           <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                           <includeTypes>jar</includeTypes>
-                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
                      <execution>
-                        <id>unwar-ide</id>
+                        <id>copy-ca-config</id>
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
-                                 <patternset>
-                                    <exclude name="**/exo-configuration.xml" />
-                                 </patternset>
-                              </unwar>
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                     <execution>
-                        <id>copy-war</id>
-                        <phase>install</phase>
-                        <configuration>
-                           <tasks>
-                              <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/ide-war-selenium">
-                                    <exclude name="**/conf/exo-jcr-config-hsql.xml" />
-                                    <exclude name="**/conf/exo-jcr-config-mysql.xml" />
-                                    <exclude name="**/exo-jcr-config.xml" />
-                                    <exclude name="**/exo-configuration.xml" />
-                                 </fileset>
-                              </copy>
-                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/tomcat/selenium" />
-                              </copy>
-                              <copy file="${basedir}/src/main/resources/exo-configuration-hsql-selenium.xml" tofile="${project.build.directory}/tomcat-ide/exo-configuration.xml" />
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
-                              <move todir="${project.build.directory}/tomcat-ide/lib">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar/WEB-INF/lib" />
-                              </move>
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                                 <fileset dir="${project.build.directory}/packager-conf/unwar" />
-                              </war>
-                              <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
-                                 <fileset dir="${basedir}/src/main/resources/rest-war" />
-                              </war>
-
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>pkg</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <build>
-            <plugins>
-               <plugin>
-                  <artifactId>maven-antrun-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-war</id>
-                        <phase>install</phase>
-                        <configuration>
-                           <tasks>
-                              <copy file="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" />
-                              <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                                 <fileset dir="${basedir}/src/main/resources/tomcat/demo-site">
-                                    <exclude name="**/server.xml" />
-                                 </fileset>
-                              </copy>
-                              <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>

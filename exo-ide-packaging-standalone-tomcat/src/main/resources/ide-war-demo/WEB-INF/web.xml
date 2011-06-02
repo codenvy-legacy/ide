@@ -29,7 +29,7 @@
    <context-param>
    <param-name>guice-modules</param-name>
    <param-value>
-      org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeShellModule:
+      org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeModule:
       org.apache.shindig.gadgets.DefaultGuiceModule:
       org.apache.shindig.social.sample.SampleModule:
       org.apache.shindig.gadgets.oauth.OAuthModule:
