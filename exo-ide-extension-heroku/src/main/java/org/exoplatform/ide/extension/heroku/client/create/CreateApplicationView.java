@@ -24,9 +24,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 {
    private static final String ID = "ideCreateApplicationView";
 
-   private static final int WIDTH = 570;
+   private static final int WIDTH = 520;
 
-   private static final int HEIGHT = 210;
+   private static final int HEIGHT = 240;
 
    private static final String TYPE = "modal";
 

@@ -22,8 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -162,18 +160,6 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-
-      display.getApplicationNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean enabled = (event.getValue() != null && !event.getValue().isEmpty());
-            display.enableCreateButton(enabled);
-         }
-      });
-
    }
 
    /**
@@ -231,7 +217,6 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
                   display = GWT.create(Display.class);
                   bindDisplay();
                   IDE.getInstance().openView(display.asView());
-                  display.enableCreateButton(false);
                   display.focusInApplicationNameField();
                   display.getWorkDirLocationField().setValue(workDir);
                }
