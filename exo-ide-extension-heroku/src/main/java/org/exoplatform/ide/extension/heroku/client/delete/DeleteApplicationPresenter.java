@@ -41,6 +41,11 @@ import java.util.List;
 
 /**
  * Presenter for deleting application from Heroku.
+ *  Performs following actions on delete:
+ * 1. Gets the Git working directory location.
+ * 2. Gets application name (application info) by Git working directory location.
+ * 3. Asks user to confirm the deleting of the application.
+ * 4. When user confirms - performs deleting the application.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  May 26, 2011 5:24:52 PM anya $
@@ -62,6 +67,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     * Git working directory.
     */
    private String workDir;
+
+   private static final String NAME_PROPERTY = "name";
 
    /**
     * @param eventBus
@@ -113,7 +120,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
                workDir = result.getWorkDir();
                workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
 
-               askForDelete(workDir);
+               getApplicationInfo();
             }
 
             @Override
@@ -125,16 +132,36 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    }
 
    /**
+    * Get information about application.
+    */
+   protected void getApplicationInfo()
+   {
+      HerokuClientService.getInstance().getApplicationInfo(workDir, null, false,
+         new HerokuAsyncRequestCallback(eventBus, this)
+         {
+            @Override
+            protected void onSuccess(HashMap<String, String> result)
+            {
+               String name = result.get(NAME_PROPERTY);
+               askForDelete(name);
+            }
+         });
+   }
+
+   /**
     * Show confirmation message before delete.
     * 
     * @param gitWorkDir
     */
-   protected void askForDelete(final String gitWorkDir)
+   protected void askForDelete(final String deleteName)
    {
-      Dialogs.getInstance().ask("Delete application from Heroku",
-         "Are you sure you want to delete application " + "<b>" + gitWorkDir + "</b>" + " from Heroku?",
-         new BooleanValueReceivedHandler()
+      final boolean isName = (deleteName != null); 
+      String deletion = (isName) ? deleteName : workDir;
+      
+         Dialogs.getInstance().ask("Delete application from Heroku",
+         "Are you sure you want to delete application " + "<b>" + deletion + "</b>" + " from Heroku?", new BooleanValueReceivedHandler()
          {
+            
             @Override
             public void booleanValueReceived(Boolean value)
             {
@@ -147,15 +174,13 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    }
 
    /**
-    * Perform deleting the application on Heroku
-    * 
-    * @param gitWorkDir
+    * Perform deleting the application on Heroku.
+    *
     */
    protected void doDelete()
    {
       HerokuClientService.getInstance().deleteApplication(workDir, null, new HerokuAsyncRequestCallback(eventBus, this)
       {
-
          @Override
          protected void onSuccess(HashMap<String, String> result)
          {
@@ -174,7 +199,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
       eventBus.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
-         doDelete();
+         getApplicationInfo();
       }
    }
 }
