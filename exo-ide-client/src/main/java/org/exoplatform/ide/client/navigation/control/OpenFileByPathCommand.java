@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -39,9 +40,7 @@ public class OpenFileByPathCommand extends SimpleControl implements IDEControl, 
 
    private final static String ID = "File/Open File By Path...";
 
-   private final static String TITLE = "Open File By Path...";
-
-   private final static String PROMPT = "Open File By Path...";
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openFileByPathControl();
 
    private boolean browserPanelSelected = true;
 
@@ -49,7 +48,7 @@ public class OpenFileByPathCommand extends SimpleControl implements IDEControl, 
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.openFileByPath(), IDEImageBundle.INSTANCE.openFileByPathDisabled());
       setEvent(new OpenFileByPathEvent());
    }

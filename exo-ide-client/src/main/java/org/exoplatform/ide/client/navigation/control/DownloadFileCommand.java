@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -37,15 +38,19 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DownloadFileCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private final static String ID = "File/Download File...";
+   private static final String ID = "File/Download File...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.downloadTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.downloadPromptControl();
 
    private boolean oneItemSelected = true;
 
    public DownloadFileCommand()
    {
       super(ID);
-      setTitle("Download...");
-      setPrompt("Download File...");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.downloadFile(), IDEImageBundle.INSTANCE.downloadFileDisabled());
       setEvent(new DownloadFileEvent());
    }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.outline;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -44,11 +45,11 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
    public static final String ID = "View/Show \\ Hide Outline";
 
-   public static final String TITLE = "Outline";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleControl();
 
-   public static final String PROMPT_SHOW = "Show Outline";
+   public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptShowControl();
 
-   public static final String PROMPT_HIDE = "Hide Outline";
+   public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptHideControl();
 
    private boolean outlineViewOpened = false;
 

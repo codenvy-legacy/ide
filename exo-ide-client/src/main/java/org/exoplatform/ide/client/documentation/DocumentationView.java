@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.documentation;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -45,7 +46,7 @@ public class DocumentationView extends ViewImpl implements DocumentationPresente
 
    public DocumentationView()
    {
-      super(ID, ViewType.INFORMATION , "Documentation");
+      super(ID, ViewType.INFORMATION , IDE.IDE_LOCALIZATION_CONSTANT.documentationTitle());
       setIcon(DOCUMENTATION_TAB_ICON);
 
       iFrame = new Frame();

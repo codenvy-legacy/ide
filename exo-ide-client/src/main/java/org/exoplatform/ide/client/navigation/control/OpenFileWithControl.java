@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -41,13 +42,15 @@ public class OpenFileWithControl extends SimpleControl implements IDEControl, It
    EntryPointChangedHandler
 {
    private static final String ID = "File/Open File With...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openWithControl();
 
    private boolean browserPanelSelected = true;
 
    public OpenFileWithControl()
    {
       super(ID);
-      setTitle("Open With...");
+      setTitle(TITLE);
       setPrompt("Open File With...");
       setImages(IDEImageBundle.INSTANCE.openWith(), IDEImageBundle.INSTANCE.openWithDisabled());
       setEvent(new OpenFileWithEvent());

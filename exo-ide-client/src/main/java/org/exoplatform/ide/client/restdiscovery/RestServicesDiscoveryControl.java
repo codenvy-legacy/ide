@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.restdiscovery;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -37,9 +38,7 @@ public class RestServicesDiscoveryControl extends SimpleControl implements IDECo
 {
    public static final String ID = "Help/REST Services Discovery";
 
-   public static final String TITLE = "REST Services Discovery";
-
-   public static final String PROMPT = "REST Services Discovery";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.restServicesDiscoveryControl();
 
    /**
     * @param id
@@ -48,7 +47,7 @@ public class RestServicesDiscoveryControl extends SimpleControl implements IDECo
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.restServicesDiscovery(),
          IDEImageBundle.INSTANCE.restServicesDiscoveryDisabled());
       setEvent(new ShowRestServicesDiscoveryEvent());

@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -28,10 +31,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
 import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +45,7 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
 
    public static final String ID = "Edit/Undo Typing";
 
-   public static final String TITLE = "Undo Typing";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.undoTypingControl();
 
    public UndoTypingControl()
    {

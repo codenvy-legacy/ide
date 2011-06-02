@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.project.control;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -40,11 +41,15 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
 {
    private boolean folderItemSelected = true;
 
-   public final static String ID = "File/New/Create Project From Template...";
+   public static final String ID = "File/New/Create Project From Template...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl();
 
    public CreateProjectFromTemplateControl()
    {
-      super(ID, "Project From Template...", "Create Project From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateProjectFromTemplateEvent());
       setDelimiterBefore(true);
    }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -40,14 +41,18 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    PasteItemsCompleteHandler, ItemsSelectedHandler
 {
    public static final String ID = "Edit/Paste Item(s)";
+   
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsTitleControl();
+   
+   private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
 
    private boolean pastePrepared = false;
 
    public PasteItemsCommand()
    {
       super(ID);
-      setTitle("Paste Item(s)");
-      setPrompt("Paste Selected Item(s)");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
       setEvent(new PasteItemsEvent());
    }

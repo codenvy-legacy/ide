@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -48,9 +49,9 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
 
    private static final String ID = "Edit/Show \\ Hide Line Numbers";
 
-   private static final String TITLE_SHOW = "Show Line Numbers";
+   private static final String TITLE_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersShowControl();
 
-   private static final String TITLE_HIDE = "Hide Line Numbers";
+   private static final String TITLE_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersHideControl();
 
    private File activeFile;
 

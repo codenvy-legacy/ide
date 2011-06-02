@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.edit.FindTextPresenter;
 import org.exoplatform.ide.client.edit.event.FindTextEvent;
@@ -48,7 +49,7 @@ public class FindTextControl extends SimpleControl implements IDEControl, Editor
    //   public static final String ID = "Edit/Find&#47Replace...";
    public static final String ID = "Edit/Find-Replace...";
 
-   private static final String TITLE = "Find/Replace...";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.findReplaceControl();
 
    private boolean findTextViewOpened = false;
 

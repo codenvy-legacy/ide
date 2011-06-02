@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -46,9 +47,9 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
 
    private static final String ID = "File/Refresh Selected Folder";
 
-   private static final String TITLE = "Refresh";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.refreshTitleControl();
 
-   private static final String PROMPT = "Refresh Selected Folder";
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.refreshPromptControl();
 
    private boolean browserPanelSelected = true;
 

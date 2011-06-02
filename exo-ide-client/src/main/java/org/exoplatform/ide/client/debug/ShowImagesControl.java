@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.debug;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -40,9 +41,9 @@ public class ShowImagesControl extends SimpleControl implements IDEControl, View
 
    public static final String ID = "Help/Debug/Show Images";
 
-   public static final String TITLE = "Show Images";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showImagesControl();
 
-   public static final String PROMPT = "Show Images";
+   public static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.showImagesControl();
 
    public ShowImagesControl()
    {

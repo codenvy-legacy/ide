@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -45,9 +46,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
 
    private final static String ID = "File/Open Local File...";
 
-   private final static String TITLE = "Open Local File...";
-
-   private final static String PROMPT = "Open Local File...";
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openLocalFileControl();
 
    private boolean browserPanelSelected = true;
 
@@ -55,7 +54,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       //setIcon(Images.MainMenu.UPLOAD_FILE);
       setImages(IDEImageBundle.INSTANCE.openLocalFile(), IDEImageBundle.INSTANCE.openLocalFileDisabled());
       setEvent(new UploadFileEvent(UploadFileEvent.UploadType.OPEN_FILE));

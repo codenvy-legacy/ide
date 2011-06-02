@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -39,12 +40,14 @@ public class GoToLineControl extends SimpleControl implements IDEControl, Editor
 {
 
    public static final String ID = "Edit/Go to Line...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToLineControl();
 
    public GoToLineControl()
    {
       super(ID);
-      setTitle("Go to Line...");
-      setPrompt("Go to Line");
+      setTitle(TITLE);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
       setEvent(new GoToLineEvent());
    }

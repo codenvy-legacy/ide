@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control.newitem;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
@@ -33,10 +34,14 @@ public class CreateFileFromTemplateControl extends NewFileCommand
 {
 
    public final static String ID = "File/New/Create File From Template...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplateTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplatePromptControl();
 
    public CreateFileFromTemplateControl()
    {
-      super(ID, "File From Template...", "Create File From Template...", IDEImageBundle.INSTANCE.createFromTemplate(),
+      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(),
          IDEImageBundle.INSTANCE.createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
    }
 

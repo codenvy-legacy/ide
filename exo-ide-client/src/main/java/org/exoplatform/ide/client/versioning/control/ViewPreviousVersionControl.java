@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.versioning.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
@@ -38,9 +39,9 @@ public class ViewPreviousVersionControl extends VersionControl implements ShowVe
 {
    private static final String ID = "View/Older Version";
 
-   private final String TITLE = "Older Version";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.viewPreviousVersionTitleControl();
 
-   private final String PROMPT = "View Older Version";
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.viewPreviousVersionPromptControl();
 
    private Version version;
 

@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -64,7 +65,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * Title of this control
     */
-   public static final String TITLE = "Save";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileControl();
 
    /**
     * Currently active file

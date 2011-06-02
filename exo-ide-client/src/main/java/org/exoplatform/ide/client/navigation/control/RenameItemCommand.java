@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -48,6 +49,10 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
 {
 
    private static final String ID = "File/Rename...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.renameTitleControl();
+
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.renamePromptControl();
 
    private boolean browserPanelSelected = true;
 
@@ -58,8 +63,8 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
    public RenameItemCommand()
    {
       super(ID);
-      setTitle("Rename...");
-      setPrompt("Rename Item");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());

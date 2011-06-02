@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -47,12 +48,16 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    private boolean browserPanelSelected = true;
 
    public final static String ID = "File/New/Create Folder...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFolderPromptControl();
 
    public CreateFolderControl()
    {
       super(ID);
-      setTitle("Folder...");
-      setPrompt("Create Folder...");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
       setVisible(true);

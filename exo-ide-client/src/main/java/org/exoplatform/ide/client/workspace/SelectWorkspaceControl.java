@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.workspace;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -40,7 +41,7 @@ public class SelectWorkspaceControl extends SimpleControl implements IDEControl,
 
    public static final String ID = "Window/Workspace...";
 
-   public static final String TITLE = "Select Workspace...";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.selectWorkspaceControl();
 
    public SelectWorkspaceControl()
    {

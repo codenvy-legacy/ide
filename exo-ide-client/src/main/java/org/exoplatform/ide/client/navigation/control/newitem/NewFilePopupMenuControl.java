@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -41,7 +42,7 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
    public NewFilePopupMenuControl()
    {
       super(ID);
-      setPrompt("New");
+      setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.newMenu());
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setDelimiterBefore(true);
       setEnabled(true);

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -43,7 +44,7 @@ public class SearchFilesCommand extends SimpleControl implements IDEControl, Ite
 
    public static final String ID = "File/Search...";
 
-   public static final String TITLE = "Search...";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
 
    public SearchFilesCommand()
    {

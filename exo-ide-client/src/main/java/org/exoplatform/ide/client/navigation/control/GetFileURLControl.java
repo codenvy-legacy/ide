@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -47,9 +48,7 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
 
    private static final String ID = "View/Get URL...";
 
-   private static final String TITLE = "Get URL...";
-
-   private static final String PROMPT = "Get URL";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.getFileUrlControl();
 
    private Item selectedItem;
 
@@ -57,7 +56,7 @@ public class GetFileURLControl extends SimpleControl implements IDEControl, Item
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
       setEvent(new GetFileURLEvent());
    }

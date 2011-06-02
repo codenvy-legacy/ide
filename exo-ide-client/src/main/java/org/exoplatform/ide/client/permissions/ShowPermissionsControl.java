@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.permissions;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -41,15 +42,13 @@ public class ShowPermissionsControl extends SimpleControl implements IDEControl,
 {
    public static final String ID = "View/Permissions";
 
-   public static final String TITLE = "Show Permissions";
-
-   public static final String PROMPT = "Show Permissions";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.permissionsControl();
 
    public ShowPermissionsControl()
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPermissionsEvent());
       setVisible(true);

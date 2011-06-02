@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -38,10 +39,12 @@ public class QuickTextSearchControl extends TextInputControl implements IDEContr
 
    public static final String ID = "Quick search";
    
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.quickTextSearchControl();
+   
    public QuickTextSearchControl()
    {
       super(ID);
-      setPrompt("Quick search");
+      setPrompt(TITLE);
       setNormalImage(IDEImageBundle.INSTANCE.findText());
       setDisabledImage(IDEImageBundle.INSTANCE.findTextDisabled());
       setEnabled(true);

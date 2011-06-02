@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.versioning.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
@@ -35,9 +36,9 @@ public class ViewVersionListControl extends VersionControl
 
    private static final String ID = "View/Version...";
 
-   private final String TITLE = "Version...";
+   private final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.viewVersionListTitleControl();
 
-   private final String PROMPT = "View Item Version...";
+   private final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.viewVersionListPromptControl();
 
    /**
     * @param id

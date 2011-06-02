@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -43,7 +44,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
 
    private static final String ID = "View/Go to Folder";
 
-   private static final String TITLE = "Go to Folder";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToFolderControl();
 
    public GoToFolderControl()
    {

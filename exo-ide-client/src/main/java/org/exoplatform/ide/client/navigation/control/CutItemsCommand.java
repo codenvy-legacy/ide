@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -37,6 +38,10 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
 {
 
    private static final String ID = "Edit/Cut Item(s)";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.cutItemsPromptControl();
 
    private boolean cutReady = false;
 
@@ -45,8 +50,8 @@ public class CutItemsCommand extends MultipleSelectionItemsCommand implements It
    public CutItemsCommand()
    {
       super(ID);
-      setTitle("Cut Item(s)");
-      setPrompt("Cut Selected Item(s)");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
       setEvent(new CutItemsEvent());

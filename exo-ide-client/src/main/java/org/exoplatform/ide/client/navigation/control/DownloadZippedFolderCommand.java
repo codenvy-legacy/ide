@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -37,15 +38,17 @@ import com.google.gwt.event.shared.HandlerManager;
 public class DownloadZippedFolderCommand extends MultipleSelectionItemsCommand implements ItemsSelectedHandler
 {
 
-   private final static String ID = "File/Download Zipped Folder...";
-
+   private static final String ID = "File/Download Zipped Folder...";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.downloadZippedFolderControl();
+   
    private boolean oneItemSelected = true;
 
    public DownloadZippedFolderCommand()
    {
       super(ID);
-      setTitle("Download Zipped Folder...");
-      setPrompt("Download Zipped Folder...");
+      setTitle(TITLE);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.downloadFolder(), IDEImageBundle.INSTANCE.downloadFolderDisabled());
       setEvent(new DownloadZippedFolderEvent());
    }

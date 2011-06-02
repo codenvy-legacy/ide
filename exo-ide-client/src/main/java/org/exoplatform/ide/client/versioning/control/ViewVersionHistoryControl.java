@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.versioning.control;
 
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -50,11 +51,11 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
 
    private static final String ID = "View/Version History...";
 
-   private final String TITLE = "Version History...";
+   private final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.viewVersionHistoryTitleControl();
 
-   private final String PROMPT_SHOW = "View Item Version History";
+   private final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.viewVersionHistoryPromptShowControl();
 
-   private final String PROMPT_HIDE = "Hide Item Version History";
+   private final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.viewVersionHistoryPromptHideControl();
 
    private boolean versionPanelOpened = false;
 

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -40,12 +41,14 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
 {
 
    public static final String ID = "Edit/Delete Current Line";
-
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.deleteCurrentLineControl();
+   
    public DeleteCurrentLineControl()
    {
       super(ID);
-      setTitle("Delete Current Line");
-      setPrompt("Delete Current Line");
+      setTitle(TITLE);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
       setEvent(new EditorDeleteCurrentLineEvent());
    }

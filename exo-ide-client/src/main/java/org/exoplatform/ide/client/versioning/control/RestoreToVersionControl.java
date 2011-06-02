@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.versioning.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
@@ -39,9 +40,7 @@ public class RestoreToVersionControl extends VersionControl implements ShowVersi
 
    private static final String ID = "File/Restore to Version";
 
-   private final String TITLE = "Restore to Version";
-
-   private final String PROMPT = "Restore to Version";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.restoreToVersionControl();
 
    private Version version;
 
@@ -53,7 +52,7 @@ public class RestoreToVersionControl extends VersionControl implements ShowVersi
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setEvent(new RestoreToVersionEvent());
       setImages(IDEImageBundle.INSTANCE.restoreVersion(), IDEImageBundle.INSTANCE.restoreVersionDisabled());
    }

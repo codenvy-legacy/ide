@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.navigation.control;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -42,7 +43,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    private static final String ID = "File/Save As...";
 
-   private static final String TITLE = "Save As...";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsControl();
 
    private boolean singleItemSelected = true;
    

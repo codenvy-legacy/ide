@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.project.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -38,13 +39,17 @@ import com.google.gwt.event.shared.HandlerManager;
 public class CreateProjectTemplateControl extends SimpleControl implements IDEControl, EntryPointChangedHandler
 {
 
-   public final static String ID = "File/New/Project Template...";
+   public static final String ID = "File/New/Project Template...";
+
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplateTitleControl();
+
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectTemplatePromptControl();
 
    public CreateProjectTemplateControl()
    {
       super(ID);
-      setTitle("Project Template...");
-      setPrompt("Create Project Template...");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setDelimiterBefore(true);
       setEnabled(true);
       setImages(IDEImageBundle.INSTANCE.createProjectTemplate(), IDEImageBundle.INSTANCE.createProjectTemplateDisabled());

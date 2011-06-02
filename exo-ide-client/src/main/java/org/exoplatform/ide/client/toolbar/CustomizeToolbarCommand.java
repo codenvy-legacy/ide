@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.toolbar;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -37,7 +38,7 @@ public class CustomizeToolbarCommand extends SimpleControl implements IDEControl
 
    public static final String ID = "Window/Customize Toolbar...";
 
-   public static final String TITLE = "Customize Toolbar...";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeToolbarControl();
 
    public CustomizeToolbarCommand()
    {

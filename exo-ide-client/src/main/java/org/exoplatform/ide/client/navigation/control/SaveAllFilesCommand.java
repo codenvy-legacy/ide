@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -58,7 +59,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
 
    public static final String ID = "File/Save All";
 
-   public static final String TITLE = "Save All";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveAllControl();
 
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 

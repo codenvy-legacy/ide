@@ -36,6 +36,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
@@ -184,24 +185,14 @@ public class AskForValueDialog extends DialogWindow
       buttonsLayout.setHeight(22 + "px");
       buttonsLayout.setSpacing(5);
 
-//      okButton = new IButton("Yes");
-//      okButton.setID(ID_OK_BUTTON);
-//      okButton.setWidth(90);
-//      okButton.setHeight(22);
-//      okButton.setIcon(Images.Buttons.OK);
-//      if (defaultValue == null || defaultValue.length() == 0)
-//      {
-//         okButton.setDisabled(true);
-//      }
-      
-      okButton = new ImageButton("Yes", "yes");
+      okButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogYesButton(), "yes");
       okButton.setId(ID_OK_BUTTON);
       if (defaultValue == null || defaultValue.length() == 0)
       {
          okButton.setEnabled(false);
       }      
 
-      IButton cancelButton = new IButton("Cancel");
+      IButton cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogCancelButton());
       cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
@@ -214,7 +205,7 @@ public class AskForValueDialog extends DialogWindow
       }
       else
       {
-         IButton noButton = new IButton("No");
+         IButton noButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogNoButton());
          noButton.setID(ID_NO_BUTTON);
          noButton.setWidth(90);
          noButton.setHeight(22);

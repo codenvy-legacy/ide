@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -51,9 +52,7 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
 
    private final static String ID = "File/Upload Zipped Folder...";
 
-   private final static String TITLE = "Upload Zipped Folder...";
-
-   private final static String PROMPT = "Upload Zipped Folder...";
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFolderControl();
 
    private boolean browserPanelSelected = true;
 
@@ -63,7 +62,7 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       setEvent(new UploadFileEvent(UploadFileEvent.UploadType.FOLDER));
    }

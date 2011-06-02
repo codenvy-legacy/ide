@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.edit.event.LockFileEvent;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -61,13 +62,9 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    //Edit/Show \\ Hide Line Numbers
    public static final String ID = "Edit/Lock \\ Unlock File";
 
-   public static final String TITLE_LOCK = "Lock File";
+   public static final String TITLE_LOCK = IDE.IDE_LOCALIZATION_CONSTANT.lockFileLockControl();
    
-   public static final String TITLE_UNLOCK = "Unlock File";
-
-   public static final String PROMPT_LOCK = "Lock File";
-
-   public static final String PROMPT_UNLOCK = "Unlock File";
+   public static final String TITLE_UNLOCK = IDE.IDE_LOCALIZATION_CONSTANT.lockFileUnlockControl();
 
    private boolean fileLocked = false;
    
@@ -163,13 +160,13 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       if (fileLocked)
       {
          setTitle(TITLE_UNLOCK);
-         setPrompt(PROMPT_UNLOCK);
+         setPrompt(TITLE_UNLOCK);
          setEvent(new LockFileEvent(false));
       }
       else
       {
          setTitle(TITLE_LOCK);
-         setPrompt(PROMPT_LOCK);
+         setPrompt(TITLE_LOCK);
          setEvent(new LockFileEvent(true));
       }
    }

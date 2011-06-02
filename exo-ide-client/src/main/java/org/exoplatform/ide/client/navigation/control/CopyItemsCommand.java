@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -41,6 +42,10 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
 {
 
    public static final String ID = "Edit/Copy Item(s)";
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.copyItemsPromptControl();
 
    private Item selectedItem;
 
@@ -49,8 +54,8 @@ public class CopyItemsCommand extends MultipleSelectionItemsCommand implements I
    public CopyItemsCommand()
    {
       super(ID);
-      setTitle("Copy Item(s)");
-      setPrompt("Copy Selected Item(s)");
+      setTitle(TITLE);
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
       setEvent(new CopyItemsEvent());
 

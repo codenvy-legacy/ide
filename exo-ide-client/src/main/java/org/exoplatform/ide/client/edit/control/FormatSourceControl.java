@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -43,7 +44,7 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
 
    private static final String ID = "Edit/Format";
 
-   private static final String TITLE = "Format";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.formatControl();
 
    public FormatSourceControl()
    {

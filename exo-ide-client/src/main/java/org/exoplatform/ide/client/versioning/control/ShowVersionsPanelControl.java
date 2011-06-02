@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.versioning.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 
@@ -37,16 +38,14 @@ public class ShowVersionsPanelControl extends SimpleControl
 
    public static final String ID = "View/Show Versions";
 
-   public static final String TITLE = "Show versions";
-
-   public static final String PROMPT = "Show Versions";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showVersionsPanelControl();
 
    public ShowVersionsPanelControl(HandlerManager eventBus)
    {
       super(ID);
 
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setVisible(true);
       setEnabled(true);
 

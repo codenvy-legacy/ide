@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -50,9 +51,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
 
    private final static String ID = "File/Upload File...";
 
-   private final static String TITLE = "Upload File...";
-
-   private final static String PROMPT = "Upload File...";
+   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFileControl();
 
    private boolean browserPanelSelected = true;
 
@@ -62,7 +61,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt(PROMPT);
+      setPrompt(TITLE);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       setEvent(new UploadFileEvent(UploadFileEvent.UploadType.FILE));

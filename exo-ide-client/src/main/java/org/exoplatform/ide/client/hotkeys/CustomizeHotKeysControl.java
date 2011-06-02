@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.hotkeys;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -38,7 +39,7 @@ public class CustomizeHotKeysControl extends SimpleControl implements IDEControl
 
    public static final String ID = "Window/HotKeys...";
 
-   public static final String TITLE = "Customize Hotkeys...";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeHotkeysControl();
 
    public CustomizeHotKeysControl()
    {
