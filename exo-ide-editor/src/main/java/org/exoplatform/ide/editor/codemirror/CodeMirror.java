@@ -1116,8 +1116,21 @@ public class CodeMirror extends Editor
    {
       return this;
    }
+
+   /**
+    * Set show/hide line numbers and revalidate code if needed 
+    * @param showLineNumbers
+    */
+   private void setLineNumbers(boolean showLineNumbers)
+   {
+      setLineNumbersNative(showLineNumbers);
+      if (configuration.canBeValidated() && showLineNumbers)
+      {
+         udpateErrorMarks(codeErrorList);
+      }
+   }
    
-   private native void setLineNumbers(boolean showLineNumbers)   /*-{
+   private native void setLineNumbersNative(boolean showLineNumbers)   /*-{
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (editor != null)
          editor.setLineNumbers(showLineNumbers);

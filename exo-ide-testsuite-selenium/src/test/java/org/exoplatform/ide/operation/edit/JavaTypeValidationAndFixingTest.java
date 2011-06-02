@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -88,6 +89,16 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME, false);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + SERVICE_FILE_NAME);
+      
+      // test error marks
+      firstTestErrorMarks();
+      
+      // test error marks appearance after the hiding line numbers (IDE-764)
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS, true);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS, true);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);      
+      
       // test error marks
       firstTestErrorMarks();
 
@@ -150,28 +161,6 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(3, "'POST' cannot be resolved to a type; ")));
       assertTrue(selenium.isElementPresent(getCodeErrorMarkLocator(4, "'PathParam' cannot be resolved to a type; ")));
       // turn off line numbers
-
-      //TODO after fix problem in Issue IDE - 764 code must be uncommented
-      /*      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_HIDE_NUMBERS);
-
-            // turn on line numbers and test error marks
-            IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
-            Thread.sleep(TestConstants.SLEEP);
-            secondVerificationOfErrorMarks();
-
-            // save text, reopen and test error marks
-            saveCurrentFile();
-            IDE.EDITOR.closeTab(0);
-            IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(SERVICE_FILE_NAME, false);
-            Thread.sleep(TestConstants.SLEEP);
-            secondVerificationOfErrorMarks();
-
-            // refresh browser and test error marks
-            refresh();
-            IDE.EDITOR.clickOnEditor();
-            Thread.sleep(TestConstants.SLEEP);
-            secondVerificationOfErrorMarks();
-      */
    }
 
    private void firstTestErrorMarks() throws InterruptedException
