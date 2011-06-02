@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.heroku.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
-
 /**
  * Heroku client service.
  * 
@@ -47,7 +46,7 @@ public abstract class HerokuClientService
    {
       instance = this;
    }
-   
+
    /**
     * Logins user on Heroku.
     * 
@@ -56,7 +55,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Creates new application on Heroku.
     * 
@@ -65,7 +64,8 @@ public abstract class HerokuClientService
     * @param remoteName name of Git remote repository
     * @param callback callback
     */
-   public abstract void createApplication(String applicationName, String gitWorkDir, String remoteName, HerokuAsyncRequestCallback callback);
+   public abstract void createApplication(String applicationName, String gitWorkDir, String remoteName,
+      HerokuAsyncRequestCallback callback);
 
    /**
     * Deletes application pointed by it's name or Git location.
@@ -76,7 +76,40 @@ public abstract class HerokuClientService
     */
    public abstract void deleteApplication(String gitWorkDir, String applicationName, HerokuAsyncRequestCallback callback);
 
+   /**
+    * Adds(deploys) public ssh keys on Heroku.
+    * 
+    * @param callback callback
+    */
    public abstract void addKey(HerokuAsyncRequestCallback callback);
-   
+
+   /**
+    * Clears (removes) public ssh keys from Heroku.
+    * 
+    * @param callback
+    */
    public abstract void clearKeys(HerokuAsyncRequestCallback callback);
+
+   /**
+    * Get information about Heroku application, pointed by application's name or Git work directory location.
+    * 
+    * @param gitWorkDir Git working directory location
+    * @param applicationName application's name
+    * @param isRaw the format of the response if <code>true</code> then get result as raw Map. If <code>false</code> (default) result
+    *           is Map that contains predefined set of key-value pair
+    * @param callback callback
+    */
+   public abstract void getApplicationInfo(String gitWorkDir, String applicationName, boolean isRaw,
+      HerokuAsyncRequestCallback callback);
+
+   /**
+    * Rename Heroku application, pointed by application's name or Git work directory location.
+    * 
+    * @param gitWorkDir Git working directory location
+    * @param applicationName application's name
+    * @param newName new name of the application
+    * @param callback callback
+    */
+   public abstract void renameApplication(String gitWorkDir, String applicationName, String newName,
+      HerokuAsyncRequestCallback callback);
 }

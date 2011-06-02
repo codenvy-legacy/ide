@@ -23,41 +23,40 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
-import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
+import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent;
 
 /**
- * Control for grouping all Heroku controls.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 31, 2011 3:32:33 PM anya $
+ * @version $Id:  Jun 2, 2011 11:47:47 AM anya $
  *
  */
-public class HerokuControl extends SimpleControl implements IDEControl 
+public class RenameApplicationControl extends SimpleControl implements IDEControl
 {
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku";
+   public static final String ID = "PaaS/Heroku/Rename application...";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Heroku";
+   public static final String TITLE = "Rename application...";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Heroku";
-   
-   public HerokuControl()
+   public static final String PROMPT = "Rename application on Heroku...";
+
+   public RenameApplicationControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new AddKeyEvent());
-      setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
+      setEvent(new RenameApplicationEvent());
+      setImages(HerokuClientBundle.INSTANCE.createApplication(),
+         HerokuClientBundle.INSTANCE.createApplicationDisabled());
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)

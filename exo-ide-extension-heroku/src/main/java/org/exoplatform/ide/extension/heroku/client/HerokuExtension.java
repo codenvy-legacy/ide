@@ -26,14 +26,17 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.D
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
-import org.exoplatform.ide.extension.heroku.client.control.ClearKeysControl;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
+import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
+import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -71,12 +74,16 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new HerokuControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
       //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters
       new CreateApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
+      new ApplicationInfoPresenter(eventBus);
+      new RenameApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new KeysPresenter(eventBus);
    }

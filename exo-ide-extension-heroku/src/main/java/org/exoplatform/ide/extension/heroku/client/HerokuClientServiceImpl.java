@@ -47,10 +47,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
 
    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
+   
+   private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
 
    private static final String ADD_KEY = "/ide/heroku/keys/add";
 
    private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
+
+   private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
 
    /**
     * Events handler.
@@ -108,8 +112,8 @@ public class HerokuClientServiceImpl extends HerokuClientService
    {
       String workDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
       String url = restServiceContext + CREATE_APPLICATION;
-      String params = "name=" + applicationName;
-      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "&remote=" + remoteName : "";
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
       params += "&workDir=" + workDir;
 
       HashMap<String, String> applicationInfo = new HashMap<String, String>();
@@ -160,5 +164,58 @@ public class HerokuClientServiceImpl extends HerokuClientService
    {
       String url = restServiceContext + CLEAR_KEYS;
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationInfo(String gitWorkDir, String applicationName, boolean isRaw,
+      HerokuAsyncRequestCallback callback)
+   {
+      if (gitWorkDir != null)
+      {
+         gitWorkDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
+      }
+
+      String url = restServiceContext + APPLICATION_INFO;
+
+      String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
+      params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
+
+      HashMap<String, String> applicationInfo = new HashMap<String, String>();
+      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+      callback.setResult(applicationInfo);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    */
+   @Override
+   public void renameApplication(String gitWorkDir, String applicationName, String newName,
+      HerokuAsyncRequestCallback callback)
+   {
+      if (gitWorkDir != null)
+      {
+         gitWorkDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
+      }
+
+      String url = restServiceContext + RENAME_APPLICATION;
+
+      String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
+      params = (newName != null) ? "newname=" + newName + "&" : "";
+      params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
+
+      HashMap<String, String> applicationInfo = new HashMap<String, String>();
+      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
+      callback.setResult(applicationInfo);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 }
