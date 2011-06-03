@@ -26,6 +26,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
@@ -43,6 +44,10 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
 {
    
    private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
+   
+   private static final String NAME = IDE.TEMPLATE_CONSTANT.listGridName();
+   
+   private static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
    
    public TemplateListGrid()
    {
@@ -132,7 +137,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
          }
 
       };
-      getCellTable().addColumn(nameColumn, "Name");
+      getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
       
       //--- description column -----
@@ -166,7 +171,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
 
       };
       
-      getCellTable().addColumn(entryNameColumn, "Description");
+      getCellTable().addColumn(entryNameColumn, DESCRIPTION);
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
    }
 

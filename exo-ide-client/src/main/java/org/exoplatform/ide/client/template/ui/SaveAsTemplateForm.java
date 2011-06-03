@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
@@ -59,22 +60,27 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
 
    private static final String ID_DYNAMIC_FORM = "ideSaveAsTemplateFormDynamicForm";
 
-   private static final int BUTTON_WIDTH = 90;
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int FIELDS_WIDTH = 350;
+   
+   private static final String SAVE = IDE.IDE_LOCALIZATION_CONSTANT.saveButton();
+   
+   private static final String CANCEL = IDE.IDE_LOCALIZATION_CONSTANT.cancelButton();
 
-   private static final String TITLE = "Save file as template";
+   private static final String TITLE = IDE.TEMPLATE_CONSTANT.saveAsTemplateTitle();
+   
+   private static final String TYPE = IDE.TEMPLATE_CONSTANT.saveAsTemplateType();
+   
+   private static final String NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateName();
+   
+   private static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.saveAsTemplateDescription();
 
    private TextField nameField;
 
    private TextAreaItem descriptionField;
 
    private TextField typeField;
-
-//   private IButton saveButton;
-//   private IButton cancelButton;
 
    private ImageButton saveButton;
    
@@ -115,17 +121,17 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       form.setWidth(FIELDS_WIDTH+"px");
       form.setSpacing(3);
 
-      typeField = new TextField(TYPE_FIELD, "Type:");
+      typeField = new TextField(TYPE_FIELD, TYPE);
       typeField.setTitleOrientation(TitleOrientation.TOP);
       typeField.setWidth(FIELDS_WIDTH);
       typeField.setHeight(20);
 
-      nameField = new TextField(NAME_FIELD, "Name:");
+      nameField = new TextField(NAME_FIELD, NAME);
       nameField.setTitleOrientation(TitleOrientation.TOP);
       nameField.setWidth(FIELDS_WIDTH);
       nameField.setHeight(20);
 
-      descriptionField = new TextAreaItem(DESCRIPTION_FIELD, "Description:");
+      descriptionField = new TextAreaItem(DESCRIPTION_FIELD, DESCRIPTION);
       descriptionField.setTitleOrientation(TitleOrientation.TOP);
       descriptionField.setHeight(60);
       descriptionField.setWidth(FIELDS_WIDTH);
@@ -144,10 +150,10 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
       buttonsLayout.setSpacing(5);
       buttonsLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
-      saveButton = new ImageButton("Save", "ok");
+      saveButton = new ImageButton(SAVE, "ok");
       saveButton.setId(ID_SAVE_BUTTON);
 
-      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton = new ImageButton(CANCEL, "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(saveButton);
@@ -210,7 +216,6 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
     */
    public void disableSaveButton()
    {
-      //saveButton.disable();
       saveButton.setEnabled(false);
    }
 
@@ -219,7 +224,6 @@ public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePr
     */
    public void enableSaveButton()
    {
-      //saveButton.enable();
       saveButton.setEnabled(true);
    }
 

@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.template.ui;
 
 import java.util.List;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
@@ -61,7 +62,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
    @Override
    public String getCreateButtonTitle()
    {
-      return "Create";
+      return IDE.TEMPLATE_CONSTANT.createFileFromTemplateCreateButton();
    }
 
    /**
@@ -70,7 +71,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
    @Override
    public String getFormTitle()
    {
-      return "Create file";
+      return IDE.TEMPLATE_CONSTANT.createFileFromTemplateFormTitle();
    }
 
    /**
@@ -79,7 +80,7 @@ public class CreateFileFromTemplateForm extends AbstractCreateFromTemplateForm<F
    @Override
    protected String getNameFieldLabel()
    {
-      return "File Name";
+      return IDE.TEMPLATE_CONSTANT.createFileFromTemplateNameField();
    }
 
 }

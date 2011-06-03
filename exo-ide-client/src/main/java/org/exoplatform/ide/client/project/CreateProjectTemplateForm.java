@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
@@ -72,11 +73,13 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
    private static final String DESCRIPTION_FIELD = "ideCreateProjectTemplateFormDescriptionField";
 
-   private static final String ADD_FOLDER_BUTTON = "Add Folder";
+   private static final String ADD_FOLDER_BUTTON = IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderBtn();
 
-   private static final String ADD_FILE_BUTTON = "Add File";
+   private static final String ADD_FILE_BUTTON = IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFileBtn();
 
-   private static final String DELETE_BUTTON = "Delete";
+   private static final String DELETE_BUTTON = IDE.IDE_LOCALIZATION_CONSTANT.deleteButton();
+   
+   private static final String TITLE = IDE.TEMPLATE_CONSTANT.createProjectTemplateTitle();
 
    private static final int BUTTONS_WIDTH = 120;
 
@@ -106,7 +109,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    {
       super(WIDTH, HEIGHT, ID);
 
-      setTitle("Create project template");
+      setTitle(TITLE);
       //TODO
       //setCanDragResize(true);
       setCanMaximize(true);
@@ -217,13 +220,13 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       buttonsLayout.setHeight("22px");
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton("Create");
+      createButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.createButton());
       createButton.setID(ID_CREATE_BUTTON);
       createButton.setWidth(75);
       createButton.setHeight(22);
       createButton.setIcon(Images.Buttons.YES);
 
-      cancelButton = new IButton("Cancel");
+      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
       cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(75);
       cancelButton.setHeight(22);

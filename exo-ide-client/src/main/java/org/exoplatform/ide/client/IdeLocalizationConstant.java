@@ -36,6 +36,18 @@ public interface IdeLocalizationConstant extends Constants
    @Key("cancelButton")
    String cancelButton();
    
+   @DefaultStringValue("Save")
+   @Key("saveButton")
+   String saveButton();
+   
+   @DefaultStringValue("Delete")
+   @Key("deleteButton")
+   String deleteButton();
+   
+   @DefaultStringValue("Create")
+   @Key("createButton")
+   String createButton();
+   
    /* Create Folder */
    @DefaultStringValue("Create Folder")
    @Key("createFolderFormTitle")

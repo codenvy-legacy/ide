@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
@@ -182,13 +183,13 @@ implements CreateFromTemplateDisplay<T>
       createButton.setHeight(22);
       createButton.setIcon(Images.Buttons.YES);
 
-      cancelButton = new IButton("Cancel");
+      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
       cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(75);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);
 
-      deleteButton = new IButton("Delete");
+      deleteButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
       deleteButton.setID(ID_DELETE_BUTTON);
       deleteButton.setWidth(75);
       deleteButton.setHeight(22);

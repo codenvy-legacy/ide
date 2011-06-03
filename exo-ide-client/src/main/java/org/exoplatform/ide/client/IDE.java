@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
+import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
@@ -65,6 +66,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
     * Initialize constants  for UI 
     */
    public static final IdeLocalizationConstant IDE_LOCALIZATION_CONSTANT = GWT.create(IdeLocalizationConstant.class);
+   public static final IdeTemplateLocalizationConstant TEMPLATE_CONSTANT = (IdeTemplateLocalizationConstant) GWT.create(IdeTemplateLocalizationConstant.class);
 
    public IDE()
    {

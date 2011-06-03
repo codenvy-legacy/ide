@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.component.Tree;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
@@ -116,7 +117,7 @@ public class TemplateTree extends Tree<Template>
             String nodeName = template.getName();
             if (template instanceof FileTemplate)
             {
-               nodeName = ((FileTemplate)template).getFileName() + "(from " + template.getName() + ")";
+               nodeName = ((FileTemplate)template).getFileName() + "(" + IDE.TEMPLATE_CONSTANT.from() + " " + template.getName() + ")";
             }
             newNode = new TreeItem(createItemWidget(template.getIcon(), nodeName));
             newNode.setUserObject(template);
