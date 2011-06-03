@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
+   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
+   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+   <component>
+      <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStrorage</type>
+      <init-params>
+         <object-param>
+            <name>classinfostrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>production</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>true</boolean>
+               </field>
+               <field name="jars">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                           <field name="jarPath">
+                              <string>${jre.lib}${file.separator}rt.jar</string>
+                           </field>
+                           <field name="includePkg">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.lang</string>
+                                 </value>
+                                 <value>
+                                    <string>java.util</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                     <value>
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                           <field name="jarPath">
+                              <string>
+                                 ../lib/jcr-1.0.jar;
+                                 ../lib/chromattic.*.jar;
+                                 ../lib/jsr250-api-1.0.jar;
+                                 ../lib/jsr311-api-1.0.jar;
+                                 ../lib/jsp-api.jar;
+                                 ../lib/servlet-api.jar;
+                                 ../lib/exo.ws.commons*.jar;
+                                 ../lib/exo.ws.frameworks.json*.jar;
+                                 ../lib/exo.ws.rest.core*.jar;
+                                 ../lib/exo.ws.rest.ext*.jar;
+                                 ../lib/exo.kernel.commons*.jar;
+                                 ../lib/exo.kernel.component.command*.jar;
+                                 ../lib/exo.kernel.component.common*.jar;
+                                 ../lib/exo.kernel.container*.jar;
+                                 ../lib/exo.core.component.database*.jar;
+                                 ../lib/exo.core.component.document*.jar;
+                                 ../lib/exo.core.component.organization.api*.jar;
+                                 ../lib/exo.core.component.script.groovy*.jar;
+                                 ../lib/exo.core.component.security.core*.jar;
+                                 ../lib/exo.core.component.xml-processing*.jar;
+                                 ../lib/exo.jcr.component.core*.jar;
+                                 ../lib/exo.jcr.component.ext*.jar;
+                                 ../lib/exo.jcr.component.webdav*.jar;
+                                 ../lib/exo.jcr.framework.command*.jar;
+                                 ../lib/exo.jcr.framework.web*.jar
+                              </string>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage</type>
+      <init-params>
+         <object-param>
+            <name>docstrorage.configuration</name>
+            <object type="org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig">
+               <field name="wsName">
+                  <string>production</string>
+               </field>
+               <field name="runInThread">
+                  <boolean>true</boolean>
+               </field>
+               <field name="jars">
+                  <collection type="java.util.ArrayList">
+                     <value>
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                           <field name="jarPath">
+                              <string>${javasrc}</string>
+                           </field>
+                           <field name="includePkg">
+                              <collection type="java.util.ArrayList">
+                                 <value>
+                                    <string>java.lang</string>
+                                 </value>
+                                 <value>
+                                    <string>java.util</string>
+                                 </value>
+                              </collection>
+                           </field>
+                        </object>
+                     </value>
+                     <value>
+                        <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
+                           <field name="jarPath">
+                              <string>
+                                 ../lib-docs/jcr-1.0-sources.jar;
+                                 ../lib-docs/chromattic.*-sources.jar;
+                                 ../lib-docs/jsr250-api-1.0-sources.jar;
+                                 ../lib-docs/jsr311-api-1.0-sources.jar;
+                                 ../lib-docs/exo.ws.commons*-sources.jar;
+                                 ../lib-docs/exo.ws.frameworks.json*-sources.jar;
+                                 ../lib-docs/exo.ws.rest.core*-sources.jar;
+                                 ../lib-docs/exo.ws.rest.ext*-sources.jar;
+                                 ../lib-docs/exo.kernel.commons*-sources.jar;
+                                 ../lib-docs/exo.kernel.component.command*-sources.jar;
+                                 ../lib-docs/exo.kernel.component.common*-sources.jar;
+                                 ../lib-docs/exo.kernel.container*-sources.jar;
+                                 ../lib-docs/exo.core.component.database*-sources.jar;
+                                 ../lib-docs/exo.core.component.document*-sources.jar;
+                                 ../lib-docs/exo.core.component.organization.api*-sources.jar;
+                                 ../lib-docs/exo.core.component.script.groovy*-sources.jar;
+                                 ../lib-docs/exo.core.component.security.core*-sources.jar;
+                                 ../lib-docs/exo.core.component.xml-processing*-sources.jar;
+                                 ../lib-docs/exo.jcr.component.core*-sources.jar;
+                                 ../lib-docs/exo.jcr.component.ext*-sources.jar;
+                                 ../lib-docs/exo.jcr.component.webdav*-sources.jar;
+                                 ../lib-docs/exo.jcr.framework.command*-sources.jar;
+                                 ../lib-docs/exo.jcr.framework.web*-sources.jar
+                              </string>
+                           </field>
+                        </object>
+                     </value>
+                  </collection>
+               </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component>
+</configuration>
