@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
+import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;

@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
 import java.util.List;

@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -128,8 +129,8 @@ public class UploadPresenter implements FileSelectedHandler
     * @return result of javaScript function <code>encodeURI(url)</code>
     */
    public static native String encodeURI(String url) /*-{
-                                                     return encodeURI(url);
-                                                     }-*/;
+		return encodeURI(url);
+   }-*/;
 
    protected void uploadFileToForm()
    {
@@ -173,7 +174,7 @@ public class UploadPresenter implements FileSelectedHandler
       }
       completeUpload(uploadServiceResponse);
    }
-   
+
    /**
     * Check response is Ok.
     * If response is Ok, return null,
@@ -184,19 +185,20 @@ public class UploadPresenter implements FileSelectedHandler
     */
    private String checkResponseOk(String uploadServiceResponse)
    {
-      boolean matches = 
-         uploadServiceResponse.matches("^<ERROR>(.*)</ERROR>$") || uploadServiceResponse.matches("^<error>(.*)</error>$");
-      
+      boolean matches =
+         uploadServiceResponse.matches("^<ERROR>(.*)</ERROR>$")
+            || uploadServiceResponse.matches("^<error>(.*)</error>$");
+
       if (!gotError(uploadServiceResponse, matches))
       {
          return null;
       }
-      
+
       if (matches)
       {
          String errorMsg = uploadServiceResponse.substring("<error>".length());
          errorMsg = errorMsg.substring(0, errorMsg.length() - "</error>".length());
-         
+
          return errorMsg;
       }
       else
@@ -204,12 +206,12 @@ public class UploadPresenter implements FileSelectedHandler
          return errorMessage();
       }
    }
-   
+
    protected String errorMessage()
    {
       return "Can not upload folder!";
    }
-   
+
    protected boolean gotError(String uploadServiceResponse, boolean matches)
    {
       return uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
