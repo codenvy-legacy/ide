@@ -57,9 +57,8 @@ public class KeysAdd extends HerokuCommand
          (SshKeyProvider)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SshKeyProvider.class);
       try
       {
-         org.exoplatform.ide.extension.ssh.server.Key publicKey = keyProvider.getPublicKey("heroku.com");
-         byte[] bytes = publicKey.getBytes();
-         if (bytes != null)
+         org.exoplatform.ide.extension.ssh.server.SshKey publicKey = keyProvider.getPublicKey("heroku.com");
+         if (publicKey != null)
          {
             HttpURLConnection http = null;
             try
@@ -74,7 +73,7 @@ public class KeysAdd extends HerokuCommand
                OutputStream output = http.getOutputStream();
                try
                {
-                  output.write(bytes);
+                  output.write(publicKey.getBytes());
                   output.flush();
                }
                finally

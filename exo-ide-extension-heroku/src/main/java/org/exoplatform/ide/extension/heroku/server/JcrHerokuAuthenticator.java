@@ -24,7 +24,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 import org.picocontainer.Startable;
 
@@ -90,8 +89,7 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator implements Start
          ManageableRepository repository = repositoryService.getCurrentRepository();
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
-         String keyPath =
-            herokuAPIKeys + ConversationState.getCurrent().getIdentity().getUserId() + "/heroku-credentials";
+         String keyPath = herokuAPIKeys + session.getUserID() + "/heroku-credentials";
 
          Item item = null;
          try
@@ -172,7 +170,8 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator implements Start
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
          contentNode.setProperty("jcr:data", credentials.getEmail() + "\n" + credentials.getApiKey());
          // Make file accessible for current user only.
-         fileNode.addMixin("exo:privilegeable");
+         if (!fileNode.isNodeType("exo:privilegeable"))
+            fileNode.addMixin("exo:privilegeable");
          fileNode.clearACL();
          fileNode.setPermission(user, PermissionType.ALL);
          fileNode.removePermission(IdentityConstants.ANY);
