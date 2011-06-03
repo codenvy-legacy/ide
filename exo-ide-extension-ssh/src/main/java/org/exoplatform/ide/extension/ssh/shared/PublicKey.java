@@ -31,22 +31,12 @@ public class PublicKey
    /** SSH key as text.   */
    private String key;
    
-
-   /**
-    * 
-    */
    public PublicKey()
    {
    }
    
-   
-   /**
-    * @param host
-    * @param key
-    */
    public PublicKey(String host, String key)
    {
-      super();
       this.host = host;
       this.key = key;
    }
@@ -70,5 +60,4 @@ public class PublicKey
    {
       this.key = key;
    }
-
 }

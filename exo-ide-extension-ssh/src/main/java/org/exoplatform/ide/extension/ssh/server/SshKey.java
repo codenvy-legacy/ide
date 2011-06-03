@@ -26,20 +26,39 @@ import java.io.IOException;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Key
+public class SshKey
 {
+   private String path;
+   private byte[] bytes;
+
+   public SshKey(String path, byte[] bytes)
+   {
+      this.path = path;
+      this.bytes = bytes;
+   }
+
+   protected SshKey()
+   {
+   }
+
    /**
-    * Identifier of key file.
+    * Identifier of key file, e.g. path to file where key stored.
     * 
     * @return identifier of key file
     */
-   String getIdentifier();
+   public String getIdentifier()
+   {
+      return path;
+   }
 
    /**
     * Get SSH key as byte array.
     * 
-    * @return SSH key as byte array or <code>null</code> if key is not exist
-    * @throws IOException if any i/o error occurs
+    * @return SSH key as byte array
+    * @throws if any i/o errors occurs
     */
-   byte[] getBytes() throws IOException;
+   public byte[] getBytes() throws IOException
+   {
+      return bytes;
+   }
 }

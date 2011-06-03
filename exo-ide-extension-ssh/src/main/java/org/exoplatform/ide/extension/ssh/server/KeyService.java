@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.ssh.server;
 
 import org.apache.commons.fileupload.FileItem;
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
@@ -27,7 +26,6 @@ import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +41,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -55,15 +54,11 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/ssh-keys")
 public class KeyService
 {
-   /**
-    * 
-    */
-   private static final String FILE = "file";
-   private SshKeyProvider delegate;
+   private SshKeyProvider keyProvider;
 
    public KeyService(SshKeyProvider keyProvider)
    {
-      this.delegate = keyProvider;
+      this.keyProvider = keyProvider;
    }
 
    /**
@@ -77,7 +72,7 @@ public class KeyService
    {
       try
       {
-         delegate.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
+         keyProvider.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
       }
       catch (IOException ioe)
       {
@@ -94,20 +89,26 @@ public class KeyService
    @Path("add")
    @Consumes("multipart/*")
    @RolesAllowed({"users"})
-   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, Iterator<FileItem> iterator)
+   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
+      Iterator<FileItem> iterator)
    {
-//      if (!security.isSecure())
-//         throw new WebApplicationException(Response.status(400)
-//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      //      if (!security.isSecure())
+      //         throw new WebApplicationException(Response.status(400)
+      //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
-         HashMap<String, FileItem> requestItems = getRequestItems(iterator);
-         if (requestItems.get(FILE) == null)
+         byte[] key = null;
+         if (iterator.hasNext())
          {
-            throw new WebApplicationException(Response.status(HTTPStatus.BAD_REQUEST).entity("Can't find input file").build());
+            FileItem fileItem = iterator.next();
+            if (!fileItem.isFormField())
+               key = fileItem.get();
          }
+         if (key == null)
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Can't find input file. ")
+               .build());
 
-         delegate.addPrivateKey(host, requestItems.get(FILE).get());
+         keyProvider.addPrivateKey(host, key);
       }
       catch (IOException ioe)
       {
@@ -135,11 +136,10 @@ public class KeyService
       //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
       try
       {
-         Key publicKey = delegate.getPublicKey(host);
-         byte[] bytes = publicKey.getBytes();
-         if (bytes != null)
-            return Response.ok().entity(new PublicKey(host, new String(bytes))).type(MediaType.APPLICATION_JSON)
-               .build();
+         SshKey publicKey = keyProvider.getPublicKey(host);
+         if (publicKey != null)
+            return Response.ok().entity(new PublicKey(host, new String(publicKey.getBytes())))
+               .type(MediaType.APPLICATION_JSON).build();
          throw new WebApplicationException(Response.status(404).entity("Public key for host " + host + " not found. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
@@ -158,7 +158,7 @@ public class KeyService
    @RolesAllowed({"users"})
    public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback)
    {
-      delegate.removeKeys(host);
+      keyProvider.removeKeys(host);
       return calback + "();";
    }
 
@@ -168,16 +168,16 @@ public class KeyService
    @Produces(MediaType.APPLICATION_JSON)
    public Response getKeys(@Context UriInfo uriInfo)
    {
-      Set<String> all = delegate.getAll();
+      Set<String> all = keyProvider.getAll();
       if (all.size() == 0)
          return Response.ok().entity(Collections.emptyList()).type(MediaType.APPLICATION_JSON).build();
       List<KeyItem> result = new ArrayList<KeyItem>(all.size());
       for (String host : all)
       {
-         byte[] bytes = null;
+         boolean publicKeyExists = false;
          try
          {
-            bytes = delegate.getPublicKey(host).getBytes();
+            publicKeyExists = keyProvider.getPublicKey(host) != null;
          }
          catch (IOException ioe)
          {
@@ -185,30 +185,12 @@ public class KeyService
                .type(MediaType.TEXT_PLAIN).build());
          }
          String getPublicKeyUrl = null;
-         if (bytes != null)
+         if (publicKeyExists)
             getPublicKeyUrl = uriInfo.getBaseUriBuilder().path(getClass()).queryParam("host", host).build().toString();
          String removeKeysUrl =
             uriInfo.getBaseUriBuilder().path(getClass(), "removeKeys").queryParam("host", host).build().toString();
          result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
       }
       return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
-   }
-   
-   /**
-    * Get the map of form fields request items.
-    * 
-    * @param iterator - file item iterator
-    * @return {@link HashMap}
-    */
-   private HashMap<String, FileItem> getRequestItems(Iterator<FileItem> iterator)
-   {
-      HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
-      while (iterator.hasNext())
-      {
-         FileItem item = iterator.next();
-         String fieldName = item.getFieldName();
-         requestItems.put(fieldName, item);
-      }
-      return requestItems;
    }
 }

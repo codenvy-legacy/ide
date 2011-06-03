@@ -39,6 +39,7 @@ import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
+import org.exoplatform.services.test.mock.MockHttpServletRequest;
 import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +58,7 @@ import javax.ws.rs.core.SecurityContext;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class KeyServiceTest extends BaseTest
 {
@@ -120,7 +121,7 @@ public class KeyServiceTest extends BaseTest
       InputStream resourceAsStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test.txt");
       byte[] res = new byte[resourceAsStream.available()];
       resourceAsStream.read(res);
-      resourceAsStream.close();     
+      resourceAsStream.close();
       String source =
          getRequestSource("Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n", new String(res));
 
@@ -130,7 +131,9 @@ public class KeyServiceTest extends BaseTest
       byte[] data = out.toByteArray();
 
       HttpServletRequest httpRequest =
-         new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
+         new MockHttpServletRequest("http://localhost/ide/ssh-keys/add?host=exoplatform.com", new ByteArrayInputStream(
+            data), data.length, "POST", headers);
+
       ctx.put(HttpServletRequest.class, httpRequest);
 
       ContainerResponse response =
@@ -146,7 +149,7 @@ public class KeyServiceTest extends BaseTest
    private String getRequestSource(String fileContentDisposition, String content)
    {
       String source =
-         "-------abcdef\r\n" + fileContentDisposition + "Content-Type: text/plain\r\n\r\n" + content+"\r\n"
+         "-------abcdef\r\n" + fileContentDisposition + "Content-Type: text/plain\r\n\r\n" + content + "\r\n"
             + "-------abcdef--\r\n";
 
       return source;

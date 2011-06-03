@@ -45,7 +45,7 @@ public interface SshKeyProvider
     * @return private key
     * @throws IOException if any i/o error occurs
     */
-   Key getPrivateKey(String host) throws IOException;
+   SshKey getPrivateKey(String host) throws IOException;
 
    /**
     * Get SSH public key for <code>host</code>. Obtained key should be copied to remote host. Typically this method
@@ -55,7 +55,7 @@ public interface SshKeyProvider
     * @return public key
     * @throws IOException if any i/o error occurs
     */
-   Key getPublicKey(String host) throws IOException;
+   SshKey getPublicKey(String host) throws IOException;
 
    /**
     * Generate SSH key files.

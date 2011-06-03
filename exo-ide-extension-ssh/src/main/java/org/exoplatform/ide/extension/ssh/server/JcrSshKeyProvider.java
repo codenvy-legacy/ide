@@ -28,7 +28,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.IdentityConstants;
 
 import java.io.ByteArrayInputStream;
@@ -41,7 +40,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -78,69 +76,6 @@ import javax.jcr.Session;
  */
 public class JcrSshKeyProvider implements SshKeyProvider
 {
-   private static class JcrKey implements Key
-   {
-      private final ManageableRepository repository;
-      private final String workspace;
-      private final String path;
-
-      public JcrKey(String path, ManageableRepository repository, String workspace)
-      {
-         this.path = path;
-         this.repository = repository;
-         this.workspace = workspace;
-      }
-
-      @Override
-      public String getIdentifier()
-      {
-         return path;
-      }
-
-      @Override
-      public byte[] getBytes() throws IOException
-      {
-         Session session = null;
-         try
-         {
-            // Login with current identity. ConversationState.getCurrent(). 
-            session = repository.login(workspace);
-            Item item = null;
-            try
-            {
-               item = session.getItem(path);
-            }
-            catch (PathNotFoundException pnfe)
-            {
-            }
-            if (item == null)
-               return null;
-            Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-            long length = property.getLength();
-            byte[] buf = new byte[(int)length];
-            InputStream stream = property.getStream();
-            try
-            {
-               stream.read(buf);
-            }
-            finally
-            {
-               stream.close();
-            }
-            return buf;
-         }
-         catch (RepositoryException re)
-         {
-            throw new RuntimeException(re.getMessage(), re);
-         }
-         finally
-         {
-            if (session != null)
-               session.logout();
-         }
-      }
-   }
-
    private static final Pattern keyPattern = Pattern.compile("(.+)\\.key");
 
    /** Name of JCR workspace that store SSH keys. */
@@ -209,7 +144,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
             userKeys = ((Node)session.getItem(keyStore)).addNode(user, "nt:folder");
          }
 
-         writeKeyFile(userKeys, host + ".key", user, key);
+         writeKey(userKeys, host + ".key", user, key);
 
          session.save();
       }
@@ -228,34 +163,109 @@ public class JcrSshKeyProvider implements SshKeyProvider
     * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPrivateKey(java.lang.String)
     */
    @Override
-   public Key getPrivateKey(String host) throws IOException
+   public SshKey getPrivateKey(String host) throws IOException
    {
-      String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".key";
-      return getKeyFile(path);
+      Session session = null;
+      try
+      {
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         session = repository.login(workspace);
+         String name = host + ".key";
+         SshKey key = readKey(session, name, true);
+         return key;
+      }
+      catch (RepositoryException re)
+      {
+         throw new RuntimeException(re.getMessage(), re);
+      }
+      finally
+      {
+         if (session != null)
+            session.logout();
+      }
    }
 
    /**
     * @see org.exoplatform.ide.git.server.jgit.ssh.SshKeyProvider#getPublicKey(java.lang.String)
     */
    @Override
-   public Key getPublicKey(String host) throws IOException
+   public SshKey getPublicKey(String host) throws IOException
    {
-      String path = keyStore + ConversationState.getCurrent().getIdentity().getUserId() + "/" + host + ".pub";
-      return getKeyFile(path);
-   }
-
-   private Key getKeyFile(String path)
-   {
-      ManageableRepository repository;
+      Session session = null;
       try
       {
-         repository = repositoryService.getCurrentRepository();
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         session = repository.login(workspace);
+         String name = host + ".pub";
+         return readKey(session, name, true);
       }
       catch (RepositoryException re)
       {
          throw new RuntimeException(re.getMessage(), re);
       }
-      return new JcrKey(path, repository, workspace);
+      finally
+      {
+         if (session != null)
+            session.logout();
+      }
+   }
+
+   /**
+    * @param session JCR session
+    * @param name name of node to read key
+    * @param findParent if true then try to find key for higher level domain. e.g. if have key for 'domain.com' then use
+    *           it for 'my.domain.com'
+    * @return SshKey
+    * @throws RepositoryException
+    */
+   private SshKey readKey(Session session, String name, boolean findParent) throws IOException, RepositoryException
+   {
+      String userKeysPath = keyStore + session.getUserID();
+      Node keyNode = null;
+      try
+      {
+         keyNode = (Node)session.getItem(userKeysPath + "/" + name);
+      }
+      catch (PathNotFoundException pnfe)
+      {
+      }
+
+      if (keyNode == null && findParent)
+      {
+         try
+         {
+            Node userKeys = (Node)session.getItem(userKeysPath);
+            for (NodeIterator iter = userKeys.getNodes(); iter.hasNext();)
+            {
+               Node nextNode = iter.nextNode();
+               if (name.endsWith("." + nextNode.getName()))
+               {
+                  keyNode = nextNode;
+                  break;
+               }
+            }
+         }
+         catch (PathNotFoundException pnfe)
+         {
+         }
+      }
+
+      if (keyNode == null)
+         return null;
+
+      Property property = keyNode.getNode("jcr:content").getProperty("jcr:data");
+      long length = property.getLength();
+      byte[] buf = new byte[(int)length];
+      InputStream stream = property.getStream();
+      try
+      {
+         stream.read(buf);
+      }
+      finally
+      {
+         stream.close();
+      }
+      return new SshKey(keyNode.getPath(), buf);
    }
 
    /**
@@ -297,11 +307,11 @@ public class JcrSshKeyProvider implements SshKeyProvider
 
          ByteArrayOutputStream buff = new ByteArrayOutputStream();
          keyPair.writePrivateKey(buff);
-         writeKeyFile(userKeys, host + ".key", user, buff.toByteArray());
+         writeKey(userKeys, host + ".key", user, buff.toByteArray());
 
          buff.reset();
          keyPair.writePublicKey(buff, comment != null ? comment : (user + "@ide.exoplaform.local"));
-         writeKeyFile(userKeys, host + ".pub", user, buff.toByteArray());
+         writeKey(userKeys, host + ".pub", user, buff.toByteArray());
 
          session.save();
       }
@@ -316,7 +326,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
       }
    }
 
-   private void writeKeyFile(Node parent, String name, String user, byte[] content) throws RepositoryException
+   private void writeKey(Node parent, String name, String user, byte[] content) throws RepositoryException
    {
       ExtendedNode fileNode = (ExtendedNode)parent.addNode(name, "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
@@ -324,7 +334,8 @@ public class JcrSshKeyProvider implements SshKeyProvider
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content));
       // Make file accessible for current user only.
-      fileNode.addMixin("exo:privilegeable");
+      if (!fileNode.isNodeType("exo:privilegeable"))
+         fileNode.addMixin("exo:privilegeable");
       fileNode.clearACL();
       fileNode.setPermission(user, PermissionType.ALL);
       fileNode.removePermission(IdentityConstants.ANY);
