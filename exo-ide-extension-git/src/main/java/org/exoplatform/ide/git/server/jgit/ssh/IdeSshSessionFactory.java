@@ -26,7 +26,7 @@ import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
-import org.exoplatform.ide.extension.ssh.server.Key;
+import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.picocontainer.Startable;
 
@@ -41,9 +41,6 @@ import java.io.IOException;
  */
 public class IdeSshSessionFactory extends SshConfigSessionFactory implements Startable
 {
-   //   /** Cached JSch instances. */
-   //   private Map<String, JSch> jschCache;
-
    private SshKeyProvider keyProvider;
 
    public IdeSshSessionFactory(SshKeyProvider keyProvider)
@@ -55,18 +52,9 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    /**
     * Initial this SshSessionFactory. By default turn of using "know-hosts" file.
     */
-   //@SuppressWarnings("serial")
    protected void init()
    {
       JSch.setConfig("StrictHostKeyChecking", "no");
-      /*jschCache = new LinkedHashMap<String, JSch>()
-      {
-         @Override
-         protected boolean removeEldestEntry(Entry<String, JSch> eldest)
-         {
-            return size() > 256;
-         }
-      };*/
    }
 
    /**
@@ -85,44 +73,14 @@ public class IdeSshSessionFactory extends SshConfigSessionFactory implements Sta
    @Override
    protected final JSch getJSch(OpenSshConfig.Host hc, FS fs) throws JSchException
    {
-      /*String host = hc.getHostName();
-      Key key;
-      try
-      {
-         key = keyProvider.getPrivateKey(host);
-      }
-      catch (IOException ioe)
-      {
-         throw new JSchException(ioe.getMessage(), ioe);
-      }
-      String keyIdentifier = key.getIdentifier();
-      JSch jsch = jschCache.get(keyIdentifier);
-      if (jsch == null)
-      {
-         jsch = new JSch();
-         try
-         {
-            byte[] bytes = key.getBytes();
-            if (bytes == null)
-               throw new JSchException("SSH connection failed. Key file not found. ");
-            jsch.addIdentity(keyIdentifier, bytes, null, null);
-         }
-         catch (IOException ioe)
-         {
-            throw new JSchException(ioe.getMessage(), ioe);
-         }
-         jschCache.put(keyIdentifier, jsch);
-      }
-      return jsch;*/
       try
       {
          String host = hc.getHostName();
-         Key key = keyProvider.getPrivateKey(host);
-         byte[] bytes = key.getBytes();
-         if (bytes == null)
+         SshKey key = keyProvider.getPrivateKey(host);
+         if (key == null)
             throw new JSchException("SSH connection failed. Key file not found. ");
          JSch jsch = new JSch();
-         jsch.addIdentity(key.getIdentifier(), bytes, null, null);
+         jsch.addIdentity(key.getIdentifier(), key.getBytes(), null, null);
          return jsch;
       }
       catch (IOException ioe)
