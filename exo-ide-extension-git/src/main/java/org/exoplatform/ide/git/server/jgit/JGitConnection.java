@@ -575,8 +575,10 @@ public class JGitConnection implements GitConnection
    public GitConnection init(InitRequest request) throws GitException
    {
       File workDir = repository.getWorkTree();
-      if (!(workDir.exists() || workDir.mkdirs()))
-         throw new GitException("Can't create working folder " + workDir + ". ");
+      /*if (!(workDir.exists() || workDir.mkdirs()))
+         throw new GitException("Can't create working folder " + workDir + ". ");*/
+      if (!workDir.exists())
+         throw new GitException("Working folder " + workDir + " not exists . ");
 
       boolean bare = request.isBare();
 

@@ -43,6 +43,7 @@ public class InitTest extends BaseTest
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
       workDir = new File(target, "InitRepoTest");
+      workDir.mkdir();
       forClean.add(workDir);
    }
 

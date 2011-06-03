@@ -50,6 +50,7 @@ public class RemoteUpdateTest extends BaseTest
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
       File repoDir = new File(target, "RemoteUpdateTest");
+      repoDir.mkdir();
       forClean.add(repoDir);
       repo = new FileRepository(new File(repoDir, ".git"));
       /* May be empty request in this impl. 

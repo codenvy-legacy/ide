@@ -40,6 +40,7 @@ public class ConnectionFactoryTest extends BaseTest
       URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
       File target = new File(testCls.toURI()).getParentFile();
       File repoDir = new File(target, "ConnectionFactoryTest");
+      repoDir.mkdir();
       forClean.add(repoDir);
 
       GitConnection gitConnection =
