@@ -26,5 +26,9 @@
    </replace-with>
    <replace-with class="org.exoplatform.ide.extension.ssh.client.keymanager.ui.SshPublicKeyView">
       <when-type-is class="org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView">
+      <when-type-is class="org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display" />
    </replace-with> 
 </module>

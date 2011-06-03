@@ -31,6 +31,53 @@
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.webdav</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.testframework</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.hsqldb</groupId>
+         <artifactId>hsqldb</artifactId>
+         <scope>test</scope>
+      </dependency>
 
       <!-- CLIENT SIDE -->
       <dependency>

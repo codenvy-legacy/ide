@@ -35,12 +35,12 @@ public class SshKeyManagerControl extends SimpleControl implements IDEControl
    /**
     * Control ID.
     */
-   public static final String ID = "Ssh/Key Manager";
+   public static final String ID = "Window/Ssh Key Manager";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Key Manager";
+   public static final String TITLE = "Ssh Key Manager";
 
    /**
     * Control's prompt, when user hovers the mouse on it.

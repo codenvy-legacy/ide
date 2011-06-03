@@ -18,12 +18,23 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.dialogs.StringValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -38,20 +49,13 @@ import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
  *
  */
-public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler
+public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
+   ConfigurationReceivedSuccessfullyHandler
 {
    public interface Display extends IsView
    {
@@ -63,9 +67,13 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
       HasClickHandlers getGenerateButton();
 
+      HasClickHandlers getUploadButton();
+
    }
 
    private Display display;
+
+   private IDEConfiguration configuration;
 
    /**
    * 
@@ -73,7 +81,9 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    public SshKeyManagerPresenter()
    {
       IDE.EVENT_BUS.addHandler(ShowSshKeyManagerEvent.TYPE, this);
-//      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      //add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -145,7 +155,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          @Override
          public void onSelection(SelectionEvent<KeyItem> event)
          {
-            IDE.EVENT_BUS.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
+            if (event.getSelectedItem().getPublicKeyURL() != null)
+               IDE.EVENT_BUS.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
          }
       });
 
@@ -180,6 +191,16 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
                });
          }
       });
+
+      display.getUploadButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            new UploadSshKeyPresenter(configuration.getContext());
+         }
+      });
    }
 
    /**
@@ -194,7 +215,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
             @Override
             public void booleanValueReceived(Boolean value)
             {
-               if(value != null && value)
+               if (value != null && value)
                {
                   doDeleteKey(keyItem);
                }
@@ -209,14 +230,14 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    {
       SshKeyService.get().deleteKey(keyItem, new JsonpAsyncCallback<Void>()
       {
-         
+
          @Override
          public void onSuccess(Void result)
          {
             getLoader().hide();
             refreshKeys();
          }
-         
+
          @Override
          public void onFailure(Throwable exception)
          {
@@ -255,6 +276,19 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       {
          display = null;
       }
+      if (event.getView() instanceof org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display)
+      {
+         refreshKeys();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
+    */
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      configuration = event.getConfiguration();
    }
 
 }

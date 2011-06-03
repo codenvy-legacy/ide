@@ -18,20 +18,18 @@
  */
 package org.exoplatform.ide.extension.ssh.client.marshaller;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
-
 /**
+ * Unmarshaller for get All Keys request 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeysUnmarshaller May 18, 2011 4:57:42 PM evgen $
  *
@@ -50,16 +48,24 @@ public class SshKeysUnmarshaller
          for (int i = 0; i < array.size(); i++)
          {
             JSONObject object = array.get(i).isObject();
-            KeyItem keyItem =
-               new KeyItem(object.get("host").isString().stringValue(), object.get("publicKeyURL").isString()
-                  .stringValue(), object.get("removeKeyURL").isString().stringValue());
+            KeyItem keyItem = new KeyItem();
+            keyItem.setHost(object.get("host").isString().stringValue());
+            //check of "publicKeyURL" field, may be null
+            if (object.containsKey("publicKeyURL") && object.get("publicKeyURL").isNull() == null)
+            {
+               keyItem.setPublicKeyURL(object.get("publicKeyURL").isString().stringValue());
+            }
+            
+            if (object.containsKey("removeKeyURL") && object.get("removeKeyURL").isNull() == null)
+               keyItem.setRemoveKeyURL(object.get("removeKeyURL").isString().stringValue());
             keyItems.add(keyItem);
          }
          return keyItems;
       }
       catch (Exception e)
       {
-         throw new UnmarshallerException("Can't parse Ssh Keys");
+         e.printStackTrace();
+         throw new UnmarshallerException("Can't parse SSH Keys");
       }
    }
 

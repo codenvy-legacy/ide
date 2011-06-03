@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
@@ -37,6 +39,8 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKe
 public class SshKeyExtension extends Extension implements InitializeServicesHandler, ShowPublicSshKeyHandler
 {
 
+   public static final SshLocalizationConstant CONSTANTS = GWT.create(SshLocalizationConstant.class);
+   
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */

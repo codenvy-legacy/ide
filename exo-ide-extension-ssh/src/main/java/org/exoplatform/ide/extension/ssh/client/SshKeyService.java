@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -27,10 +31,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ssh.client.marshaller.GenerateSshKeysMarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,18 +45,17 @@ public class SshKeyService
    private final String restContext;
 
    private final Loader loader;
-   
-//   private final int httpsPort;
-   
+
+   //   private final int httpsPort;
 
    /**
     * 
     */
-   public SshKeyService(String restContext,int httpsPort, Loader loader)
+   public SshKeyService(String restContext, int httpsPort, Loader loader)
    {
       this.restContext = restContext;
       this.loader = loader;
-  //    this.httpsPort = httpsPort;
+      //    this.httpsPort = httpsPort;
       instance = this;
    }
 
@@ -70,12 +69,12 @@ public class SshKeyService
     * @param callback
     */
    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback)
-   { 
-//      UrlBuilder builder = new UrlBuilder();
-//      String url =
-//         builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
-//            .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
-      
+   {
+      //      UrlBuilder builder = new UrlBuilder();
+      //      String url =
+      //         builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
+      //            .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
+
       JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
       loader.setMessage("Getting SSH keys....");
       loader.show();

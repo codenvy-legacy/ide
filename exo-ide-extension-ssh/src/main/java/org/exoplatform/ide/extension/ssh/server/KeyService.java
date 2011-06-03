@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
+import org.apache.commons.fileupload.FileItem;
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
@@ -25,6 +27,8 @@ import org.exoplatform.ide.extension.ssh.shared.PublicKey;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -51,6 +55,10 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/ssh-keys")
 public class KeyService
 {
+   /**
+    * 
+    */
+   private static final String FILE = "file";
    private SshKeyProvider delegate;
 
    public KeyService(SshKeyProvider keyProvider)
@@ -79,28 +87,35 @@ public class KeyService
       return Response.ok().build();
    }
 
-   //   /**
-   //    * Add prepared private key.
-   //    */
-   //   @POST
-   //   @Path("add")
-   //   @RolesAllowed({"users"})
-   //   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, byte[] keyBody)
-   //   {
-   //      if (!security.isSecure())
-   //         throw new WebApplicationException(Response.status(400)
-   //            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
-   //      try
-   //      {
-   //         delegate.addPrivateKey(host, keyBody);
-   //      }
-   //      catch (IOException ioe)
-   //      {
-   //         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
-   //            .build());
-   //      }
-   //      return Response.ok().build();
-   //   }
+   /**
+    * Add prepared private key.
+    */
+   @POST
+   @Path("add")
+   @Consumes("multipart/*")
+   @RolesAllowed({"users"})
+   public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host, Iterator<FileItem> iterator)
+   {
+//      if (!security.isSecure())
+//         throw new WebApplicationException(Response.status(400)
+//            .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
+      try
+      {
+         HashMap<String, FileItem> requestItems = getRequestItems(iterator);
+         if (requestItems.get(FILE) == null)
+         {
+            throw new WebApplicationException(Response.status(HTTPStatus.BAD_REQUEST).entity("Can't find input file").build());
+         }
+
+         delegate.addPrivateKey(host, requestItems.get(FILE).get());
+      }
+      catch (IOException ioe)
+      {
+         throw new WebApplicationException(Response.serverError().entity(ioe.getMessage()).type(MediaType.TEXT_PLAIN)
+            .build());
+      }
+      return Response.ok().entity("Success").build();
+   }
 
    /**
     * Get public key.
@@ -177,5 +192,23 @@ public class KeyService
          result.add(new KeyItem(host, getPublicKeyUrl, removeKeysUrl));
       }
       return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
+   }
+   
+   /**
+    * Get the map of form fields request items.
+    * 
+    * @param iterator - file item iterator
+    * @return {@link HashMap}
+    */
+   private HashMap<String, FileItem> getRequestItems(Iterator<FileItem> iterator)
+   {
+      HashMap<String, FileItem> requestItems = new HashMap<String, FileItem>();
+      while (iterator.hasNext())
+      {
+         FileItem item = iterator.next();
+         String fieldName = item.getFieldName();
+         requestItems.put(fieldName, item);
+      }
+      return requestItems;
    }
 }

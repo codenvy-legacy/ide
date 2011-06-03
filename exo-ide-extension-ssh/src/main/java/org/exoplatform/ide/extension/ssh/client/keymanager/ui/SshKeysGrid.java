@@ -42,9 +42,9 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
 {
 
    private Column<KeyItem, String> hostColumn;
-   
+
    private Column<KeyItem, String> publicKeyColumn;
-   
+
    private Column<KeyItem, String> deleteKeyColumn;
 
    /**
@@ -63,18 +63,20 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
       };
       publicKeyColumn = new Column<KeyItem, String>(new Link())
       {
-         
+
          @Override
          public String getValue(KeyItem object)
          {
-            return "View";
+            if (object.getPublicKeyURL() != null)
+               return "View";
+            else
+               return "";
          }
       };
-      
-      
+
       deleteKeyColumn = new Column<KeyItem, String>(new Link())
       {
-         
+
          @Override
          public String getValue(KeyItem object)
          {
@@ -85,13 +87,13 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
       hostColumn.setSortable(true);
       publicKeyColumn.setFieldUpdater(new FieldUpdater<KeyItem, String>()
       {
-         
+
          @Override
          public void update(int index, KeyItem object, String value)
          {
          }
       });
-      
+
       getCellTable().addColumn(hostColumn, "Host");
       getCellTable().addColumn(publicKeyColumn, "Public Key");
       getCellTable().addColumn(deleteKeyColumn, "Delete");
@@ -108,11 +110,11 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
    {
       publicKeyColumn.setFieldUpdater(new FieldUpdater<KeyItem, String>()
       {
-         
+
          @Override
          public void update(int index, KeyItem object, String value)
          {
-            
+
             handler.onSelection(new SelectionEventImpl(object));
          }
       });
@@ -126,15 +128,15 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
    public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<KeyItem> handler)
    {
       deleteKeyColumn.setFieldUpdater(new FieldUpdater<KeyItem, String>()
+      {
+
+         @Override
+         public void update(int index, KeyItem object, String value)
          {
-            
-            @Override
-            public void update(int index, KeyItem object, String value)
-            {
-               
-               handler.onSelection(new SelectionEventImpl(object));
-            }
-         });
+
+            handler.onSelection(new SelectionEventImpl(object));
+         }
+      });
       return null;
    }
 
@@ -147,9 +149,9 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
       {
          super(selectedItem);
       }
-      
+
    }
-   
+
    private class Link extends ClickableTextCell
    {
       /**
@@ -169,7 +171,7 @@ public class SshKeysGrid extends ListGrid<KeyItem> implements HasSshGrid<KeyItem
             }
          };
          sb.append(s);
-       
+
       }
    }
 }
