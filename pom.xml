@@ -18,7 +18,7 @@
    </scm>
    <properties>
       <!-- Repositories URLs -->
-      <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
+      <exo.snapshots.repo.url>dav:http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
       <org.exoplatform.jcr.version>1.14.0-GA-SNAPSHOT</org.exoplatform.jcr.version>
