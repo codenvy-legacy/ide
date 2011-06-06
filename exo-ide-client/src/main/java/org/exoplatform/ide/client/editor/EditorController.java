@@ -91,6 +91,8 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentHandler;
 
@@ -106,13 +108,13 @@ import java.util.Map;
  * @version $Id: EditorController Mar 21, 2011 5:22:10 PM evgen $
  *
  */
-public class EditorController implements EditorContentChangedHandler, EditorCursorActivityHandler,
+public class EditorController implements EditorContentChangedHandler, 
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
    EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler,
    EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
    EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
-   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler
+   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -160,7 +162,6 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE, eventBus.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
 
       handlerRegistrations.put(EditorContentChangedEvent.TYPE, eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
-      handlerRegistrations.put(EditorCursorActivityEvent.TYPE, eventBus.addHandler(EditorCursorActivityEvent.TYPE, this));
       handlerRegistrations.put(EditorSaveContentEvent.TYPE, eventBus.addHandler(EditorSaveContentEvent.TYPE, this));
       handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(EditorCloseFileEvent.TYPE, eventBus.addHandler(EditorCloseFileEvent.TYPE, this));
@@ -176,6 +177,7 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       handlerRegistrations.put(SaveFileAsEvent.TYPE, eventBus.addHandler(SaveFileAsEvent.TYPE, this));
       handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE, eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
       handlerRegistrations.put(ClosingViewEvent.TYPE, eventBus.addHandler(ClosingViewEvent.TYPE, this));
+      handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, eventBus.addHandler(EditorFocusReceivedEvent.TYPE, this));
 
    }
 
@@ -246,11 +248,11 @@ public class EditorController implements EditorContentChangedHandler, EditorCurs
       eventBus.fireEvent(new EditorFileContentChangedEvent(file, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
-   public void onEditorCursorActivity(EditorCursorActivityEvent event)
+   public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      eventBus.fireEvent(new EditorSetFocusEvent());
+      editorsViews.get(event.getEditorId()).activate();
    }
-
+   
    /* (non-Javadoc)
     * @see org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedHandler#onEditorChangedActiveFile(org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedEvent)
     */

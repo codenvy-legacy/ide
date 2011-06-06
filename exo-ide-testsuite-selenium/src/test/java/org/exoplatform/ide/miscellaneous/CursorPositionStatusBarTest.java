@@ -117,14 +117,14 @@ public class CursorPositionStatusBarTest extends BaseTest
       // selectMainFrame();
      IDE.EDITOR.selectTab(0);
 
-//      //TODO fix problem see issue IDE -713
-//      //		check status bar
-//      assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-//      //	refresh
-//      refresh();
-//
-//      //			check status bar
-//      assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      //TODO fix problem see issue IDE -713
+      //		check status bar
+      assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      //	refresh
+      refresh();
+      
+      //			check status bar
+      assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
      IDE.EDITOR.closeFile(0);
    }
 

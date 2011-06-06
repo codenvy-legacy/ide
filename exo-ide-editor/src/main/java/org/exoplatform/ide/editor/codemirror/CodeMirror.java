@@ -91,6 +91,10 @@ public class CodeMirror extends Editor
 
    private String genericMimeType;  // type of document itself
    
+   private int cursorPositionCol = 1;
+   private int cursorPositionRow = 1;
+   
+   
    /**
     * @param file
     * @param params
@@ -253,7 +257,11 @@ public class CodeMirror extends Editor
    {
       // highlight current line
       highlightLine(0);
-      eventBus.fireEvent(new EditorCursorActivityEvent(editorId, getCursorRow(), getCursorCol()));
+      
+      cursorPositionCol = getCursorCol();
+      cursorPositionRow = getCursorRow();
+
+      eventBus.fireEvent(new EditorCursorActivityEvent(editorId, cursorPositionRow, cursorPositionCol));
    }
 
    private void highlightLine(int lineNumber)
@@ -432,20 +440,17 @@ public class CodeMirror extends Editor
    }-*/;
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode) {      
-      int cursorRow = getCursorRow();
-
       // calculate cursorOffsetY
       int cursorOffsetY = getAbsoluteTop() + getCursorOffsetY(0);
 
       // calculate cursorOffsetX
-      int cursorCol = getCursorCol();
-      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + 11;   // 8px per symbol 
+      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + 11;   // 8px per symbol 
 
       if (this.showLineNumbers) {
          cursorOffsetX += this.lineNumberFieldWidth;
       }
       
-      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorRow, cursorCol);
+      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorPositionRow, cursorPositionCol);
       
       List<? extends Token> tokenList = getTokenList();
       
@@ -462,8 +467,8 @@ public class CodeMirror extends Editor
          cursorOffsetX,
          cursorOffsetY,
          lineContent,
-         cursorCol,
-         cursorRow,
+         cursorPositionCol,
+         cursorPositionRow,
          (List<Token>) tokenList,
          currentLineMimeType,
          tokenBeforeCursor
@@ -741,6 +746,8 @@ public class CodeMirror extends Editor
    @Override
    public void setFocus()
    {
+      goToPosition(cursorPositionRow, cursorPositionCol);
+      
       setFocus(editorObject);
    }
 

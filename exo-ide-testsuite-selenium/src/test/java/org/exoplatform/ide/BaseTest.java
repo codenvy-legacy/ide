@@ -67,9 +67,9 @@ import com.thoughtworks.selenium.Selenium;
 @RunWith(RCRunner.class)
 public abstract class BaseTest
 {
-   public static final String BASE_URL = IdeAddress.STANDALONE.getBaseUrl();
+   public static final String BASE_URL = IdeAddress.SHELL.getBaseUrl();
 
-   protected static final String APPLICATION_URL = IdeAddress.STANDALONE.getApplicationUrl();
+   protected static final String APPLICATION_URL = IdeAddress.SHELL.getApplicationUrl();
 
    public static final String REST_CONTEXT = "rest/private";
 
