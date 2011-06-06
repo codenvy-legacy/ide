@@ -258,10 +258,22 @@ public class Express
    {
       final String host = "rhcloud.com";
 
-      SshKey publicKey = keyProvider.getPublicKey(host);
-      if (publicKey == null)
+      SshKey publicKey = null;
+      if (alter)
+      {
+         // Update SSH keys.
+         keyProvider.removeKeys(host);
          keyProvider.genKeyPair(host, null, null);
-      publicKey = keyProvider.getPublicKey(host);
+      }
+      else
+      {
+         publicKey = keyProvider.getPublicKey(host);
+         if (publicKey == null)
+         {
+            keyProvider.genKeyPair(host, null, null);
+            publicKey = keyProvider.getPublicKey(host);
+         }
+      }
 
       FastStrWriter strWr = new FastStrWriter();
       JsonWriter jsonWriter = new JsonWriterImpl(strWr);
@@ -426,7 +438,7 @@ public class Express
                target = a;
          }
       }
-      
+
       if (target == null)
          throw new ExpressException(404, -1, "Application not found: " + app + "\n", "text/plain");
 
