@@ -160,10 +160,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
    @Override
-   public void init(String href, boolean bare, AsyncRequestCallback<String> callback)
+   public void init(String workDir, boolean bare, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + INIT;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       InitRequest initRequest = new InitRequest(workDir, bare);
@@ -179,10 +178,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String href, String remoteUri, String remoteName, AsyncRequestCallback<String> callback)
+   public void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + CLONE;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir);
       cloneRequest.setRemoteName(remoteName);
@@ -198,12 +196,11 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void statusText(String href, boolean shortFormat, String[] fileFilter,
+   public void statusText(String workDir, boolean shortFormat, String[] fileFilter,
       AsyncRequestCallback<StatusResponse> callback)
    {
       String url = restServiceContext + STATUS;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       StatusRequest statusRequest = new StatusRequest(fileFilter, shortFormat);
       StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
@@ -224,7 +221,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#getWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getWorkDir(String href, AsyncRequestCallback<WorkDirResponse> callback)
+   public void getWorkDir(String workDir, AsyncRequestCallback<WorkDirResponse> callback)
    {
       String url = restServiceContext + GET_WORKDIR;
       callback.setEventBus(eventBus);
@@ -234,17 +231,16 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(workDirResponse);
       callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, workDir).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.git.client.GitClientService#add(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void add(String href, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
+   public void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + ADD;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       AddRequest addRequest = new AddRequest(filePattern, update);
@@ -260,10 +256,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#commit(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void commit(String href, String message, boolean all, AsyncRequestCallback<Revision> callback)
+   public void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback)
    {
       String url = restServiceContext + COMMIT;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       CommitRequest commitRequest = new CommitRequest(message, all);
@@ -285,10 +280,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#push(java.lang.String, java.lang.String[], java.lang.String, boolean)
     */
    @Override
-   public void push(String href, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
+   public void push(String workDir, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + PUSH;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       PushRequest pushRequest = new PushRequest();
       pushRequest.setRemote(remote);
@@ -307,10 +301,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteList(java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void remoteList(String href, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback)
+   public void remoteList(String workDir, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback)
    {
       String url = restServiceContext + REMOTE_LIST;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       List<Remote> remotes = new ArrayList<Remote>();
@@ -331,10 +324,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchList(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void branchList(String href, boolean remote, AsyncRequestCallback<List<Branch>> callback)
+   public void branchList(String workDir, boolean remote, AsyncRequestCallback<List<Branch>> callback)
    {
       String url = restServiceContext + BRANCH_LIST;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       BranchListRequest branchListRequest = new BranchListRequest();
@@ -360,11 +352,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void status(String href, AsyncRequestCallback<StatusResponse> callback)
+   public void status(String workDir, AsyncRequestCallback<StatusResponse> callback)
    {
       String url = restServiceContext + STATUS;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       StatusRequest statusRequest = new StatusRequest(null, true);
       StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
@@ -385,11 +376,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchDelete(java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void branchDelete(String href, String name, boolean force, AsyncRequestCallback<String> callback)
+   public void branchDelete(String workDir, String name, boolean force, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + BRANCH_DELETE;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
       BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
@@ -404,11 +394,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchCreate(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void branchCreate(String href, String name, String startPoint, AsyncRequestCallback<Branch> callback)
+   public void branchCreate(String workDir, String name, String startPoint, AsyncRequestCallback<Branch> callback)
    {
       String url = restServiceContext + BRANCH_CREATE;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       BranchCreateRequest branchCreateRequest = new BranchCreateRequest(name, startPoint);
       BranchCreateRequestMarshaller marshaller = new BranchCreateRequestMarshaller(branchCreateRequest);
@@ -429,12 +418,11 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchCheckout(java.lang.String, java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void branchCheckout(String href, String name, String startPoint, boolean createNew,
+   public void branchCheckout(String workDir, String name, String startPoint, boolean createNew,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + BRANCH_CHECKOUT;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
       BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
@@ -449,11 +437,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remove(java.lang.String, java.lang.String[], org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remove(String href, String[] files, AsyncRequestCallback<String> callback)
+   public void remove(String workDir, String[] files, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOVE;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       RmRequest rmRequest = new RmRequest(files);
       RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
@@ -468,12 +455,11 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#reset(java.lang.String, java.lang.String[], java.lang.String, org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void reset(String href, String[] paths, String commit, ResetType resetType,
+   public void reset(String workDir, String[] paths, String commit, ResetType resetType,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + RESET;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       ResetRequest resetRequest = new ResetRequest();
       resetRequest.setPaths(paths);
@@ -492,11 +478,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#log(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void log(String href, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
+   public void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
    {
       String url = restServiceContext + LOG;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       LogRequest logRequest = new LogRequest();
       LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
@@ -526,11 +511,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteAdd(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remoteAdd(String href, String name, String repositoryURL, AsyncRequestCallback<String> callback)
+   public void remoteAdd(String workDir, String name, String repositoryURL, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOTE_ADD;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
       RemoteAddRequest remoteAddRequest = new RemoteAddRequest(name, repositoryURL);
 
@@ -546,11 +530,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteDelete(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remoteDelete(String href, String name, AsyncRequestCallback<String> callback)
+   public void remoteDelete(String workDir, String name, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOTE_DELETE + "/" + name;
 
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       String params = "workdir=" + workDir;
@@ -562,11 +545,10 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#fetch(java.lang.String, java.lang.String, java.lang.String[], boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void fetch(String href, String remote, String[] refspec, boolean removeDeletedRefs,
+   public void fetch(String workDir, String remote, String[] refspec, boolean removeDeletedRefs,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + FETCH;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
@@ -582,10 +564,9 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#pull(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void pull(String href, String refSpec, String remote, AsyncRequestCallback<String> callback)
+   public void pull(String workDir, String refSpec, String remote, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + PULL;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
@@ -626,10 +607,9 @@ public class GitClientServiceImpl extends GitClientService
     * @param href working directory's href
     * @param callback callback
     */
-   protected void diff(DiffRequest diffRequest, String href, AsyncRequestCallback<DiffResponse> callback)
+   protected void diff(DiffRequest diffRequest, String workDir, AsyncRequestCallback<DiffResponse> callback)
    {
       String url = restServiceContext + DIFF;
-      String workDir = GitClientUtil.getWorkingDirFromHref(href, restServiceContext);
       callback.setEventBus(eventBus);
 
       DiffRequestMarshaller marshaller = new DiffRequestMarshaller(diffRequest);
