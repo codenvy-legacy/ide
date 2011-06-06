@@ -192,7 +192,7 @@ public class PerspectiveImpl extends Layer implements Perspective
          {
             layoutLayer.restore();
 
-            viewsLayer.add(viewWidget, 100, 100);
+            viewsLayer.add(viewWidget, -10000, -10000);
 
             panel.addView(view);
 
