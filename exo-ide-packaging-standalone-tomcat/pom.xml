@@ -312,7 +312,7 @@
                         <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
-                              <exclude name="**/conf/exo-jcr-config-mysql.xml" />
+                              <exclude name="**/conf/*-mysql.xml" />
                            </fileset>
                         </copy>
                         <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
@@ -412,6 +412,8 @@
                            <tasks>
                               <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
                                  overwrite="true" />
+                               <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
+                                 overwrite="true" />  
                            </tasks>
                         </configuration>
                         <goals>
