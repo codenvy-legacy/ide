@@ -73,6 +73,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -103,10 +104,10 @@ public class GitService
    @Path("add")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void add(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, AddRequest request)
-      throws GitException
+   public void add(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      AddRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.add(request);
@@ -120,10 +121,10 @@ public class GitService
    @Path("branch-checkout")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void branchCheckout(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      BranchCheckoutRequest request) throws GitException
+   public void branchCheckout(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, BranchCheckoutRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.branchCheckout(request);
@@ -138,10 +139,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Branch branchCreate(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      BranchCreateRequest request) throws GitException
+   public Branch branchCreate(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, BranchCreateRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.branchCreate(request);
@@ -155,10 +156,10 @@ public class GitService
    @Path("branch-delete")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void branchDelete(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      BranchDeleteRequest request) throws GitException
+   public void branchDelete(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, BranchDeleteRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.branchDelete(request);
@@ -173,10 +174,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Branch> branchList(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      BranchListRequest request) throws GitException
+   public List<Branch> branchList(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, BranchListRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.branchList(request);
@@ -190,10 +191,10 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, CloneRequest request)
-      throws URISyntaxException, GitException
+   public void clone(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      CloneRequest request) throws URISyntaxException, GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.clone(request);
@@ -208,10 +209,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Revision commit(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, CommitRequest request)
-      throws GitException
+   public Revision commit(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, CommitRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.commit(request);
@@ -226,10 +227,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput diff(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, DiffRequest request)
-      throws GitException
+   public StreamingOutput diff(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, DiffRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          InfoPage diffPage = gitConnection.diff(request);
@@ -244,10 +245,10 @@ public class GitService
    @Path("fetch")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void fetch(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, FetchRequest request)
-      throws GitException
+   public void fetch(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      FetchRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.fetch(request);
@@ -261,10 +262,10 @@ public class GitService
    @Path("init")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void init(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, InitRequest request)
-      throws GitException
+   public void init(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      InitRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.init(request);
@@ -279,10 +280,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput log(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
-      throws GitException
+   public StreamingOutput log(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, LogRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          InfoPage logPage = gitConnection.log(request);
@@ -298,10 +299,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Log jsonLog(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, LogRequest request)
-      throws GitException
+   public Log jsonLog(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      LogRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.log(request);
@@ -316,10 +317,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public MergeResult merge(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, MergeRequest request)
-      throws GitException
+   public MergeResult merge(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, MergeRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.merge(request);
@@ -333,10 +334,10 @@ public class GitService
    @Path("mv")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void mv(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, MoveRequest request)
-      throws GitException
+   public void mv(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      MoveRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.mv(request);
@@ -350,10 +351,10 @@ public class GitService
    @Path("pull")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void pull(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, PullRequest request)
-      throws GitException
+   public void pull(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      PullRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.pull(request);
@@ -367,10 +368,10 @@ public class GitService
    @Path("push")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void push(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, PushRequest request)
-      throws GitException
+   public void push(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      PushRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.push(request);
@@ -384,10 +385,10 @@ public class GitService
    @Path("remote-add")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void remoteAdd(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, RemoteAddRequest request)
-      throws GitException
+   public void remoteAdd(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, RemoteAddRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.remoteAdd(request);
@@ -400,10 +401,10 @@ public class GitService
 
    @Path("remote-delete/{name}")
    @POST
-   public void remoteDelete(@QueryParam("workdir") String workDir, @PathParam("name") String name,
-      @Context SecurityContext sctx) throws GitException
+   public void remoteDelete(@QueryParam("workDir") String workDir, @PathParam("name") String name,
+      @Context SecurityContext sctx, @Context UriInfo uriInfo) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.remoteDelete(name);
@@ -418,10 +419,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Remote> remoteList(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      RemoteListRequest request) throws GitException
+   public List<Remote> remoteList(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, RemoteListRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.remoteList(request);
@@ -435,10 +436,10 @@ public class GitService
    @Path("remote-update")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void remoteUpdate(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      RemoteUpdateRequest request) throws GitException
+   public void remoteUpdate(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, RemoteUpdateRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.remoteUpdate(request);
@@ -452,10 +453,10 @@ public class GitService
    @Path("reset")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void reset(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, ResetRequest request)
-      throws GitException
+   public void reset(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      ResetRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.reset(request);
@@ -469,10 +470,10 @@ public class GitService
    @Path("rm")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void rm(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, RmRequest request)
-      throws GitException
+   public void rm(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      RmRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.rm(request);
@@ -487,10 +488,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput status(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      StatusRequest request) throws GitException
+   public StreamingOutput status(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, StatusRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          StatusPage statusPage = gitConnection.status(request);
@@ -506,10 +507,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Status jsonStatus(@QueryParam("workdir") String workDir, @Context SecurityContext sctx,
-      StatusRequest request) throws GitException
+   public Status jsonStatus(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, StatusRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.status(request);
@@ -524,10 +525,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Tag tagCreate(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, TagCreateRequest request)
-      throws GitException
+   public Tag tagCreate(@QueryParam("workDir") String workDir, @Context SecurityContext sctx, @Context UriInfo uriInfo,
+      TagCreateRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.tagCreate(request);
@@ -541,10 +542,10 @@ public class GitService
    @Path("tag-delete")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void tagDelete(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, TagDeleteRequest request)
-      throws GitException
+   public void tagDelete(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, TagDeleteRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          gitConnection.tagDelete(request);
@@ -559,10 +560,10 @@ public class GitService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public List<Tag> tagList(@QueryParam("workdir") String workDir, @Context SecurityContext sctx, TagListRequest request)
-      throws GitException
+   public List<Tag> tagList(@QueryParam("workDir") String workDir, @Context SecurityContext sctx,
+      @Context UriInfo uriInfo, TagListRequest request) throws GitException
    {
-      GitConnection gitConnection = getGitConnection(workDir, sctx);
+      GitConnection gitConnection = getGitConnection(determineLocalDir(uriInfo, workDir), sctx);
       try
       {
          return gitConnection.tagList(request);
@@ -571,6 +572,25 @@ public class GitService
       {
          gitConnection.close();
       }
+   }
+
+   /**
+    * Determine local directory where git repository located.
+    * 
+    * @param uriInfo UriInfo
+    * @param url full URL of working directory in IDE notation.
+    */
+   protected String determineLocalDir(UriInfo uriInfo, String url)
+   {
+      String baseUrl = uriInfo.getBaseUri().toString();
+      baseUrl += "/jcr/";
+      String localDir = System.getProperty("org.exoplatform.ide.git.repo-dir");
+      if (localDir == null)
+         throw new IllegalStateException("Directory for git repositories is not specified. ");
+      if (!localDir.endsWith("/"))
+         localDir += "/"; // unix like path only!
+      localDir += url.substring(baseUrl.length());
+      return localDir;
    }
 
    protected GitConnection getGitConnection(String workDir, SecurityContext sctx) throws GitException
