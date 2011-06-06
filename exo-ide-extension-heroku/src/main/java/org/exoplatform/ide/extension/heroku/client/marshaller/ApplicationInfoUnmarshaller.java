@@ -26,7 +26,7 @@ import com.google.gwt.http.client.Response;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.git.client.marshaller.JSONUmarshaller;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Unmarshaller for application information from JSON format.
@@ -40,14 +40,14 @@ public class ApplicationInfoUnmarshaller extends JSONUmarshaller
    /**
     * Application's information.
     */
-   private HashMap<String, String> applicationInfo;
+   private List<Property> properties;
 
    /**
     * @param applicationInfo application's information
     */
-   public ApplicationInfoUnmarshaller(HashMap<String, String> applicationInfo)
+   public ApplicationInfoUnmarshaller(List<Property> properties)
    {
-      this.applicationInfo = applicationInfo;
+      this.properties = properties;
    }
 
    /**
@@ -67,7 +67,8 @@ public class ApplicationInfoUnmarshaller extends JSONUmarshaller
       {
          if (jsonObject.get(key).isString() != null)
          {
-            applicationInfo.put(key, jsonObject.get(key).isString().stringValue());
+            String value = jsonObject.get(key).isString().stringValue();
+            properties.add(new Property(key, value));
          }
       }
    }

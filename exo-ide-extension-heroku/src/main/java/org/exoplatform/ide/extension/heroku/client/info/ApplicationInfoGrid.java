@@ -26,6 +26,8 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
 /**
  * Grid for displaying application information.
@@ -38,9 +40,9 @@ public class ApplicationInfoGrid extends ListGrid<Property>
 {
    private final String ID = "ideApplicationInfoGrid";
    
-   private final String NAME = "Property";
+   private final String NAME = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
    
-   private final String VALUE = "Value";
+   private final String VALUE = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
    
    public ApplicationInfoGrid()
    {

@@ -29,9 +29,12 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.heroku.client.marshaller.ApplicationInfoUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
 import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Implementation of {@link HerokuClientService} service.
@@ -116,9 +119,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
       params += "&workDir=" + workDir;
 
-      HashMap<String, String> applicationInfo = new HashMap<String, String>();
-      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
-      callback.setResult(applicationInfo);
+      List<Property> properties = new ArrayList<Property>();
+      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
+      callback.setResult(properties);
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
@@ -183,9 +186,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
 
-      HashMap<String, String> applicationInfo = new HashMap<String, String>();
-      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
-      callback.setResult(applicationInfo);
+      List<Property> properties = new ArrayList<Property>();
+      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
+      callback.setResult(properties);
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
@@ -210,9 +213,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
       params = (newName != null) ? "newname=" + newName + "&" : "";
       params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
 
-      HashMap<String, String> applicationInfo = new HashMap<String, String>();
-      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(applicationInfo);
-      callback.setResult(applicationInfo);
+      List<Property> properties = new ArrayList<Property>();
+      ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
+      callback.setResult(properties);
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)

@@ -44,11 +44,11 @@ import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -124,6 +124,8 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
     * Heroku application's name.
     */
    private String applicationName;
+   
+   private static final String NAME_PROPERTY = "name";
 
    /**
     * @param eventBus events handler
@@ -260,9 +262,16 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
-            protected void onSuccess(HashMap<String, String> result)
+            protected void onSuccess(List<Property> result)
             {
-               applicationName = result.get("name");
+               for (Property property : result)
+               {
+                  if (NAME_PROPERTY.equals(property.getName()))
+                  {
+                     applicationName = property.getValue();
+                     break;
+                  }
+               }
                if (display == null)
                {
                   display = GWT.create(Display.class);
@@ -300,7 +309,7 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
          {
 
             @Override
-            protected void onSuccess(HashMap<String, String> result)
+            protected void onSuccess(List<Property> result)
             {
                String message =
                   "Application \"" + applicationName + "\" is successfully renamed to \"" + newName + "\".";

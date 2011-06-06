@@ -26,11 +26,12 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
-import org.exoplatform.ide.extension.heroku.client.Messages;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Presenter for actions with keys (add, clear).
@@ -80,9 +81,9 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
       HerokuClientService.getInstance().addKey(new HerokuAsyncRequestCallback(eventBus, this)
       {
          @Override
-         protected void onSuccess(HashMap<String, String> result)
+         protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.ADD_KEYS_SUCCESS, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.addKeysSuccess(), Type.INFO));
          }
       });
    }
@@ -117,9 +118,9 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
       HerokuClientService.getInstance().clearKeys(new HerokuAsyncRequestCallback(eventBus, this)
       {
          @Override
-         protected void onSuccess(HashMap<String, String> result)
+         protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.CLEAR_KEYS_SUCCESS, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysSuccess(), Type.INFO));
          }
       });
    }

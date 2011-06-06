@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent;
 
 /**
@@ -37,17 +38,17 @@ public class DeleteApplicationControl extends SimpleControl implements IDEContro
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku/Delete application...";
+   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Delete application...";
+   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Delete application on Heroku...";
+   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
    
    
    /**

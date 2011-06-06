@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
 
 /**
@@ -37,17 +38,17 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku/Create application...";
+   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlId();
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Create application...";
+   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle();
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Create application on Heroku...";
+   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlPrompt();
    
    public CreateApplicationControl()
    {

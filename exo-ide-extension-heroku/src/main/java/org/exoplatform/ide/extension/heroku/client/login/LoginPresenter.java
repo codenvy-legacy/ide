@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * Presenter for login view.
@@ -189,11 +190,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onSuccess(String result)
          {
             IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new OutputEvent(org.exoplatform.ide.extension.heroku.client.Messages.LOGIN_SUCCESS,
-               Type.INFO));
+            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
             eventBus.fireEvent(new LoggedInEvent(false));
          }
-         
+
          /**
           * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
           */

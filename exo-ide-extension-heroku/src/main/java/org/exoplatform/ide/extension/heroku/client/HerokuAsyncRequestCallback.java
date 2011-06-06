@@ -25,8 +25,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Asynchronous Heroku request.
@@ -37,7 +38,7 @@ import java.util.HashMap;
  * @version $Id:  May 27, 2011 12:17:17 PM anya $
  *
  */
-public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<HashMap<String, String>>
+public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<List<Property>>
 {
    /**
     * Events handler.

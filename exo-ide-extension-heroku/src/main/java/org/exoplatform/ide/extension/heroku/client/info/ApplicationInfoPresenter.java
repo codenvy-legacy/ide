@@ -39,6 +39,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
@@ -62,12 +63,12 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    /**
     * Properties order to be displayed.
     */
-   private List<String> order;
+   private static List<String> order;
 
    /**
     * Set the properties order.
     */
-   private void initPropertiesOrder()
+   static
    {
       order = new ArrayList<String>();
 
@@ -137,7 +138,6 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    public ApplicationInfoPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      initPropertiesOrder();
       
       eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -222,7 +222,7 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
          {
 
             @Override
-            protected void onSuccess(HashMap<String, String> result)
+            protected void onSuccess(List<Property> result)
             {
                if (display == null)
                {
@@ -231,14 +231,8 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
                   IDE.getInstance().openView(display.asView());
                }
 
-               List<Property> properties = new ArrayList<Property>();
-               for (String key : result.keySet())
-               {
-                 String name = (key.length() > 1) ? (key.substring(0, 1).toUpperCase() + key.substring(1)) : key.toUpperCase();
-                  properties.add(new Property(name, result.get(key)));
-               }
-               Collections.sort(properties, new PropertiesComparator());
-               display.getApplicationInfoGrid().setValue(properties);
+               Collections.sort(result, new PropertiesComparator());
+               display.getApplicationInfoGrid().setValue(result);
             }
          });
    }

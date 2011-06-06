@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for creation new application on Heroku.
@@ -30,7 +31,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final String TYPE = "modal";
 
-   private static final String TITLE = "Create application on Heroku";
+   private static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle();
 
    private static final String CREATE_BUTTON_ID = "ideCreateApplicationViewCreateButton";
 

@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
 
 /**
@@ -37,17 +38,17 @@ public class AddKeyControl extends SimpleControl implements IDEControl
    /**
     * Control ID.
     */
-   public static final String ID = "PaaS/Heroku/Deploy public key";
+   public static final String ID = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlId();
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "Deploy public key...";
+   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlTitle();
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Deploy public key on Heroku...";
+   public static final String PROMPT = HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt();
    
    public AddKeyControl()
    {

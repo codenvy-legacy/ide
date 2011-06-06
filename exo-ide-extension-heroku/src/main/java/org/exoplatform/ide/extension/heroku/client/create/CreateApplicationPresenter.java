@@ -40,11 +40,11 @@ import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -242,7 +242,7 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
          {
 
             @Override
-            protected void onSuccess(HashMap<String, String> result)
+            protected void onSuccess(List<Property> result)
             {
                IDE.getInstance().closeView(display.asView().getId());
                eventBus.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
@@ -265,16 +265,16 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
     * @param properties application's properties
     * @return {@link String}
     */
-   public String formApplicationCreatedMessage(HashMap<String, String> properties)
+   public String formApplicationCreatedMessage(List<Property> properties)
    {
       if (properties == null)
       {
          return "Application is successfully created.";
       }
       String message = "Application <br> [";
-      for (String key : properties.keySet())
+      for (Property property : properties)
       {
-         message += "<b>" + key + "</b>" + " : " + properties.get(key) + "<br>";
+         message += "<b>" + property.getName() + "</b>" + " : " + property.getValue() + "<br>";
       }
       message += "] ";
       message += "is successfully created.";

@@ -30,8 +30,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
+import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
@@ -140,9 +143,17 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
-            protected void onSuccess(HashMap<String, String> result)
+            protected void onSuccess(List<Property> result)
             {
-               String name = result.get(NAME_PROPERTY);
+               String name = null;
+               for (Property property : result)
+               {
+                  if (NAME_PROPERTY.equals(property.getName()))
+                  {
+                     name = property.getValue();
+                     break;
+                  }
+               }
                askForDelete(name);
             }
          });
@@ -155,13 +166,14 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     */
    protected void askForDelete(final String deleteName)
    {
-      final boolean isName = (deleteName != null); 
+      final boolean isName = (deleteName != null);
       String deletion = (isName) ? deleteName : workDir;
-      
-         Dialogs.getInstance().ask("Delete application from Heroku",
-         "Are you sure you want to delete application " + "<b>" + deletion + "</b>" + " from Heroku?", new BooleanValueReceivedHandler()
+
+      Dialogs.getInstance().ask("Delete application from Heroku",
+         "Are you sure you want to delete application " + "<b>" + deletion + "</b>" + " from Heroku?",
+         new BooleanValueReceivedHandler()
          {
-            
+
             @Override
             public void booleanValueReceived(Boolean value)
             {
@@ -182,10 +194,10 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
       HerokuClientService.getInstance().deleteApplication(workDir, null, new HerokuAsyncRequestCallback(eventBus, this)
       {
          @Override
-         protected void onSuccess(HashMap<String, String> result)
+         protected void onSuccess(List<Property> result)
          {
-            eventBus.fireEvent(new OutputEvent(
-               org.exoplatform.ide.extension.heroku.client.Messages.DESTROY_APPLICATION_SUCCESS, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(),
+               Type.INFO));
          }
       });
    }

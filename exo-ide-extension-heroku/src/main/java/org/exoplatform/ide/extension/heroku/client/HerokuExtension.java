@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -51,6 +52,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
     * Events handler.
     */
    private HandlerManager eventBus;
+   
+   public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
