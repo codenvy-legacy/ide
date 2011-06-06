@@ -1208,7 +1208,7 @@ public class PhpParser extends CodeMirrorParserImpl
       return isKeyword(node) && "function".equals(node.getContent());
    }
 
-   private boolean isKeyword(Node node)
+   private static boolean isKeyword(Node node)
    {
       return (node.getType() != null) && (node.getType().startsWith("php-keyword"));
    }
@@ -1299,7 +1299,7 @@ public class PhpParser extends CodeMirrorParserImpl
     */
    private boolean isEqualSign(Node node)
    {
-      return "php-operator".equals(node.getType()) && "=".equals(node.getContent());
+      return (node.getType() != null) && node.getType().startsWith("php-operator") && "=".equals(node.getContent());
    }
  
    /**
@@ -1392,5 +1392,15 @@ public class PhpParser extends CodeMirrorParserImpl
    public static boolean isStaticCallingOperator(Node node)
    {
       return node.getType().startsWith("php-operator") && staticCallingOperator.equals(node.getContent());
+   }
+
+   /**
+    * Recognize "$this" keyword
+    * @param node
+    * @return
+    */   
+   public static boolean isThisKeyword(Node node)
+   {
+      return isKeyword(node) && "$this".equals(node.getContent());
    }
 }
