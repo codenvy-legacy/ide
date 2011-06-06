@@ -153,7 +153,7 @@ public class Express
    private String workspace;
    private String expressConfig = "/";
 
-   private final boolean debug = true;
+   private final boolean debug = false;
 
    public Express(RepositoryService repositoryService, SshKeyProvider keyProvider, InitParams initParams)
    {
@@ -206,9 +206,6 @@ public class Express
          throw new RuntimeException(jsone.getMessage(), jsone);
       }
 
-      final String encJsonData = URLEncoder.encode(strWr.toString(), "utf-8");
-      final String encPassword = URLEncoder.encode(password, "utf-8");
-
       URL url = new URL(EXPRESS_API + "/userinfo");
       HttpURLConnection http = (HttpURLConnection)url.openConnection();
       try
@@ -217,19 +214,7 @@ public class Express
          http.setRequestMethod("POST");
          http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-         OutputStream output = http.getOutputStream();
-         try
-         {
-            output.write("json_data=".getBytes());
-            output.write(encJsonData.getBytes());
-            output.write('&');
-            output.write("password=".getBytes());
-            output.write(encPassword.getBytes());
-         }
-         finally
-         {
-            output.close();
-         }
+         writeFormData(http, strWr.toString(), password);
 
          int status = http.getResponseCode();
          if (status != 200)
