@@ -31,14 +31,13 @@ import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabEvent;
 import org.exoplatform.gwtframework.ui.client.tab.event.CloseTabHandler;
 import org.exoplatform.gwtframework.ui.client.wrapper.Wrapper;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
@@ -50,12 +49,12 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasChangeViewTitleHand
 import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
-import org.exoplatform.ide.client.ui.impl.layout.ViewsLayer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -69,7 +68,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, RequiresResize, SetViewVisibleHandler
+public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, RequiresResize, SetViewVisibleHandler,
+   HasClosingViewHandler, HasMaximizePanelHandler, HasRestorePanelHandler, HasShowPanelHandler, HasHidePanelHandler,
+   HasViewVisibilityChangedHandler
 {
 
    /**
@@ -93,11 +94,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    private LinkedHashMap<String, View> views = new LinkedHashMap<String, View>();
 
    /**
-    * Each View wrapped in special wrapper
-    */
-   private LinkedHashMap<String, Widget> viewWrappers = new LinkedHashMap<String, Widget>();
-
-   /**
     * 
     */
    private LinkedHashMap<String, ViewController> viewControllers =
@@ -109,48 +105,49 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    private String selectedViewId;
 
    /**
-    * 
+    * List of types of views, which can be opened by this panel.
     */
    private List<String> acceptableTypes = new ArrayList<String>();
 
    /**
-    * 
+    * TabPanel for placing views in the tabs.
     */
    private TabPanel tabPanel;
 
    /**
-    * 
+    * List of handlers for notify that we have to show this panel.
     */
-   private ShowPanelHandler showPanelHandler;
-
-   private HidePanelHandler hidePanelHandler;
-
-   private MaximizePanelHandler maximizePanelHandler;
-
-   private RestorePanelHandler restorePanelHandler;
-
-   private ViewVisibilityChangedHandler viewVisibilityChangedHandler;
-
-   private ViewOpenedHandler viewOpenedHandler;
-
-   private ViewClosedHandler viewClosedHandler;
-
-   private ClosingViewHandler closingViewHandler;
+   private List<ShowPanelHandler> showPanelHandlers = new ArrayList<ShowPanelHandler>();
 
    /**
-    * Layer for storing all opened views.
+    * List of handlers for notify that we have to hide this panel.
     */
-   private ViewsLayer viewsLayer;
+   private List<HidePanelHandler> hidePanelHandlers = new ArrayList<HidePanelHandler>();
+
+   /**
+    * List of handlers for notify that we have to maximize this panel.
+    */
+   private List<MaximizePanelHandler> maximizePanelHandlers = new ArrayList<MaximizePanelHandler>();
+
+   /**
+    * List of handlers for notify that we have to restore maxinized panel.
+    */
+   private List<RestorePanelHandler> restorePanelHandlers = new ArrayList<RestorePanelHandler>();
+
+   private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
+      new ArrayList<ViewVisibilityChangedHandler>();
+
+   private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
 
    /**
     * Maximize button
     */
-   private TabButton maximizePanelControl;
+   private TabButton maximizePanelButton;
 
    /**
     * Restore button
     */
-   private TabButton restorePanelControl;
+   private TabButton restorePanelButton;
 
    /**
     * Image for Maximize button
@@ -162,19 +159,21 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
     */
    private Image restoreImage = new Image(IDEImageBundle.INSTANCE.restore());
 
-   private boolean panelMaximized = false;
+   private boolean maximized = false;
 
-   public PanelImpl(String panelId, ViewsLayer viewsLayer)
+   public PanelImpl(String panelId)
    {
       this.panelId = panelId;
-      this.viewsLayer = viewsLayer;
+      //      this.viewsLayer = viewsLayer;
 
+      createMaxinizeRestorePanelButtons();
+      
       /*
        * For selenium tests
        */
       getElement().setAttribute("panel-id", panelId);
       getElement().setAttribute("is-panel", "true");
-      setPanelMaximized(false);
+      setMaximized(false);
 
       setWidth("100px");
       setHeight("100px");
@@ -192,57 +191,49 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       tabPanel.addSelectionHandler(tabSelectionHandler);
       tabPanel.addCloseTabHandler(closeTabHandler);
 
-      maximizePanelControl = new TabButton(panelId + "-maximize", maximizeImage, maximizeImage);
-      maximizePanelControl.addClickHandler(new ClickHandler()
+      tabPanel.addTabButton(maximizePanelButton);
+      tabPanel.addTabButton(restorePanelButton);
+   }
+   
+   private void createMaxinizeRestorePanelButtons() {
+      maximizePanelButton = new TabButton(panelId + "-maximize", maximizeImage, maximizeImage);
+      maximizePanelButton.addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            doMaximize();
+            maximize();
          }
       });
 
-      restorePanelControl = new TabButton(panelId + "-restore", restoreImage, restoreImage);
-      restorePanelControl.setVisible(false);
-      restorePanelControl.addClickHandler(new ClickHandler()
+      restorePanelButton = new TabButton(panelId + "-restore", restoreImage, restoreImage);
+      restorePanelButton.setVisible(false);
+      restorePanelButton.addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            doRestore();
+            restore();
          }
-      });
-
-      tabPanel.addTabButton(maximizePanelControl);
-      tabPanel.addTabButton(restorePanelControl);
+      });      
    }
 
-   public String getSelectedViewId()
-   {
-      return selectedViewId;
-   }
-
-   public void setSelectedViewId(String selectedViewId)
-   {
-      this.selectedViewId = selectedViewId;
-   }
-
-   protected void doMaximize()
+   public void maximize()
    {
       MaximizePanelEvent maximizePanelEvent = new MaximizePanelEvent(this);
-      maximizePanelHandler.onMaximizePanel(maximizePanelEvent);
-
-      maximizePanelControl.setVisible(false);
-      restorePanelControl.setVisible(true);
+      for (MaximizePanelHandler maximizePanelHandler : maximizePanelHandlers)
+      {
+         maximizePanelHandler.onMaximizePanel(maximizePanelEvent);
+      }
    }
 
-   protected void doRestore()
+   public void restore()
    {
       RestorePanelEvent restorePanelEvent = new RestorePanelEvent(this);
-      restorePanelHandler.onRestorePanel(restorePanelEvent);
-
-      restorePanelControl.setVisible(false);
-      maximizePanelControl.setVisible(true);
+      for (RestorePanelHandler restorePanelHandler : restorePanelHandlers)
+      {
+         restorePanelHandler.onRestorePanel(restorePanelEvent);
+      }
    }
 
    private SelectionHandler<Integer> tabSelectionHandler = new SelectionHandler<Integer>()
@@ -252,28 +243,35 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       {
          int selectedTabIndex = event.getSelectedItem();
          String viewId = tabPanel.getTabIdByIndex(selectedTabIndex);
-         
-         if (viewId.equals(selectedViewId)) {
+
+         if (viewId.equals(selectedViewId))
+         {
             View view = views.get(selectedViewId);
-            if (!view.isActive()) {
+            if (!view.isActive())
+            {
                view.activate();
             }
-            
+
             return;
          }
 
-         if (selectedViewId != null && !viewId.equals(selectedViewId)) {
+         if (selectedViewId != null && !viewId.equals(selectedViewId))
+         {
             setViewVisible(selectedViewId, false);
-            fireVisibilityChangedEvent(selectedViewId);            
+            fireVisibilityChangedEvent(selectedViewId);
          }
-         
+
          selectedViewId = viewId;
          setViewVisible(selectedViewId, true);
-         resizeView(selectedViewId);
+
+         ViewController controller = viewControllers.get(viewId);
+         controller.onResize();
+
          fireVisibilityChangedEvent(selectedViewId);
-         
+
          View view = views.get(selectedViewId);
-         if (!view.isActive()) {
+         if (!view.isActive())
+         {
             view.activate();
          }
       }
@@ -288,24 +286,8 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    private void setViewVisible(String viewId, boolean isVisible)
    {
       View currentView = views.get(viewId);
-      if (currentView instanceof Widget)
-      {
-         ((Widget)currentView).setVisible(isVisible);
-      }
-
-      Widget currentViewWrapper = viewWrappers.get(viewId);
-      currentViewWrapper.setVisible(isVisible);
-   }
-
-   /**
-    * Resize View and ViewController
-    * 
-    * @param viewId
-    */
-   private void resizeView(String viewId)
-   {
-      ViewController selectedViewController = viewControllers.get(viewId);
-      selectedViewController.onResize();
+      Widget viewWidget = (Widget)currentView;
+      viewWidget.setVisible(isVisible);
    }
 
    /**
@@ -315,61 +297,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    {
       View view = views.get(viewId);
 
-      if (viewVisibilityChangedHandler != null)
+      ViewVisibilityChangedEvent event = new ViewVisibilityChangedEvent(view);
+      for (ViewVisibilityChangedHandler viewVisibilityChangedHandler : viewVisibilityChangedHandlers)
       {
-         ViewVisibilityChangedEvent event = new ViewVisibilityChangedEvent(view);
          viewVisibilityChangedHandler.onViewVisibilityChanged(event);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.Panel#closeView(java.lang.String)
-    */
-   public void closeView(String viewId)
-   {
-      tabPanel.removeTab(viewId);
-      doCloseView(viewId);
-   }
-
-   /**
-    * Closes view with specified id
-    * 
-    * @param viewId id of the view to be closed 
-    */
-   protected void doCloseView(String viewId)
-   {
-      if (viewId.equals(selectedViewId))
-      {
-         selectedViewId = null;
-      }
-
-      View view = views.get(viewId);
-      if (view instanceof Widget)
-      {
-         ((Widget)view).removeFromParent();
-      }
-
-      views.remove(viewId);
-
-      Widget viewWrapper = viewWrappers.get(viewId);
-      viewWrapper.removeFromParent();
-      viewWrappers.remove(viewId);
-
-      viewControllers.remove(viewId);
-
-      if (viewClosedHandler != null)
-      {
-         ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
-         viewClosedHandler.onViewClosed(viewClosedEvent);
-      }
-
-      if (views.size() == 0 && hidePanelHandler != null)
-      {
-         HidePanelEvent hidePanelEvent = new HidePanelEvent(panelId);
-         hidePanelHandler.onHidePanel(hidePanelEvent);
-      }
-
-      updateViewTabIndex();
    }
 
    /**
@@ -381,14 +313,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       int tabs = tabPanel.getTabBar().getTabCount();
       for (int i = 0; i < tabs; i++)
       {
-         String viewId = tabPanel.getTabIdByIndex(i);
-
-         View view = views.get(viewId);
-         if (view == null)
-         {
-            continue;
-         }
-
+         View view = views.get(tabPanel.getTabIdByIndex(i));
          Widget viewWidget = (Widget)view;
          DOM.setElementAttribute(viewWidget.getElement(), "tab-index", "" + i);
       }
@@ -399,30 +324,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       @Override
       public void onCloseTab(CloseTabEvent event)
       {
-         String viewId = event.getTabId();
-         View view = views.get(viewId);
+         event.cancelClosing();
 
-         try
+         View view = views.get(event.getTabId());
+         ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
+         for (ClosingViewHandler closingViewHandler : closingViewHandlers)
          {
-
-            if (closingViewHandler != null)
-            {
-               ClosingViewEvent closingViewEvent = new ClosingViewEvent(view);
-               closingViewHandler.onClosingView(closingViewEvent);
-               if (closingViewEvent.isClosingCanceled())
-               {
-                  event.cancelClosing();
-                  return;
-               }
-            }
-
+            closingViewHandler.onClosingView(closingViewEvent);
          }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
-
-         doCloseView(viewId);
       }
    };
 
@@ -487,23 +396,29 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       @Override
       public void onResize()
       {
-         int left = getAbsoluteLeft();
-         int top = getAbsoluteTop();
-         int width = getOffsetWidth();
-         int height = getOffsetHeight();
+         try {
+            int left = getAbsoluteLeft();
+            int top = getAbsoluteTop();
+            int width = getOffsetWidth();
+            int height = getOffsetHeight();
 
-         DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
-         DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
-
-         if (widget instanceof Resizeable)
-         {
-            ((Resizeable)widget).resize(width, height);
-         }
-         else
-         {
+            DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
+            DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
             DOM.setStyleAttribute(widget.getElement(), "width", "" + width + "px");
             DOM.setStyleAttribute(widget.getElement(), "height", "" + height + "px");
-         }
+            
+            if (width == 0 || height == 0) {
+               return;
+            }
+
+            if (widget instanceof Resizeable)
+            {
+               ((Resizeable)widget).resize(width, height);
+            }
+            
+         } catch (Exception e) {
+            e.printStackTrace();
+         }         
       }
 
       public void repositionOnly()
@@ -516,84 +431,42 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
 
    }
 
-   public void setShowPanelHandler(ShowPanelHandler showPanelHandler)
-   {
-      this.showPanelHandler = showPanelHandler;
-   }
-
-   public void setHidePanelHandler(HidePanelHandler hidePanelHandler)
-   {
-      this.hidePanelHandler = hidePanelHandler;
-   }
-
-   public void setMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler)
-   {
-      this.maximizePanelHandler = maximizePanelHandler;
-   }
-
-   public void setRestorePanelHandler(RestorePanelHandler restorePanelHandler)
-   {
-      this.restorePanelHandler = restorePanelHandler;
-   }
-
-   public void setViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   {
-      this.viewOpenedHandler = viewOpenedHandler;
-   }
-
-   public void setViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   {
-      this.viewClosedHandler = viewClosedHandler;
-   }
-
-   public void setViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
-   {
-      this.viewVisibilityChangedHandler = viewVisibilityChangedHandler;
-   }
-
-   public void setClosingViewHandler(ClosingViewHandler closingViewHandler)
-   {
-      this.closingViewHandler = closingViewHandler;
-   }
-
    public void onSetViewVisible(SetViewVisibleEvent event)
    {
-      if (event.getViewId().equals(selectedViewId)) {
+      if (event.getViewId().equals(selectedViewId))
+      {
          return;
       }
-      
+
       tabPanel.selectTab(event.getViewId());
    }
 
    @Override
-   public void openView(View view)
+   public void addView(View view)
    {
-      /*
-       * add view to ViewLayout
-       */
-      Widget viewWrapper = viewsLayer.addView(view);
-
-      if (views.size() == 0 && showPanelHandler != null)
+      System.out.println("PanelImpl.addView(" + view.getId() + ")");
+      
+      if (views.size() == 0 && showPanelHandlers.size() > 0)
       {
          ShowPanelEvent showPanelEvent = new ShowPanelEvent(panelId);
-         showPanelHandler.onShowPanel(showPanelEvent);
+         for (ShowPanelHandler showPanelHandler : showPanelHandlers)
+         {
+            showPanelHandler.onShowPanel(showPanelEvent);
+         }
       }
 
       views.put(view.getId(), view);
-      viewWrappers.put(view.getId(), viewWrapper);
 
-      final ViewController controller = new ViewController(viewWrapper);
+      Widget viewWidget = (Widget)view;
+      /*
+      * Set element attribute "panel-id" which is points to Panel with this ID.
+      */
+      DOM.setElementAttribute(viewWidget.getElement(), "panel-id", panelId);
+
+      final ViewController controller = new ViewController(viewWidget);
       viewControllers.put(view.getId(), controller);
       tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
-
-      /*
-       * Set element attribute "panel-id" which is points to Panel with this ID.
-       */
-      if (view instanceof Widget)
-      {
-         Widget viewWidget = (Widget)view;
-         DOM.setElementAttribute(viewWidget.getElement(), "panel-id", panelId);
-      }
+      controller.onResize();
 
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)
@@ -611,34 +484,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
          ((HasSetViewVisibleHandler)view).addSetViewVisibleHandler(this);
       }
 
-      if (viewOpenedHandler != null)
-      {
-         ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
-         viewOpenedHandler.onViewOpened(viewOpenedEvent);
-      }
-
       updateViewTabIndex();
       tabPanel.selectTab(view.getId());
    }
 
    @Override
-   public Map<String, View> getViewMap()
+   public Map<String, View> getViews()
    {
       return views;
-   }
-
-   @Override
-   public boolean canOpenView(String viewType)
-   {
-      for (String t : acceptableTypes)
-      {
-         if (t.equals(viewType))
-         {
-            return true;
-         }
-      }
-
-      return false;
    }
 
    @Override
@@ -675,15 +528,11 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       setVisible(!panelHidden);
       if (selectedViewId != null)
       {
-         Widget viewWrapper = viewWrappers.get(selectedViewId);
-         viewWrapper.setVisible(!panelHidden);
-         if (viewVisibilityChangedHandler != null)
-         {
-            View selectedView = views.get(selectedViewId);
-            ViewVisibilityChangedEvent viewVisibilityChangedEvent = new ViewVisibilityChangedEvent(selectedView);
-            viewVisibilityChangedHandler.onViewVisibilityChanged(viewVisibilityChangedEvent);
-         }
+         View selectedView = views.get(selectedViewId);
+         Widget selectedViewWidget = (Widget)selectedView;
+         selectedViewWidget.setVisible(!panelHidden);
 
+         fireVisibilityChangedEvent(selectedViewId);
       }
    }
 
@@ -693,15 +542,17 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       return panelHidden;
    }
 
-   public boolean isPanelMaximized()
+   public boolean isMaximized()
    {
-      return panelMaximized;
+      return maximized;
    }
 
-   public void setPanelMaximized(boolean panelMaximized)
+   public void setMaximized(boolean maximized)
    {
-      this.panelMaximized = panelMaximized;
-      getElement().setAttribute("panel-maximized", "" + panelMaximized);
+      this.maximized = maximized;
+      getElement().setAttribute("panel-maximized", "" + maximized);
+      maximizePanelButton.setVisible(!maximized);
+      restorePanelButton.setVisible(maximized);
    }
 
    @Override
@@ -721,6 +572,75 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       DOM.setStyleAttribute(getElement(), "width", "" + width + "px");
       DOM.setStyleAttribute(getElement(), "height", "" + height + "px");
       onResize();
+   }
+
+   @Override
+   public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
+   {
+      closingViewHandlers.add(closingViewHandler);
+      return new ListBasedHandlerRegistration(closingViewHandlers, closingViewHandler);
+   }
+
+   @Override
+   public boolean removeView(View view)
+   {
+      tabPanel.removeTab(view.getId());
+
+      if (view.getId().equals(selectedViewId))
+      {
+         selectedViewId = null;
+      }
+
+      views.remove(view.getId());
+      viewControllers.remove(view.getId());
+
+      if (views.size() == 0 && hidePanelHandlers.size() > 0)
+      {
+         HidePanelEvent hidePanelEvent = new HidePanelEvent(panelId);
+         for (HidePanelHandler hidePanelHandler : hidePanelHandlers)
+         {
+            hidePanelHandler.onHidePanel(hidePanelEvent);
+         }
+      }
+
+      updateViewTabIndex();
+
+      return true;
+   }
+
+   @Override
+   public HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler)
+   {
+      maximizePanelHandlers.add(maximizePanelHandler);
+      return new ListBasedHandlerRegistration(maximizePanelHandlers, maximizePanelHandler);
+   }
+
+   @Override
+   public HandlerRegistration addRestorePanelHandler(RestorePanelHandler restorePanelHandler)
+   {
+      restorePanelHandlers.add(restorePanelHandler);
+      return new ListBasedHandlerRegistration(restorePanelHandlers, restorePanelHandler);
+   }
+
+   @Override
+   public HandlerRegistration addShowPanelHandler(ShowPanelHandler showPanelHandler)
+   {
+      showPanelHandlers.add(showPanelHandler);
+      return new ListBasedHandlerRegistration(showPanelHandlers, showPanelHandler);
+   }
+
+   @Override
+   public HandlerRegistration addHidePanelHandler(HidePanelHandler hidePanelHandler)
+   {
+      hidePanelHandlers.add(hidePanelHandler);
+      return new ListBasedHandlerRegistration(hidePanelHandlers, hidePanelHandler);
+   }
+
+   @Override
+   public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
+   {
+      viewVisibilityChangedHandlers.add(viewVisibilityChangedHandler);
+      return new ListBasedHandlerRegistration(viewVisibilityChangedHandlers, viewVisibilityChangedHandler);
    }
 
 }

@@ -19,9 +19,13 @@
 package org.exoplatform.ide.client.ui.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.Direction;
+import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -33,13 +37,19 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.ui.impl.layout.Layout;
-import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
+import org.exoplatform.ide.client.ui.impl.panel.HidePanelEvent;
+import org.exoplatform.ide.client.ui.impl.panel.HidePanelHandler;
+import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelEvent;
+import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelHandler;
+import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
+import org.exoplatform.ide.client.ui.impl.panel.RestorePanelEvent;
+import org.exoplatform.ide.client.ui.impl.panel.RestorePanelHandler;
+import org.exoplatform.ide.client.ui.impl.panel.ShowPanelEvent;
+import org.exoplatform.ide.client.ui.impl.panel.ShowPanelHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -49,8 +59,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilityChangedHandler, ViewOpenedHandler,
-   ViewClosedHandler, ClosingViewHandler
+public class PerspectiveImpl extends Layer implements Perspective
 {
 
    private WindowsLayer popupWindowsLayer;
@@ -66,36 +75,74 @@ public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilit
 
    private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
 
-   private Layout layout;
+   private Layer viewsLayer;
+
+   private Layer panelsLayer;
+
+   private LayoutLayer layoutLayer;
+
+   private Map<String, View> views = new HashMap<String, View>();
+
+   private Map<String, Panel> panels = new HashMap<String, Panel>();
+
+   private Map<String, HasViews> viewTargets = new HashMap<String, HasViews>();
 
    public PerspectiveImpl()
    {
       super("test-perspective");
 
-      layout = new Layout();
-      addLayer(layout);
+      layoutLayer = new LayoutLayer();
+      addLayer(layoutLayer);
 
-      layout.addViewVisibilityChangedHandler(this);
-      layout.addViewOpenedHandler(this);
-      layout.addClosingViewHandler(this);
-      layout.addViewClosedHandler(this);
+      panelsLayer = new Layer("panels");
+      addLayer(panelsLayer);
+
+      viewsLayer = new Layer("views");
+      addLayer(viewsLayer);
 
       popupWindowsLayer = new WindowsLayer("popup-windows");
-      popupWindowsLayer.setViewOpenedHandler(this);
-      popupWindowsLayer.setClosingViewHandler(this);
-      popupWindowsLayer.setViewClosedHandler(this);
+      popupWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(popupWindowsLayer);
 
       modalWindowsLayer = new WindowsLayer("modal-windows", true);
-      modalWindowsLayer.setViewOpenedHandler(this);
-      modalWindowsLayer.setClosingViewHandler(this);
-      modalWindowsLayer.setViewClosedHandler(this);
+      modalWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(modalWindowsLayer);
    }
 
-   public Panel addPanel(String panelId, PanelDirection direction, int initialSize)
+   public Panel addPanel(String panelId, Direction direction, int initialSize)
    {
-      return layout.addPanel(panelId, direction, initialSize);
+      PanelImpl panel = new PanelImpl(panelId);
+      panelsLayer.add(panel);
+      panels.put(panelId, panel);
+
+      if (direction == Direction.WEST)
+      {
+         layoutLayer.addWest(panel, initialSize);
+      }
+      else if (direction == Direction.EAST)
+      {
+         layoutLayer.addEast(panel, initialSize);
+      }
+      else if (direction == Direction.NORTH)
+      {
+         layoutLayer.addNorth(panel, initialSize);
+      }
+      else if (direction == Direction.SOUTH)
+      {
+         layoutLayer.addSouth(panel, initialSize);
+      }
+      else
+      {
+         layoutLayer.addCenter(panel);
+      }
+
+      panel.addMaximizePanelHandler(maximizePanelHandler);
+      panel.addRestorePanelHandler(restorePanelHandler);
+      panel.addShowPanelHandler(showPanelHandler);
+      panel.addHidePanelHandler(hidePanelHandler);
+      panel.addViewVisibilityChangedHandler(viewVisibilityChangedHandler);
+      panel.addClosingViewHandler(closingViewHandler);
+      return panel;
    }
 
    @Override
@@ -129,85 +176,171 @@ public class PerspectiveImpl extends Layer implements Perspective, ViewVisibilit
    @Override
    public void openView(View view)
    {
-      if (view instanceof IsWidget)
-      {
-         Widget viewWidget = ((IsWidget)view).asWidget();
-         DOM.setStyleAttribute(viewWidget.getElement(), "zIndex", "0");
-      }
-
-      /*
-       * return if view already opened
-       */
-      if (layout.isViewOpened(view))
+      if (views.containsKey(view.getId()))
       {
          Window.alert("View [" + view.getId() + "] already opened!");
          return;
       }
 
-      boolean viewOpened = layout.openView(view);
+      views.put(view.getId(), view);
+      Widget viewWidget = (Widget)view;
+      DOM.setStyleAttribute(viewWidget.getElement(), "zIndex", "0");
 
-      if (!viewOpened)
+      for (Panel panel : panels.values())
       {
-         if ("popup".equals(view.getType()))
+         if (panel.getAcceptedTypes().contains(view.getType()))
          {
-            popupWindowsLayer.openView(view);
-         }
-         else if ("modal".equals(view.getType()))
-         {
-            modalWindowsLayer.openView(view);
-         }
-         else
-         {
-            Window.alert("Can't open view [" + view.getId() + "] of type [" + view.getType() + "]");
+            layoutLayer.restore();
+
+            viewsLayer.add(viewWidget, 100, 100);
+
+            panel.addView(view);
+
+            viewTargets.put(view.getId(), panel);
+            fireViewOpenedEvent(view);
+            activateView(view);
+            return;
          }
       }
 
+      if ("popup".equals(view.getType()))
+      {
+         popupWindowsLayer.addView(view);
+         viewTargets.put(view.getId(), popupWindowsLayer);
+         fireViewOpenedEvent(view);
+         activateView(view);
+      }
+      else if ("modal".equals(view.getType()))
+      {
+         modalWindowsLayer.addView(view);
+         viewTargets.put(view.getId(), modalWindowsLayer);
+         fireViewOpenedEvent(view);
+         activateView(view);
+      }
+      else
+      {
+         Window.alert("Can't open view [" + view.getId() + "] of type [" + view.getType() + "]");
+      }
+   }
+
+   public void activateView(View view)
+   {
       view.activate();
+   }
+
+   private void fireViewOpenedEvent(View view)
+   {
+      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
+      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
+      {
+         viewOpenedHandler.onViewOpened(viewOpenedEvent);
+      }
    }
 
    @Override
    public void closeView(String viewId)
    {
-      if (modalWindowsLayer.closeView(viewId) || popupWindowsLayer.closeView(viewId) || layout.closeView(viewId))
+      View view = views.get(viewId);
+      HasViews viewTarget = viewTargets.get(viewId);
+      if (view == null)
       {
          return;
       }
-   }
 
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
+      if (layoutLayer.isMaximized())
       {
-         handler.onViewVisibilityChanged(event);
+         layoutLayer.restore();
+      }
+
+      Widget viewWidget = (Widget)view;
+      viewWidget.removeFromParent();
+
+      viewTarget.removeView(view);
+      views.remove(view.getId());
+      viewTargets.remove(view.getId());
+
+      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
+      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
+      {
+         viewClosedHandler.onViewClosed(viewClosedEvent);
       }
    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
+   private ViewVisibilityChangedHandler viewVisibilityChangedHandler = new ViewVisibilityChangedHandler()
    {
-      for (ViewClosedHandler handler : viewClosedHandlers)
+      @Override
+      public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
       {
-         handler.onViewClosed(event);
+         for (ViewVisibilityChangedHandler handler : viewVisibilityChangedHandlers)
+         {
+            handler.onViewVisibilityChanged(event);
+         }
       }
+   };
+
+   private ClosingViewHandler closingViewHandler = new ClosingViewHandler()
+   {
+      @Override
+      public void onClosingView(ClosingViewEvent event)
+      {
+         for (ClosingViewHandler handler : closingViewHandlers)
+         {
+            handler.onClosingView(event);
+         }
+
+         if (!event.isClosingCanceled())
+         {
+            closeView(event.getView().getId());
+         }
+      }
+   };
+
+   private MaximizePanelHandler maximizePanelHandler = new MaximizePanelHandler()
+   {
+      @Override
+      public void onMaximizePanel(MaximizePanelEvent event)
+      {
+         layoutLayer.maximizePanel(event.getPanel().getPanelId());
+      }
+   };
+
+   private RestorePanelHandler restorePanelHandler = new RestorePanelHandler()
+   {
+      @Override
+      public void onRestorePanel(RestorePanelEvent event)
+      {
+         layoutLayer.restore();
+      }
+   };
+
+   private ShowPanelHandler showPanelHandler = new ShowPanelHandler()
+   {
+      @Override
+      public void onShowPanel(ShowPanelEvent event)
+      {
+         layoutLayer.showPanel(event.getPanelId());
+      }
+   };
+
+   private HidePanelHandler hidePanelHandler = new HidePanelHandler()
+   {
+      @Override
+      public void onHidePanel(HidePanelEvent event)
+      {
+         layoutLayer.hidePanel(event.getPanelId());
+      }
+   };
+
+   @Override
+   public Map<String, View> getViews()
+   {
+      return views;
    }
 
    @Override
-   public void onViewOpened(ViewOpenedEvent event)
+   public Map<String, Panel> getPanels()
    {
-      for (ViewOpenedHandler handler : viewOpenedHandlers)
-      {
-         handler.onViewOpened(event);
-      }
-   }
-
-   @Override
-   public void onClosingView(ClosingViewEvent event)
-   {
-      for (ClosingViewHandler handler : closingViewHandlers)
-      {
-         handler.onClosingView(event);
-      }
-   }
+      return panels;
+   };
 
 }

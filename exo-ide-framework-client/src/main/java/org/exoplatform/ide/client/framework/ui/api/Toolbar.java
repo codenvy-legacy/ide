@@ -16,47 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.ui.impl.layout;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.exoplatform.ide.client.ui.impl.Layer;
-import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
+package org.exoplatform.ide.client.framework.ui.api;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PanelsLayer extends Layer
+public interface Toolbar
 {
-
-   private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
-
-   public ViewsLayer viewsLayer;
-
-   public PanelsLayer(ViewsLayer viewsLayer)
-   {
-      super("panels");
-      this.viewsLayer = viewsLayer;
-   }
-
-   public PanelImpl addPanel(String panelId)
-   {
-      PanelImpl panel = new PanelImpl(panelId, viewsLayer);
-      add(panel);
-      panels.put(panel.getPanelId(), panel);
-      return panel;
-   }
-
-   public Map<String, PanelImpl> getPanels()
-   {
-      return panels;
-   }
 
 }

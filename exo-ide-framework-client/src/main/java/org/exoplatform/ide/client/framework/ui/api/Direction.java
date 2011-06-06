@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
+package org.exoplatform.ide.client.framework.ui.api;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,7 +25,7 @@ package org.exoplatform.ide.client.ui.impl.panel;
  * @version $
  */
 
-public enum PanelDirection {
+public enum Direction {
 
    EAST, WEST, SOUTH, NORTH, CENTER
 

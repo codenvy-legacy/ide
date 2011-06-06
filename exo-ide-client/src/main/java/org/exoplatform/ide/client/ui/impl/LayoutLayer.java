@@ -17,26 +17,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.ui.impl.layout;
+package org.exoplatform.ide.client.ui.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.ide.client.framework.ui.api.Panel;
-import org.exoplatform.ide.client.ui.impl.Layer;
-import org.exoplatform.ide.client.ui.impl.panel.HidePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.HidePanelHandler;
-import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelHandler;
 import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
-import org.exoplatform.ide.client.ui.impl.panel.RestorePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.RestorePanelHandler;
-import org.exoplatform.ide.client.ui.impl.panel.ShowPanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.ShowPanelHandler;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,23 +40,24 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHandler, MaximizePanelHandler,
-   RestorePanelHandler
+public class LayoutLayer extends Layer
 {
 
-   private static final int MARGIN = 3;
+   private int marginLeft = 3;
 
-   private static final int MENU_HEIGHT = 20;
+   private int marginTop = 20 + 32 + 3;
 
-   private static final int STATUSBAR_HEIGHT = 30;
+   private int marginRight = 3;
 
-   private static final int TOOLBAR_HEIGHT = 32;
+   private int marginBottom = 30 + 3;
 
-   private int left = MARGIN;
+   private int left = marginLeft;
 
-   private int top = MENU_HEIGHT + TOOLBAR_HEIGHT + MARGIN;
+   private int top = marginTop;
 
-   private AbsolutePanel layoutWrapper;
+   private int width;
+
+   private int height;
 
    private SplitLayoutPanel layoutPanel;
 
@@ -73,34 +65,26 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
 
    private Map<String, PanelImpl> panels = new HashMap<String, PanelImpl>();
 
-   //   private ViewsLayer viewsLayer;
+   private PanelImpl maximizedPanel;
 
-   public LayoutLayer(ViewsLayer viewsLayer)
+   public LayoutLayer()
    {
       super("layout");
-      //      this.viewsLayer = viewsLayer;
-      layoutWrapper = new AbsolutePanel();
-      add(layoutWrapper, left, top);
 
       layoutPanel = new SplitLayoutPanel();
-      layoutWrapper.add(layoutPanel, 0, 0);
+      layoutPanel.getElement().getStyle().setPosition(Position.ABSOLUTE);
+      add(layoutPanel, left, top);
    }
 
    private void registerPanel(PanelImpl panel, PanelController panelController)
    {
-      panelController.setLeftBorder(left);
-      panelController.setTopBorder(top);
+      panelController.setLeftBorder(marginLeft);
+      panelController.setTopBorder(marginTop);
 
       panels.put(panel.getPanelId(), panel);
-      panel.setShowPanelHandler(this);
-      panel.setHidePanelHandler(this);
-
-      panel.setMaximizePanelHandler(this);
-      panel.setRestorePanelHandler(this);
-
       panelControllers.put(panel.getPanelId(), panelController);
 
-      if (panel.getViewMap().size() == 0)
+      if (panel.getViews().size() == 0)
       {
          hidePanel(panel.getPanelId());
       }
@@ -110,6 +94,11 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
    }
 
+   /**
+    * Adds panel to the center of the layout.
+    * 
+    * @param panel
+    */
    public void addCenter(PanelImpl panel)
    {
       PanelController controller = new PanelController(panel);
@@ -118,6 +107,12 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       registerPanel(panel, controller);
    }
 
+   /**
+    * Adds panel to the east of the layout.
+    * 
+    * @param panel
+    * @param size
+    */
    public void addEast(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
@@ -127,6 +122,12 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       registerPanel(panel, controller);
    }
 
+   /**
+    * Adds panel to the north of the layout.
+    * 
+    * @param panel
+    * @param size
+    */
    public void addNorth(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
@@ -136,6 +137,12 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       registerPanel(panel, controller);
    }
 
+   /**
+    * Adds panel to the south of the layout.
+    * 
+    * @param panel
+    * @param size
+    */
    public void addSouth(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
@@ -145,6 +152,12 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       registerPanel(panel, controller);
    }
 
+   /**
+    * Adds panel to the west of the layout.
+    * 
+    * @param panel
+    * @param size
+    */
    public void addWest(PanelImpl panel, int size)
    {
       PanelController controller = new PanelController(panel);
@@ -154,46 +167,11 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       registerPanel(panel, controller);
    }
 
-   public void beginBuildLayot()
-   {
-   }
-
-   public void finishBuildLayot()
-   {
-      layoutPanel.forceLayout();
-      //layoutPanel.animate(1000);
-   }
-
-   @Override
-   public void onHidePanel(HidePanelEvent event)
-   {
-      hidePanel(event.getPanelId());
-   }
-
-   public void hidePanel(String panelId)
-   {
-      panels.get(panelId).setVisible(false);
-
-      PanelController controller = panelControllers.get(panelId);
-      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER)
-      {
-         return;
-      }
-
-      controller.setVisible(false);
-
-      layoutPanel.setWidgetSize(controller, 0);
-      layoutPanel.setWidgetMinSize(controller, 0);
-
-      layoutPanel.forceLayout();
-   }
-
-   @Override
-   public void onShowPanel(ShowPanelEvent event)
-   {
-      showPanel(event.getPanelId());
-   }
-
+   /**
+    * Sets panel visible.
+    * 
+    * @param panelId
+    */
    public void showPanel(String panelId)
    {
       panels.get(panelId).setVisible(true);
@@ -222,19 +200,43 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       layoutPanel.forceLayout();
    }
 
-   private int width;
+   /**
+    * Sets panel unvisible.
+    * 
+    * @param panelId
+    */
+   public void hidePanel(String panelId)
+   {
+      panels.get(panelId).setVisible(false);
 
-   private int height;
+      PanelController controller = panelControllers.get(panelId);
+      if (layoutPanel.getWidgetDirection(controller) == Direction.CENTER)
+      {
+         return;
+      }
 
+      controller.setVisible(false);
+
+      layoutPanel.setWidgetSize(controller, 0);
+      layoutPanel.setWidgetMinSize(controller, 0);
+
+      layoutPanel.forceLayout();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.ui.impl.Layer#onResize(int, int)
+    */
    @Override
    public void onResize(int width, int height)
    {
-      this.width = width - MARGIN - MARGIN;
-      this.height = height - MENU_HEIGHT - TOOLBAR_HEIGHT - MARGIN - MARGIN - STATUSBAR_HEIGHT;
-
+      this.width = width - marginLeft - marginRight;
+      this.height = height - marginTop - marginBottom;
       updateSizes();
    }
 
+   /**
+    * 
+    */
    private void updateSizes()
    {
       if (maximizedPanel != null)
@@ -244,7 +246,6 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
          return;
       }
 
-      layoutWrapper.setPixelSize(width, height);
       layoutPanel.setPixelSize(width, height);
 
       for (int i = 0; i < layoutPanel.getWidgetCount(); i++)
@@ -257,10 +258,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
    }
 
-   private PanelImpl maximizedPanel;
-
-   @Override
-   public void onMaximizePanel(MaximizePanelEvent event)
+   public void maximizePanel(String panelId)
    {
       if (maximizedPanel != null)
       {
@@ -268,41 +266,44 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
          return;
       }
 
-      layoutWrapper.setVisible(false);
+      layoutPanel.setVisible(false);
+
       for (Panel panel : panels.values())
       {
          if (panel instanceof PanelImpl)
          {
             PanelImpl pi = (PanelImpl)panel;
-            if (!pi.getPanelId().equals(event.getPanel().getPanelId()))
+            if (!pi.getPanelId().equals(panelId))
             {
                pi.setPanelHidden(true);
             }
          }
       }
 
-      maximizedPanel = panels.get(event.getPanel().getPanelId());
+      maximizedPanel = panels.get(panelId);
 
-      //updateSizes();
       new MaximizeAnimation(maximizedPanel).run(200);
    }
 
-   @Override
-   public void onRestorePanel(RestorePanelEvent event)
+   public void restore()
    {
-      if (maximizedPanel != null) {
-         maximizedPanel.setPanelMaximized(false);
-         maximizedPanel = null;
+      if (maximizedPanel == null)
+      {
+         return;
       }
 
-      layoutWrapper.setVisible(true);
+      String panelId = maximizedPanel.getPanelId();
+      maximizedPanel.setMaximized(false);
+      maximizedPanel = null;
+
+      layoutPanel.setVisible(true);
 
       for (Panel panel : panels.values())
       {
          if (panel instanceof PanelImpl)
          {
             PanelImpl pi = (PanelImpl)panel;
-            if (!pi.getPanelId().equals(event.getPanel().getPanelId()))
+            if (!pi.getPanelId().equals(panelId))
             {
                if (pi.isPanelHidden())
                {
@@ -314,6 +315,19 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
       }
 
       updateSizes();
+   }
+
+   public void setMargin(int marginLeft, int marginTop, int marginRight, int marginBottom)
+   {
+      this.marginLeft = marginLeft;
+      this.marginTop = marginTop;
+      this.marginRight = marginRight;
+      this.marginBottom = marginBottom;
+   }
+
+   public boolean isMaximized()
+   {
+      return maximizedPanel != null;
    }
 
    private class MaximizeAnimation extends Animation
@@ -368,7 +382,7 @@ public class LayoutLayer extends Layer implements ShowPanelHandler, HidePanelHan
             newTop = startY + (int)(dy * progress);
             newWidth = startWidth + (int)(dWidth * progress);
             newHeight = startHeight + (int)(dHeight * progress);
-            panel.setPanelMaximized(true);
+            panel.setMaximized(true);
          }
 
          panel.setPosition(newLeft, newTop);

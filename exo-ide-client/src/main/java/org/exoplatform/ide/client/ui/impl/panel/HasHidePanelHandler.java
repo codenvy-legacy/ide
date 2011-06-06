@@ -16,52 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.api;
+package org.exoplatform.ide.client.ui.impl.panel;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * This interface describes a visual component that can display views in tabs or in any other form. 
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Panel extends HasViews
+public interface HasHidePanelHandler
 {
 
-   /**
-    * Returns the ID of this panel.
-    * 
-    * @return id of this panel
-    */
-   String getPanelId();
-
-   /**
-    * Adds a view to the panel.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   void addView(View view);
-
-   /**
-    * Removes view from the panel.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   boolean removeView(View view);
-
-   Map<String, View> getViews();
-
-   List<String> getAcceptedTypes();
-
-   void acceptType(String viewType);
-
-   void setPanelHidden(boolean panelHidden);
-
-   boolean isPanelHidden();
-
+   HandlerRegistration addHidePanelHandler(HidePanelHandler hidePanelHandler);
+   
 }

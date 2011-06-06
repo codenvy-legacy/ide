@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
+import java.util.Map;
+
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
@@ -38,5 +39,9 @@ HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
    void openView(View view);
 
    void closeView(String viewId);
+   
+   public Map<String, View> getViews();
+
+   public Map<String, Panel> getPanels();   
 
 }

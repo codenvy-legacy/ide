@@ -18,20 +18,22 @@
  */
 package org.exoplatform.ide.client.ui.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
 import org.exoplatform.gwtframework.ui.client.window.Window;
+import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class WindowsLayer extends Layer
+public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandler
 {
 
    protected class WindowController implements CloseClickHandler
@@ -60,29 +62,16 @@ public class WindowsLayer extends Layer
       @Override
       public void onCloseClick()
       {
-         if (closingViewHandler != null)
+         ClosingViewEvent event = new ClosingViewEvent(view);
+         for (ClosingViewHandler closingViewHandler : closingViewHandlers)
          {
-            ClosingViewEvent event = new ClosingViewEvent(view);
             closingViewHandler.onClosingView(event);
-
-            if (event.isClosingCanceled())
-            {
-               return;
-            }
          }
-
-         closeView(view.getId());
       }
 
    }
 
-   protected ClosingViewHandler closingViewHandler;
-
-   protected ViewClosedHandler viewClosedHandler;
-
-   protected ViewOpenedHandler viewOpenedHandler;
-
-   protected Map<String, View> views = new HashMap<String, View>();
+   private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
 
    protected Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
 
@@ -107,52 +96,40 @@ public class WindowsLayer extends Layer
       this.hasModalWindows = hasModalWindows;
    }
 
-   public boolean closeView(String viewId)
+   @Override
+   public boolean removeView(View view)
    {
       if (hasModalWindows)
       {
-         if (lockPanels.get(viewId) == null)
+         Widget lockPanel = lockPanels.get(view.getId());
+         if (lockPanel == null)
          {
             return false;
          }
-
-         Widget lockPanel = lockPanels.get(viewId);
          lockPanel.removeFromParent();
-         lockPanels.remove(viewId);
+         lockPanels.remove(view.getId());
       }
 
-      if (windows.get(viewId) == null)
+      Window window = windows.get(view.getId());
+      if (window == null)
       {
          return false;
       }
 
-      Window window = windows.get(viewId);
-      windows.remove(viewId);
+      windows.remove(view.getId());
 
       window.hide();
       window.destroy();
 
-      windowControllers.remove(viewId);
-
-      View closedView = views.get(viewId);
-      views.remove(viewId);
-
-      if (viewClosedHandler != null)
-      {
-         ViewClosedEvent viewClosedEvent = new ViewClosedEvent(closedView);
-         viewClosedHandler.onViewClosed(viewClosedEvent);
-      }
-
+      windowControllers.remove(view.getId());
       return true;
    }
 
-   public Map<String, View> getViews()
+   @Override
+   public void addView(View view)
    {
-      return views;
-   }
-
-   public void openView(View view)
-   {
+      Widget viewWidget = (Widget)view;
+      
       if (hasModalWindows)
       {
          AbsolutePanel lockPanel = new AbsolutePanel();
@@ -163,10 +140,8 @@ public class WindowsLayer extends Layer
          resizeLockPanels();
       }
 
-      views.put(view.getId(), view);
-
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
-      
+
       window.getElement().setAttribute("id", view.getId() + "-window");
       window.getElement().getStyle().setProperty("zIndex", "auto");
 
@@ -184,36 +159,10 @@ public class WindowsLayer extends Layer
       add(window);
       DOM.setStyleAttribute(window.getElement(), "left", left + "px");
       DOM.setStyleAttribute(window.getElement(), "top", top + "px");
+      window.add(viewWidget);
 
-      if (view instanceof Widget)
-      {
-         Widget viewWidget = (Widget)view;
-         window.add(viewWidget);
-      }
-      
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
-
-      if (viewOpenedHandler != null)
-      {
-         ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
-         viewOpenedHandler.onViewOpened(viewOpenedEvent);
-      }
-   }
-
-   public void setClosingViewHandler(ClosingViewHandler closingViewHandler)
-   {
-      this.closingViewHandler = closingViewHandler;
-   }
-
-   public void setViewClosedHandler(ViewClosedHandler viewClosedHandler)
-   {
-      this.viewClosedHandler = viewClosedHandler;
-   }
-
-   public void setViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
-   {
-      this.viewOpenedHandler = viewOpenedHandler;
    }
 
    private void resizeLockPanels()
@@ -230,6 +179,13 @@ public class WindowsLayer extends Layer
       layerWidth = width;
       layerHeight = height;
       resizeLockPanels();
+   }
+
+   @Override
+   public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
+   {
+      closingViewHandlers.add(closingViewHandler);
+      return new ListBasedHandlerRegistration(closingViewHandlers, closingViewHandler);
    }
 
 }

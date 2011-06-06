@@ -18,50 +18,33 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-import java.util.List;
-import java.util.Map;
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
- * This interface describes a visual component that can display views in tabs or in any other form. 
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Panel extends HasViews
+public interface HasViews
 {
-
+   
    /**
-    * Returns the ID of this panel.
+    * Adds a view.
     * 
-    * @return id of this panel
-    */
-   String getPanelId();
-
-   /**
-    * Adds a view to the panel.
-    * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View)
+    * @param view the view to be added
+    * @throws UnsupportedOperationException if this method is not supported (most
+    *           often this means that a specific overload must be called)
     */
    void addView(View view);
 
    /**
-    * Removes view from the panel.
+    * Removes a view.
     * 
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View)
+    * @param view the view to be removed
+    * @return <code>true</code> if the view was present
     */
    boolean removeView(View view);
-
-   Map<String, View> getViews();
-
-   List<String> getAcceptedTypes();
-
-   void acceptType(String viewType);
-
-   void setPanelHidden(boolean panelHidden);
-
-   boolean isPanelHidden();
 
 }

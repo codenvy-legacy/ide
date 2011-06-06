@@ -20,13 +20,13 @@ package org.exoplatform.ide.client.application;
 
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.MenuImpl;
 import org.exoplatform.ide.client.ui.impl.Layer;
 import org.exoplatform.ide.client.ui.impl.PerspectiveImpl;
-import org.exoplatform.ide.client.ui.impl.panel.PanelDirection;
 
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -118,16 +118,16 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
       perspective = new PerspectiveImpl();
       addLayer(perspective);
 
-      Panel navigationPanel = perspective.addPanel("navigation", PanelDirection.WEST, 300);
+      Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
       navigationPanel.acceptType("navigation");
 
-      Panel informationPane = perspective.addPanel("information", PanelDirection.EAST, 200);
+      Panel informationPane = perspective.addPanel("information", Direction.EAST, 200);
       informationPane.acceptType("information");
 
-      Panel operationPanel = perspective.addPanel("operation", PanelDirection.SOUTH, 150);
+      Panel operationPanel = perspective.addPanel("operation", Direction.SOUTH, 150);
       operationPanel.acceptType("operation");
 
-      Panel editorPanel = perspective.addPanel("editor", PanelDirection.CENTER, 0);
+      Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
       editorPanel.acceptType("editor");
    }
 
