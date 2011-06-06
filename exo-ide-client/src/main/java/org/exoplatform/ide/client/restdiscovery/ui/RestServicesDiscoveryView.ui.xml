@@ -4,6 +4,8 @@
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	xmlns:rd="urn:import:org.exoplatform.ide.client.restdiscovery.ui"
 	>
+	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+	<ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preflocal"></ui:with>
 	
 	<c:VPanel>
 
@@ -16,14 +18,18 @@
 			
 			<c:Border borderSize="5" borderColor="transparent">
 					<c:VPanel>
-						<c:TextField ui:field="pathField" name="ideMethodPathField" title="Path" height="40px" showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
-						<c:TextField ui:field="requestTypeField" name="ideRequestType" title="Request media type" height="40px" showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
-						<c:TextField ui:field="responseTypeField" name="ideResponseType" title="Response media type" height="40px" showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
+						<c:TextField ui:field="pathField" name="ideMethodPathField" title="{preflocal.restServicesDiscoveryPath}" height="40px" 
+								     showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
+						<c:TextField ui:field="requestTypeField" name="ideRequestType" title="{preflocal.restServicesDiscoveryRequestMediaType}" 
+						 			 height="40px" showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
+						<c:TextField ui:field="responseTypeField" name="ideResponseType" title="{preflocal.restServicesDiscoveryResponseMediaType}" 
+									 height="40px" showDisabled="false" visible="true" titleOrientation="top"></c:TextField>
 
 						<g:FlowPanel height="6px"></g:FlowPanel>
 
 						<c:Border ui:field="parametersListGridContainer">
-							<rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters" ></rd:RestServiceParameterListGrid>
+							<rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters" >
+							</rd:RestServiceParameterListGrid>
 						</c:Border>						
 					</c:VPanel>
 			</c:Border>
@@ -32,7 +38,8 @@
 		<c:Panel height="40px">
 			<g:HorizontalPanel spacing="5" width="100%" height="100%">
 				<g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
-					<c:ImageButton text="Ok" imageName="ok" ui:field="okButton" buttonId="exoRestServicesDiscoveryOkButton"></c:ImageButton>
+					<c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="exoRestServicesDiscoveryOkButton">
+					</c:ImageButton>
 				</g:cell>
 			</g:HorizontalPanel>
 		</c:Panel>

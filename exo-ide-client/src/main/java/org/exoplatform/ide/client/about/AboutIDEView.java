@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.about;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.BuildNumber;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -59,23 +60,25 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private final String BUILD_TIME;
 
-   private final String COPYRIGHT = "(c) ";
+   private final String COPYRIGHT = IDE.PREFERENCES_CONSTANT.aboutCopyright();
 
-   private final String COMPANY_NAME = "eXo Platform SAS";
+   private final String COMPANY_NAME = IDE.PREFERENCES_CONSTANT.aboutCompanyName();
 
-   private static final String NAME = "eXo IDE";
+   private static final String NAME = IDE.PREFERENCES_CONSTANT.aboutIdeName();
 
-   private static final String YEAR = "2009-2011";
+   private static final String YEAR = IDE.PREFERENCES_CONSTANT.aboutYear();
+   
+   private static final String TITLE = IDE.PREFERENCES_CONSTANT.aboutTitle();
 
    private ImageButton okButton;
 
    public AboutIDEView()
    {
-      super(ID, "modal", "About", new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT, false);
+      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT, false);
       BuildNumber buildNumber = GWT.create(BuildNumber.class);
-      REVISION = "Revision: " + buildNumber.buildNumber();
-      VERSION = "Version: " + buildNumber.version();
-      BUILD_TIME = "Build Time: " + buildNumber.buildTime();
+      REVISION = IDE.PREFERENCES_CONSTANT.aboutRevision() + buildNumber.buildNumber();
+      VERSION = IDE.PREFERENCES_CONSTANT.aboutVersion() + buildNumber.version();
+      BUILD_TIME = IDE.PREFERENCES_CONSTANT.aboutBuildTime() + buildNumber.buildTime();
 
       VerticalPanel centerLayout = new VerticalPanel();
       centerLayout.setWidth("100%");
@@ -107,7 +110,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private HorizontalPanel createButtonLayout()
    {
-      okButton = new ImageButton("Ok", "ok");
+      okButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.okButton(), "ok");
       okButton.setId(OK_BUTTON_ID);
 
       HorizontalPanel hLayout = new HorizontalPanel();

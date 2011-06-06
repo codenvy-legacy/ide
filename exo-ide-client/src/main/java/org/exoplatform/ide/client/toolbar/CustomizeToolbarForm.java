@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -68,23 +69,23 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    private static final String ID_MOVEDOWN_BUTTON = "ideCustomizeToolbarFormMoveDownButton";
 
-   private static final String TITLE = "Customize Toolbar";
+   private static final String TITLE = IDE.PREFERENCES_CONSTANT.customizeToolbarTitle();
 
-   private static final String BUTTON_OK = "OK";
+   private static final String BUTTON_OK = IDE.IDE_LOCALIZATION_CONSTANT.okButton();
 
-   private static final String BUTTON_CANCEL = "Cancel";
+   private static final String BUTTON_CANCEL = IDE.IDE_LOCALIZATION_CONSTANT.cancelButton();
 
-   private static final String BUTTON_RESTOREDEFAULTS = "Defaults";
+   private static final String BUTTON_RESTOREDEFAULTS = IDE.PREFERENCES_CONSTANT.customizeToolbarDefaultButton();
 
-   private static final String BUTTON_ADD = "Add";
+   private static final String BUTTON_ADD = IDE.IDE_LOCALIZATION_CONSTANT.addButton();
 
-   private static final String BUTTON_DELIMITER = "Delimiter";
+   private static final String BUTTON_DELIMITER = IDE.PREFERENCES_CONSTANT.customizeToolbarDelimiterButton();
 
-   private static final String BUTTON_DELETE = "Delete";
+   private static final String BUTTON_DELETE = IDE.IDE_LOCALIZATION_CONSTANT.deleteButton();
 
-   private static final String BUTTON_MOVEUP = "Move Up";
+   private static final String BUTTON_MOVEUP = IDE.PREFERENCES_CONSTANT.customizeToolbarMoveUpButton();
 
-   private static final String BUTTON_MOVEDOWN = "Move Down";
+   private static final String BUTTON_MOVEDOWN = IDE.PREFERENCES_CONSTANT.customizeToolbarMoveDownButton();
 
    private static final int BUTTONS_WIDTH = 120;
 

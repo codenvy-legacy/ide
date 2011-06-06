@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.hotkeys;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -44,6 +45,10 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
 {
    
    public static final String ID = "ideCustomizeHotKeysView";
+   
+   public static final String MSG_LABEL_ID = "ideCustomizeHotKeysMessageLabel";
+   
+   private static final String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
    
    /**
     * Initial width of this view
@@ -84,9 +89,9 @@ public class CustomizeHotKeysView extends ViewImpl implements org.exoplatform.id
 
    public CustomizeHotKeysView()
    {
-      super(ID, "popup", "Customize hotkeys", new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), WIDTH, HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      messageLabel.getElement().setId("ideCustomizeHotKeysMessageLabel");
+      messageLabel.getElement().setId(MSG_LABEL_ID);
    }
 
    @Override

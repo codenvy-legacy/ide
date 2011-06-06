@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.workspace.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -33,7 +34,9 @@ import com.google.gwt.user.cellview.client.Column;
 */
 public class EntryPointsListGrid extends ListGrid<EntryPoint>
 {
-   private final String ID = "ideEntryPointListGrid"; 
+   private final String ID = "ideEntryPointListGrid";
+   
+   private static final String ENTRY_POINT_COLUMN = IDE.PREFERENCES_CONSTANT.entryPointListGridName();
    
    public EntryPointsListGrid()
    {
@@ -61,7 +64,7 @@ public class EntryPointsListGrid extends ListGrid<EntryPoint>
          }
       };
       
-      getCellTable().addColumn(entryNameColumn, "Entry Point");
+      getCellTable().addColumn(entryNameColumn, ENTRY_POINT_COLUMN);
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
       removeTableHeader();

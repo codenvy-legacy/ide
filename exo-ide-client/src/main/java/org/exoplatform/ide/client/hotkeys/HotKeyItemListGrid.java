@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.ImageUtil;
 
 /**
@@ -45,9 +46,11 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
    }
 
-   private final static String TITLE = "Command";
+   private final static String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridCommand();
 
-   private final static String CONTROL = "Binding";
+   private final static String CONTROL = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridBinding();
+   
+   private final static String POPUP = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridPopup();
    
    private final static String ID = "ideCustomizeHotKeysListGrid";
 
@@ -135,7 +138,7 @@ public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
 
          if (item.getCommand() instanceof PopupMenuControl)
          {
-            commandName += "&nbsp;[Popup]";
+            commandName += "&nbsp;[" + POPUP + "]";
          }
 
          if (item.getCommand().getNormalImage() != null)

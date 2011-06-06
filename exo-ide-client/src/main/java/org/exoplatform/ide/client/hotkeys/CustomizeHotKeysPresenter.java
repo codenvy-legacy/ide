@@ -18,19 +18,14 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -51,16 +46,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.CustomizeHotKeysHandler;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
+import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Presenter for customize hotkeys form.
@@ -105,6 +100,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    }
 
    private static final String EDITOR_GROUP = "Editor hotkeys";
+   
+   private static final IdePreferencesLocalizationConstant CONSTANTS = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT;
 
    private HandlerManager eventBus;
 
@@ -385,17 +382,17 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     */
    private boolean validateHotKey(boolean isCtrl, boolean isAlt, int keyCode)
    {
-      final String firstKeyCtrlOrAltMsg = "First key should be Ctrl or Alt";
+      final String firstKeyCtrlOrAltMsg = CONSTANTS.msgFirstKeyCtrlOrAlt();
 
-      final String hotkeyIsUsedInCkEditorMsg = "This hotkey is used by Code or WYSIWYG Editors";
+      final String hotkeyIsUsedInCkEditorMsg = CONSTANTS.msgHotkeyUsedInOtherEditor();
 
-      final String pressControlKeyThenKey = "Holt Ctrl or Alt, then press key";
+      final String pressControlKeyThenKey = CONSTANTS.msgPressControlKeyTheKey();
 
-      final String boundToAnotherCommand = "Such hotkey already bound to another command";
+      final String boundToAnotherCommand = CONSTANTS.msgBoundToAnotherCommand();
 
-      final String tryToBindTheSameHotKey = "Such hotkey already bound to this command";
+      final String tryToBindTheSameHotKey = CONSTANTS.msgBoundToTheSameCommand();
 
-      final String tryAnotherKey = "Undefined key. Please, use another key";
+      final String tryAnotherKey = CONSTANTS.msgTryAnotherHotkey();
 
       //--- check is control key pressed first ---
       //

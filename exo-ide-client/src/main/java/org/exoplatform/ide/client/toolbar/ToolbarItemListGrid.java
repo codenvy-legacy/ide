@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.ImageUtil;
 
 /**
@@ -47,7 +48,7 @@ public class ToolbarItemListGrid extends ListGrid<ToolbarItem>
 
    }
 
-   public final static String TOOLBAR = "Toolbar";
+   public final static String TOOLBAR = IDE.PREFERENCES_CONSTANT.toolbarListGridToolbarColumn();
 
    public final static String COMMAND_ID = "CommandId";
 

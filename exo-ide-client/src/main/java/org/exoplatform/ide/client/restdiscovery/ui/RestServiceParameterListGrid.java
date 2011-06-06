@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.restdiscovery.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.restdiscovery.ParamExt;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -33,11 +34,11 @@ import com.google.gwt.user.cellview.client.Column;
 public class RestServiceParameterListGrid extends ListGrid<ParamExt>
 {
    
-   private static final String NAME = "Name";
+   private static final String NAME = IDE.PREFERENCES_CONSTANT.restServiceListGridNameColumn();
 
-   private static final String TYPE = "Type";
+   private static final String TYPE = IDE.PREFERENCES_CONSTANT.restServiceListGridTypeColumn();
 
-   private static final String DEFAULT = "By default";
+   private static final String DEFAULT = IDE.PREFERENCES_CONSTANT.restServiceListGridDefaultColumn();
 
    public RestServiceParameterListGrid()
    {

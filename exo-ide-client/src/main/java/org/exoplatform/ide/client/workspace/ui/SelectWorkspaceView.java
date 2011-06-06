@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.workspace.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -51,6 +52,8 @@ public class SelectWorkspaceView extends ViewImpl implements
     * Initial height of this view.
     */
    private static final int HEIGHT = 200;
+   
+   private static final String TITLE = IDE.PREFERENCES_CONSTANT.workspaceTitle();
 
    /**
     * UIBinder instance
@@ -78,7 +81,7 @@ public class SelectWorkspaceView extends ViewImpl implements
 
    public SelectWorkspaceView()
    {
-      super(ID, "popup", "Workspace", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

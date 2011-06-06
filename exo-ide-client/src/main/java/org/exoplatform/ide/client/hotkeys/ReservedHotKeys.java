@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import org.exoplatform.ide.client.IDE;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,22 +32,27 @@ import java.util.Map;
 public class ReservedHotKeys
 {
 
+   /**
+    * Map with reserved hotkeys.<p/>
+    * Key - combination of key for this command.<p/>
+    * Value - displayed title in list grid.
+    */
    private static Map<String, String> hotkeys = new HashMap<String, String>();
    
    static
    {
-      hotkeys.put("Ctrl+32", "Autocomplete"); //Ctrl+Space
-      hotkeys.put("Ctrl+66", "Bold"); //Ctrl+B
-      hotkeys.put("Ctrl+73", "Italic"); //Ctrl+I
-      hotkeys.put("Ctrl+85", "Undeline"); //Ctrl+U
-      hotkeys.put("Ctrl+67", "Copy"); //Ctrl+C
-      hotkeys.put("Ctrl+86", "Paste"); //Ctrl+V
-      hotkeys.put("Ctrl+88", "Cut"); //Ctrl+X
-      hotkeys.put("Ctrl+90", "Undo"); //Ctrl+Z
-      hotkeys.put("Ctrl+89", "Redo"); //Ctrl+Y
-      hotkeys.put("Ctrl+65", "Select All"); //Ctrl+A
-      hotkeys.put("Ctrl+36", "Go to the start"); //Ctrl+Home
-      hotkeys.put("Ctrl+35", "Go to the end"); //Ctrl+End      
+      hotkeys.put("Ctrl+32", IDE.PREFERENCES_CONSTANT.reservedHotkyesAutocomplete()); //Ctrl+Space
+      hotkeys.put("Ctrl+66", IDE.PREFERENCES_CONSTANT.reservedHotkeysBold()); //Ctrl+B
+      hotkeys.put("Ctrl+73", IDE.PREFERENCES_CONSTANT.reservedHotkeysItalic()); //Ctrl+I
+      hotkeys.put("Ctrl+85", IDE.PREFERENCES_CONSTANT.reservedHotkeysUndeline()); //Ctrl+U
+      hotkeys.put("Ctrl+67", IDE.PREFERENCES_CONSTANT.reservedHotkeysCopy()); //Ctrl+C
+      hotkeys.put("Ctrl+86", IDE.PREFERENCES_CONSTANT.reservedHotkeysPaste()); //Ctrl+V
+      hotkeys.put("Ctrl+88", IDE.PREFERENCES_CONSTANT.reservedHotkeysCut()); //Ctrl+X
+      hotkeys.put("Ctrl+90", IDE.PREFERENCES_CONSTANT.reservedHotkeysUndo()); //Ctrl+Z
+      hotkeys.put("Ctrl+89", IDE.PREFERENCES_CONSTANT.reservedHotkeysRedo()); //Ctrl+Y
+      hotkeys.put("Ctrl+65", IDE.PREFERENCES_CONSTANT.reservedHotkeysSelectAll()); //Ctrl+A
+      hotkeys.put("Ctrl+36", IDE.PREFERENCES_CONSTANT.reservedHotkeysGoToStart()); //Ctrl+Home
+      hotkeys.put("Ctrl+35", IDE.PREFERENCES_CONSTANT.reservedHotkeysGoToEnd()); //Ctrl+End      
    }
 
    public static Map<String, String> getHotkeys()

@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.ImageUtil;
 
 /**
@@ -45,7 +46,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
    }
 
-   private final static String TITLE = "Command";
+   private final static String TITLE = IDE.PREFERENCES_CONSTANT.commandListGridCommandColumn();
 
    private final static String ID = "ideCommandItemExListGrid";
 

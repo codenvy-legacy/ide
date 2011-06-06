@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.restdiscovery.ParamExt;
@@ -58,6 +59,8 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     * Initial height of this view
     */
    private static int INITIAL_HEIGHT = 330;
+   
+   private static final String TITLE = IDE.PREFERENCES_CONSTANT.restServicesDiscoveryTitle();
 
    /**
     * UIBinder instance
@@ -115,7 +118,7 @@ public class RestServicesDiscoveryView extends ViewImpl implements
     */
    public RestServicesDiscoveryView()
    {
-      super(ID, "popup", "REST Services Discovery", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()),
          INITIAL_WIDTH, INITIAL_HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
