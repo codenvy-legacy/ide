@@ -81,9 +81,25 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       
       if (nodeContent != null && !nodeContent.isEmpty())
       {    
+         // return element type = container class name for case $this->_ 
+         if ("$this".equals(nodeContent))
+         {
+
+            String elementType = null;
+            if ((elementType = getContainerClassName(lineNumber, (List<TokenBeenImpl>) tokenList)) != null)
+            {
+               return new TokenBeenImpl(
+                  nodeContent, 
+                  TokenType.VARIABLE, 
+                  lineNumber, 
+                  MimeType.APPLICATION_PHP,
+                  elementType
+               );
+            }
+         }
+            
          // search token for variables like "$name->_" or "$name->ch_"
-         tokenBeforeCursor = GroovyAutocompleteHelper.getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList);            
-         if (tokenBeforeCursor != null) 
+         else if ((tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList)) != null) 
          {
             return new TokenBeenImpl(
                tokenBeforeCursor.getName(), 
@@ -94,32 +110,51 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
                tokenBeforeCursor.getModifiers()
             );
          }
+         
+         // return null if there is no such variable, or property, or parameter
+         else
+         {
+            return null;
+         }
       }
       
-      // check static calling
+      // check on static calling
       else 
       {
          nodeContent = getLastElementName(javaScriptNode, cursorPosition, PhpParser.staticCallingOperator);
          
          if (nodeContent != null && !nodeContent.isEmpty())
          {    
-            // return class name before token like "Handler" in case like "Handler::_"
-            return new TokenBeenImpl(
-               nodeContent, 
-               TokenType.CLASS, 
-               lineNumber, 
-               MimeType.APPLICATION_PHP
-            );
+            // return element type = container class name for case self::_ 
+            String elementType = null;
+            if ("self".equals(nodeContent))
+            {
+               if ((elementType = getContainerClassName(lineNumber, (List<TokenBeenImpl>) tokenList)) != null)
+               {
+                  return new TokenBeenImpl(
+                     nodeContent, 
+                     TokenType.KEYWORD, 
+                     lineNumber, 
+                     MimeType.APPLICATION_PHP,
+                     elementType
+                  );
+               }
+            }
+            else
+            {
+               // return class name before token like "Handler" in case like "Handler::_"
+               return new TokenBeenImpl(
+                  nodeContent, 
+                  TokenType.CLASS, 
+                  lineNumber, 
+                  MimeType.APPLICATION_PHP
+               );
+            }
          }
-
-         // if this is "name_" or " _" cases, return Token of parent element, like method or class
-         else
-         {
-            return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
-         }  
       }      
       
-      return null;
+      // if this is "name_" or " _" cases, trying to find out and return Token of parent element, like method or class
+      return (Token) getContainerToken(lineNumber, (List<TokenBeenImpl>) tokenList);
    }
 
    /**
@@ -149,7 +184,10 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
             nodeContent = Node.getContent(javaScriptNode);
             nodeType = Node.getType(javaScriptNode);
    
-            if ((!PhpParser.isVariable(nodeType) && !PhpParser.isPhpElementName(nodeType) && !isDelimiter(nodeType, nodeContent.trim(), delimiter))  // filter part with non-variable and non-point symbols, not "<delimiter> " symbol
+            if ((!PhpParser.isVariable(nodeType) 
+                     && !PhpParser.isPhpElementName(nodeType) 
+                     && !PhpParser.isThisKeyword(new Node(nodeType, nodeContent)) 
+                     && !isDelimiter(nodeType, nodeContent.trim(), delimiter))  // filter part with non-variable and non-point symbols, not "<delimiter> " symbol, not "$this" symbol
                    || (
                          nodeContent.indexOf(" ") != -1  // filter nodes like "String " in sentence "String name<delimiter>_", or like "<delimiter> " in sentence "<delimiter> String_", or like "<delimiter> _" in sentence like "String<delimiter> _", or like "ch " in sentence like "name<delimiter>ch _"  
                          && (statement.length() > 0  // filter nodes like "name <delimiter>_" or "name<delimiter> ch<delimiter>_"
@@ -201,16 +239,138 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       
       return nodeContent.equals(delimiter);
    }
+ 
+   protected static TokenBeenImpl getGenericToken(String nodeContent, int targetLineNumber, List<TokenBeenImpl> tokenList)
+   {
+      if (tokenList == null || tokenList.size() == 0)
+         return null;
+
+      nearestToken = tokenList.get(0);
+      
+      for (TokenBeenImpl token : tokenList)
+      {
+         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+            break;
+
+         searchNearestToken(targetLineNumber, token);
+      }
+      
+      TokenBeenImpl genericToken;
+      
+      if (nearestToken != null)
+      {
+         // test if nearest token is within the method
+         if (nearestToken.getParentToken() != null
+               && TokenType.METHOD.equals(nearestToken.getParentToken().getType()))
+         {
+            // search as local variables among the subTokens
+            genericToken = searchGenericTokenAmongMethodVariables(nodeContent, nearestToken, nearestToken.getParentToken());
+            if (genericToken != null) return genericToken;
+   
+            // search among the parameters of method
+            genericToken = searchGenericTokenAmongParameters(nodeContent, nearestToken.getParentToken().getParameters());
+            if (genericToken != null) return genericToken;
+            
+            // search among the properties (fields) of class
+            genericToken = searchGenericTokenAmongProperties(nodeContent, nearestToken.getParentToken().getParentToken());
+            if (genericToken != null) return genericToken;
+         }
+         
+         // test if nearest token is method token 
+         else if (TokenType.METHOD.equals(nearestToken.getType()))
+         {
+            // search among the parameters of method
+            genericToken = searchGenericTokenAmongParameters(nodeContent, nearestToken.getParameters());
+            if (genericToken != null) return genericToken;
+            
+            // search among the properties (fields) of class
+            genericToken = searchGenericTokenAmongProperties(nodeContent, nearestToken.getParentToken());
+            if (genericToken != null) return genericToken;
+         }
+         
+         // test if nearest token is within the function
+         if (nearestToken.getParentToken() != null
+                && TokenType.FUNCTION.equals(nearestToken.getParentToken().getType())
+            )
+         {
+            // search among the variables
+            genericToken = searchGenericTokenAmongVariables(nodeContent, nearestToken.getParentToken());
+            if (genericToken != null) return genericToken;
+            
+            // search among the parameters of method
+            genericToken = GroovyAutocompleteHelper.searchGenericTokenAmongParameters(nodeContent, nearestToken.getParentToken().getParameters());
+            if (genericToken != null) return genericToken;            
+         }
+         
+         // test if nearest token is in the root php node
+         else if (nearestToken.getParentToken() != null
+                && TokenType.PHP_TAG.equals(nearestToken.getParentToken().getType())
+            )
+         {
+            // search among the variables
+            genericToken = searchGenericTokenAmongVariables(nodeContent, nearestToken.getParentToken());
+            if (genericToken != null) return genericToken;
+         }
+         
+      }      
+         
+      return null;
+   } 
+
+   @Override
+   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   {
+      return TokenType.PHP_TAG.equals(token.getType()) || TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType());
+   }
+ 
 
    /**
-    * Recognize class name like "Handler" in case like "Handler::_"
-    * @param javaScriptNode
-    * @param cursorPosition
+    * Return class name in cases like "class a { _ }" or "class a { function b() { _ } }"
+    * @param targetLineNumber
+    * @param tokenList
     * @return
     */
-   private String getClassName(JavaScriptObject javaScriptNode, int cursorPosition)
+   private String getContainerClassName(int targetLineNumber, List<TokenBeenImpl> tokenList)
    {
-      // TODO Auto-generated method stub
+      if (tokenList == null || tokenList.size() == 0)
+         return null;
+
+      nearestToken = tokenList.get(0);
+      
+      for (TokenBeenImpl token : tokenList)
+      {
+         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+            break;
+
+         searchNearestToken(targetLineNumber, token);
+      }
+      
+      if (nearestToken != null)
+      {
+         // test if nearest token is within the class like "class a { _ }"
+         if (TokenType.CLASS.equals(nearestToken.getType()))
+         {
+            return nearestToken.getName();
+         }
+         
+         // test if nearest token is within the method of class like "class a { function b() { _ } }"
+         else if (nearestToken.getParentToken() != null
+                  && TokenType.METHOD.equals(nearestToken.getParentToken().getType())
+                  && TokenType.CLASS.equals(nearestToken.getParentToken().getParentToken().getType()))
+         {
+            return nearestToken.getParentToken().getParentToken().getName();
+         }
+         
+         // test if nearest token is within the method of class like "class a { function b() { _ } }"
+         else if (nearestToken.getParentToken() != null
+                  && TokenType.METHOD.equals(nearestToken.getType())
+                  && TokenType.CLASS.equals(nearestToken.getParentToken().getType()))
+         {
+            return nearestToken.getParentToken().getName();
+         }
+      }
+      
       return null;
-   }   
+   }
+   
 }

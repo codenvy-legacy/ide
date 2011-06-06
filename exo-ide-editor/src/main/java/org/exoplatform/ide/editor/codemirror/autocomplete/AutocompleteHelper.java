@@ -187,7 +187,7 @@ public abstract class AutocompleteHelper
       }
    }   
    
-   protected static TokenBeenImpl searchGenericTokenAmongLocalVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
+   protected static TokenBeenImpl searchGenericTokenAmongMethodVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
    {
       for (TokenBeenImpl subtoken: methodToken.getSubTokenList())
       {
@@ -216,6 +216,59 @@ public abstract class AutocompleteHelper
    protected static boolean isCurrentLineAfterTheContainerToken(int targetLineNumber, int lastContainerLineNumber)
    {
       return (targetLineNumber >= lastContainerLineNumber);
+   }
+
+
+   protected static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
+   {
+      for (TokenBeenImpl subtoken: classToken.getSubTokenList())
+      {
+         if (TokenType.PROPERTY.equals(subtoken.getType())
+                && nodeContent.equals(subtoken.getName()))
+         {
+            return subtoken;
+         }
+      }
+   
+      return null;
+   }
+
+
+   protected static TokenBeenImpl searchGenericTokenAmongParameters(String nodeContent, List<TokenBeenImpl> parameters)
+   {
+      if (parameters == null)
+         return null;
+      
+      for (TokenBeenImpl parameter: parameters)
+      {
+         if (nodeContent.equals(parameter.getName()))
+         {
+            return parameter;
+         }
+      }
+   
+      return null;
+   }
+
+
+   protected static TokenBeenImpl searchGenericTokenAmongVariables(String nodeContent, TokenBeenImpl parentToken)
+   {
+      for (TokenBeenImpl subtoken: parentToken.getSubTokenList())
+      {
+         if (TokenType.VARIABLE.equals(subtoken.getType())
+              && nodeContent.equals(subtoken.getName()))
+         {
+            return subtoken;
+         }
+         
+         // test if this is last node before target node
+         if (subtoken.equals(nearestToken))
+         {
+           return null;
+         }
+      }
+   
+      return null;
    }
 
 

@@ -135,7 +135,7 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
                && TokenType.METHOD.equals(nearestToken.getParentToken().getType()))
          {
             // search as local variables among the subTokens
-            genericToken = searchGenericTokenAmongLocalVariables(nodeContent, nearestToken, nearestToken.getParentToken());
+            genericToken = searchGenericTokenAmongMethodVariables(nodeContent, nearestToken, nearestToken.getParentToken());
             if (genericToken != null) return genericToken;
    
             // search among the parameters of method
@@ -168,36 +168,6 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          }
       }      
          
-      return null;
-   }   
-   
-   protected static TokenBeenImpl searchGenericTokenAmongParameters(String nodeContent, List<TokenBeenImpl> parameters)
-   {
-      if (parameters == null)
-         return null;
-      
-      for (TokenBeenImpl parameter: parameters)
-      {
-         if (nodeContent.equals(parameter.getName()))
-         {
-            return parameter;
-         }
-      }
-
-      return null;
-   }   
-
-   protected static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
-   {
-      for (TokenBeenImpl subtoken: classToken.getSubTokenList())
-      {
-         if (TokenType.PROPERTY.equals(subtoken.getType())
-                && nodeContent.equals(subtoken.getName()))
-         {
-            return subtoken;
-         }
-      }
-
       return null;
    } 
       

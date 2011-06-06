@@ -104,7 +104,7 @@ public class JavaScriptAutocompleteHelper extends AutocompleteHelper
          if (nearestToken.getParentToken() != null)
          {
             // search as local variables among the subTokens
-            genericToken = searchGenericTokenAmongLocalVariables(nodeContent, nearestToken, nearestToken.getParentToken());
+            genericToken = searchGenericTokenAmongMethodVariables(nodeContent, nearestToken, nearestToken.getParentToken());
             if (genericToken != null) 
             {
                return genericToken;
