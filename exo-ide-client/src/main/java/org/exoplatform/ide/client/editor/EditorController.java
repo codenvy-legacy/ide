@@ -637,6 +637,7 @@ public class EditorController implements EditorContentChangedHandler,
    public void onEditorGoToLine(EditorGoToLineEvent event)
    {
       editors.get(activeFile.getHref()).goToPosition(event.getLineNumber(), event.getColumnNumber());
+      editorsViews.get(editors.get(activeFile.getHref()).getEditorId()).activate();      
    }
 
    /**
