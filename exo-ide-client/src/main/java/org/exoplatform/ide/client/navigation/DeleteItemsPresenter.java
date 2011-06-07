@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -54,6 +48,12 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -268,7 +268,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          @Override
          protected void onSuccess(Item result)
          {
-            selectedItems.remove(item);
+            selectedItems.remove(0);
             eventBus.fireEvent(new ItemDeletedEvent(item));
 
             if (item instanceof File)
