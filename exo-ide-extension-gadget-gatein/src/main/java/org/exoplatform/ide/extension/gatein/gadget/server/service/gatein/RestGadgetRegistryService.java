@@ -16,7 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.service.gatein;
+package org.exoplatform.ide.extension.gatein.gadget.server.service.gatein;
+
+import org.apache.commons.io.IOUtils;
+import org.exoplatform.application.gadget.Gadget;
+import org.exoplatform.application.gadget.GadgetRegistryService;
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.impl.uri.UriComponent;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -34,20 +48,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.io.IOUtils;
-import org.exoplatform.application.gadget.Gadget;
-import org.exoplatform.application.gadget.GadgetRegistryService;
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.component.RequestLifeCycle;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.impl.uri.UriComponent;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -56,9 +56,7 @@ import org.json.JSONObject;
 @Path("/ide/gadget")
 public class RestGadgetRegistryService implements ResourceContainer
 {
-   
-//   private static final String WEBDAV_CONTEXT = "jcr";
-   
+
    /**
     * Class logger.
     */
@@ -98,23 +96,24 @@ public class RestGadgetRegistryService implements ResourceContainer
     */
    @POST
    @Path("/deploy")
-   public Response addGadget(@Context UriInfo uriInfo, @QueryParam(QueryParams.GADGET_URL) String gadgetUrl,
-      @QueryParam(QueryParams.PUBLIC_CONTEXT) String publicContext, @QueryParam(QueryParams.PRIVATE_CONTEXT) String privateContext)
+   public Response addGadget(@Context UriInfo uriInfo, @QueryParam("gadgetUrl") String gadgetUrl,
+      @QueryParam("publicContext") String publicContext, @QueryParam("privateContext") String privateContext)
    {
       String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);
       String publicContextEncoded = UriComponent.encode(publicContext, UriComponent.PATH, false);
       String privateContextEncoded = UriComponent.encode(privateContext, UriComponent.PATH, false);
-      
+
       urlEncoded = urlEncoded.replace(privateContextEncoded, publicContextEncoded);
-      
+
       log.info("DEPLOY GADGET: " + urlEncoded);
-      
+
       String name = "gadget" + urlEncoded.hashCode();
       try
       {
          Gadget gadget = createGadget(name, urlEncoded, false, uriInfo);
-         if (gadget == null) 
-            throw new WebApplicationException(new DeployGadgetException("Gadget not deployed. Possible reason GadgetRegistryService not found"), 404);
+         if (gadget == null)
+            throw new WebApplicationException(new DeployGadgetException(
+               "Gadget not deployed. Possible reason GadgetRegistryService not found"), 404);
          ExoContainer container = ExoContainerContext.getCurrentContainer();
          RequestLifeCycle.begin(container, true);
          try
@@ -146,7 +145,6 @@ public class RestGadgetRegistryService implements ResourceContainer
       }
    }
 
-
    /**
     * @param gadgetUrl the gadget URL
     * @param publicContext public context
@@ -155,17 +153,17 @@ public class RestGadgetRegistryService implements ResourceContainer
     */
    @POST
    @Path("/undeploy")
-   public Response removeGadget(@QueryParam(QueryParams.GADGET_URL) String gadgetUrl,
-      @QueryParam(QueryParams.PUBLIC_CONTEXT) String publicContext, @QueryParam(QueryParams.PRIVATE_CONTEXT) String privateContext)
+   public Response removeGadget(@QueryParam("gadgetUrl") String gadgetUrl,
+      @QueryParam("publicContext") String publicContext, @QueryParam("privateContext") String privateContext)
    {
-      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);      
+      String urlEncoded = UriComponent.encode(gadgetUrl, UriComponent.PATH, false);
       String publicContextEncoded = UriComponent.encode(publicContext, UriComponent.PATH, false);
       String privateContextEncoded = UriComponent.encode(privateContext, UriComponent.PATH, false);
-      
+
       urlEncoded = urlEncoded.replace(privateContextEncoded, publicContextEncoded);
-      
+
       log.info("UNDEPLOY GADGET: " + urlEncoded);
-      
+
       String name = "gadget" + urlEncoded.hashCode();
       try
       {
@@ -175,8 +173,9 @@ public class RestGadgetRegistryService implements ResourceContainer
          {
             GadgetRegistryService gadgetService =
                (GadgetRegistryService)container.getComponentInstanceOfType(GadgetRegistryService.class);
-            if (gadgetService == null) 
-               throw new WebApplicationException(new DeployGadgetException("Can not undeployed. Possible reason GadgetRegistryService not found"), 404);
+            if (gadgetService == null)
+               throw new WebApplicationException(new DeployGadgetException(
+                  "Can not undeployed. Possible reason GadgetRegistryService not found"), 404);
             gadgetService.removeGadget(name);
             return Response.noContent().build();
          }

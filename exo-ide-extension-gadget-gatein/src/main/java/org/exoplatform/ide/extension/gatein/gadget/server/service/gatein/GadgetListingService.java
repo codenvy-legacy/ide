@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.service.gatein;
+package org.exoplatform.ide.extension.gatein.gadget.server.service.gatein;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

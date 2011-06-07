@@ -16,16 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.gatein.gadget.server.service.gatein;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface UndeployGadgetHandler extends EventHandler
+public class DeployGadgetException extends Exception
 {
-   void onUndeployGadget(UndeployGadgetEvent event);
+
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1478688088741097862L;
+
+   private Throwable cause;
+
+   public DeployGadgetException(String message)
+   {
+      super(message);
+   }
+
+   public DeployGadgetException(Throwable t)
+   {
+      super(t.getMessage());
+      this.cause = t;
+   }
+
+   public Throwable getCause()
+   {
+      return this.cause;
+   }
+
 }

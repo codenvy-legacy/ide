@@ -16,37 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.service.gatein;
+package org.exoplatform.ide.extension.gatein.gadget.client.event;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class DeployGadgetException extends Exception
+public class DeployGadgetEvent extends GwtEvent<DeployGadgetHadndler>
 {
 
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1478688088741097862L;
+   public static final Type<DeployGadgetHadndler> TYPE = new Type<DeployGadgetHadndler>();
 
-   private Throwable cause;
-
-   public DeployGadgetException(String message)
+   @Override
+   protected void dispatch(DeployGadgetHadndler hadndler)
    {
-      super(message);
+      hadndler.onDeployGadget(this);
    }
 
-   public DeployGadgetException(Throwable t)
+   @Override
+   public Type<DeployGadgetHadndler> getAssociatedType()
    {
-      super(t.getMessage());
-      this.cause = t;
-   }
-
-   public Throwable getCause()
-   {
-      return this.cause;
+      return TYPE;
    }
 
 }

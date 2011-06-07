@@ -7,10 +7,20 @@
       <version>1.2.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-extension-gadget</artifactId>
+   <artifactId>exo-ide-extension-gadget-gatein</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension : Gadget</name>
+   <name>eXo IDE :: Extension : GateIn Gadget Deploy</name>
+   <properties>
+      <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
+   </properties>
    <dependencies>
+      <dependency>
+         <groupId>org.exoplatform.portal</groupId>
+         <artifactId>exo.portal.component.application-registry</artifactId>
+         <type>jar</type>
+         <scope>provided</scope>
+         <version>${org.exoplatform.gatein.version}</version>
+      </dependency>
       <dependency>
          <groupId>org.gatein.shindig</groupId>
          <artifactId>shindig-common</artifactId>

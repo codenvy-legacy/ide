@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client.controls;
+package org.exoplatform.ide.extension.gatein.gadget.client.controls;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -24,32 +24,34 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.gadget.client.GadgetClientBundle;
-import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
+import org.exoplatform.ide.extension.gatein.gadget.client.GateinGadgetClientBundle;
+import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @RolesAllowed({"administrators"})
-public class DeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class UndeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   private static final String ID = "Run/Deploy Gadget";
+   private static final String ID = "Run/UnDeploy Gadget";
 
-   private static final String TITLE = "Deploy Gadget to GateIn";
+   private static final String TITLE = "UnDeploy Gadget from GateIn";
 
-   public DeployGadgetCommand()
+   public UndeployGadgetCommand()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setDelimiterBefore(true);
-      setImages(GadgetClientBundle.INSTANCE.deployGadget(), GadgetClientBundle.INSTANCE.deployGadgetDisabled());
-      setEvent(new DeployGadgetEvent());
+      setImages(GateinGadgetClientBundle.INSTANCE.undeployGadget(), GateinGadgetClientBundle.INSTANCE.undeployGadgetDisabled());
+      //      setIcon(Images.UNDEPLOY_GADGET);
+      setEvent(new UndeployGadgetEvent());
+
    }
 
    /**
@@ -69,11 +71,12 @@ public class DeployGadgetCommand extends SimpleControl implements IDEControl, Ed
          return;
       }
 
-      setVisible(true);
+      // setVisible(true);
 
       if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
       {
          setVisible(true);
+
          if (event.getFile().isNewFile())
          {
             setEnabled(false);

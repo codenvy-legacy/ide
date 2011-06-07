@@ -26,10 +26,8 @@
       <org.exoplatform.core.version>2.4.0-GA-SNAPSHOT</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.0-GA-SNAPSHOT</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-SNAPSHOT</org.exoplatform.gwtframework.version>
-      <org.exoplatform.gatein.version>3.1.4-PLF</org.exoplatform.gatein.version>
       <!-- Third parties -->
       <gwt.version>2.2.0</gwt.version>
-      <smartgwt.version>2.3-nb01</smartgwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
       <gwt.maven.plugin.version>2.2.0</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
@@ -141,12 +139,6 @@
             <artifactId>exo-gwtframework-ui</artifactId>
             <version>${org.exoplatform.gwtframework.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-smartgwt</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
-         </dependency>
-
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
@@ -299,11 +291,6 @@
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>exo.portal.component.application-registry</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
-         </dependency>
-         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwt.version}</version>
@@ -317,11 +304,6 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>com.smartgwt</groupId>
-            <artifactId>smartgwt</artifactId>
-            <version>${smartgwt.version}</version>
          </dependency>
          <dependency>
             <groupId>com.google.gwt.google-apis</groupId>
@@ -414,11 +396,6 @@
             <version>4.7</version>
          </dependency>
          <dependency>
-            <groupId>org.gatein.tools</groupId>
-            <artifactId>packager</artifactId>
-            <version>1.0.0-CR01</version>
-         </dependency>
-         <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>kernel.packaging.module</artifactId>
             <version>${org.exoplatform.kernel.version}</version>
@@ -442,31 +419,6 @@
             <groupId>org.exoplatform.jcr</groupId>
             <artifactId>jcr.packaging.module</artifactId>
             <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>portal.packaging.module</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>portal.packaging.product</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>exo.portal.server.tomcat.patch</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>exo.portal.starter.war</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.portal</groupId>
-            <artifactId>exo.portal.gadgets-core</artifactId>
-            <version>${org.exoplatform.gatein.version}</version>
          </dependency>
          <!-- Chromattic -->
          <dependency>
@@ -677,6 +629,7 @@
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-gadget</module>
+      <module>exo-ide-extension-gadget-gatein</module>
       <module>exo-ide-editor-extension-groovy</module>
       <module>exo-ide-editor-extension-gtmpl</module>
       <module>exo-ide-editor-extension-chromattic</module>
@@ -694,6 +647,7 @@
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
+      <module>exo-ide-extension-openshift</module>
 
       <module>exo-ide-docs</module>
 
@@ -704,6 +658,5 @@
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
-    <module>exo-ide-extension-openshift</module>
   </modules>
 </project>

@@ -16,18 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.client.event;
+package org.exoplatform.ide.extension.gatein.gadget.client.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface DeployGadgetHadndler extends EventHandler
+public class UndeployGadgetEvent extends GwtEvent<UndeployGadgetHandler>
 {
+
+   public static final Type<UndeployGadgetHandler> TYPE = new Type<UndeployGadgetHandler>();
    
-   void onDeployGadget(DeployGadgetEvent event);
+   
+   @Override
+   protected void dispatch(UndeployGadgetHandler handler)
+   {
+      handler.onUndeployGadget(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UndeployGadgetHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+   
    
 }

@@ -16,22 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.service.gatein;
+package org.exoplatform.ide.extension.gatein.gadget.client;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Created by The eXo Platform SAS .
- * 
+ * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version $Id: $
  */
 
-public class QueryParams
+public interface GateinGadgetClientBundle extends ClientBundle
 {
 
-   public static final String GADGET_URL = "gadgetURL";
+   public static final GateinGadgetClientBundle INSTANCE = GWT.create(GateinGadgetClientBundle.class);
+
+   @Source("bundled/deploy_gadget.png")
+   ImageResource deployGadget();
+
+   @Source("bundled/deploy_gadget_Disabled.png")
+   ImageResource deployGadgetDisabled();
+
+   @Source("bundled/undeploy_gadget.png")
+   ImageResource undeployGadget();
+
+   @Source("bundled/undeploy_gadget_Disabled.png")
+   ImageResource undeployGadgetDisabled();
    
-   public static final String PUBLIC_CONTEXT = "publicContext";
+   @Source("bundled/preview.png")
+   ImageResource preview();
    
-   public static final String PRIVATE_CONTEXT = "privateContext";
+   @Source("bundled/preview_Disabled.png")
+   ImageResource previewDisabled();
+   
    
 }

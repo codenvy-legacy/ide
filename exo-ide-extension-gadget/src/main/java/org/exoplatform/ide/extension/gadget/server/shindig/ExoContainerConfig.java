@@ -23,8 +23,6 @@ import org.apache.shindig.auth.BlobCrypterSecurityTokenDecoder;
 import org.apache.shindig.config.ContainerConfigException;
 import org.apache.shindig.config.JsonContainerConfig;
 import org.apache.shindig.expressions.Expressions;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import java.security.SecureRandom;
 
@@ -55,10 +53,6 @@ import com.google.inject.name.Named;
 public class ExoContainerConfig extends JsonContainerConfig
 {
 
-   /** . */
-   private Log log = ExoLogger.getLogger(ExoContainerConfig.class);
-
-
    @Inject
    public ExoContainerConfig(@Named("shindig.containers.default") String s, Expressions expressions)
       throws ContainerConfigException
@@ -67,12 +61,11 @@ public class ExoContainerConfig extends JsonContainerConfig
       KeyCreator.createKeyFile();
    }
 
-   
-
    @Override
    public Object getProperty(String container, String property)
    {
-      if (property.equals(BlobCrypterSecurityTokenDecoder.SECURITY_TOKEN_KEY_FILE) && KeyCreator.getKeyFilePath() != null)
+      if (property.equals(BlobCrypterSecurityTokenDecoder.SECURITY_TOKEN_KEY_FILE)
+         && KeyCreator.getKeyFilePath() != null)
       {
          return KeyCreator.getKeyFilePath();
       }

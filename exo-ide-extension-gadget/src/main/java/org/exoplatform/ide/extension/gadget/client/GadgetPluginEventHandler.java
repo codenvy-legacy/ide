@@ -23,7 +23,6 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
@@ -31,17 +30,11 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetEvent;
-import org.exoplatform.ide.extension.gadget.client.event.DeployGadgetHadndler;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
-import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetEvent;
-import org.exoplatform.ide.extension.gadget.client.event.UndeployGadgetHandler;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
@@ -53,8 +46,8 @@ import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
  * @version $Id: $
  *
  */
-public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployGadgetHandler,
-   EditorActiveFileChangedHandler, PreviewGadgetHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
+public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler, PreviewGadgetHandler,
+   ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -64,7 +57,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
    private IDEConfiguration applicationConfiguration;
 
    private boolean previewOpened = false;
-   
+
    private GadgetPreviewPane gadgetPreviewPane;
 
    public GadgetPluginEventHandler(HandlerManager eventBus)
@@ -72,91 +65,11 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
       this.eventBus = eventBus;
 
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(DeployGadgetEvent.TYPE, this);
-      eventBus.addHandler(UndeployGadgetEvent.TYPE, this);
       eventBus.addHandler(PreviewGadgetEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-
    }
 
-   /**
-    * @see org.exoplatform.ideall.plugin.gadget.event.DeployGadgetHadndler#onDeployGadget(org.exoplatform.ideall.plugin.gadget.event.DeployGadgetEvent)
-    */
-   public void onDeployGadget(DeployGadgetEvent event)
-   {
-      GadgetService.getInstance().deployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
-         {
-            String outputContent = "<b>" + result + "</b> deployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));      
-         }
-         
-         @Override
-         protected void onFailure(Throwable exc)
-         {
-            if (exc instanceof ServerException)
-            {
-               ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getResult() + "</b> deploy failed.&nbsp;";
-               sendExceptionEvent(exception, outputContent);
-            }
-            else
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exc));
-            }  
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetHandler#onUndeployGadget(org.exoplatform.ideall.plugin.gadget.event.UndeployGadgetEvent)
-    */
-   public void onUndeployGadget(UndeployGadgetEvent event)
-   {
-      GadgetService.getInstance().undeployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
-         {
-            String outputContent = "<b>" + result + "</b> undeployed successfully.";
-            eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-         }
-         
-         @Override
-         protected void onFailure(Throwable exc)
-         {
-            if (exc instanceof ServerException)
-            {
-               ServerException exception = (ServerException)exc;
-               String outputContent = "<b>" + this.getResult() + "</b> undeploy failed.&nbsp;";
-               sendExceptionEvent(exception, outputContent);
-            }
-            else
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exc));
-            }
-         }
-      }); 
-   }
-
-   /**
-    * @param exception
-    * @param message
-    */
-   private void sendExceptionEvent(ServerException exception, String message)
-   {
-      message += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-      if (!exception.getMessage().equals(""))
-      {
-         message += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on "<br />"
-      }
-      eventBus.fireEvent(new OutputEvent(message, OutputMessage.Type.ERROR));
-   }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
@@ -166,7 +79,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
          IDE.getInstance().closeView(GadgetPreviewPane.ID);
          previewOpened = false;
       }
-      
+
    }
 
    /**
@@ -226,7 +139,7 @@ public class GadgetPluginEventHandler implements DeployGadgetHadndler, UndeployG
                   gadgetPreviewPane.setViewVisible();
                }
             }
-            
+
             gadgetPreviewPane.setConfiguration(applicationConfiguration);
             gadgetPreviewPane.setMetadata(result);
             gadgetPreviewPane.showGadget();

@@ -23,9 +23,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.gadget.client.controls.DeployGadgetCommand;
 import org.exoplatform.ide.extension.gadget.client.controls.ShowGadgetPreviewControl;
-import org.exoplatform.ide.extension.gadget.client.controls.UndeployGadgetCommand;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -47,20 +45,9 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
    public void initialize()
    {
       this.eventBus = IDE.EVENT_BUS;
-
-      IDE.getInstance().addControl(new DeployGadgetCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true);
       IDE.getInstance().addControl(new ShowGadgetPreviewControl(), DockTarget.TOOLBAR,true);
-
-      
-      //      addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget", "Create New Google 4Gadget",
-      //         Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
-      //      addControl(new DeployGadgetCommand(eventBus), true, true);
-      //      addControl(new UndeployGadgetCommand(eventBus), true, true);
-
       new GadgetPluginEventHandler(eventBus);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

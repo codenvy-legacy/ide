@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -30,6 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.GadgetMetadataUnmarshaler;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenRequestMarshaler;
 import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponseUnmarshal;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 
 /**
@@ -40,12 +39,6 @@ import org.exoplatform.ide.extension.gadget.client.service.marshal.TokenResponse
 public class GadgetServiceImpl extends GadgetService
 {
 
-   private static final String CONTEXT = "/ide/gadget";
-
-   private static final String DEPLOY = "/deploy";
-
-   private static final String UNDEPLOY = "/undeploy";
-
    private HandlerManager eventBus;
 
    private Loader loader;
@@ -54,7 +47,6 @@ public class GadgetServiceImpl extends GadgetService
 
    private String gadgetServer;
 
-   private String publicContext;
 
    public GadgetServiceImpl(HandlerManager eventBus, Loader loader, String restServiceContext, String gadgetServer,
       String publicContext)
@@ -63,7 +55,6 @@ public class GadgetServiceImpl extends GadgetService
       this.loader = loader;
       this.restServiceContext = restServiceContext;
       this.gadgetServer = gadgetServer;
-      this.publicContext = publicContext;
    }
 
    public void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<GadgetMetadata>callback)
@@ -95,35 +86,8 @@ public class GadgetServiceImpl extends GadgetService
       callback.setPayload(unmarshal);
 
       String url = restServiceContext + "/services/shindig/securitytoken/createToken";
-      //String url = Configuration.getInstance().getContext() + "/services/shindig/securitytoken/createToken";
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
          .data(marshaler).send(callback);
-   }
-
-   @Override
-   public void deployGadget(String href, AsyncRequestCallback<String> callback)
-   {
-      String url =
-         restServiceContext +
-         /*Configuration.getInstance().getContext() + */CONTEXT + DEPLOY + "?" + QueryParams.GADGET_URL + "="
-            + URL.encodeQueryString(href) + "&" + QueryParams.PRIVATE_CONTEXT + "=" + URL.encodeQueryString(restServiceContext)
-            + "&" + QueryParams.PUBLIC_CONTEXT + "=" + URL.encodeQueryString(publicContext);
-      callback.setResult(url);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
-   }
-
-   @Override
-   public void undeployGadget(String href, AsyncRequestCallback<String> callback)
-   {
-      String url =
-         restServiceContext + /*Configuration.getInstance().getContext() + */CONTEXT + UNDEPLOY + "?"
-            + QueryParams.GADGET_URL + "=" + URL.encodeQueryString(href) + "&" + QueryParams.PRIVATE_CONTEXT + "="
-            + URL.encodeQueryString(restServiceContext) + "&" + QueryParams.PUBLIC_CONTEXT + "="
-            + URL.encodeQueryString(publicContext);
-      callback.setResult(url);
-      callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
 }

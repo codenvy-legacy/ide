@@ -54,18 +54,4 @@ public abstract class GadgetService
     */
    public abstract void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback);
    
-   /**
-    * @param href
-    * @param callback
-    */
-   public abstract void deployGadget(String href, AsyncRequestCallback<String> callback);
-   
-   /**
-    * @param href
-    * @param callback
-    */
-   public abstract void undeployGadget(String href, AsyncRequestCallback<String> callback);
-   
-   
-
 }
