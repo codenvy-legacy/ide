@@ -21,6 +21,7 @@ package org.exoplatform.ide.operation.edit.outline;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -99,6 +100,7 @@ public class CodeOutlineXmlTest extends BaseTest
       //---- 2 -----------------
       IDE.TOOLBAR.runCommand("Show Outline");
       waitForElementPresent("ideOutlineTreeGrid");
+      Thread.sleep(TestConstants.SLEEP);
 
       //---- 3 -----------------
       checkTreeCorrectlyCreated();

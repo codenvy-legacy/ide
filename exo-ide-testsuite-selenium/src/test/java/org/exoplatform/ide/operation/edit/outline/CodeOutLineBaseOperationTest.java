@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -30,8 +29,6 @@ import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -118,13 +115,8 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "div", true);
 
       //---- 5 -----------------
-      //move in editor
-
       //click on editor
-      selenium.clickAt("//body[@class='editbox']", "5,5");
-      Thread.sleep(TestConstants.SLEEP);
-      //press key DOWN to navigate in editor
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      goToLine(27);
 
       //check outline tree
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
