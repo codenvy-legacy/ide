@@ -320,7 +320,10 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
    @Override
    protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
-      return TokenType.PHP_TAG.equals(token.getType()) || TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType());
+      return TokenType.PHP_TAG.equals(token.getType()) 
+               || TokenType.CLASS.equals(token.getType()) 
+               || TokenType.METHOD.equals(token.getType()) 
+               || TokenType.FUNCTION.equals(token.getType());
    }
  
 
