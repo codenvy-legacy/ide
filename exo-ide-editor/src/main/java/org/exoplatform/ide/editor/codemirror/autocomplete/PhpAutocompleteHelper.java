@@ -140,6 +140,20 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
                   );
                }
             }
+            
+            // search token for variables like "$name::_" or "$name::ch_"
+            else if ((tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>) tokenList)) != null) 
+            {
+               return new TokenBeenImpl(
+                  tokenBeforeCursor.getName(), 
+                  tokenBeforeCursor.getType(), 
+                  lineNumber, 
+                  tokenBeforeCursor.getMimeType(), 
+                  tokenBeforeCursor.getElementType(),
+                  tokenBeforeCursor.getModifiers()
+               );
+            }
+            
             else
             {
                // return class name before token like "Handler" in case like "Handler::_"
