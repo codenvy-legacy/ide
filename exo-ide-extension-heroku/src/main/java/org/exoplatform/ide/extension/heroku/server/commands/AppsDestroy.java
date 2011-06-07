@@ -23,6 +23,7 @@ import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,8 @@ import java.net.URL;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Permanently destroy an application.
@@ -54,12 +57,13 @@ public class AppsDestroy extends HerokuCommand
    @POST
    public void destroy( //
       @QueryParam("name") String name, //
-      @QueryParam("workDir") File workDir //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo
    ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
       if (name == null || name.isEmpty())
       {
-         name = detectAppName(workDir);
+         name = detectAppName(new File(workDir.getLocalPath(uriInfo)));
          if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
       }

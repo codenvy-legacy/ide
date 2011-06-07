@@ -23,6 +23,7 @@ import org.exoplatform.ide.extension.heroku.server.CredentialsNotFoundException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -39,7 +40,9 @@ import java.util.Map;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -76,12 +79,13 @@ public class AppsInfo extends HerokuCommand
    public Map<String, String> info( //
       @QueryParam("name") String name, //
       @QueryParam("raw") boolean inRawFormat, //
-      @QueryParam("workDir") File workDir //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo
    ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
       if (name == null || name.isEmpty())
       {
-         name = detectAppName(workDir);
+         name = detectAppName(new File(workDir.getLocalPath(uriInfo)));
          if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
       }

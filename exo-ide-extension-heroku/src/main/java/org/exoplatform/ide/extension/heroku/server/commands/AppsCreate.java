@@ -27,6 +27,7 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -44,7 +45,9 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -81,8 +84,8 @@ public class AppsCreate extends HerokuCommand
    public Map<String, String> create( //
       @QueryParam("name") String name, //
       @QueryParam("remote") @DefaultValue("heroku") String remote, //
-      @QueryParam("workDir") File workDir //
-   ) throws HerokuException, CredentialsNotFoundException, CommandException
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo) throws HerokuException, CredentialsNotFoundException, CommandException
    {
       HttpURLConnection http = null;
       try
@@ -129,16 +132,20 @@ public class AppsCreate extends HerokuCommand
          String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
          String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
 
-         if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+         if (workDir != null)
          {
-            GitConnection git = GitConnectionFactory.getInstance().getConnection(workDir, null);
-            try
+            String localPath = workDir.getLocalPath(uriInfo);
+            if (new File(localPath, Constants.DOT_GIT).exists())
             {
-               git.remoteAdd(new RemoteAddRequest(remote, gitUrl));
-            }
-            finally
-            {
-               git.close();
+               GitConnection git = GitConnectionFactory.getInstance().getConnection(localPath, null);
+               try
+               {
+                  git.remoteAdd(new RemoteAddRequest(remote, gitUrl));
+               }
+               finally
+               {
+                  git.close();
+               }
             }
          }
 

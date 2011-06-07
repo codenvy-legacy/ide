@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
@@ -41,7 +42,9 @@ import java.util.Map;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Rename application.
@@ -74,15 +77,17 @@ public class AppsRename extends HerokuCommand
    public Map<String, String> rename( //
       @QueryParam("name") String name, //
       @QueryParam("newname") String newname, //
-      @QueryParam("workDir") File workDir //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo
    ) throws HerokuException, CredentialsNotFoundException, CommandException
    {
       if (newname == null || newname.isEmpty())
          throw new CommandException("New name may not be null or empty string. ");
 
+      File localDir = new File(workDir.getLocalPath(uriInfo));
       if (name == null || name.isEmpty())
       {
-         name = detectAppName(workDir);
+         name = detectAppName(localDir);
          if (name == null || name.isEmpty())
             throw new CommandException("Application name is not defined. ");
       }
@@ -115,12 +120,12 @@ public class AppsRename extends HerokuCommand
 
          // Get updated info about application.
          Map<String, String> info =
-            ((AppsInfo)Heroku.getInstance().getCommand("apps:info")).info(newname, false, workDir);
+            ((AppsInfo)Heroku.getInstance().getCommand("apps:info")).info(newname, false, workDir, uriInfo);
 
          String gitUrl = (String)info.get("gitUrl");
 
          RemoteListRequest listRequest = new RemoteListRequest(null, true);
-         git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+         git = GitConnectionFactory.getInstance().getConnection(localDir, null);
          List<Remote> remoteList = git.remoteList(listRequest);
          for (Remote r : remoteList)
          {

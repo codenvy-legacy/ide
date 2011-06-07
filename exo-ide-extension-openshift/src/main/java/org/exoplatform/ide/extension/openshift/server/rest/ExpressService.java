@@ -22,6 +22,7 @@ import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -71,9 +74,9 @@ public class ExpressService
    @POST
    @Path("apps/create")
    public AppInfo createApplication(@QueryParam("app") String app, @QueryParam("type") String type,
-      @QueryParam("workDir") File workDir) throws ExpressException, IOException
+      @QueryParam("workdir") GitLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException
    {
-      return express.createApplication(app, type, workDir);
+      return express.createApplication(app, type, new File(workDir.getLocalPath(uriInfo)));
    }
 
    @POST
