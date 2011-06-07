@@ -181,6 +181,28 @@
                               </field>
                            </object>
                         </value>
+                        <value>
+                           <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                              <field name="userName">
+                                 <string>admin</string>
+                              </field>
+                              <field name="password">
+                                 <string>gtn</string>
+                              </field>
+                              <field name="firstName">
+                                 <string>Admin</string>
+                              </field>
+                              <field name="lastName">
+                                 <string>Administrator</string>
+                              </field>
+                              <field name="email">
+                                 <string>admin@localhost</string>
+                              </field>
+                              <field name="groups">
+                                 <string>member:/ide/users,member:/ide/administrators</string>
+                              </field>
+                           </object>
+                        </value>
                      </collection>
                   </field>
                </object>
