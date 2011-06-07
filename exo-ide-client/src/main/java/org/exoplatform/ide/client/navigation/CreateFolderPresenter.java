@@ -99,7 +99,7 @@ public class CreateFolderPresenter
       {
          public void onKeyPress(KeyPressEvent event)
          {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
             {
                createFolder();
             }

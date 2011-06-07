@@ -255,7 +255,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       {
          public void onKeyPress(KeyPressEvent event)
          {
-            onKeyPressed(event.getCharCode(), event.isControlKeyDown());
+            onKeyPressed(event.getNativeEvent().getKeyCode(), event.isControlKeyDown());
          }
 
       });
@@ -600,31 +600,31 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    }
 
    // keyboard keys doesn't work within the TreeGrid in the Internet Explorer 8.0, Safari 5.0.2 and Google Chrome 7.0.5 seems because of SmartGWT issues
-   protected void onKeyPressed(char charCode, boolean isControlKeyDown)
+   protected void onKeyPressed(int keyCode, boolean isControlKeyDown)
    {
       if (isControlKeyDown)
       {
          // "Ctrl+C" hotkey handling
-         if (String.valueOf(charCode).toUpperCase().equals("C"))
+         if (String.valueOf(keyCode).toUpperCase().equals("C"))
          {
             eventBus.fireEvent(new CopyItemsEvent());
          }
 
          // "Ctrl+X" hotkey handling         
-         else if (String.valueOf(charCode).toUpperCase().equals("X"))
+         else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
             eventBus.fireEvent(new CutItemsEvent());
          }
 
          // "Ctrl+V" hotkey handling
-         else if (String.valueOf(charCode).toUpperCase().equals("V"))
+         else if (String.valueOf(keyCode).toUpperCase().equals("V"))
          {
             eventBus.fireEvent(new PasteItemsEvent());
          }
       }
 
       // "Delete" hotkey handling
-      else if (charCode == KeyCodes.KEY_DELETE)
+      else if (keyCode == KeyCodes.KEY_DELETE)
       {
          eventBus.fireEvent(new DeleteItemEvent());
       }
