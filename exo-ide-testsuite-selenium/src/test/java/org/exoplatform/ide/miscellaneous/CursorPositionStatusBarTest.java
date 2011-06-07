@@ -75,19 +75,19 @@ public class CursorPositionStatusBarTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.NAVIGATION.saveFileAs(FILE_1);
 
-//      IDE.WORKSPACE.waitForRootItem();
+      //      IDE.WORKSPACE.waitForRootItem();
 
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //click on editor
-     IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor();
       // change cursor position in editor
       for (int i = 0; i < 6; i++)
       {
          selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_RIGHT);
          selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       }
-      
+
       IDE.selectMainFrame();
       //chek position in status bar 
       assertEquals("1 : 7", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
@@ -115,17 +115,18 @@ public class CursorPositionStatusBarTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       // selectMainFrame();
-     IDE.EDITOR.selectTab(0);
+      IDE.EDITOR.selectTab(0);
 
       //TODO fix problem see issue IDE -713
       //		check status bar
       assertEquals("7 : 8", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
       //	refresh
       refresh();
-      
+
+      waitForElementPresent("//td[@class='exo-statusText-table-middle']/nobr[text()='1 : 1']");
       //			check status bar
       assertEquals("1 : 1", selenium.getText("//td[@class='exo-statusText-table-middle']/nobr"));
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass
