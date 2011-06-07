@@ -440,17 +440,20 @@ public class CodeMirror extends Editor
    }-*/;
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode) {      
+      int cursorRow = getCursorRow();
+
       // calculate cursorOffsetY
       int cursorOffsetY = getAbsoluteTop() + getCursorOffsetY(0);
 
       // calculate cursorOffsetX
-      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + 11;   // 8px per symbol 
+      int cursorCol = getCursorCol();
+      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + 11;   // 8px per symbol 
 
       if (this.showLineNumbers) {
          cursorOffsetX += this.lineNumberFieldWidth;
       }
       
-      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorPositionRow, cursorPositionCol);
+      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorRow, cursorCol);
       
       List<? extends Token> tokenList = getTokenList();
       
@@ -467,8 +470,8 @@ public class CodeMirror extends Editor
          cursorOffsetX,
          cursorOffsetY,
          lineContent,
-         cursorPositionCol,
-         cursorPositionRow,
+         cursorCol,
+         cursorRow,
          (List<Token>) tokenList,
          currentLineMimeType,
          tokenBeforeCursor
