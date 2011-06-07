@@ -242,7 +242,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
 
       display.setRemoteValues(remoteValues);
-
+      
       getBranches(workDir, false);
       getBranches(workDir, true);
    }

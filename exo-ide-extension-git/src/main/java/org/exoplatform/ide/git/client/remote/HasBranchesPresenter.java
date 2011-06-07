@@ -105,8 +105,6 @@ public abstract class HasBranchesPresenter extends GitPresenter
          @Override
          protected void onSuccess(List<Branch> result)
          {
-            if (result.size() <= 0)
-               return;
             if (remote)
             {
                remoteBranches = result;
@@ -158,11 +156,12 @@ public abstract class HasBranchesPresenter extends GitPresenter
     */
    protected String[] getRemoteBranchesToDisplay(String remoteName)
    {
+      List<String> branchesToDisplay = new ArrayList<String>();
       if (remoteBranches == null || remoteBranches.size() <= 0 || remoteName == null)
       {
-         return null;
+         branchesToDisplay.add("master");
+         return branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
       }
-      List<String> branchesToDisplay = new ArrayList<String>();
       String compareString = "refs/remotes/" + remoteName + "/";
       for (Branch branch : remoteBranches)
       {
