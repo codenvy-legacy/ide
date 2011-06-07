@@ -169,12 +169,12 @@ public class HighlightCurrentLineTest extends BaseTest
       // switch tab to previous file.
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.waitTabPresent(0);
-      lineHighlighterTest(1, 0);
+      lineHighlighterTest(8, 0);
 
       // Return to new HTML file
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.waitTabPresent(1);
-      lineHighlighterTest(1, 1);
+      lineHighlighterTest(2, 1);
 
       // switch tab to previous file.
       IDE.EDITOR.selectTab(0);
