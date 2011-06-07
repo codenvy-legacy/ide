@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -67,6 +68,14 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    private static final String FILE_NAME_FIELD = "ideUploadFormFilenameField";
 
    private static final String ID_BROWSE_BUTTON = "ideUploadFormBrowseButton";
+   
+   private static final String BROWSE_BTN = IDE.UPLOAD_CONSTANT.uploadBrowseBtn();
+   
+   private static final String UPLOAD_FOLDER_TITLE = IDE.UPLOAD_CONSTANT.uploadFolderTitle();
+   
+   private static final String UPLOAD_BUTTON = IDE.UPLOAD_CONSTANT.uploadButton();
+   
+   private static final String FOLDER_TO_UPLOAD = IDE.UPLOAD_CONSTANT.folderToUpload();
 
    private FormPanel uploadForm;
 
@@ -136,9 +145,9 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    
    protected void initTitles()
    {
-      title = "Upload folder";
-      buttonTitle = "Upload";
-      labelTitle = "Folder to upload (zip):";
+      title = UPLOAD_FOLDER_TITLE;
+      buttonTitle = UPLOAD_BUTTON;
+      labelTitle = FOLDER_TO_UPLOAD;
    }
    
    protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
@@ -220,7 +229,7 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       absolutePanel.setSize("80px", "22px");
       IButton selectButton = new IButton();
       selectButton.setID(ID_BROWSE_BUTTON);
-      selectButton.setTitle("Browse...");
+      selectButton.setTitle(BROWSE_BTN);
       selectButton.setWidth(80);
       selectButton.setHeight(22);
 

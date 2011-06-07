@@ -26,6 +26,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.vfs.Version;
 
 import java.util.Comparator;
@@ -40,11 +41,11 @@ public class VersionsGrid extends ListGrid<Version>
 {
    private final String ID = "ideViewVersionsGrid";
    
-   private final String NAME = "Name";
+   private final String NAME = IDE.VERSIONS_CONSTANT.versionsGridName();
 
-   private final String DATE = "Created";
+   private final String DATE = IDE.VERSIONS_CONSTANT.versionsGridDate();
 
-   private final String LENGTH = "Size";
+   private final String LENGTH = IDE.VERSIONS_CONSTANT.versionsGridLength();
 
    Column<Version, String> nameColumn;
    

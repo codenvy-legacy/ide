@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -97,10 +98,26 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    private Label findResultLabel;
 
    private VerticalPanel layout;
+   
+   private static final String TITLE = IDE.EDITOR_CONSTANT.findTextTitle();
+   
+   private static final String FIND = IDE.EDITOR_CONSTANT.findTextFind();
+   
+   private static final String REPLACE_WITH = IDE.EDITOR_CONSTANT.findTextReplaceWith();
+   
+   private static final String CASE_SENSITIVE = IDE.EDITOR_CONSTANT.findTextCaseSensitive();
+   
+   private static final String FIND_BUTTON = IDE.EDITOR_CONSTANT.findTextFindButton();
+   
+   private static final String REPLACE_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceButton();
+   
+   private static final String REPLACE_FIND_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceFindButton();
+   
+   private static final String REPLACE_ALL_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceAllButton();
 
    public FindTextView()
    {
-      super(ID, "popup", "Find/Replace", new Image(IDEImageBundle.INSTANCE.findText()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.findText()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       layout = new VerticalPanel();
       layout.setSize("100%", "100%");
@@ -123,10 +140,10 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private void createTextFields()
    {
-      findField = createTextField("Find", FIND_FIELD);
-      replaceField = createTextField("Replace with", REPLACE_FIELD);
+      findField = createTextField(FIND, FIND_FIELD);
+      replaceField = createTextField(REPLACE_WITH, REPLACE_FIELD);
 
-      caseSensitiveField = createCheckBoxItem("Case sensitive", CASE_SENSITIVE_FIELD);
+      caseSensitiveField = createCheckBoxItem(CASE_SENSITIVE, CASE_SENSITIVE_FIELD);
       DOM.setStyleAttribute(caseSensitiveField.getElement(), "marginLeft", "76px");
 
       layout.add(findField);
@@ -137,11 +154,11 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private void createButtons()
    {
-      findButton = createButton("Find", "", ID_FIND_BUTTON);
-      cancelButton = createButton("Cancel", Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
-      replaceButton = createButton("Replace", "", ID_REPLACE_BUTTON);
-      replaceFindButton = createButton("Replace/Find", "", ID_REPLACE_FIND_BUTTON);
-      replaceAllButton = createButton("Replace All", "", ID_REPLACE_ALL_BUTTON);
+      findButton = createButton(FIND_BUTTON, "", ID_FIND_BUTTON);
+      cancelButton = createButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
+      replaceButton = createButton(REPLACE_BUTTON, "", ID_REPLACE_BUTTON);
+      replaceFindButton = createButton(REPLACE_FIND_BUTTON, "", ID_REPLACE_FIND_BUTTON);
+      replaceAllButton = createButton(REPLACE_ALL_BUTTON, "", ID_REPLACE_ALL_BUTTON);
 
       HorizontalPanel upPanel = new HorizontalPanel();
       upPanel.setHeight(BUTTON_HEIGHT + "px");

@@ -18,22 +18,21 @@
  */
 package org.exoplatform.ide.client.versioning;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.editor.api.EditorParameters;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.editor.api.EditorParameters;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 

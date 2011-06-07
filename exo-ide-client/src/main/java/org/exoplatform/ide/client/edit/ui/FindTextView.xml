@@ -18,56 +18,52 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder>
+	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="ideConst"></ui:with>
+	<ui:with type="org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant" field="editorConst"></ui:with>
 
-<vpanel>
-	<textitem name="findTextField" text="Find" value="some text" />
-	<textitem name="replaceTextField" text="Replace with" value="replace text" />
-	
-	<booleanitem name="caseSensitiveField" text="Case sensitive" value="true" />
-	<!--
-	
-		HasValue<Boolean> getCaseSensitiveField();
-		void enableCaseSensitiveField();
-		void disableCaseSensitiveField();
-		void showCaseSensitiveField()
-		void hideCaseSensitiveField();
-		void setCaseSensitiveFieldText();
-	 
-	 -->
-	 
-	<hpanel>
-		<spacer />
-		<button name="findTextButton" text="Find" image="find" />
-		<!--
+	<vpanel>
+		<textitem name="findTextField" text="{editorConst.findTextFind}" value="{editorConst.findTextFieldValueSomeText}" />
+		<textitem name="replaceTextField" text="{editorConst.findTextReplaceWith}" value="{editorConst.findTextFieldValueReplaceText}" />
+
+		<booleanitem name="caseSensitiveField" text="{editorConst.findTextCaseSensitive}"
+			value="true" />
+		<!-- 
+			 HasValue<Boolean> getCaseSensitiveField(); 
+			 void enableCaseSensitiveField(); 
+			 void disableCaseSensitiveField(); 
+			 void showCaseSensitiveField() 
+			 void hideCaseSensitiveField(); 
+			 void setCaseSensitiveFieldText(); 
+			 -->
+
+		<hpanel>
+			<spacer />
+			<button name="findTextButton" text="{editorConst.findTextFindButton}" image="find" />
 			
-			HasClickHandlers getFindTextButton();
-			
-			void enableFindTextButton();
-			
-			void disableFindTextButton();
-			
-			void setFindTextButtonImage();
-			
-			void showFindTextButton();
-			
-			void hideFindTextButton();
-			
-			void setFindTextButtonEnabled(boolean enabled);
-			
-			boolean getFindTextButtonEnabled();
-			
-		 -->
-		
-		<button name="replaceFindButton" text="Replace/Find" />
-	</hpanel>
-	<hpanel>
-		<spacer />
-		<button name="replaceButton" text="Replace" />
-		<button name="replaceAllButton" text="Replace All" />
-	</hpanel>
-	<hpanel>
-		<label name="searchStatusLabel" text="Click 'Find to find text"></label>
-		<spacer />
-		<button name="cancelButton" text="Cancel" />
-	</hpanel>
-</vpanel>
+			<!-- 
+			    HasClickHandlers getFindTextButton(); 
+			    void enableFindTextButton(); 
+				void disableFindTextButton(); 
+				void setFindTextButtonImage(); 
+				void showFindTextButton(); 
+				void hideFindTextButton(); 
+				void setFindTextButtonEnabled(boolean enabled); 
+				boolean getFindTextButtonEnabled(); 
+				-->
+
+			<button name="replaceFindButton" text="{editorConst.findTextReplaceFindButton}" />
+		</hpanel>
+		<hpanel>
+			<spacer />
+			<button name="replaceButton" text="{editorConst.findTextReplaceButton}" />
+			<button name="replaceAllButton" text="{editorConst.findTextReplaceAllButton}" />
+		</hpanel>
+		<hpanel>
+			<label name="searchStatusLabel" text="{editorConst.findTextSearchStatusLabel}"></label>
+			<spacer />
+			<button name="cancelButton" text="{ideConst.cancelButton}" />
+		</hpanel>
+	</vpanel>
+</ui:UiBinder>

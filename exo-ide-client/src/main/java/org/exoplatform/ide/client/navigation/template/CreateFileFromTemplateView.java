@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.navigation.template;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.model.template.FileTemplate;
@@ -47,7 +48,9 @@ public class CreateFileFromTemplateView extends ViewImpl implements org.exoplatf
    
    private static final int WIDTH = 550;
 
-   private static final int HEIGHT = 300;   
+   private static final int HEIGHT = 300;
+   
+   private static final String TITLE = IDE.TEMPLATE_CONSTANT.createFileFromTemplateFormTitle();
 
    private static CreateFileFromTemplateViewUiBinder uiBinder = GWT.create(CreateFileFromTemplateViewUiBinder.class);
 
@@ -72,7 +75,7 @@ public class CreateFileFromTemplateView extends ViewImpl implements org.exoplatf
 
    public CreateFileFromTemplateView()
    {
-      super(ID, "modal", "Create file", new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
+      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

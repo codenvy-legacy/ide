@@ -24,6 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
@@ -293,7 +294,8 @@ public class CreateProjectTemplatePresenter
 
    private void callAddFolderForm()
    {
-      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus, "Add folder", "Add")
+      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus, IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderTitle(), 
+         IDE.IDE_LOCALIZATION_CONSTANT.addButton())
       {
       };
 

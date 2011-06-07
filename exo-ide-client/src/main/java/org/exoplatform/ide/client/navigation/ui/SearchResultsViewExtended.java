@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.navigation.ui;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -61,10 +62,12 @@ public class SearchResultsViewExtended extends ViewImpl implements org.exoplatfo
    
    @UiField
    ItemTree treeGrid;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchResultTitle();
 
    public SearchResultsViewExtended()
    {
-      super(ID, "navigation", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

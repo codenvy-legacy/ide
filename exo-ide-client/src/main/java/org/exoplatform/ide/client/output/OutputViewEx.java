@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.output;
 import org.exoplatform.gwtframework.ui.client.button.IconButton;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -55,6 +56,10 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
    public static final int HEIGHT = 250;
 
    private static OutputViewExUiBinder uiBinder = GWT.create(OutputViewExUiBinder.class);
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitle();
+   
+   private static final String CLEAR_OUTPUT = IDE.IDE_LOCALIZATION_CONSTANT.outputClear();
 
    interface OutputViewExUiBinder extends UiBinder<Widget, OutputViewEx>
    {
@@ -75,13 +80,13 @@ public class OutputViewEx extends ViewImpl implements org.exoplatform.ide.client
 
    public OutputViewEx()
    {
-      super(ID, ViewType.OPERATION, "Output", new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
+      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.output()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       String normalIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
       String disabledIcon = ImageHelper.getImageHTML(Images.OutputPanel.CLEAR_OUTPUT);
       clearOutputButton = new IconButton(normalIcon, disabledIcon);
-      clearOutputButton.setTitle("Clear output");
+      clearOutputButton.setTitle(CLEAR_OUTPUT);
 
       toolbar.addItem(clearOutputButton, true);
       

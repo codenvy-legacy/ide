@@ -62,7 +62,8 @@ public interface IdeTemplateLocalizationConstant extends Constants
    String saveAsTemplateDescription();
    
    /*
-    * CreateFileFromTemplate
+    * CreateFileFromTemplateForm
+    * CreateFileFromTemplateView
     */
    @Key("createFileFromTemplate.createButton")
    String createFileFromTemplateCreateButton();
@@ -72,6 +73,9 @@ public interface IdeTemplateLocalizationConstant extends Constants
    
    @Key("createFileFromTemplate.nameField")
    String createFileFromTemplateNameField();
+   
+   @Key("createFileFromTemplate.name")
+   String createFileFromTemplateName();
    
    /*
     * CreateProjectFromTemplateForm
@@ -93,5 +97,8 @@ public interface IdeTemplateLocalizationConstant extends Constants
    
    @Key("createProjectTemplate.addFileButton")
    String createProjectTemplateAddFileBtn();
+   
+   @Key("createProjectTemplate.addFolder.title")
+   String createProjectTemplateAddFolderTitle();
    
 }

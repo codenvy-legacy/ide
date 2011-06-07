@@ -4,6 +4,8 @@
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	xmlns:t="urn:import:org.exoplatform.ide.client.navigation.template"
 	>
+	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+	<ui:with type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant" field="ideTemplateConst"></ui:with>
 	
 	<ui:style>
 		.table
@@ -28,21 +30,21 @@
 					<td style="width:2px;"><div style="width:2px; height:1px;"></div></td>
 					
 					<td style="width:210px;">
-						<c:TextField ui:field="fileNameField" title="Name" titleOrientation="left" name="ideCreateFileFromTemplateFormFileNameField"></c:TextField>
+						<c:TextField ui:field="fileNameField" title="{ideTemplateConst.createFileFromTemplateName}" titleOrientation="left" name="ideCreateFileFromTemplateFormFileNameField"></c:TextField>
 					</td>
 					
 					<td><div style="width:1px; height:1px;"></div></td>
 					
 					<td style="width:100px;">
-						<c:ImageButton ui:field="deleteButton" text="Delete" imageName="delete" buttonId="ideCreateFileFromTemplateFormDeleteButton"></c:ImageButton>
+						<c:ImageButton ui:field="deleteButton" text="{idelocal.deleteButton}" imageName="delete" buttonId="ideCreateFileFromTemplateFormDeleteButton"></c:ImageButton>
 					</td>
 					
 					<td style="width:100px">
-						<c:ImageButton ui:field="createButton" text="Create" imageName="ok" buttonId="ideCreateFileFromTemplateFormCreateButton"></c:ImageButton>
+						<c:ImageButton ui:field="createButton" text="{idelocal.createButton}" imageName="ok" buttonId="ideCreateFileFromTemplateFormCreateButton"></c:ImageButton>
 					</td>
 					
 					<td style="width:94px;">	
-						<c:ImageButton ui:field="cancelButton" text="Cancel" imageName="cancel" buttonId="ideCreateFileFromTemplateFormCancelButton"></c:ImageButton>
+						<c:ImageButton ui:field="cancelButton" text="{idelocal.cancelButton}" imageName="cancel" buttonId="ideCreateFileFromTemplateFormCancelButton"></c:ImageButton>
 					</td>
 					
 				</tr>

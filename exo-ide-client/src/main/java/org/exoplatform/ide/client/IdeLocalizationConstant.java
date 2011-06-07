@@ -32,6 +32,10 @@ import com.google.gwt.i18n.client.Constants;
 
 public interface IdeLocalizationConstant extends Constants
 {
+   
+   /*
+    * Buttons
+    */
    @DefaultStringValue("Cancel")
    @Key("cancelButton")
    String cancelButton();
@@ -56,6 +60,26 @@ public interface IdeLocalizationConstant extends Constants
    @Key("addButton")
    String addButton();
    
+   @DefaultStringValue("Open")
+   @Key("openButton")
+   String openButton();
+   
+   @DefaultStringValue("Close")
+   @Key("closeButton")
+   String closeButton();
+   
+   @DefaultStringValue("Search")
+   @Key("searchButton")
+   String searchButton();
+   
+   @DefaultStringValue("Yes")
+   @Key("yesButton")
+   String yesButton();
+   
+   @DefaultStringValue("No")
+   @Key("noButton")
+   String noButton();
+   
    /* Create Folder */
    @DefaultStringValue("Create Folder")
    @Key("createFolderFormTitle")
@@ -78,6 +102,36 @@ public interface IdeLocalizationConstant extends Constants
     */
    @Key("documentation.title")
    String documentationTitle();
+   
+   /*
+    * PropertiesView
+    */
+   @Key("properties.title")
+   String propertiesTitle();
+   
+   @Key("properties.noPropertiesMsg")
+   String propertiesNoPropertiesMsg();
+   
+   /*
+    * OutputViewEx
+    */
+   @Key("output.title")
+   String outputTitle();
+   
+   @Key("output.clear")
+   String outputClear();
+   
+   /*
+    * OutlineViewExtended
+    */
+   @Key("outline.title")
+   String outlineTitle();
+   
+   /*
+    * PreviewHTMLView
+    */
+   @Key("previewHtml.title")
+   String previewHtmlTitle();
    
    /*
     * Controls
@@ -294,6 +348,12 @@ public interface IdeLocalizationConstant extends Constants
    
    @Key("control.selectWorkspace")
    String selectWorkspaceControl();
+   
+   @Key("control.minMax.maximize")
+   String minMaxMaximizeControl();
+   
+   @Key("control.minMax.restore")
+   String minMaxRestoreControl();
    
    /*
     * Menu

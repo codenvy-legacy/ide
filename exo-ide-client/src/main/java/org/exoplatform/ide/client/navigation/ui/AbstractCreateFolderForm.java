@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
 
@@ -70,6 +71,8 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
    private ImageButton cancelButton;
 
    private String submitButtonTitle;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.createFolderNameOfNewFolder();
 
    public AbstractCreateFolderForm(HandlerManager eventBus, String title, String submitButtonTitle)
    {
@@ -106,7 +109,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       paramsForm.setPadding(5);
 
       folderNameField = new TextField();
-      folderNameField.setTitle("Name of new folder:");
+      folderNameField.setTitle(TITLE);
       folderNameField.setName(NAME_FIELD);
       folderNameField.setTitleOrientation(TitleOrientation.TOP);
       folderNameField.setWidth(300);
@@ -129,7 +132,7 @@ public abstract class AbstractCreateFolderForm extends DialogWindow implements C
       createButton = new ImageButton(submitButtonTitle, "ok");
       createButton.setId(ID_CREATE_BUTTON);
 
-      cancelButton = new ImageButton("Cancel", "cencel");
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(createButton);

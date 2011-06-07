@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
@@ -35,6 +36,10 @@ import com.google.gwt.user.cellview.client.Column;
 */
 public class EditorsListGrid extends ListGrid<EditorInfo>
 {
+   
+   private static final String EDITORS_COLUMN = IDE.EDITOR_CONSTANT.editorsListGridEditorsColumn();
+   
+   private static final String DEFAULT = IDE.EDITOR_CONSTANT.editorsListGridDefault();
 
    /**
     * 
@@ -60,7 +65,7 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
                {
                   if (item.isDefault())
                   {
-                     return item.getEditor().getDescription() + "&nbsp;[Default]";
+                     return item.getEditor().getDescription() + "&nbsp;[" + DEFAULT + "]";
                   }
                   else
                   {
@@ -73,7 +78,7 @@ public class EditorsListGrid extends ListGrid<EditorInfo>
       };
 
       entryNameColumn.setSortable(true);
-      getCellTable().addColumn(entryNameColumn, "Editors");
+      getCellTable().addColumn(entryNameColumn, EDITORS_COLUMN);
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
    }
 

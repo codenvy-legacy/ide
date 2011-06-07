@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
@@ -55,30 +56,29 @@ public class EditorFactory
    static
    {
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt", Images.FileTypes.TXT,true,
-         new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
+         Images.FileTypes.TXT, true, new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
          )));
-      
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, "CodeMirror XML editor", "xml",Images.FileTypes.XML, true,
-         new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
+
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
+         Images.FileTypes.XML, true, new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
             new XmlParser(), // exoplatform code parser
-            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
-         )));
-      
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, "CodeMirror XML editor", "xml",Images.FileTypes.XML, true,
-         new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))));
+
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
+         Images.FileTypes.XML, true, new CodeMirrorConfiguration("['parsexml.js', 'tokenize.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
             new XmlParser(), // exoplatform code parser
-            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML)
-         )));
-      
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, "CodeMirror JavaScript editor", "js",Images.FileTypes.JAVASCRIPT, true,
+            CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))));
+
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
+         IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
@@ -87,8 +87,9 @@ public class EditorFactory
             new JavaScriptAutocompleteHelper(),// autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, "CodeMirror JavaScript editor", "js",Images.FileTypes.JAVASCRIPT, true,
-         new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(),
+         "js", Images.FileTypes.JAVASCRIPT, true, new CodeMirrorConfiguration(
+            "['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
             true, // can be autocompleted
@@ -96,7 +97,8 @@ public class EditorFactory
             new JavaScriptAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, "CodeMirror JavaScript editor", "js",Images.FileTypes.JAVASCRIPT, true,
+      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT,
+         IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
          new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", // code styles
             true, // can be outlined
@@ -105,16 +107,16 @@ public class EditorFactory
             new JavaScriptAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))));
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, "CodeMirror Css editor", "css",Images.FileTypes.CSS, true,
-         new CodeMirrorConfiguration("['parsecss.js']", // generic code parsers
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, IDE.EDITOR_CONSTANT.codeMirrorCssEditor(), "css",
+         Images.FileTypes.CSS, true, new CodeMirrorConfiguration("['parsecss.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
             false, // can be outlined
             true, // can be autocompleted
             new CssParser() // exoplatform code parser 
             , CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))));
-      
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, "CodeMirror HTML editor", "html",Images.FileTypes.HTML, true,
-         new CodeMirrorConfiguration(
+
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.codeMirrorHtmlEditor(), "html",
+         Images.FileTypes.HTML, true, new CodeMirrorConfiguration(
             "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
             "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
                + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
@@ -123,13 +125,13 @@ public class EditorFactory
             new HtmlParser(), // exoplatform code parser
             new HtmlAutocompleteHelper(), // autocomplete helper
             CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML), true)));
-      
-      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, "CKEditor HTML editor", "html",Images.FileTypes.HTML, false,
-         new CKEditorConfiguration()));   
-      
-            //To initialize client bundle 
-            CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
-            CodeMirrorClientBundle.INSTANCE.css().ensureInjected();
+
+      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.ckEditorHtmlEditor(), "html",
+         Images.FileTypes.HTML, false, new CKEditorConfiguration()));
+
+      //To initialize client bundle 
+      CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
+      CodeMirrorClientBundle.INSTANCE.css().ensureInjected();
    }
 
    public static void addEditor(EditorProducer producer)
@@ -183,7 +185,7 @@ public class EditorFactory
    public static List<EditorProducer> getEditors(String mimeType) throws EditorNotFoundException
    {
       List<EditorProducer> editorProducers = editors.get(mimeType);
-      if(editorProducers == null)
+      if (editorProducers == null)
          throw new EditorNotFoundException();
       return editorProducers;
    }

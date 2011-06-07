@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -73,6 +74,14 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
    private ImageButton cancelButton;
 
    private ComboBoxField mimeTypesField;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchFilesTitle();
+   
+   private static final String PATH = IDE.NAVIGATION_CONSTANT.searchFilesPath();
+   
+   private static final String CONTAINING_TEXT = IDE.NAVIGATION_CONSTANT.searchFilesContainingText();
+   
+   private static final String MIME_TYPE = IDE.NAVIGATION_CONSTANT.searchFilesMimeType();
 
    /**
     * {@inheritDoc}
@@ -100,7 +109,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    public SearchFilesView()
    {
-      super(ID, "popup", "Search", new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");
@@ -123,11 +132,11 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       paramForm.getElement().setId(ID_DYNAMIC_FORM);
       paramForm.setSpacing(3);
 
-      pathField = createValueField("Path", PATH_FIELD);
+      pathField = createValueField(PATH, PATH_FIELD);
 
-      contentField = createValueField("Containing text", CONTENT_FIELD);
+      contentField = createValueField(CONTAINING_TEXT, CONTENT_FIELD);
 
-      mimeTypesField = createSelectField("Mime type", MIME_TYPE_FIELD);
+      mimeTypesField = createSelectField(MIME_TYPE, MIME_TYPE_FIELD);
 
       paramForm.add(pathField);
       paramForm.add(contentField);
@@ -164,10 +173,10 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      searchButton = new ImageButton("Search", "search");
+      searchButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.searchButton(), "search");
       searchButton.setId(ID_SEARCH_BUTTON);
       
-      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(searchButton);

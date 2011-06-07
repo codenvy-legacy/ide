@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.Version;
@@ -46,8 +47,6 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
 
    public static final int HEIGHT = 250;
 
-   private final int BUTTON_WIDTH = 90;
-
    private final int BUTTON_HEIGHT = 22;
 
    private static final String ID = "ideViewVersionsForm";
@@ -56,7 +55,11 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
 
    private final String ID_CLOSE_BUTTON = "ideViewVersionsFormCloseButton";
 
-   private final String TITLE = "Version history";
+   private final String TITLE = IDE.VERSIONS_CONSTANT.viewVersionsTitle();
+   
+   private static final String OPEN = IDE.IDE_LOCALIZATION_CONSTANT.openButton();
+   
+   private static final String CLOSE = IDE.IDE_LOCALIZATION_CONSTANT.closeButton();
 
    private ImageButton openVersionButton;
 
@@ -77,7 +80,8 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       super(WIDTH, HEIGHT, ID);
 
       String title =
-         ((item != null) && (item.getName() != null) && (item.getName().length() > 0)) ? TITLE + " for "
+         ((item != null) && (item.getName() != null) && (item.getName().length() > 0)) ? TITLE + " " 
+            + IDE.VERSIONS_CONSTANT.viewVersionsFor() + " "
             + item.getName() : TITLE;
 
       setTitle(title);
@@ -110,10 +114,10 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
       hLayout.setHeight(BUTTON_HEIGHT + "px");
       hLayout.setSpacing(5);
 
-      openVersionButton = new ImageButton("Open", "ok");
+      openVersionButton = new ImageButton(OPEN, "ok");
       openVersionButton.setId(ID_OPEN_VERSION_BUTTON);
 
-      closeButton = new ImageButton("Close", "cancel");
+      closeButton = new ImageButton(CLOSE, "cancel");
       closeButton.setId(ID_CLOSE_BUTTON);
 
       hLayout.add(openVersionButton);
@@ -179,12 +183,10 @@ public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresen
    {
       if (enable)
       {
-         //openVersionButton.enable();
          openVersionButton.setEnabled(true);
       }
       else
       {
-         //openVersionButton.disable();
          openVersionButton.setEnabled(false);
       }
 

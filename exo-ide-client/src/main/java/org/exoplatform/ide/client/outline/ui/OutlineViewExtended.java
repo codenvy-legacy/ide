@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.client.outline.ui;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.Border;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -71,9 +71,11 @@ public class OutlineViewExtended extends ViewImpl implements
    @UiField
    OutlineTreeGrid outlineTreeGrid;
 
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outlineTitle();
+   
    public OutlineViewExtended()
    {
-      super(ID, "information", "Outline", new Image(IDEImageBundle.INSTANCE.outline()), WIDTH, HEIGHT);
+      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.outline()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

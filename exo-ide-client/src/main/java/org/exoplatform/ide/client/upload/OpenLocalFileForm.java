@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.upload;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
@@ -34,6 +35,13 @@ import java.util.List;
  */
 public class OpenLocalFileForm extends UploadFileForm implements OpenLocalFilePresenter.Display
 {
+   
+   private static final String TITLE = IDE.UPLOAD_CONSTANT.openLocalFileTitle();
+   
+   private static final String OPEN_BUTTON = IDE.UPLOAD_CONSTANT.openButton();
+   
+   private static final String FILE_TO_OPEN = IDE.UPLOAD_CONSTANT.fileToOpen();
+   
    public OpenLocalFileForm(HandlerManager eventBus, List<Item> selectedItems, String path, IDEConfiguration applicationConfiguration)
    {
       super(eventBus, selectedItems, path, applicationConfiguration);
@@ -42,9 +50,9 @@ public class OpenLocalFileForm extends UploadFileForm implements OpenLocalFilePr
    @Override
    protected void initTitles()
    {
-      title = "Open file";
-      buttonTitle = "Open";
-      labelTitle = "File to open";
+      title = TITLE;
+      buttonTitle = OPEN_BUTTON;
+      labelTitle = FILE_TO_OPEN;
    }
    
    @Override

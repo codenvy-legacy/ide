@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.GoToLinePresenter;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -68,11 +69,15 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    private ImageButton cancelButton;
 
    private DynamicForm paramsForm;
+   
+   private static final String TITLE = IDE.EDITOR_CONSTANT.goToLineTitle();
+   
+   private static final String GO_BUTTON = IDE.EDITOR_CONSTANT.goToLineGoButton();
 
    public GoToLineForm(HandlerManager eventBus, File activeFile)
    {
       super(WIDTH, HEIGHT, ID);
-      setTitle("Go to Line");
+      setTitle(TITLE);
 
       vLayout = new VerticalPanel();
       vLayout.setWidth("100%");
@@ -133,10 +138,10 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
       buttonsLayout.setSpacing(5);
       buttonsLayout.setHeight((22 + 25) + "px");
 
-      goButton = new ImageButton("Go", "ok");
+      goButton = new ImageButton(GO_BUTTON, "ok");
       goButton.setId(ID_GO_BUTTON);
 
-      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(goButton);

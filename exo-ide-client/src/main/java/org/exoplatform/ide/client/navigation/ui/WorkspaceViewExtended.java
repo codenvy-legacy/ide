@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -65,10 +66,12 @@ public class WorkspaceViewExtended extends ViewImpl implements
    
    @UiField
    ItemTree treeGrid;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.workspaceTitle();
 
    public WorkspaceViewExtended()
    {
-      super(ID, "navigation", "Workspace", new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

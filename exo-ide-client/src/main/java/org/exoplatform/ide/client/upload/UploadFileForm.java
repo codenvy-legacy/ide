@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -46,6 +47,14 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
 {
 
    private static final String MIME_TYPE_FIELD = "ideUploadFormMimeTypeField";
+   
+   private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();
+   
+   private static final String UPLOAD_BUTTON = IDE.UPLOAD_CONSTANT.uploadButton();
+   
+   private static final String FILE_TO_UPLOAD = IDE.UPLOAD_CONSTANT.fileToUpload();
+   
+   private static final String MIME_TYPE_TITLE = IDE.UPLOAD_CONSTANT.uploadFileMimeType();
 
    private ComboBoxField mimeTypesField;
 
@@ -58,9 +67,9 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    @Override
    protected void initTitles()
    {
-      title = "File upload";
-      buttonTitle = "Upload";
-      labelTitle = "File to upload:";
+      title = TITLE;
+      buttonTitle = UPLOAD_BUTTON;
+      labelTitle = FILE_TO_UPLOAD;
    }
    
    @Override
@@ -131,7 +140,7 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
        * horizontal panel
        */
       mimeTypesField.setWidth("330px");
-      mimeTypesField.setTitle("Mime Type:");
+      mimeTypesField.setTitle(MIME_TYPE_TITLE);
       mimeTypesField.setShowTitle(true);
       mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
       

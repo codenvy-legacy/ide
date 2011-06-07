@@ -37,8 +37,13 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
+import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
@@ -71,6 +76,16 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public static final IdeTemplateLocalizationConstant TEMPLATE_CONSTANT = GWT.create(IdeTemplateLocalizationConstant.class);
    
    public static final IdePreferencesLocalizationConstant PREFERENCES_CONSTANT = GWT.create(IdePreferencesLocalizationConstant.class);
+   
+   public static final IdeVersionsLocalizationConstant VERSIONS_CONSTANT = GWT.create(IdeVersionsLocalizationConstant.class);
+   
+   public static final IdeUploadLocalizationConstant UPLOAD_CONSTANT = GWT.create(IdeUploadLocalizationConstant.class);
+   
+   public static final IdePermissionsLocalizationConstant PERMISSIONS_CONSTANT = GWT.create(IdePermissionsLocalizationConstant.class);
+   
+   public static final IdeNavigationLocalizationConstant NAVIGATION_CONSTANT = GWT.create(IdeNavigationLocalizationConstant.class);
+   
+   public static final IdeEditorLocalizationConstant EDITOR_CONSTANT = GWT.create(IdeEditorLocalizationConstant.class);
 
    public IDE()
    {

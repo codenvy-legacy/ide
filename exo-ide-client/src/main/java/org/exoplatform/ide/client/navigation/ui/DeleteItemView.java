@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.navigation.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
@@ -51,6 +52,8 @@ public class DeleteItemView extends ViewImpl implements
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
 
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.deleteItemTitle();
 
    private HorizontalPanel infoLayout;
 
@@ -62,7 +65,7 @@ public class DeleteItemView extends ViewImpl implements
 
    public DeleteItemView()
    {
-      super(ID, ViewType.MODAL, "IDE", new Image(IDEImageBundle.INSTANCE.delete()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.MODAL, TITLE, new Image(IDEImageBundle.INSTANCE.delete()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -108,13 +111,13 @@ public class DeleteItemView extends ViewImpl implements
       buttonsLayout.setHeight(22 + "px");
       buttonsLayout.setSpacing(5);
 
-      deleteButton = new IButton("Yes");
+      deleteButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.yesButton());
       deleteButton.setID(ID_OK_BUTTON);
       deleteButton.setWidth(90);
       deleteButton.setHeight(22);
       deleteButton.setIcon(Images.Buttons.YES);
 
-      cancelButton = new IButton("No");
+      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.noButton());
       cancelButton.setID(ID_CANCEL_BUTTON);
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);

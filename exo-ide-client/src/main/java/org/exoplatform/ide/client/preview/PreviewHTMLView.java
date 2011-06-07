@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.preview;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
@@ -54,10 +55,12 @@ public class PreviewHTMLView extends ViewImpl implements
    private PreviewFrame previewFrame;
    
    private boolean previewAvailable = true;
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.previewHtmlTitle();
 
    public PreviewHTMLView()
    {
-      super(ID, ViewType.OPERATION, "Preview", new Image(IDEImageBundle.INSTANCE.preview()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.preview()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       previewPanel = new FlowPanel();     
       if (ViewType.POPUP.equals(getType()))

@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 
 /**
@@ -34,6 +35,10 @@ import org.exoplatform.ide.client.Images;
 
 public class MinMaxControlButton extends Image implements com.google.gwt.event.dom.client.ClickHandler
 {
+   
+   private static final String MAXIMIZE = IDE.IDE_LOCALIZATION_CONSTANT.minMaxMaximizeControl();
+   
+   private static final String RESTORE = IDE.IDE_LOCALIZATION_CONSTANT.minMaxRestoreControl();
 
    private HandlerManager eventBus;
 
@@ -70,12 +75,12 @@ public class MinMaxControlButton extends Image implements com.google.gwt.event.d
       if (maximize)
       {
          setUrl(Images.ControlButtons.MAXIMIZE);
-         setTitle("Maximize");
+         setTitle(MAXIMIZE);
       }
       else
       {
          setUrl(Images.ControlButtons.RESTORE);
-         setTitle("Restore");
+         setTitle(RESTORE);
       }
    }
 

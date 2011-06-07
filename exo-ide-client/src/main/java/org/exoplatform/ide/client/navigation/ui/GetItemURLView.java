@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -61,10 +62,14 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
    private ImageButton okButton;
    
    private VerticalPanel mainPanel;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.getItemUrlTitle();
+   
+   private static final String WEB_DAV_ITEMS_URL = IDE.NAVIGATION_CONSTANT.getItemUrlWebdavItemsUrl();
 
    public GetItemURLView()
    {
-      super(ID, ViewType.POPUP, "Item URL", new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
       mainPanel = new VerticalPanel();
       mainPanel.setWidth("100%");
@@ -95,7 +100,7 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
       paramsForm.setPadding(5);
       paramsForm.setWidth(450);
 
-      urlField = new TextField(URL_FIELD, "WebDav item's URL:");
+      urlField = new TextField(URL_FIELD, WEB_DAV_ITEMS_URL);
       urlField.setWidth(450);
       urlField.setHeight(22);
       urlField.setTitleOrientation(TitleOrientation.TOP);
@@ -113,13 +118,7 @@ public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.clie
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
 
-//      okButton = new IButton("OK");
-//      okButton.setID(ID_OK_BUTTON);
-//      okButton.setWidth(BUTTON_WIDTH);
-//      okButton.setHeight(BUTTON_HEIGHT);
-//      okButton.setIcon(Images.Buttons.OK);
-
-      okButton = new ImageButton("Ok", "ok");
+      okButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.okButton(), "ok");
       okButton.setId(ID_OK_BUTTON);
       buttonsLayout.add(okButton);
       

@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -97,13 +98,21 @@ public class RenameItemForm extends DialogWindow implements
    private RenameItemPresenter presenter;
 
    private Label warningMimeTypeLabel;
+   
+   private static final String TITLE = IDE.NAVIGATION_CONSTANT.renameItemTitle();
+   
+   private static final String RENAME_ITEM_TO = IDE.NAVIGATION_CONSTANT.renameItemTo();
+   
+   private static final String SELECT_MIME_TYE = IDE.NAVIGATION_CONSTANT.renameItemSelectMimeType();
+   
+   private static final String RENAME_BUTTON = IDE.NAVIGATION_CONSTANT.renameItemRenameBtn();
 
    public RenameItemForm(HandlerManager eventBus, List<Item> selectedItems, Map<String, File> openedFiles,
       Map<String, String> lockTokens)
    {
       super(WIDTH, (selectedItems.get(0) instanceof File) ? HEIGHT : HEIGHT_SMALL, ID);
 
-      setTitle("Rename item");
+      setTitle(TITLE);
 
       mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -128,7 +137,7 @@ public class RenameItemForm extends DialogWindow implements
       VerticalPanel vPanel = new VerticalPanel();
       vPanel.setSpacing(3);
 
-      itemNameField = new TextField(RENAME_FIELD, "Rename item to:");
+      itemNameField = new TextField(RENAME_FIELD, RENAME_ITEM_TO);
       itemNameField.setName(RENAME_FIELD);
       itemNameField.setWidth(340);
       itemNameField.setTitleOrientation(TitleOrientation.TOP);
@@ -145,7 +154,7 @@ public class RenameItemForm extends DialogWindow implements
          mimeTypesField.setPickListHeight(100);
          mimeTypesField.setEnabled();
          mimeTypesField.setShowTitle(true);
-         mimeTypesField.setTitle("Select mime-type: ");
+         mimeTypesField.setTitle(SELECT_MIME_TYE + " ");
          mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
 
          vPanel.add(dropBox);
@@ -167,10 +176,10 @@ public class RenameItemForm extends DialogWindow implements
       buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
 
-      renameButton = new ImageButton("Rename", "ok");
+      renameButton = new ImageButton(RENAME_BUTTON, "ok");
       renameButton.setId(ID_RENAME_BUTTON);
 
-      cancelButton = new ImageButton("Cancel", "cancel");
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), "cancel");
       cancelButton.setId(ID_CANCEL_BUTTON);
 
       buttonsLayout.add(renameButton);

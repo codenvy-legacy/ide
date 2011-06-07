@@ -18,19 +18,19 @@
  */
 package org.exoplatform.ide.client.editor.custom;
 
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -60,6 +60,8 @@ public class OpenFileWithView extends ViewImpl implements
     * Initial height of this view
     */
    private static int INITIAL_HEIGHT = 280;
+   
+   private static final String TITLE = IDE.EDITOR_CONSTANT.openFileWithTitle();
 
    @UiField
    EditorsListGrid editorsListGrid;
@@ -75,7 +77,7 @@ public class OpenFileWithView extends ViewImpl implements
 
    public OpenFileWithView()
    {
-      super(ID, "modal", "Open File With", new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), INITIAL_WIDTH,
+      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.restServicesDiscovery()), INITIAL_WIDTH,
          INITIAL_HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }

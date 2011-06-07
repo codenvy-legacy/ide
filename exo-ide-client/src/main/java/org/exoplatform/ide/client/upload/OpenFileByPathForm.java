@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 
@@ -51,6 +52,14 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
    private static final String CANCEL_BUTTON_ID = "ideOpenFileByPathFormCancelButton";
 
    private static final String FILE_PATH_FIELD_NAME = "ideOpenFileByPathFormFilePathField";
+   
+   private static final String TITLE = IDE.UPLOAD_CONSTANT.openFileByPathTitle();
+   
+   private static final String OPEN_BUTTON = IDE.UPLOAD_CONSTANT.openButton();
+   
+   private static final String FILE_URL = IDE.UPLOAD_CONSTANT.openFileByPathFileUrl();
+   
+   private static final String CANCEL_BUTTON = IDE.IDE_LOCALIZATION_CONSTANT.cancelButton();
 
    private TextField filePathField;
 
@@ -73,9 +82,9 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       super(WIDTH, HEIGHT, ID);
       this.eventBus = eventBus;
 
-      title = "Open file by path";
-      buttonTitle = "Open";
-      labelTitle = "File URL";
+      title = TITLE;
+      buttonTitle = OPEN_BUTTON;
+      labelTitle = FILE_URL;
       setTitle(title);
 
       mainPanel = new VerticalPanel();
@@ -124,7 +133,7 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       openButton.setWidth(90);
       openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
 
-      cancelButton = new IButton("Cancel");
+      cancelButton = new IButton(CANCEL_BUTTON);
       cancelButton.setID(CANCEL_BUTTON_ID);
       cancelButton.setHeight(22);
       cancelButton.setWidth(90);

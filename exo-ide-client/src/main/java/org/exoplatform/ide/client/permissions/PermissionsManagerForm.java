@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -80,12 +81,18 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
    private TextField itemOwnerField;
 
    private IButton removeButton;
+   
+   private static final String TITLE = IDE.PERMISSIONS_CONSTANT.permissionsTitle();
+   
+   private static final String NAME = IDE.PERMISSIONS_CONSTANT.permissionsName();
+   
+   private static final String OWNER = IDE.PERMISSIONS_CONSTANT.permissionsOwner();
 
    public PermissionsManagerForm(HandlerManager eventBus, Item item, Map<String, String> lockTokens)
    {
       super(WIDTH, HEIGTH, ID);
 
-      setTitle("Permissions");
+      setTitle(TITLE);
 
       vLayout = new VerticalPanel();
       vLayout.setHeight("100%");
@@ -114,7 +121,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
    private void addFileInfo()
    {
       itemNameField = new TextField();
-      itemNameField.setTitle("Name");
+      itemNameField.setTitle(NAME);
       itemNameField.setHeight(20);
       itemNameField.setWidth(320);
       //TODO fix form
@@ -126,7 +133,8 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       formName.add(itemNameField);
       formName.setHeight(28);
 
-      itemOwnerField = new TextField("Owner");
+      itemOwnerField = new TextField();
+      itemOwnerField.setTitle(OWNER);
       itemOwnerField.setHeight(20);
       itemOwnerField.setWidth(320);
       //itemOwnerField.setTitleAlign(Alignment.LEFT);
@@ -161,13 +169,13 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       permissionsListGrid.setWidth(384);
       permissionsListGrid.setHeight(140);
 
-      addEntityButton = new IButton("Add");
+      addEntityButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.addButton());
       addEntityButton.setWidth(90);
       addEntityButton.setHeight(22);
       addEntityButton.setID(ID_ADD_ENTITY);
       addEntityButton.setIcon(Images.Buttons.ADD);
 
-      removeButton = new IButton("Remove");
+      removeButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
       removeButton.setWidth(90);
       removeButton.setHeight(22);
       removeButton.setIcon(Images.Buttons.DELETE);
@@ -198,13 +206,13 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
     //  buttonsLayout.setLayoutAlign(Alignment.CENTER);
       buttonsLayout.setSpacing(5);
 
-      saveACLButton = new IButton("Save");
+      saveACLButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.saveButton());
       saveACLButton.setWidth(90);
       saveACLButton.setHeight(22);
       saveACLButton.setIcon(Images.Buttons.YES);
       saveACLButton.setID(ID_SAVE);
 
-      cancelButton = new IButton("Cancel");
+      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
       cancelButton.setWidth(90);
       cancelButton.setHeight(22);
       cancelButton.setIcon(Images.Buttons.NO);

@@ -26,6 +26,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 
@@ -40,11 +41,11 @@ import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
 public class PermissionsListGrid extends ListGrid<AccessControlEntry>
 {
 
-   private final String IDENTITY = "Identity";
+   private final String IDENTITY = IDE.PERMISSIONS_CONSTANT.listGridIdentity();
 
-   private final String READ = "Read";
+   private final String READ = IDE.PERMISSIONS_CONSTANT.listGridRead();
 
-   private final String WRITE = "Write";
+   private final String WRITE = IDE.PERMISSIONS_CONSTANT.listGridWrite();
    
    public PermissionsListGrid()
    {

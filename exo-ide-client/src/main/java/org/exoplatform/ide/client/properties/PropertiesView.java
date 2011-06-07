@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -50,11 +51,15 @@ public class PropertiesView extends ViewImpl implements
 
    private static final String ID = "ideFilePropertiesView";
    
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.propertiesTitle();
+   
+   private static final String NO_PROPERTIES_MSG = IDE.IDE_LOCALIZATION_CONSTANT.propertiesNoPropertiesMsg();
+   
    private Grid propertiesGrid;   
 
    public PropertiesView()
    {
-      super(ID, ViewType.OPERATION, "Properties", new Image(IDEImageBundle.INSTANCE.properties()));
+      super(ID, ViewType.OPERATION, TITLE, new Image(IDEImageBundle.INSTANCE.properties()));
 
       propertiesGrid = new Grid();
       propertiesGrid.setSize("100%", "100%");
@@ -72,7 +77,7 @@ public class PropertiesView extends ViewImpl implements
       if (file.getProperties() == null || file.getProperties().size() == 0)
       {
          propertiesGrid.resize(1, 1);
-         propertiesGrid.setText(0, 0, "There are no properties for this file.");
+         propertiesGrid.setText(0, 0, NO_PROPERTIES_MSG);
          DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(0, 0), "textAlign", "center");
       }
       else
