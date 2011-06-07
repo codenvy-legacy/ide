@@ -574,25 +574,6 @@ public class GitService
       }
    }
 
-   /**
-    * Determine local directory where git repository located.
-    * 
-    * @param uriInfo UriInfo
-    * @param url full URL of working directory in IDE notation.
-    */
-   protected String determineLocalDir(UriInfo uriInfo, String url)
-   {
-      String baseUrl = uriInfo.getBaseUri().toString();
-      baseUrl += "/jcr/";
-      String localDir = System.getProperty("org.exoplatform.ide.git.repo-dir");
-      if (localDir == null)
-         throw new IllegalStateException("Directory for git repositories is not specified. ");
-      if (!localDir.endsWith("/"))
-         localDir += "/"; // unix like path only!
-      localDir += url.substring(baseUrl.length());
-      return localDir;
-   }
-
    protected GitConnection getGitConnection(String workDir, SecurityContext sctx) throws GitException
    {
       GitUser user = null;
