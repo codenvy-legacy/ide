@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.editor.codeassistant.java;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.editor.api.CodeLine;
@@ -31,7 +33,6 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.StringProperty;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
@@ -40,13 +41,11 @@ import org.exoplatform.ide.editor.codeassistant.java.service.marshal.JavaClass;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -130,10 +129,10 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
    @Override
-   public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, final int markOffsetX,
+   public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, final int markOffsetX,
       final int markOffsetY, String fileMimeType)
    {
       this.editor = editor;
@@ -391,7 +390,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       List<Token> staticList = new ArrayList<Token>();
       for (Token t : JavaClass.getPublicFields())
       {
-         if (ModifierHelper.isStatic((t.getProperty(TokenProperties.MODIFIERS).isNumericProperty().numberValue()
+         if (ModifierHelper.isStatic((t.getProperty(TokenProperties.MODIFIERS).isNumericProperty().numericValue()
             .intValue())))
          {
             staticList.add(t);
@@ -400,7 +399,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
       for (Token t : JavaClass.getPublicMethods())
       {
-         int mod = (t.getProperty(TokenProperties.MODIFIERS).isNumericProperty().numberValue().intValue());
+         int mod = (t.getProperty(TokenProperties.MODIFIERS).isNumericProperty().numericValue().intValue());
          if (ModifierHelper.isStatic(mod) || ModifierHelper.isAbstract(mod))
          {
             staticList.add(t);
@@ -645,7 +644,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       {
          for (Token t : currentMethod.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
          {
-            if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numberValue().intValue() < currentLineNumber)
+            if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numericValue().intValue() < currentLineNumber)
             {
                tokens.add(t);
             }
@@ -655,31 +654,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       return tokens;
    }
    
-   private void printTokens(List<? extends Token> tokens, int i)
-   {
-      String spacer = "";
-      for (int j = 0; j < i; j++)
-      {
-         spacer += " ";
-      }
-      i++;
-      for (Token t : tokens)
-      {
-         if(t.getName() == null)
-            continue;
-         System.out.println(spacer + t.getName() + " " + t.getType());
-         for(String key : t.getPropertiesNames())
-         {
-            TokenProperty p = t.getProperty(key);
-            System.out.println(spacer + key + " " + p);
-         }
-         if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
-            && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
-         {
-            printTokens(t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue(), i);
-         }
-      }
-   }
 
    public void setactiveFileHref(String href)
    {

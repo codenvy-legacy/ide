@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,84 +16,63 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.java.ui;
+package org.exoplatform.ide.editor.codeassistant.php.ui;
 
-import java.util.List;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
 
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Nov 29, 2010 9:42:07 AM evgen $
+ * Base part implementation of {@link TokenWidget}, uses frol all PHP token widgets.
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: $
  *
  */
-public abstract class JavaTokenWidgetBase extends TokenWidget
+public abstract class PhpTokenWidgetBase extends TokenWidget 
 {
 
-   protected int modifieres;
-
-   protected String docContext;
-
+   protected Grid grid;
+   
+   protected List<Modifier> modifieres;
+   
    /**
     * @param token
     */
    @SuppressWarnings("unchecked")
-   public JavaTokenWidgetBase(Token token, String docContext)
+   public PhpTokenWidgetBase(Token token)
    {
       super(token);
-      this.docContext = docContext;
-      if (token.hasProperty(TokenProperties.MODIFIERS))
+      modifieres = new ArrayList<Modifier>();
+      
+      if(token.hasProperty(TokenProperties.MODIFIERS))
       {
-         TokenProperty mod = token.getProperty(TokenProperties.MODIFIERS);
-         if (mod.isNumericProperty() != null)
-            modifieres = mod.isNumericProperty().numericValue().intValue();
-         else
-         {
-            modifieres = getModifires((List<Modifier>)mod.isObjectProperty().objectValue());
-         }
+         modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty().objectValue());
       }
-      else
-         modifieres = 0;
    }
-
+   
    protected String getModifiers()
    {
 
       String span =
          "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
             + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
-      span += (ModifierHelper.isAbstract(modifieres)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+      span += (modifieres.contains(Modifier.ABSTRACT)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
       //      span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
-      span += (ModifierHelper.isStatic(modifieres)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
+      span += (modifieres.contains(Modifier.STATIC)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
       span += "</span>";
       return span;
    }
 
-   /**
-    * @param modifiers
-    * @return
-    */
-   private int getModifires(List<Modifier> modifiers)
-   {
-      int i = 0;
-      for (Modifier m : modifiers)
-      {
-         i = i | m.value();
-      }
-      return i;
-   }
-
+   
    /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName()
     */
@@ -131,13 +110,25 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenDecription()
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
+    */
+   @Override
+   public String getTokenValue()
+   {
+      if (token.hasProperty(TokenProperties.CODE))
+         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
+      else
+         return token.getName();
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenDecription()
     */
    @Override
    public Widget getTokenDecription()
    {
-      return new Frame(docContext + token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue()
-         + "." + getTokenValue());
+      return null;
    }
 
+   
 }

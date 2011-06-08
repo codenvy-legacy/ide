@@ -135,7 +135,7 @@ public class JavaGwtTestCodeAssistant extends Base
       codeErrorList.add(codeLine);
       JavaCodeAssist javaCodeAssist = new JavaCodeAssist();
       
-      javaCodeAssist.errorMarckClicked(null, codeErrorList, 0, 0, MimeType.APPLICATION_GROOVY);
+      javaCodeAssist.errorMarkClicked(null, codeErrorList, 0, 0, MimeType.APPLICATION_GROOVY);
       
    }
    

@@ -50,7 +50,7 @@ public class NumericProperty extends TokenProperty
    /**
     * @return value of this property
     */
-   public Number numberValue()
+   public Number numericValue()
    {
       return value;
    }

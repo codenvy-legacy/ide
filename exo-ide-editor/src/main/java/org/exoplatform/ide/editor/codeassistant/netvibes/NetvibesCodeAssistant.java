@@ -79,10 +79,10 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
    private Token currentToken;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
    @Override
-   public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
+   public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
    }
@@ -318,7 +318,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
          if (t.getName() == null)
             continue;
 
-         if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numberValue().intValue() > currentLine)
+         if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numericValue().intValue() > currentLine)
          {
             break;
          }

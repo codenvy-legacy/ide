@@ -51,7 +51,7 @@ public abstract class RubyBaseWidget extends TokenWidget
       {
          TokenProperty mod = token.getProperty(TokenProperties.MODIFIERS);
          if (mod.isNumericProperty() != null)
-            modifieres = mod.isNumericProperty().numberValue().intValue();
+            modifieres = mod.isNumericProperty().numericValue().intValue();
          else
          {
             modifieres = 0;

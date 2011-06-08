@@ -52,6 +52,7 @@ import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantServic
 import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.jsp.JspCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.php.PhpCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.ruby.RubyCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -115,14 +116,6 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
          {
             System.out.println(">>>>>>>>>>> onEditorHotKeyCalled = " + event.getHotKey());
-         }
-      });
-
-      eventBus.addHandler(EditorCursorActivityEvent.TYPE, new EditorCursorActivityHandler()
-      {
-         public void onEditorCursorActivity(EditorCursorActivityEvent event)
-         {
-            System.out.println(">>>>>>>>>>> onEditorCursorActivity = " + event.getEditorId());
          }
       });
 
@@ -406,7 +399,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          true, // can be autocompleted
          new PhpParser(), // exoplatform code parser
          new PhpAutocompleteHelper(), // autocomplete helper
-         new HtmlCodeAssistant(),  // TODO should be replaced on PhpCodeAssistant 
+         new PhpCodeAssistant(),  // TODO should be replaced on PhpCodeAssistant 
          true)));   
 
       addEditor(new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff", "", true,

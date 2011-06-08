@@ -70,7 +70,7 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     * @param markOffsetY coordinate X
     * @param fileMimeType mime type of current edited file
     */
-   public abstract void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
+   public abstract void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
       int markOffsetY, String fileMimeType);
 
    /**

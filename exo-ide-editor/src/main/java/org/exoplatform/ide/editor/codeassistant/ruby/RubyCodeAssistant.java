@@ -73,10 +73,10 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
    private int currentLineNumber;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarckClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor, java.util.List, int, int, java.lang.String)
     */
    @Override
-   public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
+   public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
       String fileMimeType)
    {
    }
@@ -331,7 +331,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       if (methodToken.hasProperty(TokenProperties.SUB_TOKEN_LIST))
          for (Token t : methodToken.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
          {
-            if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numberValue().intValue() <= currentLineNumber)
+            if (t.getProperty(TokenProperties.LINE_NUMBER).isNumericProperty().numericValue().intValue() <= currentLineNumber)
             {
                tokens.add(t);
             }
@@ -567,7 +567,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
          System.out.println(spacer + t.getName() + " " + t.getType());
          TokenProperty p = t.getProperty(TokenProperties.LAST_LINE_NUMBER);
          if (p != null && p.isNumericProperty() != null)
-            System.out.println(spacer + p.isNumericProperty().numberValue());
+            System.out.println(spacer + p.isNumericProperty().numericValue());
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {

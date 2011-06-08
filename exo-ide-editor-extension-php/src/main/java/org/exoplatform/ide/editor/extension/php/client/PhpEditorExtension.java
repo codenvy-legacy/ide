@@ -20,6 +20,11 @@
 package org.exoplatform.ide.editor.extension.php.client;
 
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -27,16 +32,11 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.php.PhpCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 
 /**
  * 
@@ -83,7 +83,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
          true, // can be autocompleted
          new PhpParser(), // exoplatform code parser
          new PhpAutocompleteHelper(), // autocomplete helper
-         new HtmlCodeAssistant(),  // TODO should be replaced on PhpCodeAssistant  
+         new PhpCodeAssistant(),    
          true
       );
       

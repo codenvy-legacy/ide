@@ -642,7 +642,7 @@ public class CodeMirror extends Editor
       // test if this is line with code error
       if (CodeValidator.isExistedCodeError(lineNumber, codeErrorList))
       {
-         codeAssistant.errorMarckClicked(this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
+         codeAssistant.errorMarkClicked(this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
             (getAbsoluteTop() + getCursorOffsetY(lineNumber)), (getAbsoluteLeft() + lineNumberFieldWidth),
             (String)params.get(EditorParameters.MIME_TYPE));
       }

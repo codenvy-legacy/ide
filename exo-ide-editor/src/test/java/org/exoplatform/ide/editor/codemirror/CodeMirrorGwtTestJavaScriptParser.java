@@ -227,7 +227,7 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
       }
 
       @Override
-      public void errorMarckClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
+      public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
          int markOffsetY, String fileMimeType)
       {
          System.out.println(">>>>>>>>>>>>>>>> errorMarckClicked");
