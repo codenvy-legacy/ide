@@ -226,5 +226,14 @@ public interface IdeErrorsLocalizationConstant extends Constants
     */
    @Key("versions.receiveVersionsFailure")
    String versionsReceiveVersionsFailure();
+   
+   /*
+    * IDEConfigurationUnmarshaller
+    */
+   @Key("configuration.cantParseApplicationSettings")
+   String configurationCantParseApplicationSettings();
+   
+   @Key("configuration.receivedJsonValueNotAnObject")
+   String configurationReceivedJsonValueNotAnObject();
 
 }

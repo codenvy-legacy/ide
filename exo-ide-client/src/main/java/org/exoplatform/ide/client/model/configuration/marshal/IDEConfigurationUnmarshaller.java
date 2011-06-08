@@ -135,12 +135,12 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
          }
          else
-            throw new Exception("Received JSON value not a Object.");
+            throw new Exception(IDE.ERRORS_CONSTANT.configurationReceivedJsonValueNotAnObject());
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new UnmarshallerException("Can't parse application settings!");
+         throw new UnmarshallerException(IDE.ERRORS_CONSTANT.configurationCantParseApplicationSettings());
       }
    }
 
@@ -189,7 +189,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
 
    private void showErrorMessage(String message)
    {
-      String m = "Invalid configuration:  missing " + message + " item";
+      String m = IDE.IDE_LOCALIZATION_MESSAGES.configurationInvalidConfiguration(message);
       Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, m);
    }
 

@@ -154,7 +154,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private Display display;
 
-   private static final String UNTITLED_FILE = "Untitled file";
+   private static final String UNTITLED_FILE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
 
    private String previousExtension;
 
@@ -522,22 +522,23 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          return;
       }
 
-      String message = "Do you want to delete template <b>" + selectedTemplate.getName() + "</b>?";
+      String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.templateAskDeleteTemplate(selectedTemplate.getName());
 
-      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
-      {
-         public void booleanValueReceived(Boolean value)
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
+         message, new BooleanValueReceivedHandler()
          {
-            if (value == null)
+            public void booleanValueReceived(Boolean value)
             {
-               return;
+               if (value == null)
+               {
+                  return;
+               }
+               if (value)
+               {
+                  doDeleteTemplate();
+               }
             }
-            if (value)
-            {
-               doDeleteTemplate();
-            }
-         }
-      });
+         });
    }
 
    /**
@@ -569,38 +570,42 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          return;
       }
 
-      String msg = "File template <b>" + selectedTemplate.getName() + "</b> is used in <b>";
+      String projectsNames = "";
       for (ProjectTemplate template : usedProjectTemplates)
       {
-         msg += template.getName() + ", ";
+         projectsNames += template.getName() + ", ";
       }
 
-      msg = msg.substring(0, msg.length() - 2);
-      msg += "</b> project template(s). Are your sure you want to delete this template?";
+      projectsNames = projectsNames.substring(0, projectsNames.length() - 2);
+      
+      final String message =
+         org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.askDeleteTemplateUsedInOtherProjects(
+            selectedTemplate.getName(), projectsNames);
 
-      Dialogs.getInstance().ask("IDE", msg, new BooleanValueReceivedHandler()
-      {
-         public void booleanValueReceived(Boolean value)
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
+         message, new BooleanValueReceivedHandler()
          {
-            if (value == null)
+            public void booleanValueReceived(Boolean value)
             {
-               return;
-            }
-
-            if (value)
-            {
-               TemplateService.getInstance().deleteTemplate(selectedTemplate, new TemplateDeletedCallback()
+               if (value == null)
                {
-                  @Override
-                  protected void onSuccess(Template result)
+                  return;
+               }
+
+               if (value)
+               {
+                  TemplateService.getInstance().deleteTemplate(selectedTemplate, new TemplateDeletedCallback()
                   {
-                     selectedTemplate = null;
-                     refreshTemplateList();
-                  }
-               });
+                     @Override
+                     protected void onSuccess(Template result)
+                     {
+                        selectedTemplate = null;
+                        refreshTemplateList();
+                     }
+                  });
+               }
             }
-         }
-      });
+         });
 
    }
 

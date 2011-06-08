@@ -48,6 +48,12 @@ public interface IdePreferencesLocalizationConstant extends Constants
    /*
     * SelectWorkspacePresenter
     */
+   @Key("selectWorkspaces.dialog.askSaveFileBeforeClosing.title")
+   String selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
+   
+   /*
+    * SelectWorkspacePresenter
+    */
    @Key("workspace.closeAllFilesDialog.title")
    String workspaceCloseAllFilesDialogTitle();
    

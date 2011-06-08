@@ -112,9 +112,11 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
    }
    
-   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogTitle();
-   
-   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogText();
+   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+      .workspaceCloseAllFilesDialogTitle();
+
+   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+      .workspaceCloseAllFilesDialogText();
 
    /**
     * Instance of Display
@@ -402,8 +404,12 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
       if (file.isContentChanged())
       {
-         String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-         Dialogs.getInstance().ask("IDEall", message, new BooleanValueReceivedHandler()
+         final String fileName = Utils.unescape(file.getName());
+         final String message =
+            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.selectWorkspaceAskSaveFileBeforeClosing(fileName);
+         final String title =
+            org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
+         Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
             {

@@ -97,7 +97,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
       }
 
       Dialogs.getInstance().ask(ASK_DIALOG_TITLE,
-         "Do you want to restore file to version " + activeVersion.getDisplayName() + "?",
+         IDE.IDE_LOCALIZATION_MESSAGES.restoreToVersionAskDialog(activeVersion.getDisplayName()),
          new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)

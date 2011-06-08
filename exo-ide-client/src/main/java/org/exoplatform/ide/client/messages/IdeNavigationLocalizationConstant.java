@@ -122,8 +122,11 @@ public interface IdeNavigationLocalizationConstant extends Constants
    @Key("saveFileAs.dialog.doYouWantToSave")
    String saveFileAsDialogDoYouWantToSave();
    
-   
-   
+   /*
+    * 
+    */
+   @Key("paste.saveFileBeforeCutAskDialog.title")
+   String pasteSaveFileBeforeCutAskDialogTitle();
    
    
    

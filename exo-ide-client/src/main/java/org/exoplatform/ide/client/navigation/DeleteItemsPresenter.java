@@ -156,8 +156,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       display = d;
 
       String prompt =
-         selectedItems.size() == 1 ? "<br>Do you want to delete  <b>" + selectedItems.get(0).getName() + "</b> ?"
-            : "<br>Do you want to delete <b>" + selectedItems.size() + "</b> items?";
+         selectedItems.size() == 1 ? org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteOneItem(selectedItems.get(0).getName())
+            : org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteSeveralItems(selectedItems.size());
       display.getPromptField().setValue(prompt);
 
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -195,7 +195,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             File file = openedFiles.get(item.getHref());
             if (file.isContentChanged() || file.isPropertiesChanged())
             {
-               String msg = "Do you want to delete modified file <b>" + item.getName() + "</b>?";
+               String msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item.getName());
                showDialog(file, msg);
                return;
             }
@@ -228,8 +228,9 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
          if (files > 0)
          {
-            String msg =
-               "Folder <b>" + item.getName() + "</b> contains " + copy.size() + " modified file(s), delete them?";
+            final String msg =
+               org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
+                  item.getName(), copy.size());
             showDialog(item, msg);
             return;
          }

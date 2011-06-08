@@ -249,7 +249,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
 
       catch (EditorNotFoundException e)
       {
-         String message = "Can't find editor for type <b>" + mimeType + "</b>";
+         String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.openFileWithCantFindEditor(mimeType);
          eventBus.fireEvent(new ExceptionThrownEvent(new Exception(message)));
       }
    }
@@ -300,8 +300,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
     */
    private void showAskReopenDialog()
    {
-      Dialogs.getInstance().ask("IDE",
-         "Do you want to reopen <b>" + selectedFile.getName() + "</b> in selected editor?",
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.openFileWithAskDialogTitle(),
+         org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.openFileWithDoYouWantToReopen(selectedFile.getName()),
          new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)

@@ -204,7 +204,8 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
             final File openedFile = openedFiles.get(file.getHref());
             if (openedFile.isContentChanged())
             {
-               Dialogs.getInstance().ask("Cut", "Save <b>" + openedFile.getName() + "</b> file?",
+               Dialogs.getInstance().ask(IDE.NAVIGATION_CONSTANT.pasteSaveFileBeforeCutAskDialogTitle(), 
+                  IDE.IDE_LOCALIZATION_MESSAGES.pasteSaveFileBeforeCutAskDialogText(openedFile.getName()),
                   new BooleanValueReceivedHandler()
                   {
                      public void booleanValueReceived(Boolean value)

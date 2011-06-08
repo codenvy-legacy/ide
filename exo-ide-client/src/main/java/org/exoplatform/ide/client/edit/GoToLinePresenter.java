@@ -121,7 +121,7 @@ public class GoToLinePresenter
       });
 
       maxLineNumber = getLineNumber(activeFile.getContent());
-      String labelCaption = "Enter line number (1.." + maxLineNumber + "):";
+      String labelCaption = IDE.IDE_LOCALIZATION_MESSAGES.goToLineLabelEnterLineNumber(maxLineNumber);
       display.setCaptionLabel(labelCaption);
    }
    

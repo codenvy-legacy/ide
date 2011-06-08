@@ -70,7 +70,8 @@ public class ShowVersionListCommandHandler implements ShowVersionListHandler, Ed
                }
                else
                {
-                  Dialogs.getInstance().showInfo("Item \"" + result.getItem().getName() + "\" has no versions.");
+                  Dialogs.getInstance().showInfo(
+                     IDE.IDE_LOCALIZATION_MESSAGES.showVersionListItemHasNoVersions(result.getItem().getName()));
                }
             }
 

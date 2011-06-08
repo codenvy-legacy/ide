@@ -223,5 +223,17 @@ public interface IdeTemplateLocalizationConstant extends Constants
    
    @Key("saveAsTemplate.templateCreated")
    String saveAsTemplateCreated();
+   
+   /*
+    * CreateFileFromTemplatePresenter
+    */
+   @Key("template.askDeleteTemplateDialog.title")
+   String askDeleteTemplateDialogTitle();
+   
+   /*
+    * CreateProjectFromTemplatePresenter
+    */
+   @Key("createProjectFromTemplate.askDeleteSeveralTemplates")
+   String createFromTemplateAskDeleteSeveralTemplates();
 
 }

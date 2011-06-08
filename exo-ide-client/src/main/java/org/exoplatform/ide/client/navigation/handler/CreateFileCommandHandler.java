@@ -139,7 +139,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       }
       catch (EditorNotFoundException e)
       {
-         Dialogs.getInstance().showError("Can't find editor for type <b>" + event.getMimeType() + "</b>");
+         Dialogs.getInstance().showError(IDE.IDE_LOCALIZATION_MESSAGES.createFileCantFindEditorForType(event.getMimeType()));
       }
    }
 

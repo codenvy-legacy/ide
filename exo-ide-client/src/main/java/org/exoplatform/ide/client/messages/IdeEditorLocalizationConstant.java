@@ -42,6 +42,12 @@ public interface IdeEditorLocalizationConstant extends Constants
    String openFileWithUseAsDefaultEditor();
    
    /*
+    * OpenFileWithPresenter
+    */
+   @Key("openFileWith.askDialog.title")
+   String openFileWithAskDialogTitle();
+   
+   /*
     * EditorsListGrid
     */
    @Key("editorsListGrid.column.editors")

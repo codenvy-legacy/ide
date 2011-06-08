@@ -125,9 +125,8 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
       final String submittedFileContent = extractRecievedContent(response);
       if (submittedFileContent == null)
       {
-         Dialogs.getInstance().showError(
-            "There is an error of parsing of loopback service response with file '"
-               + display.getFileNameField().getValue() + "' content.");
+         final String errMsg = IDE.IDE_LOCALIZATION_MESSAGES.openLocalFileOpeningFailure(display.getFileNameField().getValue());
+         Dialogs.getInstance().showError(errMsg);
          // error - displaying behind the window
          return;
       }

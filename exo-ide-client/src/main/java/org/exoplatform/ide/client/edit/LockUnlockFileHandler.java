@@ -193,7 +193,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
    {
       if (event.getException() != null)
       {
-         Dialogs.getInstance().showError("Can't lock file <b>" + event.getItem().getName() + "</b>");
+         Dialogs.getInstance().showError(IDE.IDE_LOCALIZATION_MESSAGES.lockUnlockFileCantLockFile(event.getItem().getName()));
       }
    }
 

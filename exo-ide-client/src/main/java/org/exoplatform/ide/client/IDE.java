@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
 import org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeOperationLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant;
@@ -92,6 +93,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public static final IdeErrorsLocalizationConstant ERRORS_CONSTANT = GWT.create(IdeErrorsLocalizationConstant.class);
    
    public static final IdeOperationLocalizationConstant OPERATION_CONSTANT = GWT.create(IdeOperationLocalizationConstant.class);
+   
+   public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
 
    public IDE()
    {

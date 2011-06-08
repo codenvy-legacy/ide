@@ -241,45 +241,48 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
          return;
       }
       
-      String msg = "File template <b>" + fileTemplate.getName() + "</b> is used in <b>";
-      
+      String projectsNames = "";
       for (ProjectTemplate template : usedProjectTemplates)
       {
-         msg += template.getName() + ", ";
+         projectsNames += template.getName() + ", ";
       }
       
-      msg = msg.substring(0, msg.length() - 2);
-      msg += "</b> project template(s). Are your sure you want to delete this template?";
+      projectsNames = projectsNames.substring(0, projectsNames.length() - 2);
       
-      Dialogs.getInstance().ask("IDE", msg, new BooleanValueReceivedHandler()
-      {
-         public void booleanValueReceived(Boolean value)
+      final String message =
+         org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.askDeleteTemplateUsedInOtherProjects(
+            fileTemplate.getName(), projectsNames);
+      
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
+         message, new BooleanValueReceivedHandler()
          {
-            if (value == null)
+            public void booleanValueReceived(Boolean value)
             {
-               selectedTemplates.remove(fileTemplate);
-               deleteNextTemplate();
-               return;
-            }
-            if (value)
-            {
-               TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
+               if (value == null)
                {
-                  @Override
-                  protected void onSuccess(Template result)
+                  selectedTemplates.remove(fileTemplate);
+                  deleteNextTemplate();
+                  return;
+               }
+               if (value)
+               {
+                  TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
                   {
-                     selectedTemplates.remove(result);
-                     deleteNextTemplate();
-                  }
-               });
+                     @Override
+                     protected void onSuccess(Template result)
+                     {
+                        selectedTemplates.remove(result);
+                        deleteNextTemplate();
+                     }
+                  });
+               }
+               else
+               {
+                  selectedTemplates.remove(fileTemplate);
+                  deleteNextTemplate();
+               }
             }
-            else
-            {
-               selectedTemplates.remove(fileTemplate);
-               deleteNextTemplate();
-            }
-         }
-      });
+         });
    }
    
    private boolean isPresentInProjectTemplate(FolderTemplate projectTemplate, FileTemplate fileTemplate)

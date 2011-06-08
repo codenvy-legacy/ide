@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -190,7 +191,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       }
       catch (EditorNotFoundException e)
       {
-         Dialogs.getInstance().showError("Can't find editor for type <b>" + file.getContentType() + "</b>");
+         Dialogs.getInstance().showError(IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getContentType()));
       }
    }
 

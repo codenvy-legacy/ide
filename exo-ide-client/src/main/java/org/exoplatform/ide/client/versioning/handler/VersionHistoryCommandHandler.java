@@ -143,7 +143,9 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
                }
                else
                {
-                  Dialogs.getInstance().showInfo("Item \"" + result.getItem().getName() + "\" has no versions.");
+                  Dialogs.getInstance().showInfo(
+                     org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.versionHistoryItemHasNoVersions(result
+                        .getItem().getName()));
                }
             }
 

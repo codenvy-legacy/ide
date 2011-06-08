@@ -182,30 +182,35 @@ public abstract class AbstractCreateFromTemplatePresenter<T extends Template>
          return;
       }
       
-      String message = "Do you want to delete template";
+      String message = "";
       if (selectedTemplates.size() == 1)
       {
-         message += " <b>" + selectedTemplates.get(0).getName() + "</b>?";
+         final String templateName = selectedTemplates.get(0).getName();
+         message =
+            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+               .createFromTemplateAskDeleteOneTemplate(templateName);
       }
       else if (selectedTemplates.size() > 1)
       {
-         message += "s?";
+         message =
+            org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.createFromTemplateAskDeleteSeveralTemplates();
       }
       
-      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
-      {
-         public void booleanValueReceived(Boolean value)
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
+         message, new BooleanValueReceivedHandler()
          {
-            if (value == null)
+            public void booleanValueReceived(Boolean value)
             {
-               return;
+               if (value == null)
+               {
+                  return;
+               }
+               if (value)
+               {
+                  deleteNextTemplate();
+               }
             }
-            if (value)
-            {
-               deleteNextTemplate();
-            }
-         }
-      });
+         });
    }
    
    /**

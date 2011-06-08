@@ -89,8 +89,6 @@ import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
@@ -351,7 +349,8 @@ public class EditorController implements EditorContentChangedHandler,
       else
       {
          closeFileAfterSaving = true;
-         String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
+         final String fileName = Utils.unescape(file.getName());
+         String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(fileName);
          Dialogs.getInstance().ask(CLOSE_FILE, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
@@ -440,20 +439,8 @@ public class EditorController implements EditorContentChangedHandler,
    {
       activeFile = event.getFile();
       Editor editor = editors.get(activeFile.getHref());
-      //   TextEditor textEditor = display.getEditor(event.getFile().getHref());
-
-      //   display.selectTab(event.getFile().getHref());
 
       editorsViews.get(editor.getEditorId()).activate();
-      //eventBus.fireEvent(new SelectViewEvent(editorsViews.get(editor.getEditorId()).getId()));
-      
-
-      //      context.setActiveFile(event.getFile());
-      //      context.setActiveTextEditor(display.getEditor(event.getFile().getHref()));
-
-      //String href = context.getActiveFile().getHref();
-      //   eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, textEditor));
-      //CookieManager.getInstance().storeOpenedFiles(context);
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)

@@ -86,7 +86,7 @@ public class IDEConfigurationLoader
 
    private void showErrorMessage(String message)
    {
-      String mes = "Invalid configuration:  missing " + message + " item"; //$NON-NLS-1$ //$NON-NLS-2$
+      String mes = IDE.IDE_LOCALIZATION_MESSAGES.configurationInvalidConfiguration(message); //$NON-NLS-1$ //$NON-NLS-2$
       Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, mes);
    }
 

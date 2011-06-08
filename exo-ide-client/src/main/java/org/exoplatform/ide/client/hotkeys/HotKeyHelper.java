@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import org.exoplatform.ide.client.IDE;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -192,7 +194,7 @@ public class HotKeyHelper
       String charKey = (KEY_CODES.get(keyCode) != null) ? KEY_CODES.get(keyCode) : null;
       
       if (charKey == null)
-         throw new IllegalArgumentException("Can't find " + codeCombination + " code in keycodes map");
+         throw new IllegalArgumentException(IDE.IDE_LOCALIZATION_MESSAGES.hotkeysCantFindCodeCombination(codeCombination));
       
       return controlKey + "+" + charKey;
    }
