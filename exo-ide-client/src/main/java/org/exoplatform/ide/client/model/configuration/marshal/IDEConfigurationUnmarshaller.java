@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Window.Location;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
@@ -61,6 +62,8 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    private static final String IS_DISCOVERABLE = "discoverable";
 
    private static final String USER = "user";
+   
+   private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
    //   private static final String HTTPS_PORT = "httpsPort";
 
@@ -187,7 +190,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable
    private void showErrorMessage(String message)
    {
       String m = "Invalid configuration:  missing " + message + " item";
-      Dialogs.getInstance().showError("Invalid configuration", m);
+      Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, m);
    }
 
    private static native String getRegistryURL() /*-{

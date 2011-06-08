@@ -116,5 +116,14 @@ public interface IdeEditorLocalizationConstant extends Constants
    @Key("findText.fieldValue.replateText")
    String findTextFieldValueReplaceText();
    
+   /*
+    * EditorController
+    */
+   @Key("editorController.dialogTitle.closeFile")
+   String editorControllerAskCloseFile();
+   
+   @Key("editorController.fileIsReadOnly")
+   String editorControllerFileIsReadOnly();
+   
 
 }

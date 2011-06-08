@@ -4,6 +4,8 @@
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	xmlns:hk="urn:import:org.exoplatform.ide.client.hotkeys"
 	>
+	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+	<ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="idePrefs"></ui:with>
 	
 	<ui:style>
 
@@ -39,19 +41,19 @@
 
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 
-						<td><c:ImageButton text="Bind" imageName="yes" ui:field="bindButton" enabled="false" buttonId="ideCustomizeHotKeysViewBindButton"></c:ImageButton></td>
+						<td><c:ImageButton text="{idePrefs.customizeHotkeysBindButton}" imageName="yes" ui:field="bindButton" enabled="false" buttonId="ideCustomizeHotKeysViewBindButton"></c:ImageButton></td>
 
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 
-						<td><c:ImageButton text="Unbind" imageName="no" ui:field="unbindButton" enabled="false" buttonId="ideCustomizeHotKeysViewUnbindButton"></c:ImageButton></td>
+						<td><c:ImageButton text="{idePrefs.customizeHotkeysUnbindButton}" imageName="no" ui:field="unbindButton" enabled="false" buttonId="ideCustomizeHotKeysViewUnbindButton"></c:ImageButton></td>
 						
 						<td style="width:100%;"><div style="width:1px; height:1px;"></div></td>
 						
-						<td><c:ImageButton text="Ok" imageName="ok" ui:field="okButton" enabled="false" buttonId="ideCustomizeHotKeysViewOkButton"></c:ImageButton></td>
+						<td><c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" enabled="false" buttonId="ideCustomizeHotKeysViewOkButton"></c:ImageButton></td>
 						
 						<td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
 						
-						<td><c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideCustomizeHotKeysViewCancelButton"></c:ImageButton></td>
+						<td><c:ImageButton text="{idelocal.cancelButton}" imageName="cancel" ui:field="cancelButton" buttonId="ideCustomizeHotKeysViewCancelButton"></c:ImageButton></td>
 						
 						<td style="width:2px;"><div style="width:2px; height:1px;"></div></td>						
 					</tr>

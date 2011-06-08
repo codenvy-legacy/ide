@@ -116,6 +116,10 @@ public class EditorController implements EditorContentChangedHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
    ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler
 {
+   
+   private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerAskCloseFile();
+   
+   private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileIsReadOnly();
 
    private HandlerManager eventBus;
 
@@ -348,7 +352,7 @@ public class EditorController implements EditorContentChangedHandler,
       {
          closeFileAfterSaving = true;
          String message = "Do you want to save <b>" + Utils.unescape(file.getName()) + "</b> before closing?<br>&nbsp;";
-         Dialogs.getInstance().ask("Close file", message, new BooleanValueReceivedHandler()
+         Dialogs.getInstance().ask(CLOSE_FILE, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
             {
@@ -404,7 +408,7 @@ public class EditorController implements EditorContentChangedHandler,
             ? "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\" src=\""
                + Images.Editor.READONLY_FILE + "\" />" : "";
 
-      mainHint = (isReadOnly(file)) ? "File opened in read only mode. Use SaveAs command." : mainHint;
+      mainHint = (isReadOnly(file)) ? FILE_IS_READ_ONLY : mainHint;
       String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "</span>";
 
       return title;

@@ -26,6 +26,7 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -171,16 +172,21 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", "XML", "Create New XML File",
-         Images.FileTypes.XML, MimeType.TEXT_XML).setDelimiterBefore(true)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML", "HTML",
-         "Create New HTML File", Images.FileTypes.HTML, MimeType.TEXT_HTML).setDelimiterBefore(true)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", "Text",
-         "Create New Text File", Images.FileTypes.TXT, MimeType.TEXT_PLAIN)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script", "JavaScript",
-         "Create New Java Script File", Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS", "CSS", "Create New CSS File",
-         Images.FileTypes.CSS, MimeType.TEXT_CSS)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", IDE.IDE_LOCALIZATION_CONSTANT
+         .controlNewXmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewXmlPrompt(), Images.FileTypes.XML,
+         MimeType.TEXT_XML).setDelimiterBefore(true)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML", IDE.IDE_LOCALIZATION_CONSTANT
+         .controlNewHtmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewHtmlPrompt(), Images.FileTypes.HTML,
+         MimeType.TEXT_HTML).setDelimiterBefore(true)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
+         .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
+         MimeType.TEXT_PLAIN)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script",
+         IDE.IDE_LOCALIZATION_CONSTANT.controlNewJavascriptTitle(), IDE.IDE_LOCALIZATION_CONSTANT
+            .controlNewJavascriptPrompt(), Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
+      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS", IDE.IDE_LOCALIZATION_CONSTANT
+         .controlNewCssTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewCssPrompt(), Images.FileTypes.CSS,
+         MimeType.TEXT_CSS)));
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithControl()));
@@ -281,8 +287,7 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
          if (UploadFileEvent.UploadType.FILE.equals(event.getUploadType())
             || UploadFileEvent.UploadType.FOLDER.equals(event.getUploadType()))
          {
-            Dialogs.getInstance().showInfo(
-               "Please, select target folder in the Workspace Panel before calling this command !");
+            Dialogs.getInstance().showInfo(IDE.ERRORS_CONSTANT.navigationUploadNoTargetSelected());
             return;
          }
       }

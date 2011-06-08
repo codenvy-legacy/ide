@@ -40,7 +40,7 @@ import org.exoplatform.ide.client.framework.vfs.Version;
  */
 @RolesAllowed({"administrators", "developers"})
 public class UndoTypingControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EditorFileContentChangedHandler//, FileContentReceivedHandler
+   EditorFileContentChangedHandler
 {
 
    public static final String ID = "Edit/Undo Typing";
@@ -64,7 +64,6 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorFileContentChangedEvent.TYPE, this);
-//      eventBus.addHandler(FileContentReceivedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -92,9 +91,4 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
       setEnabled(event.hasUndoChanges());
    }
 
-//   public void onFileContentReceived(FileContentReceivedEvent event)
-//   {
-//      setVisible(true);
-//      setEnabled(false);
-//   }
 }

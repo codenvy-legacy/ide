@@ -55,5 +55,14 @@ public interface IdePermissionsLocalizationConstant extends Constants
    
    @Key("permissions.owner")
    String permissionsOwner();
+   
+   /*
+    * PermissionsManagerPresenter
+    */
+   @Key("permissions.setAclFailure")
+   String permissionsSetAclFailure();
+   
+   @Key("permissions.noAclProperty")
+   String permissionsNoAclProperty();
 
 }

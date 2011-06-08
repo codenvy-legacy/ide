@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.component.AskForValueDialog;
 import org.exoplatform.ide.client.component.ValueCallback;
 import org.exoplatform.ide.client.component.ValueDiscardCallback;
@@ -68,6 +69,14 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
    private File activeFile;
 
    private Map<String, String> lockTokens;
+   
+   private static final String PREFIX = IDE.NAVIGATION_CONSTANT.saveFileAsNewFileNamePrefix();
+   
+   private static final String SAVE_AS_DIALOG_TITLE = IDE.NAVIGATION_CONSTANT.saveFileAsDialogTitle();
+   
+   private static final String SAVE_AS_DIALOG_ENTER_NEW_NAME = IDE.NAVIGATION_CONSTANT.saveFileAsDialogEnterNewName();
+   
+   private static final String SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE = IDE.NAVIGATION_CONSTANT.saveFileAsDialogDoYouWantToSave();
 
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
@@ -89,8 +98,7 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
    {
       if (selectedItems == null || selectedItems.size() == 0)
       {
-         Dialogs.getInstance().showInfo(
-            "Please, select target folder in the Workspace Panel before calling this command !");
+         Dialogs.getInstance().showInfo(IDE.ERRORS_CONSTANT.saveFileAsTargetNotSelected());
          return;
       }
 
@@ -105,12 +113,12 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
     */
    private void askForNewFileName(final File file, SaveFileAsEvent.SaveDialogType type, final GwtEvent<?> eventFiredOnNo, final GwtEvent<?> eventFiredOnCancel)
    {
-      final String newFileName = file.isNewFile() ? file.getName() : "Copy Of " + file.getName();
+      final String newFileName = file.isNewFile() ? file.getName() : PREFIX + " " + file.getName();
       sourceHref = file.getHref();
       
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
-         new AskForValueDialog("Save file as", "Enter name to new file:", newFileName, 400, new ValueCallback()
+         new AskForValueDialog(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, new ValueCallback()
          {
             public void execute(String value)
             {
@@ -131,7 +139,7 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
       }
       else
       {
-         new AskForValueDialog("Save file as", "Do you want to save new file?", newFileName, 400, new ValueCallback()
+         new AskForValueDialog(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, new ValueCallback()
          {
             public void execute(String value)
             {

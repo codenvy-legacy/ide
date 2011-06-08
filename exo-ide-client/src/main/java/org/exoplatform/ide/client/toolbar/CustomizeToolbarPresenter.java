@@ -33,6 +33,7 @@ import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.SettingsService;
@@ -102,6 +103,8 @@ public class CustomizeToolbarPresenter
       void disableMoveDownButton();
 
    }
+   
+   private static final String SAVE_SETTINGS_FAILURE = IDE.ERRORS_CONSTANT.customizeToolbarSaveFailure();
 
    private HandlerManager eventBus;
 
@@ -538,7 +541,7 @@ public class CustomizeToolbarPresenter
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Can't save toolbar settings"));
+               eventBus.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
             }
          });
       

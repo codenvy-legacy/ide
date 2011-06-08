@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -42,9 +43,9 @@ public class DeleteItemCommand extends MultipleSelectionItemsCommand implements 
 
    private static final String ID = "File/Delete...";
 
-   private static final String TITLE = "Delete...";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.deleteItemsTitleControl();
 
-   private static final String PROMPT = "Delete Item(s)...";
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.deleteItemsPromptControl();
 
    private Item selectedItem;
 

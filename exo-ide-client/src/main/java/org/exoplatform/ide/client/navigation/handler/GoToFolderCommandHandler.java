@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -57,6 +58,8 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    private String entryPoint;
 
    private File activeFile;
+   
+   private static final String RECEIVE_CHILDREN_FAILURE = IDE.ERRORS_CONSTANT.goToFolderReceiveChildrenFailure();
 
    public GoToFolderCommandHandler(HandlerManager eventBus)
    {
@@ -154,7 +157,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
          protected void onFailure(Throwable exception)
          {
             exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
          }
       });
    }

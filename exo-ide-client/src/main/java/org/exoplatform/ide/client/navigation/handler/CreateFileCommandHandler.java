@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -64,6 +65,8 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
    private ApplicationSettings applicationSettings;
+   
+   private static final String UNTITLED_FILE_NAME = IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
 
    public CreateFileCommandHandler(HandlerManager eventBus)
    {
@@ -105,11 +108,11 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
       String content = FileTemplates.getTemplateFor(event.getMimeType());
 
-      String fileName = "Untitled file." + extension;
+      String fileName = UNTITLED_FILE_NAME + "." + extension;
       int index = 1;
       while (openedFiles.get(href + fileName) != null)
       {
-         fileName = "Untitled file " + index + "." + extension;
+         fileName = UNTITLED_FILE_NAME + " " + index + "." + extension;
          index++;
       }
 

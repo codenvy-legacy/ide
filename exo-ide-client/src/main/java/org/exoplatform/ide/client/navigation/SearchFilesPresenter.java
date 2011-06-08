@@ -73,6 +73,8 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       void setMimeTypeValues(String[] mimeTypes);
 
    }
+   
+   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.searchFileSearchError();
 
    private Display display;
 
@@ -145,16 +147,6 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       String content = display.getSearchContentItem().getValue();
       String contentType = display.getMimeTypeItem().getValue();
 
-      //      if (content != null)
-      //      {
-      //         context.setSearchContent(content);
-      //      }
-      //
-      //      if (contentType != null)
-      //      {
-      //         context.setSearchContentType(contentType);
-      //      }
-
       Item item = selectedItems.get(0);
 
       String path = item.getHref();
@@ -182,7 +174,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Search path does not exist."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
          }
       });
    }

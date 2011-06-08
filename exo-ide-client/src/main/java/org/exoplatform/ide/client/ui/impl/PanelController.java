@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.ui.impl;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
 
 import com.google.gwt.user.client.DOM;
@@ -40,7 +41,7 @@ public class PanelController extends AbsolutePanel implements RequiresResize
 
    public static final String INVISIBLE_PANEL_BACKGROUND = "#F9F9F9";
 
-   public static final String INVISIBLE_PANEL_MESSAGE = "Not enough space to display this panel.";
+   public static final String INVISIBLE_PANEL_MESSAGE = IDE.IDE_LOCALIZATION_CONSTANT.panelNotEnoughSpaceToDisplay();
    
    private int height;
 

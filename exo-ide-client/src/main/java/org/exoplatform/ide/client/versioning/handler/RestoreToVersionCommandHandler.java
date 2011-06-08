@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -49,6 +50,9 @@ import java.util.Map;
 public class RestoreToVersionCommandHandler implements ShowVersionContentHandler, RestoreToVersionHandler,
    ApplicationSettingsReceivedHandler
 {
+   
+   private static final String ASK_DIALOG_TITLE = IDE.VERSIONS_CONSTANT.restoreToVersionDialogTitle();
+   
    private HandlerManager eventBus;
 
    private Version activeVersion;
@@ -92,7 +96,7 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
          return;
       }
 
-      Dialogs.getInstance().ask("Restore version",
+      Dialogs.getInstance().ask(ASK_DIALOG_TITLE,
          "Do you want to restore file to version " + activeVersion.getDisplayName() + "?",
          new BooleanValueReceivedHandler()
          {

@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.upload;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -111,7 +112,7 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
    @Override
    protected String errorMessage()
    {
-      return "Can not open local file!";
+      return IDE.ERRORS_CONSTANT.openLocalFileOpeningFailure();
    }
    
    @Override

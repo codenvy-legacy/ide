@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -35,7 +36,7 @@ public abstract class TemplateDeletedCallback extends AsyncRequestCallback<Templ
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent(exception, "Registry service is not deployed.<br>Template not found."));
+      fireEvent(new ExceptionThrownEvent(exception, IDE.ERRORS_CONSTANT.templateDeleteFailure()));
    }
 
 }

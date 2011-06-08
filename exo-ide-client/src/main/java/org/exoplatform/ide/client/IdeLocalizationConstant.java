@@ -134,6 +134,18 @@ public interface IdeLocalizationConstant extends Constants
    String previewHtmlTitle();
    
    /*
+    * ShowImagesView
+    */
+   @Key("showImages.title")
+   String showImagesTitle();
+   
+   /*
+    * PanelController
+    */
+   @Key("panel.notEnoughSpaceToDisplay")
+   String panelNotEnoughSpaceToDisplay();
+   
+   /*
     * Controls
     */
    @Key("control.showImages")
@@ -223,8 +235,11 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.openFileByPath")
    String openFileByPathControl();
    
-   @Key("control.openWith")
-   String openWithControl();
+   @Key("control.openWith.title")
+   String openWithTitleControl();
+   
+   @Key("control.openWith.prompt")
+   String openWithPromptControl();
    
    @Key("control.openLocalFile")
    String openLocalFileControl();
@@ -354,6 +369,49 @@ public interface IdeLocalizationConstant extends Constants
    
    @Key("control.minMax.restore")
    String minMaxRestoreControl();
+   
+   @Key("control.properties.title")
+   String showPropertiesTitleControl();
+   
+   @Key("control.properties.prompt.show")
+   String showPropertiesShowPromptControl();
+   
+   @Key("control.properties.prompt.hide")
+   String showPropertiesHidePromptControl();
+   
+   /*
+    * Controls from menu "New"
+    */
+   @Key("control.new.xml.title")
+   String controlNewXmlTitle();
+   
+   @Key("control.new.xml.prompt")
+   String controlNewXmlPrompt();
+   
+   @Key("control.new.html.title")
+   String controlNewHtmlTitle();
+   
+   @Key("control.new.html.prompt")
+   String controlNewHtmlPrompt();
+   
+   @Key("control.new.text.title")
+   String controlNewTextTitle();
+   
+   @Key("control.new.text.prompt")
+   String controlNewTextPrompt();
+   
+   @Key("control.new.javascript.title")
+   String controlNewJavascriptTitle();
+   
+   @Key("control.new.javascript.prompt")
+   String controlNewJavascriptPrompt();
+   
+   @Key("control.new.css.title")
+   String controlNewCssTitle();
+   
+   @Key("control.new.css.prompt")
+   String controlNewCssPrompt();
+   
    
    /*
     * Menu

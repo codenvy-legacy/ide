@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
@@ -56,6 +57,8 @@ public class VersionContentPresenter implements ShowVersionContentHandler
       void setTitle(String title);
 
    }
+   
+   private static final String VERSIONS_PREFIX = IDE.VERSIONS_CONSTANT.versionsDisplayPrefix();
 
    private HandlerManager eventBus;
 
@@ -108,7 +111,7 @@ public class VersionContentPresenter implements ShowVersionContentHandler
    private String getTitle()
    {
       String hint = "title=\"" + version.getHref() + "\"";
-      String title = "<span " + hint + ">" + "Version " + version.getDisplayName() + "</span>";
+      String title = "<span " + hint + ">" + VERSIONS_PREFIX + " " + version.getDisplayName() + "</span>";
       return title;
    }
 }

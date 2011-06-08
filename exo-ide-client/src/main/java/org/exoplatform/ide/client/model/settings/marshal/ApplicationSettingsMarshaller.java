@@ -35,7 +35,7 @@ import java.util.Map;
  * @version $
  */
 
-public class ApplicationSettingsMarshaller implements Const, Marshallable
+public class ApplicationSettingsMarshaller implements Marshallable
 {
 
    private ApplicationSettings applicationSettings;
@@ -94,19 +94,16 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
 
    private String getStringNode(String key, Object value)
    {
-      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
       return "\"" + key + "\":\"" + value + "\",";
    }
 
    private String getIntegerNode(String key, Object value)
    {
-      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
       return "\"" + key + "\":" + value + ",";
    }
 
    private String getBooleanNode(String key, Object value)
    {
-      //      return "<" + xmlNodeName + ">" + javaScriptEncodeURIComponent("" + value) + "</" + xmlNodeName + ">";
       return "\"" + key + "\":" + value + ",";
    }
 
@@ -123,17 +120,6 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
          xml = xml.substring(0, xml.length() - 1);
       xml += "],";
       
-
-      //      String xml = "<" + xmlNodeName + ">";
-      //
-      //      List<String> values = (List<String>)value;
-      //      for (String v : values)
-      //      {
-      //         String subXML = "<item>" + javaScriptEncodeURIComponent(v) + "</item>";
-      //         xml += subXML;
-      //      }
-      //
-      //      xml += "</" + xmlNodeName + ">";
       return xml;
    }
 
@@ -154,26 +140,7 @@ public class ApplicationSettingsMarshaller implements Const, Marshallable
       if (xml.endsWith(","))
          xml = xml.substring(0, xml.length() - 1);
       xml += "},";
-      //      String xml = "<" + xmlNodeName + ">";
-      //
-      //      Map<String, String> values = (Map<String, String>)value;
-      //      Iterator<String> keyIter = values.keySet().iterator();
-      //      while (keyIter.hasNext())
-      //      {
-      //         String k = keyIter.next();
-      //         String v = values.get(k);
-      //
-      //         String subXML = "<item>";
-      //
-      //         subXML += "<key>" + javaScriptEncodeURIComponent(k) + "</key>";
-      //         subXML += "<value>" + javaScriptEncodeURIComponent(v) + "</value>";
-      //
-      //         subXML += "</item>";
-      //
-      //         xml += subXML;
-      //      }
-      //
-      //      xml += "</" + xmlNodeName + ">";
+
       return xml;
    }
 

@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -45,6 +46,8 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
    private HandlerManager eventBus;
 
    private Map<String, String> lockTokens;
+   
+   private static final String UNLOCK_FAILURE_MSG = IDE.ERRORS_CONSTANT.fileClosedUnlockFailure();
 
    public FileClosedHandler(HandlerManager eventBus)
    {
@@ -79,7 +82,7 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));               
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));               
             }
          });
       }

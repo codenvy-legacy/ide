@@ -118,6 +118,8 @@ public class CreateProjectTemplatePresenter
    private Template templateToCreate;
 
    private Template selectedTemplate;
+   
+   private static final String ENTER_FILE_NAME_FIRST = IDE.TEMPLATE_CONSTANT.createProjectTemplateEnterNameFirst();
 
    public CreateProjectTemplatePresenter(HandlerManager eventBus, List<Template> templateList)
    {
@@ -263,7 +265,7 @@ public class CreateProjectTemplatePresenter
                final String fileName = display.getNameField().getValue().trim();
                if ("".equals(fileName))
                {
-                  Dialogs.getInstance().showError("You must enter file name the first!");
+                  Dialogs.getInstance().showError(ENTER_FILE_NAME_FIRST);
                   return;
                }
 
@@ -280,13 +282,13 @@ public class CreateProjectTemplatePresenter
             @Override
             public String getCreateButtonTitle()
             {
-               return "Add";
+               return IDE.IDE_LOCALIZATION_CONSTANT.addButton();
             }
 
             @Override
             public String getFormTitle()
             {
-               return "Add file";
+               return IDE.TEMPLATE_CONSTANT.addFileButton();
             }
          };
       addFilePresenter.bindDisplay(createFileDisplay);
@@ -341,7 +343,7 @@ public class CreateProjectTemplatePresenter
       //validate
       if (folderName == null || folderName.length() == 0)
       {
-         Dialogs.getInstance().showError("Value can't be empty");
+         Dialogs.getInstance().showError(IDE.TEMPLATE_CONSTANT.createProjectTemplateValueCantBeEmpty());
          return;
       }
 
@@ -351,7 +353,7 @@ public class CreateProjectTemplatePresenter
          {
             if (template instanceof FolderTemplate && folderName.equals(template.getName()))
             {
-               Dialogs.getInstance().showError("Folder with such name already exists");
+               Dialogs.getInstance().showError(IDE.TEMPLATE_CONSTANT.createProjectTemplateFolderAlreadyExists());
                return;
             }
          }
@@ -407,7 +409,7 @@ public class CreateProjectTemplatePresenter
       {
          if (template instanceof FolderTemplate && templateToCreate.getName().equals(template.getName()))
          {
-            Dialogs.getInstance().showError("Project template with such name already exists!");
+            Dialogs.getInstance().showError(IDE.TEMPLATE_CONSTANT.createProjectTemplateProjectAlreadyExists());
             return;
          }
       }
@@ -417,7 +419,7 @@ public class CreateProjectTemplatePresenter
          protected void onSuccess(Template result)
          {
             display.closeForm();
-            Dialogs.getInstance().showInfo("Template created successfully!");
+            Dialogs.getInstance().showInfo(IDE.TEMPLATE_CONSTANT.createProjectTemplateCreated());
          }
       });
    }
@@ -437,7 +439,7 @@ public class CreateProjectTemplatePresenter
             if (template instanceof FileTemplate
                && fileTemplate.getFileName().equals(((FileTemplate)template).getFileName()))
             {
-               Dialogs.getInstance().showError("File with such name already exists");
+               Dialogs.getInstance().showError(IDE.TEMPLATE_CONSTANT.createProjectTemplateFileAlreadyExists());
                return;
             }
          }

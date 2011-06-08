@@ -98,7 +98,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    private HandlerManager eventBus;
 
-   private final String STRING_NOT_FOUND = "String not found.";
+   private final String STRING_NOT_FOUND = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.findTextStringNotFound();
 
    private HashMap<String, FindTextState> filesFindState;
 

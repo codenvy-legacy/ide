@@ -63,6 +63,13 @@ import java.util.List;
 public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorActiveFileChangedHandler,
    ShowPreviousVersionHandler, ShowNextVersionHandler, ViewClosedHandler, ViewOpenedHandler, FileSavedHandler, VersionRestoredHandler
 {
+   
+   private static final String RECEIVE_VERSIONS_FAILURE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.versionsReceiveVersionsFailure();
+   
+   private static final String PLEASE_OPEN_FILE = org.exoplatform.ide.client.IDE.VERSIONS_CONSTANT.versionsOpenFile();
+   
+   private static final String VERSION_TITLE = org.exoplatform.ide.client.IDE.VERSIONS_CONSTANT.versionTitle();
+   
    private HandlerManager eventBus;
 
    private Version version;
@@ -143,8 +150,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
             @Override
             protected void onFailure(Throwable exception)
             {
-               String errorMessage = "Versions were not received.";
-               eventBus.fireEvent(new ExceptionThrownEvent(errorMessage));
+               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
 
                if (versionToOpenOnError != null && ignoreErrorCount > 0)
                {
@@ -159,7 +165,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       }
       else
       {
-         Dialogs.getInstance().showInfo("Please, open file.");
+         Dialogs.getInstance().showInfo(PLEASE_OPEN_FILE);
       }
    }
 
@@ -249,7 +255,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
          {
             view = new VersionContentForm(eventBus, version);
             view.setIcon(new Image(IDEImageBundle.INSTANCE.viewVersions()));
-            view.setTitle("Version");
+            view.setTitle(VERSION_TITLE);
             IDE.getInstance().openView(view);
          }
          else

@@ -16,27 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model.template;
+package org.exoplatform.ide.client.messages;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.IDE;
+import com.google.gwt.i18n.client.Constants;
 
 /**
+ * Interface to represent the constants contained in resource bundle:
+ *      'IdeOperationLocalizationConstant.properties'.
+ * <p/>
+ * Localization message for forms from operation group.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: TemplateListReceivedCallback.java Feb 7, 2011 12:56:15 PM vereshchaka $
+ * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
  *
  */
-public abstract class TemplateCreatedCallback extends AsyncRequestCallback<Template>
+public interface IdeOperationLocalizationConstant extends Constants
 {
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+   /*
+    * PreviewHTMLPresenter
     */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      fireEvent(new ExceptionThrownEvent(exception, IDE.ERRORS_CONSTANT.templateCreationFailure()));
-   }
+   @Key("preview.notAvailable")
+   String previewNotAvailable();
+   
+   @Key("priview.notAvailable.saveFile")
+   String previewNotAvailableSaveFile();
 
 }

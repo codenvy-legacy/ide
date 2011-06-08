@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -40,6 +41,9 @@ import org.exoplatform.ide.client.versioning.event.ShowVersionListHandler;
  */
 public class ShowVersionListCommandHandler implements ShowVersionListHandler, EditorActiveFileChangedHandler
 {
+   
+   private static final String RECEIVE_VERSIONS_FAILURE = IDE.ERRORS_CONSTANT.versionsReceiveVersionsFailure();
+   
    private HandlerManager eventBus;
 
    private File activeFile;
@@ -73,15 +77,14 @@ public class ShowVersionListCommandHandler implements ShowVersionListHandler, Ed
             @Override
             protected void onFailure(Throwable exception)
             {
-               String errorMessage = "Versions were not received.";
-               eventBus.fireEvent(new ExceptionThrownEvent(errorMessage));
+               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
                eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));               
             }
          });
       }
       else
       {
-         Dialogs.getInstance().showInfo("Please, open file.");
+         Dialogs.getInstance().showInfo(IDE.VERSIONS_CONSTANT.versionsOpenFile());
       }
    }
 

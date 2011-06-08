@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -152,7 +153,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
       
       if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
-         String message = "Can't copy items in the same directory!";
+         String message = IDE.ERRORS_CONSTANT.pasteItemsCantCopyToTheSameFolder();;
          Dialogs.getInstance().showError(message);
          return;
       }
@@ -230,7 +231,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
       if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
       {
-         Dialogs.getInstance().showError("Can't move items in the same directory!");
+         Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.pasteItemsCantMoveToTheSameFolder());
          return;
       }
 

@@ -90,12 +90,37 @@ public interface IdeNavigationLocalizationConstant extends Constants
    String deleteItemTitle();
    
    /*
+    * DeleteItemsPresenter
+    */
+   @Key("deleteFile.dialog.title")
+   String deleteFileDialogTitle();
+   
+   /*
     * AbstractCreateFolderForm
     */
    @Key("createFolder.nameOfNewFolder")
    String createFolderNameOfNewFolder();
    
+   /*
+    * CreateFileCommandHandler
+    */
+   @Key("createFile.untitledFile.name")
+   String createFileUntitledFileName();
    
+   /*
+    * SaveFileAsCommandHandler
+    */
+   @Key("saveFileAs.newFileName.prefix")
+   String saveFileAsNewFileNamePrefix();
+   
+   @Key("saveFileAs.dialog.title")
+   String saveFileAsDialogTitle();
+   
+   @Key("saveFileAs.dialog.enterNewName")
+   String saveFileAsDialogEnterNewName();
+   
+   @Key("saveFileAs.dialog.doYouWantToSave")
+   String saveFileAsDialogDoYouWantToSave();
    
    
    

@@ -46,6 +46,15 @@ public interface IdePreferencesLocalizationConstant extends Constants
    String workspaceTitle();
    
    /*
+    * SelectWorkspacePresenter
+    */
+   @Key("workspace.closeAllFilesDialog.title")
+   String workspaceCloseAllFilesDialogTitle();
+   
+   @Key("workspace.closeAllFilesDialog.text")
+   String workspaceCloseAllFilesDialogText();
+   
+   /*
     * CustomizeToolbarForm
     */
    @Key("customizeToolbar.title")
@@ -91,6 +100,26 @@ public interface IdePreferencesLocalizationConstant extends Constants
    String restServicesDiscoveryResponseMediaType();
    
    /*
+    * RestServicesDiscoveryPresenter
+    */
+   @Key("restServicesDiscovery.param.header")
+   String restServicesDiscoveryParamHeader();
+   
+   @Key("restServicesDiscovery.param.query")
+   String restServicesDiscoveryParamQuery();
+   
+   @Key("restServicesDiscovery.param.plain")
+   String restServicesDiscoveryParamPlain();
+   
+   @Key("restServicesDiscovery.param.path")
+   String restServicesDiscoveryParamPath();
+   
+   @Key("restServicesDiscovery.param.matrix")
+   String restServicesDiscoveryParamMatrix();
+   
+   @Key("restServicesDiscovery.param.param")
+   String restServicesDiscoveryParam();
+   /*
     * RestServiceParameterListGrid
     */
    @Key("restServiceListGrid.column.name")
@@ -134,6 +163,12 @@ public interface IdePreferencesLocalizationConstant extends Constants
     */
    @Key("customizeHotkeys.title")
    String customizeHotkeysTitle();
+   
+   @Key("customizeHotkeys.button.bind")
+   String customizeHotkeysBindButton();
+   
+   @Key("customizeHotkeys.button.unbind")
+   String customizeHotkeysUnbindButton();
    
    /*
     * HotKeyItemListGrid
@@ -206,5 +241,14 @@ public interface IdePreferencesLocalizationConstant extends Constants
    
    @Key("hotkeys.tryAnotherHotkey")
    String msgTryAnotherHotkey();
+   
+   /*
+    * CustomizeHotKeysPresenter
+    */
+   @Key("hotkeys.group.editor")
+   String hotkeysEditorGroup();
+   
+   @Key("hotkeys.group.other")
+   String hotkeysOtherGroup();
 
 }

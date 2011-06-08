@@ -111,6 +111,10 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       void setSelectedItem(EntryPoint item);
 
    }
+   
+   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogTitle();
+   
+   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.workspaceCloseAllFilesDialogText();
 
    /**
     * Instance of Display
@@ -354,7 +358,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    {
       if (openedFiles.size() != 0)
       {
-         Dialogs.getInstance().ask("IDEall", "All opened files will be closed.<br>Do you want to continue?",
+         Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT,
             new BooleanValueReceivedHandler()
             {
                public void booleanValueReceived(Boolean value)

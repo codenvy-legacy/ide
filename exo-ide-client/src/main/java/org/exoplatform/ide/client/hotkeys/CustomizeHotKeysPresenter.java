@@ -99,7 +99,19 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
    }
 
-   private static final String EDITOR_GROUP = "Editor hotkeys";
+   /*
+    * Title of group, that contains hotkeys, which used in editor (autocomplete, save etc.).
+    * Will be displayed in hotkeys listgrid.
+    * Other groups will be formed from menu titles: File, Edit and so on.
+    */
+   private static final String EDITOR_GROUP = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.hotkeysEditorGroup();
+   
+   /*
+    * Group for hotkeys, that don't belong to one of defined groups.
+    */
+   private static final String OTHER_GROUP = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.hotkeysOtherGroup();
+   
+   private static final String CANT_SAVE_HOTKEYS = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.hotkeysCantSaveHotkeys();
    
    private static final IdePreferencesLocalizationConstant CONSTANTS = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT;
 
@@ -298,7 +310,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       }
       else
       {
-         groupName = "Other";
+         groupName = OTHER_GROUP;
       }
 
       List<SimpleControl> commands = groups.get(groupName);
@@ -520,7 +532,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Can't save hotkeys."));
+               eventBus.fireEvent(new ExceptionThrownEvent(CANT_SAVE_HOTKEYS));
             }
          });
    }

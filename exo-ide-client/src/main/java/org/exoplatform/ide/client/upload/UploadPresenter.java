@@ -31,6 +31,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
@@ -209,7 +210,7 @@ public class UploadPresenter implements FileSelectedHandler
 
    protected String errorMessage()
    {
-      return "Can not upload folder!";
+      return IDE.ERRORS_CONSTANT.uploadFolderUploadingFailure();
    }
 
    protected boolean gotError(String uploadServiceResponse, boolean matches)

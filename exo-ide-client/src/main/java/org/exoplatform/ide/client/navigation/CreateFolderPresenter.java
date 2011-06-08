@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -57,6 +58,8 @@ public class CreateFolderPresenter
 
       void closeForm();
    }
+   
+   private static final String NEW_FOLDER_NAME = IDE.IDE_LOCALIZATION_CONSTANT.newFolderName();
 
    private CreateFolderDisplay display;
 
@@ -93,7 +96,7 @@ public class CreateFolderPresenter
          }
       });
 
-      display.getFolderNameField().setValue("New Folder");
+      display.getFolderNameField().setValue(NEW_FOLDER_NAME);
 
       display.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
       {

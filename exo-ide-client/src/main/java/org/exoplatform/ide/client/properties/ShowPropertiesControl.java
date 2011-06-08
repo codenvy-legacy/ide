@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.properties;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -44,11 +45,11 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
 
    public static final String ID = "View/Properties";
 
-   public static final String TITLE = "Properties";
+   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showPropertiesTitleControl();
 
-   public static final String PROMPT_SHOW = "Show Properties";
+   public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showPropertiesShowPromptControl();
 
-   public static final String PROMPT_HIDE = "Hide Properties";
+   public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showPropertiesHidePromptControl();
 
    public ShowPropertiesControl()
    {

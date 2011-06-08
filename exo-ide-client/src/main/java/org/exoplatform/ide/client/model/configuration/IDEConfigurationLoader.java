@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.model.configuration;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
@@ -30,6 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.configuration.marshal.IDEConfigurationUnmarshaller;
 
 /**
@@ -40,8 +39,15 @@ import org.exoplatform.ide.client.model.configuration.marshal.IDEConfigurationUn
 public class IDEConfigurationLoader
 {
 
+   /* Consts */
    public static final String APPLICATION_NAME = "IDE"; //$NON-NLS-1$
+   
+   /* Error messages */
+   private static final String CANT_READ_CONFIGURATION = IDE.ERRORS_CONSTANT.confLoaderCantReadConfiguration();
+   
+   private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
+   /* Fields */
    private boolean loaded = false;
 
    private HandlerManager eventBus;
@@ -69,7 +75,7 @@ public class IDEConfigurationLoader
       }
       catch (Exception e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e, "Can't read initialization configuration!"));
+         eventBus.fireEvent(new ExceptionThrownEvent(e, CANT_READ_CONFIGURATION));
       }
    }
 
@@ -81,7 +87,7 @@ public class IDEConfigurationLoader
    private void showErrorMessage(String message)
    {
       String mes = "Invalid configuration:  missing " + message + " item"; //$NON-NLS-1$ //$NON-NLS-2$
-      Dialogs.getInstance().showError("Invalid configuration", mes);
+      Dialogs.getInstance().showError(INVALID_CONFIGURATION_TITLE, mes);
    }
 
    private static native String getConfigurationURL()/*-{

@@ -145,6 +145,8 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       void setFileNameFieldEnabled(boolean enabled);
 
    }
+   
+   private static final String ENTER_NAME_FIRST_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.createFileFromTemplateEnterName();
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
@@ -304,7 +306,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
       if ("".equals(fileName.trim()))
       {
-         Dialogs.getInstance().showError("You must enter file name the first!");
+         Dialogs.getInstance().showError(ENTER_NAME_FIRST_MSG);
          return;
       }
 

@@ -261,23 +261,23 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       switch (param.getStyle())
       {
          case HEADER :
-            groupName = "Header";
+            groupName = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParamHeader();
             break;
          case QUERY :
-            groupName = "Query";
+            groupName = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParamQuery();
             break;
          case PLAIN :
-            groupName = "Plain";
+            groupName = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParamPlain();
             break;
          case TEMPLATE :
-            groupName = "Path";
+            groupName = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParamPath();
             break;
          case MATRIX :
-            groupName = "Matrix";
+            groupName = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParamMatrix();
             break;
       }
 
-      groupName += " param";
+      groupName += " " + org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.restServicesDiscoveryParam();;
 
       return groupName;
    }
@@ -347,7 +347,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+               .restServicesDiscoveryGetWadlFailure()));
          }
       });
    }
@@ -365,7 +366,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+               .restServicesDiscoveryGetRestServicesFailure()));
          }
       });
    }

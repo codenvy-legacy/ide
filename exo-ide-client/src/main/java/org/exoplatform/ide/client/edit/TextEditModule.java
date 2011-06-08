@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.edit.control.FindTextControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
@@ -26,8 +28,6 @@ import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
 import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
-import org.exoplatform.ide.client.edit.event.FindTextEvent;
-import org.exoplatform.ide.client.edit.event.FindTextHandler;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
 import org.exoplatform.ide.client.edit.event.GoToLineHandler;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
@@ -47,8 +47,6 @@ import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettin
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

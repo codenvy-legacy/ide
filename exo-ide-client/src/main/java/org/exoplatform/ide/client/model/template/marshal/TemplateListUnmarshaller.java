@@ -28,6 +28,7 @@ import com.google.gwt.xml.client.XMLParser;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
@@ -46,6 +47,8 @@ import java.util.List;
 
 public class TemplateListUnmarshaller implements Unmarshallable, Const
 {
+   
+   private static final String CANT_PARSE_TEMPLATE = IDE.ERRORS_CONSTANT.templateCantParseTemplate();
 
    private TemplateList templateList;
 
@@ -78,8 +81,7 @@ public class TemplateListUnmarshaller implements Unmarshallable, Const
       }
       catch (Exception exc)
       {
-         String message = "Can't parse template!";
-         throw new UnmarshallerException(message);
+         throw new UnmarshallerException(CANT_PARSE_TEMPLATE);
       }
 
    }

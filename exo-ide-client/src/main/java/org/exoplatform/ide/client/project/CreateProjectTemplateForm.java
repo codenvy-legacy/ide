@@ -80,6 +80,10 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    private static final String DELETE_BUTTON = IDE.IDE_LOCALIZATION_CONSTANT.deleteButton();
    
    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createProjectTemplateTitle();
+   
+   private static final String TEXT_FIELD_NAME = IDE.TEMPLATE_CONSTANT.createProjectTemplateTextFieldName();
+   
+   private static final String TEXT_AREA_DESCRIPTION = IDE.TEMPLATE_CONSTANT.createProjectTemplateTextAreaDescription();
 
    private static final int BUTTONS_WIDTH = 120;
 
@@ -139,14 +143,14 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       fieldsLayout.getElement().setId(ID_NAME_FIELDS_FORM);
       fieldsLayout.setSpacing(1);
 
-      templateNameField = new TextField("TemplateName", "Name");
+      templateNameField = new TextField("TemplateName", TEXT_FIELD_NAME);
       templateNameField.setName(TEMPLATE_NAME_FIELD);
       templateNameField.setWidth(TEXT_FIELD_WIDTH);
       templateNameField.setTitleWidth(63);
 
       templateDescriptionField = new TextAreaItem("Description");
       templateDescriptionField.setName(DESCRIPTION_FIELD);
-      templateDescriptionField.setTitle("Description");
+      templateDescriptionField.setTitle(TEXT_AREA_DESCRIPTION);
       //  TODO templateDescriptionField.setTitleOrientation(TitleOrientation.LEFT);
       // templateDescriptionField.setColSpan(2);
       templateDescriptionField.setHeight(40);

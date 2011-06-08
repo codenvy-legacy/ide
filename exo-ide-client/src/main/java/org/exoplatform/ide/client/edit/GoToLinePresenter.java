@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -57,7 +58,13 @@ public class GoToLinePresenter
       void removeFocusFromLineNumber();
 
    }
+   
+   /* Error messages */
+   private static final String LINE_OUT_OF_RANGE = IDE.ERRORS_CONSTANT.goToLineLineNumberOutOfRange();
+   
+   private static final String CANT_PARSE_LINE_NUMBER = IDE.ERRORS_CONSTANT.goToLineCantParseLineNumber();
 
+   /* Variables */
    private HandlerManager eventBus;
 
    private Display display;
@@ -152,13 +159,13 @@ public class GoToLinePresenter
          else
          {
             display.removeFocusFromLineNumber();
-            Dialogs.getInstance().showError("Line number out of range");
+            Dialogs.getInstance().showError(LINE_OUT_OF_RANGE);
          }
       }
       catch (NumberFormatException e)
       {
          display.removeFocusFromLineNumber();
-         Dialogs.getInstance().showError("Can't parse line number.");
+         Dialogs.getInstance().showError(CANT_PARSE_LINE_NUMBER);
       }
    }
 

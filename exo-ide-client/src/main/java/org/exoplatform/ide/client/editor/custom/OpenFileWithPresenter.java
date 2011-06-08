@@ -90,6 +90,8 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
       HasClickHandlers getCancelButton();
 
    }
+   
+   private static final String SAVING_SETTINGS_FAILURE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.openFileWithSavingSettingsFailure();
 
    private HandlerManager eventBus;
 
@@ -287,7 +289,7 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent("Can't save information about default editor"));
+                  eventBus.fireEvent(new ExceptionThrownEvent(SAVING_SETTINGS_FAILURE));
                }
             });
       }

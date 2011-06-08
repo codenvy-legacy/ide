@@ -43,7 +43,9 @@ public class OpenFileWithControl extends SimpleControl implements IDEControl, It
 {
    private static final String ID = "File/Open File With...";
    
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openWithControl();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.openWithTitleControl();
+   
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.openWithPromptControl();
 
    private boolean browserPanelSelected = true;
 
@@ -51,7 +53,7 @@ public class OpenFileWithControl extends SimpleControl implements IDEControl, It
    {
       super(ID);
       setTitle(TITLE);
-      setPrompt("Open File With...");
+      setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.openWith(), IDEImageBundle.INSTANCE.openWithDisabled());
       setEvent(new OpenFileWithEvent());
    }

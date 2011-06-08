@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
@@ -75,6 +76,12 @@ public class SaveAsTemplatePresenter
    private Template templateToCreate;
    
    private HandlerManager eventBus;
+   
+   private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
+   
+   private static final String TEMPLATE_ALREADY_EXISTS = IDE.TEMPLATE_CONSTANT.saveAsTemplateTemplateAlreadyExists();
+   
+   private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
 
    public SaveAsTemplatePresenter(HandlerManager eventBus, File file)
    {
@@ -134,7 +141,7 @@ public class SaveAsTemplatePresenter
       String name = display.getNameField().getValue().trim();
       if ("".equals(name))
       {
-         Dialogs.getInstance().showError("You should specify the name of template!");
+         Dialogs.getInstance().showError(ENTER_TEMPLATE_NAME);
          return;
       }
 
@@ -156,7 +163,7 @@ public class SaveAsTemplatePresenter
             {
                if (template instanceof FileTemplate && templateToCreate.getName().equals(template.getName()))
                {
-                  Dialogs.getInstance().showError("Template with such name already exists!");
+                  Dialogs.getInstance().showError(TEMPLATE_ALREADY_EXISTS);
                   return;
                }
             }
@@ -166,7 +173,7 @@ public class SaveAsTemplatePresenter
                protected void onSuccess(Template result)
                {
                   display.closeForm();
-                  Dialogs.getInstance().showInfo("Template created successfully!");
+                  Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
                }
             });
          }

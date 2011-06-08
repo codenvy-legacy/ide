@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.template;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -49,7 +50,9 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<FileTemplate>
 {
-   private static final String UNTITLED_FILE = "Untitled file";
+   private static final String UNTITLED_FILE = IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
+   
+   private static final String ENTER_FILE_NAME_FIRST = IDE.TEMPLATE_CONSTANT.createFileFromTemplateEnterFileNameFirst();
 
    private String previousExtension;
    
@@ -151,7 +154,7 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
 
       if ("".equals(fileName.trim()))
       {
-         Dialogs.getInstance().showError("You must enter file name the first!");
+         Dialogs.getInstance().showError(ENTER_FILE_NAME_FIRST);
          return;
       }
       

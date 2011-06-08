@@ -24,6 +24,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
@@ -143,7 +144,7 @@ public class UploadFilePresenter extends UploadPresenter
    @Override
    protected String errorMessage()
    {
-      return "Can not upload file!";
+      return IDE.ERRORS_CONSTANT.uploadFileUploadingFailure();
    }
 
    @Override

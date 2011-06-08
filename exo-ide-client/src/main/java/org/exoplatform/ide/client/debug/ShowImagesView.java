@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
@@ -60,10 +61,12 @@ public class ShowImagesView extends ViewImpl implements org.exoplatform.ide.clie
 
    @UiField
    Grid imagesGrid;
+   
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showImagesTitle();
 
    public ShowImagesView()
    {
-      super(ID, "information", "Images", new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT);
+      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.about()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
@@ -194,7 +195,7 @@ public class PermissionsManagerPresenter
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found.<br /> Resource locked."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, IDE.PERMISSIONS_CONSTANT.permissionsSetAclFailure()));
             dispaly.closeForm();            
          }
       });
@@ -237,7 +238,7 @@ public class PermissionsManagerPresenter
 
       if (acl == null)
       {
-         throw new Exception("No acl property");
+         throw new Exception(IDE.PERMISSIONS_CONSTANT.permissionsNoAclProperty());
       }
 
       for (Property aceProperty : acl.getChildProperties())

@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.event.LockFileEvent;
 import org.exoplatform.ide.client.edit.event.LockFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -58,6 +59,12 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
 EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
 
+   /* Error messages */
+   private static final String SERVICE_NOT_DEPLOYED = IDE.ERRORS_CONSTANT.lockFileServiceNotDeployed();
+   
+   private static final String LOCK_FILE_FAILURE = IDE.ERRORS_CONSTANT.lockFileLockOperationFailure();
+   
+   /* Fields */
    private HandlerManager eventBus;
 
    private Map<String, String> lockTokens;
@@ -102,7 +109,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));               
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, SERVICE_NOT_DEPLOYED));               
             }
          });
       }
@@ -141,7 +148,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
             {
                ItemLockResultReceivedEvent event =
                   new ItemLockResultReceivedEvent(this.getResult().getItem(), this.getResult().getLockToken(),
-                     "Service is not deployed.<br />Lock was not enforceable on this resource.");
+                     LOCK_FILE_FAILURE);
                event.setException(exception);
                eventBus.fireEvent(event);
             }
@@ -164,7 +171,7 @@ EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));                  
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, SERVICE_NOT_DEPLOYED));                  
                }
             });
          }

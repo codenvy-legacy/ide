@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -43,6 +44,8 @@ public class RestServicesUnmarshaller implements Unmarshallable
     * 
     */
    private static final String ROOT_RESOURCES = "rootResources";
+   
+   private static final String PARSE_REST_SERVICE_ERROR = IDE.ERRORS_CONSTANT.restServiceParseError();
 
    private List<RestService> restServices;
 
@@ -65,7 +68,7 @@ public class RestServicesUnmarshaller implements Unmarshallable
       }
       catch (Exception e)
       {
-         throw new UnmarshallerException("Can't parse REST Services Discovery.");
+         throw new UnmarshallerException(PARSE_REST_SERVICE_ERROR);
       }
    }
 

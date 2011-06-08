@@ -125,7 +125,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                   }
                   else
                   {
-                     Dialogs.getInstance().showError("User has no roles defined.");
+                     Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.userHasNoRoles());
                   }
                }
                catch (Exception e)
@@ -184,9 +184,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    protected void promptToSelectEntryPoint()
    {
       // TODO [IDE-307] handle incorrect appConfig["entryPoint"] property value
-      Dialogs.getInstance().showError("Workspace was not set!",
-         //"Workspace was not set. Please, click on 'Ok' button and select another workspace manually from the next dialog!",
-         "Workspace was not set. Please, select another workspace manually from the next dialog!",
+      Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetTitle(),
+         org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.confWorkspaceWasNotSetText(),
          new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)

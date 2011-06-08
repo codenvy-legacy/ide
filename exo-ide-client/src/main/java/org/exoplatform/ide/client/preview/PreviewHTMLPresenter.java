@@ -65,6 +65,10 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       void setMessage(String message);
 
    }
+   
+   private static final String PREVIEW_NOT_AVAILABLE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT.previewNotAvailable();
+   
+   private static final String PREVIEW_NOT_AVAILABLE_SAVE_FILE = org.exoplatform.ide.client.IDE.OPERATION_CONSTANT.previewNotAvailableSaveFile();
 
    /**
     * Instance of attached Display
@@ -101,7 +105,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       if (activeFile == null)
       {
          display.setPreviewAvailable(false);
-         display.setMessage("Preview is not available.");
+         display.setMessage(PREVIEW_NOT_AVAILABLE);
          return;
       }
 
@@ -111,7 +115,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          if (activeFile.isNewFile())
          {
             display.setPreviewAvailable(false);
-            display.setMessage("Preview is not available.<br>You should save the file.");
+            display.setMessage(PREVIEW_NOT_AVAILABLE_SAVE_FILE);
          }
          else
          {
@@ -122,7 +126,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       else
       {
          display.setPreviewAvailable(false);
-         display.setMessage("Preview is not available.");
+         display.setMessage(PREVIEW_NOT_AVAILABLE);
       }
    }
 

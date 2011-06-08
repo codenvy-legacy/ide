@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -86,7 +87,7 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    {
       if (!(event.getControl() instanceof IDEControl))
       {
-         Dialogs.getInstance().showError("Only IDE controls can be registered! " + event.getControl().getClass());
+         Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.controlsRegistration() + " " + event.getControl().getClass());
          return;
       }
       
@@ -106,7 +107,7 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
    {
       if (!(control instanceof IDEControl))
       {
-         Dialogs.getInstance().showError("Only IDE controls can be registered! " + control.getClass());
+         Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.controlsRegistration() + " " + control.getClass());
          return;
       }
       

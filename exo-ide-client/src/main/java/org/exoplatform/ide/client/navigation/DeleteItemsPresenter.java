@@ -85,6 +85,12 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       HasClickHandlers getCancelButton();
 
    }
+   
+   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileUnlockFailure();
+   
+   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileFailure();
+   
+   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.deleteFileDialogTitle();
 
    private HandlerManager eventBus;
 
@@ -245,7 +251,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed."));
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
             }
          });
       }
@@ -306,7 +312,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
             IDE.getInstance().closeView(Display.ID);
          }
       });
@@ -314,7 +320,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private void showDialog(final Item item, String msg)
    {
-      Dialogs.getInstance().ask("Delete file", msg, new BooleanValueReceivedHandler()
+      Dialogs.getInstance().ask(DELETE_FILE_DIALOG_TITLE, msg, new BooleanValueReceivedHandler()
       {
          public void booleanValueReceived(Boolean value)
          {

@@ -158,6 +158,8 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
    }
+   
+   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.workspaceReceiveChildrenError();
 
    private Display display;
 
@@ -405,7 +407,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             itemToSelect = null;
             foldersToRefresh.clear();
             exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
+            eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
             eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
          }
       });

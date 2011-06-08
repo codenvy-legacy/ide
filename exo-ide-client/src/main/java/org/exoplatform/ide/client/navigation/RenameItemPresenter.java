@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -90,6 +91,8 @@ public class RenameItemPresenter
       void closeForm();
 
    }
+   
+   private static final String CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE = IDE.ERRORS_CONSTANT.renameItemCantRenameMimeTypeToOpenedFile();
 
    private HandlerManager eventBus;
 
@@ -201,7 +204,7 @@ public class RenameItemPresenter
          if (openedFiles.containsKey(file.getHref()))
          {
             display.disableMimeTypeSelect();
-            display.addLabel("", "Can't change mime-type to opened file");
+            display.addLabel("", CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE);
          }
          
       }

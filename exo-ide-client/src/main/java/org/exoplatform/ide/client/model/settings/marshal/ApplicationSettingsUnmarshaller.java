@@ -30,6 +30,7 @@ import com.google.gwt.xml.client.Node;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 
@@ -45,12 +46,12 @@ import java.util.Map;
  * @version $
  */
 
-public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
+public class ApplicationSettingsUnmarshaller implements Unmarshallable
 {
 
    private ApplicationSettings applicationSettings;
 
-   public final static String ERROR_MESSAGE = "Can't parse application settings!";
+   public final static String ERROR_MESSAGE = IDE.ERRORS_CONSTANT.appSettingsCantParse();
 
    public ApplicationSettingsUnmarshaller(ApplicationSettings applicationSettings)
    {
@@ -79,49 +80,12 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
    {
       try
       {
-         //         Document dom = XMLParser.parse(response.getText());
-         //
-         //         Node configurationNode = dom.getElementsByTagName(SETTINGS).item(0);
-         //
-         //         NodeList nodes = configurationNode.getChildNodes();
-         //         for (int i = 0; i < nodes.getLength(); i++)
-         //         {
-         //            Node node = nodes.item(i);
-         //
-         //            String nodeName = node.getNodeName();
-         //            if (nodeName.endsWith("_str"))
-         //            {
-         //               parseStringValue(node);
-         //            }
-         //            else if (nodeName.endsWith("_int"))
-         //            {
-         //               parseIntegerValue(node);
-         //            }
-         //            else if (nodeName.endsWith("_bool"))
-         //            {
-         //               parseBooleanValue(node);
-         //            }
-         //            else if (nodeName.endsWith("_list"))
-         //            {
-         //               parseListValue(node);
-         //            }
-         //            else if (nodeName.endsWith("_map"))
-         //            {
-         //               parseMapValue(node);
-         //            }
-         //            else
-         //            {
-         //               new Exception("Can't parse node value").printStackTrace();
-         //            }
-         //
-         //         }
          JSONValue value = JSONParser.parseStrict(response.getText());
          parseSettings(value);
 
       }
       catch (Exception exc)
       {
-         //new Exception().printStackTrace();
          exc.printStackTrace();
          throw new UnmarshallerException(ERROR_MESSAGE);
       }
@@ -216,120 +180,5 @@ public class ApplicationSettingsUnmarshaller implements Const, Unmarshallable
       }
       applicationSettings.setValue(key, list, Store.REGISTRY);
    }
-
-   //   private void parseStringValue(Node node)
-   //   {
-   //      String name = node.getNodeName();
-   //      name = name.substring(0, name.length() - "_str".length());
-   //
-   //      if (!node.hasChildNodes())
-   //      {
-   //         applicationSettings.setValue(name, "", Store.REGISTRY);
-   //      }
-   //      else
-   //      {
-   //         Node valueNode = node.getChildNodes().item(0);
-   //         String value = valueNode.getNodeValue();
-   //         value = javaScriptDecodeURIComponent(value);
-   //         applicationSettings.setValue(name, value, Store.REGISTRY);
-   //      }
-   //   }
-
-   //   private void parseIntegerValue(Node node)
-   //   {
-   //      String name = node.getNodeName();
-   //      name = name.substring(0, name.length() - "_int".length());
-   //
-   //      if (!node.hasChildNodes())
-   //      {
-   //         applicationSettings.setValue(name, new Integer(0), Store.REGISTRY);
-   //      }
-   //      else
-   //      {
-   //         Node valueNode = node.getChildNodes().item(0);
-   //         String value = valueNode.getNodeValue();
-   //         value = javaScriptDecodeURIComponent(value);
-   //
-   //         Integer intValue = new Integer(value);
-   //         applicationSettings.setValue(name, intValue, Store.REGISTRY);
-   //      }
-   //   }
-
-   //   private void parseBooleanValue(Node node)
-   //   {
-   //      String name = node.getNodeName();
-   //      name = name.substring(0, name.length() - "_bool".length());
-   //
-   //      if (!node.hasChildNodes())
-   //      {
-   //         applicationSettings.setValue(name, Boolean.FALSE, Store.REGISTRY);
-   //      }
-   //      else
-   //      {
-   //         Node valueNode = node.getChildNodes().item(0);
-   //         String value = valueNode.getNodeValue();
-   //         value = javaScriptDecodeURIComponent(value);
-   //
-   //         Boolean booleanValue = new Boolean(value);
-   //         applicationSettings.setValue(name, booleanValue, Store.REGISTRY);
-   //      }
-   //   }
-
-   //   private void parseListValue(Node node)
-   //   {
-   //      String name = node.getNodeName();
-   //      name = name.substring(0, name.length() - "_list".length());
-   //
-   //      if (!node.hasChildNodes())
-   //      {
-   //         applicationSettings.setValue(name, new ArrayList<String>(), Store.REGISTRY);
-   //      }
-   //      else
-   //      {
-   //         List<String> items = new ArrayList<String>();
-   //
-   //         for (int i = 0; i < node.getChildNodes().getLength(); i++)
-   //         {
-   //            Node itemNode = node.getChildNodes().item(i);
-   //            String value = !itemNode.hasChildNodes() ? "" : itemNode.getChildNodes().item(0).getNodeValue();
-   //            value = javaScriptDecodeURIComponent(value);
-   //            items.add(value);
-   //         }
-   //
-   //         applicationSettings.setValue(name, items, Store.REGISTRY);
-   //      }
-   //   }
-
-   //   private void parseMapValue(Node node)
-   //   {
-   //      String name = node.getNodeName();
-   //      name = name.substring(0, name.length() - "_map".length());
-   //
-   //      if (!node.hasChildNodes())
-   //      {
-   //         applicationSettings.setValue(name, new LinkedHashMap<String, String>(), Store.REGISTRY);
-   //      }
-   //      else
-   //      {
-   //         Map<String, String> map = new LinkedHashMap<String, String>();
-   //
-   //         for (int i = 0; i < node.getChildNodes().getLength(); i++)
-   //         {
-   //            Node itemNode = node.getChildNodes().item(i);
-   //
-   //            Node keyNode = getChildNode(itemNode, "key");
-   //            Node valueNode = getChildNode(itemNode, "value");
-   //
-   //            String key = keyNode.getChildNodes().item(0).getNodeValue();
-   //            key = javaScriptDecodeURIComponent(key);
-   //            String value = valueNode.getChildNodes().item(0).getNodeValue();
-   //            value = javaScriptDecodeURIComponent(value);
-   //            map.put(key, value);
-   //         }
-   //
-   //         applicationSettings.setValue(name, map, Store.REGISTRY);
-   //      }
-   //
-   //   }
 
 }

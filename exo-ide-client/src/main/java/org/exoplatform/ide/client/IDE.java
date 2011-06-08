@@ -38,7 +38,9 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant;
+import org.exoplatform.ide.client.messages.IdeOperationLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
@@ -86,6 +88,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public static final IdeNavigationLocalizationConstant NAVIGATION_CONSTANT = GWT.create(IdeNavigationLocalizationConstant.class);
    
    public static final IdeEditorLocalizationConstant EDITOR_CONSTANT = GWT.create(IdeEditorLocalizationConstant.class);
+   
+   public static final IdeErrorsLocalizationConstant ERRORS_CONSTANT = GWT.create(IdeErrorsLocalizationConstant.class);
+   
+   public static final IdeOperationLocalizationConstant OPERATION_CONSTANT = GWT.create(IdeOperationLocalizationConstant.class);
 
    public IDE()
    {

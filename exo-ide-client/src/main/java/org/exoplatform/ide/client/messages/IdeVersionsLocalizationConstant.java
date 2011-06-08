@@ -52,5 +52,27 @@ public interface IdeVersionsLocalizationConstant extends Constants
    
    @Key("viewVersions.for")
    String viewVersionsFor();
+   
+   /*
+    * VersionContentPresenter
+    */
+   @Key("versions.displayPrefix")
+   String versionsDisplayPrefix();
+   
+   /*
+    * RestoreToVersionCommandHandler
+    */
+   @Key("restoreToVersion.dialog.title")
+   String restoreToVersionDialogTitle();
+   
+   /*
+    * ShowVersionListCommandHandler
+    * VersionHistoryCommandHandler
+    */
+   @Key("versions.openFile")
+   String versionsOpenFile();
+   
+   @Key("versions.version.title")
+   String versionTitle();
 
 }
