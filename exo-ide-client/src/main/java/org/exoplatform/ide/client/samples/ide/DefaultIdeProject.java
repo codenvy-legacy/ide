@@ -101,9 +101,9 @@ public class DefaultIdeProject
    {
       String content = DefaultIdeSample.INSTANCE.getPojoSource().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_GROOVY, "Pojo.groovy", "POJO file template", content,
+         new FileTemplate(MimeType.APPLICATION_GROOVY, "Pogo.groovy", "POGO file template", content,
             null);
-      template.setFileName("Pojo.groovy");
+      template.setFileName("Pogo.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
    }
