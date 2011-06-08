@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide;
 
+import static org.junit.Assert.fail;
+
 import org.exoplatform.common.http.client.CookieModule;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
@@ -31,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -42,13 +45,13 @@ import java.security.NoSuchAlgorithmException;
 */
 public class Utils
 {
-   
+
    public static final String USER = "root";
-   
+
    public static final String PASSWD = "gtn";
-   
-   public static final String COMMAND =  "/ide/groovy/";
-   
+
+   public static final String COMMAND = "/ide/groovy/";
+
    public static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
    {
       HTTPConnection connection = new HTTPConnection(url);
@@ -57,18 +60,19 @@ public class Utils
       connection.addBasicAuthorization(null, USER, PASSWD);
       return connection;
    }
-   
-   private static int changeServiceState(String baseUrl, String restContext, String location, String state) throws IOException, ModuleException
+
+   private static int changeServiceState(String baseUrl, String restContext, String location, String state)
+      throws IOException, ModuleException
    {
       URL url = new URL(baseUrl + restContext + COMMAND + state);
       HTTPConnection connection = getConnection(url);
       NVPair[] headers = new NVPair[2];
       headers[0] = new NVPair("Location", location);
       headers[1] = new NVPair(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED);
-      HTTPResponse response = connection.Post(url.getFile(),"", headers);
+      HTTPResponse response = connection.Post(url.getFile(), "", headers);
       return response.getStatusCode();
    }
-   
+
    /**
     * @param baseUrl
     * @param restContext
@@ -77,11 +81,12 @@ public class Utils
     * @throws ModuleException 
     * @throws IOException 
     */
-   public static int undeployService(String baseUrl, String restContext, String location) throws IOException, ModuleException
+   public static int undeployService(String baseUrl, String restContext, String location) throws IOException,
+      ModuleException
    {
       return changeServiceState(baseUrl, restContext, location, "undeploy");
    }
-   
+
    /**
     * @param baseUrl
     * @param restContext
@@ -90,11 +95,12 @@ public class Utils
     * @throws ModuleException 
     * @throws IOException 
     */
-   public static int deployService(String baseUrl, String restContext, String location) throws IOException, ModuleException
+   public static int deployService(String baseUrl, String restContext, String location) throws IOException,
+      ModuleException
    {
-     return changeServiceState(baseUrl, restContext, location, "deploy");
+      return changeServiceState(baseUrl, restContext, location, "deploy");
    }
-   
+
    public static String readFileAsString(String filePath) throws java.io.IOException
    {
       StringBuffer fileData = new StringBuffer(1000);
@@ -110,7 +116,7 @@ public class Utils
       reader.close();
       return fileData.toString();
    }
-   
+
    /**
     * Encode string in md5 hash
     * @param string to encode
@@ -123,22 +129,25 @@ public class Utils
       {
          m = MessageDigest.getInstance("MD5");
          m.reset();
-         m.update(string.getBytes());
+         //add /IDE/ path segment to URL be equals with client URL 
+         m.update((BaseTest.BASE_URL + "IDE/" + string.substring(BaseTest.BASE_URL.length())).getBytes());
          byte[] digest = m.digest();
-         BigInteger bigInt = new BigInteger(1,digest);
+         BigInteger bigInt = new BigInteger(1, digest);
          String hashtext = bigInt.toString(16);
          // Now we need to zero pad it if you actually want the full 32 chars.
-         while(hashtext.length() < 32 ){
-           hashtext = "0"+hashtext;
+         while (hashtext.length() < 32)
+         {
+            hashtext = "0" + hashtext;
          }
          return hashtext;
       }
       catch (NoSuchAlgorithmException e)
       {
          e.printStackTrace();
-         return null;
+         fail();
       }
-   
+      return "";
+
    }
 
 }
