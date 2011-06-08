@@ -234,7 +234,7 @@ public class CustomizeToolbarTest extends BaseTest
       assertTrue(items.contains("Set / Unset Autoload"));
       assertTrue(items.contains("Deploy"));
       assertTrue(items.contains("Undeploy from Sandbox"));
-      assertTrue(items.contains("Deploy Gadget"));
+      assertTrue(items.contains("Deploy widget"));
       assertTrue(items.contains("Deploy node type"));
    }
 
