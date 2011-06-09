@@ -115,6 +115,7 @@ public class UploadingZippedFolderTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL + testFolder + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + testFolder + "/" + mineFile);
       IDE.NAVIGATION.assertItemVisible(WS_URL +  testFolder + "/" + exoFolder + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + testFolder + "/" + mineFile);
 

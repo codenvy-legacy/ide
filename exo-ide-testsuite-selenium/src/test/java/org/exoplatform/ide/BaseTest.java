@@ -79,6 +79,11 @@ public abstract class BaseTest
 
    public static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
+   //this two variables add after change in URL IDE
+   public static final String REST_CONTEXT_IDE = "IDE/rest/private";
+   
+   public static final String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+   
    /**
     * Default workspace.
     */
@@ -88,7 +93,9 @@ public abstract class BaseTest
     * Default workspace URL.
     */
    public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/";
-
+   
+   //this variable add after change in URL IDE
+   public static final String WS_URL_IDE = ENTRY_POINT_URL_IDE + WS_NAME + "/";
    /**
     * Second workspace. Needed in some tests.
     */

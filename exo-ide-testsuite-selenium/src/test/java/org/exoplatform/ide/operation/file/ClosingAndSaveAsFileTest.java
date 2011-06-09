@@ -76,8 +76,8 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       
-      String textFileURL = WS_URL + FOLDER + "/Untitled file.txt";
-      String xmlFileURL = WS_URL + FOLDER + "/Untitled file.xml";
+      String textFileURL = WS_URL_IDE + FOLDER + "/Untitled file.txt";
+      String xmlFileURL = WS_URL_IDE + FOLDER + "/Untitled file.xml";
       
       /*
        * 1. Create TEXT and XML files.
@@ -142,7 +142,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       
-      String createdFileURL = WS_URL + FOLDER + "/Untitled file.xml";
+      String createdFileURL = WS_URL_IDE + FOLDER + "/Untitled file.xml";
       assertTrue(IDE.EDITOR.isFileOpened(createdFileURL));
       
       /*

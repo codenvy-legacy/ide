@@ -46,6 +46,9 @@ public class UploadingGoogleGadgetTest extends BaseTest
    
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
    
+   //temp URL after change URL IDE
+   private static final String URL_WITH_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER_NAME;
+   
    private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/gadget.xml";
    
    @BeforeClass
@@ -78,7 +81,7 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       String url = getSelectedItemUrl();
       
-      assertEquals(URL + "/" + FILE_NAME, url);
+      assertEquals(URL_WITH_IDE + "/" + FILE_NAME, url);
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
       

@@ -114,7 +114,7 @@ public class PreviewHtmlFileTest extends BaseTest
        * 6/ "Preview" must be opened.
        */
       IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
-      IDE.PREVIEW.selectIFrame(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
       assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
       assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
@@ -144,7 +144,7 @@ public class PreviewHtmlFileTest extends BaseTest
        * 10. Check "Preview" again.
        */
       IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
-      IDE.PREVIEW.selectIFrame(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
       assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
       assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
