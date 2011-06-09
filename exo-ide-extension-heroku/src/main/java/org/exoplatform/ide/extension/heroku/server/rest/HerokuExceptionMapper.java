@@ -22,11 +22,13 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@Provider
 public class HerokuExceptionMapper implements ExceptionMapper<HerokuException>
 {
    /**
@@ -35,6 +37,7 @@ public class HerokuExceptionMapper implements ExceptionMapper<HerokuException>
    @Override
    public Response toResponse(HerokuException he)
    {
-      return Response.status(he.getResponseStatus()).entity(he.getMessage()).type(he.getContentType()).build();
+      return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+         .entity(he.getMessage()).type(he.getContentType()).build();
    }
 }

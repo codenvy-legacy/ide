@@ -19,10 +19,26 @@
 package org.exoplatform.ide.extension.heroku.server.rest;
 
 import org.exoplatform.ide.extension.heroku.server.Heroku;
-import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
+import org.exoplatform.ide.extension.heroku.server.HerokuException;
+import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
+import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
+import org.exoplatform.ide.git.server.rest.GitLocation;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST interface to {@link Heroku}.
@@ -33,31 +49,98 @@ import javax.ws.rs.PathParam;
 @Path("ide/heroku")
 public class HerokuService
 {
-   @Path("login")
-   public HerokuCommand login()
+   @Inject
+   private Heroku heroku;
+
+   public HerokuService()
    {
-      return Heroku.getInstance().getCommand("auth:login");
+   }
+
+   protected HerokuService(Heroku heroku)
+   {
+      // Use this constructor when deploy HerokuService as singleton resource.
+      this.heroku = heroku;
+   }
+
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws HerokuException, IOException, ParsingResponseException
+   {
+      heroku.login(credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
-   public HerokuCommand logout()
+   @POST
+   public void logout()
    {
-      return Heroku.getInstance().getCommand("auth:logout");
+      heroku.logout();
    }
 
-   @Path("apps{sl:(/)?}{command:.*}")
-   public HerokuCommand appsSub(@PathParam("command") String command)
+   @Path("keys")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<HerokuKey> keysList(@QueryParam("long") boolean inLongFormat) throws HerokuException, IOException,
+      ParsingResponseException
    {
-      if (command != null & !command.isEmpty())
-         return Heroku.getInstance().getCommand("apps:" + command);
-      return Heroku.getInstance().getCommand("apps");
+      return heroku.listSshKeys(inLongFormat);
    }
 
-   @Path("keys{sl:(/)?}{command:.*}")
-   public HerokuCommand keysSub(@PathParam("command") String command)
+   @Path("keys/add")
+   @POST
+   public void keysAdd() throws HerokuException, IOException
    {
-      if (command != null & !command.isEmpty())
-         return Heroku.getInstance().getCommand("keys:" + command);
-      return Heroku.getInstance().getCommand("keys");
+      heroku.addSshKey();
+   }
+
+   @Path("apps/create")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> appsCreate( //
+      @QueryParam("name") String name, //
+      @QueryParam("remote") String remote, //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku.createApplication(name, remote, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/destroy")
+   @POST
+   public void appsDestroy( //
+      @QueryParam("name") String name, //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException
+   {
+      heroku.destroyApplication(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/info")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> appsInfo( //
+      @QueryParam("name") String name, //
+      @QueryParam("raw") boolean inRawFormat, //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku
+         .applicationInfo(name, inRawFormat, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/rename")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> appsRename( //
+      @QueryParam("name") String name, //
+      @QueryParam("newname") String newname, //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku.renameApplication(name, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 }

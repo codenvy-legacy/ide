@@ -18,27 +18,24 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-/**
- * Should be thrown if any error occurs when invoke request to Heroku API.
- * 
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
- */
-@SuppressWarnings("serial")
-public class CommandException extends Exception
+class HerokuCredentials
 {
-   public CommandException(String message, Throwable cause)
+   private final String email;
+   private final String apiKey;
+
+   public HerokuCredentials(String email, String apiKey)
    {
-      super(message, cause);
+      this.email = email;
+      this.apiKey = apiKey;
    }
 
-   public CommandException(String message)
+   public String getEmail()
    {
-      super(message);
+      return email;
    }
 
-   public CommandException(Throwable cause)
+   public String getApiKey()
    {
-      super(cause);
+      return apiKey;
    }
 }

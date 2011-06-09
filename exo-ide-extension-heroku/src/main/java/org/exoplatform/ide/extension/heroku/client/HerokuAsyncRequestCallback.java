@@ -67,7 +67,7 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
       {
          ServerException serverException = (ServerException)exception;
          //TODO check is not authorized
-         if (serverException.getMessage() != null && serverException.getMessage().contains("Credentials not found"))
+         if (401 == serverException.getHTTPStatus())
          {
             eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
             eventbus.fireEvent(new LoginEvent());

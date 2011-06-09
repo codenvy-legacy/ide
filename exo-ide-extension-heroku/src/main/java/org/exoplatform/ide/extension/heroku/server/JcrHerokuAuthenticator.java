@@ -25,7 +25,6 @@ import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.security.IdentityConstants;
-import org.picocontainer.Startable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import javax.jcr.Session;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JcrHerokuAuthenticator extends HerokuAuthenticator implements Startable
+public class JcrHerokuAuthenticator extends HerokuAuthenticator
 {
    private RepositoryService repositoryService;
    private String workspace;
@@ -219,23 +218,5 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator implements Start
          if (session != null)
             session.logout();
       }
-   }
-
-   /**
-    * @see org.picocontainer.Startable#start()
-    */
-   @Override
-   public void start()
-   {
-      HerokuAuthenticator.setInstance(this);
-   }
-
-   /**
-    * @see org.picocontainer.Startable#stop()
-    */
-   @Override
-   public void stop()
-   {
-      HerokuAuthenticator.setInstance(null);
    }
 }

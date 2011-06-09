@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.heroku.client.info;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -47,7 +46,6 @@ import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 /**

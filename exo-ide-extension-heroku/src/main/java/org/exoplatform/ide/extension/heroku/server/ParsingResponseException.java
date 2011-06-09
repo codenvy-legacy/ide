@@ -16,33 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.server.commands;
-
-import org.exoplatform.ide.extension.heroku.server.CommandException;
-import org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator;
-import org.exoplatform.ide.extension.heroku.server.HerokuCommand;
-import org.exoplatform.ide.extension.heroku.server.HerokuException;
-
-import javax.ws.rs.POST;
+package org.exoplatform.ide.extension.heroku.server;
 
 /**
- * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
- * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see HerokuAuthenticator
- * @see HerokuAuthenticator#logout()
- * @see HerokuAuthenticator#login(String, String)
  */
-public class AuthLogout extends HerokuCommand
+@SuppressWarnings("serial")
+public class ParsingResponseException extends Exception
 {
-   /**
-    * @throws HerokuException if heroku server return unexpected or error status for request
-    * @throws CommandException if any other exception occurs
-    */
-   @POST
-   public void logout() throws HerokuException, CommandException
+   public ParsingResponseException(String message, Throwable cause)
    {
-      HerokuAuthenticator.getInstance().logout();
+      super(message, cause);
+   }
+
+   public ParsingResponseException(String message)
+   {
+      super(message);
+   }
+
+   public ParsingResponseException(Throwable cause)
+   {
+      super(cause);
    }
 }

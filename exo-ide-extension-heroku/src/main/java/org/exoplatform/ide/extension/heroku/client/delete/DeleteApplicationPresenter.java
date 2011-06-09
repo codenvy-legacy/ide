@@ -34,12 +34,10 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**

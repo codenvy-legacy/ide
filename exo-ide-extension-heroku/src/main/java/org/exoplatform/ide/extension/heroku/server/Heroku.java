@@ -18,12 +18,43 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-import java.io.BufferedReader;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.transport.URIish;
+import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
+import org.exoplatform.ide.extension.ssh.server.SshKey;
+import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitConnectionFactory;
+import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -31,107 +62,831 @@ import java.util.Map;
  */
 public class Heroku
 {
-   private static class HerokuHolder
-   {
-      private static final Heroku INSTANCE = new Heroku();
-   }
-
-   public static Heroku getInstance()
-   {
-      return HerokuHolder.INSTANCE;
-   }
-
    /** Base URL of heroku REST API. */
    public static final String HEROKU_API = "https://api.heroku.com";
 
-   private final Map<String, HerokuCommand> commands;
+   private static final String HEROKU_GIT_REMOTE = "heroku";
 
-   private Heroku()
+   private final HerokuAuthenticator authenticator;
+
+   private final SshKeyProvider keyProvider;
+
+   public Heroku(HerokuAuthenticator authenticator, SshKeyProvider keyProvider)
    {
-      ClassLoader cl = Thread.currentThread().getContextClassLoader();
-      commands = new HashMap<String, HerokuCommand>();
-      String catalog = "META-INF/services/" + HerokuCommand.class.getName();
-      InputStream input = cl.getResourceAsStream(catalog);
-      BufferedReader reader = null;
+      this.authenticator = authenticator;
+      this.keyProvider = keyProvider;
+   }
+
+   /**
+    * Log in with specified email/password. Result of command execution is saved 'heroku API key', see
+    * {@link HerokuAuthenticator#login(String, String)} for details.
+    * 
+    * @param email email address that used when create account at heroku.com
+    * @param password password
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException id any i/o errors occurs
+    */
+   public void login(String email, String password) throws HerokuException, IOException, ParsingResponseException
+   {
+      authenticator.login(email, password);
+   }
+
+   /**
+    * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
+    */
+   public void logout()
+   {
+      authenticator.logout();
+   }
+
+   /**
+    * Add SSH key for current user. Uppload SSH key to heroku.com. {@link SshKeyProvider} must have registered public
+    * key for host' hiroku.com', see method {@link SshKeyProvider#getPublicKey(String)}
+    * 
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException id any i/o errors occurs
+    */
+   public void addSshKey() throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      addSshKey(herokuCredentials);
+   }
+
+   private void addSshKey(HerokuCredentials herokuCredentials) throws IOException, HerokuException
+   {
+      final String host = "heroku.com";
+      SshKey publicKey = keyProvider.getPublicKey(host);
+      if (publicKey == null)
+      {
+         keyProvider.genKeyPair(host, null, null);
+         publicKey = keyProvider.getPublicKey(host);
+      }
+      HttpURLConnection http = null;
       try
       {
-         reader = new BufferedReader(new InputStreamReader(input, "utf-8"));
-         String line = null;
-         while ((line = reader.readLine()) != null)
+         URL url = new URL(HEROKU_API + "/user/keys");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("POST");
+         authenticate(herokuCredentials, http);
+         http.setRequestProperty("Accept", "application/xml, */*");
+         http.setDoOutput(true);
+         http.setRequestProperty("Content-type", "text/ssh-authkey");
+         OutputStream output = http.getOutputStream();
+         try
          {
-            if (line.length() > 0 && line.charAt(0) != '#')
-            {
-               try
-               {
-                  Class<? extends HerokuCommand> c = Class.forName(line, true, cl).asSubclass(HerokuCommand.class);
-                  commands.put(name(c), c.newInstance());
-               }
-               catch (ClassNotFoundException ignored)
-               {
-                  // Ignore at this stage as result command will be not available.
-               }
-               catch (InstantiationException ignored)
-               {
-                  // Ignore at this stage as result command will be not available.
-               }
-               catch (IllegalAccessException ignored)
-               {
-                  // Ignore at this stage as result command will be not available.
-               }
-            }
+            output.write(publicKey.getBytes());
+            output.flush();
          }
-      }
-      catch (IOException ioe)
-      {
-         throw new RuntimeException("Failed to read commands catalog. " + ioe.getMessage());
+         finally
+         {
+            output.close();
+         }
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
       }
       finally
       {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Remove SSH key for current user.
+    * 
+    * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for
+    *           current user removed
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException id any i/o errors occurs
+    */
+   public void removeSshKey(String keyName) throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      removeSshKey(herokuCredentials, keyName);
+   }
+
+   private void removeSshKey(HerokuCredentials herokuCredentials, String keyName) throws IOException, HerokuException
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(Heroku.HEROKU_API + ((keyName != null) //
+            ? ("/user/keys/" + URLEncoder.encode(keyName, "utf-8")) //
+            : "/user/keys")); // The same as keyClear
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("DELETE");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Get SSH keys for current user.
+    * 
+    * @param inLongFormat if <code>true</code> then display info about each key in long format. In other words full
+    *           content of public key provided. By default public key displayed in truncated form
+    * @return List with all SSH keys for current user
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, IOException, ParsingResponseException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return listSshKeys(herokuCredentials, inLongFormat);
+   }
+
+   private List<HerokuKey> listSshKeys(HerokuCredentials herokuCredentials, boolean inLongFormat) throws HerokuException,
+      IOException, ParsingResponseException
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/user/keys");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         InputStream input = http.getInputStream();
+         Document xmlDoc;
          try
          {
-            if (reader != null)
-               reader.close();
+            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
          }
-         catch (IOException ignored)
-         {
-         }
-         try
+         finally
          {
             input.close();
          }
-         catch (IOException ignored)
+
+         XPath xPath = XPathFactory.newInstance().newXPath();
+         NodeList keyNodes = (NodeList)xPath.evaluate("/keys/key", xmlDoc, XPathConstants.NODESET);
+         int keyLength = keyNodes.getLength();
+         List<HerokuKey> keys = new ArrayList<HerokuKey>(keyLength);
+         for (int i = 0; i < keyLength; i++)
          {
+            Node n = keyNodes.item(i);
+            String email = (String)xPath.evaluate("email", n, XPathConstants.STRING);
+            String contents = (String)xPath.evaluate("contents", n, XPathConstants.STRING);
+            if (!inLongFormat)
+               contents = formatKey(contents);
+            keys.add(new HerokuKey(email, contents));
          }
+         return keys;
       }
-      /*for (Map.Entry<String, HerokuCommand> e : commands.entrySet())
-         System.out.println("\t" + e.getKey() + "\t: " + e.getValue().getClass().getName());*/
+      catch (ParserConfigurationException pce)
+      {
+         throw new ParsingResponseException(pce.getMessage(), pce);
+      }
+      catch (SAXException sae)
+      {
+         throw new ParsingResponseException(sae.getMessage(), sae);
+      }
+      catch (XPathExpressionException xpe)
+      {
+         throw new ParsingResponseException(xpe.getMessage(), xpe);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
    }
 
-   private static String name(Class<? extends HerokuCommand> c)
+   private String formatKey(String source)
    {
-      char[] clname = c.getSimpleName().toCharArray();
-      StringBuilder name = new StringBuilder();
-      for (int i = 0; i < clname.length; i++)
+      String[] parts = source.split(" ");
+      StringBuilder key = new StringBuilder();
+      key.append(parts[0]) //
+         .append(' ') //
+         .append(parts[1].substring(0, 10)) //
+         .append('.') //
+         .append('.') //
+         .append('.') //
+         .append(parts[1].substring(parts[1].length() - 10, parts[1].length()));
+      if (parts.length > 2)
+         key.append(' ') //
+            .append(parts[2]);
+      return key.toString();
+   }
+
+   /**
+    * Remove all SSH keys for current user.
+    * 
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException id any i/o errors occurs
+    */
+   public void removeAllSshKeys() throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      removeAllSshKeys(herokuCredentials);
+   }
+
+   private void removeAllSshKeys(HerokuCredentials herokuCredentials) throws IOException, HerokuException
+   {
+      HttpURLConnection http = null;
+      try
       {
-         if (Character.isUpperCase(clname[i]))
+         URL url = new URL(HEROKU_API + "/user/keys");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("DELETE");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Create new application.
+    * 
+    * @param name application name. If <code>null</code> then application got random name
+    * @param remote git remote name, default 'heroku'
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository. If
+    *           <code>workDir</code> exists and is git repository folder then remote configuration added
+    * @return Map with information about newly created application. Minimal set of application attributes:
+    *         <ul>
+    *         <li>Name</li>
+    *         <li>Git URL of repository</li>
+    *         <li>HTTP URL of application</li>
+    *         </ul>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public Map<String, String> createApplication(String name, String remote, File workDir) throws IOException, HerokuException,
+      ParsingResponseException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return createApplication(herokuCredentials, name, remote, workDir);
+   }
+
+   private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote, File workDir)
+      throws IOException, HerokuException, ParsingResponseException
+   {
+      if (remote == null || remote.isEmpty())
+         remote = HEROKU_GIT_REMOTE;
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("POST");
+         http.setRequestProperty("Accept", "application/xml");
+         authenticate(herokuCredentials, http);
+         if (name != null)
          {
-            if (name.length() > 0)
-               name.append(':');
-            name.append(Character.toLowerCase(clname[i]));
+            http.setDoOutput(true);
+            http.setRequestProperty("Content-type", "application/xml, */*");
+            OutputStream output = http.getOutputStream();
+            try
+            {
+               output.write(("<?xml version='1.0' encoding='UTF-8'?><app><name>" + name + "</name></app>").getBytes());
+               output.flush();
+            }
+            finally
+            {
+               output.close();
+            }
+         }
+
+         int status = http.getResponseCode();
+         if (status < 200 || status > 202)
+            throw fault(http);
+
+         InputStream input = http.getInputStream();
+         Document xmlDoc;
+         try
+         {
+            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+         }
+         finally
+         {
+            input.close();
+         }
+
+         XPath xPath = XPathFactory.newInstance().newXPath();
+
+         name = (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING);
+         String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
+         String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
+
+         if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+         {
+            GitConnection git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            try
+            {
+               git.remoteAdd(new RemoteAddRequest(remote, gitUrl));
+            }
+            finally
+            {
+               git.close();
+            }
+         }
+
+         Map<String, String> info = new HashMap<String, String>(3);
+         info.put("name", name);
+         info.put("gitUrl", gitUrl);
+         info.put("webUrl", webUrl);
+
+         return info;
+      }
+      catch (ParserConfigurationException pce)
+      {
+         throw new ParsingResponseException(pce.getMessage(), pce);
+      }
+      catch (SAXException sae)
+      {
+         throw new ParsingResponseException(sae.getMessage(), sae);
+      }
+      catch (XPathExpressionException xpe)
+      {
+         throw new ParsingResponseException(xpe.getMessage(), xpe);
+      }
+      catch (GitException ge)
+      {
+         throw new RuntimeException(ge.getMessage(), ge);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Permanently destroy an application.
+    * 
+    * @param name application name to destroy. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>
+    *           at least. If name not specified and cannot be determined IllegalStateException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException id any i/o errors occurs
+    */
+   public void destroyApplication(String name, File workDir) throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      destroyApplication(herokuCredentials, name, workDir);
+   }
+
+   private void destroyApplication(HerokuCredentials herokuCredentials, String name, File workDir) throws IOException,
+      HerokuException
+   {
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name);
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("DELETE");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Provide detailed information about application.
+    * 
+    * @param name application name to get information. If <code>null</code> then try to determine application name from
+    *           git configuration. To be able determine application name <code>workDir</code> must not be
+    *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
+    * @param inRawFormat if <code>true</code> then get result as raw Map. If <code>false</code> (default) result is Map
+    *           that contains predefined set of key-value pair
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>
+    * @return result of execution of {@link #execute()} depends to {@link #inRawFormat} parameter. If
+    *         {@link #inRawFormat} is <code>false</code> (default) then method returns with predefined set of attributes
+    *         otherwise method returns raw Map that contains all attributes
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public Map<String, String> applicationInfo(String name, boolean inRawFormat, File workDir) throws IOException,
+      HerokuException, ParsingResponseException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return applicationInfo(herokuCredentials, name, inRawFormat, workDir);
+   }
+
+   private Map<String, String> applicationInfo(HerokuCredentials herokuCredentials, String name, boolean inRawFormat,
+      File workDir) throws IOException, HerokuException, ParsingResponseException
+   {
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name);
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         InputStream input = http.getInputStream();
+         Document xmlDoc;
+         try
+         {
+            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+         }
+         finally
+         {
+            input.close();
+         }
+
+         // TODO : Add 'addons', 'collaborators' to be conform to ruby implementation.
+         XPath xPath = XPathFactory.newInstance().newXPath();
+
+         Map<String, String> info = new HashMap<String, String>();
+
+         if (!inRawFormat)
+         {
+            info.put("name", (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
+            info.put("webUrl", (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING));
+            info.put("domainName", (String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
+            info.put("gitUrl", (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING));
+            info.put("dynos", (String)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.STRING));
+            info.put("workers", (String)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.STRING));
+            info.put("repoSize", (String)xPath.evaluate("/app/repo-size", xmlDoc, XPathConstants.STRING));
+            info.put("slugSize", (String)xPath.evaluate("/app/slug-size", xmlDoc, XPathConstants.STRING));
+            info.put("stack", (String)xPath.evaluate("/app/stack", xmlDoc, XPathConstants.STRING));
+            info.put("owner", (String)xPath.evaluate("/app/owner", xmlDoc, XPathConstants.STRING));
+            info.put("databaseSize", (String)xPath.evaluate("/app/database_size", xmlDoc, XPathConstants.STRING));
+            return info;
          }
          else
          {
-            name.append(clname[i]);
+            NodeList appNodes = (NodeList)xPath.evaluate("/app/*", xmlDoc, XPathConstants.NODESET);
+            int appLength = appNodes.getLength();
+            for (int i = 0; i < appLength; i++)
+            {
+               Node item = appNodes.item(i);
+               if (!item.getNodeName().equals("dyno_hours"))
+                  info.put(item.getNodeName(), item.getTextContent());
+            }
+            return info;
          }
       }
-      return name.toString();
+      catch (ParserConfigurationException pce)
+      {
+         throw new ParsingResponseException(pce.getMessage(), pce);
+      }
+      catch (SAXException sae)
+      {
+         throw new ParsingResponseException(sae.getMessage(), sae);
+      }
+      catch (XPathExpressionException xpe)
+      {
+         throw new ParsingResponseException(xpe.getMessage(), xpe);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
    }
 
-   public HerokuCommand getCommand(String name)
+   /**
+    * Rename application.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    *           If name not specified and cannot be determined IllegalStateException thrown
+    * @param newname new name for application. If <code>null</code> IllegalStateException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>. If not <code>null</code> and is git
+    *           folder then remote configuration update
+    * @return information about renamed application. Minimal set of application attributes:
+    *         <ul>
+    *         <li>New name</li>
+    *         <li>New git URL of repository</li>
+    *         <li>New HTTP URL of application</li>
+    *         </ul>
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public Map<String, String> renameApplication(String name, String newname, File workDir) throws IOException, HerokuException,
+      ParsingResponseException
    {
-      HerokuCommand c = commands.get(name);
-      if (c == null)
-         throw new IllegalArgumentException("Unsupported command " + name);
-      return c;
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return renameApplication(herokuCredentials, name, newname, workDir);
+   }
+
+   private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname, File workDir)
+      throws IOException, HerokuException, ParsingResponseException
+   {
+      if (newname == null || newname.isEmpty())
+         throw new IllegalStateException("New name may not be null or empty string. ");
+
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
+      HttpURLConnection http = null;
+      GitConnection git = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name);
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("PUT");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         http.setRequestProperty("Content-type", "application/xml");
+         http.setDoOutput(true);
+         authenticate(herokuCredentials, http);
+
+         OutputStream output = http.getOutputStream();
+         try
+         {
+            output.write(("<app><name>" + newname + "</name></app>").getBytes());
+            output.flush();
+         }
+         finally
+         {
+            output.close();
+         }
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         // Get updated info about application.
+         Map<String, String> info = applicationInfo(herokuCredentials, newname, false, workDir);
+
+         String gitUrl = (String)info.get("gitUrl");
+
+         RemoteListRequest listRequest = new RemoteListRequest(null, true);
+         git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+         List<Remote> remoteList = git.remoteList(listRequest);
+         for (Remote r : remoteList)
+         {
+            // Update remote.
+            if (r.getUrl().startsWith("git@heroku.com:"))
+            {
+               String rname = extractAppName(r);
+               if (rname != null && rname.equals(name))
+               {
+                  git.remoteUpdate(new RemoteUpdateRequest(r.getName(), null, false, new String[]{gitUrl},
+                     new String[]{r.getUrl()}, null, null));
+                  break;
+               }
+            }
+         }
+         return info;
+      }
+      catch (GitException gite)
+      {
+         throw new RuntimeException(gite.getMessage(), gite);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * List of heroku applications for current user.
+    * 
+    * @return List of names of applications for current user
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public List<String> listApplications() throws IOException, HerokuException, ParsingResponseException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return listApplications(herokuCredentials);
+   }
+
+   private List<String> listApplications(HerokuCredentials herokuCredentials) throws IOException, HerokuException,
+      ParsingResponseException
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         InputStream input = http.getInputStream();
+         Document xmlDoc;
+         try
+         {
+            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+         }
+         finally
+         {
+            input.close();
+         }
+
+         XPath xPath = XPathFactory.newInstance().newXPath();
+         NodeList appNodes = (NodeList)xPath.evaluate("/apps/app", xmlDoc, XPathConstants.NODESET);
+         int appLength = appNodes.getLength();
+         List<String> apps = new ArrayList<String>(appLength);
+         for (int i = 0; i < appLength; i++)
+         {
+            String name = (String)xPath.evaluate("name", appNodes.item(i), XPathConstants.STRING);
+            apps.add(name);
+         }
+         return apps;
+      }
+      catch (ParserConfigurationException pce)
+      {
+         throw new ParsingResponseException(pce.getMessage(), pce);
+      }
+      catch (SAXException sae)
+      {
+         throw new ParsingResponseException(sae.getMessage(), sae);
+      }
+      catch (XPathExpressionException xpe)
+      {
+         throw new ParsingResponseException(xpe.getMessage(), xpe);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * Add Basic authentication headers to HttpURLConnection.
+    * 
+    * @param http HttpURLConnection
+    * @throws IOException if any i/o errors occurs
+    */
+   private final void authenticate(HerokuCredentials herokuCredentials, HttpURLConnection http) throws IOException
+   {
+      byte[] base64 = org.apache.commons.codec.binary.Base64.encodeBase64( //
+         (herokuCredentials.getEmail() + ":" + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
+      http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
+   }
+
+   /**
+    * Extract heroku application name from git configuration. If {@link #workDir} is <code>null</code> or does not
+    * contain <code>.git<code> sub-directory method always return <code>null</code>.
+    * 
+    * @return application name or <code>null</code> if name can't be determined since command invoked outside of git
+    *         repository
+    */
+   private static String detectAppName(File workDir)
+   {
+      if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+      {
+         GitConnection git = null;
+         try
+         {
+            git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            RemoteListRequest request = new RemoteListRequest(null, true);
+            List<Remote> remoteList = git.remoteList(request);
+            String detectedApp = null;
+            for (Remote r : remoteList)
+            {
+               if (r.getUrl().startsWith("git@heroku.com:"))
+               {
+                  if ((detectedApp = extractAppName(r)) != null)
+                     break;
+               }
+            }
+            return detectedApp;
+         }
+         catch (GitException ge)
+         {
+            throw new RuntimeException(ge.getMessage(), ge);
+         }
+         finally
+         {
+            if (git != null)
+               git.close();
+         }
+      }
+      return null;
+   }
+
+   private static String extractAppName(Remote gitRemote)
+   {
+      String name = null;
+      try
+      {
+         name = new URIish(gitRemote.getUrl()).getHumanishName();
+      }
+      catch (URISyntaxException e)
+      {
+         // Invalid URL is not a problem for us, just say we can't determine name from wrong URL.
+      }
+      return name;
+   }
+
+   static HerokuException fault(HttpURLConnection http) throws IOException
+   {
+      HerokuException error;
+      InputStream errorStream = null;
+      try
+      {
+         errorStream = http.getErrorStream();
+         if (errorStream == null)
+         {
+            error = new HerokuException(http.getResponseCode(), null, null);
+         }
+         else
+         {
+            int length = http.getContentLength();
+
+            if (length > 0)
+            {
+               byte[] b = new byte[length];
+               errorStream.read(b);
+               error = new HerokuException(http.getResponseCode(), new String(b), http.getContentType());
+            }
+            else if (length == 0)
+            {
+               error = new HerokuException(http.getResponseCode(), null, null);
+            }
+            else
+            {
+               // Unknown length of response.
+               ByteArrayOutputStream bout = new ByteArrayOutputStream();
+               byte[] b = new byte[1024];
+               int point = -1;
+               while ((point = errorStream.read(b)) != -1)
+                  bout.write(b, 0, point);
+               error =
+                  new HerokuException(http.getResponseCode(), new String(bout.toByteArray()), http.getContentType());
+            }
+         }
+      }
+      finally
+      {
+         if (errorStream != null)
+            errorStream.close();
+      }
+      return error;
    }
 }
