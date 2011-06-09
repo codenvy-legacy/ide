@@ -27,8 +27,11 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $Id: Nov 1, 2010 $
  *
  */
+
+
+//After issue-818 RolesWithGadgetTest remove
 @RunWith(Suite.class)
-@SuiteClasses({RolesWithGadgetTest.class, RolesWithRESTServiceTest.class})
+@SuiteClasses({RolesWithRESTServiceTest.class})
 public class UserRolesTestSuite
 {
 
