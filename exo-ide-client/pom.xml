@@ -133,6 +133,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-heroku</artifactId>
       </dependency>
+      
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-openshift</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -420,7 +425,7 @@
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
                      <bindAddress>0.0.0.0</bindAddress>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.git.repo-dir=git</extraJvmArgs>
                   </configuration>
                </plugin>
 
