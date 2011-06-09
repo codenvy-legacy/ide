@@ -158,25 +158,17 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
             }
             catch (PathNotFoundException e)
             {
-               if ("/".equals(herokuAPIKeys))
+               String[] pathSegments = herokuAPIKeys.substring(1).split("/");
+               herokuAPINode = session.getRootNode();
+               for (int i = 0; i < pathSegments.length; i++)
                {
-                  herokuAPINode = session.getRootNode();
-               }
-               else
-               {
-                  // If store in other then root node.
-                  String[] pathSegments = herokuAPIKeys.substring(1).split("/");
-                  herokuAPINode = session.getRootNode();
-                  for (int i = 0; i < pathSegments.length; i++)
+                  try
                   {
-                     try
-                     {
-                        herokuAPINode = herokuAPINode.getNode(pathSegments[i]);
-                     }
-                     catch (PathNotFoundException e1)
-                     {
-                        herokuAPINode = herokuAPINode.addNode(pathSegments[i], "nt:folder");
-                     }
+                     herokuAPINode = herokuAPINode.getNode(pathSegments[i]);
+                  }
+                  catch (PathNotFoundException e1)
+                  {
+                     herokuAPINode = herokuAPINode.addNode(pathSegments[i], "nt:folder");
                   }
                }
             }
