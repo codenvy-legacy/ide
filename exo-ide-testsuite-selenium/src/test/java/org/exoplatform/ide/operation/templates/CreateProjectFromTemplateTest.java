@@ -262,7 +262,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
     * IDE-668 Add template for empty project in IDE
     * @throws Exception
     */
-    //@Test
+    @Test
    public void createEmptyProject() throws Exception
    {
       refresh();

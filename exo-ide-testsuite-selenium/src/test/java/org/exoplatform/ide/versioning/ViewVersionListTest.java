@@ -51,7 +51,7 @@ public class ViewVersionListTest extends BaseTest
 
    private String version3Text = "three-";
 
-   private String version4Text = "four.";
+   private String version4Text = "four";
 
    @BeforeClass
    public static void setUp()
