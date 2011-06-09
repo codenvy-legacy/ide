@@ -190,7 +190,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onSuccess(String result)
          {
             IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
+            eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
             eventBus.fireEvent(new LoggedInEvent(false));
          }
 

@@ -30,7 +30,6 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.ApplicationInfoUnm
 import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
 import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.git.client.GitClientUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,11 +112,10 @@ public class HerokuClientServiceImpl extends HerokuClientService
    public void createApplication(String applicationName, String gitWorkDir, String remoteName,
       HerokuAsyncRequestCallback callback)
    {
-      String workDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += "&workDir=" + workDir;
+      params += "&workdir=" + gitWorkDir;
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -135,14 +133,9 @@ public class HerokuClientServiceImpl extends HerokuClientService
    @Override
    public void deleteApplication(String gitWorkDir, String applicationName, HerokuAsyncRequestCallback callback)
    {
-      if (gitWorkDir != null)
-      {
-         gitWorkDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
-      }
-
       String url = restServiceContext + DESTROY_APPLICATION;
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
+      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
@@ -176,15 +169,10 @@ public class HerokuClientServiceImpl extends HerokuClientService
    public void getApplicationInfo(String gitWorkDir, String applicationName, boolean isRaw,
       HerokuAsyncRequestCallback callback)
    {
-      if (gitWorkDir != null)
-      {
-         gitWorkDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
-      }
-
       String url = restServiceContext + APPLICATION_INFO;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
+      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -202,16 +190,11 @@ public class HerokuClientServiceImpl extends HerokuClientService
    public void renameApplication(String gitWorkDir, String applicationName, String newName,
       HerokuAsyncRequestCallback callback)
    {
-      if (gitWorkDir != null)
-      {
-         gitWorkDir = GitClientUtil.getWorkingDirFromHref(gitWorkDir, restServiceContext);
-      }
-
       String url = restServiceContext + RENAME_APPLICATION;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params = (newName != null) ? "newname=" + newName + "&" : "";
-      params += (gitWorkDir != null) ? "workDir=" + gitWorkDir : "";
+      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
