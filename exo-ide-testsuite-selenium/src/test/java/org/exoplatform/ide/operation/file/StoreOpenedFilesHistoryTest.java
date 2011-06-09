@@ -206,9 +206,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       //select Gadget file
       IDE.EDITOR.selectTab(0);
 
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_GADGET, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
+      //IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW, true);
+      //IDE.MENU.checkCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_GADGET, true);
    }
 
 }

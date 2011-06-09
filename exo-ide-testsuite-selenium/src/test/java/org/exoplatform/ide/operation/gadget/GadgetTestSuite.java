@@ -27,9 +27,10 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $Id: $
  *
  */
+//GadgetDeployUndeployTest.class must be remove see issue IDE-818
 @RunWith(Suite.class)
 @SuiteClasses({GadgetDevelopmentTest.class, 
-   GoogleGadgetPreviewTest.class, GadgetDeployUndeployTest.class
+   GoogleGadgetPreviewTest.class, 
    })
 public class GadgetTestSuite
 {
