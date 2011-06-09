@@ -57,13 +57,13 @@ public class CreateProjectFromTemplateTest extends BaseTest
 
    private static final String FILE_DATAOBJECT = "DataObject.groovy";
 
-   private static final String FILE_POJO = "Pojo.groovy";
+   private static final String FILE_POJO = "Pogo.groovy";
 
    private static final String FILE_RESTSERVICE = "GreetingRESTService.grs";
 
    private static final String URL = BASE_URL + "rest/private/registry/repository/exo:applications/IDE/templates/";
 
-   private final static String PROJECT_FOLDER_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
+   private final static String PROJECT_FOLDER_URL = BASE_URL+ REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
       + "/" + WS_NAME + "/";
 
    private static String templateUrl;
@@ -135,6 +135,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
+     System.out.print("/n"+"<<<<<<<<<<<<<<<<<<<<<<<<<:"+PROJECT_FOLDER_URL+"\n");
+      
+      
       IDE.WORKSPACE.waitForItem(WS_URL);
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       /*
@@ -247,19 +250,19 @@ public class CreateProjectFromTemplateTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/"
          + "DataObject.groovy");
-      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" + "Pojo.groovy");
+      IDE.WORKSPACE.waitForItem(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/" + "Pogo.groovy");
 
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/"
          + "DataObject.groovy");
       IDE.NAVIGATION.assertItemVisible(PROJECT_FOLDER_URL + PROJECT_FROM_DEFAULT_TEMPLATE + "/" + "data/"
-         + "Pojo.groovy");
+         + "Pogo.groovy");
    }
 
    /**
     * IDE-668 Add template for empty project in IDE
     * @throws Exception
     */
-    @Test
+    //@Test
    public void createEmptyProject() throws Exception
    {
       refresh();
