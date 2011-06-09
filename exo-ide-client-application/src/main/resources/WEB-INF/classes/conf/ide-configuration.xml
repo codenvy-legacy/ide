@@ -69,6 +69,10 @@
       </init-params>
    </component>
 
+    <component>
+      <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
+   </component>
+     
    <component>
       <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
    </component>

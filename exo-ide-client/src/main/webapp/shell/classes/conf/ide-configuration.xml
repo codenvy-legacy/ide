@@ -7,10 +7,10 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-  <component>
+   <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -71,6 +71,10 @@
 
    <component>
       <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
    </component>
 
    <component>
