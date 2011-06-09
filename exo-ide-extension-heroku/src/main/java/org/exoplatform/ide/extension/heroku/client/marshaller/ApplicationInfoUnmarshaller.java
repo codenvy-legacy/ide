@@ -59,8 +59,8 @@ public class ApplicationInfoUnmarshaller extends JSONUmarshaller
       JavaScriptObject json = build(response.getText());
       if (json == null)
          return;
-      JSONObject jsonObject = new JSONObject(json);
-      if (json == null)
+      JSONObject jsonObject = new JSONObject(json).isObject();
+      if (jsonObject == null)
          return;
 
       for (String key : jsonObject.keySet())
