@@ -59,6 +59,9 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
       this.workspace = workspace;
       if (herokuAPIKeys != null)
       {
+         if (!(herokuAPIKeys.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + herokuAPIKeys
+               + ". Absolute path to heroku keys storage required. ");
          this.herokuAPIKeys = herokuAPIKeys;
          if (!this.herokuAPIKeys.endsWith("/"))
             this.herokuAPIKeys += "/";
@@ -148,7 +151,36 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = ((Node)session.getItem(herokuAPIKeys)).addNode(user, "nt:folder");
+            Node herokuAPINode;
+            try
+            {
+               herokuAPINode = (Node)session.getItem(herokuAPIKeys);
+            }
+            catch (PathNotFoundException e)
+            {
+               if ("/".equals(herokuAPIKeys))
+               {
+                  herokuAPINode = session.getRootNode();
+               }
+               else
+               {
+                  // If store in other then root node.
+                  String[] pathSegments = herokuAPIKeys.substring(1).split("/");
+                  herokuAPINode = session.getRootNode();
+                  for (int i = 0; i < pathSegments.length; i++)
+                  {
+                     try
+                     {
+                        herokuAPINode = herokuAPINode.getNode(pathSegments[i]);
+                     }
+                     catch (PathNotFoundException e1)
+                     {
+                        herokuAPINode = herokuAPINode.addNode(pathSegments[i], "nt:folder");
+                     }
+                  }
+               }
+            }
+            userKeys = herokuAPINode.addNode(user, "nt:folder");
          }
 
          ExtendedNode fileNode;
