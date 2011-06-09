@@ -80,7 +80,31 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Delete application on OpenShift...")
    @Key("control.deleteApplication.prompt")
    String deleteApplicationControlPrompt();
+   
+   @DefaultMessage("PaaS/OpenShift/Application info...")
+   @Key(" control.showApplicationInfo.id")
+   String showApplicationInfoControlId();
 
+   @DefaultMessage("Application info...")
+   @Key("control.showApplicationInfo.title")
+   String showApplicationInfoControlTitle();
+
+   @DefaultMessage("Show application info...")
+   @Key("control.showApplicationInfo.prompt")
+   String showApplicationInfoControlPrompt();
+   
+   @DefaultMessage("PaaS/OpenShift")
+   @Key("control.openshift.id")
+   String openShiftControlId();
+   
+   @DefaultMessage("OpenShift")
+   @Key("control.openshift.title")
+   String openShiftControlTitle();
+   
+   @DefaultMessage("OpenShift")
+   @Key("control.openshift.prompt")
+   String openShiftControlPrompt();
+   
    /*Login view*/
    @DefaultMessage("Log in OpenShift")
    @Key("loginView.title")
@@ -112,7 +136,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("createApplicationView.name.field")
    String createApplicationViewNameField();
 
-   @DefaultMessage("Application's working directory:")
+   @DefaultMessage("Application working directory:")
    @Key("createApplicationView.workdir.field")
    String createApplicationViewWorkDirField();
 
@@ -140,4 +164,16 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Please, select folder(place for OpenShift application) in browser tree.")
    @Key("selectFolder")
    String selectFolder();
+   
+   @DefaultMessage("Do you want to delete application <b>{0}</b> on OpenShift?")
+   @Key("deleteApplication")
+   String deleteApplication(String applicationName);
+   
+   @DefaultMessage("Delete OpenShift application")
+   @Key("deleteApplicationTitle")
+   String deleteApplicationTitle();
+   
+   @DefaultMessage("Application <b>{0}</b> is successfully deleted.")
+   @Key("deleteApplicationSuccess")
+   String deleteApplicationSuccess(String applicationName);
 }
