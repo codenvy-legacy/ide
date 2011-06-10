@@ -34,6 +34,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -48,6 +49,16 @@ public class ExpressService
 {
    @Inject
    private Express express;
+
+   public ExpressService()
+   {
+   }
+
+   protected ExpressService(Express express)
+   {
+      // Use this constructor when deploy ExpressService as singleton resource.
+      this.express = express;
+   }
 
    @POST
    @Path("login")
@@ -74,6 +85,7 @@ public class ExpressService
 
    @POST
    @Path("apps/create")
+   @Produces(MediaType.APPLICATION_JSON)
    public AppInfo createApplication(@QueryParam("app") String app, @QueryParam("type") String type,
       @QueryParam("workdir") GitLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException,
       ParsingResponseException
@@ -83,6 +95,7 @@ public class ExpressService
 
    @GET
    @Path("apps/info")
+   @Produces(MediaType.APPLICATION_JSON)
    public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") GitLocation workDir,
       @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
    {
@@ -99,6 +112,7 @@ public class ExpressService
 
    @GET
    @Path("user/info")
+   @Produces(MediaType.APPLICATION_JSON)
    public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, IOException,
       ParsingResponseException
    {
