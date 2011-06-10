@@ -52,7 +52,7 @@ public class GoToLineTest extends BaseTest
       //Select Groovy file.
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.selectMainFrame();
+
 
       //Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
