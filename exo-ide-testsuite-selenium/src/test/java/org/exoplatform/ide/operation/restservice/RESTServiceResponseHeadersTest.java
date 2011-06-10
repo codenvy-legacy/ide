@@ -86,7 +86,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForOutputOpened();
 
-      assertEquals("[INFO] " + BASE_URL + "rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/" + FOLDER_NAME
+      assertEquals("[INFO] " + BASE_URL + "IDE/rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/" + FOLDER_NAME
          + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(1));
 
       IDE.REST_SERVICE.launchRestService();
@@ -96,6 +96,7 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
       IDE.REST_SERVICE.sendRequst();
 
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       String mess = IDE.OUTPUT.getOutputMessageText(2);
 
       assertTrue(mess.contains("[OUTPUT] - -Status - - - - - - - -"));
