@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.openshift.server.rest;
 
 import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
+import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.git.server.rest.GitLocation;
@@ -74,21 +75,32 @@ public class ExpressService
    @POST
    @Path("apps/create")
    public AppInfo createApplication(@QueryParam("app") String app, @QueryParam("type") String type,
-      @QueryParam("workdir") GitLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException
+      @QueryParam("workdir") GitLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException,
+      ParsingResponseException
    {
-      return express.createApplication(app, type, new File(workDir.getLocalPath(uriInfo)));
+      return express.createApplication(app, type, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @GET
+   @Path("apps/info")
+   public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") GitLocation workDir,
+      @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
+   {
+      return express.applicationInfo(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @POST
    @Path("apps/destroy")
-   public void destroyApplication(@QueryParam("app") String app) throws ExpressException, IOException
+   public void destroyApplication(@QueryParam("app") String app, @QueryParam("workdir") GitLocation workDir,
+      @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
    {
-      express.destroyApplication(app);
+      express.destroyApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @GET
-   @Path("userinfo")
-   public RHUserInfo userInfo(@QueryParam("appsInfo") boolean appsInfo) throws ExpressException, IOException
+   @Path("user/info")
+   public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, IOException,
+      ParsingResponseException
    {
       return express.userInfo(appsInfo);
    }

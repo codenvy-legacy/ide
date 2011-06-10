@@ -16,34 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.server.rest;
-
-import org.exoplatform.ide.extension.openshift.server.ExpressException;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+package org.exoplatform.ide.extension.openshift.server;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Provider
-public class ExpressExceptionMapper implements ExceptionMapper<ExpressException>
+@SuppressWarnings("serial")
+public class ParsingResponseException extends Exception
 {
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(ExpressException e)
+   public ParsingResponseException(String message, Throwable cause)
    {
-      ResponseBuilder rb =
-         Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
-            .type(e.getContentType());
-      int exitCode = e.getExitCode();
-      if (exitCode != -1)
-         rb.header("Express-Exit-Code", exitCode);
-      return rb.build();
+      super(message, cause);
+   }
+
+   public ParsingResponseException(String message)
+   {
+      super(message);
+   }
+
+   public ParsingResponseException(Throwable cause)
+   {
+      super(cause);
    }
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
+import org.eclipse.jgit.lib.Constants;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
@@ -28,7 +29,9 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -146,6 +149,8 @@ public class Express
       );
    private static final Pattern TD_DATE_FORMAT = Pattern
       .compile("(\\d{4})-(\\d{2})-(\\d{2})[Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{1,3}))?([+-])((\\d{2}):(\\d{2}))");
+   private static final Pattern GIT_URL_PATTERN = Pattern
+      .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/\\~/git/(\\w+)\\.git/");
 
    private RepositoryService repositoryService;
    private SshKeyProvider keyProvider;
@@ -161,14 +166,18 @@ public class Express
          "express-config"));
    }
 
-   protected Express(RepositoryService repositoryService, SshKeyProvider keyProvider, String workspace, String openshift)
+   protected Express(RepositoryService repositoryService, SshKeyProvider keyProvider, String workspace,
+      String expressConfig)
    {
       this.repositoryService = repositoryService;
       this.keyProvider = keyProvider;
       this.workspace = workspace;
-      if (openshift != null)
+      if (expressConfig != null)
       {
-         this.expressConfig = openshift;
+         if (!(expressConfig.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + expressConfig
+               + ". Absolute path to express configuration storage required. ");
+         this.expressConfig = expressConfig;
          if (!this.expressConfig.endsWith("/"))
             this.expressConfig += "/";
       }
@@ -249,7 +258,7 @@ public class Express
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, -1, "Authentication required.\n", "text/plain");
+         throw new ExpressException(401, "Authentication required.\n", "text/plain");
       createDomain(rhCloudCredentials, namespace, alter);
    }
 
@@ -319,7 +328,8 @@ public class Express
       }
    }
 
-   public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, IOException
+   public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, IOException,
+      ParsingResponseException
    {
       if (!APP_TYPES.contains(type))
       {
@@ -340,12 +350,12 @@ public class Express
 
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, -1, "Authentication required.\n", "text/plain");
+         throw new ExpressException(401, "Authentication required.\n", "text/plain");
       return createApplication(rhCloudCredentials, app, type, workDir);
    }
 
    private AppInfo createApplication(RHCloudCredentials rhCloudCredentials, String app, String type, File workDir)
-      throws ExpressException, IOException
+      throws ExpressException, IOException, ParsingResponseException
    {
       FastStrWriter strWr = new FastStrWriter();
       JsonWriterImpl jsonWriter = new JsonWriterImpl(strWr);
@@ -415,18 +425,48 @@ public class Express
       }
    }
 
-   public void destroyApplication(String app) throws ExpressException, IOException
+   public AppInfo applicationInfo(String app, File workDir) throws ExpressException, IOException,
+      ParsingResponseException
    {
+      if (app == null || app.isEmpty())
+      {
+         app = detectAppName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
+      List<AppInfo> apps = userInfo(true).getApps();
+      if (apps != null && apps.size() > 0)
+      {
+         for (AppInfo a : apps)
+         {
+            if (app.equals(a.getName()))
+               return a;
+         }
+      }
+      throw new ExpressException(404, "Application not found: " + app + "\n", "text/plain");
+   }
+
+   public void destroyApplication(String app, File workDir) throws ExpressException, IOException,
+      ParsingResponseException
+   {
+      if (app == null || app.isEmpty())
+      {
+         app = detectAppName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, -1, "Authentication required.\n", "text/plain");
+         throw new ExpressException(401, "Authentication required.\n", "text/plain");
       destroyApplication(rhCloudCredentials, app);
    }
 
    private void destroyApplication(RHCloudCredentials rhCloudCredentials, String app) throws ExpressException,
-      IOException
+      IOException, ParsingResponseException
    {
-      RHUserInfo userInfo = userInfo(true);
+      RHUserInfo userInfo = userInfo(rhCloudCredentials, true);
       List<AppInfo> apps = userInfo.getApps();
       AppInfo target = null;
       if (apps != null && apps.size() > 0)
@@ -440,7 +480,7 @@ public class Express
       }
 
       if (target == null)
-         throw new ExpressException(404, -1, "Application not found: " + app + "\n", "text/plain");
+         throw new ExpressException(404, "Application not found: " + app + "\n", "text/plain");
 
       FastStrWriter strWr = new FastStrWriter();
       JsonWriterImpl jsonWriter = new JsonWriterImpl(strWr);
@@ -485,16 +525,16 @@ public class Express
       }
    }
 
-   public RHUserInfo userInfo(boolean appsInfo) throws ExpressException, IOException
+   public RHUserInfo userInfo(boolean appsInfo) throws ExpressException, IOException, ParsingResponseException
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, -1, "Authentication required.\n", "text/plain");
+         throw new ExpressException(401, "Authentication required.\n", "text/plain");
       return userInfo(rhCloudCredentials, appsInfo);
    }
 
    private RHUserInfo userInfo(RHCloudCredentials rhCloudCredentials, boolean appsInfo) throws ExpressException,
-      IOException
+      IOException, ParsingResponseException
    {
       final boolean userInfo = true;
 
@@ -587,7 +627,7 @@ public class Express
          }
          catch (JsonException jsone)
          {
-            throw new RuntimeException(jsone.getMessage(), jsone);
+            throw new ParsingResponseException(jsone.getMessage(), jsone);
          }
          finally
          {
@@ -673,14 +713,34 @@ public class Express
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = ((Node)session.getItem(expressConfig)).addNode(user, "nt:folder");
+            Node expressConfigNode;
+            try
+            {
+               expressConfigNode = (Node)session.getItem(expressConfig);
+            }
+            catch (PathNotFoundException e)
+            {
+               String[] pathSegments = expressConfig.substring(1).split("/");
+               expressConfigNode = session.getRootNode();
+               for (int i = 0; i < pathSegments.length; i++)
+               {
+                  try
+                  {
+                     expressConfigNode = expressConfigNode.getNode(pathSegments[i]);
+                  }
+                  catch (PathNotFoundException e1)
+                  {
+                     expressConfigNode = expressConfigNode.addNode(pathSegments[i], "nt:folder");
+                  }
+               }
+            }
+            userKeys = expressConfigNode.addNode(user, "nt:folder");
          }
 
          ExtendedNode fileNode;
          Node contentNode;
          try
          {
-
             fileNode = (ExtendedNode)userKeys.getNode("rhcloud-credentials");
             contentNode = fileNode.getNode("jcr:content");
          }
@@ -756,6 +816,41 @@ public class Express
       sb.append(app);
       sb.append(".git/");
       return sb.toString();
+   }
+
+   private static String detectAppName(File workDir)
+   {
+      if (workDir != null && new File(workDir, Constants.DOT_GIT).exists())
+      {
+         GitConnection git = null;
+         try
+         {
+            git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            RemoteListRequest request = new RemoteListRequest(null, true);
+            List<Remote> remoteList = git.remoteList(request);
+            String detectedApp = null;
+            for (Remote r : remoteList)
+            {
+               Matcher m = GIT_URL_PATTERN.matcher(r.getUrl());
+               if (m.matches())
+               {
+                  detectedApp = m.group(4);
+                  break;
+               }
+            }
+            return detectedApp;
+         }
+         catch (GitException ge)
+         {
+            throw new RuntimeException(ge.getMessage(), ge);
+         }
+         finally
+         {
+            if (git != null)
+               git.close();
+         }
+      }
+      return null;
    }
 
    private static String publicUrl(RHUserInfo userInfo, String app)

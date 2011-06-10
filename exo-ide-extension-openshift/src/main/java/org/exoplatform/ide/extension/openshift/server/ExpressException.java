@@ -31,11 +31,15 @@ public class ExpressException extends Exception
    /** Content type of response from openshift express server. */
    private final String contentType;
 
-   /** Exit code of command execution at openshift express server. */
+   /**
+    * Exit code of command execution at openshift express server. May be -1 if cannot get exit code from openshift
+    * response.
+    */
    private final int exitCode;
 
    /**
     * @param responseStatus HTTP status of response from openshift express server
+    * @param exitCode exit code of command execution at openshift express server
     * @param message text message
     * @param contentType content type of response from openshift express server
     */
@@ -45,6 +49,16 @@ public class ExpressException extends Exception
       this.responseStatus = responseStatus;
       this.exitCode = exitCode;
       this.contentType = contentType;
+   }
+
+   /**
+    * @param responseStatus HTTP status of response from openshift express server
+    * @param message text message
+    * @param contentType content type of response from openshift express server
+    */
+   public ExpressException(int responseStatus, String message, String contentType)
+   {
+      this(responseStatus, -1, message, contentType);
    }
 
    public int getExitCode()
