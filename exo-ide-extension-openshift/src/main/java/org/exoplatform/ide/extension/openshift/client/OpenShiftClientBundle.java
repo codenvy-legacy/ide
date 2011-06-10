@@ -56,4 +56,22 @@ public interface OpenShiftClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/destroyApp_Disabled.png")
    ImageResource destroyApplicationControlDisabled();
+   
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo.png")
+   ImageResource applicationInfoControl();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo_Disabled.png")
+   ImageResource applicationInfoControlDisabled();
+   
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain.png")
+   ImageResource createDomainControl();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain_Disabled.png")
+   ImageResource createDomainControlDisabled();
+   
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift.png")
+   ImageResource openShiftControl();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_Disabled.png")
+   ImageResource openShiftControlDisabled();
 }

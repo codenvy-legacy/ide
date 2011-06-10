@@ -24,24 +24,23 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
 
 /**
- * Control is used for new domain creation.
+ * Group control for OpenShift controls
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:22:44 PM anya $
+ * @version $Id:  Jun 9, 2011 4:58:20 PM anya $
  *
  */
-public class CreateDomainControl extends SimpleControl implements IDEControl
+public class OpenShiftControl extends SimpleControl implements IDEControl
 {
-   public CreateDomainControl()
+   public OpenShiftControl()
    {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(), OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
-      setEvent(new CreateDomainEvent());
+      super(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlId());
+      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
+      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlPrompt());
+      setImages(OpenShiftClientBundle.INSTANCE.openShiftControl(),
+         OpenShiftClientBundle.INSTANCE.openShiftControlDisabled());
    }
 
    /**

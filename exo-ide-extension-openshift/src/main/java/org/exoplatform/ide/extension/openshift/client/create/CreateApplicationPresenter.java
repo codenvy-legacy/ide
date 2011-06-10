@@ -249,9 +249,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
                if (exception instanceof ServerException)
                {
                   ServerException serverException = (ServerException)exception;
-                  //TODO check is not authorized
-                  if (serverException.getMessage() != null
-                     && serverException.getMessage().contains("Authentication required"))
+                  if (401 == serverException.getHTTPStatus())
                   {
                      addLoggedInHandler();
                      eventBus.fireEvent(new LoginEvent());

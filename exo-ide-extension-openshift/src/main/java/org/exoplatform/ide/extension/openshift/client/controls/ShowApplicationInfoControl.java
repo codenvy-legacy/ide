@@ -24,24 +24,25 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
+import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent;
 
 /**
- * Control is used for new domain creation.
+ * Control for showing OpenShift application's information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:22:44 PM anya $
+ * @version $Id:  Jun 9, 2011 2:51:28 PM anya $
  *
  */
-public class CreateDomainControl extends SimpleControl implements IDEControl
+public class ShowApplicationInfoControl extends SimpleControl implements IDEControl
 {
-   public CreateDomainControl()
+   public ShowApplicationInfoControl()
    {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(), OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
-      setEvent(new CreateDomainEvent());
+      super(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
+      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
+      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
+      setImages(OpenShiftClientBundle.INSTANCE.applicationInfoControl(),
+         OpenShiftClientBundle.INSTANCE.applicationInfoControlDisabled());
+      setEvent(new ShowApplicationInfoEvent());
    }
 
    /**

@@ -45,26 +45,28 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     * Login method's path.
     */
    private static final String LOGIN = "/ide/openshift/express/login";
-   
+
    /**
     * Create domain method's path.
     */
    private static final String CREATE_DOMAIN = "/ide/openshift/express/domain/create";
-   
+
    /**
     * Create application method's path.
     */
    private static final String CREATE_APPLICATION = "/ide/openshift/express/apps/create";
-   
+
    /**
     * Destroy application method's path.
     */
    private static final String DESTROY_APPLICATION = "/ide/openshift/express/apps/destroy";
-   
+
    /**
     * User info method's path.
     */
-   private static final String USER_INFO = "/ide/openshift/express/userinfo";
+   private static final String USER_INFO = "/ide/openshift/express/user/info";
+
+   private static final String APPLICATION_INFO = "/ide/openshift/express/apps/info";
 
    /**
     * Events handler.
@@ -145,7 +147,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       callback.setEventBus(eventBus);
-      String params = "?app=";
+      String params = "?app=" + name;
       AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
@@ -162,7 +164,25 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setResult(userInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      String params = "?appsInfo=" + appsInfo;
+      String params = "?appsinfo=" + appsInfo;
       AsyncRequest.build(RequestBuilder.GET, url + params, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationInfo(String applicationName, String workDir, AsyncRequestCallback<AppInfo> callback)
+   {
+      String url = restServiceContext + APPLICATION_INFO;
+
+      AppInfo appInfo = new AppInfo();
+      AppInfoUmarshaller unmarshaller = new AppInfoUmarshaller(appInfo);
+      callback.setResult(appInfo);
+      callback.setPayload(unmarshaller);
+      callback.setEventBus(eventBus);
+      String params = (applicationName != null && applicationName.length() > 0) ? "app=" + applicationName + "&" : "";
+      params += (workDir != null && workDir.length() > 0) ? "workdir=" + workDir : "";
+      AsyncRequest.build(RequestBuilder.GET, url + "?" +params, loader).send(callback);
    }
 }

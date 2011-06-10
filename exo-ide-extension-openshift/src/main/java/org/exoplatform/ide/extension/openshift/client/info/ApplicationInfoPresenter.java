@@ -16,22 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.client.domain;
+package org.exoplatform.ide.extension.openshift.client.info;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
 import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -40,77 +40,50 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.git.client.GitPresenter;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
+ * Presenter for getting and displaying application's information.
+ * The view must be pointed in Views.gwt.xml.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 3:49:41 PM anya $
+ * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
  *
  */
-public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler
+public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
+   LoggedInHandler
 {
    interface Display extends IsView
    {
-      /**
-       * Get create button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCreateButton();
+      HasClickHandlers getOkButton();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
-
-      /**
-       * Get domain name field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getDomainNameField();
-
-      /**
-       * Change the enable state of the create button.
-       * 
-       * @param enable
-       */
-      void enableCreateButton(boolean enable);
-
-      /**
-       * Give focus to domain name field.
-       */
-      void focusInDomainNameField();
+      ListGridItem<Property> getApplicationInfoGrid();
    }
 
    private Display display;
 
-   private HandlerManager eventBus;
-
    /**
     * @param eventBus events handler
     */
-   public CreateDomainPresenter(HandlerManager eventBus)
+   public ApplicationInfoPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
+
+      eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(CreateDomainEvent.TYPE, this);
    }
 
+   /**
+    * Bind presenter with display.
+    */
    public void bindDisplay()
    {
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            createDomain();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.getOkButton().addClickHandler(new ClickHandler()
       {
 
          @Override
@@ -119,17 +92,15 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
+   }
 
-      display.getDomainNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean isNotEmpty = (event.getValue() != null && event.getValue().trim().length() > 0);
-            display.enableCreateButton(isNotEmpty);
-         }
-      });
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoHandler#onShowApplicationInfo(org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent)
+    */
+   @Override
+   public void onShowApplicationInfo(ShowApplicationInfoEvent event)
+   {
+      getWorkDir();
    }
 
    /**
@@ -145,40 +116,33 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent)
+    * Get application's information.
     */
-   @Override
-   public void onCreateDomain(CreateDomainEvent event)
+   public void getApplicationInfo()
    {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.enableCreateButton(false);
-         display.focusInDomainNameField();
-      }
-   }
-
-   protected void createDomain()
-   {
-      final String domainName =
-         (display.getDomainNameField().getValue() != null) ? display.getDomainNameField().getValue().trim() : display
-            .getDomainNameField().getValue();
-      if (domainName == null || domainName.length() == 0)
-      {
-         return;
-      }
-
-      OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>()
+      OpenShiftClientService.getInstance().getApplicationInfo(null, workDir, new AsyncRequestCallback<AppInfo>()
       {
 
          @Override
-         protected void onSuccess(String result)
+         protected void onSuccess(AppInfo result)
          {
-            eventBus.fireEvent(new OutputEvent(
-               OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName), Type.INFO));
-            IDE.getInstance().closeView(display.asView().getId());
+            if (display == null)
+            {
+               display = GWT.create(Display.class);
+               bindDisplay();
+               IDE.getInstance().openView(display.asView());
+            }
+            List<Property> properties = new ArrayList<Property>();
+            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result.getName()));
+            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result.getType()));
+            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), result
+               .getPublicUrl()));
+            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
+               .getGitUrl()));
+            String time =
+               DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(result.getCreationTime()));
+            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
+            display.getApplicationInfoGrid().setValue(properties);
          }
 
          /**
@@ -199,12 +163,13 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
             }
             super.onFailure(exception);
          }
+
       });
    }
 
    /**
     * Register {@link LoggedInHandler} handler.
-    */   
+    */
    protected void addLoggedInHandler()
    {
       eventBus.addHandler(LoggedInEvent.TYPE, this);
@@ -219,7 +184,16 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
       eventBus.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
-         createDomain();
+         getApplicationInfo();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      getApplicationInfo();
    }
 }

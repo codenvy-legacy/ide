@@ -16,7 +16,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
- * View for creation new application on Heroku.
+ * View for creation new application on OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  May 30, 2011 3:07:34 PM anya $
@@ -96,7 +96,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getCreateButton()
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#getCreateButton()
     */
    @Override
    public HasClickHandlers getCreateButton()
@@ -105,7 +105,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -114,7 +114,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getApplicationNameField()
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#getApplicationNameField()
     */
    @Override
    public HasValue<String> getApplicationNameField()
@@ -123,7 +123,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getWorkDirLocationField()
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#getWorkDirLocationField()
     */
    @Override
    public HasValue<String> getWorkDirLocationField()
@@ -132,7 +132,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#enableCreateButton(boolean)
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#enableCreateButton(boolean)
     */
    @Override
    public void enableCreateButton(boolean enable)
@@ -141,7 +141,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#focusInApplicationNameField()
+    * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter.Display#focusInApplicationNameField()
     */
    @Override
    public void focusInApplicationNameField()

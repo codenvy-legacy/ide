@@ -50,13 +50,59 @@ public abstract class OpenShiftClientService
       instance = this;
    }
    
+   /**
+    * Performs log in OpenShift.
+    * 
+    * @param login user's email
+    * @param password user's password
+    * @param callback callback
+    */
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
    
+   /**
+    * Creates new domain name. A domain name is a requirement for 
+    * each new application that you create in the cloud 
+    * and is part of the application name.
+    * 
+    * @param name domain's name
+    * @param alter alter namespace (will change urls) and/or ssh key
+    * @param callback callback
+    */
    public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback);
    
+   /**
+    * Creates OpenShift application.
+    * 
+    * @param name application's name
+    * @param type application's type
+    * @param workdir application's working directory
+    * @param callback callback
+    */
    public abstract void createApplication(String name, String type, String workdir, AsyncRequestCallback<AppInfo> callback);
    
+   /**
+    * Destroys application with pointed name from OpenShift. 
+    * 
+    * @param name application's name
+    * @param callback callback
+    */
    public abstract void destroyApplication(String name, AsyncRequestCallback<String> callback);
    
+   /**
+    * Get user's information. 
+    * You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
+    * 
+    * @param appsInfo if <code>true</code>, then list applications
+    * @param callback callback
+    */
    public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback);
+   
+   /**
+    * Get application's information.
+    * 
+    * @param applicationName application name
+    * @param workDir application's working directory
+    * @param callback callback
+    */
+   public abstract void getApplicationInfo(String applicationName, String workDir, AsyncRequestCallback<AppInfo> callback);
 }

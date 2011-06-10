@@ -176,4 +176,37 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Application <b>{0}</b> is successfully deleted.")
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess(String applicationName);
+   
+   @DefaultMessage("OpenShift application information")
+   @Key("applicationInfoView.title")
+   String applicationInfoViewTitle();
+   
+   @DefaultMessage("Property")
+   @Key("applicationInfoGid.field.name")
+   String applicationInfoGridNameField();
+
+   @DefaultMessage("Value")
+   @Key("applicationInfoGid.field.value")
+   String applicationInfoGridValueField();
+   
+   /*Application properties*/
+   @DefaultMessage("Name")
+   @Key("application.name")
+   String applicationName();
+   
+   @DefaultMessage("Type")
+   @Key("application.type")
+   String applicationType();
+   
+   @DefaultMessage("Public URL")
+   @Key("application.publicUrl")
+   String applicationPublicUrl();
+   
+   @DefaultMessage("Git URL")
+   @Key("application.gitUrl")
+   String applicationGitUrl();
+   
+   @DefaultMessage("Creation time")
+   @Key("application.createTime")
+   String applicationCreationTime();
 }

@@ -28,8 +28,13 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainControl;
+import org.exoplatform.ide.extension.openshift.client.controls.DeleteApplicationControl;
+import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControl;
+import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
+import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
+import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 
 /**
@@ -62,13 +67,18 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
+      IDE.getInstance().addControl(new OpenShiftControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateDomainControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
 
       //Create presenters:
       new LoginPresenter(eventBus);
       new CreateDomainPresenter(eventBus);
       new CreateApplicationPresenter(eventBus);
+      new DeleteApplicationPresenter(eventBus);
+      new ApplicationInfoPresenter(eventBus);
    }
 
    /**
@@ -79,5 +89,4 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    {
       new OpenShiftClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
    }
-
 }

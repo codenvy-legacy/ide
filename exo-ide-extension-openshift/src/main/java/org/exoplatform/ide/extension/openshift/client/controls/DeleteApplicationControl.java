@@ -24,24 +24,25 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
+import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationEvent;
 
 /**
- * Control is used for new domain creation.
+ * Control is used for deleting application from OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 6, 2011 2:22:44 PM anya $
+ * @version $Id:  Jun 9, 2011 12:17:37 PM anya $
  *
  */
-public class CreateDomainControl extends SimpleControl implements IDEControl
+public class DeleteApplicationControl extends SimpleControl implements IDEControl
 {
-   public CreateDomainControl()
+   public DeleteApplicationControl()
    {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(), OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
-      setEvent(new CreateDomainEvent());
+      super(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
+      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
+      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
+      setImages(OpenShiftClientBundle.INSTANCE.destroyApplicationControl(),
+         OpenShiftClientBundle.INSTANCE.destroyApplicationControlDisabled());
+      setEvent(new DeleteApplicationEvent());
    }
 
    /**
