@@ -64,7 +64,7 @@ public class NavigateVersionsTest extends BaseTest
 
    private String version6Text = " sixth,";
 
-   private String version7Text = " seventh.";
+   private String version7Text = " seventh";
 
    @BeforeClass
    public static void setUp()
@@ -107,7 +107,7 @@ public class NavigateVersionsTest extends BaseTest
       }
    }
 
-   @Test
+    @Test
    public void testNavigateOlderVersion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
@@ -321,7 +321,11 @@ public class NavigateVersionsTest extends BaseTest
       // 1. Create new file in TEST_FOLDER
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      //See issue IDE-832--------------------------
+      selenium.keyPressNative("" + KeyEvent.VK_END);
+      //-------------------------------------------
       saveAsUsingToolbarButton(FILE_2);
 
       // Version History button is disabled.
@@ -438,7 +442,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
    }
 
-   @Test
+    @Test
    public void testNavigateNewerVersionWithSave() throws Exception
    {
       refresh();
@@ -449,6 +453,9 @@ public class NavigateVersionsTest extends BaseTest
       //Create new file, add text and save file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      //See issue IDE-832--------------------------
+      selenium.keyPressNative("" + KeyEvent.VK_END);
+      //-------------------------------------------
       saveAsUsingToolbarButton(FILE_3);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
@@ -562,6 +569,9 @@ public class NavigateVersionsTest extends BaseTest
       //Create new file, add text and save file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      //See issue IDE-832--------------------------
+      selenium.keyPressNative("" + KeyEvent.VK_END);
+      //-------------------------------------------
       saveAsUsingToolbarButton(FILE_4);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
@@ -634,7 +644,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY);
       IDE.VERSIONS.waitVersionContentViewOpen();
       IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.File.RESTORE_VERSION, false);
-      
+
       IDE.VERSIONS.checkVersionPanelState(true);
       //View older version button is enabled: 
       IDE.VERSIONS.checkOlderVersionButtonState(true);
