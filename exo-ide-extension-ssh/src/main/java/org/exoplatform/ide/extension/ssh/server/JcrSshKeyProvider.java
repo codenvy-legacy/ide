@@ -112,6 +112,9 @@ public class JcrSshKeyProvider implements SshKeyProvider
       this.workspace = workspace;
       if (keyStore != null)
       {
+         if (!(keyStore.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + keyStore
+               + ". Absolute path to SSH keys storage required. ");
          this.keyStore = keyStore;
          if (!this.keyStore.endsWith("/"))
             this.keyStore += "/";
@@ -141,7 +144,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = ((Node)session.getItem(keyStore)).addNode(user, "nt:folder");
+            userKeys = createKeyStore(session).addNode(user, "nt:folder");
          }
 
          writeKey(userKeys, host + ".key", user, key);
@@ -302,7 +305,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = ((Node)session.getItem(keyStore)).addNode(user, "nt:folder");
+            userKeys = createKeyStore(session).addNode(user, "nt:folder");
          }
 
          ByteArrayOutputStream buff = new ByteArrayOutputStream();
@@ -421,5 +424,31 @@ public class JcrSshKeyProvider implements SshKeyProvider
          if (session != null)
             session.logout();
       }
+   }
+
+   private Node createKeyStore(Session session) throws RepositoryException
+   {
+      Node keyStoreNode;
+      try
+      {
+         keyStoreNode = (Node)session.getItem(keyStore);
+      }
+      catch (PathNotFoundException e)
+      {
+         String[] pathSegments = keyStore.substring(1).split("/");
+         keyStoreNode = session.getRootNode();
+         for (int i = 0; i < pathSegments.length; i++)
+         {
+            try
+            {
+               keyStoreNode = keyStoreNode.getNode(pathSegments[i]);
+            }
+            catch (PathNotFoundException e1)
+            {
+               keyStoreNode = keyStoreNode.addNode(pathSegments[i], "nt:folder");
+            }
+         }
+      }
+      return keyStoreNode;
    }
 }
