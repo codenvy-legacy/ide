@@ -51,11 +51,11 @@ public class ViewVersionHistoryTest extends BaseTest
 
    private final static String FILE_3 = "File 3";
 
-   private String version1Text = "This is version 1.";
+   private String version1Text = "This is version 1";
 
-   private String version2Text = " One more.";
+   private String version2Text = " One more";
 
-   private String version3Text = " And more.";
+   private String version3Text = " And more";
 
    private String version4Text = " The last";
 
