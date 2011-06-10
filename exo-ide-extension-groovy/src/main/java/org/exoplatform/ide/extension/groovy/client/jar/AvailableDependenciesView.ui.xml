@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:t="urn:import:org.exoplatform.ide.extension.groovy.client"
 	xmlns:tp="urn:import:org.exoplatform.gwtframework.ui.client.tab"
 	>
 

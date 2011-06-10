@@ -69,9 +69,9 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
    /**
     * UIBinder instance. 
     */
-   private static JarDiscoveryViewUiBinder uiBinder = GWT.create(JarDiscoveryViewUiBinder.class);
+   private static AvailableDependenciesViewUiBinder uiBinder = GWT.create(AvailableDependenciesViewUiBinder.class);
 
-   interface JarDiscoveryViewUiBinder extends UiBinder<Widget, AvailableDependenciesView>
+   interface AvailableDependenciesViewUiBinder extends UiBinder<Widget, AvailableDependenciesView>
    {
    }
    
