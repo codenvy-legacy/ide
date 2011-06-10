@@ -181,11 +181,12 @@ public abstract class HasBranchesPresenter extends GitPresenter
     */
    protected String[] getRemoteBranchesNamesToDisplay(String remoteName)
    {
+      List<String> branchesToDisplay = new ArrayList<String>();
       if (remoteBranches == null || remoteBranches.size() <= 0 || remoteName == null)
       {
-         return null;
+         branchesToDisplay.add("master");
+         return branchesToDisplay.toArray(new String[branchesToDisplay.size()]);
       }
-      List<String> branchesToDisplay = new ArrayList<String>();
       String compareString = "refs/remotes/" + remoteName + "/";
       for (Branch branch : remoteBranches)
       {
