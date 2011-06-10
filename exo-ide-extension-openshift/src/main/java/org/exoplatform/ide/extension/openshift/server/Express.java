@@ -273,6 +273,7 @@ public class Express
          // Update SSH keys.
          keyProvider.removeKeys(host);
          keyProvider.genKeyPair(host, null, null);
+         publicKey = keyProvider.getPublicKey(host);
       }
       else
       {
