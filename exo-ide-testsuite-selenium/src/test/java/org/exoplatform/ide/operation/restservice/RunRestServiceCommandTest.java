@@ -137,7 +137,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 5 -----------------
       //check messages
       assertEquals("[INFO] " + SIMPLE_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
          + FOLDER_NAME + "/" + SIMPLE_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
 
       //---- 6 -----------------
@@ -248,7 +248,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //check messages
       assertEquals("[INFO] " + FILE_FOR_CHANGE_CONTENT_NAME + " validated successfully.",
          IDE.OUTPUT.getOutputMessageText(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
          + FOLDER_NAME + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          IDE.OUTPUT.getOutputMessageText(2));
 
@@ -296,7 +296,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //---- 7 -----------------
       //check messages
       assertEquals("[INFO] " + NEW_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessageText(1));
-      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+      assertEquals("[INFO] " + BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
          + FOLDER_NAME + "/" + NEW_FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(2));
 
    }
