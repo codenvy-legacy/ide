@@ -766,6 +766,8 @@ public class CodeMirror extends Editor
    @Override
    public void goToPosition(int row, int column)
    {
+      cursorPositionRow = row;
+      cursorPositionCol = column;
       goToPosition(editorObject, row, column);
    }
 
