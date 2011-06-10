@@ -55,5 +55,5 @@ public abstract class DiscoveryService
    public abstract void getRestServices(AsyncRequestCallback<List<RestService>> callback);
    
    public abstract void getIsDiscoverable(AsyncRequestCallback<Boolean> callback);
-
+   
 }

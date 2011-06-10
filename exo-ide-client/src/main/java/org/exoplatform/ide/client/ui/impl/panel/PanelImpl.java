@@ -444,8 +444,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    @Override
    public void addView(View view)
    {
-      System.out.println("PanelImpl.addView(" + view.getId() + ")");
-      
       if (views.size() == 0 && showPanelHandlers.size() > 0)
       {
          ShowPanelEvent showPanelEvent = new ShowPanelEvent(panelId);

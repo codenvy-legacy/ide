@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
-
-import java.util.List;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 /**
  * Created by The eXo Platform SAS .
@@ -116,4 +117,11 @@ public abstract class GroovyService
    public abstract void getOutput(String url, String method, List<SimpleParameterEntry> headers,
       List<SimpleParameterEntry> params, String body, AsyncRequestCallback<RestServiceOutput> callback);
 
+   /**
+    * Get list of available JAR libraries.
+    * 
+    * @param callback - handle the results from the server
+    */
+   public abstract void getAvailableJarLibraries(AsyncRequestCallback<List<Jar>> callback);
+   
 }

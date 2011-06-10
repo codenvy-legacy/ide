@@ -424,7 +424,9 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
+                     <!-- 
                      <bindAddress>0.0.0.0</bindAddress>
+                      -->
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.git.repo-dir=git</extraJvmArgs>
                   </configuration>
                </plugin>

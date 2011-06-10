@@ -28,8 +28,7 @@
 						<g:FlowPanel height="6px"></g:FlowPanel>
 
 						<c:Border ui:field="parametersListGridContainer">
-							<rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters" >
-							</rd:RestServiceParameterListGrid>
+							<rd:RestServiceParameterListGrid ui:field="parametersListGrid" ID="ideRestServiceDiscoveryParameters" ></rd:RestServiceParameterListGrid>
 						</c:Border>						
 					</c:VPanel>
 			</c:Border>

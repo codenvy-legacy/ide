@@ -64,6 +64,12 @@ public interface GroovyClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/groovy/client/images/codeassistant/default-method.png")
    ImageResource defaultMethod();
 
+   @Source("org/exoplatform/ide/extension/groovy/client/images/jarlibrary.png")
+   ImageResource jarLibrary();
+
+   @Source("org/exoplatform/ide/extension/groovy/client/images/jarlibrary-disabled.png")
+   ImageResource jarLibraryDisabled();   
+   
    @Source("org/exoplatform/ide/extension/groovy/client/images/codeassistant/private-field.png")
    ImageResource privateField();
 

@@ -36,4 +36,10 @@
     <entry-point class='org.exoplatform.ide.extension.groovy.client.GroovyExtension' />
    
    <source path="client" />
+   <source path="shared" />
+   
+	<replace-with class="org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesView">
+		<when-type-is class="org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.Display" />
+	</replace-with>   
+   
 </module>

@@ -37,13 +37,13 @@ public interface IDEImageBundle extends ClientBundle
    /*
     * BUTTONS
     */
-   
+
    @Source("bundled-images/ok.png")
    ImageResource ok();
 
    @Source("bundled-images/ok-disabled.png")
    ImageResource okDisabled();
-   
+
    @Source("bundled-images/cancel.png")
    ImageResource cancel();
 
@@ -123,7 +123,7 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/edit/delete_current_line_Disabled.png")
    ImageResource deleteCurrentLineDisabled();
-   
+
    @Source("../public/images/bundled/edit/lock_file.png")
    ImageResource lockUnlockFile();
 
@@ -150,7 +150,7 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/file/open_file_by_path_Disabled.png")
    ImageResource openFileByPathDisabled();
-   
+
    @Source("../public/images/bundled/file/download_file.png")
    ImageResource downloadFile();
 
@@ -228,74 +228,74 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/file/refresh_Disabled.png")
    ImageResource refreshDisabled();
-   
+
    @Source("../public/images/bundled/file/create_from_template.png")
    ImageResource createFromTemplate();
 
    @Source("../public/images/bundled/file/create_from_template_Disabled.png")
    ImageResource createFromTemplateDisabled();
-   
+
    @Source("../public/images/bundled/file/create_project_template.png")
    ImageResource createProjectTemplate();
-   
+
    @Source("../public/images/bundled/file/create_project_template_Disabled.png")
-   ImageResource createProjectTemplateDisabled();  
+   ImageResource createProjectTemplateDisabled();
 
    /*
     * GADGET
     */
 
-//   @Source("../public/images/bundled/gadget/deploy_gadget.png")
-//   ImageResource deployGadget();
-//
-//   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
-//   ImageResource deployGadgetDisabled();
-//
-//   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
-//   ImageResource undeployGadget();
-//
-//   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
-//   ImageResource undeployGadgetDisabled();
+   //   @Source("../public/images/bundled/gadget/deploy_gadget.png")
+   //   ImageResource deployGadget();
+   //
+   //   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
+   //   ImageResource deployGadgetDisabled();
+   //
+   //   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
+   //   ImageResource undeployGadget();
+   //
+   //   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
+   //   ImageResource undeployGadgetDisabled();
 
    /*
     * GROOVY
     */
 
-//   @Source("../public/images/bundled/groovy/set_autoload.png")
-//   ImageResource setAutoLoad();
-//
-//   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
-//   ImageResource setAutoLoadDisabled();
-//
-//   @Source("../public/images/bundled/groovy/unset_autoload.png")
-//   ImageResource unsetAutoLoad();
-//
-//   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
-//   ImageResource unsetAutoLoadDisabled();
-//
-//   @Source("../public/images/bundled/groovy/validate.png")
-//   ImageResource validateGroovy();
-//
-//   @Source("../public/images/bundled/groovy/validate_Disabled.png")
-//   ImageResource validateGroovyDisabled();
-//
-//   @Source("../public/images/bundled/groovy/deploy.png")
-//   ImageResource deployGroovy();
-//
-//   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
-//   ImageResource deployGroovyDisabled();
-//
-//   @Source("../public/images/bundled/groovy/undeploy.png")
-//   ImageResource undeployGroovy();
-//
-//   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
-//   ImageResource undeployGroovyDisabled();
-//
-//   @Source("../public/images/bundled/groovy/output.png")
-//   ImageResource groovyOutput();
-//
-//   @Source("../public/images/bundled/groovy/output_Disabled.png")
-//   ImageResource groovyOutputDisabled();
+   //   @Source("../public/images/bundled/groovy/set_autoload.png")
+   //   ImageResource setAutoLoad();
+   //
+   //   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
+   //   ImageResource setAutoLoadDisabled();
+   //
+   //   @Source("../public/images/bundled/groovy/unset_autoload.png")
+   //   ImageResource unsetAutoLoad();
+   //
+   //   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
+   //   ImageResource unsetAutoLoadDisabled();
+   //
+   //   @Source("../public/images/bundled/groovy/validate.png")
+   //   ImageResource validateGroovy();
+   //
+   //   @Source("../public/images/bundled/groovy/validate_Disabled.png")
+   //   ImageResource validateGroovyDisabled();
+   //
+   //   @Source("../public/images/bundled/groovy/deploy.png")
+   //   ImageResource deployGroovy();
+   //
+   //   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
+   //   ImageResource deployGroovyDisabled();
+   //
+   //   @Source("../public/images/bundled/groovy/undeploy.png")
+   //   ImageResource undeployGroovy();
+   //
+   //   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
+   //   ImageResource undeployGroovyDisabled();
+   //
+   //   @Source("../public/images/bundled/groovy/output.png")
+   //   ImageResource groovyOutput();
+   //
+   //   @Source("../public/images/bundled/groovy/output_Disabled.png")
+   //   ImageResource groovyOutputDisabled();
 
    /*
     * HELP
@@ -306,23 +306,23 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/help/about_Disabled.png")
    ImageResource aboutDisabled();
+
    @Source("../public/images/bundled/help/restServicesDiscovery.png")
    ImageResource restServicesDiscovery();
-   
+
    @Source("../public/images/bundled/help/restServicesDiscovery_Disabled.png")
    ImageResource restServicesDiscoveryDisabled();
 
    /*
     * OUTLINE
     */
-   
+
    @Source("../public/images/bundled/outline/outline.png")
    ImageResource outline();
 
    @Source("../public/images/bundled/outline/outline_Disabled.png")
    ImageResource outlineDisabled();
-   
-   
+
    /*
     * OUTPUT
     */
@@ -370,40 +370,39 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/view/go_to_folder_Disabled.png")
    ImageResource goToFolderDisabled();
-   
+
    /*
     * VERSIONING
     */
    @Source("../public/images/bundled/versioning/view_versions.png")
    ImageResource viewVersions();
-   
+
    @Source("../public/images/bundled/versioning/view_versions_Disabled.png")
    ImageResource viewVersionsDisabled();
-   
+
    @Source("../public/images/bundled/versioning/view_version_content.png")
    ImageResource viewVersionContent();
-   
+
    @Source("../public/images/bundled/versioning/view_version_content_Disabled.png")
    ImageResource viewVersionContentDisabled();
-   
+
    @Source("../public/images/bundled/versioning/restore_version.png")
    ImageResource restoreVersion();
-   
+
    @Source("../public/images/bundled/versioning/restore_version_Disabled.png")
    ImageResource restoreVersionDisabled();
-   
+
    @Source("../public/images/bundled/versioning/older_version.png")
    ImageResource viewOlderVersion();
-   
+
    @Source("../public/images/bundled/versioning/older_version_Disabled.png")
    ImageResource viewOlderVersionDisabled();
-   
+
    @Source("../public/images/bundled/versioning/newer_version.png")
    ImageResource viewNewerVersion();
-   
+
    @Source("../public/images/bundled/versioning/newer_version_Disabled.png")
    ImageResource viewNewerVersionDisabled();
-   
 
    /*
     * WINDOW
@@ -426,49 +425,48 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/window/workspace_Disabled.png")
    ImageResource workspaceDisabled();
-   
+
    /*
     * AUTO COMPLETE
     */
    @Source("../public/images/bundled/outline/function-item.png")
    ImageResource functionItem();
-   
+
    @Source("../public/images/bundled/outline/method-item.png")
    ImageResource methodItem();
-   
+
    @Source("../public/images/bundled/outline/var-item.png")
    ImageResource varItem();
-   
+
    @Source("../public/images/bundled/outline/property-item.png")
    ImageResource propertyItem();
-   
+
    @Source("../public/images/bundled/outline/template.png")
    ImageResource templateItem();
-   
+
    @Source("../public/images/bundled/outline/keyword.png")
    ImageResource keywordItem();
-   
+
    @Source("../public/images/bundled/outline/tag.png")
    ImageResource tagItem();
-   
+
    @Source("../public/images/bundled/outline/attribute.png")
    ImageResource attributeItem();
 
    @Source("../public/images/bundled/documentation/documentation.png")
    ImageResource documentation();
-   
+
    @Source("../public/images/bundled/documentation/documentation_Disabled.png")
    ImageResource documentation_Disabled();
-
 
    /*
     * Maximize, Restore for Panels
     */
-   
+
    @Source("../public/images/bundled/panel/maximize.png")
    ImageResource maximize();
-   
+
    @Source("../public/images/bundled/panel/minimize.png")
    ImageResource restore();
-   
+
 }

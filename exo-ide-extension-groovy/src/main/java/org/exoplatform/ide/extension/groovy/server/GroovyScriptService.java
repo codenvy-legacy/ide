@@ -18,36 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.container.configuration.ConfigurationManager;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
-import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.registry.RegistryService;
-import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
-import org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader;
-import org.exoplatform.services.jcr.ext.script.groovy.NodeScriptKey;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.ObjectFactory;
-import org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher;
-import org.exoplatform.services.rest.ext.groovy.ResourceId;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.impl.ResourcePublicationException;
-import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
-import org.exoplatform.services.script.groovy.GroovyScriptInstantiator;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.jcr.AccessDeniedException;
@@ -69,6 +45,31 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.container.configuration.ConfigurationManager;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
+import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.registry.RegistryService;
+import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
+import org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader;
+import org.exoplatform.services.jcr.ext.script.groovy.NodeScriptKey;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.ObjectFactory;
+import org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher;
+import org.exoplatform.services.rest.ext.groovy.ResourceId;
+import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
+import org.exoplatform.services.rest.impl.ResourceBinder;
+import org.exoplatform.services.rest.impl.ResourcePublicationException;
+import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
+import org.exoplatform.services.script.groovy.GroovyScriptInstantiator;
 
 /**
  * Created by The eXo Platform SAS .
@@ -446,4 +447,26 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    {
       return Response.status(status).entity(t.getMessage()).type("text/plain").build();
    }
+
+   /*
+    * Get list of JAR files include attributes from META-INF/MANIFEST.MF
+    */
+   @GET
+   @Path("/jars")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getAvailableJarLibraries()
+   {
+      try
+      {
+         JarsCollector collector = new JarsCollector();
+         List<Jar> jarList = new ArrayList<Jar>(collector.getJars().values());
+         return Response.ok().entity(jarList).build();
+      }
+      catch (Exception e)
+      {
+         return createErrorResponse(e, HTTPStatus.INTERNAL_ERROR);
+      }
+
+   }
+
 }

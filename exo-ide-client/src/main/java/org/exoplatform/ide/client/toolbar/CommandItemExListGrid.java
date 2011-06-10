@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
+import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.client.IDE;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-
-import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.ImageUtil;
 
 /**
  * Created by The eXo Platform SAS .
@@ -126,7 +126,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          if (item.getCommand().getNormalImage() != null)
          {
             Image image = new Image(item.getCommand().getNormalImage());
-            String imageHTML = ImageUtil.getHTML(image);
+            String imageHTML = ImageHelper.getImageHTML(image);
             title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
          }
          else if (item.getCommand().getIcon() != null)

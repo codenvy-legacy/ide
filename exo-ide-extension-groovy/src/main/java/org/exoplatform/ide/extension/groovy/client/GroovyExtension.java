@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -71,6 +70,7 @@ import org.exoplatform.ide.extension.groovy.client.handlers.DeployGroovyCommandH
 import org.exoplatform.ide.extension.groovy.client.handlers.RunGroovyServiceCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.UndeployGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler;
+import org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
@@ -79,9 +79,10 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -149,6 +150,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
       new ConfigureBuildPathPresenter(eventBus);
+      new AvailableDependenciesPresenter(eventBus);
 
       GroovyClientBundle.INSTANCE.css().ensureInjected();
    }

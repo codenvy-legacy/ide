@@ -97,5 +97,4 @@
 		<when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
 	</replace-with>
 
-
 </module>
