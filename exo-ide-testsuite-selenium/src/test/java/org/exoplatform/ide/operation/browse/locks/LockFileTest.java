@@ -99,7 +99,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.NAVIGATION.saveFileAs(FILE_NAME_1);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.LOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.LOCK_FILE, true);
-      checkFileLocking(FILE_NAME_1, false);
+      checkFileLocking(WS_URL + FOLDER_NAME + "/"+FILE_NAME_1, false);
 
       //----- 3 ------------
       //lock XML file
@@ -109,7 +109,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNLOCK_FILE, true);
       IDE.TOOLBAR.assertButtonEnabled(MenuCommands.Edit.UNLOCK_FILE, true);
 
-      checkFileLocking(FILE_NAME_1, false);
+      checkFileLocking(WS_URL + FOLDER_NAME + "/"+FILE_NAME_1, false);
 
       //----- 4 ------------
       //open new HTML file
