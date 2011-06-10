@@ -67,8 +67,8 @@ public class WorkspaceTest extends BaseTest
       assertTrue(selenium.isElementPresent(SelectWorkspace.OK_BUTTON_ID));
       assertTrue(selenium.isElementPresent(SelectWorkspace.CANCEL_BUTTON_ID));
       assertTrue(selenium.isElementPresent(SelectWorkspace.LIST_GRID_ID));
-      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME_2 + "/"));
-      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL + WS_NAME + "/"));
+      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME_2 + "/"));
+      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME + "/"));
 
       //check Ok button is disabled
       assertFalse(IDE.SELECT_WORKSPACE.getOkButtonState());
