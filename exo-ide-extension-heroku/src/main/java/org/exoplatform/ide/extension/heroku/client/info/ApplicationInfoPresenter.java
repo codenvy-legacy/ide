@@ -228,7 +228,12 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
                   bindDisplay();
                   IDE.getInstance().openView(display.asView());
                }
-
+               //Make first letter of property name to be in upper case.
+               for (Property property : result)
+               {
+                  String name = (property.getName().length() > 1) ? (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1)) : property.getName().toUpperCase();
+                  property.setName(name);
+               }
                Collections.sort(result, new PropertiesComparator());
                display.getApplicationInfoGrid().setValue(result);
             }
