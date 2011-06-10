@@ -89,6 +89,7 @@ public class CreateFolderTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //create folder
       selenium.click("ideCreateFolderFormCreateButton");
+      Thread.sleep(2000);
       //check disapear menu after create of folder
       assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu

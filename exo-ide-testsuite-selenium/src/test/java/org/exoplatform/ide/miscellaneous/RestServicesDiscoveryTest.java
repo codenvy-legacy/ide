@@ -91,29 +91,29 @@ public class RestServicesDiscoveryTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
       assertTrue(selenium.isElementPresent("exoRestServicesDiscoveryOkButton"));
       
-      openNode(Utils.md5("/aa"));
-      waitForElementPresent(Utils.md5("/aa/testService11/"));
-      openNode(Utils.md5("/aa/testService11/"));
-      waitForElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}"));
+      openNode(Utils.md5old("/aa"));
+      waitForElementPresent(Utils.md5old("/aa/testService11/"));
+      openNode(Utils.md5old("/aa/testService11/"));
+      waitForElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
 
-      openNode(Utils.md5("/aa/testService11/Inner/{pathParam}"));
-      waitForElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST");
-      assertTrue(selenium.isElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST"));
-      assertTrue(selenium.isElementPresent(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":GET"));
+      openNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
+      waitForElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
+      assertTrue(selenium.isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST"));
+      assertTrue(selenium.isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":GET"));
 
-      selectNode(Utils.md5("/aa/testService11/Inner/{pathParam}"));
+      selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
 
       assertFalse(selenium.isVisible("ideRestServiceDiscoveryParameters"));
       assertFalse(selenium.isVisible("ideResponseType"));
       assertFalse(selenium.isVisible("ideRequestType"));
 
-      selectNode(Utils.md5("/aa/testService11/Inner/{pathParam}") + ":POST");
+      selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
 
       assertEquals("application/xml", selenium.getValue("ideRequestType"));
 
       assertEquals("*/*", selenium.getValue("ideResponseType"));
 
-      selectNode(Utils.md5("/aa/testService11/") + ":OPTIONS");
+      selectNode(Utils.md5old("/aa/testService11/") + ":OPTIONS");
 
       assertEquals("n/a", selenium.getValue("ideRequestType"));
 

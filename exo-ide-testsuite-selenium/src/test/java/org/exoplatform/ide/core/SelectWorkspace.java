@@ -53,7 +53,7 @@ public class SelectWorkspace extends AbstractTestModule
       waitForElementPresent(LIST_GRID_ID);
       waitForElementPresent(OK_BUTTON_ID);
       waitForElementPresent(CANCEL_BUTTON_ID);
-      String url = BaseTest.ENTRY_POINT_URL + workspaceName;
+      String url = BaseTest.ENTRY_POINT_URL_IDE + workspaceName;
       if (!url.endsWith("/"))
       {
          url += "/";

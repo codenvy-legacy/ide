@@ -118,7 +118,7 @@ public class Utils
    }
 
    /**
-    * Encode string in md5 hash
+    * Encode URL(Add /IDE/ to path) string in md5 hash 
     * @param string to encode
     * @return md5 hash of string
     */
@@ -131,6 +131,38 @@ public class Utils
          m.reset();
          //add /IDE/ path segment to URL be equals with client URL 
          m.update((BaseTest.BASE_URL + "IDE/" + string.substring(BaseTest.BASE_URL.length())).getBytes());
+         byte[] digest = m.digest();
+         BigInteger bigInt = new BigInteger(1, digest);
+         String hashtext = bigInt.toString(16);
+         // Now we need to zero pad it if you actually want the full 32 chars.
+         while (hashtext.length() < 32)
+         {
+            hashtext = "0" + hashtext;
+         }
+         return hashtext;
+      }
+      catch (NoSuchAlgorithmException e)
+      {
+         e.printStackTrace();
+         fail();
+      }
+      return "";
+
+   }
+   
+   /**
+    * Encode string in md5 hash
+    * @param string to encode
+    * @return md5 hash of string
+    */
+   public static String md5old(String string)
+   {
+      MessageDigest m;
+      try
+      {
+         m = MessageDigest.getInstance("MD5");
+         m.reset();
+         m.update(string.getBytes());
          byte[] digest = m.digest();
          BigInteger bigInt = new BigInteger(1, digest);
          String hashtext = bigInt.toString(16);

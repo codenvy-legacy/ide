@@ -95,7 +95,7 @@ public class RESTServiceGetURLTest extends BaseTest
 
       String url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
-      assertTrue((BASE_URL + "rest/private/testService").equals(url));
+      assertTrue((BASE_URL + "IDE/rest/private/testService").equals(url));
       //Close form
       IDE.REST_SERVICE.closeGetURLForm();
 
@@ -105,7 +105,7 @@ public class RESTServiceGetURLTest extends BaseTest
       IDE.REST_SERVICE.openGetURLForm();
       url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
-      assertTrue((BASE_URL + "rest/private/testService/Inner/{pathParam}").equals(url));
+      assertTrue((BASE_URL + "IDE/rest/private/testService/Inner/{pathParam}").equals(url));
 
       //Close form
       IDE.REST_SERVICE.closeGetURLForm();
@@ -115,7 +115,7 @@ public class RESTServiceGetURLTest extends BaseTest
       IDE.REST_SERVICE.openGetURLForm();
       url = IDE.REST_SERVICE.getUrlFromGetURLForm();
 
-      assertTrue((BASE_URL + "rest/private/testService/Inner/{param}/node/{paramList: .+}").equals(url));
+      assertTrue((BASE_URL + "IDE/rest/private/testService/Inner/{param}/node/{paramList: .+}").equals(url));
 
       //Close form
       IDE.REST_SERVICE.closeGetURLForm();
