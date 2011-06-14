@@ -125,6 +125,8 @@ public class UseOfClasspathEntriesTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + PROJECT_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
+     IDE.WORKSPACE.waitForItem(WORKSPACE_URL + PROJECT_NAME + "/"
+         + REST_SERVICE_FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WORKSPACE_URL + PROJECT_NAME + "/"
          + REST_SERVICE_FILE_NAME, false);
 
