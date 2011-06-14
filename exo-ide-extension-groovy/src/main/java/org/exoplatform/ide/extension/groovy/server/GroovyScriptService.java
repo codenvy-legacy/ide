@@ -449,7 +449,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    }
 
    /*
-    * Get list of JAR files include attributes from META-INF/MANIFEST.MF
+    * Get list of JAR files includes attributes from META-INF/MANIFEST.MF
     */
    @GET
    @Path("/jars")

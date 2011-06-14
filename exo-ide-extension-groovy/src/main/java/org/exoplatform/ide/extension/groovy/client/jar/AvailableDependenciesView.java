@@ -45,6 +45,12 @@ import com.google.gwt.user.client.ui.Widget;
 public class AvailableDependenciesView extends ViewImpl implements
 org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.Display
 {
+   
+   private static final String JAR_LIST_ID = "ideAvailableDependenciesJARList";
+   
+   private static final String JAR_ATTRIBUTES_ID = "ideAvailableDependenciesJARAttributesTable";
+   
+   private static final String OK_BUTTON_ID = "ideAvailableDependenciesOkButton";
 
    /**
     * ID of this view.
@@ -113,26 +119,29 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       
       jarsListGrid = new JarFilesListGrid();
       jarsListGrid.setSize("100%", "100%");
-      
-      Image jarsIcon = new Image(GroovyClientBundle.INSTANCE.jarLibrary());
+      jarsListGrid.setID(JAR_LIST_ID);
       
       Border b1 = new Border();
       b1.setSize("100%", "100%");
       b1.add(jarsListGrid);
       
+      Image jarsIcon = new Image(GroovyClientBundle.INSTANCE.jarLibrary());
       jarsTabPanel.addTab("jarList", jarsIcon, "JAR Libraries", b1, false);
       jarsTabPanel.selectTab(0);
 
       attributesListGrid = new AttributesListGrid();
       attributesListGrid.setSize("100%", "100%");
-      Image propertiesIcon = ImageFactory.getImage("properties");
+      attributesListGrid.setID(JAR_ATTRIBUTES_ID);
       
       Border b2 = new Border();
       b2.setSize("100%", "100%");
       b2.add(attributesListGrid);
       
-      propertiesTabPanel.addTab("properties", propertiesIcon, "Properties", b2, false);
+      Image attributesIcon = ImageFactory.getImage("properties");
+      propertiesTabPanel.addTab("properties", attributesIcon, "Attributes", b2, false);
       propertiesTabPanel.selectTab(0);
+      
+      okButton.setButtonId(OK_BUTTON_ID);
    }
 
    /**

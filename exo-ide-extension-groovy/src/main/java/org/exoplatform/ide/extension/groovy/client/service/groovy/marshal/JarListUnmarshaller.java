@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
 import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
@@ -57,10 +57,11 @@ public class JarListUnmarshaller implements Unmarshallable
       {
          JSONObject jarJSONObj = jsonArray.get(i).isObject();
 
-         Jar jar = new Jar(jarJSONObj.get("path").isString().stringValue());
+         String jarPath = jarJSONObj.get("path").isString().stringValue();
+         Jar jar = new Jar(jarPath);
          jarList.add(jar);
 
-         JSONArray propertiesArray = jarJSONObj.get("properties").isArray();
+         JSONArray propertiesArray = jarJSONObj.get("attributes").isArray();
          for (int pi = 0; pi < propertiesArray.size(); pi++)
          {
             JSONObject propertyObject = propertiesArray.get(pi).isObject();
