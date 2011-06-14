@@ -24,26 +24,25 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
 
 /**
- * Control for creating new application on OpenShift.
+ * Control is used for showing OpenShift user's information.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 7, 2011 5:35:09 PM anya $
+ * @version $Id:  Jun 14, 2011 10:47:04 AM anya $
  *
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl
+public class ShowUserInfoControl extends SimpleControl implements IDEControl
 {
-   public CreateApplicationControl()
+   public ShowUserInfoControl()
    {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createApplicationControl(),
-         OpenShiftClientBundle.INSTANCE.createApplicationControlDisabled());
-      setEvent(new CreateApplicationEvent());
-      setDelimiterBefore(true);
+      super(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlId());
+      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlTitle());
+      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlPrompt());
+      setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
+         OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
+      setEvent(new ShowUserInfoEvent());
    }
 
    /**

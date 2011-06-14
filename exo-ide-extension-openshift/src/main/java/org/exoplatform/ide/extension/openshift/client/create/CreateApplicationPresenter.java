@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
@@ -227,7 +228,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
     */
    protected void doCreateApplication()
    {
-      String applicationName = display.getApplicationNameField().getValue();
+      final String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
       OpenShiftClientService.getInstance().createApplication(applicationName, type, workDir,
          new AsyncRequestCallback<AppInfo>()
@@ -256,7 +257,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
                      return;
                   }
                }
-               super.onFailure(exception);
+               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName)));
             }
          });
    }

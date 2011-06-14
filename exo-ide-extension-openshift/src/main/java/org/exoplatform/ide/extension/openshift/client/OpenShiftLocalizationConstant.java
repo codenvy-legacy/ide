@@ -80,7 +80,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Delete application on OpenShift...")
    @Key("control.deleteApplication.prompt")
    String deleteApplicationControlPrompt();
-   
+
    @DefaultMessage("PaaS/OpenShift/Application info...")
    @Key(" control.showApplicationInfo.id")
    String showApplicationInfoControlId();
@@ -92,19 +92,31 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
-   
+
    @DefaultMessage("PaaS/OpenShift")
    @Key("control.openshift.id")
    String openShiftControlId();
-   
+
    @DefaultMessage("OpenShift")
    @Key("control.openshift.title")
    String openShiftControlTitle();
-   
+
    @DefaultMessage("OpenShift")
    @Key("control.openshift.prompt")
    String openShiftControlPrompt();
-   
+
+   @DefaultMessage("PaaS/OpenShift/User info...")
+   @Key("control.showUserInfo.id")
+   String showUserInfoControlId();
+
+   @DefaultMessage("User info...")
+   @Key("control.showUserInfo.title")
+   String showUserInfoControlTitle();
+
+   @DefaultMessage("Show user info...")
+   @Key("control.showUserInfo.prompt")
+   String showUserInfoControlPrompt();
+
    /*Login view*/
    @DefaultMessage("Log in OpenShift")
    @Key("loginView.title")
@@ -144,6 +156,23 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("createApplicationView.type.field")
    String createApplicationViewTypeField();
 
+   /*User info view*/
+   @DefaultMessage("User information")
+   @Key("userInfoView.title")
+   String userInfoViewTitle();
+
+   @DefaultMessage("Login")
+   @Key("userInfoView.field.login")
+   String userInfoViewLoginField();
+
+   @DefaultMessage("Domain")
+   @Key("userInfoView.field.domain")
+   String userInfoViewDomainField();
+
+   @DefaultMessage("Applications")
+   @Key("userInfoView.applications")
+   String userInfoViewApplications();
+
    /*Messages*/
    /**
     * @param domainName domain name
@@ -160,27 +189,31 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Logged in OpenShift successfully.")
    @Key("loginSuccess")
    String loginSuccess();
-   
+
+   @DefaultMessage("Failed to log in OpenShift.")
+   @Key("loginFailed")
+   String loginFailed();
+
    @DefaultMessage("Please, select folder(place for OpenShift application) in browser tree.")
    @Key("selectFolder")
    String selectFolder();
-   
+
    @DefaultMessage("Do you want to delete application <b>{0}</b> on OpenShift?")
    @Key("deleteApplication")
    String deleteApplication(String applicationName);
-   
+
    @DefaultMessage("Delete OpenShift application")
    @Key("deleteApplicationTitle")
    String deleteApplicationTitle();
-   
+
    @DefaultMessage("Application <b>{0}</b> is successfully deleted.")
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess(String applicationName);
-   
+
    @DefaultMessage("OpenShift application information")
    @Key("applicationInfoView.title")
    String applicationInfoViewTitle();
-   
+
    @DefaultMessage("Property")
    @Key("applicationInfoGid.field.name")
    String applicationInfoGridNameField();
@@ -188,25 +221,49 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Value")
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
-   
+
    /*Application properties*/
    @DefaultMessage("Name")
    @Key("application.name")
    String applicationName();
-   
+
    @DefaultMessage("Type")
    @Key("application.type")
    String applicationType();
-   
+
    @DefaultMessage("Public URL")
    @Key("application.publicUrl")
    String applicationPublicUrl();
-   
+
    @DefaultMessage("Git URL")
    @Key("application.gitUrl")
    String applicationGitUrl();
-   
+
    @DefaultMessage("Creation time")
    @Key("application.createTime")
    String applicationCreationTime();
+
+   @DefaultMessage("Express exit code : <b>{0}</b>")
+   @Key("express.exit.code")
+   String expressExitCode(String code);
+
+   @DefaultMessage("Create OpenShift application {0} failed.")
+   @Key("createApplicationFail")
+   String createApplicationFail(String applicationName);
+
+   @DefaultMessage("Create OpenShift domain {0} failed.")
+   @Key("createDomainFail")
+   String createDomainFail(String domainName);
+
+   @DefaultMessage("Delete OpenShift application {0} failed.")
+   @Key("deleteApplicationFail")
+   String deleteApplicationFail(String applicationName);
+
+   @DefaultMessage("Get application information failed.")
+   @Key("getApplicationInfoFail")
+   String getApplicationInfoFail();
+
+   @DefaultMessage("Get user information failed.")
+   @Key("getUserInfoFail")
+   String getUserInfoFail();
 }

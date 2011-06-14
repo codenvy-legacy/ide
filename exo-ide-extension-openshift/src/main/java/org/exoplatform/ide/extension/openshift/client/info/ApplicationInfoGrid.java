@@ -60,7 +60,7 @@ public class ApplicationInfoGrid extends ListGrid<Property>
                @Override
                public String asString()
                {
-                  return "<b>" + property.getName() + "</b>";
+                  return property.getName();
                }
             };
             return html;

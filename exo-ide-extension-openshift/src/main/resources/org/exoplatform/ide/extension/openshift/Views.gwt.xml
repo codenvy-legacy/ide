@@ -35,4 +35,8 @@
    <replace-with class="org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoView">
       <when-type-is class="org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter.Display" />
    </replace-with>
+   
+      <replace-with class="org.exoplatform.ide.extension.openshift.client.user.UserInfoView">
+      <when-type-is class="org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display" />
+   </replace-with>
 </module>

@@ -1,0 +1,42 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.openshift.client.info" xmlns:u="urn:import:org.exoplatform.ide.extension.openshift.client.user">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant"></ui:with>
+   <g:VerticalPanel spacing="10" horizontalAlignment="center" width="100%">
+      <g:VerticalPanel spacing="5" width="100%">
+         <g:HorizontalPanel width="100%">
+            <g:cell verticalAlignment="middle" width="50px">
+               <g:Label text="{locale.userInfoViewLoginField}" height="18px"></g:Label>
+            </g:cell>
+            <g:cell>
+               <f:TextField ui:field="loginField" width="100%" showTitle="false" enabled="false" showDisabled="false"></f:TextField>
+            </g:cell>
+         </g:HorizontalPanel>
+         <g:HorizontalPanel width="100%">
+            <g:cell verticalAlignment="middle" width="50px">
+               <g:Label text="{locale.userInfoViewDomainField}" height="18px"></g:Label>
+            </g:cell>
+            <g:cell>
+               <f:TextField ui:field="domainField" width="100%" showTitle="false" enabled="false" showDisabled="false"></f:TextField>
+            </g:cell>
+         </g:HorizontalPanel>
+      </g:VerticalPanel>
+      <g:HorizontalPanel width="100%" spacing="5">
+         <g:cell width="35%">
+            <f:Border width="100%">
+               <u:ApplicationGrid ui:field="applicationGrid" width="100%" height="120px"></u:ApplicationGrid>
+            </f:Border>
+         </g:cell>
+
+         <g:cell width="65%">
+            <f:Border width="100%">
+               <e:ApplicationInfoGrid ui:field="applicationInfoGrid" width="100%" height="120px"></e:ApplicationInfoGrid>
+            </f:Border>
+         </g:cell>
+      </g:HorizontalPanel>
+      <g:HorizontalPanel height="30px" horizontalAlignment="center">
+         <f:IButton ui:field="okButton" width="90" height="22" title="{locale.okButton}" icon="{resource.okButton.getURL}" disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
+      </g:HorizontalPanel>
+   </g:VerticalPanel>
+</ui:UiBinder> 

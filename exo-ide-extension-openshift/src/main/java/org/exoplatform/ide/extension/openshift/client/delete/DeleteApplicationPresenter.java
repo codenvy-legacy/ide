@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
@@ -108,7 +109,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                   return;
                }
             }
-            super.onFailure(exception);
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.getApplicationInfoFail()));
          }
       });
    }
@@ -171,6 +172,15 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
          {
             eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
                Type.INFO));
+         }
+         
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationFail(name)));
          }
       });
    }

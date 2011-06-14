@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
@@ -204,7 +205,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new LoggedInEvent(true));
-            super.onFailure(exception);
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.loginFailed()));
          }
       });
    }

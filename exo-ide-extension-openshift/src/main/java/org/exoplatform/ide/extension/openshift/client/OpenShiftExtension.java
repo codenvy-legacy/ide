@@ -31,11 +31,13 @@ import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainContr
 import org.exoplatform.ide.extension.openshift.client.controls.DeleteApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationInfoControl;
+import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 /**
  * OpenShift extenstion to be added to IDE.
@@ -69,16 +71,20 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       //Add controls:
       IDE.getInstance().addControl(new OpenShiftControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateDomainControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowUserInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
-
+      
+      new OpenShiftExceptionsHandler(eventBus);
+      
       //Create presenters:
       new LoginPresenter(eventBus);
       new CreateDomainPresenter(eventBus);
       new CreateApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
+      new UserInfoPresenter(eventBus);
    }
 
    /**

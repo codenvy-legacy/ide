@@ -16,17 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.client.info;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+package org.exoplatform.ide.extension.openshift.client.user;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -38,44 +39,49 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
-import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Presenter for getting and displaying application's information.
- * The view must be pointed in Views.gwt.xml.
- * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
+ * @version $Id:  Jun 14, 2011 2:38:17 PM anya $
  *
  */
-public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler,
-   LoggedInHandler
+public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler, LoggedInHandler
 {
    interface Display extends IsView
    {
       HasClickHandlers getOkButton();
 
+      HasValue<String> getLoginField();
+
+      HasValue<String> getDomainField();
+
       ListGridItem<Property> getApplicationInfoGrid();
+
+      ListGridItem<AppInfo> getApplicationGrid();
    }
 
    private Display display;
 
+   private HandlerManager eventBus;
+
    /**
     * @param eventBus events handler
     */
-   public ApplicationInfoPresenter(HandlerManager eventBus)
+   public UserInfoPresenter(HandlerManager eventBus)
    {
-      super(eventBus);
+      this.eventBus = eventBus;
 
-      eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
+      eventBus.addHandler(ShowUserInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -93,15 +99,19 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-   }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoHandler#onShowApplicationInfo(org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEvent)
-    */
-   @Override
-   public void onShowApplicationInfo(ShowApplicationInfoEvent event)
-   {
-      getWorkDir();
+      display.getApplicationGrid().addSelectionHandler(new SelectionHandler<AppInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<AppInfo> event)
+         {
+            if (event.getSelectedItem() != null)
+            {
+               displayAppInfo(event.getSelectedItem());
+            }
+         }
+      });
    }
 
    /**
@@ -117,15 +127,21 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    }
 
    /**
-    * Get application's information.
+    * @see org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoHandler#onShowUserInfo(org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent)
     */
-   public void getApplicationInfo()
+   @Override
+   public void onShowUserInfo(ShowUserInfoEvent event)
    {
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workDir, new AsyncRequestCallback<AppInfo>()
+      getUserInfo();
+   }
+
+   protected void getUserInfo()
+   {
+      OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>()
       {
 
          @Override
-         protected void onSuccess(AppInfo result)
+         protected void onSuccess(RHUserInfo result)
          {
             if (display == null)
             {
@@ -133,17 +149,9 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                bindDisplay();
                IDE.getInstance().openView(display.asView());
             }
-            List<Property> properties = new ArrayList<Property>();
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result.getName()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result.getType()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), result
-               .getPublicUrl()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
-               .getGitUrl()));
-            String time =
-               DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(result.getCreationTime()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
-            display.getApplicationInfoGrid().setValue(properties);
+            display.getLoginField().setValue(result.getRhlogin());
+            display.getDomainField().setValue(result.getNamespace());
+            display.getApplicationGrid().setValue(result.getApps());
          }
 
          /**
@@ -162,10 +170,22 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.getApplicationInfoFail()));
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .getUserInfoFail()));
          }
-
       });
+
+   }
+
+   protected void displayAppInfo(AppInfo appInfo)
+   {
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), appInfo.getName()));
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), appInfo.getType()));
+      String time =
+         DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(appInfo.getCreationTime()));
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
+      display.getApplicationInfoGrid().setValue(properties);
    }
 
    /**
@@ -185,16 +205,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       eventBus.removeHandler(LoggedInEvent.TYPE, this);
       if (!event.isFailed())
       {
-         getApplicationInfo();
+         getUserInfo();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getApplicationInfo();
    }
 }
