@@ -234,6 +234,12 @@
             <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-logreader</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -654,6 +660,7 @@
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
       <module>exo-ide-extension-openshift</module>
+      <module>exo-ide-extension-logreader</module>
 
       <module>exo-ide-docs</module>
 
