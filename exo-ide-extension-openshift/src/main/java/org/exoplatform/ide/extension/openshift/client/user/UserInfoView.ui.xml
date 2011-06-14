@@ -23,15 +23,15 @@
          </g:HorizontalPanel>
       </g:VerticalPanel>
       <g:HorizontalPanel width="100%" spacing="5">
-         <g:cell width="35%">
+         <g:cell width="25%">
             <f:Border width="100%">
-               <u:ApplicationGrid ui:field="applicationGrid" width="100%" height="120px"></u:ApplicationGrid>
+               <u:ApplicationGrid ui:field="applicationGrid" width="100%" height="135px"></u:ApplicationGrid>
             </f:Border>
          </g:cell>
 
-         <g:cell width="65%">
+         <g:cell width="75%">
             <f:Border width="100%">
-               <e:ApplicationInfoGrid ui:field="applicationInfoGrid" width="100%" height="120px"></e:ApplicationInfoGrid>
+               <e:ApplicationInfoGrid ui:field="applicationInfoGrid" width="100%" height="135px"></e:ApplicationInfoGrid>
             </f:Border>
          </g:cell>
       </g:HorizontalPanel>

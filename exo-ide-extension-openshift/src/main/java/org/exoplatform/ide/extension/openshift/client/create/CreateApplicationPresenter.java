@@ -116,10 +116,10 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
     * Types of the application.
     */
    private static String[] APP_TYPES = new String[]{"php-5.3.2", //
-      "wsgi-3.2.1", //
-      "jbossas-7.0.0", //
-      "perl-5.10.1", //
-      "rack-1.1.0"}; //
+    //  "wsgi-3.2.1", //
+    //  "jbossas-7.0.0", //
+    //  "perl-5.10.1", //
+      "rack-1.1.0"};
 
    private Display display;
 

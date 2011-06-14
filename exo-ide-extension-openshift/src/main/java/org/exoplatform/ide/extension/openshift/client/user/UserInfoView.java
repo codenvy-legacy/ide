@@ -28,9 +28,9 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
 {
    public static final String ID = "ideUserInfoView";
 
-   private static final int HEIGHT = 305;
+   private static final int HEIGHT = 320;
 
-   private static final int WIDTH = 530;
+   private static final int WIDTH = 700;
 
    public static final String TYPE = "modal";
 

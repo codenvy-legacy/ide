@@ -182,6 +182,9 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
       List<Property> properties = new ArrayList<Property>();
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), appInfo.getName()));
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), appInfo.getType()));
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), appInfo
+         .getPublicUrl()));
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), appInfo.getGitUrl()));
       String time =
          DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(appInfo.getCreationTime()));
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));

@@ -41,7 +41,6 @@ public class ApplicationGrid extends ListGrid<AppInfo>
    {
       setID(ID);
       initColumns();
-      removeTableHeader();
    }
 
    private void initColumns()
