@@ -388,14 +388,14 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       switch (DOM.eventGetType(event))
       {
          case Event.ONMOUSEDOWN :
-            if (event.getButton() != Event.BUTTON_LEFT)
+            if (event.getButton() == Event.BUTTON_LEFT)
             {
-               return;
+               onMouseDown();
             }
-
-            onMouseDown();
             break;
       }
+      
+      super.onBrowserEvent(event);
    }
 
    /**
