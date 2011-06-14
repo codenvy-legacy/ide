@@ -139,7 +139,7 @@ public class RESTService extends AbstractTestModule
       final String msg = IDE().OUTPUT.getOutputMessageText(numberOfRecord);
 
       final String validateSuccessMsg =
-         "[INFO] " + BaseTest.ENTRY_POINT_URL + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";
+         "[INFO] " + BaseTest.ENTRY_POINT_URL_IDE + BaseTest.WS_NAME + "/" + filePath + " deployed successfully.";
 
       assertEquals(validateSuccessMsg, msg);
    }
