@@ -52,7 +52,7 @@ public class DeleteItemView extends ViewImpl implements
    public static final String ID_OK_BUTTON = "ideDeleteItemFormOkButton";
 
    public static final String ID_CANCEL_BUTTON = "ideDeleteItemFormCancelButton";
-   
+
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.deleteItemTitle();
 
    private HorizontalPanel infoLayout;

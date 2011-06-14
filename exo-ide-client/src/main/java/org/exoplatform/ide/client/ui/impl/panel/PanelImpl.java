@@ -167,7 +167,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       //      this.viewsLayer = viewsLayer;
 
       createMaxinizeRestorePanelButtons();
-      
+
       /*
        * For selenium tests
        */
@@ -194,8 +194,9 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       tabPanel.addTabButton(maximizePanelButton);
       tabPanel.addTabButton(restorePanelButton);
    }
-   
-   private void createMaxinizeRestorePanelButtons() {
+
+   private void createMaxinizeRestorePanelButtons()
+   {
       maximizePanelButton = new TabButton(panelId + "-maximize", maximizeImage, maximizeImage);
       maximizePanelButton.addClickHandler(new ClickHandler()
       {
@@ -215,7 +216,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
          {
             restore();
          }
-      });      
+      });
    }
 
    public void maximize()
@@ -396,7 +397,8 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       @Override
       public void onResize()
       {
-         try {
+         try
+         {
             int left = getAbsoluteLeft();
             int top = getAbsoluteTop();
             int width = getOffsetWidth();
@@ -406,8 +408,9 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
             DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
             DOM.setStyleAttribute(widget.getElement(), "width", "" + width + "px");
             DOM.setStyleAttribute(widget.getElement(), "height", "" + height + "px");
-            
-            if (width == 0 || height == 0) {
+
+            if (width == 0 || height == 0)
+            {
                return;
             }
 
@@ -415,10 +418,12 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
             {
                ((Resizeable)widget).resize(width, height);
             }
-            
-         } catch (Exception e) {
+
+         }
+         catch (Exception e)
+         {
             e.printStackTrace();
-         }         
+         }
       }
 
       public void repositionOnly()
@@ -437,7 +442,6 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       {
          return;
       }
-
       tabPanel.selectTab(event.getViewId());
    }
 

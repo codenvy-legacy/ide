@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -46,11 +50,7 @@ import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.

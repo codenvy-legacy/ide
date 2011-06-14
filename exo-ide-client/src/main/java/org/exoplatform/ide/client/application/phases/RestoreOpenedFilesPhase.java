@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import com.google.gwt.event.shared.GwtEvent;
-
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
@@ -42,11 +41,8 @@ import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * 
@@ -56,8 +52,7 @@ import java.util.Map;
  * @version $
  */
 
-public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHandler, 
-EditorFileOpenedHandler
+public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHandler, EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -75,32 +70,20 @@ EditorFileOpenedHandler
    private List<String> filesToOpen;
 
    private String activeFileURL;
-   
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
-   public RestoreOpenedFilesPhase(HandlerManager eventbus, ApplicationSettings applicationSettings)
+   private boolean isLoadingOpenedFiles = false;
+
+   private boolean isRestoringOpenedFiles = false;
+
+   public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings)
    {
-      this.eventBus = eventbus;
+      this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
 
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      handlerRegistrations.put(ExceptionThrownEvent.TYPE, eventBus.addHandler(ExceptionThrownEvent.TYPE, this));
-   }
-   
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
-   {
-      for (HandlerRegistration h : handlerRegistrations.values())
-      {
-         h.removeHandler();
-      }
-      handlerRegistrations.clear();
+
+      eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
    @Override
@@ -119,6 +102,9 @@ EditorFileOpenedHandler
          defaultEditors = new LinkedHashMap<String, String>();
       }
 
+      isLoadingOpenedFiles = true;
+      isRestoringOpenedFiles = false;
+
       preloadNextFile();
    }
 
@@ -126,15 +112,12 @@ EditorFileOpenedHandler
    {
       if (filesToLoad.size() == 0)
       {
-         fileToLoad = null;
-         removeHandlers();
-         eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+         isLoadingOpenedFiles = false;
          openFilesInEditor();
          return;
       }
 
       String href = filesToLoad.get(0);
-
       fileToLoad = new File(href);
       filesToLoad.remove(0);
 
@@ -158,17 +141,13 @@ EditorFileOpenedHandler
       });
    }
 
-   public void onError(ExceptionThrownEvent event)
-   {
-      openedFiles.remove(fileToLoad.getHref());
-      preloadNextFile();
-   }
-
    private void openFilesInEditor()
    {
+      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+
+      isRestoringOpenedFiles = true;
       activeFileURL = applicationSettings.getValueAsString("active-file");
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
-      handlerRegistrations.put(EditorFileOpenedEvent.TYPE, eventBus.addHandler(EditorFileOpenedEvent.TYPE, this));
       openNextFileInEditor();
    }
 
@@ -176,25 +155,23 @@ EditorFileOpenedHandler
    {
       if (filesToOpen.size() == 0)
       {
-         removeHandlers();
+         isRestoringOpenedFiles = false;
 
-         if (activeFileURL != null)
+         new Timer()
          {
-            File activeFile = openedFiles.get(activeFileURL);
-            if (activeFile != null)
+            @Override
+            public void run()
             {
-               eventBus.fireEvent(new EditorChangeActiveFileEvent(activeFile));
+               changeActiveFile();
             }
-         }
+         }.schedule(100);
 
          return;
       }
 
       String fileURL = filesToOpen.get(0);
       filesToOpen.remove(0);
-
       File file = openedFiles.get(fileURL);
-
       try
       {
          String editorDescription = defaultEditors.get(file.getContentType());
@@ -205,12 +182,42 @@ EditorFileOpenedHandler
       {
          e.printStackTrace();
       }
-
    }
 
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   private void changeActiveFile()
    {
-      openNextFileInEditor();
+      if (activeFileURL != null)
+      {
+         File activeFile = openedFiles.get(activeFileURL);
+         if (activeFile != null)
+         {
+            eventBus.fireEvent(new EditorChangeActiveFileEvent(activeFile));
+         }
+      }
+   }
+
+   public void onError(ExceptionThrownEvent event)
+   {
+      if (isLoadingOpenedFiles)
+      {
+         preloadNextFile();
+         return;
+      }
+   }
+
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (isLoadingOpenedFiles)
+      {
+         preloadNextFile();
+      }
+
+      if (isRestoringOpenedFiles)
+      {
+         openNextFileInEditor();
+         return;
+      }
    }
 
 }

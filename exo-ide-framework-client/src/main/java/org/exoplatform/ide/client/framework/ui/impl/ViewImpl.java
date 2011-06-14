@@ -211,7 +211,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public void activate()
    {
-      if (isViewVisible())
+      if (!isViewVisible())
       {
          setViewVisible();
       }
@@ -394,7 +394,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
             }
             break;
       }
-      
+
       super.onBrowserEvent(event);
    }
 
@@ -419,7 +419,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       /*
        *  Attribute for Selenium Tests
        */
-      getElement().setAttribute("is-active", "" + activated);      
+      getElement().setAttribute("is-active", "" + activated);
    }
 
    /**
@@ -475,7 +475,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    public void setViewVisible()
    {
       SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
-
       for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
       {
          setViewVisibleHandler.onSetViewVisible(event);
