@@ -22,9 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -47,8 +44,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
    private final static String TEST_FOLDER = EditFileInWysiwygEditorTest.class.getSimpleName();
 
-   private final static String DIALOG_ASK_REOPEN =
-      "Do you want to reopen Copy Of Untitled file.html in selected editor?";
+   //private final static String DIALOG_ASK_REOPEN =
+   // "Do you want to reopen Copy Of Untitled file.html in selected editor?";
 
    @Test
    public void editFileInWysiwygEditor() throws Exception
@@ -111,23 +108,27 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
       assertEquals("Table Properties", selenium.getText("//div[@class='cke_dialog_body']/div"));
 
-      //      //TODO fix problem in issue IDE-762
-      //      //------ 6 ---------------
-      //      //type qwe to Height field
-      //      selenium
-      //         .typeKeys(
-      //            "//table[@class='cke_dialog_contents']/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/div/table/tbody//tr[2]/td/table/tbody/tr/td/div/div[2]/div/input",
-      //            "qwe");
-      //
-      //      //click Ok button
-      //      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
-      //
-      //      //warning dialog
-      //      
-      //      //------ 7 ---------------
-      //      //click Ok button in warning dialog
+      //TODO fix problem in issue IDE-762
+      //------ 6 ---------------
+      //type qwe to Height field
+      selenium
+         .typeKeys(
+            "//table[@class='cke_dialog_contents']/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/div/table/tbody//tr[2]/td/table/tbody/tr/td/div/div[2]/div/input",
+            "qwe");
+
+      //click Ok button
+      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
+
+      //warning dialog
+
+      //------ 7 ---------------
+      //click Ok button in warning dialog
+      waitForElementPresent("exoWarningDialog");
+      selenium.click("//div[@id='exoWarningDialogOkButton']");
+      waitForElementNotPresent("exoWarningDialog");
 
       //click Cancel button in Table Properties dialog
+      waitForElementPresent("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
       selenium.click("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
       Thread.sleep(TestConstants.SLEEP);
       //check Table Properties dialog disappeared
@@ -254,7 +255,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       assertEquals(table2x3FromCodeEditor, textFromCodeEditor);
 
-      //      //------ 15 ---------------
+      //TODO selected items dosen't work in IDE 1.2.0
+      //------ 15 ---------------
       //      deleteSelectedItems();
       //      checkDeleteConfirmationDialogOfModifiedText();
       //      
