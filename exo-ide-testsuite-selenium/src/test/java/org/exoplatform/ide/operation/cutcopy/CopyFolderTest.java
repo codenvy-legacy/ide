@@ -38,14 +38,14 @@ import org.junit.Test;
 public class CopyFolderTest extends BaseTest
 {
 
-   private static final String FILE_1 = "test"; 
-   
+   private static final String FILE_1 = "test";
+
    private final static String FOLDER_1 = "Test 1";
 
    private final static String FOLDER_1_1 = "Test 1.1";
-   
+
    private static final String FILE_CONTENT_1 = "file content";
-   
+
    /**
     * BeforeClass create such structure:
     * FOLDER_1
@@ -58,30 +58,30 @@ public class CopyFolderTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" +FOLDER_1_1);
-         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/"  + FOLDER_1_1 + "/" + FILE_1);
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1 + "/" + FOLDER_1_1);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/"
+            + FOLDER_1_1 + "/" + FILE_1);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL +FOLDER_1);
-         VirtualFileSystemUtils.delete(WS_URL +FOLDER_1_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1);
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_1_1);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
-   
+
    /*
     * Create folder "/Test 1"
     * Create folder "/Test 1/Test 1.1" 
@@ -113,11 +113,12 @@ public class CopyFolderTest extends BaseTest
    public void copyOperationTestIde116() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/");
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1, false);
+
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1,
+         false);
 
       /* 
       * Select folder "/Test 1/Test 1.1"
@@ -154,43 +155,43 @@ public class CopyFolderTest extends BaseTest
        */
       IDE.WORKSPACE.selectRootItem();
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
-      
+
       /*
        * Check new folder appeared in root folder
        */
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/");      
+
+      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1 + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_1_1 + "/");
 
       /*
        * Change text in file.
        */
-     IDE.EDITOR.typeTextIntoEditor(0, "updated");
+      IDE.EDITOR.typeTextIntoEditor(0, "updated");
 
       saveCurrentFile();
 
       /* 
        * Close opened file
        */
-     IDE.EDITOR.closeFile(0);
-      
+      IDE.EDITOR.closeFile(0);
+
       /* 
        * Open "/Test 1.1/test.groovy"
        */
-     IDE.WORKSPACE.selectRootItem();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1_1 + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1_1 + "/" + FILE_1);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1_1 + "/" + FILE_1, false);
 
       /*
        * Check file content
        */
-      assertEquals(FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(0));
    }
 
 }
