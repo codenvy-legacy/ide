@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
@@ -72,7 +72,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
          {
             if (result.size() == 0)
             {
-               Dialogs.getInstance().showError(Messages.REMOTE_LIST_FAILED);
+               Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
                return;
             }
 
@@ -83,7 +83,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.REMOTE_LIST_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
             Dialogs.getInstance().showError(errorMessage);
          }
       });
@@ -119,7 +119,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.BRANCHES_LIST_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchesListFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 import java.util.List;
@@ -135,7 +135,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    {
       if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof Folder))
       {
-         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
       
@@ -156,7 +156,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          @Override
          protected void onSuccess(WorkDirResponse result)
          {
-            Dialogs.getInstance().showInfo(Messages.REPOSITORY_ALREADY_EXISTS);
+            Dialogs.getInstance().showInfo(GitExtension.MESSAGES.repositoryAlreadyExists());
          }
 
          @Override
@@ -184,7 +184,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.INIT_SUCCESS, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
@@ -193,7 +193,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : Messages.INIT_FAILED;
+                  : GitExtension.MESSAGES.initFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

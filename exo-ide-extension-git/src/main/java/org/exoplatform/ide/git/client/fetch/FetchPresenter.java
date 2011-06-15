@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
@@ -224,7 +224,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(Messages.FETCH_SUCCESS + "<b>" + remoteUrl + "</b>", Type.INFO));
+               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
             }
 
@@ -232,8 +232,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
             protected void onFailure(Throwable exception)
             {
                String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : Messages.FETCH_FAIL + "<b>" + remoteUrl
-                     + "</b>";
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.fetchFail(remoteUrl);
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });

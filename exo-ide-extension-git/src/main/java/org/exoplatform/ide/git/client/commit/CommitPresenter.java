@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.git.client.commit;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,6 +25,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -37,8 +36,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.shared.Revision;
 
 import java.util.Date;
@@ -192,7 +191,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : Messages.COMMIT_FAILED;
+                  : GitExtension.MESSAGES.commitFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

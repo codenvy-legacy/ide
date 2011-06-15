@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 
 /**
  * Presenter for add changes to index view.
@@ -183,7 +183,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.ADD_SUCCESS));
+            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
@@ -192,7 +192,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : Messages.ADD_FAILED;
+                  : GitExtension.MESSAGES.addFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

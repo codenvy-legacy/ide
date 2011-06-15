@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.List;
 
@@ -170,7 +170,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    {
       if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof Folder))
       {
-         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
 
@@ -207,7 +207,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.CLONE_SUCCESS, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
@@ -216,7 +216,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          {
             String errorMessage =
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : Messages.CLONE_FAILED;
+                  : GitExtension.MESSAGES.cloneFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

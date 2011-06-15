@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
@@ -189,7 +189,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.LOG_FAILED;
+            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -211,14 +211,14 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent(Messages.RESET_SUCCESSFULLY, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
          }
 
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.RESET_FAIL;
+            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

@@ -37,8 +37,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.DiffResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
@@ -328,7 +328,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          {
             exception.printStackTrace();
             nothingToDisplay(null);
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.LOG_FAILED;
+            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -400,7 +400,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             protected void onFailure(Throwable exception)
             {
                nothingToDisplay(revision);
-               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.DIFF_FAILED;
+               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
@@ -435,7 +435,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                {
                   nothingToDisplay(revision);
                   String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : Messages.DIFF_FAILED;
+                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
                   eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
                }
             });

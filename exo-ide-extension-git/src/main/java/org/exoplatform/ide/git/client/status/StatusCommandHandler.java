@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.GitFile;
@@ -107,7 +107,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          @Override
          protected void onFailure(Throwable exception)
          {
-            Dialogs.getInstance().showInfo(Messages.NOT_GIT_REPOSITORY);
+            Dialogs.getInstance().showInfo(GitExtension.MESSAGES.notGitRepository());
          }
       });
    }
@@ -154,7 +154,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.STATUS_FAILED;
+            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() :GitExtension.MESSAGES.statusFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
          }
       });

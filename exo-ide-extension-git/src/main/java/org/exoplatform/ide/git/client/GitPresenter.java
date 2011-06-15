@@ -79,7 +79,7 @@ public abstract class GitPresenter implements ItemsSelectedHandler
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
-         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
 
@@ -98,7 +98,7 @@ public abstract class GitPresenter implements ItemsSelectedHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               Dialogs.getInstance().showError(Messages.NOT_GIT_REPOSITORY);
+               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
             }
          });
    }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -64,6 +66,9 @@ import org.exoplatform.ide.git.client.status.StatusCommandHandler;
  */
 public class GitExtension extends Extension implements InitializeServicesHandler
 {
+
+   public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
+   
    private HandlerManager eventBus;
    
    /**

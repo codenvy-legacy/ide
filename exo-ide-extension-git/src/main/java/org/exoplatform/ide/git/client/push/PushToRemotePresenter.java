@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
@@ -211,13 +211,13 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(Messages.PUSH_SUCCESS + "<b>" + remote + "</b>", Type.INFO));
+               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : Messages.PUSH_FAIL;
+               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.pushFail();
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });

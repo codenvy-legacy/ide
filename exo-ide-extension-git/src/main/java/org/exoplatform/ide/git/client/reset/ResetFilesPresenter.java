@@ -33,8 +33,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
@@ -151,7 +151,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          {
             if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
             {
-               Dialogs.getInstance().showInfo(Messages.NOTHING_TO_COMMIT);
+               Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
                return;
             }
 
@@ -171,7 +171,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : Messages.STATUS_FAILED;
+            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
             eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
@@ -199,7 +199,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             protected void onSuccess(String result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new OutputEvent(Messages.RESET_FILES_SUCCESSFULLY, Type.INFO));
+               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
                eventBus.fireEvent(new RefreshBrowserEvent());
             }
 
@@ -207,7 +207,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             protected void onFailure(Throwable exception)
             {
                String errorMassage =
-                  (exception.getMessage() != null) ? exception.getMessage() : Messages.RESET_FILES_FAILED;
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
                eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });

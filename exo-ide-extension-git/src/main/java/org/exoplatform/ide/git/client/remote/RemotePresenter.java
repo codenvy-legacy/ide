@@ -37,8 +37,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.List;
@@ -201,7 +201,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.REMOTE_LIST_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
             Dialogs.getInstance().showError(errorMessage);
          }
       });
@@ -248,7 +248,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.REMOTE_ADD_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -302,7 +302,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.REMOTE_DELETE_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

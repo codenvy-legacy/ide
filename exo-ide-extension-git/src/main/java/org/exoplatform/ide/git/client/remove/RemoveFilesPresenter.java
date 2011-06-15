@@ -33,8 +33,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.GitFile;
 
@@ -150,7 +150,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
          {
             if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
             {
-               Dialogs.getInstance().showInfo(Messages.NOTHING_TO_COMMIT);
+               Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
                return;
             }
 
@@ -170,7 +170,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() : Messages.STATUS_FAILED;
+            String errorMassage = (exception.getMessage() != null) ? exception.getMessage() :GitExtension.MESSAGES.statusFailed();
             eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
          }
       });
@@ -205,7 +205,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
             protected void onFailure(Throwable exception)
             {
                String errorMassage =
-                  (exception.getMessage() != null) ? exception.getMessage() : Messages.REMOVE_FILES_FAILED;
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.removeFilesFailed();
                eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });

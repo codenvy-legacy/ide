@@ -37,8 +37,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.Messages;
 import org.exoplatform.ide.git.shared.Branch;
 
 import java.util.List;
@@ -211,7 +211,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.BRANCHES_LIST_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchesListFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -265,7 +265,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.BRANCH_CREATE_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchCreateFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -295,7 +295,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.BRANCH_CHECKOUT_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchCheckoutFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -345,7 +345,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          protected void onFailure(Throwable exception)
          {
             String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : Messages.BRANCH_DELETE_FAILED;
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.branchDeleteFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });

@@ -40,7 +40,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.Messages;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 import java.util.ArrayList;
@@ -186,7 +186,7 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
-         Dialogs.getInstance().showInfo(Messages.SELECTED_ITEMS_FAIL);
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
 
@@ -205,7 +205,7 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
             @Override
             protected void onFailure(Throwable exception)
             {
-               Dialogs.getInstance().showError(Messages.NOT_GIT_REPOSITORY);
+               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
             }
          });
    }
