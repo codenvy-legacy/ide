@@ -55,6 +55,7 @@ public class GoToLineTest extends BaseTest
 
 
       //Go to menu and click "View->Go To Line".
+      waitForElementPresent("//td[@class='exo-menuBarItem'and text()='Edit']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitForGoToLineForm();
       assertTrue(selenium.isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
