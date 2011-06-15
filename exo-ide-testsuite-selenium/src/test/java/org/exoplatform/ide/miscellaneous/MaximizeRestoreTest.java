@@ -49,7 +49,7 @@ public class MaximizeRestoreTest extends BaseTest
    public void maximizeRestoreNavigationPanel() throws Exception
    {
       //prepare file
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.NAVIGATION);
       IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, true);
