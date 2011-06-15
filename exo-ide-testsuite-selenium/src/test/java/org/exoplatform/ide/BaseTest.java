@@ -848,6 +848,11 @@ public abstract class BaseTest
       return APPLICATION_URL.equals(IdeAddress.STANDALONE.getApplicationUrl());
    }
 
+   protected static boolean isRunIdeAsShell()
+   {
+      return APPLICATION_URL.equals(IdeAddress.SHELL.getApplicationUrl());
+   }   
+   
    protected static boolean isRunTestUnderWindowsOS()
    {
       return selenium.getEval("/Win/.test(navigator.platform)").equals("true");

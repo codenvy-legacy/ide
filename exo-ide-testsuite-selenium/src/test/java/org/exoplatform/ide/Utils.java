@@ -130,7 +130,16 @@ public class Utils
          m = MessageDigest.getInstance("MD5");
          m.reset();
          //add /IDE/ path segment to URL be equals with client URL 
-         m.update((BaseTest.BASE_URL + "IDE/" + string.substring(BaseTest.BASE_URL.length())).getBytes());
+
+         if (BaseTest.isRunIdeAsShell())
+         {
+            m.update(string.getBytes());
+         }
+         else
+         {
+            m.update((BaseTest.BASE_URL + "IDE/" + string.substring(BaseTest.BASE_URL.length())).getBytes());            
+         }
+         
          byte[] digest = m.digest();
          BigInteger bigInt = new BigInteger(1, digest);
          String hashtext = bigInt.toString(16);
