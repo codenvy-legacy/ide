@@ -61,17 +61,83 @@ public class JarsCollector
     */
    public JarsCollector() throws Exception
    {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      assert classLoader != null;
+      String javaClassPath = System.getProperty("java.class.path");
+      getJarsFromClasspath(javaClassPath);
 
-      String classPath = System.getProperty("java.class.path");
-      String[] classPathEntries = classPath.split(":");
+      String javaExtDirs = System.getProperty("java.ext.dirs");
+      getJarsFromClasspath(javaExtDirs);
+
+      String javaLibraryPath = System.getProperty("java.library.path");
+      getJarsFromClasspath(javaLibraryPath);
+
+      String sunBootLibraryPath = System.getProperty("sun.boot.library.path");
+      getJarsFromClasspath(sunBootLibraryPath);
+
+      String catalinaBase = System.getProperty("catalina.base");
+      String catalinaHome = System.getProperty("catalina.home");
+
+      String commonLoaderPath = System.getProperty("common.loader");
+      String[] commonLoaderPathEntries = commonLoaderPath.split(",");
+      for (String commonLoaderPathEntry : commonLoaderPathEntries)
+      {
+         if (commonLoaderPathEntry.indexOf("${catalina.base}") >= 0)
+         {
+            commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.base}", catalinaBase);
+         }
+
+         if (commonLoaderPathEntry.indexOf("${catalina.home}") >= 0)
+         {
+            commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.home}", catalinaHome);
+         }
+
+         getJarsFromClasspath(commonLoaderPathEntry);
+      }
+   }
+
+   /**
+    * Get list of JAR files from classpath entry.
+    * 
+    * @param entry
+    * @throws Exception
+    */
+   private void getJarsFromEntry(String entry) throws Exception
+   {
+      String path = URLDecoder.decode(entry, "UTF-8");
+      File file = new File(path);
+      if (file.exists() && file.isFile())
+      {
+         readJARManifest(file.getAbsolutePath());
+         return;
+      }
+
+      if (file.exists() && file.isDirectory())
+      {
+         File[] files = file.listFiles();
+
+         for (File f : files)
+         {
+            if (f.getName().endsWith(".jar"))
+            {
+               readJARManifest(f.getAbsolutePath());
+            }
+         }
+      }
+   }
+
+   /**
+    * Get list of JAR files from classpath.
+    * 
+    * @param classPath
+    * @throws Exception
+    */
+   private void getJarsFromClasspath(String classPath) throws Exception
+   {
+      String pathSeparator = System.getProperty("path.separator");
+
+      String[] classPathEntries = classPath.split(pathSeparator);
       for (String classPathEntry : classPathEntries)
       {
-         if (!jars.containsKey(classPathEntry))
-         {
-            readJARManifest(classPathEntry);
-         }
+         getJarsFromEntry(classPathEntry);
       }
    }
 
@@ -80,18 +146,11 @@ public class JarsCollector
     * 
     * @param jarPath
     */
-   private void readJARManifest(String jarPath)
+   private void readJARManifest(String path)
    {
       try
       {
-         String jarFilePath = URLDecoder.decode(jarPath, "UTF-8");
-         File file = new File(jarFilePath);
-         if (!file.exists() || !file.isFile())
-         {
-            return;
-         }
-
-         JarFile jarFile = new JarFile(jarFilePath);
+         JarFile jarFile = new JarFile(path);
          ZipEntry manifestZipEntry = jarFile.getEntry(MANIFEST);
          if (manifestZipEntry == null)
          {
@@ -102,8 +161,8 @@ public class JarsCollector
          Manifest manifest = new Manifest(in);
          Attributes attributes = manifest.getMainAttributes();
 
-         Jar jar = new Jar(jarPath);
-         jars.put(jarPath, jar);
+         Jar jar = new Jar(path);
+         jars.put(path, jar);
 
          Iterator<Object> iter = attributes.keySet().iterator();
          while (iter.hasNext())
@@ -115,12 +174,16 @@ public class JarsCollector
       }
       catch (Exception e)
       {
-         System.out.println("Error reading JAR " + jarPath);
-         System.out.println("Message:  " + e.getMessage());
+         System.out.println("Error reading JAR " + path);
          e.printStackTrace();
       }
    }
 
+   /**
+    * Get list of JAR files with attributes from MANIFEST.MF.
+    * 
+    * @return
+    */
    public Map<String, Jar> getJars()
    {
       return jars;
