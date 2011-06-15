@@ -177,7 +177,7 @@ public class ClassInfoStrorage implements Startable
 
             for (String jarFile : fileFinder.getFileList())
             {
-               LOG.info("Load ClassInfo from jar -" + jarFile);
+               LOG.debug("Load ClassInfo from jar -" + jarFile);
                List<String> fqns = new ArrayList<String>();
 
                if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
@@ -188,7 +188,7 @@ public class ClassInfoStrorage implements Startable
                {
                   for (String pkg : entry.getIncludePkgs())
                   {
-                     LOG.info("Load ClassInfo from - " + pkg);
+                     LOG.debug("Load ClassInfo from - " + pkg);
                      fqns.addAll(ClassNamesExtractor.getCompiledClassesFromJar(jarFile, pkg));
                   }
                }
@@ -201,13 +201,13 @@ public class ClassInfoStrorage implements Startable
                   }
                   catch (Exception e)
                   {
-                     LOG.warn("Could not ad class " + fqn);
+                     LOG.debug("Could not ad class " + fqn);
                      if (LOG.isDebugEnabled())
                         e.printStackTrace();
                   }
                   catch (NoClassDefFoundError e)
                   {
-                     LOG.warn(e.getMessage());
+                     LOG.debug(e.getMessage());
                      if (LOG.isDebugEnabled())
                         e.printStackTrace();
                   }

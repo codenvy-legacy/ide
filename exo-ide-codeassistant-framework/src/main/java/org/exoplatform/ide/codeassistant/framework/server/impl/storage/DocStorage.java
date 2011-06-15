@@ -155,7 +155,7 @@ public class DocStorage implements Startable
             {
                try
                {
-                  LOG.info("Load JavaDoc from jar - " + jarFile);
+                  LOG.debug("Load JavaDoc from jar - " + jarFile);
                   if (entry.getIncludePkgs() == null || entry.getIncludePkgs().isEmpty())
                   {
                      Map<String, GroovyRootDoc> roots = DocExtractor.extract(jarFile);
@@ -174,7 +174,7 @@ public class DocStorage implements Startable
                   {
                      for (String pkgs : entry.getIncludePkgs())
                      {
-                        LOG.info("Load JavaDoc from - " + pkgs);
+                        LOG.debug("Load JavaDoc from - " + pkgs);
                         Map<String, GroovyRootDoc> roots = DocExtractor.extract(jarFile, pkgs);
                         Set<String> keys = roots.keySet();
                         for (String key : keys)
@@ -191,7 +191,7 @@ public class DocStorage implements Startable
                }
                catch (Exception e)
                {
-                  LOG.error("Could not load JavaDoc from " + jarFile);
+                  LOG.debug("Could not load JavaDoc from " + jarFile);
                }
 
             }
@@ -199,7 +199,7 @@ public class DocStorage implements Startable
          }
 
          session.save();
-         LOG.info("Load javadoc complete");
+         LOG.debug("Load javadoc complete");
       }
       catch (RepositoryException e)
       {
@@ -215,85 +215,7 @@ public class DocStorage implements Startable
          //TODO:need fix status code
          throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
       }
-      //      catch (IOException e)
-      //      {
-      //         if (LOG.isDebugEnabled())
-      //            e.printStackTrace();
-      //         //TODO:need fix status code
-      //         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
-      //      }
-      //      catch (RecognitionException e)
-      //      {
-      //         if (LOG.isDebugEnabled())
-      //            e.printStackTrace();
-      //      }
-      //      catch (TokenStreamException e)
-      //      {
-      //         if (LOG.isDebugEnabled())
-      //            e.printStackTrace();
-      //      }
    }
-
-   //   /**
-   //    * Extract javaDoc from java source from getting package and save it. 
-   //    * 
-   //    * @param javaSrcPath
-   //    * @param packageName
-   //    * @throws SaveDocException
-   //    */
-   //   @POST
-   //   @Path("/jar-source")
-   //   public void addDocs(@QueryParam("jar") String jar, @QueryParam("package") String packageName)
-   //      throws SaveDocException
-   //   {
-   //
-   //      try
-   //      {
-   //         Session session = JcrUtils.getSession(repositoryService, sessionProviderService, wsName);
-   //
-   //         Map<String, GroovyRootDoc> roots = DocExtractor.extract(jar, packageName);
-   //         Set<String> keys = roots.keySet();
-   //         for (String key : keys)
-   //         {
-   //            GroovyClassDoc[] docs = roots.get(key).classes();
-   //            for (GroovyClassDoc doc : docs)
-   //            {
-   //               putDoc(session, doc, key + "." + doc.name());
-   //            }
-   //         }
-   //      }
-   //      catch (RepositoryException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO:need fix status code
-   //         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
-   //      }
-   //      catch (RepositoryConfigurationException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO:need fix status code
-   //         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
-   //      }
-   //      catch (IOException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //         //TODO:need fix status code
-   //         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
-   //      }
-   //      catch (RecognitionException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //      }
-   //      catch (TokenStreamException e)
-   //      {
-   //         if (LOG.isDebugEnabled())
-   //            e.printStackTrace();
-   //      }
-   //   }
 
    /**
     * Adding to storage java doc by classes
@@ -398,7 +320,7 @@ public class DocStorage implements Startable
             // newInstance(Class, int)
 
             if (LOG.isDebugEnabled())
-               LOG.warn("Tryed ad name with same name and parameters.");
+               LOG.debug("Tryed ad name with same name and parameters.");
          }
 
       }
