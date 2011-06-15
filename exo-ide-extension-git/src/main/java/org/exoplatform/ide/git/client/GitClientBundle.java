@@ -192,4 +192,16 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/branch/current.png")
    ImageResource currentBranch();
+
+   @Source("org/exoplatform/ide/git/images/controls/remote_Disabled.png")
+   ImageResource remoteDisabled();
+
+   @Source("org/exoplatform/ide/git/images/controls/remote.png")
+   ImageResource remote();
+
+   @Source("org/exoplatform/ide/git/images/controls/revert_Disabled.png")
+   ImageResource revertDisabled();
+
+   @Source("org/exoplatform/ide/git/images/controls/revert.png")
+   ImageResource revert();
 }

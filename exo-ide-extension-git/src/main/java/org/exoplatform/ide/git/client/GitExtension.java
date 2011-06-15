@@ -37,6 +37,7 @@ import org.exoplatform.ide.git.client.control.FetchControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.PullControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
+import org.exoplatform.ide.git.client.control.RemoteControl;
 import org.exoplatform.ide.git.client.control.RemotesControl;
 import org.exoplatform.ide.git.client.control.RemoveFilesControl;
 import org.exoplatform.ide.git.client.control.ResetFilesControl;
@@ -86,6 +87,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new FetchControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new PullControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new RemoteControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RemotesControl(), DockTarget.NONE, false);
       
       IDE.getInstance().addControl(new ShowHistoryControl(), DockTarget.NONE, false);

@@ -18,42 +18,38 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
 
 /**
- * Control for reseting the branch's head to commit.
- * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Apr 14, 2011 5:58:58 PM anya $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: $
  *
  */
-public class ResetToCommitControl extends GitControl
+public class RemoteControl extends SimpleControl implements IDEControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Reset...";
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Reset...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Reset to revision...";
-
-   /**
-    * @param id
-    */
-   public ResetToCommitControl()
+   public static final String ID = "Git/Remote"; 
+   
+   
+   public RemoteControl()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ResetToCommitEvent());
-      setImages(GitClientBundle.INSTANCE.revert(), GitClientBundle.INSTANCE.revertDisabled());
+      setTitle("Remote");
+      setPrompt("Remote");
+      setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
    }
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
+    */
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
+      setVisible(true);
+      setEnabled(true);
+   }
+
 }
