@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
@@ -90,6 +92,8 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
          prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
          statusMessage = statusMessage.substring(prefix.length());
+         statusMessage = URL.decodePathSegment(statusMessage);
+         
          if (statusMessage.endsWith("/"))
          {
             statusMessage = statusMessage.substring(0, statusMessage.length() - 1);

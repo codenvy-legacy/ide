@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -33,8 +31,9 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.Version;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -92,7 +91,7 @@ public class ItemVersionsUnmarshaller implements Unmarshallable
 
       for (Resource ver : resources)
       {
-         Version version = new Version(URL.decode(ver.getHref()));
+         Version version = new Version(ver.getHref());
 
          version .getProperties().clear();
          version .getProperties().addAll(ver.getProperties());

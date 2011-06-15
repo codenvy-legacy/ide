@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -158,7 +160,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
          return;
       }
 
-      String destination = folderToPaste + item.getName();
+      String destination = folderToPaste + URL.encodePathSegment(item.getName());
       VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback()
       {
          @Override
@@ -236,8 +238,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
          return;
       }
 
-      String destination = folderToPaste + item.getName();
-
+      String destination = folderToPaste + URL.encodePathSegment(item.getName());
       
       VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback()
       {

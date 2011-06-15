@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.module.vfs.webdav;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -133,22 +132,13 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       this.restContext = restContext;
    }
 
-   public static native String javaScriptEncodeURI(String text) /*-{
-                                                                return encodeURI(text);
-                                                                }-*/;
-
-   private ExceptionThrownEvent getErrorEvent(String message)
-   {
-      return new ExceptionThrownEvent(message);
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getContent(org.exoplatform.ide.client.framework.vfs.File, org.exoplatform.ide.client.framework.vfs.FileCallback)
     */
    @Override
    public void getContent(File file, FileCallback callback)
    {
-      String url = javaScriptEncodeURI(file.getHref());
+      String url = file.getHref();
 
       FileContentUnmarshaller unmarshaller = new FileContentUnmarshaller(file);
       callback.setResult(file);
@@ -167,13 +157,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getChildren(Folder folder, AsyncRequestCallback<Folder> callback)
    {
-      String href = folder.getHref();
-      if (!href.endsWith("/"))
+      String url = folder.getHref();
+      if (!url.endsWith("/"))
       {
          new Exception("Href must ends with \"/\"").printStackTrace();
       }
-
-      String url = javaScriptEncodeURI(href);
 
       callback.setResult(folder);
       List<QName> propeties = new ArrayList<QName>();
@@ -199,7 +187,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void createFolder(Folder folder,  AsyncRequestCallback<Folder> callback)
    {
-      String url = javaScriptEncodeURI(folder.getHref());
+      final String url = folder.getHref();
       callback.setResult(folder);
 
       callback.setEventBus(eventBus);
@@ -213,7 +201,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void deleteItem(Item item, AsyncRequestCallback<Item> callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       callback.setResult(item);
       callback.setEventBus(eventBus);
@@ -233,7 +221,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void saveContent(File file, String lockToken, FileContentSaveCallback callback)
    {
-      String url = javaScriptEncodeURI(file.getHref());
+      String url = file.getHref();
       final boolean isNewFile = file.isNewFile();
 
       FileContentSaveCallback.FileData fileData = callback.new FileData(file, isNewFile);
@@ -281,7 +269,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getProperties(Item item, List<QName> properties, ItemPropertiesCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       PropFindRequestMarshaller marshaller = new PropFindRequestMarshaller(properties);
 
@@ -309,7 +297,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void saveProperties(Item item, String lockToken, ItemPropertiesCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       ItemPropertiesMarshaller marshaller = new ItemPropertiesMarshaller(item);
       callback.setResult(item);
@@ -338,7 +326,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    public void search(Folder folder, String text, String mimeType, String path, AsyncRequestCallback<Folder> callback)
    {
-      String url = javaScriptEncodeURI(folder.getHref());
+      String url = folder.getHref();
       SearchRequestMarshaller requestMarshaller = new SearchRequestMarshaller(text, mimeType, path);
 
       SearchResultUnmarshaller unmarshaller = new SearchResultUnmarshaller(restContext, eventBus, folder, images);
@@ -354,9 +342,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
    public void move(Item item, String destination, String lockToken, MoveItemCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
       callback.setResult(callback.new MoveItemData(item, item.getHref()));
-      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination);
+      MoveResponseUnmarshaller unmarshaller = new MoveResponseUnmarshaller(item, destination, item.getName());
       
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
@@ -403,7 +391,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void copy(Item item, String destination, CopyCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       String destinationURL = destination;
 
@@ -450,7 +438,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void lock(Item item, int timeout, String userName, ItemLockCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
       
       LockToken lockToken = new LockToken();
 
@@ -477,7 +465,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void unlock(Item item, String lockToken, AsyncRequestCallback<Item> callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       UnlockItemMarshaller marshaller = new UnlockItemMarshaller();
       UnlockItemUnmarshaller unmarshaller = new UnlockItemUnmarshaller();
@@ -498,7 +486,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void getVersions(Item item, VersionsCallback callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       List<Version> versions = new ArrayList<Version>();
 
@@ -524,7 +512,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    @Override
    public void setACL(Item item, AccessControlList acl, String lockToken, AsyncRequestCallback<Item> callback)
    {
-      String url = javaScriptEncodeURI(item.getHref());
+      String url = item.getHref();
 
       ItemSetACLMarshaller marshaller = new ItemSetACLMarshaller(acl);
       ItemSetACLUnmarshaller unmarshaller = new ItemSetACLUnmarshaller();

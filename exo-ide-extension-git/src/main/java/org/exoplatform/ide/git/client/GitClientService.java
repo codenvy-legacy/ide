@@ -343,7 +343,7 @@ public abstract class GitClientService
     * Get the Git work directory (where ".git" folder is located) 
     * for the pointed item's location.
     * 
-    * @param href item's location
+    * @param href item's location (encoded location, service will decode location by himself)
     * @param callback
     */
    public abstract void getWorkDir(String href, AsyncRequestCallback<WorkDirResponse> callback);

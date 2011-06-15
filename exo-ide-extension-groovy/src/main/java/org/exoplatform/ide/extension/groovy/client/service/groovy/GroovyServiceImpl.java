@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,8 +232,10 @@ public class GroovyServiceImpl extends GroovyService
 
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshaller);
+      
+      String location = URL.decodePathSegment(href);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location).send(callback);
    }
 
    @Override

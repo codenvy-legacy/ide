@@ -51,7 +51,10 @@ public abstract class VirtualFileSystem
    public abstract void getChildren(Folder folder, AsyncRequestCallback<Folder> callback);
 
    /**
-    * Create new folder
+    * Create new folder.
+    * <p/>
+    * Don't forget, that href of new folder, must be a string where all characters 
+    * that are not valid for a URL component have been escaped.
     * 
     * @param folder - the folder to create
     * @param callback - the callback which the client has to implement
@@ -85,6 +88,9 @@ public abstract class VirtualFileSystem
    
    /**
     * Move existed item to another location as path
+    * <p/>
+    * Don't forget, that href of item and destination, must be strings where all characters 
+    * that are not valid for a URL component have been escaped.
     * 
     * @param item - item to move
     * @param destination - new item location
@@ -95,9 +101,12 @@ public abstract class VirtualFileSystem
 
    /**
     * Copy item to another locations as path
+    * <p/>
+    * Don't forget, that href of item and destination, must be strings where all characters 
+    * that are not valid for a URL component have been escaped.
     * 
-    * @param item
-    * @param destination
+    * @param item - item to copy
+    * @param destination - href of copied item (where to copy)
     * @param callback
     */
    public abstract void copy(Item item, String destination, CopyCallback callback);

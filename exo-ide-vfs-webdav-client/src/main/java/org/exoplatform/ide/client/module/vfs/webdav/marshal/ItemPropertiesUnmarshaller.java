@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
-import java.util.Map;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -31,8 +31,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,7 +76,7 @@ public class ItemPropertiesUnmarshaller implements Unmarshallable
       PropfindResponse propfindResponse = PropfindResponse.parse(body);
       Resource resource = propfindResponse.getResource();
 
-      item.setHref(URL.decode(resource.getHref()));
+      item.setHref(resource.getHref());
       item.setName(resource.getDisplayname());
 
       item.getProperties().clear();

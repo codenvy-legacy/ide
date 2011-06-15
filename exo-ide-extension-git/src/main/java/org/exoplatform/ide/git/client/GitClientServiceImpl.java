@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
@@ -223,6 +225,12 @@ public class GitClientServiceImpl extends GitClientService
    @Override
    public void getWorkDir(String workDir, AsyncRequestCallback<WorkDirResponse> callback)
    {
+      
+      //decode path segment, because URL is encoded
+      //decodePathSegment used, because we must have possibility to
+      //decode @ symbol
+      String location = URL.decodePathSegment(workDir);
+      
       String url = restServiceContext + GET_WORKDIR;
       callback.setEventBus(eventBus);
 
@@ -231,7 +239,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(workDirResponse);
       callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, workDir).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location).send(callback);
    }
 
    /**

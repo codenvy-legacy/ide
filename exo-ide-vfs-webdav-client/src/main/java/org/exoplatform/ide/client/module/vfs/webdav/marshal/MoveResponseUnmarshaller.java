@@ -38,6 +38,11 @@ public class MoveResponseUnmarshaller implements Unmarshallable
    private String href;
    
    /**
+    * Display name of new folder, that must be copied from old folder.
+    */
+   private String name;
+   
+   /**
     * Moved item. After moving its properties must be updated (href and name).
     */
    private Item item;
@@ -45,18 +50,18 @@ public class MoveResponseUnmarshaller implements Unmarshallable
    /**
     * @param item - item, that will be moved (after moving properties must be updated: href and name)
     * @param newHref - new href of item after moving
+    * @param displayName - display name of new folder, that copied from old folder
     */
-   public MoveResponseUnmarshaller(Item item, String newHref)
+   public MoveResponseUnmarshaller(Item item, String newHref, String displayName)
    {
       this.href = newHref;
       this.item = item;
+      this.name = displayName;
    }
    
    public void unmarshal(Response response) throws UnmarshallerException
    {
       item.setHref(href);
-      int beginIndex = href.lastIndexOf("/") + 1;
-      String name = href.substring(beginIndex, href.length());
       item.setName(name);
    }
 

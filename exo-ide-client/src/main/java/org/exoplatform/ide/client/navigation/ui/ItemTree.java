@@ -109,20 +109,29 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          return tree.getItem(0);
       }
 
-      String[] names = path.split("/");
+      String[] pathParts = path.split("/");
       TreeItem node = tree.getItem(0);
-      for (String folderName : names)
+      for (String pathSplit : pathParts)
       {
-         node = getChild(node, folderName);
+         node = getChild(node, pathSplit);
          if (node == null)
          {
-            return node;
+            return null;
          }
       }
       return node;
    }
 
-   private TreeItem getChild(TreeItem parent, String name)
+   /**
+    * Work throught children on tree item and compare with pathSplit.
+    * <p/>
+    * If last part of child path (substring after last /) equals to pathSplit,
+    * return tree item.
+    * @param parent
+    * @param pathSplit
+    * @return
+    */
+   private TreeItem getChild(TreeItem parent, String pathSplit)
    {
       for (int i = 0; i < parent.getChildCount(); i++)
       {
@@ -133,7 +142,28 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          }
 
          Item userObject = (Item)child.getUserObject();
-         if (userObject.getName().equals(name))
+         String href = userObject.getHref();
+         
+         //crop useless part of href
+         Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
+         String path = href.substring(rootFolder.getHref().length());
+
+         if (path.length() > 0 && path.startsWith("/"))
+         {
+            path = path.substring(1);
+         }
+         if (path.length() > 0 && path.endsWith("/"))
+         {
+            path = path.substring(0, path.length() - 1);
+         }
+         
+         //get the last part of path
+         if (path.contains("/"))
+         {
+            path = path.substring(path.lastIndexOf("/") + 1);
+         }
+         
+         if (path.equals(pathSplit))
          {
             return child;
          }

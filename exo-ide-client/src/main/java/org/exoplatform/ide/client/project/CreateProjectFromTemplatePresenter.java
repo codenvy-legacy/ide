@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -294,6 +296,10 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       refreshTemplateList();
    }
 
+   /**
+    * @param templates - list of templates (folder and file), from which folders and files will be created
+    * @param href - href of parent folder
+    */
    private void build(List<Template> templates, String href)
    {
       if (templates == null || templates.size() == 0)
@@ -307,8 +313,10 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             FolderTemplate projectTemplate = (FolderTemplate)template;
 
-            folderList.add(new Folder(href + projectTemplate.getName() + "/"));
-            build(projectTemplate.getChildren(), href + projectTemplate.getName() + "/");
+            final String folderHref = href + URL.encodePathSegment(projectTemplate.getName()) + "/";
+            Folder folder = new Folder(folderHref);
+            folderList.add(folder);
+            build(projectTemplate.getChildren(), folderHref);
          }
          else if (template instanceof FileTemplate)
          {
@@ -330,7 +338,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             String contentType = fTemplate.getMimeType();
 
-            File newFile = new File(href + fileTemplate.getFileName());
+            File newFile = new File(href + URL.encodePathSegment(fileTemplate.getFileName()));
             newFile.setContentType(contentType);
             newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
             newFile.setIcon(ImageUtil.getIcon(contentType));
@@ -442,11 +450,22 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
       selectedTemplate.getChildren().add(classPathTemplate);
 
-      build(selectedTemplate.getChildren(), baseHref + projectName + "/");
-      projectFolder = new Folder(baseHref + projectName + "/");
-      fileList.add(getClasspathFile(baseHref + projectName + "/"));
+      folderList.clear();
+      build(selectedTemplate.getChildren(), baseHref + URL.encodePathSegment(projectName) + "/");
+      projectFolder = new Folder(baseHref + URL.encodePathSegment(projectName) + "/");
+      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
 
-      createFolder(projectFolder);
+      VirtualFileSystem.getInstance().createFolder(projectFolder, new AsyncRequestCallback<Folder>()
+      {
+         /**
+          * @param result - created folder
+          */
+         @Override
+         protected void onSuccess(Folder result)
+         {
+            onFolderCreated(result);
+         }
+      });
    }
 
    /**
@@ -463,10 +482,10 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    /**
     * Get classpath file.
     * 
-    * @param href href
+    * @param href - href of project (encoded)
     * @return {@link File} classpath file
     */
-   private File getClasspathFile(String href)
+   private File createClasspathFile(String href)
    {
       href = (href.endsWith("/")) ? href : href + "/";
       String contentType = MimeType.APPLICATION_JSON;
@@ -525,6 +544,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          itemsCreated++;
          return;
       }
+      itemsCreated = 0;
 
       if (fileList.size() == 0)
       {
@@ -533,7 +553,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       }
 
       saveFileContent(fileList.get(0));
-      itemsCreated = 1;
    }
 
    /**
@@ -595,6 +614,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                itemsCreated++;
                return;
             }
+            itemsCreated = 0;
 
             finishProjectCreation();
          }

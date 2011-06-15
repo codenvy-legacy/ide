@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -117,7 +119,8 @@ public class CreateFolderPresenter
 
    protected void createFolder()
    {
-      String newFolderHref = href + display.getFolderNameField().getValue() + "/";
+      final String newFolderName = display.getFolderNameField().getValue();
+      String newFolderHref = href + URL.encodePathSegment(newFolderName) + "/";
       Folder newFolder = new Folder(newFolderHref);
       VirtualFileSystem.getInstance().createFolder(newFolder, new FolderCreateCallback()
       {

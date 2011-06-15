@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -367,12 +369,12 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
    }
    
    /**
-    * @param href
-    * @param form
+    * @param href - href of parent folder
+    * @param form - {@link CreateFolderForm}
     */
    private void createFolder(final String href, final CreateFolderForm form)
    {
-      String newFolderHref = href + form.getFolderNameField().getValue() + "/";
+      final String newFolderHref = href + URL.encodePathSegment(form.getFolderNameField().getValue()) + "/";
       Folder newFolder = new Folder(newFolderHref);
       VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
       {

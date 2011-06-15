@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.client.module.vfs.webdav.marshal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.webdav.PropfindResponse;
@@ -35,8 +32,9 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -97,7 +95,7 @@ public class FolderContentUnmarshaller implements Unmarshallable
          
          Resource child = resources.get(i);
 
-         String href = URL.decode(child.getHref());
+         String href = child.getHref();
          
          Item item;
          if (child.isCollection())

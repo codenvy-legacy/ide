@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -291,9 +293,7 @@ public class RenameItemPresenter
    
    private String getDestination(Item item)
    {
-      String href = display.getItemNameField().getValue();
-
-      href = itemBaseHref + href;
+      String href = itemBaseHref + URL.encodePathSegment(display.getItemNameField().getValue());
 
       if (item instanceof Folder)
       {
@@ -382,7 +382,7 @@ public class RenameItemPresenter
     * Mote item.
     * 
     * @param item - the item to move (with old properties: href and name)
-    * @param destination - the location of new item
+    * @param destination - the location of new item (must be encoded)
     */
    private void moveItem(Item item, String destination)
    {

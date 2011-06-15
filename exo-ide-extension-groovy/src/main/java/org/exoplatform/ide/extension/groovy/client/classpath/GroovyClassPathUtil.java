@@ -95,7 +95,7 @@ public class GroovyClassPathUtil
    /**
     * Get jcr location of the source from WEBDAV href.
     * 
-    * @param href WEBDAV href of the source
+    * @param href WEBDAV href of the source (encoded, will be decode by method)
     * @return String jcr location
     */
    public static String formPathFromHref(String href, String restContext)
@@ -103,14 +103,25 @@ public class GroovyClassPathUtil
       String context = restContext + WEBDAV_CONTEXT;
       String path = href.substring(href.indexOf(context) + context.length());
       String[] parts = path.split("/");
+      
+      String result = path;
 
       //Add sybol "#" after workspace name (the second part of the path):
       if (parts.length > 2)
       {
          //Start path from workspace:
-         path = path.replaceFirst(parts[0] + "/" + parts[1], parts[1] + "#");
+         final String prefix = parts[1] + "#";
+         result = prefix;
+         //decode path components
+         for (int i = 2; i < parts.length; i++)
+         {
+            parts[i] = URL.decodePathSegment(parts[i]);
+            result += "/" + parts[i];
+         }
+         result += "/";
       }
-      return URL.encode(path);
+      
+      return result;
    }
    
    public static String getDisplayPath(String path)
