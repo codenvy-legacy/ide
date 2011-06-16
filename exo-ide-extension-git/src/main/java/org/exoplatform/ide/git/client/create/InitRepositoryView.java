@@ -30,8 +30,10 @@ import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for initializing the repository.
@@ -40,70 +42,59 @@ import org.exoplatform.ide.git.client.GitClientBundle;
  * @version $Id:  Mar 24, 2011 10:35:37 AM anya $
  *
  */
-public class InitRepositoryView extends ViewImpl implements org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display
+public class InitRepositoryView extends ViewImpl implements
+   org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display
 {
 
    public static final String ID = "ideInitRepositoryView";
 
-   public static final String TYPE = "modal";
+   /*Elements IDs*/
 
-   public static final String TITLE = "Initialize local repository";
-   
-  /*Elements IDs*/
-   
    private static final String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
-   
+
    private static final String CANCEL_BUTTON_ID = "ideInitRepositoryViewCancelButton";
-   
+
    private static final String WORKDIR_FIELD_ID = "ideInitRepositoryViewWorkDirField";
-   
+
    private static final String BARE_FIELD_ID = "ideInitRepositoryViewBareField";
-   
+
    /*Elements titles*/
-   
-   private static final String INIT_BUTTON_TITLE = "Init";
-   
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-   
-   private static final String WORKDIR_FIELD_TITLE = "Work directory";
-   
-   private static final String BARE_FIELD_TITLE = "Bare repository";
-   
+
    private static final int BUTTON_HEIGHT = 22;
-   
+
    private static final int BUTTON_WIDTH = 90;
-   
+
    private TextField workdirField;
-   
+
    private CheckboxItem bareField;
-   
+
    private IButton initButton;
-   
+
    private IButton cancelButton;
 
    public InitRepositoryView()
    {
-      super(ID, TYPE, TITLE, null, 475, 180);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.createTitle(), null, 475, 180);
       setWidth("100%");
       setHeight("100%");
-      
+
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       mainLayout.setSpacing(7);
-      
-      workdirField = new TextField(WORKDIR_FIELD_ID, WORKDIR_FIELD_TITLE);
+
+      workdirField = new TextField(WORKDIR_FIELD_ID,GitExtension.MESSAGES.createWorkdirFieldTitle());
       workdirField.setTitleOrientation(TitleOrientation.TOP);
       workdirField.setWidth(420);
       workdirField.setHeight(22);
       mainLayout.add(workdirField);
-     
-      bareField = new CheckboxItem(BARE_FIELD_ID, BARE_FIELD_TITLE);
+
+      bareField = new CheckboxItem(BARE_FIELD_ID, GitExtension.MESSAGES.createBareFieldTitle());
       mainLayout.add(bareField);
-      
+
       addButtonsLayout(mainLayout);
-      
+
       add(mainLayout);
    }
 
@@ -115,19 +106,23 @@ public class InitRepositoryView extends ViewImpl implements org.exoplatform.ide.
    private void addButtonsLayout(VerticalPanel panel)
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT+"px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
       buttonsLayout.setSpacing(5);
-      
-      initButton = createButton(INIT_BUTTON_ID, INIT_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(), GitClientBundle.INSTANCE.okDisabled());
-      cancelButton = createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
-      
+
+      initButton =
+         createButton(INIT_BUTTON_ID, GitExtension.MESSAGES.buttonInit(), GitClientBundle.INSTANCE.ok(),
+            GitClientBundle.INSTANCE.okDisabled());
+      cancelButton =
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
+            GitClientBundle.INSTANCE.cancelDisabled());
+
       buttonsLayout.add(initButton);
       buttonsLayout.add(cancelButton);
-      
+
       panel.add(buttonsLayout);
       panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
    }
-   
+
    /**
     * Creates button.
     * 
