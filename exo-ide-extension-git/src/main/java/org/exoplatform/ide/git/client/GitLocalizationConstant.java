@@ -49,6 +49,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.clone")
    String buttonClone();
    
+   @Key("button.commit")
+   String buttonCommit();
+   
    @Key("button.reset")
    String buttonReset();
    
@@ -206,6 +209,32 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
    
+   //Commit
+   
+   @Key("view.commit.commit_message")
+   String commitMessage(String revision, String time);
+   
+   @Key("view.commit.commit_user")
+   String commitUser(String user);
+   
+   @Key("view.commit.title")
+   String commitTitle();
+   
+   @Key("view.commit.message_field_title")
+   String commitMessageFieldTitle();
+   
+   @Key("view.commit.all_field_title")
+   String commitAllFieldTitle();
+   
+   @Key("view.commit.grid.date")
+   String commitGridDate();
+   
+   @Key("view.commit.grid.commiter")
+   String commitGridCommiter();
+   
+   @Key("view.commit.grid.comment")
+   String commitGridComment();
+   
    //Reset
    @Key("view.reset.files.title")
    String resetFilesViewTitle();
@@ -237,7 +266,6 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.remove.files.title")
    String removeFilesViewTitle();
-   
    /*Controls*/
    @Key("control.add.id")
    String addControlId();

@@ -178,10 +178,10 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
          {
             DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
             String date = formatter.format(new Date(result.getCommitTime()));
-            String message = "Commited with revision # <b>" + result.getId() + "</b> at time " + date;
+            String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
             message +=
                (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
-                  .getName().length() > 0) ? " by user " + result.getCommitter().getName() : "";
+                  .getName().length() > 0) ? " " +GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
             eventBus.fireEvent(new OutputEvent(message, Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
          }

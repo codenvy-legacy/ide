@@ -25,6 +25,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Revision;
 
 import java.util.Date;
@@ -47,17 +48,17 @@ public class RevisionGrid extends ListGrid<Revision>
    /**
     * Date column's name.
     */
-   private final String DATE = "Date";
+   private final String DATE = GitExtension.MESSAGES.commitGridDate();
 
    /**
     * Commiter column's name.
     */
-   private final String COMMITER = "Commiter";
+   private final String COMMITER = GitExtension.MESSAGES.commitGridCommiter();
 
    /**
     * Comment column's name.
     */
-   private final String COMMENT = "Comment";
+   private final String COMMENT = GitExtension.MESSAGES.commitGridComment();
 
    /**
     * Date column.

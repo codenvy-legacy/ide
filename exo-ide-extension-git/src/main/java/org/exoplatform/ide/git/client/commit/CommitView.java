@@ -31,8 +31,10 @@ import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for commiting from index to repository.
@@ -47,12 +49,8 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    private static final int HEIGHT = 240;
 
    private static final int WIDTH = 460;
-   
+
    public static final String ID = "ideCommitView";
-
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Commit to repository";
 
    private static final int BUTTON_HEIGHT = 22;
 
@@ -65,30 +63,22 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    private static final String CANCEL_BUTTON_ID = "ideCommitViewCancelButton";
 
    private static final String MESSAGE_FIELD_ID = "ideCommitViewMessageField";
-   
+
    private static final String ALL_FIELD_ID = "ideCommitViewAllField";
 
    /*Elements titles*/
-
-   private static final String COMMIT_BUTTON_TITLE = "Commit";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String MESSAGE_FIELD_TITLE = "Enter log message for current commit:";
-   
-   private static final String ALL_FIELD_TITLE = "Add modified and deleted files (but not new files)";
 
    private IButton commitButton;
 
    private IButton cancelButton;
 
    private TextAreaItem messageField;
-   
+
    private CheckboxItem allField;
-   
+
    public CommitView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.commitTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -96,19 +86,19 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       mainLayout.setSpacing(5);
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      
-      allField = new CheckboxItem(ALL_FIELD_ID, ALL_FIELD_TITLE);
+
+      allField = new CheckboxItem(ALL_FIELD_ID, GitExtension.MESSAGES.commitAllFieldTitle());
       mainLayout.add(allField);
       mainLayout.setCellHeight(allField, "30px");
-      
-      messageField = createTextAreaField(MESSAGE_FIELD_ID, MESSAGE_FIELD_TITLE);
+
+      messageField = createTextAreaField(MESSAGE_FIELD_ID,GitExtension.MESSAGES.commitMessageFieldTitle());
 
       mainLayout.add(messageField);
       addButtonsLayout(mainLayout);
 
       add(mainLayout);
    }
-   
+
    /**
     * Add buttons to the pointed panel.
     * 
@@ -117,12 +107,16 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    private void addButtonsLayout(VerticalPanel panel)
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT+ 10 + "px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + 10 + "px");
       buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
       buttonsLayout.setSpacing(5);
 
-      commitButton = createButton(COMMIT_BUTTON_ID, COMMIT_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(), GitClientBundle.INSTANCE.okDisabled());
-      cancelButton = createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
+      commitButton =
+         createButton(COMMIT_BUTTON_ID, GitExtension.MESSAGES.buttonCommit(), GitClientBundle.INSTANCE.ok(),
+            GitClientBundle.INSTANCE.okDisabled());
+      cancelButton =
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
+            GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(commitButton);
       buttonsLayout.add(cancelButton);
