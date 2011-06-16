@@ -33,8 +33,10 @@ import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.LinkedHashMap;
 
@@ -54,10 +56,6 @@ public class PullView extends ViewImpl implements PullPresenter.Display
 
    public static final String ID = "idePullView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Pull from remote repository";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -71,18 +69,6 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    private static final String REMOTE_BRANCHES_FIELD_ID = "idePullViewRemoteBranchesField";
 
    private static final String LOCAL_BRANCHES_FIELD_ID = "idePullViewLocalBranchesField";
-
-   /*Elements titles*/
-
-   private static final String PULL_BUTTON_TITLE = "Pull";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String REMOTE_FIELD_TITLE = "Choose remote repository :";
-
-   private static final String REMOTE_BRANCHES_TITLE = "Pull from remote branch:";
-
-   private static final String LOCAL_BRANCHES_TITLE = "To local branch:";
 
    /**
     * Pull button.
@@ -111,14 +97,14 @@ public class PullView extends ViewImpl implements PullPresenter.Display
 
    public PullView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.pullTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(10);
 
-      remoteField = new SelectItem(REMOTE_FIELD_ID, REMOTE_FIELD_TITLE);
+      remoteField = new SelectItem(REMOTE_FIELD_ID,GitExtension.MESSAGES.pullRemoteField());
       remoteField.setWidth(280);
       mainLayout.add(remoteField);
       mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -143,10 +129,10 @@ public class PullView extends ViewImpl implements PullPresenter.Display
       buttonsLayout.setSpacing(5);
 
       pullButton =
-         createButton(PULL_BUTTON_ID, PULL_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(PULL_BUTTON_ID, GitExtension.MESSAGES.buttonPull(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(pullButton);
@@ -186,14 +172,14 @@ public class PullView extends ViewImpl implements PullPresenter.Display
       refsLayout.setWidth("100%");
       refsLayout.setSpacing(3);
 
-      localBranchesField = createComboBoxField(LOCAL_BRANCHES_FIELD_ID, LOCAL_BRANCHES_TITLE);
+      localBranchesField = createComboBoxField(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pullLocalBranches());
 
       Image arrow = new Image(GitClientBundle.INSTANCE.arrow());
       arrow.setWidth("16px");
       arrow.setHeight("16px");
       DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
 
-      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, REMOTE_BRANCHES_TITLE);
+      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pullRemoteBranches());
 
       refsLayout.add(remoteBranchesField);
       refsLayout.add(arrow);

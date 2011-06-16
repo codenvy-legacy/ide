@@ -374,6 +374,19 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.history.diff.with.prev.version.button.title")
    String historyDiffWithPrevVerson();
    
+   //Pull
+   @Key("view.pull.title")
+   String pullTitle();
+   
+   @Key("view.pull.remote.field.title")
+   String pullRemoteField();
+   
+   @Key("view.pull.remote.branches.title")
+   String pullRemoteBranches();
+   
+   @Key("view.pull.local.branches.title")
+   String pullLocalBranches();
+   
    /*Controls*/
    @Key("control.add.id")
    String addControlId();
