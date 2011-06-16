@@ -59,7 +59,7 @@ public class BranchUnmarshaller extends JSONUmarshaller
       if (json == null)
          return;
 
-      JSONObject object = new JSONObject(json);
+      JSONObject object = new JSONObject(json).isObject();
       if (object == null)
          return;
       if (object.containsKey(ACTIVE))

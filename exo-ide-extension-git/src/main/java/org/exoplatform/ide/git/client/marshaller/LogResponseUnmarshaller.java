@@ -76,7 +76,7 @@ public class LogResponseUnmarshaller extends JSONUmarshaller
       JavaScriptObject json = build(response.getText());
       if (json == null)
          return;
-      JSONObject logObject = new JSONObject(json);
+      JSONObject logObject = new JSONObject(json).isObject();
       if (logObject == null)
          return;
 

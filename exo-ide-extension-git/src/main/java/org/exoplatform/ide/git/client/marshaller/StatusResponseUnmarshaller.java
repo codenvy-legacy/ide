@@ -74,7 +74,7 @@ public class StatusResponseUnmarshaller extends JSONUmarshaller
       JavaScriptObject json = build(response.getText());
       if (json == null)
          return;
-      JSONObject statusObject = new JSONObject(json);
+      JSONObject statusObject = new JSONObject(json).isObject();
       if (statusObject == null)
          return;
 

@@ -56,7 +56,7 @@ public class RevisionUnmarshaller extends JSONUmarshaller
       JavaScriptObject json = build(response.getText());
       if (json == null)
          return;
-      JSONObject revisionObject = new JSONObject(json);
+      JSONObject revisionObject = new JSONObject(json).isObject();
       if (revisionObject == null)
          return;
 
