@@ -176,7 +176,7 @@ public interface GitClientBundle extends ClientBundle
    ImageResource statusDisabled();
 
    @Source("org/exoplatform/ide/git/images/items/item_in_repository.png")
-   ImageResource itemInRepoditory();
+   ImageResource itemInRepository();
 
    @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
    ImageResource itemNew();

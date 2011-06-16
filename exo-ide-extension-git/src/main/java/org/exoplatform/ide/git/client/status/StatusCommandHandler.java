@@ -83,7 +83,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
    {
       if (selectedItems == null || selectedItems.size() != 1)
       {
-         Dialogs.getInstance().showInfo("Please, select one folder in browser tree.");
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
       }
       getGitWorkTreeLocation(selectedItems.get(0));
    }
@@ -250,7 +250,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
                {
                   if (item instanceof File)
                   {
-                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepoditory().getURL());
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository().getURL());
                   }
                }
                treeNodesToUpdate.put(item, map);
