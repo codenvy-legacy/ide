@@ -33,7 +33,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -119,11 +118,36 @@ public class Utils
 
    /**
     * Encode URL(Add /IDE/ to path) string in md5 hash 
-    * @param string to encode
+    * @param href to encode
     * @return md5 hash of string
     */
-   public static String md5(String string)
+   public static String md5(String href)
    {
+      //encode href
+      String segment = href.substring(BaseTest.ENTRY_POINT_URL.length());
+      if (segment.startsWith("/"))
+      {
+         segment = segment.substring(1);
+      }
+      if (segment.endsWith("/"))
+      {
+         segment = segment.substring(0, segment.length() - 1);
+      }
+      String[] pathSegments = segment.split("/");
+      String encoded = BaseTest.ENTRY_POINT_URL;
+      if (encoded.endsWith("/"))
+      {
+         encoded = encoded.substring(0, encoded.length() - 1);
+      }
+      for (int i = 0; i < pathSegments.length; i++)
+      {
+         pathSegments[i] = BaseTest.selenium.getEval("encodeURIComponent('" + pathSegments[i] + "')");
+         encoded += "/" + pathSegments[i];
+      }
+      if (href.endsWith("/"))
+      {
+         encoded += "/";
+      }
       MessageDigest m;
       try
       {
@@ -133,11 +157,11 @@ public class Utils
 
          if (BaseTest.isRunIdeAsShell())
          {
-            m.update(string.getBytes());
+            m.update(href.getBytes());
          }
          else
          {
-            m.update((BaseTest.BASE_URL + "IDE/" + string.substring(BaseTest.BASE_URL.length())).getBytes());            
+            m.update((BaseTest.BASE_URL + "IDE/" + href.substring(BaseTest.BASE_URL.length())).getBytes());            
          }
          
          byte[] digest = m.digest();
