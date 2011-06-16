@@ -64,6 +64,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.fetch")
    String buttonFetch();
    
+   @Key("button.ok")
+   String buttonOk();
+   
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
@@ -274,6 +277,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String removeFilesViewTitle();
    
    //Create
+   
    @Key("view.create.title")
    String createTitle();
    
@@ -298,6 +302,13 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.fetch.remove.deleted.refs.title")
    String fetchRemoveDeletedRefsTitle();
+      
+   //Remote
+   @Key("view.remote.name.field")
+   String remoteNameField();
+   
+   @Key("view.remote.location.field")
+   String remoteLocationField();
    
    /*Controls*/
    @Key("control.add.id")
