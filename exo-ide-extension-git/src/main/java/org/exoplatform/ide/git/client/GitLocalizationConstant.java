@@ -52,6 +52,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.reset")
    String buttonReset();
    
+   @Key("button.remove")
+   String buttonRemove();
+   
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
@@ -227,6 +230,13 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.reset.hard.type.description")
    String resetHardTypeDescription();
+
+   //Remove
+   @Key("view.remove.files.grid.title")
+   String removeFilesGridTitle();
+   
+   @Key("view.remove.files.title")
+   String removeFilesViewTitle();
    
    /*Controls*/
    @Key("control.add.id")
