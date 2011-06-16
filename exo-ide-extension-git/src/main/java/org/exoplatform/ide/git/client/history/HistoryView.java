@@ -36,6 +36,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
@@ -43,6 +44,7 @@ import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -61,20 +63,6 @@ import java.util.HashMap;
 public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 {
    public static final String ID = "ideHistoryView";
-
-   public static final String TYPE = "information";
-
-   public static final String TITLE = "History";
-
-   public static final String PROJECT_CHANGES_BUTTON_TITLE = "Show changes in project";
-
-   public static final String RESOURCE_CHANGES_BUTTON_TITLE = "Show changes of selected resource";
-
-   public static final String DIFF_WITH_INDEX_BUTTON_TITLE = "Show diff with index";
-
-   public static final String DIFF_WITH_WORK_TREE_BUTTON_TITLE = "Show diff with working tree";
-
-   public static final String DIFF_WITH_PREV_VERSION_BUTTON_TITLE = "Show diff with previous version";
 
    private Editor editor;
 
@@ -101,19 +89,19 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     */
    @UiField
    TextField comitADate;
-   
+
    /**
     * Field to show commit revision of first commit.
     */
    @UiField
    TextField comitARevision;
-   
+
    /**
     * Field to show commit date of second commit.
     */
    @UiField
    TextField comitBDate;
-   
+
    /**
     * Field to show commit's revision of second commit.
     */
@@ -145,12 +133,12 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     * Diff selected commit with index button.
     */
    private IconButton diffWithIndexButton;
-   
+
    /**
     * Diff selected commit with working tree button.
     */
    private IconButton diffWithWorkTreeButton;
-   
+
    /**
     * Diff selected commit with previous commit button.
     */
@@ -175,9 +163,10 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 
    public HistoryView()
    {
-      super(ID, TYPE, TITLE, new Image(GitClientBundle.INSTANCE.history()), 400, 250, true);
+      super(ID, ViewType.INFORMATION, GitExtension.MESSAGES.historyTitle(), new Image(
+         GitClientBundle.INSTANCE.history()), 400, 250, true);
       add(uiBinder.createAndBindUi(this));
-      
+
       comitADate.setHeight(20);
       comitARevision.setHeight(20);
       comitBDate.setHeight(20);
@@ -199,32 +188,32 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       projectChangesButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevel()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.projectLevelDisabled()));
-      projectChangesButton.setTitle(PROJECT_CHANGES_BUTTON_TITLE);
+      projectChangesButton.setTitle(GitExtension.MESSAGES.historyProjectChangesButtonTitle());
       toolbar.addItem(projectChangesButton, true);
 
       resourceChangesButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevel()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.resourceLevelDisabled()));
-      resourceChangesButton.setTitle(RESOURCE_CHANGES_BUTTON_TITLE);
+      resourceChangesButton.setTitle(GitExtension.MESSAGES.historyResourceChangesButtonTitle());
       toolbar.addItem(resourceChangesButton, true);
       toolbar.addDelimiter(true);
 
       diffWithIndexButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndex()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffIndexDisabled()));
-      diffWithIndexButton.setTitle(DIFF_WITH_INDEX_BUTTON_TITLE);
+      diffWithIndexButton.setTitle(GitExtension.MESSAGES.historyDiffWithIndexButtonTitle());
       toolbar.addItem(diffWithIndexButton, true);
 
       diffWithWorkTreeButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorkTree()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffWorTreeDisabled()));
-      diffWithWorkTreeButton.setTitle(DIFF_WITH_WORK_TREE_BUTTON_TITLE);
+      diffWithWorkTreeButton.setTitle(GitExtension.MESSAGES.historyDiffWithWorkTree());
       toolbar.addItem(diffWithWorkTreeButton, true);
 
       diffWithPrevCommitButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersion()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.diffPrevVersionDisabled()));
-      diffWithPrevCommitButton.setTitle(DIFF_WITH_PREV_VERSION_BUTTON_TITLE);
+      diffWithPrevCommitButton.setTitle(GitExtension.MESSAGES.historyDiffWithPrevVerson());
       toolbar.addItem(diffWithPrevCommitButton, true);
    }
 

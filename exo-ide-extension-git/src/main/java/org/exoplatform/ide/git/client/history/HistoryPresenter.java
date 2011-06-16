@@ -328,7 +328,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          {
             exception.printStackTrace();
             nothingToDisplay(null);
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
+            String errorMessage =
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
@@ -392,7 +393,9 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             protected void onSuccess(DiffResponse result)
             {
                display.displayDiffContent(result.getDiffText());
-               String text = (isCached) ? "<b>index state</b>" : "<b>working tree state</b>";
+               String text =
+                  (isCached) ? GitExtension.MESSAGES.historyDiffIndexState() : GitExtension.MESSAGES
+                     .historyDiffTreeState();
                display.displayCompareText(revision, text);
             }
 
@@ -400,7 +403,8 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
             protected void onFailure(Throwable exception)
             {
                nothingToDisplay(revision);
-               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
@@ -453,7 +457,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
     */
    protected void nothingToDisplay(Revision revision)
    {
-      display.displayCompareText(revision, "<b>nothing for comparance</b>");
+      display.displayCompareText(revision, GitExtension.MESSAGES.historyNothingToDisplay());
       display.displayDiffContent(" ");
    }
 }

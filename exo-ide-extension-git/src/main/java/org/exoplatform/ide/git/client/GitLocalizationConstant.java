@@ -333,6 +333,34 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.remote.grid.location.field")
    String remoteGridLocationField();
+   //History
+   
+   @Key("view.history.diff.index.state")
+   String historyDiffIndexState();
+   
+   @Key("view.history.diff.tree.state")
+   String historyDiffTreeState();
+   
+   @Key("view.history.nothing.to.display")
+   String historyNothingToDisplay();
+   
+   @Key("view.history.title")
+   String historyTitle();
+   
+   @Key("view.history.project.changes.button.title")
+   String historyProjectChangesButtonTitle();
+   
+   @Key("view.history.resource.changes.button.title")
+   String historyResourceChangesButtonTitle();
+   
+   @Key("view.history.diff.with.index.button.title")
+   String historyDiffWithIndexButtonTitle();
+   
+   @Key("view.history.diff.with.work.tree.button.title")
+   String historyDiffWithWorkTree();
+   
+   @Key("view.history.diff.with.prev.version.button.title")
+   String historyDiffWithPrevVerson();
    
    /*Controls*/
    @Key("control.add.id")
