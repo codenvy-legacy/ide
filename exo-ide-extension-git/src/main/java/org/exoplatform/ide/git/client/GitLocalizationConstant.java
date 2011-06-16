@@ -269,7 +269,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.remotes.id")
    String remotesControlId();
 
-   @Key("controlremotes.title")
+   @Key("control.remotes.title")
    String remotesControlTitle();
 
    @Key("control.remotes.prompt")
