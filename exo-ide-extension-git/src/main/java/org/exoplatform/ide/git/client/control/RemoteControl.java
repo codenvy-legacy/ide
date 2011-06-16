@@ -35,7 +35,7 @@ public class RemoteControl extends SimpleControl implements IDEControl
    public RemoteControl()
    {
       super(GitExtension.MESSAGES.remoteControlId());
-      setTitle(GitExtension.MESSAGES.removeControlTitle());
+      setTitle(GitExtension.MESSAGES.remoteControlTitle());
       setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
       setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
    }
