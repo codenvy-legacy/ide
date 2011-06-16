@@ -19,11 +19,10 @@
 package org.exoplatform.ide.git.client.fetch;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -34,8 +33,10 @@ import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.LinkedHashMap;
 
@@ -55,10 +56,6 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
 
    public static final String ID = "ideFetchView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Fetch from remote repository";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -74,20 +71,6 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    private static final String LOCAL_BRANCHES_FIELD_ID = "ideFetchViewLocalBranchesField";
 
    private static final String REMOVE_DELETED_REFS_FIELD_ID = "ideFetchViewRemoveDeletedRefsField";
-
-   /*Elements titles*/
-
-   private static final String FETCH_BUTTON_TITLE = "Fetch";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String REMOTE_FIELD_TITLE = "Choose remote repository :";
-
-   private static final String REMOTE_BRANCHES_TITLE = "Fetch from remote branch:";
-
-   private static final String LOCAL_BRANCHES_TITLE = "To local branch:";
-
-   private static final String REMOVE_DELETED_REFS_TITLE = "Remove deleted refs";
 
    /**
     * Fetch button.
@@ -124,21 +107,22 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
     */
    public FetchView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.fetchTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(5);
 
-      remoteField = new SelectItem(REMOTE_FIELD_ID, REMOTE_FIELD_TITLE);
+      remoteField = new SelectItem(REMOTE_FIELD_ID, GitExtension.MESSAGES.fetchRemoteFieldTitle());
       remoteField.setWidth(290);
       mainLayout.add(remoteField);
       mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
 
       addRefsLayout(mainLayout);
 
-      removeDeletedRefsField = new CheckboxItem(REMOVE_DELETED_REFS_FIELD_ID, REMOVE_DELETED_REFS_TITLE);
+      removeDeletedRefsField =
+         new CheckboxItem(REMOVE_DELETED_REFS_FIELD_ID, GitExtension.MESSAGES.fetchRemoveDeletedRefsTitle());
       mainLayout.add(removeDeletedRefsField);
 
       addButtonsLayout(mainLayout);
@@ -159,10 +143,10 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
       buttonsLayout.setSpacing(5);
 
       fetchButton =
-         createButton(FETCH_BUTTON_ID, FETCH_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(FETCH_BUTTON_ID, GitExtension.MESSAGES.buttonFetch(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(fetchButton);
@@ -202,14 +186,16 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
       refsLayout.setWidth("100%");
       refsLayout.setSpacing(3);
 
-      localBranchesField = createComboBoxField(LOCAL_BRANCHES_FIELD_ID, LOCAL_BRANCHES_TITLE);
+      localBranchesField =
+         createComboBoxField(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.fetchLocalBranchesTitle());
 
       Image arrow = new Image(GitClientBundle.INSTANCE.arrow());
       arrow.setWidth("16px");
       arrow.setHeight("16px");
       DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
 
-      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, REMOTE_BRANCHES_TITLE);
+      remoteBranchesField =
+         createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.fetchRemoteBranchesTitle());
 
       refsLayout.add(remoteBranchesField);
       refsLayout.add(arrow);
