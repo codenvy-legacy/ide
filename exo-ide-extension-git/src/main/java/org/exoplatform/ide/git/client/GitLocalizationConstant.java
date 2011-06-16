@@ -67,6 +67,12 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.ok")
    String buttonOk();
    
+   @Key("button.push")
+   String buttonPush();
+   
+   @Key("button.pull")
+   String buttonPull();
+   
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
