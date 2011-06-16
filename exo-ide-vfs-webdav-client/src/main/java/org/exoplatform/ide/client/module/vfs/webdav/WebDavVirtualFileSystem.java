@@ -147,7 +147,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.GET_FILE_CONTENT);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)
+      AsyncRequest.build(RequestBuilder.GET, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.GET)
+         .header(HTTPHeader.CONNECTION, "close")
          .send(callback);
    }
 
@@ -179,8 +181,10 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.GET_FOLDER_CONTENT);
 
       AsyncRequest.build(RequestBuilder.POST, url, loader)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND).header(HTTPHeader.DEPTH, "1")
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
+         .header(HTTPHeader.DEPTH, "1")
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+         .header(HTTPHeader.CONNECTION, "close")
          .data(marshaller).send(callback);
    }
 
@@ -194,8 +198,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.CREATE_FOLDER);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
-         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MKCOL)
+         .header(HTTPHeader.CONTENT_LENGTH, "0")
+         .header(HTTPHeader.CONNECTION, "close")
+         .send(callback);
    }
 
    @Override
@@ -214,8 +221,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       {
          loader.setMessage(Messages.DELETE_FOLDER);
       }
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
-         .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
+         .header(HTTPHeader.CONTENT_LENGTH, "0")
+         .header(HTTPHeader.CONNECTION, "close")
+         .send(callback);
    }
 
    @Override
@@ -236,16 +246,24 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       loader.setMessage(Messages.SAVE_FILE_CONTENT);
       if (lockToken != null)
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
             .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
+            .header(HTTPHeader.CONNECTION, "close")
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+            .data(marshaller)
+            .send(callback);
       }
       else
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PUT)
             .header(HTTPHeader.CONTENT_TYPE, file.getContentType() + "; " + DEFAULT_CHARSET)
-            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType()).data(marshaller).send(callback);
+            .header(HTTPHeader.CONNECTION, "close")
+            .header(HTTPHeader.CONTENT_NODETYPE, file.getJcrContentNodeType())
+            .data(marshaller)
+            .send(callback);
       }
    }
 
@@ -287,7 +305,9 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url, loader)
          .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPFIND)
          .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
-         .header(HTTPHeader.DEPTH, "0").data(marshaller)
+         .header(HTTPHeader.DEPTH, "0")
+         .header(HTTPHeader.CONNECTION, "close")
+         .data(marshaller)
          .send(callback);
    }
 
@@ -313,13 +333,19 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          AsyncRequest.build(RequestBuilder.POST, url, loader)
             .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
             .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
-            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+            .header(HTTPHeader.CONNECTION, "close")
+            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+            .data(marshaller)
+            .send(callback);
       }
       else
       {
          AsyncRequest.build(RequestBuilder.POST, url, loader)
             .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.PROPPATCH)
-            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(marshaller).send(callback);
+            .header(HTTPHeader.CONNECTION, "close")
+            .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+            .data(marshaller)
+            .send(callback);
       }
 
    }
@@ -336,8 +362,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.SEARCH);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH)
-         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8").data(requestMarshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.SEARCH)
+         .header(HTTPHeader.CONTENT_TYPE, "text/xml; charset=UTF-8")
+         .header(HTTPHeader.CONNECTION, "close")
+         .data(requestMarshaller)
+         .send(callback);
    }
 
    public void move(Item item, String destination, String lockToken, MoveItemCallback callback)
@@ -356,16 +386,22 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          if (lockToken != null)
          {
             AsyncRequest.build(RequestBuilder.POST, url, loader)
-               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-               .header(HTTPHeader.CONTENT_LENGTH, "0").header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+               .header(HTTPHeader.DESTINATION, destination)
+               .header(HTTPHeader.CONTENT_LENGTH, "0")
+               .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+               .header(HTTPHeader.CONNECTION, "close")
                .send(callback);
          }
          else
          {
 
             AsyncRequest.build(RequestBuilder.POST, url, loader)
-               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-               .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+               .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+               .header(HTTPHeader.DESTINATION, destination)
+               .header(HTTPHeader.CONTENT_LENGTH, "0")
+               .header(HTTPHeader.CONNECTION, "close")
+               .send(callback);
          }
       }
       else
@@ -383,8 +419,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          loader.setMessage(Messages.MOVE_FOLDER);
 
          AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE).header(HTTPHeader.DESTINATION, destination)
-            .header(HTTPHeader.CONTENT_LENGTH, "0").send(callback);
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.MOVE)
+            .header(HTTPHeader.DESTINATION, destination)
+            .header(HTTPHeader.CONTENT_LENGTH, "0")
+            .header(HTTPHeader.CONNECTION, "close")
+            .send(callback);
       }
    }
 
@@ -409,8 +448,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          loader.setMessage(Messages.COPY_FILE);
 
          AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY).header(HTTPHeader.DESTINATION, destinationURL)
-            .header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller).send(callback);
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
+            .header(HTTPHeader.DESTINATION, destinationURL)
+            .header(HTTPHeader.CONTENT_LENGTH, "0")
+            .header(HTTPHeader.CONNECTION, "close")
+            .data(marshaller)
+            .send(callback);
       }
       else
       {
@@ -427,8 +470,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
          loader.setMessage(Messages.COPY_FOLDER);
 
          AsyncRequest.build(RequestBuilder.POST, url, loader)
-            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY).header(HTTPHeader.DESTINATION, destinationURL)
-            .header(HTTPHeader.CONTENT_LENGTH, "0").data(marshaller).send(callback);
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.COPY)
+            .header(HTTPHeader.DESTINATION, destinationURL)
+            .header(HTTPHeader.CONTENT_LENGTH, "0")
+            .header(HTTPHeader.CONNECTION, "close")
+            .data(marshaller)
+            .send(callback);
       }
    }
 
@@ -455,8 +502,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       loader.setMessage(Messages.LOCK);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.LOCK)
-         .header(HTTPHeader.TIMEOUT, "Infinite, Second-" + timeout).data(marshaller).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.LOCK)
+         .header(HTTPHeader.CONNECTION, "close")
+         .header(HTTPHeader.TIMEOUT, "Infinite, Second-" + timeout)
+         .data(marshaller)
+         .send(callback);
    }
 
    /**
@@ -478,9 +529,12 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       callback.setPayload(unmarshaller);
       callback.setSuccessCodes(acceptStatus);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UNLOCK)
-         .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
-
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.UNLOCK)
+         .header(HTTPHeader.CONNECTION, "close")
+         .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+         .data(marshaller)
+         .send(callback);
    }
 
    @Override
@@ -501,9 +555,11 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
       callback.setPayload(unmarshaller);
       callback.setSuccessCodes(acceptStatus);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.REPORT)
-         .data(marshaller).send(callback);
-
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.REPORT)
+         .header(HTTPHeader.CONNECTION, "close")
+         .data(marshaller)
+         .send(callback);
    }
 
    /**
@@ -525,13 +581,20 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
 
       if (lockToken != null)
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
-            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">").data(marshaller).send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
+            .header(HTTPHeader.CONNECTION, "close")
+            .header(HTTPHeader.LOCKTOKEN, "<" + lockToken + ">")
+            .data(marshaller)
+            .send(callback);
       }
       else
       {
-         AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
-            .data(marshaller).send(callback);
+         AsyncRequest.build(RequestBuilder.POST, url, loader)
+            .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.ACL)
+            .header(HTTPHeader.CONNECTION, "close")
+            .data(marshaller)
+            .send(callback);
       }
    }
 
