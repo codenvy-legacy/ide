@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.git.client.add;
 
-import com.google.gwt.user.client.DOM;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -33,6 +30,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -51,10 +49,6 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    public static final int WIDTH = 420;
 
    public static final String ID = "ideAddToIndexView";
-
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Add to index";
 
    private static final int BUTTON_HEIGHT = 22;
 
@@ -80,7 +74,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
 
    public AddToIndexView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Branch;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class BranchGrid extends ListGrid<Branch>
    /**
     * Name column's name.
     */
-   private final String NAME = "Name";
+   private final String NAME = GitExtension.MESSAGES.branchGridNameColumn();
 
    /**
     * Name column.

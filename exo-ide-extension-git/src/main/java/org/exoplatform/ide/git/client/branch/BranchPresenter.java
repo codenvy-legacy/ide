@@ -228,7 +228,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
    private void askNewBranchName()
    {
-      Dialogs.getInstance().askForValue("Create new branch", "Type branch name:", "", new StringValueReceivedHandler()
+      Dialogs.getInstance().askForValue(GitExtension.MESSAGES.branchCreateNew(), GitExtension.MESSAGES.branchTypeNew(), "", new StringValueReceivedHandler()
       {
 
          @Override
@@ -311,7 +311,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
       if (workDir == null || name == null)
          return;
 
-      Dialogs.getInstance().ask("Delete branch", "Are you sure you want to delete branch <b>" + name + "</b>?",
+      Dialogs.getInstance().ask(GitExtension.MESSAGES.branchDelete(), GitExtension.MESSAGES.branchDeleteAsk(name),
          new BooleanValueReceivedHandler()
          {
 

@@ -34,6 +34,18 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.cancel")
    String buttonCancel();
    
+   @Key("button.create")
+   String buttonCreate();
+   
+   @Key("button.checkout")
+   String buttonCheckout();
+   
+   @Key("button.delete")
+   String buttonDelete();
+   
+   @Key("button.close")
+   String buttonClose();
+   
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
@@ -134,8 +146,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("messages.status_failed")
    String statusFailed();
 
-   // VIEWS
+   //----VIEWS------------------------------------------------------------------
 
+   //Add
    @Key("view.add_to_index.all_changes")
    String addToIndexAllChanges();
 
@@ -147,4 +160,28 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.add_to_index.update_field_title")
    String addToIndexUpdateFieldTitle();
+   
+   @Key("view.add_to_index.title")
+   String addToIndexTitle();
+   
+   //Branch
+   
+   @Key("view.branch.grid.name_column")
+   String branchGridNameColumn();
+   
+   @Key("view.branch.ceate_new")
+   String branchCreateNew();
+   
+   @Key("view.branch.type_new")
+   String branchTypeNew();
+   
+   @Key("view.branch.delete")
+   String branchDelete();
+   
+   @Key("view.branch.delete_ask")
+   String branchDeleteAsk(String name);
+   
+   @Key("view.branch.title")
+   String branchTitle();
+   
 }
