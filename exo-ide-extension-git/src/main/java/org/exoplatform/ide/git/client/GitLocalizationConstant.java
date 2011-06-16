@@ -49,6 +49,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.clone")
    String buttonClone();
    
+   @Key("button.reset")
+   String buttonReset();
+   
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
@@ -199,6 +202,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
+   
+   //Reset
+   @Key("view.reset.files.title")
+   String resetFilesViewTitle();
    
    /*Controls*/
    @Key("control.add.id")
