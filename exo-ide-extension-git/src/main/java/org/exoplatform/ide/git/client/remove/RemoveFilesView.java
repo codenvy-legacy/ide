@@ -28,8 +28,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for removing files from working directory and index.
@@ -47,10 +49,6 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
 
    public static final String ID = "ideRemoveFilesView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Select files to remove";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -59,11 +57,6 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
    private static final String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
    private static final String CANCEL_BUTTON_ID = "ideRemoveFilesViewCancelButton";
-
-   /* Element's titles*/
-   private static final String REMOVE_BUTTON_TITLE = "Remove";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
 
    /**
     *Save changes button.
@@ -82,7 +75,7 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
 
    public RemoveFilesView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFilesViewTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -119,10 +112,10 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
       buttonsLayout.setSpacing(5);
 
       removeButton =
-         createButton(REMOVE_BUTTON_ID, REMOVE_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(REMOVE_BUTTON_ID, GitExtension.MESSAGES.buttonRemove(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(removeButton);

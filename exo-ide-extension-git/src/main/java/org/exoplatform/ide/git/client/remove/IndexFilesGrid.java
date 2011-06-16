@@ -43,9 +43,6 @@ public class IndexFilesGrid extends ListGrid<IndexFile>
     */
    private static final String ID = "ideIndexFilesGrid";
 
-   /**
-    * Name column's name.
-    */
    private final String FILES = "Files for commit";
 
    /**
