@@ -115,15 +115,15 @@ public class Utils
       reader.close();
       return fileData.toString();
    }
-
+   
    /**
-    * Encode URL(Add /IDE/ to path) string in md5 hash 
-    * @param href to encode
-    * @return md5 hash of string
+    * Encode names of folder and filed in href
+    * (need to get correct if of item in navigatin tree).
+    * @param href
+    * @return
     */
-   public static String md5(String href)
+   private static String encodeHref(String href)
    {
-      //encode href
       String segment = href.substring(BaseTest.ENTRY_POINT_URL.length());
       if (segment.startsWith("/"))
       {
@@ -148,6 +148,18 @@ public class Utils
       {
          encoded += "/";
       }
+      return encoded;
+   }
+
+   /**
+    * Encode URL(Add /IDE/ to path) string in md5 hash 
+    * @param href to encode
+    * @return md5 hash of string
+    */
+   public static String md5(String href)
+   {
+      //encode href
+      String encoded = encodeHref(href);
       MessageDigest m;
       try
       {
