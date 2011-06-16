@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -89,7 +91,8 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
    
    private void deploySuccess(String href)
    {
-      String outputContent = "<b>" + href + "</b> deployed successfully.";
+      
+      String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> deployed successfully.";
       eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       eventBus.fireEvent(new GroovyDeployResultReceivedEvent(href));
    }
@@ -100,7 +103,7 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       {
          ServerException serverException = (ServerException)exception;
 
-         String outputContent = "<b>" + href + "</b> deploy failed.&nbsp;";
+         String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> deploy failed.&nbsp;";
          outputContent +=
             "Error (<i>" + serverException.getHTTPStatus() + "</i>: <i>" + serverException.getStatusText() + "</i>)";
          if (!serverException.getMessage().equals(""))

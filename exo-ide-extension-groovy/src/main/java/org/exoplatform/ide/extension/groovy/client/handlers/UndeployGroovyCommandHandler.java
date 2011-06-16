@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -86,7 +88,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
    private void undeploySuccess(String href)
    {
       
-      String outputContent = "<b>" + href + "</b> undeployed successfully.";
+      String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeployed successfully.";
       eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
 //      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
@@ -97,7 +99,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
       {
          ServerException exception = (ServerException)exc;
 
-         String outputContent = "<b>" + href + "</b> undeploy failed.&nbsp;";
+         String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeploy failed.&nbsp;";
          outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
          if (!exception.getMessage().equals(""))
          {
@@ -145,7 +147,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
          /*
           * Undeploy successfully
           */
-         String outputContent = "<b>" + event.getPath() + "</b> undeployed successfully.";
+         String outputContent = "<b>" + URL.decodePathSegment(event.getPath()) + "</b> undeployed successfully.";
          eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       }
       else
@@ -155,7 +157,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
           */
          ServerException exception = (ServerException)event.getException();
 
-         String outputContent = "<b>" + event.getPath() + "</b> undeploy failed.&nbsp;";
+         String outputContent = "<b>" + URL.decodePathSegment(event.getPath()) + "</b> undeploy failed.&nbsp;";
          outputContent += "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
          if (!exception.getMessage().equals(""))
          {

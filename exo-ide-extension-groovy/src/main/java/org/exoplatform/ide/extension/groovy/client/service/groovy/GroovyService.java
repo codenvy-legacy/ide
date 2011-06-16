@@ -61,7 +61,7 @@ public abstract class GroovyService
    /**
     * Deploy Groovy script.
     * 
-    * @param href - href of source to deploy
+    * @param href - href of source to deploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
    public abstract void deploy(String href, AsyncRequestCallback<String> callback);
@@ -69,7 +69,7 @@ public abstract class GroovyService
    /**
     * Deploy Groovy script.
     * 
-    * @param href - href of source to deploy
+    * @param href - href of source to deploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
    public abstract void deploySandbox(String href, AsyncRequestCallback<String> callback);
@@ -77,7 +77,7 @@ public abstract class GroovyService
    /**
     * Undeploy deployed Groovy script.
     * 
-    * @param href - href of source to undeploy
+    * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
    public abstract void undeploySandbox(String href, AsyncRequestCallback<String> callback);
@@ -85,7 +85,7 @@ public abstract class GroovyService
    /**
     * Undeploy deployed Groovy script.
     * 
-    * @param href - href of source to undeploy
+    * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
    public abstract void undeploy(String href, AsyncRequestCallback<String> callback);
@@ -99,7 +99,7 @@ public abstract class GroovyService
     * 500 - internal server error, message of the error is in the response body.
     * 
     * @param href location of the item, 
-    * with respect to which the classpath location must be found (file or folder).
+    * with respect to which the classpath location must be found (file or folder)  (encoded)
     * @param callback - handle the results when they are returned from the server
     */
    public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback);

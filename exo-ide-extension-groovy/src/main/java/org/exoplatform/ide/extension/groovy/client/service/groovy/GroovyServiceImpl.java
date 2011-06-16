@@ -106,7 +106,8 @@ public class GroovyServiceImpl extends GroovyService
    {
       callback.setResult(href);
       callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      final String location = URL.decodePathSegment(href);
+      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.LOCATION, location).send(callback);
    }
 
    /**
@@ -140,7 +141,8 @@ public class GroovyServiceImpl extends GroovyService
    {
       callback.setResult(href);
       callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).header(HTTPHeader.LOCATION, href).send(callback);
+      final String location = URL.decodePathSegment(href);
+      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).header(HTTPHeader.LOCATION, location).send(callback);
    }
 
    /**
@@ -153,9 +155,11 @@ public class GroovyServiceImpl extends GroovyService
 
       callback.setResult(file);
       callback.setEventBus(eventBus);
+      
+      final String location = URL.decodePathSegment(file.getHref());
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy")
-         .header(HTTPHeader.LOCATION, file.getHref()).data(file.getContent()).send(callback);
+         .header(HTTPHeader.LOCATION, location).data(file.getContent()).send(callback);
    }
 
    /**
