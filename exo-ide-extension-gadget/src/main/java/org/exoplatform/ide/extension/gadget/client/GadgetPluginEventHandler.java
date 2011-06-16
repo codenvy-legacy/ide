@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.gadget.client;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -97,7 +96,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       String href = activeFile.getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
-      TokenRequest tokenRequest = new TokenRequest(URL.encode(href), owner, viewer, moduleId, container, domain);
+      TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);
       GadgetService.getInstance().getSecurityToken(tokenRequest, new AsyncRequestCallback<TokenResponse>()
       {
 

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -291,7 +293,13 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          previewForm = new PreviewForm();
          previewForm.setIcon(new Image(GroovyClientBundle.INSTANCE.preview()));
       }
-      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getHref());
+      //decode url before encoding all url as parameter
+      //because we need to path file href as parameter,
+      //that's why all characters that are not valid for a URL component have been escaped
+      String href = URL.decodePathSegment(activeFile.getHref());
+      //encode file href to path it as parameter in URL
+      href = URL.encodePathSegment(href);
+      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + href);
 
       if (previewOpened)
       {
