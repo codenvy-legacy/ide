@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
@@ -203,7 +205,8 @@ public class Heroku
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, IOException, ParsingResponseException
+   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, IOException,
+      ParsingResponseException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -211,8 +214,8 @@ public class Heroku
       return listSshKeys(herokuCredentials, inLongFormat);
    }
 
-   private List<HerokuKey> listSshKeys(HerokuCredentials herokuCredentials, boolean inLongFormat) throws HerokuException,
-      IOException, ParsingResponseException
+   private List<HerokuKey> listSshKeys(HerokuCredentials herokuCredentials, boolean inLongFormat)
+      throws HerokuException, IOException, ParsingResponseException
    {
       HttpURLConnection http = null;
       try
@@ -340,8 +343,8 @@ public class Heroku
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public Map<String, String> createApplication(String name, String remote, File workDir) throws IOException, HerokuException,
-      ParsingResponseException
+   public Map<String, String> createApplication(String name, String remote, File workDir) throws IOException,
+      HerokuException, ParsingResponseException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -349,8 +352,8 @@ public class Heroku
       return createApplication(herokuCredentials, name, remote, workDir);
    }
 
-   private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote, File workDir)
-      throws IOException, HerokuException, ParsingResponseException
+   private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote,
+      File workDir) throws IOException, HerokuException, ParsingResponseException
    {
       if (remote == null || remote.isEmpty())
          remote = HEROKU_GIT_REMOTE;
@@ -621,8 +624,8 @@ public class Heroku
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public Map<String, String> renameApplication(String name, String newname, File workDir) throws IOException, HerokuException,
-      ParsingResponseException
+   public Map<String, String> renameApplication(String name, String newname, File workDir) throws IOException,
+      HerokuException, ParsingResponseException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -630,8 +633,8 @@ public class Heroku
       return renameApplication(herokuCredentials, name, newname, workDir);
    }
 
-   private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname, File workDir)
-      throws IOException, HerokuException, ParsingResponseException
+   private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname,
+      File workDir) throws IOException, HerokuException, ParsingResponseException
    {
       if (newname == null || newname.isEmpty())
          throw new IllegalStateException("New name may not be null or empty string. ");
@@ -777,15 +780,117 @@ public class Heroku
    }
 
    /**
+    * Run heroku rake command.
+    * 
+    * @param name application name. If <code>null</code> then try to determine application name from git configuration.
+    *           To be able determine application name <code>workDir</code> must not be <code>null</code> at least. If
+    *           name not specified and cannot be determined IllegalStateException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>
+    * @param command command, in form: rake {command} {options}
+    *           <p>
+    *           Examples:
+    *           <ul>
+    *           <li>rake db:create</li>
+    *           <li>rake db:version</li>
+    *           <ul>
+    * @return LazyHttpChunkReader to read result of running command
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws IOException if any i/o occurs
+    */
+   public HttpChunkReader run(String name, File workDir, String command) throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+      return run(herokuCredentials, name, workDir, command);
+   }
+
+   private HttpChunkReader run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
+      throws IOException, HerokuException
+   {
+      if (command == null || command.isEmpty())
+         throw new IllegalStateException("Command is not defined. ");
+
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Application name is not defined. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name + "/services");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("POST");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         http.setRequestProperty("Content-type", "text/plain");
+
+         authenticate(herokuCredentials, http);
+
+         http.setDoOutput(true);
+         OutputStream output = http.getOutputStream();
+         try
+         {
+            output.write(command.getBytes());
+            output.flush();
+         }
+         finally
+         {
+            output.close();
+         }
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         InputStream input = http.getInputStream();
+         URL firstChunk = null;
+         try
+         {
+            int length = http.getContentLength();
+            if (length > 0)
+            {
+               byte[] b = new byte[length];
+               for (int point = -1, off = 0; (point = input.read(b, off, length - off)) > 0; off += point) //
+               ;
+               firstChunk = new URL(new String(b));
+            }
+            else if (length < 0)
+            {
+               byte[] buf = new byte[128];
+               ByteArrayOutputStream bout = new ByteArrayOutputStream();
+               int point = -1;
+               while ((point = input.read(buf)) != -1)
+                  bout.write(buf, 0, point);
+               firstChunk = new URL(bout.toString());
+            }
+         }
+         finally
+         {
+            input.close();
+         }
+
+         return new HttpChunkReader(firstChunk);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
     * Add Basic authentication headers to HttpURLConnection.
     * 
     * @param http HttpURLConnection
     * @throws IOException if any i/o errors occurs
     */
-   private final void authenticate(HerokuCredentials herokuCredentials, HttpURLConnection http) throws IOException
+   private static void authenticate(HerokuCredentials herokuCredentials, HttpURLConnection http) throws IOException
    {
-      byte[] base64 = org.apache.commons.codec.binary.Base64.encodeBase64( //
-         (herokuCredentials.getEmail() + ":" + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
+      byte[] base64 =
+         encodeBase64((herokuCredentials.getEmail() + ":" + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
       http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
    }
 
@@ -862,7 +967,8 @@ public class Heroku
             if (length > 0)
             {
                byte[] b = new byte[length];
-               errorStream.read(b);
+               for (int point = -1, off = 0; (point = errorStream.read(b, off, length - off)) > 0; off += point) //
+               ;
                error = new HerokuException(http.getResponseCode(), new String(b), http.getContentType());
             }
             else if (length == 0)

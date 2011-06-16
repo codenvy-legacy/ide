@@ -20,12 +20,14 @@ package org.exoplatform.ide.extension.heroku.server.rest;
 
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
+import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.git.server.rest.GitLocation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +38,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -142,5 +146,48 @@ public class HerokuService
    ) throws HerokuException, IOException, ParsingResponseException
    {
       return heroku.renameApplication(name, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/run")
+   @POST
+   @Consumes(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.TEXT_PLAIN)
+   public StreamingOutput run( //
+      @QueryParam("name") String name, //
+      @QueryParam("workdir") GitLocation workDir, //
+      @Context UriInfo uriInfo, //
+      final String command //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      final HttpChunkReader chunkReader =
+         heroku.run(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, command);
+      return new StreamingOutput()
+      {
+         @Override
+         public void write(OutputStream output) throws IOException, WebApplicationException
+         {
+            output.write(command.getBytes());
+            output.write('\n');
+            output.write('\n');
+            while (!chunkReader.eof())
+            {
+               byte[] b = chunkReader.next();
+               if (b.length > 0)
+               {
+                  output.write(b);
+               }
+               else
+               {
+                  try
+                  {
+                     Thread.sleep(2000); // Wait time as in original ruby based tool from Heroku.
+                  }
+                  catch (InterruptedException ignored)
+                  {
+                  }
+               }
+            }
+         }
+      };
    }
 }
