@@ -166,7 +166,13 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("messages.status_failed")
    String statusFailed();
-
+   
+   @Key("messages.delete_remote_repository.title")
+   String deleteRemoteRepositoryTitle();
+   
+   @Key("messages.delete_remote_repository.question")
+   String deleteRemoteRepositoryQuestion();
+   
    //----VIEWS------------------------------------------------------------------
 
    //Add
@@ -304,11 +310,20 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String fetchRemoveDeletedRefsTitle();
       
    //Remote
+   @Key("view.remotes.title")
+   String remotesViewTitle();
+   
    @Key("view.remote.name.field")
    String remoteNameField();
    
    @Key("view.remote.location.field")
    String remoteLocationField();
+   
+   @Key("view.remote.grid.name.field")
+   String remoteGridNameField();
+   
+   @Key("view.remote.grid.location.field")
+   String remoteGridLocationField();
    
    /*Controls*/
    @Key("control.add.id")
