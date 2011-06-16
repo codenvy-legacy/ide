@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for adding changes togit index.
@@ -46,9 +47,9 @@ import org.exoplatform.ide.git.client.GitClientBundle;
 public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Display
 {
    public static final int HEIGHT = 180;
-   
+
    public static final int WIDTH = 420;
-   
+
    public static final String ID = "ideAddToIndexView";
 
    public static final String TYPE = "modal";
@@ -58,7 +59,7 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
-   
+
    private static final String ADD_BUTTON_ID = "ideAddToIndexViewAddButton";
 
    private static final String CANCEL_BUTTON_ID = "ideAddToIndexViewCancelButton";
@@ -69,18 +70,12 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
 
    /*Elements titles*/
 
-   private static final String ADD_BUTTON_TITLE = "Add";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String UPDATE_FIELD_TITLE = "Update (don't add new files to index)";
-
    private IButton addButton;
 
    private IButton cancelButton;
 
    private CheckboxItem updateField;
-   
+
    private Label messageField;
 
    public AddToIndexView()
@@ -91,22 +86,21 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(10);
-      
+
       messageField = new Label();
       messageField.setID(MESSAGE_FIELD_ID);
-      messageField.getElement().setInnerHTML("Adding to index files containeddddd  dd d d d      d2313 212 333333 d3 33   d in folder.");
       messageField.setIsHTML(true);
       DOM.setStyleAttribute(messageField.getElement(), "padding", "3px");
       mainLayout.add(messageField);
-      
-      updateField = new CheckboxItem(UPDATE_FIELD_ID, UPDATE_FIELD_TITLE);
+
+      updateField = new CheckboxItem(UPDATE_FIELD_ID, GitExtension.MESSAGES.addToIndexUpdateFieldTitle());
       mainLayout.add(updateField);
-      
+
       addButtonsLayout(mainLayout);
-      
+
       add(mainLayout);
    }
-   
+
    /**
     * Add buttons to the pointed panel.
     * 
@@ -115,12 +109,16 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    private void addButtonsLayout(VerticalPanel panel)
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 +  "px");
+      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 + "px");
       buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
       buttonsLayout.setSpacing(5);
 
-      addButton = createButton(ADD_BUTTON_ID, ADD_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(), GitClientBundle.INSTANCE.okDisabled());
-      cancelButton = createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
+      addButton =
+         createButton(ADD_BUTTON_ID, GitExtension.MESSAGES.buttonAdd(), GitClientBundle.INSTANCE.ok(),
+            GitClientBundle.INSTANCE.okDisabled());
+      cancelButton =
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
+            GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(addButton);
       buttonsLayout.add(cancelButton);

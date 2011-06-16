@@ -143,27 +143,24 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          return "";
       Item selectedItem = selectedItems.get(0);
 
-      String message = "Add ";
       String pattern = GitClientUtil.getFilePatternByHref(selectedItem.getHref(), workDir);
 
       //Root of the working tree:
       if (pattern.length() == 0 || "/".equals(pattern))
       {
-         message += "all changes in repository to index.";
-         return message;
+         
+         return GitExtension.MESSAGES.addToIndexAllChanges();
       }
 
       if (selectedItem instanceof Folder)
       {
-         message += "content of folder";
+         return GitExtension.MESSAGES.addToIndexFolder(pattern);
       }
       else
       {
-         message += "file";
+         return GitExtension.MESSAGES.addToIndexFile(pattern);
       }
-      message += " <b>" + pattern + "</b> ";
-      message += "to index.";
-      return message;
+      
    }
 
    /**

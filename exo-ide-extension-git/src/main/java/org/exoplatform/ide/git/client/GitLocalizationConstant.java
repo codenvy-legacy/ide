@@ -25,6 +25,16 @@ package org.exoplatform.ide.git.client;
  */
 public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
+   
+   //BUTTONS
+   
+   @Key("button.add")
+   String buttonAdd();
+   
+   @Key("button.cancel")
+   String buttonCancel();
+   
+   //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
 
@@ -123,4 +133,18 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("messages.status_failed")
    String statusFailed();
+
+   // VIEWS
+
+   @Key("view.add_to_index.all_changes")
+   String addToIndexAllChanges();
+
+   @Key("view.add_to_index.folder")
+   String addToIndexFolder(String folder);
+
+   @Key("view.add_to_index.file")
+   String addToIndexFile(String file);
+   
+   @Key("view.add_to_index.update_field_title")
+   String addToIndexUpdateFieldTitle();
 }
