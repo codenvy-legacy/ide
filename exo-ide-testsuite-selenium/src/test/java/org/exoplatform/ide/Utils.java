@@ -157,11 +157,11 @@ public class Utils
 
          if (BaseTest.isRunIdeAsShell())
          {
-            m.update(href.getBytes());
+            m.update(encoded.getBytes());
          }
          else
          {
-            m.update((BaseTest.BASE_URL + "IDE/" + href.substring(BaseTest.BASE_URL.length())).getBytes());            
+            m.update((BaseTest.BASE_URL + "IDE/" + encoded.substring(BaseTest.BASE_URL.length())).getBytes());            
          }
          
          byte[] digest = m.digest();
