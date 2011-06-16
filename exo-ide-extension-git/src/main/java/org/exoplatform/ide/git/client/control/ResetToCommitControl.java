@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
 
 /**
@@ -30,29 +31,11 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
  */
 public class ResetToCommitControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Reset...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Reset...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Reset to revision...";
-
-   /**
-    * @param id
-    */
    public ResetToCommitControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.resetToCommitControlId());
+      setTitle(GitExtension.MESSAGES.resetToCommitControlTitle());
+      setPrompt(GitExtension.MESSAGES.resetToCommitControlPrompt());
       setEvent(new ResetToCommitEvent());
       setImages(GitClientBundle.INSTANCE.revert(), GitClientBundle.INSTANCE.revertDisabled());
    }

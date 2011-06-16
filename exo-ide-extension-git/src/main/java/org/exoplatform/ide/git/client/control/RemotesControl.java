@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.remote.ShowRemotesEvent;
  */
 public class RemotesControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Remote/Remotes...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Remotes...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "The list of the remote repositories.";
-
    public RemotesControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.remotesControlId());
+      setTitle(GitExtension.MESSAGES.remotesControlTitle());
+      setPrompt(GitExtension.MESSAGES.remotesControlPrompt());
       setImages(GitClientBundle.INSTANCE.remotes(), GitClientBundle.INSTANCE.remotesDisabled());
       setEvent(new ShowRemotesEvent());
    }

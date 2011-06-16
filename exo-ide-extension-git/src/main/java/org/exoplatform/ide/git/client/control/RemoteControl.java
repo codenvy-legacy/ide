@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -31,15 +32,11 @@ import org.exoplatform.ide.git.client.GitClientBundle;
  */
 public class RemoteControl extends SimpleControl implements IDEControl
 {
-
-   public static final String ID = "Git/Remote"; 
-   
-   
    public RemoteControl()
    {
-      super(ID);
-      setTitle("Remote");
-      setPrompt("Remote");
+      super(GitExtension.MESSAGES.remoteControlId());
+      setTitle(GitExtension.MESSAGES.removeControlTitle());
+      setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
       setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
    }
    /**
@@ -51,5 +48,4 @@ public class RemoteControl extends SimpleControl implements IDEControl
       setVisible(true);
       setEnabled(true);
    }
-
 }

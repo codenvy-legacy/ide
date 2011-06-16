@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.pull.PullEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.pull.PullEvent;
  */
 public class PullControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Remote/Pull...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Pull...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Pull data from remote repository...";
-
    public PullControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.pullControlId());
+      setTitle(GitExtension.MESSAGES.pullControlTitle());
+      setPrompt(GitExtension.MESSAGES.pullControlPrompt());
       setEvent(new PullEvent());
       setImages(GitClientBundle.INSTANCE.pull(), GitClientBundle.INSTANCE.pullDisabled());
    }

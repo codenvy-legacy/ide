@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.fetch.FetchEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.fetch.FetchEvent;
  */
 public class FetchControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Remote/Fetch...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Fetch...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Fetch data from remote repository...";
-
    public FetchControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.fetchControlId());
+      setTitle(GitExtension.MESSAGES.fetchControlTitle());
+      setPrompt(GitExtension.MESSAGES.fetchControlPrompt());
       setEvent(new FetchEvent());
       setImages(GitClientBundle.INSTANCE.fetch(), GitClientBundle.INSTANCE.fetchDisabled());
    }

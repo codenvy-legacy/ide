@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
  */
 public class ShowHistoryControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Show history...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Show history...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Show history...";
-
    public ShowHistoryControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.historyControlId());
+      setTitle(GitExtension.MESSAGES.historyControlTitle());
+      setPrompt(GitExtension.MESSAGES.historyControlPrompt());
       setEvent(new ShowInHistoryEvent());
       setImages(GitClientBundle.INSTANCE.history(), GitClientBundle.INSTANCE.historyDisabled());
       setDelimiterBefore(true);

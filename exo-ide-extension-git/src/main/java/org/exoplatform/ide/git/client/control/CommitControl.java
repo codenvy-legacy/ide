@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.CommitEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.commit.CommitEvent;
  */
 public class CommitControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Commit";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Commit";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Commit";
-
    public CommitControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.commitControlId());
+      setTitle(GitExtension.MESSAGES.commitControlTitle());
+      setPrompt(GitExtension.MESSAGES.commitControlPrompt());
       setEvent(new CommitEvent());
       setImages(GitClientBundle.INSTANCE.commit(), GitClientBundle.INSTANCE.commitDisabled());
    }

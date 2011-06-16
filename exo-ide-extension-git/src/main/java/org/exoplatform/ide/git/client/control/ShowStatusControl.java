@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
  */
 public class ShowStatusControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Status";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Show Status";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Show the work tree status";
-
    public ShowStatusControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.statusControlId());
+      setTitle(GitExtension.MESSAGES.statusControlTitle());
+      setPrompt(GitExtension.MESSAGES.statusControlPrompt());
       setEvent(new ShowWorkTreeStatusEvent());
       setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
    }

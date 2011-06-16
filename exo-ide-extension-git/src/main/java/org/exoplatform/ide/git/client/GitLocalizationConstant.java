@@ -184,4 +184,139 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.branch.title")
    String branchTitle();
    
+   /*Controls*/
+   @Key("control.add.id")
+   String addControlId();
+
+   @Key("control.add.title")
+   String addControlTitle();
+
+   @Key("control.add.prompt")
+   String addControlPrompt();
+
+   @Key("control.branches.id")
+   String branchesControlId();
+
+   @Key("control.branches.title")
+   String branchesControlTitle();
+
+   @Key("control.branches.prompt")
+   String branchesControlPrompt();
+
+   @Key("control.clone.id")
+   String cloneControlId();
+
+   @Key("control.clone.title")
+   String cloneControlTitle();
+
+   @Key("control.clone.prompt")
+   String cloneControlPrompt();
+
+   @Key("control.commit.id")
+   String commitControlId();
+
+   @Key("control.commit.title")
+   String commitControlTitle();
+
+   @Key("control.commit.prompt")
+   String commitControlPrompt();
+
+   @Key("control.fetch.id")
+   String fetchControlId();
+
+   @Key("control.fetch.title")
+   String fetchControlTitle();
+
+   @Key("control.fetch.prompt")
+   String fetchControlPrompt();
+
+   @Key("control.init.id")
+   String initControlId();
+
+   @Key("control.init.title")
+   String initControlTitle();
+
+   @Key("control.init.prompt")
+   String initControlPrompt();
+
+   @Key("control.pull.id")
+   String pullControlId();
+
+   @Key("control.pull.title")
+   String pullControlTitle();
+
+   @Key("control.pull.prompt")
+   String pullControlPrompt();
+
+   @Key("control.push.id")
+   String pushControlId();
+
+   @Key("control.push.title")
+   String pushControlTitle();
+
+   @Key("control.push.prompt")
+   String pushControlPrompt();
+
+   @Key("control.remote.id")
+   String remoteControlId();
+
+   @Key("control.remote.title")
+   String remoteControlTitle();
+
+   @Key("control.remote.prompt")
+   String remoteControlPrompt();
+
+   @Key("control.remotes.id")
+   String remotesControlId();
+
+   @Key("controlremotes.title")
+   String remotesControlTitle();
+
+   @Key("control.remotes.prompt")
+   String remotesControlPrompt();
+
+   @Key("control.remove.id")
+   String removeControlId();
+
+   @Key("control.remove.title")
+   String removeControlTitle();
+
+   @Key("control.remove.prompt")
+   String removeControlPrompt();
+
+   @Key("control.resetFiles.id")
+   String resetFilesControlId();
+
+   @Key("control.resetFiles.title")
+   String resetFilesControlTitle();
+
+   @Key("control.resetFiles.prompt")
+   String resetFilesControlPrompt();
+
+   @Key("control.resetToCommit.id")
+   String resetToCommitControlId();
+
+   @Key("control.resetToCommit.title")
+   String resetToCommitControlTitle();
+
+   @Key("control.resetToCommit.prompt")
+   String resetToCommitControlPrompt();
+
+   @Key("control.history.id")
+   String historyControlId();
+
+   @Key("control.history.title")
+   String historyControlTitle();
+
+   @Key("control.history.prompt")
+   String historyControlPrompt();
+
+   @Key("control.status.id")
+   String statusControlId();
+
+   @Key("control.status.title")
+   String statusControlTitle();
+
+   @Key("control.status.prompt")
+   String statusControlPrompt();
 }

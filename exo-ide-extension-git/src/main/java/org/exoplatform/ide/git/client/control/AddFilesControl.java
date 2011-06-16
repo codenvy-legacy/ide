@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.add.AddFilesEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.add.AddFilesEvent;
  */
 public class AddFilesControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Add...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Add...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Add changes to index";
-
    public AddFilesControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.addControlId());
+      setTitle(GitExtension.MESSAGES.addControlTitle());
+      setPrompt(GitExtension.MESSAGES.addControlTitle());
       setEvent(new AddFilesEvent());
       setImages(GitClientBundle.INSTANCE.addToIndex(), GitClientBundle.INSTANCE.addToIndexDisabled());
       setDelimiterBefore(true);

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
 
 /**
@@ -30,27 +31,11 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
  */
 public class RemoveFilesControl extends GitControl
 {
-
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Remove...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Remove ...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Remove changes from index";
-
    public RemoveFilesControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.removeControlId());
+      setTitle(GitExtension.MESSAGES.removeControlTitle());
+      setPrompt(GitExtension.MESSAGES.removeControlPrompt());
       setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
       setEvent(new RemoveFilesEvent());
    }

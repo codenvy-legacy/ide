@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
 
 /**
@@ -30,26 +31,11 @@ import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
  */
 public class ResetFilesControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Reset files...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Reset files ...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Reset files...";
-
    public ResetFilesControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.resetFilesControlId());
+      setTitle(GitExtension.MESSAGES.resetFilesControlTitle());
+      setPrompt(GitExtension.MESSAGES.resetFilesControlPrompt());
       setImages(GitClientBundle.INSTANCE.reset(), GitClientBundle.INSTANCE.resetDisabled());
       setEvent(new ResetFilesEvent());
    }

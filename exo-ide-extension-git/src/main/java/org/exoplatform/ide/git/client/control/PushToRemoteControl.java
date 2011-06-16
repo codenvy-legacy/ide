@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
 
 /**
@@ -30,27 +31,11 @@ import org.exoplatform.ide.git.client.push.PushToRemoteEvent;
  */
 public class PushToRemoteControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Remote/Push...";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Push";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Push changes to remote repository.";
-   
-   
    public PushToRemoteControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.pushControlId());
+      setTitle(GitExtension.MESSAGES.pushControlTitle());
+      setPrompt(GitExtension.MESSAGES.pushControlPrompt());
       setImages(GitClientBundle.INSTANCE.push(), GitClientBundle.INSTANCE.pushDisabled());
       setEvent(new PushToRemoteEvent());
       setDelimiterBefore(true);

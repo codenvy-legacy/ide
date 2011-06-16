@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
 /**
@@ -37,29 +38,11 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
  */
 public class CloneRepositoryControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Clone repository";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Clone repository";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Clone repository to local one";
-
-   /**
-    * @param id
-    */
    public CloneRepositoryControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.cloneControlId());
+      setTitle(GitExtension.MESSAGES.cloneControlTitle());
+      setPrompt(GitExtension.MESSAGES.cloneControlPrompt());
       setImages(GitClientBundle.INSTANCE.cloneRepo(), GitClientBundle.INSTANCE.cloneRepoDisabled());
       setEvent(new CloneRepositoryEvent());
    }

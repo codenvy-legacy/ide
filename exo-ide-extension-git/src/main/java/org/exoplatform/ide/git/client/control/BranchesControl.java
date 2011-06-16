@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
 
 /**
@@ -31,26 +32,11 @@ import org.exoplatform.ide.git.client.branch.ShowBranchesEvent;
  */
 public class BranchesControl extends GitControl
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Branches";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Branches...";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Work with branches";
-
    public BranchesControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.branchesControlId());
+      setTitle(GitExtension.MESSAGES.branchesControlTitle());
+      setPrompt(GitExtension.MESSAGES.branchesControlPrompt());
       setEvent(new ShowBranchesEvent());
       setImages(GitClientBundle.INSTANCE.branches(), GitClientBundle.INSTANCE.branchesDisabled());
    }

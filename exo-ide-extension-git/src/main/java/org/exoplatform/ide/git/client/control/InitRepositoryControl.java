@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.create.InitRepositoryEvent;
 
 /**
@@ -37,29 +38,11 @@ import org.exoplatform.ide.git.client.create.InitRepositoryEvent;
  */
 public class InitRepositoryControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
-   /**
-    * Control ID.
-    */
-   public static final String ID = "Git/Initialize repository";
-
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = "Initialize repository";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Initialize repository";
-
-   /**
-    * @param id
-    */
    public InitRepositoryControl()
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      super(GitExtension.MESSAGES.initControlId());
+      setTitle(GitExtension.MESSAGES.initControlTitle());
+      setPrompt(GitExtension.MESSAGES.initControlPrompt());
       setEvent(new InitRepositoryEvent());
       setImages(GitClientBundle.INSTANCE.initRepo(), GitClientBundle.INSTANCE.initRepoDisabled());
       setVisible(true);
