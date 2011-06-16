@@ -45,6 +45,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("button.close")
    String buttonClose();
+
+   @Key("button.clone")
+   String buttonClone();
    
    //MESSAGES
    @Key("messages.not_git_repository")
@@ -184,6 +187,19 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.branch.title")
    String branchTitle();
    
+   //Clone
+   @Key("view.clone.title")
+   String cloneTitle();
+   
+   @Key("view.clone.workdir_field_title")
+   String cloneWorkdirFieldTitle();
+   
+   @Key("view.clone.remote_uri_field_title")
+   String cloneRemoteUriFieldTitle();
+   
+   @Key("view.clone.remote_name_field_title")
+   String cloneRemoteNameFieldTitle();
+   
    /*Controls*/
    @Key("control.add.id")
    String addControlId();
@@ -319,4 +335,5 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.status.prompt")
    String statusControlPrompt();
+   
 }

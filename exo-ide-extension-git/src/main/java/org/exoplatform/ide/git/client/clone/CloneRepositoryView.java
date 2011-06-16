@@ -29,8 +29,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for cloning repository.
@@ -43,10 +45,6 @@ public class CloneRepositoryView extends ViewImpl implements
    org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display
 {
    public static final String ID = "ideCloneRepositoryView";
-
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Clone remote repository";
 
    private static final int BUTTON_HEIGHT = 22;
 
@@ -64,17 +62,6 @@ public class CloneRepositoryView extends ViewImpl implements
 
    private static final String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
 
-   /*Elements titles*/
-
-   private static final String CLONE_BUTTON_TITLE = "Clone";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String WORKDIR_FIELD_TITLE = "Work directory";
-
-   private static final String REMOTE_URI_FIELD_TITLE = "Remote repository URI";
-
-   private static final String REMOTE_NAME_FIELD_TITLE = "Remote name";
 
    private IButton cloneButton;
 
@@ -88,7 +75,7 @@ public class CloneRepositoryView extends ViewImpl implements
 
    public CloneRepositoryView()
    {
-      super(ID, TYPE, TITLE, null, 480, 240);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.cloneTitle(), null, 480, 240);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -96,9 +83,9 @@ public class CloneRepositoryView extends ViewImpl implements
       mainLayout.setSpacing(2);
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      workdirField = createTextField(WORKDIR_FIELD_ID, WORKDIR_FIELD_TITLE);
-      remoteUriField = createTextField(REMOTE_URI_FIELD_ID, REMOTE_URI_FIELD_TITLE);
-      remoteNameField = createTextField(REMOTE_NAME_FIELD_ID, REMOTE_NAME_FIELD_TITLE);
+      workdirField = createTextField(WORKDIR_FIELD_ID, GitExtension.MESSAGES.cloneWorkdirFieldTitle());
+      remoteUriField = createTextField(REMOTE_URI_FIELD_ID, GitExtension.MESSAGES.cloneRemoteUriFieldTitle());
+      remoteNameField = createTextField(REMOTE_NAME_FIELD_ID, GitExtension.MESSAGES.cloneRemoteNameFieldTitle());
 
       mainLayout.add(workdirField);
       mainLayout.add(remoteUriField);
@@ -120,8 +107,12 @@ public class CloneRepositoryView extends ViewImpl implements
       buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       buttonsLayout.setSpacing(5);
 
-      cloneButton = createButton(CLONE_BUTTON_ID, CLONE_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(), GitClientBundle.INSTANCE.okDisabled());
-      cancelButton = createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(), GitClientBundle.INSTANCE.cancelDisabled());
+      cloneButton =
+         createButton(CLONE_BUTTON_ID, GitExtension.MESSAGES.buttonClone(), GitClientBundle.INSTANCE.ok(),
+            GitClientBundle.INSTANCE.okDisabled());
+      cancelButton =
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
+            GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(cloneButton);
       buttonsLayout.add(cancelButton);
