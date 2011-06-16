@@ -113,6 +113,12 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
 
    @UiField
    TableCellElement revisionBDate;
+   
+   @UiField
+   TableCellElement revisionATitle;
+
+   @UiField
+   TableCellElement revisionADate;
 
    /**
     * Refresh button.
@@ -167,6 +173,9 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
          GitClientBundle.INSTANCE.history()), 400, 250, true);
       add(uiBinder.createAndBindUi(this));
 
+      revisionADate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
+      revisionATitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
+      
       comitADate.setHeight(20);
       comitARevision.setHeight(20);
       comitBDate.setHeight(20);
@@ -391,8 +400,8 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    public void displayCompareVersion(Revision revisionA, Revision revisionB)
    {
       revisionBDate.setAttribute("rowspan", "0");
-      revisionBDate.setInnerText("Date");
-      revisionBTitle.setInnerText("Rev.");
+      revisionBDate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
+      revisionBTitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
       comitBDate.show();
       comitBRevision.show();
       DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);

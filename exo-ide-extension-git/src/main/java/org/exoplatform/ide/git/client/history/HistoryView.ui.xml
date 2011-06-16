@@ -36,24 +36,24 @@
                      <g:HTMLPanel>
                         <table width="100%">
                            <tr>
-                              <td class="{style.title}">Date:</td>
+                              <td class="{style.title}" ui:field="revisionADate"></td>
                               <td>
                                  <f:TextField ui:field="comitADate" width="100%"></f:TextField>
                               </td>
                               <td width="40px" rowspan="2" align="center">
                                  <img src="{resource.arrows.getURL}"></img>
                               </td>
-                              <td class="{style.title}" ui:field="revisionBDate">Date:</td>
+                              <td class="{style.title}" ui:field="revisionBDate"></td>
                               <td>
                                  <f:TextField ui:field="comitBDate" width="100%"></f:TextField>
                               </td>
                            </tr>
                            <tr>
-                              <td class="{style.title}">Rev.:</td>
+                              <td class="{style.title}" ui:field="revisionATitle"></td>
                               <td>
                                  <f:TextField ui:field="comitARevision" width="100%"></f:TextField>
                               </td>
-                              <td class="{style.title}" ui:field="revisionBTitle">Rev.:</td>
+                              <td class="{style.title}" ui:field="revisionBTitle"></td>
                               <td>
                                  <f:TextField ui:field="comitBRevision" width="100%"></f:TextField>
                               </td>
