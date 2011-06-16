@@ -259,6 +259,18 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.commit.grid.comment")
    String commitGridComment();
    
+   @Key("view.push.title")
+   String pushViewTitle();
+   
+   @Key("view.push.remote.field")
+   String pushViewRemoteFieldTitle();
+   
+   @Key("view.push.local_branch.field")
+   String pushViewLocalBranchFieldTitle();
+   
+   @Key("view.push.remote_branch.field")
+   String pushViewRemoteBranchFieldTitle();
+
    //Reset
    @Key("view.reset.files.title")
    String resetFilesViewTitle();
@@ -333,8 +345,8 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("view.remote.grid.location.field")
    String remoteGridLocationField();
+ 
    //History
-   
    @Key("view.history.diff.index.state")
    String historyDiffIndexState();
    

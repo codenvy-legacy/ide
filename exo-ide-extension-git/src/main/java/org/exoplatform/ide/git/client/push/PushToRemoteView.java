@@ -33,8 +33,10 @@ import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.LinkedHashMap;
 
@@ -50,10 +52,6 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
 {
    public static final String ID = "idePushToRemoteView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Push to remote repository";
-
    /*Elements IDs*/
 
    private static final String PUSH_BUTTON_ID = "idePushToRemoteViewPushButton";
@@ -67,16 +65,6 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
    private static final String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
 
    /*Elements titles*/
-
-   private static final String PUSH_BUTTON_TITLE = "Push";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String REMOTE_FIELD_TITLE = "Choose remote repository :";
-
-   private static final String LOCAL_BRANCHES_TITLE = "Push from branch:";
-
-   private static final String REMOTE_BRANCHES_TITLE = "To branch:";
 
    private static final int BUTTON_HEIGHT = 22;
 
@@ -94,7 +82,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
 
    public PushToRemoteView()
    {
-      super(ID, TYPE, TITLE, null, 490, 200);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.pushViewTitle(), null, 490, 200);
       setWidth("100%");
       setHeight("100%");
 
@@ -104,7 +92,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
       mainLayout.setSpacing(5);
 
-      remoteField = new SelectItem(REMOTE_FIELD_ID, REMOTE_FIELD_TITLE);
+      remoteField = new SelectItem(REMOTE_FIELD_ID, GitExtension.MESSAGES.pushViewRemoteFieldTitle());
       remoteField.setWidth(280);
       mainLayout.add(remoteField);
       mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -126,7 +114,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       refsLayout.setWidth("100%");
       refsLayout.setSpacing(3);
 
-      localBranchesField = new SelectItem(LOCAL_BRANCHES_FIELD_ID, LOCAL_BRANCHES_TITLE);
+      localBranchesField = new SelectItem(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewLocalBranchFieldTitle());
       localBranchesField.setTitleOrientation(TitleOrientation.TOP);
       localBranchesField.setWidth(210);
 
@@ -135,7 +123,7 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       arrow.setHeight("16px");
       DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
 
-      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, REMOTE_BRANCHES_TITLE);
+      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewRemoteBranchFieldTitle());
 
       refsLayout.add(localBranchesField);
       refsLayout.add(arrow);
@@ -177,10 +165,10 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       buttonsLayout.setSpacing(5);
 
       pushButton =
-         createButton(PUSH_BUTTON_ID, PUSH_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(PUSH_BUTTON_ID, GitExtension.MESSAGES.buttonPush(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(pushButton);
