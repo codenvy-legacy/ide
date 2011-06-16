@@ -30,8 +30,10 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.VPanel;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Remote;
 
 /**
@@ -50,10 +52,6 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
 
    public static final String ID = "ideRemoteView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Remote repositories";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -65,13 +63,6 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    private static final String DELETE_BUTTON_ID = "ideRemoteViewDeleteButton";
 
    private static final String CLOSE_BUTTON_ID = "ideRemoteViewCloseButton";
-
-   /* Element's titles*/
-   private static final String ADD_BUTTON_TITLE = "Add";
-
-   private static final String DELETE_BUTTON_TITLE = "Delete";
-
-   private static final String CLOSE_BUTTON_TITLE = "Close";
 
    /**
     * Create remote repository button.
@@ -95,7 +86,7 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
 
    public RemoteView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
 
       VPanel vPanel = new VPanel();
       Border border = new Border();
@@ -124,13 +115,13 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
       buttonsLayout.setSpacing(5);
 
       addButton =
-         createButton(ADD_BUTTON_ID, ADD_BUTTON_TITLE, GitClientBundle.INSTANCE.add(),
+         createButton(ADD_BUTTON_ID, GitExtension.MESSAGES.buttonAdd(), GitClientBundle.INSTANCE.add(),
             GitClientBundle.INSTANCE.addDisabled());
       deleteButton =
-         createButton(DELETE_BUTTON_ID, DELETE_BUTTON_TITLE, GitClientBundle.INSTANCE.remove(),
+         createButton(DELETE_BUTTON_ID, GitExtension.MESSAGES.buttonDelete(), GitClientBundle.INSTANCE.remove(),
             GitClientBundle.INSTANCE.removeDisabled());
       closeButton =
-         createButton(CLOSE_BUTTON_ID, CLOSE_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CLOSE_BUTTON_ID, GitExtension.MESSAGES.buttonClose(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(addButton);

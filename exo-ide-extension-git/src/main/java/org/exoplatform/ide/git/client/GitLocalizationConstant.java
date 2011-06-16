@@ -167,11 +167,14 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("messages.status_failed")
    String statusFailed();
    
+   @Key("messages.selected_remote_fail")
+   String selectRemoteRepositoryFail();
+   
    @Key("messages.delete_remote_repository.title")
    String deleteRemoteRepositoryTitle();
    
    @Key("messages.delete_remote_repository.question")
-   String deleteRemoteRepositoryQuestion();
+   String deleteRemoteRepositoryQuestion(String remote);
    
    //----VIEWS------------------------------------------------------------------
 

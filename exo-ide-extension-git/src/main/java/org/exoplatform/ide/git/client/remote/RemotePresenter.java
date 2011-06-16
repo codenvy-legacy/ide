@@ -264,12 +264,12 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       final Remote selectedRemote = display.getSelectedRemote();
       if (selectedRemote == null)
       {
-         Dialogs.getInstance().showInfo("Remote repository must be selected.");
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectRemoteRepositoryFail());
          return;
       }
 
-      Dialogs.getInstance().ask("Delete remote repository",
-         "Are you sure you want to delete remote repository <b>" + selectedRemote.getName() + "</b>?",
+      Dialogs.getInstance().ask(GitExtension.MESSAGES.deleteRemoteRepositoryTitle(),
+         GitExtension.MESSAGES.deleteRemoteRepositoryQuestion(selectedRemote.getName()),
          new BooleanValueReceivedHandler()
          {
 

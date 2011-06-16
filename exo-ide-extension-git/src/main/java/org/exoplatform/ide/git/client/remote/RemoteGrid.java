@@ -23,6 +23,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.List;
@@ -40,16 +41,6 @@ public class RemoteGrid extends ListGrid<Remote>
     * Grid's ID.
     */
    private static final String ID = "ideRemoteGrid";
-
-   /**
-    * Name column's name.
-    */
-   private final String NAME = "Name";
-
-   /**
-    * Location column's name.
-    */
-   private final String URL = "Location";
 
    /**
     *Name column.
@@ -98,9 +89,9 @@ public class RemoteGrid extends ListGrid<Remote>
 
       };
 
-      cellTable.addColumn(nameColumn, NAME);
+      cellTable.addColumn(nameColumn, GitExtension.MESSAGES.remoteGridNameField());
       cellTable.setColumnWidth(nameColumn, "20%");
-      cellTable.addColumn(urlColumn, URL);
+      cellTable.addColumn(urlColumn, GitExtension.MESSAGES.remoteGridLocationField());
       cellTable.setColumnWidth(urlColumn, "80%");
    }
 

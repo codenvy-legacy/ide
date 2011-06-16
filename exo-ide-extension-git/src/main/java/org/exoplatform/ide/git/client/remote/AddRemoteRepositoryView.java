@@ -31,8 +31,10 @@ import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.component.VPanel;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for adding new remote repository.
@@ -49,8 +51,6 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
 
    public static final String ID = "ideAddRemoteRepositoryView";
 
-   public static final String TYPE = "modal";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -64,15 +64,6 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
    private static final String NAME_FIELD_ID = "ideAddRemoteRepositoryViewNameField";
 
    private static final String URL_FIELD_ID = "ideAddRemoteRepositoryViewUrlField";
-
-   /* Element's titles*/
-   private static final String OK_BUTTON_TITLE = "Ok";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String NAME_FIELD_TITLE = "Name";
-
-   private static final String URL_FIELD_TITLE = "Location";
 
    /**
     * Ok button.
@@ -96,15 +87,15 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
 
    public AddRemoteRepositoryView(String title)
    {
-      super(ID, TYPE, title, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
       VPanel mainPanel = new VPanel();
 
-      nameField = new TextField(NAME_FIELD_ID, NAME_FIELD_TITLE);
+      nameField = new TextField(NAME_FIELD_ID, GitExtension.MESSAGES.remoteNameField());
       nameField.setTitleOrientation(TitleOrientation.TOP);
       nameField.setHeight(22);
       nameField.setWidth("100%");
 
-      urlField = new TextField(URL_FIELD_ID, URL_FIELD_TITLE);
+      urlField = new TextField(URL_FIELD_ID, GitExtension.MESSAGES.remoteLocationField());
       urlField.setTitleOrientation(TitleOrientation.TOP);
       urlField.setHeight(22);
       urlField.setWidth("100%");
@@ -139,10 +130,10 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
       buttonsLayout.setSpacing(5);
 
       okButton =
-         createButton(OK_BUTTON_ID, OK_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(OK_BUTTON_ID, GitExtension.MESSAGES.buttonOk(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(okButton);
