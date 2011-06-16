@@ -207,6 +207,27 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.reset.files.title")
    String resetFilesViewTitle();
    
+   @Key("view.reset.commit.title")
+   String resetCommitViewTitle();
+   
+   @Key("view.reset.soft.type.title")
+   String resetSoftTypeTitle();
+   
+   @Key("view.reset.soft.type.description")
+   String resetSoftTypeDescription();
+   
+   @Key("view.reset.mixed.type.title")
+   String resetMixedTypeTitle();
+   
+   @Key("view.reset.mixed.type.description")
+   String resetMixedTypeDescription();
+   
+   @Key("view.reset.hard.type.title")
+   String resetHardTypeTitle();
+   
+   @Key("view.reset.hard.type.description")
+   String resetHardTypeDescription();
+   
    /*Controls*/
    @Key("control.add.id")
    String addControlId();

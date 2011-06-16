@@ -28,8 +28,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.client.remove.IndexFilesGrid;
 
@@ -49,10 +51,6 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
 
    public static final String ID = "ideResetFilesView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Select files to reset";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -61,11 +59,6 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
    private static final String RESET_BUTTON_ID = "ideResetFilesViewResetButton";
 
    private static final String CANCEL_BUTTON_ID = "ideResetFilesViewCancelButton";
-
-   /* Element's titles*/
-   private static final String RESET_BUTTON_TITLE = "Reset";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
 
    /**
     *Reset files button.
@@ -84,7 +77,7 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
 
    public ResetFilesView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetFilesViewTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -120,10 +113,10 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
       buttonsLayout.setSpacing(5);
 
       resetButton =
-         createButton(RESET_BUTTON_ID, RESET_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(RESET_BUTTON_ID, GitExtension.MESSAGES.buttonReset(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(resetButton);

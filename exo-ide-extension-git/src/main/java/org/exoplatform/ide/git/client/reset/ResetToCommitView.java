@@ -34,8 +34,10 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.RadioItem;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -55,10 +57,6 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
 
    public static final String ID = "ideResetToCommitView";
 
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = "Reset to commit";
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -70,24 +68,6 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
    private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
 
    private static final String MODE_ID = "ideRevertToCommitViewMode";
-
-   /* Element's titles*/
-
-   private static final String RESET_BUTTON_TITLE = "Reset";
-
-   private static final String CANCEL_BUTTON_TITLE = "Cancel";
-
-   private static final String SOFT_MODE_TITLE = "soft";
-
-   private static final String MIXED_MODE_TITLE = "mixed";
-
-   private static final String HARD_MODE_TITLE = "hard";
-
-   private static final String SOFT_MODE_DESCRIPTION = " (only reset the head to commit)";
-
-   private static final String MIXED_MODE_DESCRIPTION = " (reset the index but not the working tree)";
-
-   private static final String HARD_MODE_DESCRIPTION = " (reset the index and working tree)";
 
    /**
     *Revert button.
@@ -121,7 +101,7 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
 
    public ResetToCommitView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT);
 
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
@@ -138,12 +118,12 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
       border.add(revisionGrid);
       mainLayout.add(border);
 
-      softMode = new RadioItem(MODE_ID, SOFT_MODE_TITLE);
-      addDescription(softMode, SOFT_MODE_DESCRIPTION);
-      mixedMode = new RadioItem(MODE_ID, MIXED_MODE_TITLE);
-      addDescription(mixedMode, MIXED_MODE_DESCRIPTION);
-      hardMode = new RadioItem(MODE_ID, HARD_MODE_TITLE);
-      addDescription(hardMode, HARD_MODE_DESCRIPTION);
+      softMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetSoftTypeTitle());
+      addDescription(softMode,GitExtension.MESSAGES.resetSoftTypeDescription());
+      mixedMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetMixedTypeTitle());
+      addDescription(mixedMode, GitExtension.MESSAGES.resetMixedTypeDescription());
+      hardMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetHardTypeTitle());
+      addDescription(hardMode, GitExtension.MESSAGES.resetHardTypeDescription());
 
       VerticalPanel modeLayout = new VerticalPanel();
       modeLayout.setWidth("100%");
@@ -187,10 +167,10 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
       buttonsLayout.setSpacing(5);
 
       resetButton =
-         createButton(RESET_BUTTON_ID, RESET_BUTTON_TITLE, GitClientBundle.INSTANCE.ok(),
+         createButton(RESET_BUTTON_ID, GitExtension.MESSAGES.buttonReset(), GitClientBundle.INSTANCE.ok(),
             GitClientBundle.INSTANCE.okDisabled());
       cancelButton =
-         createButton(CANCEL_BUTTON_ID, CANCEL_BUTTON_TITLE, GitClientBundle.INSTANCE.cancel(),
+         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
             GitClientBundle.INSTANCE.cancelDisabled());
 
       buttonsLayout.add(resetButton);
