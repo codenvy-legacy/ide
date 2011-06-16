@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
@@ -28,10 +29,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final int WIDTH = 520;
 
    private static final int HEIGHT = 240;
-
-   private static final String TYPE = "modal";
-
-   private static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle();
 
    private static final String CREATE_BUTTON_ID = "ideCreateApplicationViewCreateButton";
 
@@ -74,14 +71,14 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    IButton createButton;
 
    /**
-    * Cancel buuton.
+    * Cancel button.
     */
    @UiField
    IButton cancelButton;
 
    public CreateApplicationView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);

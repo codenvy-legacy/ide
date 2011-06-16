@@ -167,8 +167,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
       final boolean isName = (deleteName != null);
       String deletion = (isName) ? deleteName : workDir;
 
-      Dialogs.getInstance().ask("Delete application from Heroku",
-         "Are you sure you want to delete application " + "<b>" + deletion + "</b>" + " from Heroku?",
+      Dialogs.getInstance().ask(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
+        HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(deletion),
          new BooleanValueReceivedHandler()
          {
 

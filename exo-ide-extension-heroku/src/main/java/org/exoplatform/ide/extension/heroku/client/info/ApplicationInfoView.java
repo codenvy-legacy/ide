@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -46,10 +47,6 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 460;
-
-   public static final String TYPE = "modal";
-
-   public static final String TITLE = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoViewTitle();
 
    private static ApplicationInfoViewUiBinder uiBinder = GWT.create(ApplicationInfoViewUiBinder.class);
 
@@ -71,7 +68,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
 
    public ApplicationInfoView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

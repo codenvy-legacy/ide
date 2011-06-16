@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -311,9 +312,7 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
             @Override
             protected void onSuccess(List<Property> result)
             {
-               String message =
-                  "Application \"" + applicationName + "\" is successfully renamed to \"" + newName + "\".";
-               eventBus.fireEvent(new OutputEvent(message, Type.INFO));
+               eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(applicationName, newName), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
             }
          });

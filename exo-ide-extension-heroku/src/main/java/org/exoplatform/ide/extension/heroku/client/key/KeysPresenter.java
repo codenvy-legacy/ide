@@ -94,8 +94,8 @@ public class KeysPresenter implements AddKeyHandler, ClearKeysHandler, LoggedInH
    @Override
    public void onClearKeys(ClearKeysEvent event)
    {
-      Dialogs.getInstance().ask("Remove public keys from Heroku", "Do you want to remove public keys from Heroku?",
-         new BooleanValueReceivedHandler()
+      Dialogs.getInstance().ask(HerokuExtension.LOCALIZATION_CONSTANT.removeKeysTitle(),
+         HerokuExtension.LOCALIZATION_CONSTANT.askRemoveKeys(), new BooleanValueReceivedHandler()
          {
 
             @Override

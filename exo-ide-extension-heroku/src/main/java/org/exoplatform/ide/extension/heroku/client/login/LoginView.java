@@ -28,7 +28,9 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for log in Heroku.
@@ -44,10 +46,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final int WIDTH = 400;
 
    private static final int HEIGHT = 190;
-
-   private static final String TYPE = "modal";
-
-   private static final String TITLE = "Log in Heroku";
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -89,10 +87,10 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    IButton cancelButton;
-   
+
    public LoginView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);

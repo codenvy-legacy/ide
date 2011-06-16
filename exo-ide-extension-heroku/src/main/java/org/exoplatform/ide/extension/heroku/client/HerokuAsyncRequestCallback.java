@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
@@ -67,7 +68,7 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
       {
          ServerException serverException = (ServerException)exception;
          //TODO check is not authorized
-         if (401 == serverException.getHTTPStatus())
+         if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
          {
             eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
             eventbus.fireEvent(new LoginEvent());

@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -269,16 +270,16 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
    {
       if (properties == null)
       {
-         return "Application is successfully created.";
+         return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess("");
       }
-      String message = "Application <br> [";
+      String message = "<br> [";
       for (Property property : properties)
       {
          message += "<b>" + property.getName() + "</b>" + " : " + property.getValue() + "<br>";
       }
       message += "] ";
-      message += "is successfully created.";
-      return message;
+      
+      return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message);
    }
 
    /**

@@ -18,156 +18,193 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Jun 6, 2011 11:16:02 AM anya $
  *
  */
-public interface HerokuLocalizationConstant extends Constants
+public interface HerokuLocalizationConstant extends Messages
 {
    //Buttons:
-   @DefaultStringValue("Cancel")
+   @DefaultMessage("Cancel")
    @Key("cancelButton")
    String cancelButton();
-   
-   @DefaultStringValue("Create")
+
+   @DefaultMessage("Create")
    @Key("createButton")
    String createButton();
-   
-   @DefaultStringValue("Login")
+
+   @DefaultMessage("Login")
    @Key("loginButton")
    String loginButton();
-   
-   @DefaultStringValue("Rename")
+
+   @DefaultMessage("Rename")
    @Key("renameButton")
    String renameButton();
-   
-   @DefaultStringValue("Ok")
+
+   @DefaultMessage("Ok")
    @Key("okButton")
    String okButton();
-   
+
    //Controls:
-   @DefaultStringValue("Logged in Heroku successfully.")
+   @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
    String loginSuccess();
 
-   @DefaultStringValue("Public keys are successfully deployed on Heroku.")
+   @DefaultMessage("Public keys are successfully deployed on Heroku.")
    @Key("addKeysSuccess")
    String addKeysSuccess();
 
-   @DefaultStringValue("Keys are successfully removed from Heroku.")
+   @DefaultMessage("Keys are successfully removed from Heroku.")
    @Key("clearKeysSuccess")
    String clearKeysSuccess();
 
-   @DefaultStringValue("Log in Heroku failed")
+   @DefaultMessage("Log in Heroku failed")
    @Key("loginFailed")
    String loginFailed();
 
-   @DefaultStringValue("Application is successfully deleted on Heroku.")
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess();
 
-   @DefaultStringValue("PaaS/Heroku/Deploy public key")
+   @DefaultMessage("PaaS/Heroku/Deploy public key")
    @Key("control.addKey.id")
    String addKeyControlId();
 
-   @DefaultStringValue("Deploy public key...")
+   @DefaultMessage("Deploy public key...")
    @Key("control.addKey.title")
    String addKeyControlTitle();
 
-   @DefaultStringValue("Deploy public key on Heroku...")
+   @DefaultMessage("Deploy public key on Heroku...")
    @Key("control.addKey.prompt")
    String addKeyControlPrompt();
 
-   @DefaultStringValue("PaaS/Heroku/Remove public keys...")
+   @DefaultMessage("PaaS/Heroku/Remove public keys...")
    @Key("control.clearKeys.id")
    String clearKeysId();
 
-   @DefaultStringValue("Remove public keys...")
+   @DefaultMessage("Remove public keys...")
    @Key("control.clearKeys.title")
    String clearKeysTitle();
 
-   @DefaultStringValue("Remove public keys from Heroku...")
+   @DefaultMessage("Remove public keys from Heroku...")
    @Key("control.clearKeys.prompt")
    String clearKeysPrompt();
 
-   @DefaultStringValue("PaaS/Heroku/Create application...")
+   @DefaultMessage("PaaS/Heroku/Create application...")
    @Key("control.createApplication.id")
    String createApplicationControlId();
 
-   @DefaultStringValue("Create application...")
+   @DefaultMessage("Create application...")
    @Key("control.createApplication.title")
    String createApplicationControlTitle();
 
-   @DefaultStringValue("Create application on Heroku...")
+   @DefaultMessage("Create application on Heroku...")
    @Key("control.createApplication.prompt")
    String createApplicationControlPrompt();
 
-   @DefaultStringValue("PaaS/Heroku/Delete application...")
+   @DefaultMessage("PaaS/Heroku/Delete application...")
    @Key("control.deleteApplication.id")
    String deleteApplicationControlId();
 
-   @DefaultStringValue(" Delete application...")
+   @DefaultMessage(" Delete application...")
    @Key("control.deleteApplication.title")
    String deleteApplicationControlTitle();
 
-   @DefaultStringValue("Delete application on Heroku...")
+   @DefaultMessage("Delete application on Heroku...")
    @Key("control.deleteApplication.prompt")
    String deleteApplicationControlPrompt();
 
-   @DefaultStringValue("PaaS/Heroku/Rename application...")
+   @DefaultMessage("PaaS/Heroku/Rename application...")
    @Key("control.renameApplication.id")
    String renameApplicationControlId();
 
-   @DefaultStringValue("Rename application...")
+   @DefaultMessage("Rename application...")
    @Key("control.renameApplication.title")
    String renameApplicationControlTitle();
 
-   @DefaultStringValue("Rename application on Heroku...")
+   @DefaultMessage("Rename application on Heroku...")
    @Key("control.renameApplication.prompt")
    String renameApplicationControlPrompt();
 
-   @DefaultStringValue("PaaS/Heroku/Application info...")
+   @DefaultMessage("PaaS/Heroku/Application info...")
    @Key("control.showApplicationInfo.id")
    String showApplicationInfoControlId();
 
-   @DefaultStringValue("Application info...")
+   @DefaultMessage("Application info...")
    @Key("control.showApplicationInfo.title")
    String showApplicationInfoControlTitle();
 
-   @DefaultStringValue("Show application info...")
+   @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
-   
+
    //Create Application view
-   @DefaultStringValue("Create application on Heroku")
+   @DefaultMessage("Create application on Heroku")
    @Key("createApplicationView.title")
    String createApplicationViewTitle();
-   
-   @DefaultStringValue("Location of Git repository:")
+
+   @DefaultMessage("Location of Git repository:")
    @Key("createApplicationView.gitLocation")
    String createApplicationViewGitLocation();
-   
-   @DefaultStringValue("Enter application name (optional):")
+
+   @DefaultMessage("Enter application name (optional):")
    @Key("createApplicationView.applicationName")
    String createApplicationViewApplicationName();
-   
-   @DefaultStringValue("Enter remote repository name (optional):")
+
+   @DefaultMessage("Enter remote repository name (optional):")
    @Key("createApplicationView.remoteName")
    String createApplicationViewRemoteName();
-   
+
    //Application information view:
-   @DefaultStringValue("Heroku application information")
+   @DefaultMessage("Heroku application information")
    @Key("applicationInfoView.title")
    String applicationInfoViewTitle();
-   
-   @DefaultStringValue("Property")
+
+   @DefaultMessage("Property")
    @Key("applicationInfoGid.field.name")
    String applicationInfoGridNameField();
-   
-   @DefaultStringValue("Value")
+
+   @DefaultMessage("Value")
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
+
+   /*Messages*/
+   @Key("createApplicationSuccess")
+   String createApplicationSuccess(String application);
+
+   @Key("renameApplicationSuccess")
+   String renameApplicationSuccess(String oldName, String newName);
+
+   /*Delete application*/
+   @Key("deleteApplication.title")
+   String deleteApplicationTitle();
+
+   @Key("askForDeleteApplication")
+   String deleteApplicationQuestion(String application);
+
+   /*Remove keys*/
+   @Key("removeKeys.title")
+   String removeKeysTitle();
+
+   @Key("askRemoveKeys")
+   String askRemoveKeys();
+
+   /*Login view*/
+   @Key("loginView.title")
+   String loginViewTitle();
+
+   @Key("loginView.field.password")
+   String loginViewPasswordField();
+
+   @Key("loginView.field.email")
+   String loginViewEmailField();
+
+   /*Rename application*/
+   @Key("renameApplicationView.title")
+   String renameApplicationViewTitle();
+
+   @Key("renameApplicationView.field.name")
+   String renameApplicationViewNameField();
 }
