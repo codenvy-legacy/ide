@@ -37,7 +37,7 @@ import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantExcep
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.GroovyClassNamesExtractor;
-import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStrorage;
+import org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage;
 import org.exoplatform.ide.codeassistant.framework.server.impl.storage.DocStorage;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
@@ -74,7 +74,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
    private static final Log LOG = ExoLogger.getLogger(CodeAssistantJcrImpl.class);
 
    public CodeAssistantJcrImpl(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, ClassInfoStrorage classInfoStrorage, DocStorage docStorage)
+      ThreadLocalSessionProviderService sessionProviderService, ClassInfoStorage classInfoStrorage, DocStorage docStorage)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;

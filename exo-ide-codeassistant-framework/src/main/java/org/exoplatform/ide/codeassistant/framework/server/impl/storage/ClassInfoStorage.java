@@ -78,7 +78,7 @@ import org.picocontainer.Startable;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class ClassInfoStrorage implements Startable
+public class ClassInfoStorage implements Startable
 {
 
    private ThreadLocalSessionProviderService sessionProviderService;
@@ -92,9 +92,9 @@ public class ClassInfoStrorage implements Startable
    private boolean runInThread;
 
    /** Logger. */
-   private static final Log LOG = ExoLogger.getLogger(ClassInfoStrorage.class);
+   private static final Log LOG = ExoLogger.getLogger(ClassInfoStorage.class);
 
-   public ClassInfoStrorage(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService,
+   public ClassInfoStorage(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService,
       InitParams initParams)
    {
       this.sessionProviderService = sessionProvider;
