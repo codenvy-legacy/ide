@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.http.client.URL;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 23, 2011 4:05:56 PM anya $
@@ -76,6 +78,7 @@ public class GitClientUtil
     */
    public static String getFilePatternByHref(String href, String workTree)
    {
+      href = URL.decode(href);
       workTree = workTree.endsWith("/.git") ? workTree.substring(0, workTree.lastIndexOf("/.git")) : workTree;
       //Remove last "/" from path if exists:
       String pattern = href.endsWith("/") ? href.substring(0, href.length() - 1) : href;

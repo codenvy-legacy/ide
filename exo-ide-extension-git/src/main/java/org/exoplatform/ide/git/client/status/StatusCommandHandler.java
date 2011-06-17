@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.status;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
@@ -130,6 +132,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          //Remove last "/" from path:
          String href =
             item.getHref().endsWith("/") ? item.getHref().substring(0, item.getHref().length() - 1) : item.getHref();
+         href = URL.decode(href);
          //Check selected item in workspace tree is not the root of the Git repository tree:
          if (!workTree.equals(href))
          {
@@ -154,7 +157,8 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          @Override
          protected void onFailure(Throwable exception)
          {
-            String errorMessage = (exception.getMessage() != null) ? exception.getMessage() :GitExtension.MESSAGES.statusFailed();
+            String errorMessage =
+               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
          }
       });
@@ -228,7 +232,8 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
             itemsToCheck.add(folder);
             for (Item item : itemsToCheck)
             {
-               String pattern = item.getHref().replaceFirst(workDir + "/", "");
+               String href = URL.decode(item.getHref());
+               String pattern = href.replaceFirst(workDir + "/", "");
                Map<TreeIconPosition, String> map = new HashMap<TreeIconPosition, String>();
                if (pattern.length() == 0 || "/".equals(pattern))
                {
