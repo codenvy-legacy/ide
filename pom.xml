@@ -21,11 +21,11 @@
       <exo.snapshots.repo.url>dav:http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.0-GA-SNAPSHOT</org.exoplatform.jcr.version>
-      <org.exoplatform.kernel.version>2.3.0-GA-SNAPSHOT</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.4.0-GA-SNAPSHOT</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.0-GA-SNAPSHOT</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.jcr.version>1.14.0-CR3</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.3.0-CR3</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.4.0-CR3</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.2.0-CR3</org.exoplatform.ws.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M1</org.exoplatform.gwtframework.version>
       <!-- Third parties -->
       <gwt.version>2.2.0</gwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
@@ -645,6 +645,8 @@
 
       <module>exo-ide-codeassistant-framework</module>
 
+      <module>exo-ide-maven</module>
+
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-gadget</module>
       <module>exo-ide-extension-gadget-gatein</module>
@@ -677,7 +679,5 @@
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
-    <!--module>exo-ide-extension-cloudbees</module-->
-    <!--module>exo-ide-extension-maven</module-->
   </modules>
 </project>
