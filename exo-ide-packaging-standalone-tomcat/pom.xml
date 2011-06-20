@@ -4,13 +4,12 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M1</version>
    </parent>
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
    <packaging>pom</packaging>
@@ -410,10 +409,8 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
-                                 overwrite="true" />
-                               <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
-                                 overwrite="true" />  
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
+                               <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml" overwrite="true" />  
                            </tasks>
                         </configuration>
                         <goals>
@@ -440,15 +437,9 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
-                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
-                                 overwrite="true" />
-                                 <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html"
-                                 tofile="${project.build.directory}/packager-conf/unwar/Application.html"
-                                 overwrite="true" />
-                                 <copy file="${basedir}/src/main/resources/tomcat/selenium/conf/server.xml"
-                                 tofile="${project.build.directory}/tomcat-ide/conf/server.xml"
-                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml" overwrite="true" />
+                                 <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html" overwrite="true" />
+                                 <copy file="${basedir}/src/main/resources/tomcat/selenium/conf/server.xml" tofile="${project.build.directory}/tomcat-ide/conf/server.xml" overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>
