@@ -143,10 +143,15 @@ public class Express
    private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
       "php-5.3.2", //
       "wsgi-3.2.1", //
-      "jbossas-7.0.0", //
-      "perl-5.10.1", //
       "rack-1.1.0") //
       );
+   //   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
+   //      "php-5.3.2", //
+   //      "wsgi-3.2.1", //
+   //      "jbossas-7.0.0", //
+   //      "perl-5.10.1", //
+   //      "rack-1.1.0") //
+   //      );
    private static final Pattern TD_DATE_FORMAT = Pattern
       .compile("(\\d{4})-(\\d{2})-(\\d{2})[Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{1,3}))?([+-])((\\d{2}):(\\d{2}))");
    private static final Pattern GIT_URL_PATTERN = Pattern
