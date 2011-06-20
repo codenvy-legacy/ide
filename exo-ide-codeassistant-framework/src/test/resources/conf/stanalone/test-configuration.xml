@@ -79,7 +79,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStrorage</type>
+      <type>org.exoplatform.ide.codeassistant.framework.server.impl.storage.ClassInfoStorage</type>
       <init-params>
          <object-param>
             <name>classinfostrorage.configuration</name>
