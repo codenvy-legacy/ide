@@ -47,6 +47,10 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Ok")
    @Key("okButton")
    String okButton();
+   
+   @DefaultMessage("Try As Demo")
+   @Key("loginDemoButton")
+   String loginDemoButton();
 
    //Controls:
    @DefaultMessage("Logged in Heroku successfully.")
@@ -139,6 +143,15 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
+   
+   @Key("control.switchAccount.id")
+   String switchAccountControlId();
+   
+   @Key("control.switchAccount.switch.title")
+   String switchAccountControlSwitchTitle();
+   
+   @Key("control.switchAccount.switch.prompt")
+   String switchAccountControlSwitchPrompt();
 
    //Create Application view
    @DefaultMessage("Create application on Heroku")

@@ -48,6 +48,11 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final int HEIGHT = 190;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+   
+   /**
+    * Button for login as user "Demo".
+    */
+   private static final String LOGIN_DEMO_BUTTON_ID = "ideLoginDemoViewLoginButton";
 
    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
@@ -87,6 +92,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     */
    @UiField
    IButton cancelButton;
+   
+   @UiField
+   IButton loginDemoButton;
 
    public LoginView()
    {
@@ -99,6 +107,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       passwordField.setHeight(22);
       loginButton.setID(LOGIN_BUTTON_ID);
       cancelButton.setID(CANCEL_BUTTON_ID);
+      loginDemoButton.setID(LOGIN_DEMO_BUTTON_ID);
    }
 
    /**
@@ -153,5 +162,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public void focusInEmailField()
    {
       emailField.focusInItem();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getLoginDemoButton()
+    */
+   @Override
+   public HasClickHandlers getLoginDemoButton()
+   {
+      return loginDemoButton;
    }
 }

@@ -45,7 +45,7 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
  * @version $Id:  May 25, 2011 3:56:55 PM anya $
  *
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler
+public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAccountHandler
 {
    interface Display extends IsView
    {
@@ -62,6 +62,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
+      
+      /**
+       * Get login as demo user button click handler.
+       * 
+       * @return {@link HasClickHandlers} click handler
+       */
+      HasClickHandlers getLoginDemoButton();
 
       /**
        * Get email field.
@@ -93,12 +100,15 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    private Display display;
 
    private HandlerManager eventBus;
+   
+   private boolean loggedIn;
 
    public LoginPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       eventBus.addHandler(LoginEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(SwitchAccountEvent.TYPE, this);
    }
 
    /**
@@ -124,7 +134,50 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            doLogin();
+            final String email = display.getEmailField().getValue();
+            final String password = display.getPasswordField().getValue();
+            if (loggedIn)
+            {
+               HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
+               {
+                  @Override
+                  protected void onSuccess(String result)
+                  {
+                     doLogin(email, password);
+                  }
+
+               });
+            }
+            else
+            {
+               doLogin(email, password);
+            }
+         }
+      });
+      
+      display.getLoginDemoButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            final String demoLogin = HerokuExtension.CREDENTIALS_CONSTANT.loginDemoAccountEmail();
+            final String demoPassword = HerokuExtension.CREDENTIALS_CONSTANT.loginDemoAccountPassword();
+            if (loggedIn)
+            {
+               HerokuClientService.getInstance().logout(new AsyncRequestCallback<String>()
+               {
+                  @Override
+                  protected void onSuccess(String result)
+                  {
+                     doLogin(demoLogin, demoPassword);
+                  }
+
+               });
+            }
+            else
+            {
+               doLogin(demoLogin, demoPassword);
+            }
          }
       });
 
@@ -167,29 +220,22 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    {
       if (display == null)
       {
-         Display display = GWT.create(Display.class);
-         bindDisplay(display);
-         IDE.getInstance().openView(display.asView());
-         display.enableLoginButton(false);
-         display.focusInEmailField();
+         openLoginForm();
       }
    }
 
    /**
     * Perform log in Heroku.
     */
-   protected void doLogin()
+   protected void doLogin(String email, String password)
    {
-      String email = display.getEmailField().getValue();
-      String password = display.getPasswordField().getValue();
-
       HerokuClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
       {
-
          @Override
          protected void onSuccess(String result)
          {
             IDE.getInstance().closeView(display.asView().getId());
+            loggedIn = true;
             eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
             eventBus.fireEvent(new LoggedInEvent(false));
          }
@@ -216,5 +262,29 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.login.SwitchAccountHandler#onSwitchAccount(org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent)
+    */
+   @Override
+   public void onSwitchAccount(SwitchAccountEvent event)
+   {
+      if (display == null)
+      {
+         openLoginForm();
+      }
+   }
+   
+   /**
+    * Open form to login to Heroku
+    */
+   private void openLoginForm()
+   {
+      Display display = GWT.create(Display.class);
+      bindDisplay(display);
+      IDE.getInstance().openView(display.asView());
+      display.enableLoginButton(false);
+      display.focusInEmailField();
    }
 }

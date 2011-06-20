@@ -86,4 +86,10 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/appInfo_Disabled.png")
    ImageResource applicationInfoDisabled();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount.png")
+   ImageResource switchAccount();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount_Disabled.png")
+   ImageResource switchAccountDisabled();
 }

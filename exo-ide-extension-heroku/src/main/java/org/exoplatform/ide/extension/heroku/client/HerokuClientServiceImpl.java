@@ -45,6 +45,8 @@ import java.util.List;
 public class HerokuClientServiceImpl extends HerokuClientService
 {
    private static final String LOGIN_PATH = "/ide/heroku/login";
+   
+   private static final String LOGOUT_PATH = "/ide/heroku/logout";
 
    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
 
@@ -103,6 +105,15 @@ public class HerokuClientServiceImpl extends HerokuClientService
       AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+   
+   @Override
+   public void logout(AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + LOGOUT_PATH;
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
    /**

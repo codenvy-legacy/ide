@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationCont
 import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
 import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
+import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
@@ -54,6 +55,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    private HandlerManager eventBus;
    
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
+   
+   public static final HerokuCredentialsConstant CREDENTIALS_CONSTANT = GWT.create(HerokuCredentialsConstant.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
@@ -80,6 +83,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new SwitchAccountControl(eventBus), DockTarget.NONE, false);
       //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters

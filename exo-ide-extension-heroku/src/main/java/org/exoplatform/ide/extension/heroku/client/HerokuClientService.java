@@ -55,6 +55,13 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Logout from Heroku.
+    * 
+    * @param callback callback, that client has to implement
+    */
+   public abstract void logout(AsyncRequestCallback<String> callback);
 
    /**
     * Creates new application on Heroku.

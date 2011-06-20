@@ -11,6 +11,7 @@
                disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
             <f:IButton ui:field="cancelButton" width="90" height="22" title="{locale.cancelButton}" icon="{resource.cancelButton.getURL}"
                disableIcon="{resource.cancelButtonDisabled.getURL}"></f:IButton>
+            <f:IButton ui:field="loginDemoButton" width="110" height="22" title="{locale.loginDemoButton}"></f:IButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
    </f:Border>
