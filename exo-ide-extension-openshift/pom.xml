@@ -4,11 +4,11 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M1-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-openshift</artifactId>
-   <version>1.2.0-SNAPSHOT</version>
+   <version>1.2.0-M1-SNAPSHOT</version>
    <name>eXo IDE :: Extension : OPENSHIFT</name>
    <dependencies>
       <dependency>
