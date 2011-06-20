@@ -677,7 +677,7 @@
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
-    <module>exo-ide-extension-cloudbees</module>
-    <module>exo-ide-extension-maven</module>
+    <!--module>exo-ide-extension-cloudbees</module-->
+    <!--module>exo-ide-extension-maven</module-->
   </modules>
 </project>
