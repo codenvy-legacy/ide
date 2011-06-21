@@ -110,7 +110,7 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class EditorController implements EditorContentChangedHandler, 
    EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
-   EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler, 
+   EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler,
    EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
    EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
@@ -170,6 +170,7 @@ public class EditorController implements EditorContentChangedHandler,
       handlerRegistrations.put(FileSavedEvent.TYPE, eventBus.addHandler(FileSavedEvent.TYPE, this));
       handlerRegistrations.put(EditorFormatTextEvent.TYPE, eventBus.addHandler(EditorFormatTextEvent.TYPE, this));
       handlerRegistrations.put(ShowLineNumbersEvent.TYPE, eventBus.addHandler(ShowLineNumbersEvent.TYPE, this));
+      handlerRegistrations.put(EditorChangeActiveFileEvent.TYPE, eventBus.addHandler(EditorChangeActiveFileEvent.TYPE, this));
       handlerRegistrations.put(EditorDeleteCurrentLineEvent.TYPE, eventBus.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
       handlerRegistrations.put(EditorGoToLineEvent.TYPE, eventBus.addHandler(EditorGoToLineEvent.TYPE, this));
       handlerRegistrations.put(EditorSetFocusEvent.TYPE, eventBus.addHandler(EditorSetFocusEvent.TYPE, this));
@@ -415,6 +416,15 @@ public class EditorController implements EditorContentChangedHandler,
    {
 
       updateLineNumbers(event.isShowLineNumber());
+   }
+
+   public void onEditorChangeActiveFile(EditorChangeActiveFileEvent event)
+   {
+      if (activeFile == event.getFile())
+         return;
+      
+      activeFile = event.getFile();
+      editorsViews.get(activeFile.getHref()).activate();
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
