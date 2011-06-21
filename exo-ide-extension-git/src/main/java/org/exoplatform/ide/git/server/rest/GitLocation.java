@@ -18,44 +18,26 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import javax.ws.rs.core.UriInfo;
+import org.exoplatform.ide.FSLocation;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated use FSLocation instead
  */
-public class GitLocation
+public class GitLocation extends FSLocation
 {
-   private final String ideURL;
-
-   /**
-    * @param ideURL full URL of working directory in IDE notation
-    */
    public GitLocation(String ideURL)
    {
-      this.ideURL = ideURL;
-   }
-
-   public String getIdeURL()
-   {
-      return ideURL;
+      super(ideURL);
    }
 
    /**
-    * Determine local directory where git repository located.
-    * 
-    * @param uriInfo UriInfo
+    * @see org.exoplatform.ide.FSLocation#getRootPath()
     */
-   public String getLocalPath(UriInfo uriInfo)
+   @Override
+   protected String getRootPath()
    {
-      String baseUrl = uriInfo.getBaseUri().toString();
-      baseUrl += "/jcr/";
-      String localPath = System.getProperty("org.exoplatform.ide.git.repo-dir");
-      if (localPath == null)
-         throw new IllegalStateException("Directory for git repositories is not specified. ");
-      if (!localPath.endsWith("/"))
-         localPath += "/"; // unix like path only!
-      localPath += ideURL.substring(baseUrl.length());
-      return localPath;
+      return System.getProperty("org.exoplatform.ide.git.repo-dir");
    }
 }
