@@ -397,30 +397,36 @@ public class RenameItemPresenter
       VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), moveItemCallback);
    }
    
-   private void itemMoved(Item item, String oldItemHref)
+   /**
+    * @param item - moved item
+    * @param oldItemHref - href of old item
+    */
+   private void itemMoved(Item item, final String oldItemHref)
    {
       renamedItem = item;
       sourceHref = oldItemHref;
 
       if (item instanceof File)
       {
-         File file = (File)item;
-
-         if (openedFiles.containsKey(oldItemHref))
-         {
-            File openedFile = openedFiles.get(oldItemHref);
-            openedFile.setHref(file.getHref());
-            openedFiles.remove(oldItemHref);
-            openedFiles.put(openedFile.getHref(), openedFile);
-
-            eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldItemHref), file));
-         }
-
          VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
          {
             @Override
             protected void onSuccess(Item result)
             {
+               renamedItem = result;
+               
+               File file = (File)result;
+
+               if (openedFiles.containsKey(oldItemHref))
+               {
+                  File openedFile = openedFiles.get(oldItemHref);
+                  openedFile.setHref(file.getHref());
+                  openedFiles.remove(oldItemHref);
+                  openedFiles.put(openedFile.getHref(), file);
+
+                  eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldItemHref), file));
+               }
+               
                if (result.getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
                {
                   openedFiles.get(renamedItem.getHref()).getProperties().clear();

@@ -327,10 +327,10 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
          if (openedFiles.containsKey(oldSourceHref))
          {
-            File openedFle = openedFiles.get(oldSourceHref);
-            openedFle.setHref(file.getHref());
+            File openedFile = openedFiles.get(oldSourceHref);
+            openedFile.setHref(file.getHref());
             openedFiles.remove(oldSourceHref);
-            openedFiles.put(openedFle.getHref(), openedFle);
+            openedFiles.put(openedFile.getHref(), openedFile);
 
             eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldSourceHref), file));
          }
