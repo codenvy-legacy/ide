@@ -20,18 +20,17 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.UUID;
-
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.UUID;
 
 /**
  * IDE-113:Copy folders and files.
@@ -109,6 +108,7 @@ public class CopyFoldersAndFilesTest extends BaseTest
    public void testCopyFoldersAndFiles() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_1 + "/" + FILE_GROOVY, false);

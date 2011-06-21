@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -40,7 +39,7 @@ public class CopyFileTest extends BaseTest
    
    private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
    
-   private static final String FILE_GROOVY = "test.groovy";
+   private static final String FILE_GROOVY = "testgroovy";
    
    private static final String FILE_CONTENT_1 = "world";
    
@@ -119,6 +118,7 @@ public class CopyFileTest extends BaseTest
    public void testCopyFile() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
       
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");      
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
