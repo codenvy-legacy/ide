@@ -146,16 +146,11 @@ public class CKEditor extends Editor
          
          // set onContentChangeListener
          editor.exoChangeFunction = function(){
-           // test if editor iframe is existed 
-           if (instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()() === 0) {
-              instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onUnload()();   // clear all listeners
-              return;
-           }
-
            // check if content was changed
            if (editor.checkDirty()) {            
               editor.resetDirty();
               if ( editor.getData() != editor.exoSavedContent ) {
+                 editor.exoSavedContent = editor.getData();
                  instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onContentChanged()();
               }               
            }
@@ -193,7 +188,7 @@ public class CKEditor extends Editor
            instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onInitialized()(); 
            instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onEditorResizeListenerId = $wnd.setInterval(function() {
              instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onResize()();
-           }, 200);
+           }, @org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration::CONTINUOUS_SCANNING || 200);
          }
          
          editor.on('instanceReady', editor.exoInitCallback);
@@ -232,7 +227,13 @@ public class CKEditor extends Editor
       setText(content);
    }
 
-   public native String getText()/*-{
+   public String getText()
+   {
+      // replace "\t" delimiter on space symbol
+      return getTextNative().replace("\t", " ");
+   }
+   
+   public native String getTextNative()/*-{
       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
       if (editor != null) {
          editor.exoSavedContent = editor.getData();
@@ -259,6 +260,9 @@ public class CKEditor extends Editor
 
    public void setText(String text)
    {
+      // removed odd "\r" symbols 
+      text.replace("\r", "");
+      
       // extract CDATA section from google gadget
       if (getMimeType().equals(MimeType.GOOGLE_GADGET))
       {
@@ -288,12 +292,10 @@ public class CKEditor extends Editor
    private native void setData(String data)/*-{
       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
       if (editor != null) {
-         $wnd.setTimeout(function(){
-            editor.resetDirty();  // reset ckeditor content changed indicator
-            editor.setData(data);           
-            editor.exoSavedContent = data;
-            editor.focus();         
-         }, 200);
+         editor.setData(data);           
+         editor.exoSavedContent = data;
+         editor.resetDirty();  // reset ckeditor content changed indicator         
+         editor.focus();
       }
    }-*/;
 
@@ -395,13 +397,7 @@ public class CKEditor extends Editor
     * onResize Listener to set editor height into the 100%
     */
    protected native void onResize() /*-{
-     var labelOffsetHeight = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()();
-     // test if editor iframe is existed
-     if (labelOffsetHeight === 0) {
-        this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onUnload()();   // clear all listeners
-        return;
-     }
-     
+     var labelOffsetHeight = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()();    
      // check if editor was resized
      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
      if (editor !== null) {
@@ -412,6 +408,23 @@ public class CKEditor extends Editor
      }
    }-*/;
 
+   @Override
+   public void setHeight(String height)
+   {
+      super.setHeight(height);
+      setHeightNative(height);
+   }
+
+   /*
+    * set editor height 
+    */
+   public native void setHeightNative(String height) /*-{
+     var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
+     if (editor !== null) {
+          editor.resize("100%", height);
+     }
+   }-*/;
+   
    private native void removeEditorListeners() /*-{
      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
      if (editor !== null) {
@@ -437,7 +450,7 @@ public class CKEditor extends Editor
    }
 
    public int getLabelOffsetHeight()
-   {
+   {     
       return label.getOffsetHeight();
    }
    

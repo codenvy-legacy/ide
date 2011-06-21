@@ -1,7 +1,7 @@
 // see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for details
 
 CKEDITOR.config.toolbar_IDEall = [
-    ["Upload","Source", "-", 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Find','Replace','SelectAll','RemoveFormat'],
+    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Find','Replace','SelectAll','RemoveFormat'],
     ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
     '/',    // it is needed to normal work of "Collapse Toolbar" button
     ['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','NumberedList','BulletedList','-','Outdent','Indent','Blockquote','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
@@ -36,7 +36,3 @@ CKEDITOR.config.removePlugins += 'colorbutton,colordialog,font,format,maximize,n
 // protect CDATA tags
 CKEDITOR.config.protectedSource.push( /<\s*!\s*\[\s*CDATA\s*\[/img );
 CKEDITOR.config.protectedSource.push( /\]\s*\]\s*>/img );
-
-// protect <% %> tags of groovy templates
-CKEDITOR.config.protectedSource.push( /<%/img );
-CKEDITOR.config.protectedSource.push( /%>/img );
