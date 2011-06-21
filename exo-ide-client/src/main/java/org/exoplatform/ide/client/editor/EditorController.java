@@ -144,6 +144,8 @@ public class EditorController implements EditorContentChangedHandler,
    private Map<String, EditorView> editorsViews = new HashMap<String, EditorView>();
       
    private boolean waitForEditorInitialized = false;
+   
+   private boolean isAfterSaveAs = false;
 
    public EditorController()
    {
@@ -227,7 +229,7 @@ public class EditorController implements EditorContentChangedHandler,
    {
       Editor editor = getEditorFromView(activeFile.getHref());
       if (editor == null
-           || !editor.getEditorId().equals(event.getEditorId()))
+           || !event.getEditorId().equals(editor.getEditorId()))
       {
          return;
       }
@@ -540,11 +542,13 @@ public class EditorController implements EditorContentChangedHandler,
          }
          
          // call activeFileChanged event after the SaveFileAs operation
-         if (! activeFile.getHref().equals(savedFile.getHref()))
+         if (! activeFile.getHref().equals(savedFile.getHref()) && isAfterSaveAs)
          {
             eventBus.fireEvent(new EditorActiveFileChangedEvent(savedFile, oldFileEditorView.getEditor()));
          }
       }
+      
+      isAfterSaveAs = false;
    }
 
    public void onEditorReplaceFile(EditorReplaceFileEvent event)
@@ -679,6 +683,8 @@ public class EditorController implements EditorContentChangedHandler,
       {
          closeFileAfterSaving = false;
       }
+      
+      isAfterSaveAs = true;
    }
 
    /**
