@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
@@ -45,10 +46,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final int WIDTH = 400;
 
    private static final int HEIGHT = 190;
-
-   private static final String TYPE = "modal";
-
-   private static final String TITLE = OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle();
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -93,7 +90,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    
    public LoginView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);

@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -133,6 +134,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                bindDisplay();
                IDE.getInstance().openView(display.asView());
             }
+            
             List<Property> properties = new ArrayList<Property>();
             properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result.getName()));
             properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result.getType()));
@@ -155,7 +157,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (401 == serverException.getHTTPStatus())
+               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

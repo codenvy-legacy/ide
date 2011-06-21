@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -191,7 +192,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (401 == serverException.getHTTPStatus())
+               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

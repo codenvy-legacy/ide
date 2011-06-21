@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -250,7 +251,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
                if (exception instanceof ServerException)
                {
                   ServerException serverException = (ServerException)exception;
-                  if (401 == serverException.getHTTPStatus())
+                  if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
                   {
                      addLoggedInHandler();
                      eventBus.fireEvent(new LoginEvent());

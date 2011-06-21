@@ -25,28 +25,28 @@ package org.exoplatform.ide.extension.openshift.client.marshaller;
  */
 public interface Constants
 {
-   public static final String LOGIN = "rhlogin";
+   String LOGIN = "rhlogin";
 
-   public static final String PASSWORD = "password";
+   String PASSWORD = "password";
 
    /*Application information*/
 
-   public static final String NAME = "name";
+   String NAME = "name";
 
-   public static final String TYPE = "type";
+   String TYPE = "type";
 
-   public static final String GIT_URL = "gitUrl";
+   String GIT_URL = "gitUrl";
 
-   public static final String PUBLIC_URL = "publicUrl";
+   String PUBLIC_URL = "publicUrl";
 
-   public static final String CREATION_DATE = "creationTime";
-   
+   String CREATION_DATE = "creationTime";
+
    /*User info*/
-   public static final String DOMAIN = "rhcDomain";
-   
-   public static final String UUID = "uuid";
-   
-   public static final String NAMESPACE = "namespace";
-   
-   public static final String APPS = "apps";
+   String DOMAIN = "rhcDomain";
+
+   String UUID = "uuid";
+
+   String NAMESPACE = "namespace";
+
+   String APPS = "apps";
 }

@@ -181,8 +181,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setResult(appInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      String params = (applicationName != null && applicationName.length() > 0) ? "app=" + applicationName + "&" : "";
-      params += (workDir != null && workDir.length() > 0) ? "workdir=" + workDir : "";
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "app=" + applicationName + "&" : "";
+      params += (workDir != null && !workDir.isEmpty()) ? "workdir=" + workDir : "";
       AsyncRequest.build(RequestBuilder.GET, url + "?" +params, loader).send(callback);
    }
 }

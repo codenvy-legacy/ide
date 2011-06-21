@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -163,7 +164,7 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (401 == serverException.getHTTPStatus())
+               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

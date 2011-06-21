@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoGrid;
@@ -32,13 +33,9 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
 
    private static final int WIDTH = 700;
 
-   public static final String TYPE = "modal";
-
    private static final String LOGIN_FIELD_ID = "ideUserInfoViewLoginField";
 
    private static final String DOMAIN_FIELD_ID = "ideUserInfoViewDomainField";
-
-   public static final String TITLE = OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle();
 
    private static UserInfoViewUiBinder uiBinder = GWT.create(UserInfoViewUiBinder.class);
 
@@ -78,7 +75,7 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
 
    public UserInfoView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       domainField.setId(DOMAIN_FIELD_ID);
       domainField.setHeight(22);

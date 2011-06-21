@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
@@ -102,7 +103,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (401 == serverException.getHTTPStatus())
+               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

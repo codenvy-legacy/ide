@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
@@ -45,10 +46,6 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
    private static final int WIDTH = 410;
 
    private static final int HEIGHT = 160;
-
-   private static final String TYPE = "modal";
-
-   private static final String TITLE = OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainViewTitle();
 
    private static final String CREATE_BUTTON_ID = "ideCreateDomainViewCreateButton";
 
@@ -82,7 +79,7 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
 
    public CreateDomainView()
    {
-      super(ID, TYPE, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
