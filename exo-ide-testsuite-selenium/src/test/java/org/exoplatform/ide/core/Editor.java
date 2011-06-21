@@ -26,6 +26,7 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.core.Outline.Locators;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 
 /**
@@ -518,17 +519,8 @@ public class Editor extends AbstractTestModule
     */
    public void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
-      if (selenium().isElementPresent(
-         getContentPanelLocator(tabIndex) + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"))
-      {
-         selectIFrameWithEditor(tabIndex);
-         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, text);
-      }
-      else
-      {
-         selectIFrameWithEditor(tabIndex);
-         AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, text);
-      }
+      selectIFrameWithEditor(tabIndex);
+      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.EDITOR_BODY_LOCATOR, text);
 
       IDE().selectMainFrame();
    }
@@ -560,9 +552,32 @@ public class Editor extends AbstractTestModule
     * @param tabIndex begins from 0
     */
    public void selectIFrameWithEditor(int tabIndex) throws Exception
-   {
-      selenium().selectFrame(getContentPanelLocator(tabIndex) + "//iframe");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+   {     
+      String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
+      
+      int size = selenium().getXpathCount(iFrameWithEditorLocator).intValue();
+      if (size <= 0)
+         return;
+
+      if (size == 1)
+      {
+         selenium().selectFrame(iFrameWithEditorLocator);
+         Thread.sleep(TestConstants.ANIMATION_PERIOD);
+         return;         
+      }
+      else
+      {
+         for (int i = 1; i <= size; i++)
+         {
+            if (selenium().isVisible(
+               "xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]"))
+            {
+               selenium().selectFrame("xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]");
+               Thread.sleep(TestConstants.ANIMATION_PERIOD);
+               return;
+            }
+         }
+      }
    }
 
    /**
@@ -669,7 +684,9 @@ public class Editor extends AbstractTestModule
       String locator =
          "//div[@panel-id='editor' and @tab-index='" + tabIndex
             + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
+      
       assertTrue(selenium().isElementPresent(locator));
+      assertTrue(selenium().isVisible(locator));
    }
 
    /**
@@ -683,6 +700,7 @@ public class Editor extends AbstractTestModule
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
       assertTrue(selenium().isElementPresent(locator));
+      assertTrue(selenium().isVisible(locator));      
    }
    
    /**

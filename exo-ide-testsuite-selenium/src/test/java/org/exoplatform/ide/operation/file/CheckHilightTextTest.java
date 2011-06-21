@@ -142,7 +142,7 @@ public class CheckHilightTextTest extends BaseTest
       IDE.EDITOR.closeFile(0);
       
       /*
-       * 7. Check highlighting CSS
+       * 7. Check highlighting Google Gadget
        */
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GADGET_FILE_NAME);
       Thread.sleep(TestConstants.CODEMIRROR_PARSING_PERIOD);
@@ -605,19 +605,6 @@ public class CheckHilightTextTest extends BaseTest
 
    public void checkHiligtGoogleGadget()
    {
-      //selenium.selectFrame("//div[@class='tabSetContainer']/div/div[3]//iframe");
-      // string 1
-
-      try
-      {
-         IDE.EDITOR.selectIFrameWithEditor(0);
-      }
-      catch (Exception e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-
       assertTrue(selenium
          .isElementPresent("//body[@class='editbox']/span[1][@class='xml-processing' and text()=\"<?xml \"]"));
       assertTrue(selenium
