@@ -19,6 +19,9 @@
 package org.exoplatform.ide.extension.maven;
 
 import org.apache.maven.shared.invoker.InvocationRequest;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
+import org.picocontainer.Startable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TaskService.java 16504 2011-02-16 09:27:51Z andrew00x $
  */
-public class TaskService
+public class TaskService implements Startable
 {
    protected static class ToManyTaskPolicy implements RejectedExecutionHandler
    {
@@ -56,7 +59,6 @@ public class TaskService
             throw new RejectedExecutionException("Too many tasks. ");
          delegate.rejectedExecution(r, executor);
       }
-
    }
 
    private static int counter = 1000000;
@@ -64,7 +66,23 @@ public class TaskService
    protected final ExecutorService threadPool;
    protected final Map<String, MavenTask> tasks;
 
-   public TaskService(int poolSize)
+   public TaskService(InitParams params)
+   {
+      this(getPoolSize(params, "pool-size"));
+   }
+
+   private static int getPoolSize(InitParams initParams, String paramName)
+   {
+      if (initParams != null)
+      {
+         ValueParam vp = initParams.getValueParam(paramName);
+         if (vp != null)
+            return Integer.parseInt(vp.getValue());
+      }
+      return 1; // single thread pool
+   }
+
+   protected TaskService(int poolSize)
    {
       this( //
          new ThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS, //
@@ -110,12 +128,29 @@ public class TaskService
 
    public void shutdown()
    {
-      threadPool.shutdown();
+      threadPool.shutdownNow();
    }
 
    protected synchronized String generateId(InvocationRequest request)
    {
       counter++;
       return Integer.toString(counter);
+   }
+
+   /**
+    * @see org.picocontainer.Startable#start()
+    */
+   @Override
+   public void start()
+   {
+   }
+
+   /**
+    * @see org.picocontainer.Startable#stop()
+    */
+   @Override
+   public void stop()
+   {
+      shutdown();
    }
 }

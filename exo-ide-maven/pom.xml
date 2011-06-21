@@ -10,6 +10,10 @@
    <name>eXo IDE :: MAVEN</name>
    <dependencies>
       <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>exo.kernel.container</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.apache.maven.shared</groupId>
          <artifactId>maven-invoker</artifactId>
       </dependency>

@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.maven;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class InvocationRequestFactory
 
    public InvocationRequestFactory(List<String> goals)
    {
-      this.goals = goals;
+      this.goals = Collections.unmodifiableList(goals);
    }
 
    public InvocationRequest createRequest()

@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.maven;
 
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.invoker.SystemOutHandler;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -37,7 +36,8 @@ public class MavenTask extends FutureTask<InvocationResult>
 
    MavenTask(MavenInvoker invoker, InvocationRequest request, String taskId)
    {
-      this(invoker, request, taskId, new SimpleTaskLogger(new SystemOutHandler(true)));
+      /*this(invoker, request, taskId, new SimpleTaskLogger(new SystemOutHandler(true)));*/
+      this(invoker, request, taskId, new SimpleTaskLogger());
    }
 
    MavenTask(final MavenInvoker invoker, final InvocationRequest request, final String taskId,
@@ -48,7 +48,7 @@ public class MavenTask extends FutureTask<InvocationResult>
          @Override
          public InvocationResult call() throws Exception
          {
-            System.err.println("\n" //
+            /*System.err.println("\n" //
                + "=============== RUN MAVEN BUILD ===============\n" //
                + "GOALS: " //
                + request.getGoals() //
@@ -56,7 +56,7 @@ public class MavenTask extends FutureTask<InvocationResult>
                + "PROPERTIES: " //
                + request.getProperties() //
                + "\n" //
-               + "===============================================");
+               + "===============================================");*/
             InvocationResult result = invoker.execute(request);
             return result;
          }
