@@ -1,0 +1,41 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+   <ui:style>
+   		.example
+   		{
+   			color: #777;
+   			font-family: Verdana,Bitstream Vera Sans,sans-serif;
+   			font-size: 11px;
+   		}
+   </ui:style>
+   
+   <f:Border margin="7" borderColor="transparent">
+      <g:VerticalPanel spacing="5" horizontalAlignment="center" verticalAlignment="middle" height="100%">
+         <g:HorizontalPanel width="100%" spacing="5" verticalAlignment="top">
+            <g:cell width="80px" horizontalAlignment="left">
+               <f:Label value="{locale.rakeViewCommandField}" height="18px" isHTML="true"></f:Label>
+            </g:cell>
+            <g:cell>
+               <g:VerticalPanel width="100%" spacing="0">
+                  <f:TextField ui:field="commandField" width="100%" showTitle="false"></f:TextField>
+                  <g:Label text="{locale.rakeViewCommandExample}" height="18px" styleName="{style.example}"></g:Label>
+               </g:VerticalPanel>
+            </g:cell>
+            <g:cell horizontalAlignment="right" width="90px">
+               <f:ImageButton ui:field="runButton" text="{locale.runButton}" width="90" height="22" imageResource="{resource.runButton}" disabledImageResource="{resource.runButtonDisabled}"></f:ImageButton>
+            </g:cell>
+         </g:HorizontalPanel>
+         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom" width="100%">
+            <g:cell horizontalAlignment="left">
+               <f:ImageButton ui:field="helpButton" width="90" height="22" text="{locale.helpButton}" imageResource="{resource.helpButton}" disabledImageResource="{resource.helpButtonDisabled}"></f:ImageButton>
+            </g:cell>
+            <g:cell horizontalAlignment="right">
+               <f:ImageButton ui:field="closeButton" width="90" height="22" text="{locale.closeButton}" imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+            </g:cell>
+         </g:HorizontalPanel>
+      </g:VerticalPanel>
+   </f:Border>
+
+</ui:UiBinder> 

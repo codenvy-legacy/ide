@@ -38,6 +38,18 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/ok_Disabled.png")
    ImageResource okButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/help.png")
+   ImageResource helpButton();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/help_Disabled.png")
+   ImageResource helpButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/run.png")
+   ImageResource runButton();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/run_Disabled.png")
+   ImageResource runButtonDisabled();
 
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/cancel.png")
    ImageResource cancelButton();
@@ -74,6 +86,12 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/destroyApp_Disabled.png")
    ImageResource destroyApplicationDisabled();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/rake.png")
+   ImageResource rake();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/rake_Disabled.png")
+   ImageResource rakeDisabled();
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/renameApp.png")
    ImageResource renameApplication();

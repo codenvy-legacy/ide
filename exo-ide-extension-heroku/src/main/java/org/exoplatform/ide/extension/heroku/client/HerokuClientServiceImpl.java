@@ -30,6 +30,8 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.ApplicationInfoUnm
 import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
 import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
+import org.exoplatform.ide.extension.heroku.client.marshaller.RakeResultUnmarshaller;
+import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +53,10 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
 
    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
-   
+
    private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
+
+   private static final String RUN = "/ide/heroku/apps/run";
 
    private static final String ADD_KEY = "/ide/heroku/keys/add";
 
@@ -215,4 +219,50 @@ public class HerokuClientServiceImpl extends HerokuClientService
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
+    */
+   @Override
+   public void run(String gitWorkDir, String applicationName, String command, RakeCommandAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + RUN;
+
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
+
+      RakeCommandResult rakeCommandResult = new RakeCommandResult();
+      RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
+
+      callback.setResult(rakeCommandResult);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN)
+         .data(command).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
+    */
+   @Override
+   public void help(String gitWorkDir, String applicationName, RakeCommandAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + RUN;
+
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
+
+      RakeCommandResult rakeCommandResult = new RakeCommandResult();
+      RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
+
+      callback.setResult(rakeCommandResult);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN)
+         .data("rake -H").send(callback);
+   }
+   
+   
 }

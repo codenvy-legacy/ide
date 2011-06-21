@@ -26,32 +26,35 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
-import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-
-import java.util.List;
+import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
 
 /**
- * Asynchronous Heroku request.
+ * Asynchronous Heroku request for executing rake commands.
  * The {{@link #onFailure(Throwable)}} method contains the check for 
  * user not authorized exception, in this case - the {@link LoginEvent} is fired.
+ * The returned result is {@link RakeCommandResult}.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 27, 2011 12:17:17 PM anya $
+ * @version $Id:  Jun 20, 2011 9:42:51 AM anya $
  *
  */
-public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<List<Property>>
+public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallback<RakeCommandResult>
 {
    /**
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
+   /**
+    * Handler of the {@link LoggedInEvent}.
+    */
    private LoggedInHandler loggedInHandler;
 
    /**
-    * @param eventBus events handler
+    * @param eventBus event handlers manager
+    * @param handler handler of the {@link LoggedInEvent}
     */
-   public HerokuAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public RakeCommandAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
       this.eventbus = eventBus;
       this.loggedInHandler = handler;
@@ -76,5 +79,4 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
       }
       super.onFailure(exception);
    }
-
 }

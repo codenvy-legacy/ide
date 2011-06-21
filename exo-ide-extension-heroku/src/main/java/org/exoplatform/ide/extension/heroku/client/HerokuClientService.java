@@ -119,4 +119,9 @@ public abstract class HerokuClientService
     */
    public abstract void renameApplication(String gitWorkDir, String applicationName, String newName,
       HerokuAsyncRequestCallback callback);
+
+   public abstract void run(String gitWorkDir, String applicationName, String command,
+      RakeCommandAsyncRequestCallback callback);
+
+   public abstract void help(String gitWorkDir, String applicationName, RakeCommandAsyncRequestCallback callback);
 }

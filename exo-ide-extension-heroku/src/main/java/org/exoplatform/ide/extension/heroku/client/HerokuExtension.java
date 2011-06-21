@@ -30,6 +30,7 @@ import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
+import org.exoplatform.ide.extension.heroku.client.control.RakeControl;
 import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPrese
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 
 /**
@@ -82,6 +84,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new RakeControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new SwitchAccountControl(eventBus), DockTarget.NONE, false);
       //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
@@ -93,6 +96,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new RenameApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new KeysPresenter(eventBus);
+      new RakeCommandPresenter(eventBus);
    }
 
 }

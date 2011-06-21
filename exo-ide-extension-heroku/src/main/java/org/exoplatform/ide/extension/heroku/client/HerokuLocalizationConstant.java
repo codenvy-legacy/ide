@@ -52,6 +52,15 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("loginDemoButton")
    String loginDemoButton();
 
+   @Key("runButton")
+   String runButton();
+
+   @Key("closeButton")
+   String closeButton();
+
+   @Key("helpButton")
+   String helpButton();
+
    //Controls:
    @DefaultMessage("Logged in Heroku successfully.")
    @Key("loginSuccess")
@@ -153,6 +162,15 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("control.switchAccount.switch.prompt")
    String switchAccountControlSwitchPrompt();
 
+   @Key("control.rake.id")
+   String rakeControlId();
+
+   @Key("control.rake.title")
+   String rakeControlTitle();
+
+   @Key("control.rake.prompt")
+   String rakeControlPrompt();
+
    //Create Application view
    @DefaultMessage("Create application on Heroku")
    @Key("createApplicationView.title")
@@ -220,4 +238,14 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("renameApplicationView.field.name")
    String renameApplicationViewNameField();
+
+   /*Rake command*/
+   @Key("rakeView.title")
+   String rakeViewTitle();
+
+   @Key("rakeView.field.command")
+   String rakeViewCommandField();
+
+   @Key("rakeView.command.example")
+   String rakeViewCommandExample();
 }
