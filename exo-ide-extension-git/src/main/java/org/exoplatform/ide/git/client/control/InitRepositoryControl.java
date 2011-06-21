@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -36,7 +31,7 @@ import org.exoplatform.ide.git.client.create.InitRepositoryEvent;
  * @version $Id:  Mar 23, 2011 5:36:00 PM anya $
  *
  */
-public class InitRepositoryControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class InitRepositoryControl extends GitControl
 {
    public InitRepositoryControl()
    {
@@ -49,16 +44,7 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
-   @Override
-   public void initialize(HandlerManager eventBus)
-   {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * @see org.exoplatform.ide.git.client.control.GitControl#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -69,7 +55,9 @@ public class InitRepositoryControl extends SimpleControl implements IDEControl, 
          return;
       }
       //Check whether folder is selected:
-      boolean enabled = (event.getSelectedItems().get(0) instanceof Folder);
+      boolean enabled =
+         ((event.getSelectedItems().get(0) instanceof Folder) && !isWorkspaceSelected(event.getSelectedItems().get(0)
+            .getHref()));
       setEnabled(enabled);
    }
 }

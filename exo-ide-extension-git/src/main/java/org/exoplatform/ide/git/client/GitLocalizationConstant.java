@@ -79,7 +79,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("messages.selected_items_fail")
    String selectedItemsFail();
-
+   
+   @Key("messages.workspace_selected")
+   String selectedWorkace();
+   
    @Key("messages.add_success")
    String addSuccess();
 

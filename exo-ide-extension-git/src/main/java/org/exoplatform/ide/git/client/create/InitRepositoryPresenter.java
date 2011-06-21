@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -50,7 +52,7 @@ import java.util.List;
  * @version $Id:  Mar 24, 2011 9:07:58 AM anya $
  *
  */
-public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSelectedHandler
+public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSelectedHandler, EntryPointChangedHandler
 {
    public interface Display extends IsView
    {
@@ -92,6 +94,8 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
     */
    private List<Item> selectedItems;
 
+   private String workspace;
+
    /**
     * @param eventBus
     */
@@ -100,6 +104,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
       this.eventBus = eventBus;
       eventBus.addHandler(InitRepositoryEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -138,10 +143,16 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
-      
+
+      if (workspace != null && workspace.equals(selectedItems.get(0).getHref()))
+      {
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+         return;
+      }
+
       getWorkDir(selectedItems.get(0).getHref());
    }
-   
+
    /**
     * Get the location of the Git working directory, starting 
     * from pointed href.
@@ -169,8 +180,6 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          }
       });
    }
-   
-   
 
    /**
     * Get the values of the necessary parameters for initialization of the repository.
@@ -207,5 +216,14 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       this.selectedItems = event.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
+   @Override
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      this.workspace = event.getEntryPoint();
    }
 }

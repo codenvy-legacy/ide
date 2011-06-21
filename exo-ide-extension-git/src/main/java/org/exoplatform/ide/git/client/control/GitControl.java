@@ -21,6 +21,8 @@ package org.exoplatform.ide.git.client.control;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -32,8 +34,14 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  * @version $Id:  Apr 15, 2011 10:06:58 AM anya $
  *
  */
-public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   EntryPointChangedHandler
 {
+   /**
+    * Current workspace's href.
+    */
+   private String workspace;
+
    /**
     * @param id control's id
     */
@@ -53,7 +61,12 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          setEnabled(false);
          return;
       }
-      setEnabled(true);
+      setEnabled(!isWorkspaceSelected(event.getSelectedItems().get(0).getHref()));
+   }
+
+   protected boolean isWorkspaceSelected(String href)
+   {
+      return (workspace != null && href != null && href.equals(workspace));
    }
 
    /**
@@ -63,7 +76,24 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       setVisible(true);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
+   @Override
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      this.workspace = event.getEntryPoint();
+      if (event.getEntryPoint() != null)
+      {
+         setVisible(true);
+      }
+      else
+      {
+         setVisible(false);
+      }
+   }
 }

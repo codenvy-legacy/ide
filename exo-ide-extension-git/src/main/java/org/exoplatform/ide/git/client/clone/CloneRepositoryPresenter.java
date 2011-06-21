@@ -29,6 +29,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -50,7 +52,7 @@ import java.util.List;
  * @version $Id:  Mar 22, 2011 4:31:12 PM anya $
  *
  */
-public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepositoryHandler
+public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepositoryHandler, EntryPointChangedHandler
 {
    public interface Display extends IsView
    {
@@ -95,8 +97,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
        * @param enable
        */
       void enableCloneButton(boolean enable);
-      
-      
+
       void focusInRemoteUrlField();
    }
 
@@ -106,13 +107,15 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    private Display display;
 
    private HandlerManager eventBus;
-   
+
    private static final String DEFAULT_REPO_NAME = "origin";
 
    /**
     * Selected items in browser tree.
     */
    private List<Item> selectedItems;
+
+   private String workspace;
 
    /**
     * @param eventBus
@@ -123,6 +126,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
 
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CloneRepositoryEvent.TYPE, this);
+      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    /**
@@ -174,6 +178,12 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          return;
       }
 
+      if (workspace != null && workspace.equals(selectedItems.get(0).getHref()))
+      {
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+         return;
+      }
+
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
@@ -221,6 +231,15 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          }
       });
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    */
+   @Override
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      this.workspace = event.getEntryPoint();
    }
 
 }

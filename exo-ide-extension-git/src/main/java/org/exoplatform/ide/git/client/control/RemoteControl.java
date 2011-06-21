@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.git.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
@@ -30,7 +26,7 @@ import org.exoplatform.ide.git.client.GitExtension;
  * @version $Id: $
  *
  */
-public class RemoteControl extends SimpleControl implements IDEControl
+public class RemoteControl extends GitControl
 {
    public RemoteControl()
    {
@@ -38,14 +34,5 @@ public class RemoteControl extends SimpleControl implements IDEControl
       setTitle(GitExtension.MESSAGES.remoteControlTitle());
       setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
       setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
-   }
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
-   @Override
-   public void initialize(HandlerManager eventBus)
-   {
-      setVisible(true);
-      setEnabled(true);
    }
 }
