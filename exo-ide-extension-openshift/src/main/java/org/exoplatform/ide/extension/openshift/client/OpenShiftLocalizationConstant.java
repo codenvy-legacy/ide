@@ -104,7 +104,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("OpenShift")
    @Key("control.openshift.prompt")
    String openShiftControlPrompt();
-
+   
    @DefaultMessage("PaaS/OpenShift/User info...")
    @Key("control.showUserInfo.id")
    String showUserInfoControlId();
@@ -117,6 +117,15 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.showUserInfo.prompt")
    String showUserInfoControlPrompt();
 
+   @Key("control.updatePublicKey.id")
+   String updatePublicKeyControlId();
+
+   @Key("control.updatePublicKey.title")
+   String updatePublicKeyControlTitle();
+
+   @Key("control.updatePublicKey.prompt")
+   String updatePublicKeyControlPrompt();
+   
    /*Login view*/
    @DefaultMessage("Log in OpenShift")
    @Key("loginView.title")
@@ -209,6 +218,12 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Application <b>{0}</b> is successfully deleted.")
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess(String applicationName);
+   
+   @Key("updatePublicKeySuccess")
+   String updatePublicKeySuccess();
+
+   @Key("updatePublicKeyFailed")
+   String updatePublicKeyFailed();
 
    @DefaultMessage("OpenShift application information")
    @Key("applicationInfoView.title")
@@ -221,7 +236,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Value")
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
-
+   
    /*Application properties*/
    @DefaultMessage("Name")
    @Key("application.name")

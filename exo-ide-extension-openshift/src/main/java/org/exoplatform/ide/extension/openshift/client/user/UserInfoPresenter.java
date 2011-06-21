@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.client.user;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,11 +35,15 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -60,15 +70,52 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
+      /**
+       * Get Ok button click handler. 
+       * 
+       * @return {@link HasClickHandlers} click handler
+       */
       HasClickHandlers getOkButton();
-
+      
+      /**
+       * Get login field.
+       * 
+       * @return {@link HasValue}
+       */
       HasValue<String> getLoginField();
-
+      
+      /**
+       * Get domain field.
+       * 
+       * @return {@link HasValue}
+       */
       HasValue<String> getDomainField();
 
+      /**
+       * Get grid with application's information.
+       * 
+       * @return {@link ListGridItem}
+       */
       ListGridItem<Property> getApplicationInfoGrid();
 
+      /**
+       * Get grid with applications.
+       * 
+       * @return {@link ListGridItem}
+       */
       ListGridItem<AppInfo> getApplicationGrid();
+
+      /**
+       * Add handler for delete application button click.
+       * 
+       * @param handler
+       */
+      void addDeleteButtonSelectionHandler(SelectionHandler<AppInfo> handler);
+
+      /**
+       * Clear application's properties in grid.
+       */
+      void clearApplicationInfo();
    }
 
    private Display display;
@@ -111,6 +158,33 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
             {
                displayAppInfo(event.getSelectedItem());
             }
+            else
+            {
+               display.clearApplicationInfo();
+            }
+         }
+      });
+
+      display.getApplicationGrid().addValueChangeHandler(new ValueChangeHandler<List<AppInfo>>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<List<AppInfo>> event)
+         {
+            if (event.getValue() == null || event.getValue().size() == 0)
+            {
+               display.clearApplicationInfo();
+            }
+         }
+      });
+
+      display.addDeleteButtonSelectionHandler(new SelectionHandler<AppInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<AppInfo> event)
+         {
+            askDeleteApplication(event.getSelectedItem().getName());
          }
       });
    }
@@ -136,6 +210,9 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
       getUserInfo();
    }
 
+   /**
+    * Get user's information.
+    */
    protected void getUserInfo()
    {
       OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>()
@@ -178,6 +255,11 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
 
    }
 
+   /**
+    * Display application's properties.
+    * 
+    * @param appInfo
+    */
    protected void displayAppInfo(AppInfo appInfo)
    {
       List<Property> properties = new ArrayList<Property>();
@@ -211,5 +293,57 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
       {
          getUserInfo();
       }
+   }
+
+   /**
+    * Confirm the deleting of the application on OpenShift.
+    * 
+    * @param name application's name
+    */
+   protected void askDeleteApplication(final String name)
+   {
+      Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
+         OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplication(name), new BooleanValueReceivedHandler()
+         {
+
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if (value != null && value)
+               {
+                  doDeleteApplication(name);
+               }
+            }
+         });
+   }
+
+   /**
+    * Perform deleting application on OpenShift.
+    * 
+    * @param name application's name
+    */
+   protected void doDeleteApplication(final String name)
+   {
+      OpenShiftClientService.getInstance().destroyApplication(name, new AsyncRequestCallback<String>()
+      {
+
+         @Override
+         protected void onSuccess(String result)
+         {
+            eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
+               Type.INFO));
+            getUserInfo();
+         }
+
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .deleteApplicationFail(name)));
+         }
+      });
    }
 }

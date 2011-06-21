@@ -24,26 +24,26 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent;
+import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyEvent;
 
 /**
- * Control is used for showing OpenShift user's information.
+ * Control is used for updating SSH public key on OpenShift.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 14, 2011 10:47:04 AM anya $
+ * @version $Id:  Jun 21, 2011 12:15:28 PM anya $
  *
  */
-public class ShowUserInfoControl extends SimpleControl implements IDEControl
+public class UpdatePublicKeyControl extends SimpleControl implements IDEControl
 {
-   public ShowUserInfoControl()
+
+   public UpdatePublicKeyControl()
    {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showUserInfoControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.userInfoControl(),
-         OpenShiftClientBundle.INSTANCE.userInfoControlDisabled());
-      setEvent(new ShowUserInfoEvent());
-      setDelimiterBefore(true);
+      super(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlId());
+      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlTitle());
+      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeyControlPrompt());
+      setImages(OpenShiftClientBundle.INSTANCE.updateKeyControl(),
+         OpenShiftClientBundle.INSTANCE.updateKeyControlDisabled());
+      setEvent(new UpdatePublicKeyEvent());
    }
 
    /**

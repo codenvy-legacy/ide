@@ -75,6 +75,12 @@ public interface OpenShiftClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/openshift/images/controls/createDomain_Disabled.png")
    ImageResource createDomainControlDisabled();
    
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/updateKey.png")
+   ImageResource updateKeyControl();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/updateKey_Disabled.png")
+   ImageResource updateKeyControlDisabled();
+   
    @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift.png")
    ImageResource openShiftControl();
 

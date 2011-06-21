@@ -1,5 +1,7 @@
 package org.exoplatform.ide.extension.openshift.client.user;
 
+import com.google.gwt.event.logical.shared.SelectionHandler;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -17,6 +19,8 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoGrid;
 import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+
+import java.util.ArrayList;
 
 /**
  * view for showing user's information.
@@ -126,5 +130,23 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
    public ListGridItem<AppInfo> getApplicationGrid()
    {
       return applicationGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#addDeleteButtonSelectionHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addDeleteButtonSelectionHandler(SelectionHandler<AppInfo> handler)
+   {
+      applicationGrid.addDeleteButtonSelectionHandler(handler);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter.Display#clearApplicationInfo()
+    */
+   @Override
+   public void clearApplicationInfo()
+   {
+      applicationInfoGrid.setValue(new ArrayList<Property>());
    }
 }

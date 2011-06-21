@@ -32,10 +32,12 @@ import org.exoplatform.ide.extension.openshift.client.controls.DeleteApplication
 import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoControl;
+import org.exoplatform.ide.extension.openshift.client.controls.UpdatePublicKeyControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
+import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyPresenter;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
@@ -71,10 +73,11 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       //Add controls:
       IDE.getInstance().addControl(new OpenShiftControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateDomainControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowUserInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowUserInfoControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new UpdatePublicKeyControl(), DockTarget.NONE, false);
       
       new OpenShiftExceptionsHandler(eventBus);
       
@@ -85,6 +88,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new DeleteApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
       new UserInfoPresenter(eventBus);
+      new UpdatePublicKeyPresenter(eventBus);
    }
 
    /**
