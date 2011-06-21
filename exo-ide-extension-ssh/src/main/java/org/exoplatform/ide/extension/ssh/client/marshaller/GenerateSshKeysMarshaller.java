@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.ssh.client.marshaller;
 
+import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
+
 import org.exoplatform.gwtframework.commons.rest.Marshallable;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 
@@ -46,9 +51,18 @@ public class GenerateSshKeysMarshaller implements Marshallable
    @Override
    public String marshal()
    {
-      return "{ \"host\": \"" + genKey.getHost() + "\", \"comment\": \"" + genKey.getComment()
-         + "\", \"passphrase\": \"" + genKey.getPassphrase() + "\" }";
+      JSONObject jsonObject = new JSONObject();
+      JSONValue hostValue = (genKey.getHost() == null) ? JSONNull.getInstance() : new JSONString(genKey.getHost());
+      jsonObject.put("host", hostValue);
 
+      JSONValue commentValue =
+         (genKey.getComment() == null) ? JSONNull.getInstance() : new JSONString(genKey.getComment());
+      jsonObject.put("comment", commentValue);
+
+      JSONValue passphraseValue =
+         (genKey.getPassphrase() == null) ? JSONNull.getInstance() : new JSONString(genKey.getPassphrase());
+      jsonObject.put("passphrase", passphraseValue);
+
+      return jsonObject.toString();
    }
-
 }

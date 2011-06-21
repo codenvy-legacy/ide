@@ -249,7 +249,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
    private void generateKey(String host)
    {
-      SshKeyService.get().generateKey(new GenKeyRequest(host, "", ""), new AsyncRequestCallback<GenKeyRequest>()
+      SshKeyService.get().generateKey(new GenKeyRequest(host, null, null), new AsyncRequestCallback<GenKeyRequest>()
       {
 
          @Override
