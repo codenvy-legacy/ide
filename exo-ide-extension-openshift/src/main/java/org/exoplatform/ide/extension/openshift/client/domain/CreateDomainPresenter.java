@@ -172,7 +172,7 @@ public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHan
          return;
       }
 
-      OpenShiftClientService.getInstance().createDomain(domainName, true, new AsyncRequestCallback<String>()
+      OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>()
       {
 
          @Override
