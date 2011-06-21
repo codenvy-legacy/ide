@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.remote;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -91,7 +93,7 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
 
       VPanel vPanel = new VPanel();
-      Border border = new Border();
+      Border border = GWT.create(Border.class);
       vPanel.add(border);
 
       remoteGrid = new RemoteGrid();

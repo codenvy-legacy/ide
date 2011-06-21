@@ -133,8 +133,10 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
       if (hasModalWindows)
       {
          AbsolutePanel lockPanel = new AbsolutePanel();
-         DOM.setStyleAttribute(lockPanel.getElement(), "background", "#9999FF");
-         DOM.setStyleAttribute(lockPanel.getElement(), "opacity", "0.1");
+//         DOM.setStyleAttribute(lockPanel.getElement(), "background", "#9999FF");
+//         DOM.setStyleAttribute(lockPanel.getElement(), "opacity", "0.3");
+         lockPanel.getElement().getStyle().setBackgroundColor("#9999FF");
+         lockPanel.getElement().getStyle().setOpacity(0.1);
          add(lockPanel, 0, 0);
          lockPanels.put(view.getId(), lockPanel);
          resizeLockPanels();

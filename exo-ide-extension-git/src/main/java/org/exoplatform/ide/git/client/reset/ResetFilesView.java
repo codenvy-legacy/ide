@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -88,7 +90,7 @@ public class ResetFilesView extends ViewImpl implements ResetFilesPresenter.Disp
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       
-      Border border = new Border();
+      Border border = GWT.create(Border.class);
       indexFilesGrid = new IndexFilesGrid();
       indexFilesGrid.setWidth("100%");
       indexFilesGrid.setHeight(180);

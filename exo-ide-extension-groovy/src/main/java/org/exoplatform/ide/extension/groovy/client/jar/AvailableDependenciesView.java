@@ -121,7 +121,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       jarsListGrid.setSize("100%", "100%");
       jarsListGrid.setID(JAR_LIST_ID);
       
-      Border b1 = new Border();
+      Border b1 = GWT.create(Border.class);
       b1.setSize("100%", "100%");
       b1.add(jarsListGrid);
       
@@ -133,7 +133,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       attributesListGrid.setSize("100%", "100%");
       attributesListGrid.setID(JAR_ATTRIBUTES_ID);
       
-      Border b2 = new Border();
+      Border b2 = GWT.create(Border.class);
       b2.setSize("100%", "100%");
       b2.add(attributesListGrid);
       

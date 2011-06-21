@@ -29,8 +29,7 @@
 					<c:ImageButton text='{con.browseButton}' width="80px" height="22px"></c:ImageButton>
 				</g:at>
 				<g:at top="17" left="0">
-					<g:FormPanel ui:field="formPanel" method="POST"
-						encoding="ENCODING_MULTIPART">
+					<g:FormPanel ui:field="formPanel" method="POST">
 						<x:FileUploadInput ui:field="fileField"
 							styleName='{res.css.transparent}' width="80px" height="20px"></x:FileUploadInput>
 					</g:FormPanel>

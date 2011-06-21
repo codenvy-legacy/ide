@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.user.client.ui.HasValue;
@@ -112,7 +114,7 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       
-      Border border = new Border();
+      Border border = GWT.create(Border.class);
       border.setWidth("100%");
       revisionGrid = new RevisionGrid();
       revisionGrid.setWidth("100%");

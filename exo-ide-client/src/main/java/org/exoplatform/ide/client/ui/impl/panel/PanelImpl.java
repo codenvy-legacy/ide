@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.ui.impl.panel;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -404,10 +406,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
             int width = getOffsetWidth();
             int height = getOffsetHeight();
 
-            DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
-            DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
-            DOM.setStyleAttribute(widget.getElement(), "width", "" + width + "px");
-            DOM.setStyleAttribute(widget.getElement(), "height", "" + height + "px");
+//            DOM.setStyleAttribute(widget.getElement(), "left", "" + (left + 0) + "px");
+//            DOM.setStyleAttribute(widget.getElement(), "top", "" + (top + 0) + "px");
+//            DOM.setStyleAttribute(widget.getElement(), "width", "" + width + "px");
+//            DOM.setStyleAttribute(widget.getElement(), "height", "" + height + "px");
+            widget.getElement().getStyle().setLeft(left, Unit.PX);
+            widget.getElement().getStyle().setTop(top, Unit.PX);
+            widget.getElement().getStyle().setWidth(width, Unit.PX);
+            widget.getElement().getStyle().setHeight(height, Unit.PX);
 
             if (width == 0 || height == 0)
             {

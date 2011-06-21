@@ -20,6 +20,17 @@
 -->
 <module>
 	<inherits name='com.google.gwt.user.User' />
+	
+	<replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
+      <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+    </replace-with>
+    <replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderIE">
+    <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+     <any>
+       <when-property-is name="user.agent" value="ie6" />
+       <when-property-is name="user.agent" value="ie8" />
+     </any>
+    </replace-with>
 
 	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
 		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />

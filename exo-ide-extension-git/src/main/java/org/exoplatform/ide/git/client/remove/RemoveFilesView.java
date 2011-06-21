@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.remove;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -86,7 +88,7 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
-      Border border = new Border();
+      Border border = GWT.create(Border.class);
       border.setWidth("100%");
       indexFilesGrid = new IndexFilesGrid();
       indexFilesGrid.setWidth("100%");

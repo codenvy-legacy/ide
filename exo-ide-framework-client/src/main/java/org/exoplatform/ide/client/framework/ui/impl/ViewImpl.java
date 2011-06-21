@@ -18,8 +18,16 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.component.Border;
@@ -36,15 +44,8 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandl
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -193,7 +194,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       getElement().getStyle().setLeft(-1000, Unit.PT);
       getElement().getStyle().setTop(-1000, Unit.PT);
 
-      viewBorder = new Border();
+      viewBorder = GWT.create(Border.class);
       viewBorder.setBorderSize(3);
 
       super.add(viewBorder);
