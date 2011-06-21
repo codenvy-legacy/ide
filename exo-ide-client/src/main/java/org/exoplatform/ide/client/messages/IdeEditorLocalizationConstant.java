@@ -131,5 +131,10 @@ public interface IdeEditorLocalizationConstant extends Constants
    @Key("editorController.fileIsReadOnly")
    String editorControllerFileIsReadOnly();
    
-
+   @Key("editorController.fileTab.sourceView")
+   String editorControllerFileTabSourceView();
+   
+   @Key("editorController.fileTab.designView")
+   String editorControllerFileTabDesignView();
+   
 }

@@ -249,8 +249,10 @@ public interface Images
 
    public interface Editor
    {
-
       public static final String READONLY_FILE = IMAGE_URL + "panel/editor/file_readonly.png";
+      public static final String SOURCE_BUTTON_ICON = IMAGE_URL + "panel/editor/source_button.png";;
+      public static final String DESIGN_BUTTON_ICON = IMAGE_URL + "panel/editor/design_button.png";;      
+      public static final String EDITOR_SWITCHER_BACKGROUND = IMAGE_URL + "panel/editor/editor_switcher_background.png";
    }
 
    public static final String BLANK = IMAGE_URL + "blank.png";

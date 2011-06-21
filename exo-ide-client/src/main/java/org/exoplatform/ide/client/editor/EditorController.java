@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
@@ -73,6 +74,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -106,20 +108,16 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: EditorController Mar 21, 2011 5:22:10 PM evgen $
  *
  */
-public class EditorController implements EditorContentChangedHandler, EditorSaveContentHandler,
-   EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler,
-   EditorFormatTextHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler,
-   FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler,
-   EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
-   RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler,
-   ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler
+public class EditorController implements EditorContentChangedHandler, 
+   EditorSaveContentHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler,
+   EditorRedoTypingHandler, EditorFormatTextHandler, ShowLineNumbersHandler, 
+   EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
+   EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler,
+   EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
+   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler
 {
-
-   private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
-      .editorControllerAskCloseFile();
-
-   private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
-      .editorControllerFileIsReadOnly();
+   
+   private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerAskCloseFile();
 
    private HandlerManager eventBus;
 
@@ -139,21 +137,18 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
 
-   private LinkedHashMap<String, String> openedEditors = new LinkedHashMap<String, String>();
+   private LinkedHashMap<String, String> openedEditorsDescription = new LinkedHashMap<String, String>();
 
    private Map<String, String> lockTokens;
 
    private Map<String, EditorView> editorsViews = new HashMap<String, EditorView>();
-
-   private Map<String, Editor> editors = new HashMap<String, Editor>();
-
+      
    private boolean waitForEditorInitialized = false;
 
    public EditorController()
    {
       this.eventBus = IDE.EVENT_BUS;
-      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
-         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       //eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
 
       handlerRegistrations.put(EditorOpenFileEvent.TYPE, eventBus.addHandler(EditorOpenFileEvent.TYPE, this));
@@ -164,29 +159,22 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       handlerRegistrations.put(EditorFindTextEvent.TYPE, eventBus.addHandler(EditorFindTextEvent.TYPE, this));
       handlerRegistrations.put(EditorReplaceTextEvent.TYPE, eventBus.addHandler(EditorReplaceTextEvent.TYPE, this));
-      handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE,
-         eventBus.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
+      handlerRegistrations.put(EditorReplaceAndFindTextEvent.TYPE, eventBus.addHandler(EditorReplaceAndFindTextEvent.TYPE, this));
 
-      handlerRegistrations.put(EditorContentChangedEvent.TYPE,
-         eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
+      handlerRegistrations.put(EditorContentChangedEvent.TYPE, eventBus.addHandler(EditorContentChangedEvent.TYPE, this));
       handlerRegistrations.put(EditorSaveContentEvent.TYPE, eventBus.addHandler(EditorSaveContentEvent.TYPE, this));
-      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE,
-         eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(EditorActiveFileChangedEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(EditorCloseFileEvent.TYPE, eventBus.addHandler(EditorCloseFileEvent.TYPE, this));
       handlerRegistrations.put(EditorUndoTypingEvent.TYPE, eventBus.addHandler(EditorUndoTypingEvent.TYPE, this));
       handlerRegistrations.put(EditorRedoTypingEvent.TYPE, eventBus.addHandler(EditorRedoTypingEvent.TYPE, this));
       handlerRegistrations.put(FileSavedEvent.TYPE, eventBus.addHandler(FileSavedEvent.TYPE, this));
       handlerRegistrations.put(EditorFormatTextEvent.TYPE, eventBus.addHandler(EditorFormatTextEvent.TYPE, this));
       handlerRegistrations.put(ShowLineNumbersEvent.TYPE, eventBus.addHandler(ShowLineNumbersEvent.TYPE, this));
-      handlerRegistrations.put(EditorChangeActiveFileEvent.TYPE,
-         eventBus.addHandler(EditorChangeActiveFileEvent.TYPE, this));
-      handlerRegistrations.put(EditorDeleteCurrentLineEvent.TYPE,
-         eventBus.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
+      handlerRegistrations.put(EditorDeleteCurrentLineEvent.TYPE, eventBus.addHandler(EditorDeleteCurrentLineEvent.TYPE, this));
       handlerRegistrations.put(EditorGoToLineEvent.TYPE, eventBus.addHandler(EditorGoToLineEvent.TYPE, this));
       handlerRegistrations.put(EditorSetFocusEvent.TYPE, eventBus.addHandler(EditorSetFocusEvent.TYPE, this));
       handlerRegistrations.put(SaveFileAsEvent.TYPE, eventBus.addHandler(SaveFileAsEvent.TYPE, this));
-      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
-         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
+      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE, eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
       handlerRegistrations.put(ClosingViewEvent.TYPE, eventBus.addHandler(ClosingViewEvent.TYPE, this));
       handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, eventBus.addHandler(EditorFocusReceivedEvent.TYPE, this));
 
@@ -215,7 +203,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       removeHandlers();
    }
-
+   
    /**
     * Remove handlers, that are no longer needed.
     */
@@ -236,12 +224,13 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      String editorId = event.getEditorId();
-      if (editorsViews.get(editorId) == null)
+      Editor editor = getEditorFromView(activeFile.getHref());
+      if (editor == null
+           || !editor.getEditorId().equals(event.getEditorId()))
       {
          return;
       }
-      String path = editorsViews.get(editorId).getFileHref();
+      String path = activeFile.getHref();
 
       if (ignoreContentChangedList.contains(path))
       {
@@ -249,26 +238,29 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          return;
       }
 
-      File file = openedFiles.get(path);
-      file.setContentChanged(true);
+      activeFile.setContentChanged(true);
 
-      Editor editor = editors.get(file.getHref());
-
-      file.setContent(editor.getText());
-      updateTabTitle(file);
-      eventBus.fireEvent(new EditorFileContentChangedEvent(file, editor.hasUndoChanges(), editor.hasRedoChanges()));
+      activeFile.setContent(editor.getText());
+      updateTabTitle(activeFile);
+      eventBus.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      editorsViews.get(event.getEditorId()).activate();
+      editorsViews.get(activeFile.getHref()).activate();
    }
-
+   
    /* (non-Javadoc)
     * @see org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedHandler#onEditorChangedActiveFile(org.exoplatform.gadgets.devtool.client.editor.event.EditorActiveFileChangedEvent)
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      if (activeFile == event.getFile())
+      {
+         getEditorFromView(event.getFile().getHref()).setFocus();
+         return;
+      }
+
       closeFileAfterSaving = false;
       File curentFile = event.getFile();
       if (curentFile == null)
@@ -278,14 +270,14 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
 
       activeFile = curentFile;
-      Editor editor = editors.get(curentFile.getHref());
-      editor.setFocus();
+      getEditorFromView(curentFile.getHref()).setFocus();
+      ((View)editorsViews.get(activeFile.getHref())).activate();
    }
 
    public void onEditorSaveContent(EditorSaveContentEvent event)
    {
       File file = activeFile;
-      file.setContent(editors.get(file.getHref()).getText());
+      file.setContent(getEditorFromView(file.getHref()).getText());
       if (file.isNewFile())
       {
          eventBus.fireEvent(new SaveFileAsEvent());
@@ -298,29 +290,26 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
    private void closeFile(File file)
    {
-      Editor editor = editors.get(file.getHref());
-      EditorView editorView = editorsViews.get(editor.getEditorId());
-
-      String editorDescription = openedEditors.get(file.getHref());
-
-      editors.remove(file.getHref());
-      editorsViews.remove(editor.getEditorId());
+      EditorView editorView = editorsViews.get(file.getHref());
+      
+      String editorDescription = openedEditorsDescription.get(file.getHref());
+      
+      editorsViews.remove(file.getHref());
       openedFiles.remove(file.getHref());
-      openedEditors.remove(file.getHref());
+      openedEditorsDescription.remove(file.getHref());
 
       IDE.getInstance().closeView(editorView.getId());
 
       file.setContent(null);
       file.setContentChanged(false);
-
+      
       if (ignoreContentChangedList.contains(file.getHref()))
       {
          ignoreContentChangedList.remove(file.getHref());
       }
 
       eventBus.fireEvent(new EditorFileClosedEvent(file, editorDescription, openedFiles));
-      if (editors.isEmpty())
-      {
+      if (editorsViews.isEmpty()) {
          eventBus.fireEvent(new EditorActiveFileChangedEvent(null, null));
       }
    }
@@ -360,8 +349,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          closeFileAfterSaving = true;
          final String fileName = Utils.unescape(file.getName());
-         String message =
-            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(fileName);
+         String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(fileName);
          Dialogs.getInstance().ask(CLOSE_FILE, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
@@ -373,7 +361,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
                if (value)
                {
-                  file.setContent(editors.get(file.getHref()).getText());
+                  file.setContent(getEditorFromView(file.getHref()).getText());
                   eventBus.fireEvent(new SaveFileEvent());
                }
                else
@@ -386,47 +374,30 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
    }
 
+   protected Editor getEditorFromView(String href)
+   {
+      return editorsViews.get(href).getEditor();
+   }
+
    public void onEditorUndoTyping(EditorUndoTypingEvent event)
    {
-      editors.get(activeFile.getHref()).undo();
+      getEditorFromView(activeFile.getHref()).undo();
    }
 
    public void onEditorRedoTyping(EditorRedoTypingEvent event)
    {
-      editors.get(activeFile.getHref()).redo();
+      getEditorFromView(activeFile.getHref()).redo();
 
    }
 
    private void updateTabTitle(File file)
    {
-      Editor editor = editors.get(file.getHref());
-
-      editorsViews.get(editor.getEditorId()).setTitle(getFileTitle(file));
-
-   }
-
-   private String getFileTitle(File file)
-   {
-      boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
-
-      String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
-
-      String mainHint = file.getHref();
-
-      String readonlyImage =
-         (isReadOnly(file))
-            ? "<img id=\"fileReadonly\"  style=\"margin-left:-4px; margin-bottom: -4px;\" border=\"0\" suppress=\"true\" src=\""
-               + Images.Editor.READONLY_FILE + "\" />" : "";
-
-      mainHint = (isReadOnly(file)) ? FILE_IS_READ_ONLY : mainHint;
-      String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "</span>";
-
-      return title;
+      editorsViews.get(file.getHref()).setTitle(file, isReadOnly(file));
    }
 
    public void onFormatFile(EditorFormatTextEvent event)
    {
-      editors.get(activeFile.getHref()).formatSource();
+      getEditorFromView(activeFile.getHref()).formatSource();
    }
 
    private void updateLineNumbers(boolean lineNumbers)
@@ -435,23 +406,15 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       while (iterator.hasNext())
       {
          String path = iterator.next();
-         editors.get(path).showLineNumbers(lineNumbers);
+         getEditorFromView(path).showLineNumbers(lineNumbers);
       }
-      editors.get(activeFile.getHref()).setFocus();
+      getEditorFromView(activeFile.getHref()).setFocus();
    }
 
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {
 
       updateLineNumbers(event.isShowLineNumber());
-   }
-
-   public void onEditorChangeActiveFile(EditorChangeActiveFileEvent event)
-   {
-      activeFile = event.getFile();
-      Editor editor = editors.get(activeFile.getHref());
-      EditorView editorView = editorsViews.get(editor.getEditorId());
-      editorView.activate();
    }
 
    public void onEditorOpenFile(EditorOpenFileEvent event)
@@ -462,70 +425,47 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          return;
       }
-      if (openedFiles.get(file.getHref()) != null
-         && event.getEditorProducer().getDescription().equals(openedEditors.get(file.getHref())))
-      {
+      if (openedFiles.get(file.getHref()) != null)
+      {         
          File openedFile = openedFiles.get(file.getHref());
-         Editor editor = editors.get(openedFile.getHref());
-         editorsViews.get(editor.getEditorId()).setViewVisible();
-         if (openedFile.isContentChanged())
+         EditorView openedFileEditorView = editorsViews.get(openedFile.getHref());
+
+         if (! event.getEditorProducer().getDescription().equals(openedEditorsDescription.get(file.getHref())))
          {
-            return;
+            openedFileEditorView.switchToEditor(getNumberOfEditorToShow(event.getEditorProducer()) - 1);
+            openedEditorsDescription.put(file.getHref(), event.getEditorProducer().getDescription());
          }
-         ignoreContentChangedList.add(file.getHref());
-         editors.get(openedFile.getHref()).setText(file.getContent());
+         
+         openedFileEditorView.setViewVisible();
          return;
       }
 
       ignoreContentChangedList.add(file.getHref());
       openedFiles.put(file.getHref(), file);
-      openedEditors.put(file.getHref(), event.getEditorProducer().getDescription());
-
-      boolean lineNumbers = true;
-      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
+      openedEditorsDescription.put(file.getHref(), event.getEditorProducer().getDescription());
+      
+      List<Editor> supportedEditors = getSupportedEditors(event.getEditorProducer(), file, eventBus);
+            
+      EditorView editorView = new EditorView(file,
+                                             isReadOnly(file),
+                                             this.eventBus,
+                                             supportedEditors, 
+                                             getNumberOfEditorToShow(event.getEditorProducer()) - 1);
+     
+      if (editorsViews.containsKey(file.getHref()))
       {
-         lineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
-      }
-
-      List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
-      HashMap<String, Object> params = new HashMap<String, Object>();
-
-      params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
-      params.put(EditorParameters.IS_SHOW_LINE_NUMER, lineNumbers);
-      params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
-      EditorProducer producer = event.getEditorProducer();
-      Editor editor = producer.createEditor(file.getContent(), eventBus, params);
-      DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
-
-      if (editors.containsKey(file.getHref()))
-      {
-         Editor oldEditor = editors.get(file.getHref());
-         file.setContent(oldEditor.getText());
-         EditorView editorView = editorsViews.get(oldEditor.getEditorId());
-
-         String oldEditorWidth = oldEditor.getElement().getStyle().getProperty("width");
-         String oldEditorHeight = oldEditor.getElement().getStyle().getProperty("height");
-
-         oldEditor.removeFromParent();
-
-         editor.getElement().getStyle().setProperty("width", oldEditorWidth);
-         editor.getElement().getStyle().setProperty("height", oldEditorHeight);
-
-         editorView.add(editor);
-         editors.put(file.getHref(), editor);
-         editorsViews.put(editor.getEditorId(), editorView);
+         editorsViews.put(file.getHref(), editorView);
       }
       else
       {
-         editors.put(file.getHref(), editor);
-
-         EditorView view = new EditorView(editor, file, getFileTitle(file));
-         editorsViews.put(editor.getEditorId(), view);
+         editorsViews.put(file.getHref(), editorView);
          waitForEditorInitialized = true;
-         IDE.getInstance().openView(view);
+         IDE.getInstance().openView(editorView);
       }
-
-      eventBus.fireEvent(new EditorFileOpenedEvent(file, producer.getDescription(), openedFiles));
+      
+      activeFile = file;
+      
+      eventBus.fireEvent(new EditorFileOpenedEvent(file, event.getEditorProducer().getDescription(), openedFiles));
    }
 
    /**
@@ -562,18 +502,38 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       }
       else
       {
-         File currentOpenedFile = activeFile;
          File savedFile = event.getFile();
-         if (event.getSourceHref() != null)
-         {
-            openedFiles.remove(event.getSourceHref());
-            activeFile = savedFile;
-            //TODO 
-            openedFiles.put(savedFile.getHref(), savedFile);
-            replaceFile(currentOpenedFile, savedFile);
-         }
+         openedFiles.remove(event.getSourceHref());
+         openedFiles.put(savedFile.getHref(), savedFile);
 
+         EditorView oldFileEditorView = editorsViews.get(savedFile.getHref());
+         if (oldFileEditorView == null)
+         {
+            oldFileEditorView = editorsViews.get(activeFile.getHref());
+            editorsViews.remove(activeFile.getHref());
+         }
+         else
+         {
+            editorsViews.remove(savedFile.getHref());
+         }
+         
+         oldFileEditorView.setFile(savedFile);
+         editorsViews.put(savedFile.getHref(), oldFileEditorView);
          updateTabTitle(savedFile);
+
+         try
+         {
+            oldFileEditorView.setIcon(new Image(savedFile.getIcon()));
+         }
+         catch (Exception e) {
+            e.printStackTrace();
+         }
+         
+         // call activeFileChanged event after the SaveFileAs operation
+         if (! activeFile.getHref().equals(savedFile.getHref()))
+         {
+            eventBus.fireEvent(new EditorActiveFileChangedEvent(savedFile, oldFileEditorView.getEditor()));
+         }
       }
    }
 
@@ -595,34 +555,30 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          ignoreContentChangedList.add(newFile.getHref());
       }
       //TODO 
+      
+      EditorView oldFileEditorView = editorsViews.get(oldFile.getHref());
+      
+      editorsViews.remove(oldFile.getHref());
+      
+      editorsViews.put(newFile.getHref(), oldFileEditorView);
 
-      String editorId = editors.get(oldFile.getHref()).getEditorId();
-      editors.remove(oldFile.getHref());
-
-      EditorView editorView = editorsViews.get(editorId);
-      Editor editor = editorView.getEditor();
-
-      editors.put(newFile.getHref(), editor);
-      editorsViews.put(editor.getEditorId(), editorView);
       try
       {
-         editorView.setIcon(new Image(newFile.getIcon()));
+         oldFileEditorView.setIcon(new Image(newFile.getIcon()));
       }
-      catch (Exception e)
-      {
+      catch (Exception e) {
          e.printStackTrace();
       }
-      boolean contentChanged = newFile.isContentChanged();
-      editorView.setContent(newFile);
 
-      //to avoid change content
-      newFile.setContentChanged(contentChanged);
-
+      oldFileEditorView.setContent(newFile.getContent());
+            
       updateTabTitle(newFile);
+      oldFileEditorView.setFile(newFile);
+      
       //   display.replaceFile(oldFile, newFile);
 
       //   display.updateTabTitle(newFile.getHref());
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, editorView.getEditor()));
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
    }
 
    /**
@@ -630,7 +586,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorDeleteCurrentLine(EditorDeleteCurrentLineEvent event)
    {
-      editors.get(activeFile.getHref()).deleteCurrentLine();
+      getEditorFromView(activeFile.getHref()).deleteCurrentLine();
    }
 
    /**
@@ -638,7 +594,8 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorGoToLine(EditorGoToLineEvent event)
    {
-      editors.get(activeFile.getHref()).goToPosition(event.getLineNumber(), event.getColumnNumber());
+      EditorView activeEditorView = editorsViews.get(activeFile.getHref());
+      activeEditorView.getEditor().goToPosition(event.getLineNumber(), event.getColumnNumber());      
    }
 
    /**
@@ -646,7 +603,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorFindText(EditorFindTextEvent event)
    {
-      boolean isFound = editors.get(event.getPath()).findAndSelect(event.getFindText(), event.isCaseSensitive());
+      boolean isFound = getEditorFromView(event.getPath()).findAndSelect(event.getFindText(), event.isCaseSensitive());
       eventBus.fireEvent(new EditorTextFoundEvent(isFound));
    }
 
@@ -655,7 +612,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorReplaceText(EditorReplaceTextEvent event)
    {
-      Editor editor = editors.get(event.getPath());
+      Editor editor = getEditorFromView(event.getPath());
       if (event.isReplaceAll())
       {
          while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
@@ -677,7 +634,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
    {
-      Editor editor = editors.get(event.getPath());
+      Editor editor = getEditorFromView(event.getPath());
       editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
       boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
       eventBus.fireEvent(new EditorTextFoundEvent(isFound));
@@ -688,7 +645,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
     */
    public void onEditorSetFocus(EditorSetFocusEvent event)
    {
-      editors.get(activeFile.getHref()).setFocus();
+      getEditorFromView(activeFile.getHref()).setFocus();
    }
 
    public void onRefreshHotKeys(RefreshHotKeysEvent event)
@@ -699,7 +656,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       while (it.hasNext())
       {
          String file = it.next();
-         editors.get(file).setHotKeyList(hotKeyList);
+         getEditorFromView(file).setHotKeyList(hotKeyList);
       }
    }
 
@@ -722,7 +679,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       if (event.getView().getType().equals("editor"))
       {
-         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
+         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView) event.getView()).getFile()));
       }
    }
 
@@ -734,24 +691,28 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       if (event.getView().getType().equals("editor") && event.getView().isViewVisible())
       {
-         final EditorView editorView = (EditorView)event.getView();
+         final EditorView editorView = (EditorView) event.getView();
          activeFile = editorView.getFile();
          Timer timer = new Timer()
          {
             @Override
             public void run()
             {
-               try
+               try 
                {
-                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));
-               }
-               catch (Exception e)
+                  if (editorView.getEditor() == null)
+                  {
+                     return;   
+                  }
+                  eventBus.fireEvent(new EditorActiveFileChangedEvent(activeFile, editorView.getEditor()));                     
+               } 
+               catch (Exception e) 
                {
                   e.printStackTrace();
                }
             }
          };
-
+            
          if (waitForEditorInitialized)
          {
             waitForEditorInitialized = false;
@@ -774,9 +735,84 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       if (event.getView().getType().equals("editor"))
       {
          event.cancelClosing();
-         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
+         eventBus.fireEvent(new EditorCloseFileEvent(((EditorView) event.getView()).getFile()));
       }
 
    }
 
+   /**
+    * Read applicationSettings and return true if there are more than one editors for file with mimeType.   
+    * @param mimeType
+    * @return
+    * @throws EditorNotFoundException  
+    */
+   private List<EditorProducer> getSupportedEditorProducers(String mimeType)
+   {
+      try
+      {
+         return EditorFactory.getEditors(mimeType);
+      }
+      catch (EditorNotFoundException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      return null;
+   }
+
+
+   private List<Editor> getSupportedEditors(EditorProducer editorProducer, File file, HandlerManager eventBus)
+   {
+      boolean isLineNumbers = true;
+      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
+      {
+         isLineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
+      }
+      
+      // create editors for source/design view
+      List<Editor> supportedEditors = new ArrayList<Editor>();
+      List<EditorProducer> supportedEditorProducers = getSupportedEditorProducers(file.getContentType());
+      
+      for (EditorProducer supportedEditorProducer : supportedEditorProducers)
+      {
+         List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
+         
+         HashMap<String, Object> params = new HashMap<String, Object>();
+
+         params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
+         params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
+         params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
+
+         Editor editor = supportedEditorProducer.createEditor(file.getContent(), eventBus, params);
+         
+         supportedEditors.add(editor);
+         DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
+      }
+      
+      return supportedEditors;
+   }
+   
+   /**
+    * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime type.  
+    * @param editorProducer
+    * @return
+    */
+   private int getNumberOfEditorToShow(EditorProducer editorProducer)
+   {
+      // create editors for source/design view
+      List<EditorProducer> supportedEditorProducers = getSupportedEditorProducers(editorProducer.getMimeType());
+
+      int i = 1;
+      for (EditorProducer supportedEditorProducer : supportedEditorProducers)
+      {
+         if (editorProducer.getDescription().equals(supportedEditorProducer.getDescription()))
+         {
+            return i;
+         }
+         i++;
+      }
+      
+      return 1;
+   }
+   
 }

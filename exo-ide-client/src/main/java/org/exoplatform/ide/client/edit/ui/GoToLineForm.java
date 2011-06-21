@@ -153,7 +153,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#closeForm()
+    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#closeForm()
     */
 
    public void closeForm()
@@ -162,7 +162,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getCancelButton()
     */
    public HasClickHandlers getCancelButton()
    {
@@ -170,7 +170,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#getGoButton()
+    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getGoButton()
     */
    public HasClickHandlers getGoButton()
    {
@@ -178,7 +178,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
+    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
     */
    public void setCaptionLabel(String caption)
    {
@@ -186,7 +186,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.action.GoToLinePresenter.Display#removeFocusFromLineNumber()
+    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#removeFocusFromLineNumber()
     */
    public void removeFocusFromLineNumber()
    {
@@ -194,7 +194,7 @@ public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.cl
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.edit.action.GoToLinePresenter.Display#getLineNumber()
+    * @see org.exoplatform.ide.client.EditorPresenter.edit.action.GoToLinePresenter.Display#getLineNumber()
     */
    @Override
    public TextFieldItem getLineNumber()
