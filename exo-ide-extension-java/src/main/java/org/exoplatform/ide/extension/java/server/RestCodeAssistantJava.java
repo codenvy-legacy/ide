@@ -57,9 +57,6 @@ public class RestCodeAssistantJava
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
 
-   /**
-    * 
-    */
    public RestCodeAssistantJava(CodeAssistant codeAssistantStorage)
    {
       this.codeAssistantStorage = codeAssistantStorage;
@@ -86,16 +83,8 @@ public class RestCodeAssistantJava
       if (LOG.isDebugEnabled())
          LOG.error("Class info for " + fqn + " not found");
       return null;
-      
    }
 
-   /**
-    * Returns the Class object associated with the class or interface with the given string name.
-    * 
-    * @param fqn the Full Qualified Name
-    * @return {@link TypeInfo} 
-    * @throws ClassNotFoundException
-    */
    /**
     * Returns set of FQNs matched to Class name (means FQN end on {className})
     * Example :
@@ -121,7 +110,6 @@ public class RestCodeAssistantJava
    {
       List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByClassName(className);
       return info;
-
    }
 
    /**
@@ -169,7 +157,6 @@ public class RestCodeAssistantJava
       throws CodeAssistantException
    {
       return codeAssistantStorage.findByType(type, prefix);
-
    }
 
    @GET
@@ -180,5 +167,4 @@ public class RestCodeAssistantJava
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
          + codeAssistantStorage.getClassDoc(fqn) + "</body></html>";
    }
-
 }

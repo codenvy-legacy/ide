@@ -26,20 +26,19 @@ import javax.ws.rs.core.Application;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaServiceApplication Mar 30, 2011 10:34:04 AM evgen $
- *
  */
 public class JavaServiceApplication extends Application
 {
 
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
-   
-   /**
-    * 
-    */
+   private final Set<Class<?>> classes;
+
    public JavaServiceApplication()
    {
+      classes = new HashSet<Class<?>>(2);
       classes.add(RestCodeAssistantJava.class);
+      classes.add(JavaAppService.class);
    }
+
    /**
     * @see javax.ws.rs.core.Application#getClasses()
     */
@@ -48,5 +47,4 @@ public class JavaServiceApplication extends Application
    {
       return classes;
    }
-
 }
