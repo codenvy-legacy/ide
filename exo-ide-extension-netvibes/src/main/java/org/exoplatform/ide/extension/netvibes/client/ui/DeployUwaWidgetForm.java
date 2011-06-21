@@ -24,11 +24,12 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -104,13 +105,13 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
 
    //Buttons:
 
-   private IButton deployWidgetButton;
+   private ImageButton deployWidgetButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton nextStepButton;
+   private ImageButton nextStepButton;
 
-   private IButton prevStepButton;
+   private ImageButton prevStepButton;
 
    //Main :
 
@@ -337,15 +338,15 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
     * @param id button's id
     * @param title button's display title
     * @param icon button's icon
-    * @return {@link IButton} created button
+    * @return {@link ImageButton} created button
     */
-   private IButton createButton(String id, String title, String icon)
+   private ImageButton createButton(String id, String title, String icon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setWidth(BUTTON_WIDTH);
-      button.setHeight(BUTTON_HEIGHT);
-      button.setIcon(icon);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setWidth(BUTTON_WIDTH + "px");
+      button.setHeight(BUTTON_HEIGHT + "px");
+      button.setImage(new Image(icon));
       return button;
    }
 
@@ -497,14 +498,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public void updateNextButtonState(boolean isVisible, boolean isEnabled)
    {
       nextStepButton.setVisible(isVisible);
-      if (isEnabled)
-      {
-         nextStepButton.enable();
-      }
-      else
-      {
-         nextStepButton.disable();
-      }
+      nextStepButton.setEnabled(isEnabled);
    }
 
    /**
@@ -513,14 +507,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public void updatePrevButtonState(boolean isVisible, boolean isEnabled)
    {
       prevStepButton.setVisible(isVisible);
-      if (isEnabled)
-      {
-         prevStepButton.enable();
-      }
-      else
-      {
-         prevStepButton.disable();
-      }
+      prevStepButton.setEnabled(isEnabled);
    }
 
    /**
@@ -529,14 +516,7 @@ public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidget
    public void updateDeployButtonState(boolean isVisible, boolean isEnabled)
    {
       deployWidgetButton.setVisible(isVisible);
-      if (isEnabled)
-      {
-         deployWidgetButton.enable();
-      }
-      else
-      {
-         deployWidgetButton.disable();
-      }
+      deployWidgetButton.setEnabled(isEnabled);
    }
 
    /**

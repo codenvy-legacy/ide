@@ -18,20 +18,18 @@
  */
 package org.exoplatform.ide.client.component;
 
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -77,7 +75,7 @@ public class AskForValueDialog extends DialogWindow
 
    protected TextField textItem;
 
-   //private IButton okButton;
+   //private ImageButton okButton;
    private ImageButton okButton;
 
    public AskForValueDialog(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
@@ -192,11 +190,11 @@ public class AskForValueDialog extends DialogWindow
          okButton.setEnabled(false);
       }      
 
-      IButton cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogCancelButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.CANCEL);
+      ImageButton cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogCancelButton());
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
+      cancelButton.setWidth("90px");
+      cancelButton.setHeight("22px");
+      cancelButton.setImage(new Image(Images.Buttons.CANCEL));
 
       if (valueDiscardCallback == null)
       {
@@ -205,11 +203,11 @@ public class AskForValueDialog extends DialogWindow
       }
       else
       {
-         IButton noButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogNoButton());
-         noButton.setID(ID_NO_BUTTON);
-         noButton.setWidth(90);
-         noButton.setHeight(22);
-         noButton.setIcon(Images.Buttons.NO);
+         ImageButton noButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.askValueDialogNoButton());
+         noButton.setButtonId(ID_NO_BUTTON);
+         noButton.setWidth("90px");
+         noButton.setHeight("22px");
+         noButton.setImage(new Image(Images.Buttons.NO));
 
          noButton.addClickHandler(new ClickHandler()
          {

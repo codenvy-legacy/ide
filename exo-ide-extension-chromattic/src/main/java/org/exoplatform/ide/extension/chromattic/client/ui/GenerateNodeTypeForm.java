@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.Align;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.extension.chromattic.client.Images;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import org.exoplatform.gwtframework.ui.client.component.Align;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.extension.chromattic.client.Images;
 
 /**
  * View for generating node type definition.
@@ -64,9 +65,9 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
 
    private SelectItem formatField;
 
-   private IButton generateButton;
+   private ImageButton generateButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    /**
     * @param eventBus handler manager
@@ -147,15 +148,15 @@ public class GenerateNodeTypeForm extends DialogWindow implements GenerateNodeTy
     * @param id button's id
     * @param title button's display title
     * @param icon button's icon
-    * @return {@link IButton} created button
+    * @return {@link ImageButton} created button
     */
-   private IButton createButton(String id, String title, String icon)
+   private ImageButton createButton(String id, String title, String icon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setWidth(BUTTON_WIDTH);
-      button.setHeight(BUTTON_HEIGHT);
-      button.setIcon(icon);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImage(new Image(icon));
+      button.setHeight(BUTTON_HEIGHT + "px");
+      button.setWidth(BUTTON_WIDTH+"px");
       return button;
    }
 

@@ -38,7 +38,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display;
+import org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display;
 
 import java.util.Date;
 
@@ -88,7 +88,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#getDateField()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#getDateField()
     */
    @Override
    public HasValue<Date> getDateField()
@@ -97,7 +97,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#getOffsetField()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#getOffsetField()
     */
    @Override
    public HasValue<String> getOffsetField()
@@ -106,7 +106,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#getLimitField()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#getLimitField()
     */
    @Override
    public HasValue<String> getLimitField()
@@ -115,7 +115,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#getOkButton()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#getOkButton()
     */
    @Override
    public HasClickHandlers getOkButton()
@@ -124,7 +124,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -133,7 +133,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#showErrorMessage(java.lang.String)
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#showErrorMessage(java.lang.String)
     */
    @Override
    public void showErrorMessage(String message)
@@ -142,7 +142,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#clearErrorMessage()
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#clearErrorMessage()
     */
    @Override
    public void clearErrorMessage()
@@ -151,7 +151,7 @@ public class LogReaderSettingsView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display#setOkButtonEnabled(boolean)
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderSettingsPresenter.Display#setOkButtonEnabled(boolean)
     */
    @Override
    public void setOkButtonEnabled(boolean enabled)

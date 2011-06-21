@@ -25,7 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
@@ -54,7 +54,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
     * Ok button.
     */
    @UiField
-   IButton okButton;
+   ImageButton okButton;
    
    /**
     * Application's information grid.

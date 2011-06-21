@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -26,7 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
@@ -56,7 +58,7 @@ public class GetRestServiceURLForm extends DialogWindow
 
    private TextField urlField;
 
-   private IButton okButton;
+   private ImageButton okButton;
 
    private VerticalPanel mainLayout;
 
@@ -115,11 +117,11 @@ public class GetRestServiceURLForm extends DialogWindow
       buttonsLayout.setHeight((22 + 20) + "px");
       buttonsLayout.setSpacing(5);
 
-      okButton = new IButton("OK");
-      okButton.setWidth(90);
-      okButton.setHeight(22);
-      okButton.setIcon(Images.Buttons.OK);
-      okButton.setID(ID_OK);
+      okButton = new ImageButton("OK");
+      okButton.setWidth("90px");
+      okButton.setHeight("22px");
+      okButton.setImage(new Image(Images.Buttons.OK));
+      okButton.setButtonId(ID_OK);
 
       buttonsLayout.add(okButton);
 

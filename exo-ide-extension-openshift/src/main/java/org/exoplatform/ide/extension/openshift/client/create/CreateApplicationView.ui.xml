@@ -16,10 +16,10 @@
             </g:cell>
          </g:HorizontalPanel>
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:IButton ui:field="createButton" width="90" height="22" title="{locale.createButton}" icon="{resource.okButton.getURL}"
-               disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
-            <f:IButton ui:field="cancelButton" width="90" height="22" title="{locale.cancelButton}" icon="{resource.cancelButton.getURL}"
-               disableIcon="{resource.cancelButtonDisabled.getURL}"></f:IButton>
+            <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageResource="{resource.okButton}"
+               disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+               disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
    </f:Border>

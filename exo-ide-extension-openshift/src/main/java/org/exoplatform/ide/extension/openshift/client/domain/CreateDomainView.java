@@ -25,7 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -66,13 +66,13 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
     * Create button.
     */
    @UiField
-   IButton createButton;
+   ImageButton createButton;
 
    /**
     * Cancel button.
     */
    @UiField
-   IButton cancelButton;
+   ImageButton cancelButton;
 
    private static CreateDomainViewUiBinder uiBinder = GWT.create(CreateDomainViewUiBinder.class);
 
@@ -87,8 +87,8 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
 
       nameField.setName(NAME_FIELD_ID);
       nameField.setHeight(22);
-      createButton.setID(CREATE_BUTTON_ID);
-      cancelButton.setID(CANCEL_BUTTON_ID);
+      createButton.setButtonId(CREATE_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**

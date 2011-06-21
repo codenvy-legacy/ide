@@ -25,7 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -63,13 +63,13 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
     * Rename button.
     */
    @UiField
-   IButton renameButton;
+   ImageButton renameButton;
 
    /**
     * Cancel button.
     */
    @UiField
-   IButton cancelButton;
+   ImageButton cancelButton;
 
    private static RenameApplicationViewUiBinder uiBinder = GWT.create(RenameApplicationViewUiBinder.class);
 
@@ -84,8 +84,8 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
 
       nameField.setName(NAME_FIELD_ID);
       nameField.setHeight(22);
-      renameButton.setID(RENAME_BUTTON_ID);
-      cancelButton.setID(CANCEL_BUTTON_ID);
+      renameButton.setButtonId(RENAME_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**

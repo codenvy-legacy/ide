@@ -25,7 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -83,13 +83,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Login button.
     */
    @UiField
-   IButton loginButton;
+   ImageButton loginButton;
 
    /**
     * Cancel button.
     */
    @UiField
-   IButton cancelButton;
+   ImageButton cancelButton;
    
    public LoginView()
    {
@@ -100,8 +100,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       emailField.setHeight(22);
       passwordField.setName(PASSWORD_FIELD_ID);
       passwordField.setHeight(22);
-      loginButton.setID(LOGIN_BUTTON_ID);
-      cancelButton.setID(CANCEL_BUTTON_ID);
+      loginButton.setButtonId(LOGIN_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**

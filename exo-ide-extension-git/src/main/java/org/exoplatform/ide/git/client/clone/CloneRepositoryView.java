@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -26,7 +28,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
@@ -62,10 +64,9 @@ public class CloneRepositoryView extends ViewImpl implements
 
    private static final String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
 
+   private ImageButton cloneButton;
 
-   private IButton cloneButton;
-
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private TextField workdirField;
 
@@ -127,15 +128,15 @@ public class CloneRepositoryView extends ViewImpl implements
     * @param title button's title
     * @param icon button's normal icon
     * @param disabledIcon button's icon in disabled state
-    * @return {@link IButton}
+    * @return {@link ImageButton}
     */
-   private IButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
+   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon.getURL(), disabledIcon.getURL());
-      button.setHeight(BUTTON_HEIGHT);
-      button.setWidth(BUTTON_WIDTH);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImages(new Image(icon), new Image(disabledIcon));
+      button.setHeight(BUTTON_HEIGHT + "px");
+      button.setWidth(BUTTON_WIDTH + "px");
       return button;
    }
 

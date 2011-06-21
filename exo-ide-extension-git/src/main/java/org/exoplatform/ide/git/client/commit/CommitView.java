@@ -19,16 +19,16 @@
 package org.exoplatform.ide.git.client.commit;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
@@ -68,9 +68,9 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
 
    /*Elements titles*/
 
-   private IButton commitButton;
+   private ImageButton commitButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private TextAreaItem messageField;
 
@@ -132,15 +132,15 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
     * @param title button's title
     * @param icon button's normal icon
     * @param disabledIcon button's icon in disabled state
-    * @return {@link IButton}
+    * @return {@link ImageButton}
     */
-   private IButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
+   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon.getURL(), disabledIcon.getURL());
-      button.setHeight(BUTTON_HEIGHT);
-      button.setWidth(BUTTON_WIDTH);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImages(new Image(icon), new Image(disabledIcon));
+      button.setHeight(BUTTON_HEIGHT + "px");
+      button.setWidth(BUTTON_WIDTH + "px");
       return button;
    }
 

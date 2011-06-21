@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.edit.ui;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
@@ -51,9 +51,9 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int DEFAULT_HEIGHT = 230;
 
-   private final int BUTTON_WIDTH = 100;
+   private final String BUTTON_WIDTH = "100px";
 
-   private final int BUTTON_HEIGHT = 22;
+   private final String BUTTON_HEIGHT = "22px";
 
    private final int FIELD_WIDTH = 340;
 
@@ -79,15 +79,15 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
 
    private final String ID_CANCEL_BUTTON = "ideFindReplaceTextFormCancelButton";
 
-   private IButton findButton;
+   private ImageButton findButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton replaceButton;
+   private ImageButton replaceButton;
 
-   private IButton replaceFindButton;
+   private ImageButton replaceFindButton;
 
-   private IButton replaceAllButton;
+   private ImageButton replaceAllButton;
 
    private TextField findField;
 
@@ -233,14 +233,14 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
     * 
     * @param title
     * @param icon
-    * @return {@link IButton}
+    * @return {@link ImageButton}
     */
-   private IButton createButton(String title, String icon, String id)
+   private ImageButton createButton(String title, String icon, String id)
    {
-      IButton button = new IButton();
-      button.setID(id);
-      button.setTitle(title);
-      button.setIcon(icon);
+      ImageButton button = new ImageButton();
+      button.setButtonId(id);
+      button.setText(title);
+      button.setImage(new Image(icon));
       button.setWidth(BUTTON_WIDTH);
       button.setHeight(BUTTON_HEIGHT);
       return button;
@@ -307,7 +307,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
     */
    public void enableFindButton(boolean isEnable)
    {
-      findButton.setDisabled(!isEnable);
+      findButton.setEnabled(isEnable);
    }
 
    /**
@@ -323,7 +323,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
     */
    public void enableReplaceFindButton(boolean isEnable)
    {
-      replaceFindButton.setDisabled(!isEnable);
+      replaceFindButton.setEnabled(isEnable);
    }
 
    /**
@@ -331,7 +331,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
     */
    public void enableReplaceAllButton(boolean isEnable)
    {
-      replaceAllButton.setDisabled(!isEnable);
+      replaceAllButton.setEnabled(isEnable);
    }
 
    /**
@@ -339,7 +339,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
     */
    public void enableReplaceButton(boolean isEnable)
    {
-      replaceButton.setDisabled(!isEnable);
+      replaceButton.setEnabled(isEnable);
    }
 
    /**

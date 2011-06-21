@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import java.util.Map;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
@@ -30,11 +35,7 @@ import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.Map;
 
 /**
  *This class represent form for managing permissions.<br>
@@ -43,7 +44,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *<li> {@link TextField} - name of {@link Item}
  *<li> {@link TextField} - owner of {@link Item} 
  *<li> {@link PermissionsListGrid} - list of all permission for {@link Item}
- *<li> several {@link IButton} (Add, Remove, Save and Cancel)
+ *<li> several {@link ImageButton} (Add, Remove, Save and Cancel)
  *</ul>
  * Created by The eXo Platform SAS .
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
@@ -68,11 +69,11 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private PermissionsListGrid permissionsListGrid;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton saveACLButton;
+   private ImageButton saveACLButton;
 
-   private IButton addEntityButton;
+   private ImageButton addEntityButton;
 
    private VerticalPanel vLayout;
 
@@ -80,7 +81,7 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
 
    private TextField itemOwnerField;
 
-   private IButton removeButton;
+   private ImageButton removeButton;
    
    private static final String TITLE = IDE.PERMISSIONS_CONSTANT.permissionsTitle();
    
@@ -169,16 +170,16 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
       permissionsListGrid.setWidth(384);
       permissionsListGrid.setHeight(140);
 
-      addEntityButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.addButton());
-      addEntityButton.setWidth(90);
-      addEntityButton.setHeight(22);
-      addEntityButton.setID(ID_ADD_ENTITY);
-      addEntityButton.setIcon(Images.Buttons.ADD);
+      addEntityButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.addButton());
+      addEntityButton.setWidth("90px");
+      addEntityButton.setHeight("22px");
+      addEntityButton.setButtonId(ID_ADD_ENTITY);
+      addEntityButton.setImage(new Image(Images.Buttons.ADD));
 
-      removeButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
-      removeButton.setWidth(90);
-      removeButton.setHeight(22);
-      removeButton.setIcon(Images.Buttons.DELETE);
+      removeButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
+      removeButton.setWidth("90px");
+      removeButton.setHeight("22px");
+      removeButton.setImage(new Image(Images.Buttons.DELETE));
 
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setWidth("100%");
@@ -201,22 +202,22 @@ public class PermissionsManagerForm extends DialogWindow implements PermissionsM
    private void addButtonForm()
    {
       HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setWidth("100$");
+      buttonsLayout.setWidth("100%");
       buttonsLayout.setHeight("22px");
     //  buttonsLayout.setLayoutAlign(Alignment.CENTER);
       buttonsLayout.setSpacing(5);
 
-      saveACLButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.saveButton());
-      saveACLButton.setWidth(90);
-      saveACLButton.setHeight(22);
-      saveACLButton.setIcon(Images.Buttons.YES);
-      saveACLButton.setID(ID_SAVE);
+      saveACLButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.saveButton());
+      saveACLButton.setWidth("90px");
+      saveACLButton.setHeight("22px");
+      saveACLButton.setImage(new Image(Images.Buttons.YES));
+      saveACLButton.setButtonId(ID_SAVE);
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
-      cancelButton.setID(ID_CANCEL);
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+      cancelButton.setWidth("90px");
+      cancelButton.setHeight("22px");
+      cancelButton.setImage(new Image(Images.Buttons.NO));
+      cancelButton.setButtonId(ID_CANCEL);
       
       buttonsLayout.add(saveACLButton);
       buttonsLayout.add(cancelButton);

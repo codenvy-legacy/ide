@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.project;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -51,6 +51,10 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
    public static final int DEFAULT_HEIGHT = 300;
 
    public static final int DEFAULT_WIDTH = 550;
+   
+   private final String BUTTON_W = "75px";
+   
+   private final String BUTTON_H = "22px";
 
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
 
@@ -64,11 +68,11 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
    
    private static final String NAME_FIELD = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateName();
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton createButton;
+   private ImageButton createButton;
 
-   private IButton deleteButton;
+   private ImageButton deleteButton;
 
    private TextField nameField;
 
@@ -118,23 +122,23 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
       buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.createButton());
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(75);
-      createButton.setHeight(22);
-      createButton.setIcon(Images.Buttons.YES);
+      createButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.createButton());
+      createButton.setButtonId(ID_CREATE_BUTTON);
+      createButton.setWidth(BUTTON_W);
+      createButton.setHeight(BUTTON_H);
+      createButton.setImage(new Image(Images.Buttons.YES));
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(75);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
+      cancelButton.setWidth(BUTTON_W);
+      cancelButton.setHeight(BUTTON_H);
+      cancelButton.setImage(new Image(Images.Buttons.NO));
 
-      deleteButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
-      deleteButton.setID(ID_DELETE_BUTTON);
-      deleteButton.setWidth(75);
-      deleteButton.setHeight(22);
-      deleteButton.setIcon(Images.Buttons.DELETE);
+      deleteButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
+      deleteButton.setButtonId(ID_DELETE_BUTTON);
+      deleteButton.setWidth(BUTTON_W);
+      deleteButton.setHeight(BUTTON_H);
+      deleteButton.setImage(new Image(Images.Buttons.DELETE));
 
       buttonsLayout.add(deleteButton);
       buttonsLayout.add(createButton);

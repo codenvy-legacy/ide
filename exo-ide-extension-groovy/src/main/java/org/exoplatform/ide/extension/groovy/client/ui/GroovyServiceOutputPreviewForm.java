@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -28,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
@@ -85,11 +87,11 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    private static final String TITLE = "Launch REST Service";
 
-   private IButton showUrlButton;
+   private ImageButton showUrlButton;
 
-   private IButton sendRequestButton;
+   private ImageButton sendRequestButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private GroovyServiceOutputPreviewPresenter presenter;
 
@@ -224,25 +226,25 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
       buttonsLayout.setHeight(22 + 20 + "px");
       buttonsLayout.setSpacing(5);
 
-      showUrlButton = new IButton("Get URL");
-      showUrlButton.setWidth(90);
-      showUrlButton.setHeight(22);
-      showUrlButton.setID(ID_GET_URL);
+      showUrlButton = new ImageButton("Get URL");
+      showUrlButton.setWidth("90px");
+      showUrlButton.setHeight("22px");
+      showUrlButton.setButtonId(ID_GET_URL);
 
-      showUrlButton.setIcon(Images.Buttons.URL);
+      showUrlButton.setImage(new Image(Images.Buttons.URL));
 
-      sendRequestButton = new IButton("Send");
-      sendRequestButton.setWidth(90);
-      sendRequestButton.setHeight(22);
-      sendRequestButton.setIcon(Images.Buttons.YES);
-      sendRequestButton.setDisabled(true);
-      sendRequestButton.setID(ID_SEND);
+      sendRequestButton = new ImageButton("Send");
+      sendRequestButton.setWidth("90px");
+      sendRequestButton.setHeight("22px");
+      sendRequestButton.setImage(new Image(Images.Buttons.YES));
+      sendRequestButton.setEnabled(false);
+      sendRequestButton.setButtonId(ID_SEND);
 
-      cancelButton = new IButton("Cancel");
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
-      cancelButton.setID(ID_CANCEL);
+      cancelButton = new ImageButton("Cancel");
+      cancelButton.setWidth("90px");
+      cancelButton.setHeight("22px");
+      cancelButton.setImage(new Image(Images.Buttons.NO));
+      cancelButton.setButtonId(ID_CANCEL);
 
       buttonsLayout.add(showUrlButton);
       buttonsLayout.add(sendRequestButton);
@@ -333,7 +335,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    public void setSendRequestButtonDisabled(boolean value)
    {
-      sendRequestButton.setDisabled(value);
+      sendRequestButton.setEnabled(!value);
    }
 
    public HasClickHandlers getShowUrlButton()
@@ -343,7 +345,7 @@ public class GroovyServiceOutputPreviewForm extends DialogWindow implements Groo
 
    public void setShowUrlButtonDisabled(boolean value)
    {
-      showUrlButton.setDisabled(value);
+      showUrlButton.setEnabled(!value);
    }
 
    public void setBodyTabEnabled()

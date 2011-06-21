@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
@@ -85,21 +87,21 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    
    private static final String TEXT_AREA_DESCRIPTION = IDE.TEMPLATE_CONSTANT.createProjectTemplateTextAreaDescription();
 
-   private static final int BUTTONS_WIDTH = 120;
+   private static final String BUTTONS_WIDTH = "120px";
 
-   private static final int BUTTONS_HEIGHT = 22;
+   private static final String BUTTONS_HEIGHT = "22px";
 
    private VerticalPanel windowLayout;
 
-   private IButton createButton;
+   private ImageButton createButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton addFolderButton;
+   private ImageButton addFolderButton;
 
-   private IButton addFileButton;
+   private ImageButton addFileButton;
 
-   private IButton deleteButton;
+   private ImageButton deleteButton;
 
    private TemplateTree templateTreeGrid;
 
@@ -185,7 +187,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
    private VerticalPanel getActionsButtons()
    {
       VerticalPanel buttonsLayout = new VerticalPanel();
-      buttonsLayout.setWidth(BUTTONS_WIDTH + "px");
+      buttonsLayout.setWidth(BUTTONS_WIDTH);
       buttonsLayout.setHeight("100%");
 
       buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -193,23 +195,23 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
 
       buttonsLayout.setSpacing(15);
 
-      addFolderButton = new IButton(ADD_FOLDER_BUTTON);
-      addFolderButton.setID(ID_ADD_FOLDER_BUTTON);
+      addFolderButton = new ImageButton(ADD_FOLDER_BUTTON);
+      addFolderButton.setButtonId(ID_ADD_FOLDER_BUTTON);
       addFolderButton.setWidth(BUTTONS_WIDTH);
       addFolderButton.setHeight(BUTTONS_HEIGHT);
-      addFolderButton.setIcon(Images.Buttons.ADD);
+      addFolderButton.setImage(new Image(Images.Buttons.ADD));
 
-      addFileButton = new IButton(ADD_FILE_BUTTON);
-      addFileButton.setID(ID_ADD_FILE_BUTTON);
+      addFileButton = new ImageButton(ADD_FILE_BUTTON);
+      addFileButton.setButtonId(ID_ADD_FILE_BUTTON);
       addFileButton.setWidth(BUTTONS_WIDTH);
       addFileButton.setHeight(BUTTONS_HEIGHT);
-      addFileButton.setIcon(Images.Buttons.ADD);
+      addFileButton.setImage(new Image(Images.Buttons.ADD));
 
-      deleteButton = new IButton(DELETE_BUTTON);
-      deleteButton.setID(ID_DELETE_BUTTON);
+      deleteButton = new ImageButton(DELETE_BUTTON);
+      deleteButton.setButtonId(ID_DELETE_BUTTON);
       deleteButton.setWidth(BUTTONS_WIDTH);
       deleteButton.setHeight(BUTTONS_HEIGHT);
-      deleteButton.setIcon(Images.Buttons.DELETE);
+      deleteButton.setImage(new Image(Images.Buttons.DELETE));
 
       buttonsLayout.add(addFolderButton);
       buttonsLayout.add(addFileButton);
@@ -224,17 +226,17 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
       buttonsLayout.setHeight("22px");
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.createButton());
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(75);
-      createButton.setHeight(22);
-      createButton.setIcon(Images.Buttons.YES);
+      createButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.createButton());
+      createButton.setButtonId(ID_CREATE_BUTTON);
+      createButton.setWidth("75px");
+      createButton.setHeight("22px");
+      createButton.setImage(new Image(Images.Buttons.YES));
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(75);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
+      cancelButton.setWidth("75px");
+      cancelButton.setHeight("22px");
+      cancelButton.setImage(new Image(Images.Buttons.NO));
 
       buttonsLayout.add(createButton);
       buttonsLayout.add(cancelButton);
@@ -295,7 +297,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void enableCreateButton()
    {
-      createButton.setDisabled(false);
+      createButton.setEnabled(true);
    }
 
    /**
@@ -303,7 +305,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void disableCreateButton()
    {
-      createButton.setDisabled(true);
+      createButton.setEnabled(false);
    }
 
    /**
@@ -351,7 +353,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void enableAddFolderButton()
    {
-      addFolderButton.setDisabled(false);
+      addFolderButton.setEnabled(true);
    }
 
    /**
@@ -359,7 +361,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void disableAddFolderButton()
    {
-      addFolderButton.setDisabled(true);
+      addFolderButton.setEnabled(false);
    }
 
    /**
@@ -367,7 +369,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void enableAddFileButton()
    {
-      addFileButton.setDisabled(false);
+      addFileButton.setEnabled(true);
    }
 
    /**
@@ -375,7 +377,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void disableAddFileButton()
    {
-      addFileButton.setDisabled(true);
+      addFileButton.setEnabled(true);
    }
 
    /**
@@ -383,7 +385,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void enableDeleteButton()
    {
-      deleteButton.setDisabled(false);
+      deleteButton.setEnabled(true);
    }
 
    /**
@@ -391,7 +393,7 @@ public class CreateProjectTemplateForm extends DialogWindow implements CreatePro
     */
    public void disableDeleteButton()
    {
-      deleteButton.setDisabled(true);
+      deleteButton.setEnabled(true);
    }
 
    /**

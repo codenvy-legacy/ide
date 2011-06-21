@@ -18,18 +18,16 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
-import com.google.gwt.user.client.ui.HorizontalPanel;
-
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -87,9 +85,11 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    private static final String BUTTON_MOVEDOWN = IDE.PREFERENCES_CONSTANT.customizeToolbarMoveDownButton();
 
-   private static final int BUTTONS_WIDTH = 120;
-
-   private static final int CONTROL_BUTTONS_WIDTH = 100;
+   private static final String BUTTONS_WIDTH = "120px";
+   
+   private static final String BUTTONS_HEIGHT = "22px";
+   
+   private static final String CONTROL_BUTTONS_WIDTH = "100px";
 
    private CustomizeToolbarPresenter presenter;
 
@@ -97,25 +97,25 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    private HorizontalPanel hLayout;
 
-   private IButton addCommandButton;
+   private ImageButton addCommandButton;
 
-   private IButton addDelimiterButton;
+   private ImageButton addDelimiterButton;
 
-   private IButton deleteCommandButton;
+   private ImageButton deleteCommandButton;
 
-   private IButton moveUpButton;
+   private ImageButton moveUpButton;
 
-   private IButton moveDownButton;
+   private ImageButton moveDownButton;
 
    private CommandItemExListGrid commandItemListGrid;
 
    private ToolbarItemListGrid toolbarItemListGrid;
 
-   private IButton okButton;
+   private ImageButton okButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton defaultsButton;
+   private ImageButton defaultsButton;
 
    public CustomizeToolbarForm(HandlerManager eventBus, ApplicationSettings applicationSettings, List<Control> controls)
    {
@@ -166,35 +166,35 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
       buttonsLayout.setSpacing(15);
 
-      addCommandButton = new IButton(BUTTON_ADD);
-      addCommandButton.setID(ID_ADD_BUTTON);
+      addCommandButton = new ImageButton(BUTTON_ADD);
+      addCommandButton.setButtonId(ID_ADD_BUTTON);
       addCommandButton.setWidth(BUTTONS_WIDTH);
-      addCommandButton.setHeight(22);
-      addCommandButton.setIcon(Images.Buttons.ADD);
+      addCommandButton.setHeight(BUTTONS_HEIGHT);
+      addCommandButton.setImage(new Image(Images.Buttons.ADD));
 
-      addDelimiterButton = new IButton(BUTTON_DELIMITER);
-      addDelimiterButton.setID(ID_DELIMITER_BUTTON);
+      addDelimiterButton = new ImageButton(BUTTON_DELIMITER);
+      addDelimiterButton.setButtonId(ID_DELIMITER_BUTTON);
       addDelimiterButton.setWidth(BUTTONS_WIDTH);
-      addDelimiterButton.setHeight(22);
-      addDelimiterButton.setIcon(Images.Buttons.ADD);
+      addDelimiterButton.setHeight(BUTTONS_HEIGHT);
+      addDelimiterButton.setImage(new Image(Images.Buttons.ADD));
 
-      deleteCommandButton = new IButton(BUTTON_DELETE);
-      deleteCommandButton.setID(ID_DELETE_BUTTON);
+      deleteCommandButton = new ImageButton(BUTTON_DELETE);
+      deleteCommandButton.setButtonId(ID_DELETE_BUTTON);
       deleteCommandButton.setWidth(BUTTONS_WIDTH);
-      deleteCommandButton.setHeight(22);
-      deleteCommandButton.setIcon(Images.Buttons.DELETE);
+      deleteCommandButton.setHeight(BUTTONS_HEIGHT);
+      deleteCommandButton.setImage(new Image(Images.Buttons.DELETE));
 
-      moveUpButton = new IButton(BUTTON_MOVEUP);
-      moveUpButton.setID(ID_MOVEUP_BUTTON);
+      moveUpButton = new ImageButton(BUTTON_MOVEUP);
+      moveUpButton.setButtonId(ID_MOVEUP_BUTTON);
       moveUpButton.setWidth(BUTTONS_WIDTH);
-      moveUpButton.setHeight(22);
-      moveUpButton.setIcon(Images.Buttons.UP);
+      moveUpButton.setHeight(BUTTONS_HEIGHT);
+      moveUpButton.setImage(new Image(Images.Buttons.UP));
 
-      moveDownButton = new IButton(BUTTON_MOVEDOWN);
-      moveDownButton.setID(ID_MOVEDOWN_BUTTON);
+      moveDownButton = new ImageButton(BUTTON_MOVEDOWN);
+      moveDownButton.setButtonId(ID_MOVEDOWN_BUTTON);
       moveDownButton.setWidth(BUTTONS_WIDTH);
-      moveDownButton.setHeight(22);
-      moveDownButton.setIcon(Images.Buttons.DOWN);
+      moveDownButton.setHeight(BUTTONS_HEIGHT);
+      moveDownButton.setImage(new Image(Images.Buttons.DOWN));
 
       buttonsLayout.add(addCommandButton);
       buttonsLayout.add(addDelimiterButton);
@@ -221,23 +221,23 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
       buttonsLayout.setHeight(22 + "px");
       buttonsLayout.setSpacing(5);
 
-      okButton = new IButton(BUTTON_OK);
-      okButton.setID(ID_OK_BUTTON);
+      okButton = new ImageButton(BUTTON_OK);
+      okButton.setButtonId(ID_OK_BUTTON);
       okButton.setWidth(CONTROL_BUTTONS_WIDTH);
-      okButton.setHeight(22);
-      okButton.setIcon(Images.Buttons.YES);
+      okButton.setHeight(BUTTONS_HEIGHT);
+      okButton.setImage(new Image(Images.Buttons.YES));
 
-      cancelButton = new IButton(BUTTON_CANCEL);
-      cancelButton.setID(ID_CANCEL_BUTTON);
+      cancelButton = new ImageButton(BUTTON_CANCEL);
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
       cancelButton.setWidth(CONTROL_BUTTONS_WIDTH);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.CANCEL);
+      cancelButton.setHeight(BUTTONS_HEIGHT);
+      cancelButton.setImage(new Image(Images.Buttons.CANCEL));
 
-      defaultsButton = new IButton(BUTTON_RESTOREDEFAULTS);
-      defaultsButton.setID(ID_RESTOREDEFAULTS_BUTTON);
+      defaultsButton = new ImageButton(BUTTON_RESTOREDEFAULTS);
+      defaultsButton.setButtonId(ID_RESTOREDEFAULTS_BUTTON);
       defaultsButton.setWidth(CONTROL_BUTTONS_WIDTH);
-      defaultsButton.setHeight(22);
-      defaultsButton.setIcon(Images.Buttons.DEFAULTS);
+      defaultsButton.setHeight(BUTTONS_HEIGHT);
+      defaultsButton.setImage(new Image(Images.Buttons.DEFAULTS));
 
       buttonsLayout.add(okButton);
       buttonsLayout.add(cancelButton);
@@ -304,52 +304,52 @@ public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolb
 
    public void disableAddCommandButton()
    {
-      addCommandButton.disable();
+      addCommandButton.setEnabled(false);
    }
 
    public void disableAddDelimiterButton()
    {
-      addDelimiterButton.disable();
+      addDelimiterButton.setEnabled(false);
    }
 
    public void disableDeleteCommandButton()
    {
-      deleteCommandButton.disable();
+      deleteCommandButton.setEnabled(false);
    }
 
    public void disableMoveDownButton()
    {
-      moveDownButton.disable();
+      moveDownButton.setEnabled(false);
    }
 
    public void disableMoveUpButton()
    {
-      moveUpButton.disable();
+      moveUpButton.setEnabled(false);
    }
 
    public void enableAddCommandButton()
    {
-      addCommandButton.enable();
+      addCommandButton.setEnabled(true);
    }
 
    public void enableAddDelimiterButton()
    {
-      addDelimiterButton.enable();
+      addDelimiterButton.setEnabled(true);
    }
 
    public void enableDeleteCommandButton()
    {
-      deleteCommandButton.enable();
+      deleteCommandButton.setEnabled(true);
    }
 
    public void enableMoveDownButton()
    {
-      moveDownButton.enable();
+      moveDownButton.setEnabled(true);
    }
 
    public void enableMoveUpButton()
    {
-      moveUpButton.enable();
+      moveUpButton.setEnabled(true);
    }
 
    public HasClickHandlers getDefaultsButton()

@@ -39,7 +39,7 @@ import java.util.Date;
  * @version $Id: $
  *
  */
-public class LogRederSettingsPresenter implements ViewClosedHandler
+public class LogReaderSettingsPresenter implements ViewClosedHandler
 {
    public interface Display extends IsView
    {
@@ -75,7 +75,7 @@ public class LogRederSettingsPresenter implements ViewClosedHandler
     * @param limit
     * @param offset
     */
-   public LogRederSettingsPresenter(Date date, int limit, int offset)
+   public LogReaderSettingsPresenter(Date date, int limit, int offset)
    {
       super();
       this.date = date;

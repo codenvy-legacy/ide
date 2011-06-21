@@ -7,11 +7,11 @@
          <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
          <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:IButton ui:field="loginButton" width="90" height="22" title="{locale.loginButton}" icon="{resource.okButton.getURL}"
-               disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
-            <f:IButton ui:field="cancelButton" width="90" height="22" title="{locale.cancelButton}" icon="{resource.cancelButton.getURL}"
-               disableIcon="{resource.cancelButtonDisabled.getURL}"></f:IButton>
-            <f:IButton ui:field="loginDemoButton" width="110" height="22" title="{locale.loginDemoButton}"></f:IButton>
+            <f:ImageButton ui:field="loginButton" width="90" height="22" text="{locale.loginButton}" imageResource="{resource.okButton}"
+               disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+               disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="loginDemoButton" width="110" height="22" text="{locale.loginDemoButton}"></f:ImageButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
    </f:Border>

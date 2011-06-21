@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.branch;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -27,7 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.git.client.GitClientBundle;
@@ -67,22 +69,22 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
    /**
     * Create branch button.
     */
-   private IButton createButton;
+   private ImageButton createButton;
 
    /**
     * Checkout branch button.
     */
-   private IButton checkoutButton;
+   private ImageButton checkoutButton;
 
    /**
     * Delete branch button.
     */
-   private IButton deleteButton;
+   private ImageButton deleteButton;
 
    /**
     * Cancel button.
     */
-   private IButton closeButton;
+   private ImageButton closeButton;
 
    private BranchGrid branchGrid;
 
@@ -153,15 +155,15 @@ public class BranchView extends ViewImpl implements BranchPresenter.Display
     * @param title button's title
     * @param icon button's normal icon
     * @param disabledIcon button's icon in disabled state
-    * @return {@link IButton}
+    * @return {@link ImageButton}
     */
-   private IButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
+   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon.getURL(), disabledIcon.getURL());
-      button.setHeight(BUTTON_HEIGHT);
-      button.setWidth(BUTTON_WIDTH);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImages(new Image(icon), new Image(disabledIcon));
+      button.setHeight(BUTTON_HEIGHT + "px");
+      button.setWidth(BUTTON_WIDTH + "px");
       return button;
    }
 

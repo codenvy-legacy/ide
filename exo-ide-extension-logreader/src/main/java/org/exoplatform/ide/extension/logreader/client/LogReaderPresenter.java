@@ -142,7 +142,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            new LogRederSettingsPresenter(date, limit, offset);
+            new LogReaderSettingsPresenter(date, limit, offset);
          }
       });
 
@@ -154,24 +154,18 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void getLogs()
    {
-      try
+      LogReaderService.get().getLogs(date.getTime(), limit, offset, new AsyncRequestCallback<String>()
       {
-         LogReaderService.get().getLogs(date.getTime(), limit, offset, new AsyncRequestCallback<String>()
+
+         @Override
+         protected void onSuccess(String result)
          {
+            if (result.isEmpty())
+               return;
+            display.addLogs(result);
+         }
+      });
 
-            @Override
-            protected void onSuccess(String result)
-            {
-               if (result.isEmpty())
-                  return;
-               display.addLogs(result);
-            }
-         });
-      }
-      catch (NumberFormatException e)
-      {
-
-      }
    }
 
    /**

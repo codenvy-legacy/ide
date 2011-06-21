@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
@@ -68,13 +70,17 @@ implements CreateFromTemplateDisplay<T>
    
    private static final String FILE_NAME_FIELD = "ideCreateFileFromTemplateFormFileNameField";
    
+   private final String BUTTON_W = "75px";
+      
+   private final String BUTTON_H = "22px";
+   
    protected VerticalPanel windowLayout;
 
-   private IButton createButton;
+   private ImageButton createButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
-   private IButton deleteButton;
+   private ImageButton deleteButton;
 
    protected TemplateListGrid<T> templateListGrid;
 
@@ -177,23 +183,23 @@ implements CreateFromTemplateDisplay<T>
       buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       buttonsLayout.setSpacing(5);
 
-      createButton = new IButton(getCreateButtonTitle());
-      createButton.setID(ID_CREATE_BUTTON);
-      createButton.setWidth(75);
-      createButton.setHeight(22);
-      createButton.setIcon(Images.Buttons.YES);
+      createButton = new ImageButton(getCreateButtonTitle());
+      createButton.setButtonId(ID_CREATE_BUTTON);
+      createButton.setWidth(BUTTON_W);
+      createButton.setHeight(BUTTON_H);
+      createButton.setImage(new Image(Images.Buttons.YES));
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(75);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton());
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
+      cancelButton.setWidth(BUTTON_W);
+      cancelButton.setHeight(BUTTON_H);
+      cancelButton.setImage(new Image(Images.Buttons.NO));
 
-      deleteButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
-      deleteButton.setID(ID_DELETE_BUTTON);
-      deleteButton.setWidth(75);
-      deleteButton.setHeight(22);
-      deleteButton.setIcon(Images.Buttons.DELETE);
+      deleteButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
+      deleteButton.setButtonId(ID_DELETE_BUTTON);
+      deleteButton.setWidth(BUTTON_W);
+      deleteButton.setHeight(BUTTON_H);
+      deleteButton.setImage(new Image(Images.Buttons.DELETE));
 
      buttonsLayout.add(deleteButton);
      buttonsLayout.add(createButton);
@@ -231,7 +237,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public void disableCreateButton()
    {
-      createButton.disable();
+      createButton.setEnabled(false);
    }
 
    /**
@@ -239,7 +245,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public void enableCreateButton()
    {
-      createButton.enable();
+      createButton.setEnabled(true);
    }
 
    /**
@@ -287,7 +293,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public void enableDeleteButton()
    {
-      deleteButton.setDisabled(false);
+      deleteButton.setEnabled(true);
    }
 
    /**
@@ -295,7 +301,7 @@ implements CreateFromTemplateDisplay<T>
     */
    public void disableDeleteButton()
    {
-      deleteButton.setDisabled(true);
+      deleteButton.setEnabled(false);
    }
    
 

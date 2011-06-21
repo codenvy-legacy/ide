@@ -7,8 +7,8 @@
          <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
          <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:IButton ui:field="loginButton" width="90" height="22" title="Log in" icon="{resource.okButton.getURL}" disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
-            <f:IButton ui:field="cancelButton" width="90" height="22" title="Cancel" icon="{resource.cancelButton.getURL}" disableIcon="{resource.cancelButtonDisabled.getURL}"></f:IButton>
+            <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
    </f:Border>

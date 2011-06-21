@@ -22,9 +22,10 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.IDE;
@@ -63,9 +64,9 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    private TextField filePathField;
 
-   private IButton openButton;
+   private ImageButton openButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private String title;
 
@@ -75,12 +76,10 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    private VerticalPanel mainPanel;
    
-   private HandlerManager eventBus;
 
    public OpenFileByPathForm(HandlerManager eventBus)
    {
       super(WIDTH, HEIGHT, ID);
-      this.eventBus = eventBus;
 
       title = TITLE;
       buttonTitle = OPEN_BUTTON;
@@ -127,17 +126,17 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
       buttonsLayout.setHeight(22 + 20 + "px");
       buttonsLayout.setSpacing(5);
 
-      openButton = new IButton(this.buttonTitle);
-      openButton.setID(OPEN_BUTTON_ID);
-      openButton.setHeight(22);
-      openButton.setWidth(90);
-      openButton.setIcon(Images.MainMenu.File.OPEN_FILE_BY_PATH);
+      openButton = new ImageButton(this.buttonTitle);
+      openButton.setButtonId(OPEN_BUTTON_ID);
+      openButton.setHeight("22px");
+      openButton.setWidth("90px");
+      openButton.setImage(new Image(Images.MainMenu.File.OPEN_FILE_BY_PATH));
 
-      cancelButton = new IButton(CANCEL_BUTTON);
-      cancelButton.setID(CANCEL_BUTTON_ID);
-      cancelButton.setHeight(22);
-      cancelButton.setWidth(90);
-      cancelButton.setIcon(Images.Buttons.CANCEL);
+      cancelButton = new ImageButton(CANCEL_BUTTON);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      cancelButton.setHeight("22px");
+      cancelButton.setWidth("90px");
+      cancelButton.setImage(new Image(Images.Buttons.CANCEL));
 
       buttonsLayout.add(openButton);
       buttonsLayout.add(cancelButton);
@@ -168,22 +167,22 @@ public class OpenFileByPathForm extends DialogWindow implements OpenFileByPathPr
 
    public void disableOpenButton()
    {
-      this.openButton.disable();
+      openButton.setEnabled(false);
    }
 
    public void enableOpenButton()
    {
-      this.openButton.enable();
+      openButton.setEnabled(true);
    }
 
    public HasClickHandlers getOpenButton()
    {
-      return this.openButton;
+      return openButton;
    }
 
    public TextField getFilePathFieldOrigin()
    {
-      return this.filePathField;
+      return filePathField;
    }
 
    /**

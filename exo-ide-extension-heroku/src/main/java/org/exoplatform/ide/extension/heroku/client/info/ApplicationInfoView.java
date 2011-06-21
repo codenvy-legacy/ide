@@ -27,7 +27,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -54,7 +54,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
     * Ok button.
     */
    @UiField
-   IButton okButton;
+   ImageButton okButton;
    
    /**
     * Application's information grid.

@@ -18,11 +18,21 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.GwtResources;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
@@ -34,16 +44,7 @@ import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.vfs.Item;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.List;
 
 /**
  * Class for uploading zip file.
@@ -76,14 +77,18 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
    private static final String UPLOAD_BUTTON = IDE.UPLOAD_CONSTANT.uploadButton();
    
    private static final String FOLDER_TO_UPLOAD = IDE.UPLOAD_CONSTANT.folderToUpload();
+   
+   private final String BUTTON_W = "80px";
+      
+   private final String BUTTON_H = "22px";
 
    private FormPanel uploadForm;
 
    private TextField fileNameField;
 
-   private IButton uploadButton;
+   private ImageButton uploadButton;
 
-   private IButton closeButton;
+   private ImageButton closeButton;
 
    protected UploadPresenter presenter;
 
@@ -192,17 +197,17 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
       bPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
       bPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
       
-      uploadButton = new IButton(buttonTitle);
-      uploadButton.setID(ID_UPLOAD_BUTTON);
-      uploadButton.setWidth(80);
-      uploadButton.setHeight(22);
-      uploadButton.setIcon(Images.MainMenu.File.UPLOAD);
+      uploadButton = new ImageButton(buttonTitle);
+      uploadButton.setButtonId(ID_UPLOAD_BUTTON);
+      uploadButton.setWidth(BUTTON_W);
+      uploadButton.setHeight(BUTTON_H);
+      uploadButton.setImage(new Image(Images.MainMenu.File.UPLOAD));
 
-      closeButton = new IButton("Cancel");
-      closeButton.setID(ID_CLOSE_BUTTON);
-      closeButton.setWidth(80);
-      closeButton.setHeight(22);
-      closeButton.setIcon(Images.Buttons.CANCEL);
+      closeButton = new ImageButton("Cancel");
+      closeButton.setButtonId(ID_CLOSE_BUTTON);
+      closeButton.setWidth(BUTTON_W);
+      closeButton.setHeight(BUTTON_H);
+      closeButton.setImage(new Image(Images.Buttons.CANCEL));
 
       bPanel.add(uploadButton);
       bPanel.add(closeButton);
@@ -227,11 +232,11 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
       AbsolutePanel absolutePanel = new AbsolutePanel();
       absolutePanel.setSize("80px", "22px");
-      IButton selectButton = new IButton();
-      selectButton.setID(ID_BROWSE_BUTTON);
-      selectButton.setTitle(BROWSE_BTN);
-      selectButton.setWidth(80);
-      selectButton.setHeight(22);
+      ImageButton selectButton = new ImageButton();
+      selectButton.setButtonId(ID_BROWSE_BUTTON);
+      selectButton.setText(BROWSE_BTN);
+      selectButton.setWidth(BUTTON_W);
+      selectButton.setHeight(BUTTON_H);
 
       uploadForm = new FormPanel();
       uploadForm.setMethod(FormPanel.METHOD_POST);
@@ -306,12 +311,12 @@ public class UploadForm extends DialogWindow implements UploadPresenter.UploadDi
 
    public void disableUploadButton()
    {
-      uploadButton.disable();
+      uploadButton.setEnabled(false);
    }
 
    public void enableUploadButton()
    {
-      uploadButton.enable();
+      uploadButton.setEnabled(true);
    }
 
 }

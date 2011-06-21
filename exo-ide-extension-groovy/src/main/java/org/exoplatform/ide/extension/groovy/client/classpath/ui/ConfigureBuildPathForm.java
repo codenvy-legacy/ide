@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -26,7 +28,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
@@ -67,22 +69,22 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
    /**
     * Cancel button.
     */
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    /**
     * Save button.
     */
-   private IButton saveButton;
+   private ImageButton saveButton;
 
    /**
     * Add source button.
     */
-   private IButton addButton;
+   private ImageButton addButton;
 
    /**
     * Remove source button.
     */
-   private IButton removeButton;
+   private ImageButton removeButton;
 
    private ClassPathEntryListGrid classPathEntryListGrid;
    
@@ -173,15 +175,15 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
     * @param id button's id
     * @param title button's title
     * @param icon button's icon
-    * @return {@link IButton} created button
+    * @return {@link ImageButton} created button
     */
-   private IButton createButton(String id, String title, String icon)
+   private ImageButton createButton(String id, String title, String icon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon);
-      button.setWidth(BUTTON_WIDTH);
-      button.setHeight(BUTTON_HEIGHT);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImage(new Image(icon));
+      button.setWidth(BUTTON_WIDTH + "px");
+      button.setHeight(BUTTON_HEIGHT + "px");
       return button;
    }
 
@@ -238,14 +240,7 @@ public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBui
     */
    public void enableRemoveButton(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         removeButton.enable();
-      }
-      else
-      {
-         removeButton.disable();
-      }
+      removeButton.setEnabled(isEnabled);
    }
 
    /**

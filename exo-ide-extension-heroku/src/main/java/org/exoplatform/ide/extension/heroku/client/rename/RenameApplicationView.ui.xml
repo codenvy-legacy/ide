@@ -7,8 +7,8 @@ xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exopl
       <g:VerticalPanel spacing="3" horizontalAlignment="center">
          <f:TextField ui:field="nameField" title="{locale.renameApplicationViewNameField}" width="100%" height="22px"></f:TextField>
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:IButton ui:field="renameButton" width="90" height="22" title="{locale.renameButton}" icon="{resource.okButton.getURL}" disableIcon="{resource.okButtonDisabled.getURL}"></f:IButton>
-            <f:IButton ui:field="cancelButton" width="90" height="22" title="{locale.cancelButton}" icon="{resource.cancelButton.getURL}" disableIcon="{resource.cancelButtonDisabled.getURL}"></f:IButton>
+            <f:ImageButton ui:field="renameButton" width="90" height="22" text="{locale.renameButton}" imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
    </f:Border>

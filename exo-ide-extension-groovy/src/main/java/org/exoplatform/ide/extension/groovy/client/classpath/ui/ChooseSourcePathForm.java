@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.DialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.groovy.client.Images;
@@ -47,9 +49,9 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
 
    public static final int HEIGHT = 300;
 
-   private final int BUTTON_WIDTH = 90;
+   private final String BUTTON_WIDTH = "90px";
 
-   private final int BUTTON_HEIGHT = 22;
+   private final String BUTTON_HEIGHT = "22px";
 
    public static final String ID = "ideChooseSourcePathForm";
 
@@ -66,12 +68,12 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
    /**
     * Cancel button.
     */
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    /**
     * Confirm button.
     */
-   private IButton okButton;
+   private ImageButton okButton;
 
    /**
     * Tree for displaying items.
@@ -131,13 +133,13 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
     * @param id button's id
     * @param title button's title
     * @param icon button's icon
-    * @return {@link IButton} created button
+    * @return {@link ImageButton} created button
     */
-   private IButton createButton(String id, String title, String icon)
+   private ImageButton createButton(String id, String title, String icon)
    {
-      IButton button = new IButton(title);
-      button.setID(id);
-      button.setIcon(icon);
+      ImageButton button = new ImageButton(title);
+      button.setButtonId(id);
+      button.setImage(new Image(icon));
       button.setWidth(BUTTON_WIDTH);
       button.setHeight(BUTTON_HEIGHT);
       return button;
@@ -188,14 +190,7 @@ public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePa
     */
    public void enableOkButtonState(boolean isEnabled)
    {
-      if (isEnabled)
-      {
-         okButton.enable();
-      }
-      else
-      {
-         okButton.disable();
-      }
+      okButton.setEnabled(isEnabled);
    }
 
 }

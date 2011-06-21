@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
-import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
@@ -33,6 +25,14 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
@@ -57,9 +57,9 @@ public class DeleteItemView extends ViewImpl implements
 
    private HorizontalPanel infoLayout;
 
-   private IButton deleteButton;
+   private ImageButton deleteButton;
 
-   private IButton cancelButton;
+   private ImageButton cancelButton;
 
    private Label promptField;
 
@@ -111,17 +111,17 @@ public class DeleteItemView extends ViewImpl implements
       buttonsLayout.setHeight(22 + "px");
       buttonsLayout.setSpacing(5);
 
-      deleteButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.yesButton());
-      deleteButton.setID(ID_OK_BUTTON);
-      deleteButton.setWidth(90);
-      deleteButton.setHeight(22);
-      deleteButton.setIcon(Images.Buttons.YES);
+      deleteButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.yesButton());
+      deleteButton.setButtonId(ID_OK_BUTTON);
+      deleteButton.setWidth("90px");
+      deleteButton.setHeight("22px");
+      deleteButton.setImage(new Image(Images.Buttons.YES));
 
-      cancelButton = new IButton(IDE.IDE_LOCALIZATION_CONSTANT.noButton());
-      cancelButton.setID(ID_CANCEL_BUTTON);
-      cancelButton.setWidth(90);
-      cancelButton.setHeight(22);
-      cancelButton.setIcon(Images.Buttons.NO);
+      cancelButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.noButton());
+      cancelButton.setButtonId(ID_CANCEL_BUTTON);
+      cancelButton.setWidth("90px");
+      cancelButton.setHeight("22px");
+      cancelButton.setImage(new Image(Images.Buttons.NO));
 
       buttonsLayout.add(deleteButton);
       buttonsLayout.add(cancelButton);

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -53,9 +56,6 @@ import org.exoplatform.ide.client.operation.OperationModule;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .
@@ -146,7 +146,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
 
       controlsRegistration.formatControls();
-      
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).
        */

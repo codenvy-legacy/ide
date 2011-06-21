@@ -9,7 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.IButton;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -72,13 +72,13 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     * Create application button.
     */
    @UiField
-   IButton createButton;
+   ImageButton createButton;
 
    /**
     * Cancel button.
     */
    @UiField
-   IButton cancelButton;
+   ImageButton cancelButton;
 
    public CreateApplicationView()
    {
@@ -91,8 +91,8 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       typeField.setHeight(22);
       workDirField.setName(WORK_DIR_FIELD_ID);
       workDirField.setHeight(22);
-      createButton.setID(CREATE_BUTTON_ID);
-      cancelButton.setID(CANCEL_BUTTON_ID);
+      createButton.setButtonId(CREATE_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
