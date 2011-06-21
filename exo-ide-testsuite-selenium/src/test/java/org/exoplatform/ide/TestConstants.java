@@ -120,6 +120,8 @@ public interface TestConstants
    String CODEMIRROR_EDITOR_LOCATOR = "//body[@class='editbox']";
    
    String CK_EDITOR_LOCATOR = "//body";
+
+   String EDITOR_BODY_LOCATOR = "//body";
    
    public static final String UNTITLED_FILE_NAME = "Untitled file";
 }
