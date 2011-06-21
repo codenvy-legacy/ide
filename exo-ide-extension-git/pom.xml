@@ -18,6 +18,10 @@
          <artifactId>exo-ide-extension-ssh</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.eclipse.jgit</groupId>
          <artifactId>org.eclipse.jgit</artifactId>
          <version>0.10.1</version>
@@ -31,7 +35,6 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>3.8.2</version>
          <scope>test</scope>
       </dependency>
       <dependency>
