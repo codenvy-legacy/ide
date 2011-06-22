@@ -52,7 +52,7 @@ import java.util.List;
  * @version $Id:  May 26, 2011 5:24:52 PM anya $
  *
  */
-public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteApplicationHandler, LoggedInHandler
+public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, DeleteApplicationHandler, LoggedInHandler
 {
    /**
     * Events handler.
@@ -74,7 +74,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    /**
     * @param eventBus
     */
-   public DeleteApplicationPresenter(HandlerManager eventBus)
+   public DeleteApplicationCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 

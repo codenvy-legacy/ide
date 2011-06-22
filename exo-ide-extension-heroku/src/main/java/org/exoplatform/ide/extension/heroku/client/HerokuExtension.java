@@ -35,7 +35,7 @@ import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationCont
 import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
-import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationCommandHandler;
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
@@ -91,7 +91,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
 
       //Add presenters
       new CreateApplicationPresenter(eventBus);
-      new DeleteApplicationPresenter(eventBus);
+      new DeleteApplicationCommandHandler(eventBus);
       new ApplicationInfoPresenter(eventBus);
       new RenameApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
