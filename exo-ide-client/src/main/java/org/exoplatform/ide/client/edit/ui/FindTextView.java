@@ -98,21 +98,21 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    private Label findResultLabel;
 
    private VerticalPanel layout;
-   
+
    private static final String TITLE = IDE.EDITOR_CONSTANT.findTextTitle();
-   
+
    private static final String FIND = IDE.EDITOR_CONSTANT.findTextFind();
-   
+
    private static final String REPLACE_WITH = IDE.EDITOR_CONSTANT.findTextReplaceWith();
-   
+
    private static final String CASE_SENSITIVE = IDE.EDITOR_CONSTANT.findTextCaseSensitive();
-   
+
    private static final String FIND_BUTTON = IDE.EDITOR_CONSTANT.findTextFindButton();
-   
+
    private static final String REPLACE_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceButton();
-   
+
    private static final String REPLACE_FIND_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceFindButton();
-   
+
    private static final String REPLACE_ALL_BUTTON = IDE.EDITOR_CONSTANT.findTextReplaceAllButton();
 
    public FindTextView()
@@ -155,13 +155,14 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    private void createButtons()
    {
       findButton = createButton(FIND_BUTTON, "", ID_FIND_BUTTON);
-      cancelButton = createButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
+      cancelButton =
+         createButton(IDE.IDE_LOCALIZATION_CONSTANT.cancelButton(), Images.Buttons.CANCEL, ID_CANCEL_BUTTON);
       replaceButton = createButton(REPLACE_BUTTON, "", ID_REPLACE_BUTTON);
       replaceFindButton = createButton(REPLACE_FIND_BUTTON, "", ID_REPLACE_FIND_BUTTON);
       replaceAllButton = createButton(REPLACE_ALL_BUTTON, "", ID_REPLACE_ALL_BUTTON);
 
       HorizontalPanel upPanel = new HorizontalPanel();
-      upPanel.setHeight(BUTTON_HEIGHT + "px");
+      upPanel.setHeight(BUTTON_HEIGHT);
 
       upPanel.add(findButton);
       upPanel.add(getDelimiter());
@@ -170,7 +171,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
       layout.add(upPanel);
 
       HorizontalPanel downPanel = new HorizontalPanel();
-      downPanel.setHeight(BUTTON_HEIGHT + "px");
+      downPanel.setHeight(BUTTON_HEIGHT);
 
       downPanel.add(replaceButton);
       downPanel.add(getDelimiter());
@@ -183,7 +184,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    {
       HorizontalPanel hLayout = new HorizontalPanel();
       hLayout.setWidth("100%");
-      hLayout.setHeight(BUTTON_HEIGHT + "px");
+      hLayout.setHeight(BUTTON_HEIGHT);
 
       createFindResultLabel();
 
@@ -203,7 +204,7 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
    {
       findResultLabel = new Label();
       findResultLabel.setID(ID_FIND_RESULT);
-      findResultLabel.setHeight("" + BUTTON_HEIGHT);
+      findResultLabel.setHeight(BUTTON_HEIGHT);
       findResultLabel.setWidth("100%");
       findResultLabel.setValue("");
       return findResultLabel;
@@ -240,7 +241,8 @@ public class FindTextView extends ViewImpl implements org.exoplatform.ide.client
       ImageButton button = new ImageButton();
       button.setButtonId(id);
       button.setText(title);
-      button.setImage(new Image(icon));
+      if (icon != null && !icon.isEmpty())
+         button.setImage(new Image(icon));
       button.setWidth(BUTTON_WIDTH);
       button.setHeight(BUTTON_HEIGHT);
       return button;

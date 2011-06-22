@@ -149,7 +149,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
    {
       TextField textField = new TextField();
       textField.setName(id);
-      textField.setTitle("<NOBR>" + title + "</NOBR>");
+      textField.setTitle(title);
       textField.setHeight(FIELD_HEIGHT);
       textField.setWidth(FIELD_WIDTH);
       return textField;
@@ -160,7 +160,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       ComboBoxField comboboxField = new ComboBoxField();
       comboboxField.setName(id);
       comboboxField.setShowTitle(true);
-      comboboxField.setTitle("<NOBR>" + title + "</NOBR>");
+      comboboxField.setTitle("<nobr>" + title + "</nobr>");
       comboboxField.setWidth(FIELD_WIDTH);
       comboboxField.setHeight(FIELD_HEIGHT);
       comboboxField.setTitleOrientation(TitleOrientation.LEFT);
