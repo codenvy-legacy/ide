@@ -23,10 +23,10 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
-import org.exoplatform.ide.extension.maven.InvocationRequestFactory;
-import org.exoplatform.ide.extension.maven.MavenTask;
-import org.exoplatform.ide.extension.maven.TaskService;
-import org.exoplatform.ide.extension.maven.TaskWatcher;
+import org.exoplatform.ide.maven.InvocationRequestFactory;
+import org.exoplatform.ide.maven.MavenTask;
+import org.exoplatform.ide.maven.TaskService;
+import org.exoplatform.ide.maven.TaskWatcher;
 
 import java.io.File;
 import java.io.FilenameFilter;
