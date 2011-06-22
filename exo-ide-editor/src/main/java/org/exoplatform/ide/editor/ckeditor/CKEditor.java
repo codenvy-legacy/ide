@@ -269,13 +269,8 @@ public class CKEditor extends Editor
          // test if it is possible to localize CDATA section
          if (GoogleGadgetParser.hasContentSection(text))
          {
+            // extract HTML-code from <Content> tag
             text = this.parseText(text);
-         }
-         else
-         {
-            showErrorDialog("Google Gadget parsing error", "It is impossibe to localize Content section of gadget, which must be placed between '&lt;Content type=\"html\"&gt;&lt;![CDATA[' and ']]&gt;&lt;/Content&gt;' tags! So you will see all gadget content in 'source' mode.");
-            this.setEditorMode(StartupMode.SOURCE.toString());
-            // generate content section absence gadget error event 
          }
       }
 
