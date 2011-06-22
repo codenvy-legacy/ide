@@ -471,7 +471,7 @@ public class Heroku
       {
          name = detectAppName(workDir);
          if (name == null || name.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -526,7 +526,7 @@ public class Heroku
       {
          name = detectAppName(workDir);
          if (name == null || name.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -643,7 +643,7 @@ public class Heroku
       {
          name = detectAppName(workDir);
          if (name == null || name.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
@@ -816,7 +816,7 @@ public class Heroku
       {
          name = detectAppName(workDir);
          if (name == null || name.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not heroku application. ");
       }
 
       HttpURLConnection http = null;
