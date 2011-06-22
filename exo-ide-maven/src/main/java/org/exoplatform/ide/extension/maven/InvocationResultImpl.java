@@ -28,7 +28,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 public final class InvocationResultImpl implements InvocationResult
 {
    private final int exitCode;
-   private CommandLineException cle;
+   private final CommandLineException cle;
 
    public InvocationResultImpl(CommandLineException cle, int exitCode)
    {
@@ -38,7 +38,7 @@ public final class InvocationResultImpl implements InvocationResult
 
    public InvocationResultImpl(int exitCode)
    {
-      this.exitCode = exitCode;
+      this(null, exitCode);
    }
 
    /**

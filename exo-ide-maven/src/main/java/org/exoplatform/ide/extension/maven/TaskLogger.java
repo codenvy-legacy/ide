@@ -29,4 +29,6 @@ import java.io.Reader;
 public interface TaskLogger extends InvocationOutputHandler
 {
    Reader getLogReader();
+
+   String getLogAsString();
 }

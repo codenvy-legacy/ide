@@ -65,12 +65,21 @@ class SimpleTaskLogger implements TaskLogger
    @Override
    public Reader getLogReader()
    {
+      return new StringReader(getLogAsString());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.TaskLogger#getLogAsString()
+    */
+   @Override
+   public String getLogAsString()
+   {
       String log;
       synchronized (logBuf)
       {
          log = logBuf.toString();
          logBuf.setLength(0);
       }
-      return new StringReader(log);
+      return log;
    }
 }
