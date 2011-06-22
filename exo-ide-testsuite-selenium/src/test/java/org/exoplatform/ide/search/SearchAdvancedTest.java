@@ -33,12 +33,12 @@ import org.junit.Test;
 public class SearchAdvancedTest extends BaseTest
 {
    
-   private final String googleGadgetFileName = "Ð¢ÐµÑ�Ñ‚Ð¾Ð²Ñ‹Ð¹ Ð³Ð°Ð´Ð¶ÐµÑ‚.xml";
+   private final String googleGadgetFileName = "Тестовый гаджет.xml";
 
    private final String googleGadgetFileContent =
 
       "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
-         + "<Content type=\"html\">\n" + "<![CDATA[ ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚! Test]]></Content></Module>";
+         + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
    
    /**
     * IDE-34:Advanced search test.
@@ -73,7 +73,7 @@ public class SearchAdvancedTest extends BaseTest
       
       //Step 7
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "script/groovy");
+      IDE.SEARCH.performSearch("/", "Привет, свет!", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
 
@@ -85,7 +85,7 @@ public class SearchAdvancedTest extends BaseTest
       
       //Step 9
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      IDE.SEARCH.performSearch("/", "ÐŸÑ€Ð¸Ð²ÐµÑ‚, Ñ�Ð²ÐµÑ‚!", "");
+      IDE.SEARCH.performSearch("/", "Привет, свет!", "");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
       
