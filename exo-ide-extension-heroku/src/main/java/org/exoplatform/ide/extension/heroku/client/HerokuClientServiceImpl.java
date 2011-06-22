@@ -130,7 +130,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += "&workdir=" + gitWorkDir;
+      params += "workdir=" + gitWorkDir;
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
