@@ -132,7 +132,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          //Remove last "/" from path:
          String href =
             item.getHref().endsWith("/") ? item.getHref().substring(0, item.getHref().length() - 1) : item.getHref();
-         href = URL.decode(href);
+         href = URL.decodePathSegment(href);
          //Check selected item in workspace tree is not the root of the Git repository tree:
          if (!workTree.equals(href))
          {
@@ -140,7 +140,6 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
             fileFilter = new String[]{href.replace(workTree + "/", "")};
          }
       }
-
       GitClientService.getInstance().statusText(workTree, false, fileFilter, new AsyncRequestCallback<StatusResponse>()
       {
 
@@ -190,7 +189,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
    private void updateBrowserTreeStatus(final Folder folder)
    {
       if (folder == null || folder.getChildren() == null || folder.getChildren().size() <= 0
-         || folder.getHref() == null)
+         || folder.getHref() == null || folder.getHref().isEmpty())
          return;
 
       GitClientService.getInstance().getWorkDir(folder.getHref(), new AsyncRequestCallback<WorkDirResponse>()
@@ -232,7 +231,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
             itemsToCheck.add(folder);
             for (Item item : itemsToCheck)
             {
-               String href = URL.decode(item.getHref());
+               String href = URL.decodePathSegment(item.getHref());
                String pattern = href.replaceFirst(workDir + "/", "");
                Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
                if (pattern.length() == 0 || "/".equals(pattern))

@@ -81,6 +81,12 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/controls/initRepo_Disabled.png")
    ImageResource initRepoDisabled();
+   
+   @Source("org/exoplatform/ide/git/images/controls/deleteRepo.png")
+   ImageResource deleteRepo();
+
+   @Source("org/exoplatform/ide/git/images/controls/deleteRepo_Disabled.png")
+   ImageResource deleteRepoDisabled();
 
    @Source("org/exoplatform/ide/git/images/controls/add.png")
    ImageResource addToIndex();

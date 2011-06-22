@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchCheckoutRequestMarshaller;
@@ -118,7 +119,7 @@ public class GitClientServiceImpl extends GitClientService
 
    public static final String STATUS = "/ide/git/status";
 
-   public static final String GET_WORKDIR = "/ide/git-repo/workdir";
+   public static final String WORKDIR = "/ide/git-repo/workdir";
 
    public static final String PUSH = "/ide/git/push";
 
@@ -231,7 +232,7 @@ public class GitClientServiceImpl extends GitClientService
       //decode @ symbol
       String location = URL.decodePathSegment(workDir);
       
-      String url = restServiceContext + GET_WORKDIR;
+      String url = restServiceContext + WORKDIR;
       callback.setEventBus(eventBus);
 
       WorkDirResponse workDirResponse = new WorkDirResponse();
@@ -631,6 +632,23 @@ public class GitClientServiceImpl extends GitClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#deleteWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void deleteWorkDir(String href, AsyncRequestCallback<String> callback)
+   {
+      //decode path segment, because URL is encoded
+      //decodePathSegment used, because we must have possibility to
+      //decode @ symbol
+      String location = URL.decodePathSegment(href);
+      
+      String url = restServiceContext + WORKDIR;
+      callback.setEventBus(eventBus);
+
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).send(callback);
    }
 
 }

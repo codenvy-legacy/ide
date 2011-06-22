@@ -185,6 +185,15 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("messages.delete_remote_repository.question")
    String deleteRemoteRepositoryQuestion(String remote);
    
+   @Key("messages.delete_repository.question")
+   String deleteGitRepositoryQuestion(String repository);
+   
+   @Key("messages.delete_repository.title")
+   String deleteGitRepositoryTitle();
+   
+   @Key("messages.delete_success")
+   String deleteGitRepositorySuccess();
+   
    //----VIEWS------------------------------------------------------------------
 
    //Add
@@ -432,7 +441,16 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.commit.prompt")
    String commitControlPrompt();
+   
+   @Key("control.delete.id")
+   String deleteControlId();
 
+   @Key("control.delete.title")
+   String deleteControlTitle();
+
+   @Key("control.delete.prompt")
+   String deleteControlPrompt();
+   
    @Key("control.fetch.id")
    String fetchControlId();
 

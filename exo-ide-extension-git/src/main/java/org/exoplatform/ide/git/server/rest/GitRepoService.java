@@ -29,6 +29,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -104,6 +105,58 @@ public class GitRepoService
             String gitWorkDir = baseUri + WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
             gitWorkDir += (gitNode.getPath().startsWith("/")) ? gitNode.getPath() : "/" + gitNode.getPath();
             return gitWorkDir;
+         }
+         else
+         {
+            throw new GitWorkDirNotFoundException("Git working directory not found.");
+         }
+      }
+      catch (RepositoryException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (GitWorkDirNotFoundException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 404));
+      }
+      catch (Exception e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 404));
+      }
+   }
+
+   @DELETE
+   @Path("workdir")
+   @Produces(MediaType.TEXT_PLAIN)
+   public void deleteWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
+   {
+      String baseUri = uriInfo.getBaseUri().toASCIIString();
+
+      String[] jcrLocation = parseJcrLocation(baseUri, location);
+      try
+      {
+         Session session = getSession(jcrLocation[0], jcrLocation[1]);
+         Node rootNode = session.getRootNode();
+         Node node;
+         if (jcrLocation[2] == null || jcrLocation[2].length() <= 0)
+         {
+            node = rootNode;
+         }
+         else
+         {
+            node = rootNode.getNode(jcrLocation[2]);
+         }
+
+         //Find node, where ".git" is stored:
+         Node gitNode = findGitNode(node);
+         if (gitNode != null)
+         {
+            gitNode.remove();
+            session.save();
          }
          else
          {

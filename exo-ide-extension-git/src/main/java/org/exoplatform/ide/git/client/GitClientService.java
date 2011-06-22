@@ -347,5 +347,13 @@ public abstract class GitClientService
     * @param callback
     */
    public abstract void getWorkDir(String href, AsyncRequestCallback<WorkDirResponse> callback);
-
+   
+   /**
+    * Get the Git work directory (where ".git" folder is located) 
+    * for the pointed item's location and delete it.
+    * 
+    * @param href item's location (encoded location, service will decode location by himself)
+    * @param callback callback
+    */
+   public abstract void deleteWorkDir(String href, AsyncRequestCallback<String> callback);
 }
