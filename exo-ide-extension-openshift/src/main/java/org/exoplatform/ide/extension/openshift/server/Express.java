@@ -438,7 +438,7 @@ public class Express
       {
          app = detectAppName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not openshift express application. ");
       }
 
       List<AppInfo> apps = userInfo(true).getApps();
@@ -460,7 +460,7 @@ public class Express
       {
          app = detectAppName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Application name is not defined. ");
+            throw new IllegalStateException("Not openshift express application. ");
       }
 
       RHCloudCredentials rhCloudCredentials = readCredentials();
