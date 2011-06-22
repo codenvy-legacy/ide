@@ -142,7 +142,16 @@ public class JavaAppService
    private MavenResponse execute(InvocationRequest request, TaskWatcher watcher) throws Exception
    {
       MavenTask task = taskService.add(request, watcher);
-      InvocationResult result = task.get(); // Block until task end.
+      InvocationResult result;
+      try
+      {
+         result = task.get(); // Block until task end.
+      }
+      finally
+      {
+         // Do not store task in pool since we are waiting until it ends and read output from it.
+         taskService.remove(task.getId());
+      }
 
       CommandLineException executionException = result.getExecutionException();
       if (executionException != null)
