@@ -74,7 +74,6 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.WORKSPACE.doubleClickOnFolder(URL);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
@@ -84,7 +83,9 @@ public class GoogleGadgetPreviewTest extends BaseTest
 
       assertTrue(selenium.isElementPresent("//div[@class='Number']"));
 
-      IDE.EDITOR.clickOnEditor();
+      //this method call error in deleteFileContent() method. 
+      //Select not content in code editor but all IDE spase
+      //  IDE.EDITOR.clickOnEditor();
       IDE.EDITOR.deleteFileContent();
 
       String hello =
