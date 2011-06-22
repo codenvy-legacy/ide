@@ -234,8 +234,8 @@
             <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
-          <dependency>
+
+         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-logreader</artifactId>
             <version>${project.version}</version>
@@ -257,7 +257,7 @@
             <artifactId>exo-ide-extension-heroku</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-openshift</artifactId>
@@ -531,7 +531,13 @@
             <artifactId>maven-invoker</artifactId>
             <version>2.0.11</version>
          </dependency>
-         
+
+         <dependency>
+            <groupId>com.cloudbees</groupId>
+            <artifactId>cloudbees-api-client</artifactId>
+            <version>0.8.0</version>
+         </dependency>
+
       </dependencies>
    </dependencyManagement>
    <build>
@@ -680,5 +686,5 @@
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
-  </modules>
+   </modules>
 </project>
