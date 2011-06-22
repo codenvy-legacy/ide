@@ -243,19 +243,12 @@ public class CKEditor extends Editor
       }
    }-*/;
 
-   public String parseText(String text)
+   public String extractHtmlCodeFromGoogleGadget(String text)
    {
-      if (this.getMimeType().equals(MimeType.GOOGLE_GADGET))
-      {
-         this.prefix = GoogleGadgetParser.getPrefix(text);
-         String content = GoogleGadgetParser.getContentSection(text);
-         this.suffix = GoogleGadgetParser.getSuffix(text);
-         return content;
-      }
-      else
-      {
-         return text;
-      }
+      this.prefix = GoogleGadgetParser.getPrefix(text);
+      String content = GoogleGadgetParser.getContentSection(text);
+      this.suffix = GoogleGadgetParser.getSuffix(text);
+      return content;
    };
 
    public void setText(String text)
@@ -266,11 +259,13 @@ public class CKEditor extends Editor
       // extract CDATA section from google gadget
       if (getMimeType().equals(MimeType.GOOGLE_GADGET))
       {
+         this.prefix = this.suffix = "";
+         
          // test if it is possible to localize CDATA section
          if (GoogleGadgetParser.hasContentSection(text))
          {
             // extract HTML-code from <Content> tag
-            text = this.parseText(text);
+            text = this.extractHtmlCodeFromGoogleGadget(text);
          }
       }
 
