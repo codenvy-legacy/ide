@@ -22,13 +22,17 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.exoplatform.ide.FSLocation;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 import org.exoplatform.ide.extension.maven.InvocationRequestFactory;
 import org.exoplatform.ide.extension.maven.MavenTask;
 import org.exoplatform.ide.extension.maven.TaskService;
 import org.exoplatform.ide.extension.maven.TaskWatcher;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.ws.rs.POST;
@@ -38,6 +42,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -64,10 +69,11 @@ public class JavaAppService
 
    @POST
    @Path("create")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_JSON)
    public Response createApp(@QueryParam("workdir") FSLocation baseDir, @QueryParam("name") String name,
       @Context UriInfo uriInfo) throws Exception
    {
+      // web applications (.war) only
       InvocationRequest request = ARCHETYPE_REQUEST_FACTORY.createRequest();
       request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
       Properties properties = new Properties();
@@ -75,27 +81,46 @@ public class JavaAppService
       properties.put("groupId", name);
       properties.put("artifactId", name);
       request.setProperties(properties);
-      return execute(request);
+      MavenResponse mvn = execute(request);
+      return createResponse(mvn);
    }
 
    @POST
    @Path("clean")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_JSON)
    public Response clean(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
    {
       InvocationRequest request = CLEAN_REQUEST_FACTORY.createRequest();
       request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
-      return execute(request);
+      MavenResponse mvn = execute(request);
+      return createResponse(mvn);
    }
 
    @POST
    @Path("package")
-   @Produces(MediaType.TEXT_PLAIN)
+   @Produces(MediaType.APPLICATION_JSON)
    public Response pack(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
    {
       InvocationRequest request = PACKAGE_REQUEST_FACTORY.createRequest();
-      request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
-      return execute(request);
+      File dir = new File(baseDir.getLocalPath(uriInfo));
+      request.setBaseDirectory(dir);
+      MavenResponse mvn = execute(request);
+      String[] files = new File(dir, "target").list(new FilenameFilter()
+      {
+         @Override
+         public boolean accept(File dir, String name)
+         {
+            return name.endsWith(".war"); // Support only web applications at the moment.
+         }
+      });
+      if (files.length > 0)
+      {
+         Map<String, String> result = new HashMap<String, String>(1);
+         result.put("war", //
+            baseDir.getURL() + "/target/" + files[0]);
+         mvn.setResult(result);
+      }
+      return createResponse(mvn);
    }
 
    /*private Response execute(InvocationRequest request, long timeout ) throws Exception
@@ -103,12 +128,18 @@ public class JavaAppService
       return execute(request, new TaskWatcher(timeout));
    }*/
 
-   private Response execute(InvocationRequest request) throws Exception
+   private Response createResponse(MavenResponse mvn)
+   {
+      ResponseBuilder b = mvn.getExitCode() == 0 ? Response.ok() : Response.status(500);
+      return b.entity(mvn).type(MediaType.APPLICATION_JSON).build();
+   }
+
+   private MavenResponse execute(InvocationRequest request) throws Exception
    {
       return execute(request, null);
    }
 
-   private Response execute(InvocationRequest request, TaskWatcher watcher) throws Exception
+   private MavenResponse execute(InvocationRequest request, TaskWatcher watcher) throws Exception
    {
       MavenTask task = taskService.add(request, watcher);
       InvocationResult result = task.get(); // Block until task end.
@@ -117,16 +148,8 @@ public class JavaAppService
       if (executionException != null)
          throw executionException;
 
-      // Send output of maven task to caller;
+      // Send output of maven task to caller.
       int exitCode = result.getExitCode();
-      Response response;
-      if (exitCode == 0)
-         response = Response.ok().entity(task.getTaskLogger().getLogReader()).type(MediaType.TEXT_PLAIN).build();
-      else
-         response =
-            Response.status(500).entity(task.getTaskLogger().getLogReader()).type(MediaType.TEXT_PLAIN)
-               .header("Maven-Exit-Code", exitCode).build();
-
-      return response;
+      return new MavenResponse(exitCode, task.getTaskLogger().getLogAsString(), null);
    }
 }
