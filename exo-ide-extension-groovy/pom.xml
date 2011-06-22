@@ -47,6 +47,10 @@
              <groupId>org.exoplatform.tool</groupId>
              <artifactId>exo.tool.framework.junit</artifactId>
            </exclusion>
+           <exclusion>
+             <groupId>com.experlog</groupId>
+             <artifactId>xapool</artifactId>
+           </exclusion>
          </exclusions>
       </dependency>
       <dependency>

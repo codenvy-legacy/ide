@@ -29,6 +29,9 @@ import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssista
 import org.exoplatform.ide.editor.codeassistant.xml.XmlCodeAssistant;
 
 /**
+ * This factory use for autocompletion for default file type
+ * (not extensions) (e.g HTML, XML, JavaScript, CSS)  
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: DefaultCodeAssistantFactory Mar 3, 2011 5:07:20 PM evgen $
  *

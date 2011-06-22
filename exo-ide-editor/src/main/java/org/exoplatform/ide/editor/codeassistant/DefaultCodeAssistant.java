@@ -25,6 +25,7 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
+//TODO: need kill this class
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: DefaultCodeAssistant Feb 22, 2011 2:13:59 PM evgen $

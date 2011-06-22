@@ -23,6 +23,9 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
 /**
+ * Bundle uses for testing editor in EditorTest.
+ * It provide content of file template.  
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ExamplesBuandle Feb 25, 2011 9:37:15 AM evgen $
  *
