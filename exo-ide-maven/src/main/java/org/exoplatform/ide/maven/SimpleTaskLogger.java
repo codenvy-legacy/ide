@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven;
+package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 
@@ -60,7 +60,7 @@ class SimpleTaskLogger implements TaskLogger
    }
 
    /**
-    * @see org.exoplatform.ide.extension.maven.TaskLogger#getLogReader()
+    * @see org.exoplatform.ide.maven.TaskLogger#getLogReader()
     */
    @Override
    public Reader getLogReader()
@@ -69,7 +69,7 @@ class SimpleTaskLogger implements TaskLogger
    }
 
    /**
-    * @see org.exoplatform.ide.extension.maven.TaskLogger#getLogAsString()
+    * @see org.exoplatform.ide.maven.TaskLogger#getLogAsString()
     */
    @Override
    public String getLogAsString()
