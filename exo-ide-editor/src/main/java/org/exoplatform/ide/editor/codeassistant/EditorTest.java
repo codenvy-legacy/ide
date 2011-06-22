@@ -112,7 +112,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       {
          public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
          {
-            System.out.println(">>>>>>>>>>> onEditorHotKeyCalled = " + event.getHotKey());
+//            System.out.println(">>>>>>>>>>> onEditorHotKeyCalled = " + event.getHotKey());
          }
       });
 
@@ -120,7 +120,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       {
          public void onEditorInitialized(EditorInitializedEvent event)
          {
-            System.out.println(">>>>>>>>>>> onEditorInitialized = " + event.getEditorId());
+//            System.out.println(">>>>>>>>>>> onEditorInitialized = " + event.getEditorId());
          }
       });
 
@@ -128,7 +128,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       {
          public void onEditorFocusReceived(EditorFocusReceivedEvent event)
          {
-            System.out.println(">>>>>>>>>>> onEditorFocusReceived = " + event.getEditorId());
+//            System.out.println(">>>>>>>>>>> onEditorFocusReceived = " + event.getEditorId());
          }
       });
 
@@ -136,7 +136,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       {
          public void onEditorContentChanged(EditorContentChangedEvent event)
          {
-            System.out.println(">>>>>>>>>>> onEditorContentChanged = " + event.getEditorId());
+//            System.out.println(">>>>>>>>>>> onEditorContentChanged = " + event.getEditorId());
          }
       });
 
