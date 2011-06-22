@@ -34,10 +34,10 @@ import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationIn
 import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoControl;
 import org.exoplatform.ide.extension.openshift.client.controls.UpdatePublicKeyControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
-import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationPresenter;
+import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
-import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyPresenter;
+import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
@@ -85,10 +85,10 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new LoginPresenter(eventBus);
       new CreateDomainPresenter(eventBus);
       new CreateApplicationPresenter(eventBus);
-      new DeleteApplicationPresenter(eventBus);
+      new DeleteApplicationCommandHandler(eventBus);
       new ApplicationInfoPresenter(eventBus);
       new UserInfoPresenter(eventBus);
-      new UpdatePublicKeyPresenter(eventBus);
+      new UpdatePublicKeyCommandHandler(eventBus);
    }
 
    /**

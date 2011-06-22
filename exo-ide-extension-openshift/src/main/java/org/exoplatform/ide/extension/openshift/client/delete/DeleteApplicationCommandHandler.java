@@ -50,13 +50,13 @@ import org.exoplatform.ide.git.client.GitPresenter;
  * @version $Id:  Jun 9, 2011 12:27:01 PM anya $
  *
  */
-public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
+public class DeleteApplicationCommandHandler extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
 {
 
    /**
     * @param eventBus
     */
-   public DeleteApplicationPresenter(HandlerManager eventBus)
+   public DeleteApplicationCommandHandler(HandlerManager eventBus)
    {
       super(eventBus);
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);

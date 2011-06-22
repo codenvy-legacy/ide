@@ -41,7 +41,7 @@ import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
  * @version $Id:  Jun 21, 2011 12:36:44 PM anya $
  *
  */
-public class UpdatePublicKeyPresenter implements UpdatePublicKeyHandler, LoggedInHandler
+public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, LoggedInHandler
 {
 
    /**
@@ -52,7 +52,7 @@ public class UpdatePublicKeyPresenter implements UpdatePublicKeyHandler, LoggedI
    /**
     * @param eventBus events handler manager
     */
-   public UpdatePublicKeyPresenter(HandlerManager eventBus)
+   public UpdatePublicKeyCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
