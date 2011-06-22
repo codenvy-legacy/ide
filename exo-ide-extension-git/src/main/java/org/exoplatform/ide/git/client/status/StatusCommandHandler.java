@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.git.client.status;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -224,8 +224,8 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
          @Override
          protected void onSuccess(StatusResponse result)
          {
-            Map<Item, Map<TreeIconPosition, String>> treeNodesToUpdate =
-               new HashMap<Item, Map<TreeIconPosition, String>>();
+            Map<Item, Map<TreeIconPosition, ImageResource>> treeNodesToUpdate =
+               new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
             List<Item> itemsToCheck = new ArrayList<Item>();
             itemsToCheck.addAll(folder.getChildren());
@@ -234,28 +234,28 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
             {
                String href = URL.decode(item.getHref());
                String pattern = href.replaceFirst(workDir + "/", "");
-               Map<TreeIconPosition, String> map = new HashMap<TreeIconPosition, String>();
+               Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
                if (pattern.length() == 0 || "/".equals(pattern))
                {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.repositoryRoot().getURL());
+                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.repositoryRoot());
                }
                else if (contains(result.getChangedNotCommited(), pattern))
                {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNotCommited().getURL());
+                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNotCommited());
                }
                else if (contains(result.getChangedNotUpdated(), pattern))
                {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemChanged().getURL());
+                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemChanged());
                }
                else if (contains(result.getUntracked(), pattern))
                {
-                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNew().getURL());
+                  map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNew());
                }
                else
                {
                   if (item instanceof File)
                   {
-                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository().getURL());
+                     map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());
                   }
                }
                treeNodesToUpdate.put(item, map);

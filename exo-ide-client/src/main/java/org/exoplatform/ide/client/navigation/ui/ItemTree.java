@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -378,14 +380,14 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
     * Add info icons to Item main icon
     * @param itemsIcons Map of Item, info icon position and info icon URL
     */
-   public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
    {
       for (Item item : itemsIcons.keySet())
       {
          TreeItem node = getNodeByHref(item.getHref());
          Grid grid = (Grid)node.getWidget();
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-         Map<TreeIconPosition, String> map = itemsIcons.get(item);
+         Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
          for (TreeIconPosition position : map.keySet())
          {
             treeIcon.addIcon(position, map.get(position));

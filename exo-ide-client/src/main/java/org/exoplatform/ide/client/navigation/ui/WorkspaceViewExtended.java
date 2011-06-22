@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +114,7 @@ public class WorkspaceViewExtended extends ViewImpl implements
    }
 
    @Override
-   public void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons)
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
    {
       treeGrid.addItemsIcons(itemsIcons);
    }

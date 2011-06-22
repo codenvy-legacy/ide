@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
@@ -35,12 +37,12 @@ public class AddItemTreeIconEvent extends GwtEvent<AddItemTreeIconHandler>
 
    public static GwtEvent.Type<AddItemTreeIconHandler> TYPE = new Type<AddItemTreeIconHandler>();
 
-   private Map<Item, Map<TreeIconPosition, String>> treeItemIcons;
+   private Map<Item, Map<TreeIconPosition, ImageResource>> treeItemIcons;
 
    /**
     * @param treeItemIcons
     */
-   public AddItemTreeIconEvent(Map<Item, Map<TreeIconPosition, String>> treeItemsIcons)
+   public AddItemTreeIconEvent(Map<Item, Map<TreeIconPosition, ImageResource>> treeItemsIcons)
    {
       super();
       this.treeItemIcons = treeItemsIcons;
@@ -67,7 +69,7 @@ public class AddItemTreeIconEvent extends GwtEvent<AddItemTreeIconHandler>
    /**
     * @return the treeItemIcons
     */
-   public Map<Item, Map<TreeIconPosition, String>> getTreeItemIcons()
+   public Map<Item, Map<TreeIconPosition, ImageResource>> getTreeItemIcons()
    {
       return treeItemIcons;
    }

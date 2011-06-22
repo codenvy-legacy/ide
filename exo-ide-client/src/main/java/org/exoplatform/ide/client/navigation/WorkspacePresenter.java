@@ -33,6 +33,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -150,7 +151,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       /**
        * Add info icons to main item icon
        */
-      void addItemsIcons(Map<Item, Map<TreeIconPosition, String>> itemsIcons);
+      void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
       /**
        * Remove info icon from item
