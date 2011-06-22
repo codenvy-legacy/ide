@@ -26,18 +26,42 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
+          <exclusions>
+           <exclusion>
+             <groupId>org.exoplatform.tool</groupId>
+             <artifactId>exo.tool.framework.junit</artifactId>
+           </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
+          <exclusions>
+           <exclusion>
+             <groupId>org.exoplatform.tool</groupId>
+             <artifactId>exo.tool.framework.junit</artifactId>
+           </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
+          <exclusions>
+           <exclusion>
+             <groupId>org.exoplatform.tool</groupId>
+             <artifactId>exo.tool.framework.junit</artifactId>
+           </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
+          <exclusions>
+           <exclusion>
+             <groupId>org.exoplatform.tool</groupId>
+             <artifactId>exo.tool.framework.junit</artifactId>
+           </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>

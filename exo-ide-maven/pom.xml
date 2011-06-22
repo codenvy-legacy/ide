@@ -12,6 +12,12 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
+         <exclusions>
+            <exclusion>
+              <groupId>org.exoplatform.tool</groupId>
+              <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.apache.maven.shared</groupId>

@@ -14,6 +14,12 @@
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+              <groupId>org.exoplatform.tool</groupId>
+              <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>com.jcraft</groupId>
@@ -38,6 +44,10 @@
             <exclusion>
                <groupId>javax.servlet</groupId>
                <artifactId>servlet-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.exoplatform.tool</groupId>
+              <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
