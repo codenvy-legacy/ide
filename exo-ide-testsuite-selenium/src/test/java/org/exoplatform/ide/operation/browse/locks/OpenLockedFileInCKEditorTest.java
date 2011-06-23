@@ -89,7 +89,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       //lock file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      checkFileLocking(FILE_NAME, false);
+      checkFileLocking(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //----- 3 ----------
       //delete lock tokens from cookies and refresh
