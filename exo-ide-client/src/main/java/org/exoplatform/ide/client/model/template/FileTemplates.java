@@ -125,7 +125,7 @@ public class FileTemplates
    private static void addEmptyHTML()
    {
       String content =
-         "" + "<html>\r\n" + "  <head>\r\n" + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n"
+         "" + "<html>\r\n" + "  <head>\r\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\r\n" + "    <title></title>\r\n" + "  </head>\r\n" + "  <body>\r\n"
             + "  </body>\r\n" + "</html>";
       templates.put(MimeType.TEXT_HTML, content);
    }
