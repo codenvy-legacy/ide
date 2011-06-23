@@ -148,4 +148,23 @@ public class CloneRepository extends AbstractTestModule
       return selenium().getValue(Locators.REMOTE_NAME_FIELD_ID);
    }
 
+   /**
+    * Type text to remote URI field.
+    * 
+    * @param text text to type
+    */
+   public void typeToRemoteUriField(String text)
+   {
+      selenium().type(Locators.REMOTE_URI_FIELD_ID, text);
+   }
+
+   /**
+    * Type text to remote name field.
+    * 
+    * @param text text to type
+    */
+   public void typeToRemoteNameField(String text)
+   {
+      selenium().type(Locators.REMOTE_NAME_FIELD_ID, text);
+   }
 }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.core;
 
 import org.exoplatform.ide.IDE;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
 
 /**
@@ -164,5 +165,19 @@ public class InitRepository extends AbstractTestModule
    public String getCancelButtonTitle()
    {
       return selenium().getText(Locators.CANCEL_BUTTON_ID);
+   }
+
+   /**
+    * Perform init Git repository.
+    * 
+    * @throws Exception
+    */
+   public void initRepository() throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
+      waitForViewOpened();
+
+      clickInitButton();
+      waitForViewClosed();
    }
 }

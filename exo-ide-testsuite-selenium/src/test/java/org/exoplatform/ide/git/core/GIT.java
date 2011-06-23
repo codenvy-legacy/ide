@@ -34,6 +34,10 @@ public class GIT
    {
       String INIT_SUCCESS = "Repository was successfully initialized.";
 
+      String CLONE_SUCCESS = "Repository was successfully cloned.";
+      
+      String CLONE_REPO_EXISTS = "[ERROR] Repository already exists: %1s";
+      
       String GIT_REPO_EXISTS = "Git repository already exists in this folder or parent one.";
       
       String DELETE_SUCCESS = "Git repository was successfully deleted.";
@@ -45,7 +49,7 @@ public class GIT
       
       String ERROR ="Error";
    }
-
+   
    private Selenium selenium;
 
    private static GIT instance;
