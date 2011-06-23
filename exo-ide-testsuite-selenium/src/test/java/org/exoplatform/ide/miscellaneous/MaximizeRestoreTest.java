@@ -20,6 +20,7 @@ package org.exoplatform.ide.miscellaneous;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.core.Perspective;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -50,6 +51,8 @@ public class MaximizeRestoreTest extends BaseTest
    {
       //prepare file
       IDE.WORKSPACE.waitForRootItem();
+      waitForElementPresent("//div[@id='navigation-maximize']");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.NAVIGATION);
       IDE.PERSPECTIVE.checkPanelIsMaximized(Perspective.Panel.NAVIGATION, true);
