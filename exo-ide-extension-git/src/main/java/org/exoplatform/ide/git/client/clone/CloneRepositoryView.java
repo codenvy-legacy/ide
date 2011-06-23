@@ -85,6 +85,8 @@ public class CloneRepositoryView extends ViewImpl implements
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
       workdirField = createTextField(WORKDIR_FIELD_ID, GitExtension.MESSAGES.cloneWorkdirFieldTitle());
+      workdirField.disable();
+      workdirField.setShowDisabled(false);
       remoteUriField = createTextField(REMOTE_URI_FIELD_ID, GitExtension.MESSAGES.cloneRemoteUriFieldTitle());
       remoteNameField = createTextField(REMOTE_NAME_FIELD_ID, GitExtension.MESSAGES.cloneRemoteNameFieldTitle());
 

@@ -90,6 +90,8 @@ public class InitRepositoryView extends ViewImpl implements
       workdirField.setTitleOrientation(TitleOrientation.TOP);
       workdirField.setWidth(420);
       workdirField.setHeight(22);
+      workdirField.disable();
+      workdirField.setShowDisabled(false);
       mainLayout.add(workdirField);
 
       bareField = new CheckboxItem(BARE_FIELD_ID, GitExtension.MESSAGES.createBareFieldTitle());

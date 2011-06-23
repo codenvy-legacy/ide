@@ -160,7 +160,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            boolean enable = (event.getValue() != null || event.getValue().length() > 0);
+            boolean enable = (event.getValue() != null && event.getValue().length() > 0);
             display.enableCloneButton(enable);
          }
       });
