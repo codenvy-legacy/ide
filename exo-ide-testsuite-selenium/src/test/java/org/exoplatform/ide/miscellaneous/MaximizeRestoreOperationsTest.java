@@ -40,6 +40,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -112,6 +113,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
    
    //IDE-97:One-click maximize/restore for editor and actions view
 
+   @Ignore
    @Test
    public void maximizeRestoreForEditorAndActionsView() throws Exception
    {
