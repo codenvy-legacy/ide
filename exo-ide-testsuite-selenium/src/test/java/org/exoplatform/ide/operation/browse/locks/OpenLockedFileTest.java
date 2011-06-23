@@ -89,20 +89,22 @@ public class OpenLockedFileTest extends LockFileAbstract
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
       //----- 1 ----------
       //open file
+      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
 
       //----- 2 ----------
       //lock file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      checkFileLocking(FILE_NAME, false);
+      checkFileLocking(URL + FOLDER_NAME + "/"+FILE_NAME, false);
 
       //----- 3 ----------
       //delete lock tokens from cookies and refresh
