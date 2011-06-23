@@ -35,6 +35,15 @@ public class GIT
       String INIT_SUCCESS = "Repository was successfully initialized.";
 
       String GIT_REPO_EXISTS = "Git repository already exists in this folder or parent one.";
+      
+      String DELETE_SUCCESS = "Git repository was successfully deleted.";
+   }
+   
+   public interface DialogTitles
+   {
+      String DELETE_DIALOG = "Delete Git repository";
+      
+      String ERROR ="Error";
    }
 
    private Selenium selenium;
