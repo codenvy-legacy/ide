@@ -29,6 +29,7 @@ import org.exoplatform.ide.maven.TaskService;
 import org.exoplatform.ide.maven.TaskWatcher;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -75,13 +76,35 @@ public class JavaAppService
    {
       // web applications (.war) only
       InvocationRequest request = ARCHETYPE_REQUEST_FACTORY.createRequest();
-      request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
+      File dir = new File(baseDir.getLocalPath(uriInfo));
+      request.setBaseDirectory(dir);
       Properties properties = new Properties();
       properties.put("archetypeArtifactId", "maven-archetype-webapp");
       properties.put("groupId", name);
       properties.put("artifactId", name);
       request.setProperties(properties);
       MavenResponse mvn = execute(request);
+      if (0 == mvn.getExitCode()) // If other than zero then build fails. 
+      {
+         File app = new File(dir, name);
+         if (app.exists()) // Be sure application directory created after maven execution.
+         {
+            File ignore = new File(app, ".gitignore");
+            FileWriter w = null;
+            try
+            {
+               w = new FileWriter(ignore);
+               w.write("target/");
+               w.write('\n');
+               w.flush();
+            }
+            finally
+            {
+               if (w != null)
+                  w.close();
+            }
+         }
+      }
       return createResponse(mvn);
    }
 
