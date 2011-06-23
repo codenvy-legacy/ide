@@ -36,7 +36,7 @@ public class ErrorDialog extends AbstractTestModule
    private final String WARNING_MESSAGE_LOCATOR = "//div[@id=\"" + WARNING_DIALOG_ID + "\"]//div[@class=\"gwt-Label\"]";
 
    private final String OK_BUTTON_ID = "exoWarningDialogOkButton";
-   
+
    /**
     * Wait error dialog is opened.
     * 
@@ -46,7 +46,7 @@ public class ErrorDialog extends AbstractTestModule
    {
       waitForElementPresent(WARNING_DIALOG_ID);
    }
-   
+
    public void waitIsClosed() throws Exception
    {
       waitForElementNotPresent(WARNING_DIALOG_ID);
@@ -69,7 +69,17 @@ public class ErrorDialog extends AbstractTestModule
    {
       assertEquals(message, selenium().getText(WARNING_MESSAGE_LOCATOR));
    }
-   
+
+   /**
+    * Get warning message
+    * 
+    * @return {@link String} warning message
+    */
+   public String getMessage()
+   {
+      return selenium().getText(WARNING_MESSAGE_LOCATOR);
+   }
+
    /**
     * Check message from error dialog contains the pointed one.
     * 

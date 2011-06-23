@@ -147,6 +147,8 @@ public class IDE
    public Folder FOLDER = new Folder();
    
    public RenameDialog RENAME_DIALOG = new RenameDialog();
+   
+   public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
 
    /**
     * Select main frame of IDE.

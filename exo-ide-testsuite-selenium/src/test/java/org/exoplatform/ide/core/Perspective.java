@@ -132,5 +132,16 @@ public class Perspective extends AbstractTestModule
    {
       fail();
    }
+   
+   /**
+    * Forms view locator by its id.
+    * 
+    * @param viewId
+    * @return {@link String} view's locator
+    */
+   public String getViewLocator(String viewId)
+   {
+      return "//div[@view-id=\"" + viewId + "\"]";
+   }
 
 }

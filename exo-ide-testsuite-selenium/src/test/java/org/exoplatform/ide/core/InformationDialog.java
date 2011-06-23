@@ -35,6 +35,9 @@ public class InformationDialog extends AbstractTestModule
 
    private static final String INFO_BUTTON_OK_ID = "exoInfoDialogOkButton";
 
+   private static final String INFO_MESSAGE_LOCATOR = "//div[@id=\"" + INFO_DIALOG_ID
+      + "\"]//div[@class=\"gwt-Label\"]";
+
    /**
     * Check, is information dialog appeared.
     */
@@ -61,7 +64,7 @@ public class InformationDialog extends AbstractTestModule
     */
    public void clickOk() throws InterruptedException
    {
-      selenium().click("//div[@id='" + INFO_DIALOG_ID + "']//div[@id='" + INFO_BUTTON_OK_ID + "']");
+      selenium().click(INFO_BUTTON_OK_ID);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -72,7 +75,7 @@ public class InformationDialog extends AbstractTestModule
    public void clickNo()
    {
    }
-   
+
    /**
     * Wait for information dialog.
     * @throws Exception
@@ -82,7 +85,7 @@ public class InformationDialog extends AbstractTestModule
       waitForElementPresent(INFO_DIALOG_ID);
       waitForElementPresent(INFO_BUTTON_OK_ID);
    }
-   
+
    /**
     * Wait for information dialog with <code>message</code>.
     * @param message - the message at information dialog.
@@ -93,10 +96,14 @@ public class InformationDialog extends AbstractTestModule
       waitForInfoDialog();
       waitForTextPresent(message);
    }
-   
+
    public void waitForInfoDialogNotPresent() throws Exception
    {
       waitForElementNotPresent(INFO_DIALOG_ID);
    }
 
+   public String getMessage()
+   {
+      return selenium().getText(INFO_MESSAGE_LOCATOR);
+   }
 }

@@ -28,7 +28,7 @@ public interface MenuCommands
 {
    public interface New
    {
-      
+
       String NEW = "New";
 
       String XML_FILE = "XML";
@@ -60,15 +60,15 @@ public interface MenuCommands
       String CHROMATTIC = "Data Object";
 
       String PROJECT_TEMPLATE = "Project Template...";
-      
+
       String JAVA_CLASS = "Java Class";
-      
+
       String JSP = "JSP";
-      
+
       String RUBY = "Ruby File";
-      
+
       String PHP = "PHP File";
-      
+
    }
 
    public interface Run
@@ -95,9 +95,9 @@ public interface MenuCommands
       public static final String RUN_GROOVY_SERVICE = "Run in Sandbox";
 
       public static final String SHOW_PREVIEW = "Show Preview";
-      
+
       public static final String SHOW_GADGET_PREVIEW = "Show Gadget Preview";
-      
+
       public static final String SHOW_GROOVY_TEMPLATE_PREVIEW = "Show Template Preview";
 
       public static final String VALIDATE = "Validate";
@@ -115,7 +115,7 @@ public interface MenuCommands
    {
       public static final String VIEW = "View";
 
-      public static final String GO_TO_FOLDER = "Go to Folder"; 
+      public static final String GO_TO_FOLDER = "Go to Folder";
 
       public static final String GET_URL = "Get URL...";
 
@@ -138,7 +138,7 @@ public interface MenuCommands
       public static final String OPEN_WITH = "Open With...";
 
       public static final String UPLOAD_FILE = "Upload File...";
-      
+
       public static final String UPLOAD_FOLDER = "Upload Zipped Folder...";
 
       public static final String OPEN_LOCAL_FILE = "Open Local File...";
@@ -168,7 +168,7 @@ public interface MenuCommands
       public static final String RESTORE_VERSION = "Restore to Version";
 
       public static final String REFRESH_TOOLBAR = "Refresh Selected Folder";
-      
+
       public static final String CONFIGURE_CLASS_PATH = "Configure Classpath...";
    }
 
@@ -195,7 +195,7 @@ public interface MenuCommands
       public static final String HIDE_LINE_NUMBERS = "Hide Line Numbers";
 
       public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
-      
+
       public static final String FORMAT = "Format";
 
       public static final String GO_TO_LINE = "Go to Line...";
@@ -207,10 +207,9 @@ public interface MenuCommands
       public static final String LOCK_FILE = "Lock File";
 
       public static final String UNLOCK_FILE = "Unlock File";
-      
-      public static final String LUCK_UNLOCK_FILE = "Lock "+"\\" + " Unlock File";
-      
-      
+
+      public static final String LUCK_UNLOCK_FILE = "Lock " + "\\" + " Unlock File";
+
    }
 
    public interface CodeEditors
@@ -225,7 +224,7 @@ public interface MenuCommands
       public static final String HELP = "Help";
 
       public static final String ABOUT = "About...";
-      
+
       public static final String REST_SERVICES = "REST Services Discovery";
    }
 
@@ -238,7 +237,43 @@ public interface MenuCommands
       public static final String CUSTOMIZE_HOTKEYS = "Customize Hotkeys...";
 
       public static final String CUSTOMIZE_TOOLBAR = "Customize Toolbar...";
+   }
 
+   public interface Git
+   {
+      String GIT = "Git";
+      
+      String ADD = "Add...";
+
+      String BRANCHES = "Branches...";
+
+      String CLONE = "Clone Repository...";
+
+      String DELETE = "Delete Repository...";
+
+      String COMMIT = "Commit...";
+
+      String FETCH = "Fetch...";
+
+      String INIT = "Initialize Repository";
+
+      String PULL = "Pull...";
+
+      String PUSH = "Push...";
+
+      String REMOTE = "Remote";
+
+      String REMOTES = "Remotes...";
+
+      String REMOVE = "Remove...";
+
+      String RESET_FILES = "Reset Files...";
+
+      String RESET = "Reset...";
+
+      String SHOW_HISTORY = "Show History...";
+
+      String STATUS = "Status";
    }
 
 }
