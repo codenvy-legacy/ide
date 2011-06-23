@@ -40,6 +40,10 @@
          </properties-param>
       </init-params>
    </component>
+  
+   <component>
+      <type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>
+   </component>
 
    <component>
       <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
