@@ -170,7 +170,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
       /*
        * 15. Close editor
        */
-      IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeTabIgnoringChanges(0);
 
       /*
        * 16. Open html file by doubleclicking
