@@ -34,6 +34,7 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $
  */
 
@@ -57,7 +58,10 @@ public class Editor extends AbstractTestModule
       String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
 
       String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
-
+      
+      String DESIGN_BUTTON_LOCATOR = "//div[@id='DesignButtonID']";
+      
+      String SOURCE_BUTTON_LOCATOR = "//div[@id='SourceButtonID']/span";
    }
 
    /**
@@ -733,4 +737,68 @@ public class Editor extends AbstractTestModule
       }
    }
 
+   /**
+    * Click on Source button at the bottom of editor.
+    * 
+    * @throws Exception
+    */
+   public void clickSourceButton() throws Exception
+   {
+      assertTrue("Button 'Source' is absent!", selenium().isElementPresent(Locators.SOURCE_BUTTON_LOCATOR));
+      selenium().keyPress(Locators.SOURCE_BUTTON_LOCATOR, "\\13");   // hack to simulate click as described for GWT ToogleButton in the http://code.google.com/p/selenium/issues/detail?id=542
+      Thread.sleep(TestConstants.SLEEP);
+   }
+   
+   
+   /**
+    * Click on Design button at the bottom of editor.
+    * 
+    * @throws Exception
+    */
+   public void clickDesignButton() throws Exception
+   {
+      assertTrue("Button 'Design' is absent!", selenium().isElementPresent(Locators.DESIGN_BUTTON_LOCATOR));
+      selenium().keyPress(Locators.DESIGN_BUTTON_LOCATOR, "\\13");
+      Thread.sleep(TestConstants.SLEEP);
+   }   
+
+   public void selectCkEditorIframe(int tabIndex)
+   {
+      String divIndex = String.valueOf(tabIndex);
+      selenium().selectFrame("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+         + "//table[@class='cke_editor']//iframe");
+   }
+
+   /**
+    * Check what state of CK editor active: source or visual.
+    * 
+    * @param tabIndex
+    * @param isSourceActive
+    * @throws Exception
+    */
+   private void checkSourceAreaActiveInCkEditor(int tabIndex, boolean isSourceActive) throws Exception
+   {
+      String divIndex = String.valueOf(tabIndex);
+
+      if (isSourceActive)
+      {
+
+         //  assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+         //   + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
+
+         assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+            + "//table[@class='cke_editor']//textarea"));
+
+         assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+            + "//table[@class='cke_editor']//iframe"));
+      }
+      else
+      {
+         assertFalse(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
+            + "]//table[@class='cke_editor']//textarea"));
+
+         assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe"));
+      }
+   }
+   
 }

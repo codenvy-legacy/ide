@@ -22,16 +22,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.exoplatform.common.http.client.ModuleException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @author <a href="dnochevnov@exoplatform.com">Dmytro Nochevnov</a> 
  * @version $Id:
  *
  */
@@ -40,64 +46,68 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
    //IDE-123 Edit file in WYSIWYG editor
 
-   private final static String HTML_FILE = "EditFileInWysiwygEditor.html";
+   private final static String FILE_NAME = "EditFileInWysiwygEditor.html";
 
-   private final static String TEST_FOLDER = EditFileInWysiwygEditorTest.class.getSimpleName();
+   private final static String FOLDER = EditFileInWysiwygEditorTest.class.getSimpleName();
 
-   //private final static String DIALOG_ASK_REOPEN =
-   // "Do you want to reopen Copy Of Untitled file.html in selected editor?";
-
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
+   
+   @BeforeClass
+   public static void setUp()
+   {
+      String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/" + FILE_NAME;
+      try
+      {
+         VirtualFileSystemUtils.mkcol(URL);
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, "nt:resource", URL + FILE_NAME);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
    @Test
    public void editFileInWysiwygEditor() throws Exception
    {
-      VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/");
+      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
 
-      final String defaultText =
-         "<html>\n" + "\t<head>\n" + "\t\t<title></title>\n" + "\t</head>\n" + "\t<body>\n" + "\t\t<br />\n"
-            + "\t</body>\n" + "</html>";
+      IDE.WORKSPACE.selectItem(WS_URL);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.WORKSPACE.clickOpenIconOfFolder(URL);
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
+      openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
+      
+      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-
-      //------ 1 ---------------
-      createSaveAndCloseFile(MenuCommands.New.HTML_FILE, HTML_FILE, 0);
-      IDE.WORKSPACE.waitForRootItem();
-
-      //------ 2 ---------------
-      openFileFromNavigationTreeWithCkEditor(WS_URL + TEST_FOLDER + "/" + HTML_FILE, "HTML", false);
-
-      // waitForElementPresent("ideOpenFileWithForm");
       IDE.EDITOR.checkCkEditorOpened(0);
-      //TODO:
-      //how to check, that cursor should be at the start of editor.
+      
+      IDE.EDITOR.clickSourceButton();
+      
+      IDE.EDITOR.checkCodeEditorOpened(0);
 
-      //------ 3 ---------------
-      clickSourceButton();
-      checkSourceAreaActiveInCkEditor(0, true);
-      assertEquals(defaultText, getTextFromSourceInCkEditor(0));
+      
+      final String defaultText =
+         "<html>\n <head>\n  <title></title>\n </head>\n <body>\n  <br />\n </body>\n</html>";
 
-      // check all buttons are disabled except Source
-
-      //to check, that all buttons are disabled,
-      //find in cke_top td class all elements a and check, that all of them
-      //contains in class attribute "cke_disabled",
-      //except element, that contains "cke_button_source" (becaus it is Source button)
-      assertFalse(selenium
-         .isElementPresent("//td[@class='cke_top']//span[@class='cke_button']/a[not(contains(@class, 'cke_disabled')) and not(contains(@class, 'cke_button_source'))]"));
-
-      // check Source button
-
-      //check than Source button is enabled
-      assertTrue(selenium
-         .isElementPresent("//td[@class='cke_top']//span[@class='cke_button']/a[not(contains(@class, 'cke_disabled')) and contains(@class, 'cke_button_source')]"));
+      assertEquals(defaultText, IDE.EDITOR.getTextFromCodeEditor(0));
 
       //------ 4 ---------------
-      clickSourceButton();
-      //check all buttons are enabled
-      assertFalse(selenium
-         .isElementPresent("//td[@class='cke_top']//span[@class='cke_button']/a[contains(@class, 'cke_disabled')]"));
+      IDE.EDITOR.clickDesignButton();
+
+      IDE.EDITOR.checkCkEditorOpened(0);
+      
       //check, that content is empty
-      assertEquals("", getTextFromCkEditor(0));
+      assertEquals("", IDE.EDITOR.getTextFromCKEditor(0));
 
       //------ 5 ---------------
       //click on button Table in CK editor
@@ -146,10 +156,10 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check table with 2 columns and 3 rows added to ck editor
-      selectCkEditorIframe(0);
+      IDE.EDITOR.selectCkEditorIframe(0);
       checkTable2x3Present();
       IDE.selectMainFrame();
-      clickSourceButton();
+      IDE.EDITOR.clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
 
@@ -157,7 +167,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       //      runHotkeyWithinCkEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(HTML_FILE, IDE.EDITOR.getTabTitle(0));
+      assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(0));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       //      Thread.sleep(TestConstants.SLEEP);
 
@@ -165,16 +175,16 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
 
       //select iframe in Preview tab
-      selenium.selectFrame("//iframe[@src='" + WS_URL_IDE + TEST_FOLDER + "/" + HTML_FILE + "']");
+      IDE.PREVIEW.selectIFrame(URL + FILE_NAME);
 
       checkTable2x3Present();
 
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      clickSourceButton();
+      IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //------ 10 ---------------
-      selectCkEditorIframe(0);
+      IDE.EDITOR.selectCkEditorIframe(0);
       //right click on cell
       selenium
          .contextMenuAt(
@@ -190,25 +200,24 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       checkTable2x4Present();
 
       //------ 11 ---------------
-      clickSourceButton();
+      IDE.EDITOR.clickSourceButton();
 
       final String textWithTable2x4InCkEditor =
          "<html>\n"
-            + "\t<head>\n"
-            + "\t\t<title></title>\n"
-            + "\t</head>\n"
-            + "\t<body>\n"
-            //+"\t\t<br />\n"
-            + "\t\t<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 200px;\">\n"
-            + "\t\t\t<tbody>\n" + "\t\t\t\t<tr>\n" + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n"
-            + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n" + "\t\t\t\t</tr>\n" + "\t\t\t\t<tr>\n"
-            + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n" + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n"
-            + "\t\t\t\t</tr>\n" + "\t\t\t\t<tr>\n" + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n"
-            + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n" + "\t\t\t\t</tr>\n" + "\t\t\t\t<tr>\n"
-            + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n" + "\t\t\t\t\t<td>\n" + "\t\t\t\t\t\t&nbsp;</td>\n"
-            + "\t\t\t\t</tr>\n" + "\t\t\t</tbody>\n" + "\t\t</table>\n" + "\t\t<br />\n" + "\t</body>\n" + "</html>";
+            + " <head>\n"
+            + "  <title></title>\n"
+            + " </head>\n"
+            + " <body>\n"
+            + "  <table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 200px;\">\n"
+            + "   <tbody>\n" + "    <tr>\n" + "     <td>\n" + "      &nbsp;</td>\n"
+            + "     <td>\n" + "      &nbsp;</td>\n" + "    </tr>\n" + "    <tr>\n"
+            + "     <td>\n" + "      &nbsp;</td>\n" + "     <td>\n" + "      &nbsp;</td>\n"
+            + "    </tr>\n" + "    <tr>\n" + "     <td>\n" + "      &nbsp;</td>\n"
+            + "     <td>\n" + "      &nbsp;</td>\n" + "    </tr>\n" + "    <tr>\n"
+            + "     <td>\n" + "      &nbsp;</td>\n" + "     <td>\n" + "      &nbsp;</td>\n"
+            + "    </tr>\n" + "   </tbody>\n" + "  </table>\n" + "  <br />\n" + " </body>\n" + "</html>";
 
-      assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
+      assertEquals(textWithTable2x4InCkEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       //------ 12 ---------------
       IDE.NAVIGATION.deleteSelectedItems();
 
@@ -221,21 +230,41 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       //check file stays in CK editor
-      checkSourceAreaActiveInCkEditor(0, true);
-      assertEquals(textWithTable2x4InCkEditor, getTextFromSourceInCkEditor(0));
+      assertEquals(textWithTable2x4InCkEditor, IDE.EDITOR.getTextFromCodeEditor(0));
 
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + TEST_FOLDER + "/").getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(URL).getStatusCode());
 
+      IDE.EDITOR.clickDesignButton();
+      
       //------ 14 ---------------
       //reopen file with CodeMirror
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + TEST_FOLDER + "/" + HTML_FILE, false);
-      //reopne confirmatioin dialog
+      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+
+      //reopen confirmation dialog
       assertTrue(selenium.isElementPresent("exoAskDialog"));
       assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
       assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
       assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
-      //click Ok button
+
+      //click Yes button
       selenium.click("exoAskDialogYesButton");
+      Thread.sleep(TestConstants.SLEEP);
+      
+      IDE.EDITOR.checkCodeEditorOpened(0);
+
+      //reopen file with CKEditor
+      openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
+
+      //reopen confirmation dialog
+      assertTrue(selenium.isElementPresent("exoAskDialog"));
+      assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
+      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
+
+      //click No button
+      selenium.click("exoAskDialogNoButton");
+      
+      IDE.OPENWITH.clickCancelButton();
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.checkCodeEditorOpened(0);
@@ -254,21 +283,6 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       textFromCodeEditor = textFromCodeEditor.replaceAll("[ \t\n]", "");
 
       assertEquals(table2x3FromCodeEditor, textFromCodeEditor);
-
-      //TODO selected items dosen't work in IDE 1.2.0
-      //------ 15 ---------------
-      //      deleteSelectedItems();
-      //      checkDeleteConfirmationDialogOfModifiedText();
-      //      
-      //      //------ 16 ---------------
-      //      //click Ok button
-      //      selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/yesButton/");
-      //      Thread.sleep(TestConstants.SLEEP);
-      //      
-      //      assertElementNotPresentInWorkspaceTree(htmlFile);
-      //      checkNoEditorOpened(0);
-      //      
-      //      checkFileDeletedViaWebDav(htmlFile);
    }
 
    /**
@@ -346,92 +360,19 @@ public class EditFileInWysiwygEditorTest extends BaseTest
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[2]"));
    }
 
-   private void selectCkEditorIframe(int tabIndex)
-   {
-      String divIndex = String.valueOf(tabIndex);
-      selenium.selectFrame("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//table[@class='cke_editor']//iframe");
-   }
-
-   private String getTextFromCkEditor(int tabIndex)
-   {
-      final String divIndex = String.valueOf(tabIndex);
-      //select iframe with CK editor
-      selenium.selectFrame("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//table[@class='cke_editor']//iframe");
-      final String result = selenium.getText("//body/");
-      IDE.selectMainFrame();
-
-      return result;
-   }
-
-   /**
-    * Click on Source button in CK editor.
-    * 
-    * @throws Exception
-    */
-   private void clickSourceButton() throws Exception
-   {
-      selenium.clickAt("//table[@class='cke_editor']//span[text()='Source']", "");
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * Return text from source area in CK editor.
-    * 
-    * You must be sure, that source area in CK editor is active.
-    * Otherwise exception will occurs
-    * 
-    * @param tabIndex index of editor tab
-    * @return {@link String}
-    */
-   private String getTextFromSourceInCkEditor(int tabIndex)
-   {
-      String divIndex = String.valueOf(tabIndex);
-      return selenium.getValue("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//table[@class='cke_editor']//textarea");
-   }
-
-   /**
-    * Check what state of CK editor active: source or visual.
-    * 
-    * @param tabIndex
-    * @param isSourceActive
-    * @throws Exception
-    */
-   private void checkSourceAreaActiveInCkEditor(int tabIndex, boolean isSourceActive) throws Exception
-   {
-      String divIndex = String.valueOf(tabIndex);
-
-      if (isSourceActive)
-      {
-
-         //  assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         //   + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
-
-         assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//table[@class='cke_editor']//textarea"));
-
-         assertFalse(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//table[@class='cke_editor']//iframe"));
-      }
-      else
-      {
-         assertFalse(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
-            + "]//table[@class='cke_editor']//textarea"));
-
-         assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe"));
-      }
-   }
-
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws Exception
    {
+     IDE.EDITOR.closeTabIgnoringChanges(0);
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(URL);
       }
-      catch (Exception e)
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
       {
          e.printStackTrace();
       }

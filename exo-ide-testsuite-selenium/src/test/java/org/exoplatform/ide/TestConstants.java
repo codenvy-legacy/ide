@@ -25,33 +25,35 @@ package org.exoplatform.ide;
  */
 public interface TestConstants
 {
+
+   int multiple = 1;
    
-   int IDE_INITIALIZATION_PERIOD = 3000;
+   int IDE_INITIALIZATION_PERIOD = 3000 * multiple;
    
-   int REDRAW_PERIOD = 500;
+   int REDRAW_PERIOD = 500 * multiple;
 
    int TYPE_DELAY_PERIOD = 10;
 
    int ANIMATION_PERIOD = 10;
 
-   int FOLDER_REFRESH_PERIOD = 1000;
+   int FOLDER_REFRESH_PERIOD = 1000 * multiple;
    
-   int PAGE_LOAD_PERIOD = 2000;
+   int PAGE_LOAD_PERIOD = 2000 * multiple;
 
-   int EDITOR_OPEN_PERIOD = 2000;
+   int EDITOR_OPEN_PERIOD = 2000 * multiple;
    
-   int CODEMIRROR_PARSING_PERIOD = 1000;
+   int CODEMIRROR_PARSING_PERIOD = 1000 * multiple;
 
-   int IDE_LOAD_PERIOD = 20000;
+   int IDE_LOAD_PERIOD = 20000 * multiple;
    
-   int SLEEP = 3000;
+   int SLEEP = 3000 * multiple;
 
-   int SLEEP_SHORT = 500;
+   int SLEEP_SHORT = 500 * multiple;
    
    /**
     * Timeout in milliseconds to wait for element present.
     */
-   int TIMEOUT = 10000;
+   int TIMEOUT = 10000 * multiple;
    
 //   /**
 //    * Period to wait for element present.
