@@ -49,6 +49,10 @@ public class GIT
       String NOTHING_TO_COMMIT = "Nothing to commit.";
       
       String RESET_FILES_SUCCESS = "[INFO] Successfully reseted files.";
+      
+      String COMMIT_SUCCESS = "[INFO] Commited with revision";
+      
+      String DELETE_BRANCH_QUESTION = "Are you sure you want to delete branch %s?";
    }
 
    public interface DialogTitles
@@ -83,6 +87,10 @@ public class GIT
    public CloneRepository CLONE_REPOSITORY = new CloneRepository();
 
    public Add ADD = new Add();
+   
+   public Branches BRANCHES = new Branches();
+   
+   public Commit COMMIT = new Commit();
 
    public Status STATUS = new Status();
 

@@ -37,6 +37,8 @@ public class AskDialog extends AbstractTestModule
 
       String ASK_TITLE = "//div[@id='" + ASK_DIALOG_ID + "']//div[@class='Caption']/span";
 
+      String QUESTION_LOCATOR = "//div[@id=\"" + ASK_DIALOG_ID + "\"]//div[@class=\"gwt-Label\"]";
+
    }
 
    public void waitForAskDialogOpened() throws Exception
@@ -75,21 +77,30 @@ public class AskDialog extends AbstractTestModule
       selenium().click("//div[@id='exoAskDialog']//div[@id='exoAskDialogYesButton']");
       waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
-   
+
    public void waitForDialog() throws Exception
    {
       waitForElementPresent(Locators.ASK_DIALOG_ID);
    }
-   
+
    public void waitForDialog(String message) throws Exception
    {
       waitForDialog();
       waitForTextPresent(message);
    }
-   
+
    public void waitForDialogNotPresent() throws Exception
    {
       waitForElementNotPresent(Locators.ASK_DIALOG_ID);
    }
 
+   /**
+    * Get question' text.
+    * 
+    * @return {@link String} question
+    */
+   public String getQuestion()
+   {
+      return selenium().getText(Locators.QUESTION_LOCATOR);
+   }
 }

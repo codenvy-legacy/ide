@@ -37,8 +37,12 @@ public class Status extends AbstractTestModule
       String UNTRACKED = "Untracked files:";
 
       String NOT_UPDATED = "Changed but not updated:";
-      
+
       String NEW_FILE = "new file: %s";
+      
+      String MODIFIED = "modified: %s";
+
+      String NOTHING_TO_COMMIT = "nothing to commit";
    }
 
    public List<String> getNotCommited(String message)
@@ -72,10 +76,34 @@ public class Status extends AbstractTestModule
       return files;
    }
 
-   public List<String> getNotUdated()
+   public List<String> getNotUdated(String message)
    {
       List<String> files = new ArrayList<String>();
-
+      message = message.replaceAll("#", "");
+      String[] lines = message.split("\n");
+      boolean notUpdated = false;
+      for (String line : lines)
+      {
+         line = line.trim();
+         if (line.isEmpty())
+         {
+            continue;
+         }
+         if (line.startsWith(Messages.NOT_UPDATED))
+         {
+            notUpdated = true;
+            continue;
+         }
+         else if ((line.startsWith(Messages.NOT_COMMITED) && notUpdated)
+            || (line.startsWith(Messages.UNTRACKED) && notUpdated))
+         {
+            return files;
+         }
+         if (notUpdated)
+         {
+            files.add(line);
+         }
+      }
       return files;
    }
 
@@ -94,7 +122,6 @@ public class Status extends AbstractTestModule
          }
          if (line.startsWith(Messages.UNTRACKED))
          {
-            System.out.println("Status.getUntracked()!!!!!!!!!!!!!!!!!");
             untracked = true;
             continue;
          }
