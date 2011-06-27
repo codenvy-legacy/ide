@@ -54,6 +54,8 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    private static final String GADGET_FILE = "Gadget File";
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME_2 + "/";
+   
+   private static final String CK_EDITOR_FRAME_LOCATOR = "//div[@panel-id='editor' and @tab-index='1']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
 
    @BeforeClass
    public static void setUp()
@@ -173,8 +175,9 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
       //IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");
-      waitForElementPresent(Editor.Locators.CK_EDITOR);
+      waitForElementPresent(CK_EDITOR_FRAME_LOCATOR);
 
+      
       IDE.EDITOR.checkCkEditorOpened(1);
 
       checkOpenedFilesHistory();

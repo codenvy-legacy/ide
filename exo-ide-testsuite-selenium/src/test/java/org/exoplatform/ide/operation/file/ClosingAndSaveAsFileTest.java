@@ -128,7 +128,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.EDITOR.closeFile(0);
    }
 
-  // @Test
+   @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
       /*
