@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-
 /**
  * Test suite for Git extension.
  * 
@@ -31,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({})
+@SuiteClasses({InitRepositoryTest.class, CloneRepositoryTest.class, AddTest.class, ResetFilesTest.class})
 public class GitTestSuite
 {
 

@@ -35,21 +35,29 @@ public class GIT
       String INIT_SUCCESS = "Repository was successfully initialized.";
 
       String CLONE_SUCCESS = "Repository was successfully cloned.";
-      
+
       String CLONE_REPO_EXISTS = "[ERROR] Repository already exists: %1s";
-      
+
       String GIT_REPO_EXISTS = "Git repository already exists in this folder or parent one.";
-      
+
       String DELETE_SUCCESS = "Git repository was successfully deleted.";
+
+      String NOT_GIT_REPO = "Not a git repository (or any of the parent directories).";
+
+      String ADD_SUCCESS = "[INFO] Successfully added to index.";
+
+      String NOTHING_TO_COMMIT = "Nothing to commit.";
+      
+      String RESET_FILES_SUCCESS = "[INFO] Successfully reseted files.";
    }
-   
+
    public interface DialogTitles
    {
       String DELETE_DIALOG = "Delete Git repository";
-      
-      String ERROR ="Error";
+
+      String ERROR = "Error";
    }
-   
+
    private Selenium selenium;
 
    private static GIT instance;
@@ -74,4 +82,9 @@ public class GIT
 
    public CloneRepository CLONE_REPOSITORY = new CloneRepository();
 
+   public Add ADD = new Add();
+
+   public Status STATUS = new Status();
+
+   public ResetFiles RESET_FILES = new ResetFiles();
 }
