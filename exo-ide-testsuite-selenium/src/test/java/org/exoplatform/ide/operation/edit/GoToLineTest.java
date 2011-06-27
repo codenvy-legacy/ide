@@ -110,7 +110,7 @@ public class GoToLineTest extends BaseTest
       IDE.STATUSBAR.clickOnStatusBar();
       IDE.GOTOLINE.waitForGoToLineForm();
       assertTrue(selenium.isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
-      IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..7):");
+      IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..8):");
       
       // Print "2" and click "Go".
       IDE.GOTOLINE.typeIntoGoToLineFormField("2");
