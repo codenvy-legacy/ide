@@ -52,6 +52,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
    
+   private final static String IDE_URL = BASE_URL +"IDE/"+ REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
    @BeforeClass
    public static void setUp()
    {
@@ -175,7 +176,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertTrue(selenium.isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
 
       //select iframe in Preview tab
-      IDE.PREVIEW.selectIFrame(URL + FILE_NAME);
+      IDE.PREVIEW.selectIFrame(IDE_URL + FILE_NAME);
 
       checkTable2x3Present();
 
