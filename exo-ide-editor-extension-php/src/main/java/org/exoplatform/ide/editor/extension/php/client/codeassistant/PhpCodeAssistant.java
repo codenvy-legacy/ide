@@ -55,7 +55,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    
    public interface PhpBundle extends ClientBundle
    {
-      @Source("org/exoplatform/ide/editor/public/tokens/php_tokens.js")
+      @Source("org/exoplatform/ide/editor/extension/php/client/tokens/php_tokens.js")
       ExternalTextResource phpKeyWords();
    }
 
