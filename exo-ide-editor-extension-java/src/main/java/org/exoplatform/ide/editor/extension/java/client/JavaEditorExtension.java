@@ -87,14 +87,16 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", Images.JAVA, true,
-            new CodeMirrorConfiguration("['parsejava.js', 'tokenizejava.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles
-               true, // can be outlined
-               true, // can be autocompleted
-               new JavaParser(), // exoplatform code parser 
-               new JavaAutocompleteHelper(), // autocomplete helper
-               true, // can be validated
-               new JavaCodeValidator(), javaCodeAssistant)));
+            new CodeMirrorConfiguration().
+               setGenericParsers("['parsejava.js', 'tokenizejava.js']").
+               setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
+               setParser(new JavaParser()).
+               setCanBeOutlined(true).
+               setAutocompleteHelper(new JavaAutocompleteHelper()).
+               setCodeAssistant(javaCodeAssistant).
+               setCodeValidator(new JavaCodeValidator())
+         )
+      );
 
    }
 

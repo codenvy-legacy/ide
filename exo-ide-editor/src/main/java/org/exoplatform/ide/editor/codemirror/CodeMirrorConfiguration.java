@@ -19,13 +19,9 @@
 package org.exoplatform.ide.editor.codemirror;
 
 import org.exoplatform.ide.editor.api.CodeValidator;
-import org.exoplatform.ide.editor.api.DefaultCodeValidator;
-import org.exoplatform.ide.editor.api.DefaultParser;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.DefaultCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.DefaultAutocompleteHelper;
 
 import com.google.gwt.core.client.GWT;
 
@@ -36,26 +32,22 @@ import com.google.gwt.core.client.GWT;
  */
 public class CodeMirrorConfiguration
 {
-   private final boolean textWrapping = false;
+   private boolean isTextWrapping = false;
 
    /**
     * 0 to turn off continuous scanning, or value like 100 in millisec as scanning period
     */
-   private final int continuousScanning = 0;
+   private int continuousScanning = 0;
 
    public final static String PATH = GWT.getModuleBaseURL() + "codemirror/";
 
-   private final String jsDirectory = CodeMirrorConfiguration.PATH + "js/";
+   private String jsDirectory = CodeMirrorConfiguration.PATH + "js/";
 
    private String codeParsers;
 
    private String codeStyles;
 
-   private boolean canBeOutlined;
-
-   private boolean canBeAutocompleted;
-
-   private boolean canBeValidated;
+   private boolean canBeOutlined = false;
 
    private Parser parser;
 
@@ -65,191 +57,145 @@ public class CodeMirrorConfiguration
 
    private CodeAssistant codeAssistant;
 
-   private boolean canHaveSeveralMimeTypes;
+   private boolean canHaveSeveralMimeTypes = false;
    
    private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
-//   private String codeErrorMarkStyle;
-
+   
+   /**
+    * Preset configuration of plain text
+    */
    public CodeMirrorConfiguration()
    {
-      this("['parsexml.js', 'parsecss.js']", "['" + PATH + "css/xmlcolors.css']");
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles)
-   {
-      this(codeParsers, codeStyles, false, false);
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, new DefaultParser(),
-         new DefaultAutocompleteHelper());
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper());
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, false);
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         new DefaultCodeValidator());
-   }
+      this.codeParsers = "['parsexml.js']";
+      this.codeStyles = "['" + PATH + "css/xmlcolors.css']";
+   } 
    
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated, boolean canHaveSeveralMimeTypes)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         new DefaultCodeValidator());
-      this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated,
-      CodeValidator codeValidator)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         codeValidator, new DefaultCodeAssistant());
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated,
-      CodeValidator codeValidator, CodeAssistant codeAssistant)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, autocompleteHelper, canBeValidated,
-         codeValidator, codeAssistant, false);
-   }
-
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper autocompleteHelper, boolean canBeValidated,
-      CodeValidator codeValidator, CodeAssistant codeAssistant, Boolean canHaveSeveralMimeTypes)
-   {
-      this.codeParsers = codeParsers;
-      this.codeStyles = codeStyles;
-      this.canBeOutlined = canBeOutlined;
-      this.canBeAutocompleted = canBeAutocompleted;
-      this.parser = parser;
-      this.autocompleteHelper = autocompleteHelper;
-      this.canBeValidated = canBeValidated;
-      this.codeValidator = codeValidator;
-      this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
-      this.codeAssistant = codeAssistant;
-   }
-
-
-   /**
-    * @param codeParsers
-    * @param codeStyles
-    * @param canBeOutlined
-    * @param canBeAutocompleted
-    * @param parser
-    * @param codeAssistant
-    */
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, CodeAssistant codeAssistant)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, new DefaultAutocompleteHelper(),
-         false, null, codeAssistant);
-   }
-
-   /**
-    * @param codeParsers
-    * @param codeStyles
-    * @param canBeOutlined
-    * @param canBeAutocompleted
-    * @param parser
-    * @param helper
-    * @param codeAssistant
-    * @param canHaveSeveralMimeTypes
-    */
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper helper, CodeAssistant codeAssistant,
-      Boolean canHaveSeveralMimeTypes)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, false,
-         null, codeAssistant, canHaveSeveralMimeTypes);
-   }
-
-
-   /**
-    * @param codeParsers
-    * @param codeStyles
-    * @param canBeOutlined
-    * @param canBeAutocompleted
-    * @param parser
-    * @param helper
-    * @param codeAssistant
-    */
-   public CodeMirrorConfiguration(String codeParsers, String codeStyles, boolean canBeOutlined,
-      boolean canBeAutocompleted, Parser parser, AutocompleteHelper helper, CodeAssistant codeAssistant)
-   {
-      this(codeParsers, codeStyles, canBeOutlined, canBeAutocompleted, parser, helper, false,
-         null, codeAssistant);
-   }
-
    public String getCodeParsers()
    {
       return codeParsers;
    }
 
+   /**
+    * Set generic CodeMirror library parsing files *.js
+    * @param codeParsers
+    * @return configuration instance
+    */
+   public CodeMirrorConfiguration setGenericParsers(String codeParsers)
+   {
+      this.codeParsers = codeParsers;
+      return this;
+   }
+   
    public String getCodeStyles()
    {
       return codeStyles;
    }
 
+   /**
+    * Set generic CodeMirror library style files *.css
+    * @param codeStyles
+    * @return configuration instance
+    */
+   public CodeMirrorConfiguration setGenericStyles(String codeStyles)
+   {
+      this.codeStyles = codeStyles;
+      return this;
+   }
+   
    public boolean canBeOutlined()
    {
       return canBeOutlined;
    }
 
+   public CodeMirrorConfiguration setCanBeOutlined(boolean canBeOutlined)
+   {
+      this.canBeOutlined = canBeOutlined;
+      return this;
+   }
+   
    public boolean canBeAutocompleted()
    {
-      return canBeAutocompleted;
+      return this.parser != null  
+               && this.codeAssistant != null;
    }
 
+//   public CodeMirrorConfiguration setCanBeAutocompleted(boolean canBeAutocompleted)
+//   {
+//      this.canBeAutocompleted = canBeAutocompleted;
+//      return this;
+//   }
+   
    public boolean canBeValidated()
    {
-      return canBeValidated;
+      return this.parser != null
+               && this.codeValidator != null
+               && this.codeAssistant != null;
    }
 
+//   public CodeMirrorConfiguration setCanBeValidated(boolean canBeValidated)
+//   {
+//      this.canBeValidated = canBeValidated;
+//      return this;
+//   }
+   
    public Parser getParser()
    {
       return parser;
    }
 
+   public CodeMirrorConfiguration setParser(Parser parser)
+   {
+      this.parser = parser;
+      return this;
+   }
+   
    public CodeValidator getCodeValidator()
    {
       return codeValidator;
    }
 
+   public CodeMirrorConfiguration setCodeValidator(CodeValidator codeValidator)
+   {
+      this.codeValidator = codeValidator;
+      return this;
+   }
+   
    public AutocompleteHelper getAutocompleteHelper()
    {
       return autocompleteHelper;
    }
 
+   public CodeMirrorConfiguration setAutocompleteHelper(AutocompleteHelper autocompleteHelper)
+   {
+      this.autocompleteHelper = autocompleteHelper;
+      return this;
+   }
+   
    public boolean canHaveSeveralMimeTypes()
    {
       return canHaveSeveralMimeTypes;
    }
 
+   public CodeMirrorConfiguration setCanHaveSeveralMimeTypes(boolean canHaveSeveralMimeTypes)
+   {
+      this.canHaveSeveralMimeTypes = canHaveSeveralMimeTypes;
+      return this;
+   }
+   
    /**
     * @return the textWrapping
     */
    public boolean isTextWrapping()
    {
-      return textWrapping;
+      return isTextWrapping;
    }
-
+   
+   public CodeMirrorConfiguration setIsTextWrapping(boolean isTextWrapping)
+   {
+      this.isTextWrapping = isTextWrapping;
+      return this;
+   }
+   
    /**
     * @return the continuousScanning
     */
@@ -258,12 +204,24 @@ public class CodeMirrorConfiguration
       return continuousScanning;
    }
 
+   public CodeMirrorConfiguration setContinuousScanning(int continuousScanning)
+   {
+      this.continuousScanning = continuousScanning;
+      return this;
+   }
+   
    /**
     * @return the jsDirectory
     */
    public String getJsDirectory()
    {
       return jsDirectory;
+   }
+   
+   public CodeMirrorConfiguration setJsDirectory(String jsDirectory)
+   {
+      this.jsDirectory = jsDirectory;
+      return this;
    }
 
    /**
@@ -274,9 +232,16 @@ public class CodeMirrorConfiguration
       return codeAssistant;
    }
 
-   public void setCodeErrorMarkStyle(String codeErrorMarkStyle)
+   public CodeMirrorConfiguration setCodeAssistant(CodeAssistant codeAssistant)
+   {
+      this.codeAssistant = codeAssistant;
+      return this;
+   }
+   
+   public CodeMirrorConfiguration setCodeErrorMarkStyle(String codeErrorMarkStyle)
    {
       this.codeErrorMarkStyle = codeErrorMarkStyle;
+      return this;
    }
 
    public String getCodeErrorMarkStyle()

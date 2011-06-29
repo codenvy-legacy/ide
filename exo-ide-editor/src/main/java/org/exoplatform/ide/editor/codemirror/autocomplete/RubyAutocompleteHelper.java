@@ -120,8 +120,9 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
       nearestToken = tokenList.get(0);
             
       for (TokenBeenImpl token : tokenList)
-      {
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+      {        
+         // test is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
             break;
 
          searchNearestToken(targetLineNumber, token);
@@ -199,7 +200,7 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
             nodeContent = Node.getContent(javaScriptNode);
             nodeType = Node.getType(javaScriptNode);
    
-            if (((RubyParser.isVariable(nodeType) != null) && !isPoint(nodeType, nodeContent.trim()))  // filter part with non-variable and non-point symbols, not ". " symbol
+            if (((RubyParser.isVariable(nodeType) != null) && !RubyParser.isPoint(new Node(nodeType, nodeContent.trim())))  // filter part with non-variable and non-point symbols, not ". " symbol
                    || (
                          nodeContent.indexOf(" ") != -1  // filter nodes like "String " in sentence "String name._", or like ". " in sentence ". String_", or like ". _" in sentence like "String. _", or like "ch " in sentence like "name.ch _"  
                          && (statement.length() > 0  // filter nodes like "name ._" or "name. ch._"
@@ -231,13 +232,7 @@ public class RubyAutocompleteHelper extends AutocompleteHelper
    }
 
    @Override
-   /**
-    * Test if this is CLASS or METHOD or INTERFACE token
-    * @param targetLineNumber
-    * @param token
-    * @return
-    */
-   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   public boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
       return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.MODULE.equals(token.getType());
    }

@@ -154,9 +154,11 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     * Editor's producer.
     */
    private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff", "",
-      true, new CodeMirrorConfiguration("['parsediff.js']", // generic code parsers
-         "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']" // code styles
-      ));
+      true,
+      new CodeMirrorConfiguration().
+         setGenericParsers("['parsediff.js']").
+         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']")
+   );
 
    /**
     * UI binder for this view.

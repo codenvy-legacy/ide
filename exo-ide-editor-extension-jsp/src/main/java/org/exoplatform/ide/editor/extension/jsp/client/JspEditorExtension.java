@@ -93,18 +93,19 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
                "jsp",
                Images.JSP,
                true,
-               new CodeMirrorConfiguration(
-                  "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']", // generic code parsers
-                  "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
+               new CodeMirrorConfiguration().
+                  setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']").
+                  setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
                      + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-                     + CodeMirrorConfiguration.PATH + "css/javacolors.css']", // code styles               
-                  true, // can be outlined
-                  true, // can be autocompleted
-                  new JspParser(), // exoplatform code parser 
-                  new JspAutocompleteHelper(), // autocomplete helper
-                  true, // canBeValidated
-                  new JspCodeValidator(), jspCodeAssistant, true //  canHaveSeveralMimeTypes
-               )));
+                     + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
+                  setParser(new JspParser()).
+                  setCanBeOutlined(true).
+                  setAutocompleteHelper(new JspAutocompleteHelper()).
+                  setCodeAssistant(jspCodeAssistant).
+                  setCodeValidator(new JspCodeValidator()).
+                  setCanHaveSeveralMimeTypes(true)
+            )
+         );
 
    }
 

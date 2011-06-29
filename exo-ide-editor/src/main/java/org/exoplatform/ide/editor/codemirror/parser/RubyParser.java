@@ -76,7 +76,7 @@ public class RubyParser extends CodeMirrorParserImpl
    }
 
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of content
       if (javaScriptNode == null)
@@ -489,6 +489,17 @@ public class RubyParser extends CodeMirrorParserImpl
       return false;
    }
 
+   /**
+    * Recognize point in case like "a."
+    * @param node
+    * @return
+    */
+   public static boolean isPoint(Node node)
+   {
+      return "rb-method-call".equals(node.getType()) && ".".equals(node.getContent());
+   }
+   
+   
    /**
     * Recognize block node keywords like "case", "if", "unless", "do", "begin"
     * @param node

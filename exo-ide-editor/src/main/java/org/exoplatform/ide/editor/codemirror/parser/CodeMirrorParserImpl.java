@@ -35,30 +35,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  */
 public class CodeMirrorParserImpl extends Parser
-{
-   // it is needed for complex files like HTML, GoogleGadget etc.
-   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
-   
-   static
-   {
-      factory.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptParser());
-      factory.put(MimeType.TEXT_CSS, new CssParser());
-      factory.put(MimeType.TEXT_HTML, new HtmlParser());
-      factory.put(MimeType.TEXT_XML, new XmlParser());   
-      factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
-      factory.put(MimeType.APPLICATION_JAVA, new JavaParser());      
-   }
-
-   protected static CodeMirrorParserImpl getParser(String mimeType)
-   {
-      if (factory.containsKey(mimeType))
-      {
-         return factory.get(mimeType);
-      }
-
-      return new DefaultParser();
-   }
-   
+{  
    /** 
     * @param node
     * @param lineNumber
@@ -66,7 +43,7 @@ public class CodeMirrorParserImpl extends Parser
     * @param hasParentParser indicates is parser calles by another parser, e.g. JavaScriptParser is called by HtmlParser
     * @return token list with tokens gathered from node chains from start node to <br> node
     */
-   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       return currentToken;
    }
@@ -123,7 +100,7 @@ public class CodeMirrorParserImpl extends Parser
     * @param node
     * @return
     */
-   protected boolean isLineBreak(Node node)
+   public boolean isLineBreak(Node node)
    {
       return "whitespace".equals(node.getType()) && "BR".equals(node.getContent());
    }

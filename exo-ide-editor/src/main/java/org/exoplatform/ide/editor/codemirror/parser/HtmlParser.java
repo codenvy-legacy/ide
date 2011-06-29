@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.codemirror.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -36,7 +37,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class HtmlParser extends CodeMirrorParserImpl
 {
-   private String currentContentMimeType;
+   private String currentContentMimeType = MimeType.TEXT_HTML;
    
    private String lastNodeContent;
    
@@ -49,6 +50,25 @@ public class HtmlParser extends CodeMirrorParserImpl
       autoSelfClosers = new ArrayList<String>(Arrays.asList(autoSelfClosersArray));
    }
    
+   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
+   
+   static
+   {
+      factory.put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptParser());
+      factory.put(MimeType.TEXT_CSS, new CssParser());
+      factory.put(MimeType.TEXT_HTML, new HtmlParser());
+   }
+
+   protected static CodeMirrorParserImpl getParser(String mimeType)
+   {
+      if (factory.containsKey(mimeType))
+      {
+         return factory.get(mimeType);
+      }
+
+      return null;
+   }
+   
    @Override
    public void init()
    {
@@ -56,7 +76,7 @@ public class HtmlParser extends CodeMirrorParserImpl
    }
    
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null) 
@@ -76,7 +96,7 @@ public class HtmlParser extends CodeMirrorParserImpl
             {
                currentToken = XmlParser.addTag(currentToken, "script", lineNumber, MimeType.APPLICATION_JAVASCRIPT);
                currentContentMimeType = MimeType.APPLICATION_JAVASCRIPT;
-               CodeMirrorParserImpl.getParser(currentContentMimeType).init();
+               getParser(currentContentMimeType).init();
                // node = getNext(node);     // pass parsed node
             }
 
@@ -85,7 +105,7 @@ public class HtmlParser extends CodeMirrorParserImpl
             {
                currentToken = XmlParser.addTag(currentToken, "style", lineNumber, MimeType.TEXT_CSS);
                currentContentMimeType = MimeType.TEXT_CSS;
-               CodeMirrorParserImpl.getParser(currentContentMimeType).init();
+               getParser(currentContentMimeType).init();
                // node = getNext(node);     // pass parsed node
             }            
             
@@ -131,7 +151,7 @@ public class HtmlParser extends CodeMirrorParserImpl
       
       if (! MimeType.TEXT_HTML.equals(currentContentMimeType))
       {
-         currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
+         currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true);  // call child parser
       }
 
       if (hasParentParser) 

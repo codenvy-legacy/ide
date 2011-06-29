@@ -43,23 +43,23 @@ public class NetvibesEditorExtension extends Extension
    @Override
    public void initialize()
    {
-      CodeMirrorProducer producer =
-         new CodeMirrorProducer(
-            MimeType.UWA_WIDGET,
-            "CodeMirror Netvibes editor",
-            "html",
-            Images.UWA_WIGET,
-            true,
-            new CodeMirrorConfiguration(
-               "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-                  + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
-               true, // can be outlined
-               true, // can be autocompleted
-               new HtmlParser(), // exoplatform code parser 
-               new HtmlAutocompleteHelper(), // autocomplete helper
-               new NetvibesCodeAssistant(), true));
-
+      CodeMirrorProducer producer = new CodeMirrorProducer(
+         MimeType.UWA_WIDGET,
+         "CodeMirror Netvibes editor",
+         "html",
+         Images.UWA_WIGET,
+         true,
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+            setParser(new HtmlParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new HtmlAutocompleteHelper()).
+            setCodeAssistant(new NetvibesCodeAssistant()).
+            setCanHaveSeveralMimeTypes(true)        
+      );
+            
       IDE.getInstance().addEditor(producer);
       IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
          "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET),DockTarget.NONE,false);

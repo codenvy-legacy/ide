@@ -35,8 +35,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codeassistant.php.PhpCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
+//import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
+//import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
+import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpParser;
 
 /**
  * 
@@ -77,15 +79,14 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      CodeMirrorConfiguration phpCodeMirrorConfiguration = new CodeMirrorConfiguration("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']", // generic code parsers
-         "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']",// code styles
-         true, // can be outlined
-         true, // can be autocompleted
-         new PhpParser(), // exoplatform code parser
-         new PhpAutocompleteHelper(), // autocomplete helper
-         new PhpCodeAssistant(),    
-         true
-      );
+      CodeMirrorConfiguration phpCodeMirrorConfiguration = new CodeMirrorConfiguration().
+         setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizephp.js', 'parsephp.js', 'parsephphtmlmixed.js']").
+         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/csscolors.css', '" + CodeMirrorConfiguration.PATH +  "css/phpcolors.css']").
+         setParser(new PhpParser()).
+         setCanBeOutlined(true).
+         setAutocompleteHelper(new PhpAutocompleteHelper()).
+         setCodeAssistant(new PhpCodeAssistant()).
+         setCanHaveSeveralMimeTypes(true);
       
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)

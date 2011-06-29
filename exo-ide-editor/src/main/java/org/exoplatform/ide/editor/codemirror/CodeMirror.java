@@ -545,8 +545,11 @@ public class CodeMirror extends Editor
             validateCode(); // to update token's FQNs
          }
          
-         return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
-            (List<Token>) getTokenList(), getCurrentLineMimeType());
+         if (configuration.getAutocompleteHelper() != null)
+         {
+            return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
+               (List<Token>) getTokenList(), getCurrentLineMimeType());
+         }
       }
 
       return null;
@@ -1147,5 +1150,4 @@ public class CodeMirror extends Editor
       if (editor != null)
          editor.setLineNumbers(showLineNumbers);
    }-*/;
-
 }

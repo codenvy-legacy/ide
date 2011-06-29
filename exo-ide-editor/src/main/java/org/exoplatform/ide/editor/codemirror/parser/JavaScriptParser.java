@@ -51,7 +51,7 @@ public class JavaScriptParser extends CodeMirrorParserImpl
    }
    
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of content
       if (javaScriptNode == null)

@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.editor.codemirror.autocomplete;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
@@ -40,25 +38,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 @SuppressWarnings("serial")
 public abstract class AutocompleteHelper
 {
-   private static HashMap<String, AutocompleteHelper> factory = new HashMap<String, AutocompleteHelper>() {{
-      put(MimeType.APPLICATION_GROOVY, new GroovyAutocompleteHelper());
-      put(MimeType.GROOVY_TEMPLATE, new GroovyTemplateAutocompleteHelper());
-      put(MimeType.TEXT_HTML, new HtmlAutocompleteHelper());
-      put(MimeType.APPLICATION_JAVA, new JavaAutocompleteHelper());      
-      put(MimeType.APPLICATION_JAVASCRIPT, new JavaScriptAutocompleteHelper());
-      put(MimeType.APPLICATION_JSP, new JspAutocompleteHelper());
-      put(MimeType.APPLICATION_PHP, new PhpAutocompleteHelper());      
-   }};  
-   
-   protected static AutocompleteHelper getAutocompleteHelper(String mimeType)
-   {
-      if (factory.containsKey(mimeType))
-      {
-         return factory.get(mimeType);
-      }
-
-      return new DefaultAutocompleteHelper();
-   }  
    
    public abstract Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType);
    
@@ -68,7 +47,7 @@ public abstract class AutocompleteHelper
     * @param cursorPosition within the line
     * @return  line content node " java.lang.String.ch" -> "java.lang.String",  "<End-Of-Line>address.tes_" -> "address"
     */
-   protected static String getStatementBeforePoint(JavaScriptObject node, int cursorPosition)
+   public String getStatementBeforePoint(JavaScriptObject node, int cursorPosition)
    {
       String nodeContent;
       String nodeType;
@@ -119,46 +98,24 @@ public abstract class AutocompleteHelper
       }
    }
 
-   protected static boolean isVariable(String nodeType)
+   public boolean isVariable(String nodeType)
    {
-      return GroovyParser.isGroovyVariable(nodeType) || JavaParser.isJavaVariable(nodeType) || JavaScriptParser.isJsVariable(nodeType) || JavaScriptParser.isJsLocalVariable(nodeType);
+      return false;
    }
 
-   protected static boolean isPoint(String nodeType, String nodeContent)
+   public boolean isPoint(String nodeType, String nodeContent)
    {
-      return GroovyParser.isPoint(nodeType, nodeContent) || JavaParser.isPoint(nodeType, nodeContent) || JavaScriptParser.isPoint(nodeType, nodeContent);
+      return false;
    }
+  
+   public static TokenBeenImpl nearestToken;
    
-   
-   /**
-    * @param targetLineNumber
-    * @param firstContainerLineNumber
-    * @return true if firstContainterLine number > targetLineNumber
-    */   
-   protected static boolean isContainerTokenAfterTheCurrentLine(int targetLineNumber, int firstContainerLineNumber)
-   {
-      return firstContainerLineNumber > targetLineNumber;
-   }   
-
-   
-   /**
-    * @param targetLineNumber
-    * @param lastContainerLineNumber
-    * @return true if targetLineNumber >= lastContainerLineNumber
-    */   
-   protected static boolean isContainerEndedBeforeTheCurrentLine(int targetLineNumber, int lastContainerLineNumber)
-   {
-      return targetLineNumber >= lastContainerLineNumber;
-   }      
-
-   
-   protected static TokenBeenImpl nearestToken;
-   
-   protected static void searchNearestToken(int targetLineNumber, TokenBeenImpl currentToken)
+   public static void searchNearestToken(int targetLineNumber, TokenBeenImpl currentToken)
    {
       // test if this is function and it ended not before target line
       if (TokenType.FUNCTION.equals(currentToken.getType()) 
-               && isContainerEndedBeforeTheCurrentLine(targetLineNumber, currentToken.getLastLineNumber()))
+               // test is Container Ended Before The CurrentLine
+               && (targetLineNumber >= currentToken.getLastLineNumber()))
       {
          return;
       }
@@ -171,7 +128,8 @@ public abstract class AutocompleteHelper
       {
          for (TokenBeenImpl token : subTokenList)
          {
-            if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+            // test is Container Token After The Current Line
+            if (token.getLineNumber() > targetLineNumber)
                break;
 
             searchNearestToken(targetLineNumber, token);
@@ -187,7 +145,7 @@ public abstract class AutocompleteHelper
       }
    }   
    
-   protected static TokenBeenImpl searchGenericTokenAmongMethodVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
+   public static TokenBeenImpl searchGenericTokenAmongMethodVariables(String nodeContent, TokenBeenImpl nearestToken, TokenBeenImpl methodToken)
    {
       for (TokenBeenImpl subtoken: methodToken.getSubTokenList())
       {
@@ -207,19 +165,7 @@ public abstract class AutocompleteHelper
       return null;
    }
    
-   
-   /**
-    * @param targetLineNumber
-    * @param lastContainerLineNumber
-    * @return true if targetLineNumber => lastContainerLine
-    */
-   protected static boolean isCurrentLineAfterTheContainerToken(int targetLineNumber, int lastContainerLineNumber)
-   {
-      return (targetLineNumber >= lastContainerLineNumber);
-   }
-
-
-   protected static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
+   public static TokenBeenImpl searchGenericTokenAmongProperties(String nodeContent, TokenBeenImpl classToken)
    {
       for (TokenBeenImpl subtoken: classToken.getSubTokenList())
       {
@@ -233,8 +179,7 @@ public abstract class AutocompleteHelper
       return null;
    }
 
-
-   protected static TokenBeenImpl searchGenericTokenAmongParameters(String nodeContent, List<TokenBeenImpl> parameters)
+   public static TokenBeenImpl searchGenericTokenAmongParameters(String nodeContent, List<TokenBeenImpl> parameters)
    {
       if (parameters == null)
          return null;
@@ -251,7 +196,7 @@ public abstract class AutocompleteHelper
    }
 
 
-   protected static TokenBeenImpl searchGenericTokenAmongVariables(String nodeContent, TokenBeenImpl parentToken)
+   public static TokenBeenImpl searchGenericTokenAmongVariables(String nodeContent, TokenBeenImpl parentToken)
    {
       for (TokenBeenImpl subtoken: parentToken.getSubTokenList())
       {
@@ -291,14 +236,14 @@ public abstract class AutocompleteHelper
    
       for (TokenBeenImpl token : tokenList)
       {
-         // break if token is started at the line after the targetLine
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         // break if token is started at the line after the targetLine, that is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
          {
             break;
          }
          
-         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
-         else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
+         // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is Current Line After The Container Token 
+         else if (targetLineNumber >= token.getLastLineNumber())
          {
             continue;
          }
@@ -312,7 +257,7 @@ public abstract class AutocompleteHelper
       return possibleContainerToken;
    }
 
-   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   public boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
       return TokenType.CLASS.equals(token.getType()) || TokenType.METHOD.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType());
    }
@@ -326,14 +271,14 @@ public abstract class AutocompleteHelper
       {
          for (TokenBeenImpl token : subTokenList)
          {
-            // break if token is started at the line after the targetLine
-            if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+            // break if token is started at the line after the targetLine, that is Container Token After The CurrentLine
+            if (token.getLineNumber() > targetLineNumber)
             {
                break;
             }
             
-            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber)
-            else if (isCurrentLineAfterTheContainerToken(targetLineNumber, token.getLastLineNumber()))
+            // Test if (token.lineNumber > targetLineNumber) or (targetLineNumber >= token.lastLineNumber), that is CurrentLine After The Container Token 
+            else if (targetLineNumber >= token.getLastLineNumber())
             {
                continue;
             }

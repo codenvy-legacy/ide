@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.parser;
+package org.exoplatform.ide.editor.extension.php.client.codemirror;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,6 +28,10 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
+import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
+import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
+import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
+import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -41,6 +45,8 @@ public class PhpParser extends CodeMirrorParserImpl
 
    String currentContentMimeType;
 
+   HtmlParser htmlParser = new HtmlParser();
+   
    private HashMap<TokenType, LinkedList<String>> variables = new HashMap<TokenType, LinkedList<String>>();
 
    private LinkedList<String> constants = new LinkedList<String>();   
@@ -78,8 +84,7 @@ public class PhpParser extends CodeMirrorParserImpl
       constants.clear();
    }   
 
-   @Override
-   TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject javaScriptNode, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (javaScriptNode == null)
@@ -107,13 +112,13 @@ public class PhpParser extends CodeMirrorParserImpl
          currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
          currentContentMimeType = MimeType.TEXT_HTML;
-         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
+         htmlParser.init();
          javaScriptNode = Node.getNext(javaScriptNode); // pass parsed node
       } 
 
       if (!currentContentMimeType.equals(MimeType.APPLICATION_PHP))
       {
-         currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(javaScriptNode, lineNumber, currentToken, true);  // call child parser
+         htmlParser.parseLine(javaScriptNode, lineNumber, currentToken, true);  // call child parser
       }
       else
       {

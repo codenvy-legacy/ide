@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.autocomplete;
+package org.exoplatform.ide.editor.extension.php.client.codemirror;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +26,9 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
-import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
+import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -39,6 +41,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class PhpAutocompleteHelper extends AutocompleteHelper
 {
 
+   HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
+   
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.autocompletehelper.AutoCompleteHelper#getTokenBeforeCursor(com.google.gwt.core.client.JavaScriptObject, int, int, java.util.List)
     */
@@ -47,7 +51,7 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       List<? extends Token> tokenList, String currentLineMimeType)
    {
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
-         return AutocompleteHelper.getAutocompleteHelper(MimeType.TEXT_HTML).getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
 
       else if (MimeType.APPLICATION_PHP.equals(currentLineMimeType))
       {
@@ -263,7 +267,8 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       
       for (TokenBeenImpl token : tokenList)
       {
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         // test is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
             break;
 
          searchNearestToken(targetLineNumber, token);
@@ -332,7 +337,7 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
    } 
 
    @Override
-   protected boolean isPossibleContainerTokenType(TokenBeenImpl token)
+   public boolean isPossibleContainerTokenType(TokenBeenImpl token)
    {
       return TokenType.PHP_TAG.equals(token.getType()) 
                || TokenType.CLASS.equals(token.getType()) 
@@ -356,7 +361,8 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       
       for (TokenBeenImpl token : tokenList)
       {
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         // test is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
             break;
 
          searchNearestToken(targetLineNumber, token);

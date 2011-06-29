@@ -39,6 +39,8 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
     
    List<? extends Token> groovyCode;
    
+   GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
+   
    /**
     * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
     * @param tokenList 
@@ -52,7 +54,7 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
 
       groovyCode = extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
 
-      return CodeValidatorImpl.getValidator(MimeType.APPLICATION_GROOVY).getCodeErrorList(groovyCode);
+      return groovyCodeValidator.getCodeErrorList(groovyCode);
    }
 
    @Override
@@ -63,7 +65,7 @@ public class GroovyTemplateCodeValidator extends CodeValidatorImpl
          this.groovyCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
       }
       
-      if (((GroovyCodeValidator)getValidator(MimeType.APPLICATION_GROOVY)).shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
+      if (groovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) groovyCode, fqn))
       {      
          int appropriateLineNumber = GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>) tokenList);
          

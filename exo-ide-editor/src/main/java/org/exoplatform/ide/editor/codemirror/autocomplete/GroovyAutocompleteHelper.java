@@ -26,7 +26,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
+import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -38,6 +38,9 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class GroovyAutocompleteHelper extends AutocompleteHelper
 {
+
+   GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
+   
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {
       return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
@@ -86,7 +89,7 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          }
 
          // search fqn among default packages
-         String fqn = ((GroovyCodeValidator)CodeValidatorImpl.getValidator(MimeType.APPLICATION_GROOVY)).getFqnFromDefaultPackages(nodeContent);
+         String fqn = groovyCodeValidator.getFqnFromDefaultPackages(nodeContent);
          if (fqn != null) 
             return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent, Arrays.asList(Modifier.STATIC), fqn);
          
@@ -120,7 +123,8 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
       
       for (TokenBeenImpl token : tokenList)
       {
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         // test is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
             break;
 
          searchNearestToken(targetLineNumber, token);
@@ -170,5 +174,14 @@ public class GroovyAutocompleteHelper extends AutocompleteHelper
          
       return null;
    } 
-      
+
+   public boolean isVariable(String nodeType)
+   {
+      return GroovyParser.isGroovyVariable(nodeType);
+   }
+   
+   public boolean isPoint(String nodeType, String nodeContent)
+   {
+      return GroovyParser.isPoint(nodeType, nodeContent);
+   }
 }

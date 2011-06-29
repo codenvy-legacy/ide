@@ -36,7 +36,7 @@ public class XmlParser extends CodeMirrorParserImpl
    private String lastNodeType;
    
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the line or content
       if ((node == null) || Node.getName(node).equals("BR"))
@@ -165,7 +165,7 @@ public class XmlParser extends CodeMirrorParserImpl
    }   
    
    // close tag
-   static TokenBeenImpl closeTag(int lineNumber, TokenBeenImpl currentToken)
+   public static TokenBeenImpl closeTag(int lineNumber, TokenBeenImpl currentToken)
    {
       if (currentToken != null) 
       {

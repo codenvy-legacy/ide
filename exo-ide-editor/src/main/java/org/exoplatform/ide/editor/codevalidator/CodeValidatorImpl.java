@@ -18,13 +18,10 @@
  */
 package org.exoplatform.ide.editor.codevalidator;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeValidator;
-import org.exoplatform.ide.editor.api.DefaultCodeValidator;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
@@ -38,20 +35,6 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 @SuppressWarnings("serial")
 public abstract class CodeValidatorImpl extends CodeValidator
 {
-   private static HashMap<String, CodeValidator> factory = new HashMap<String, CodeValidator>() {{
-      put(MimeType.APPLICATION_GROOVY, new GroovyCodeValidator());
-      put(MimeType.APPLICATION_JAVA, new JavaCodeValidator());
-   }};  
-   
-   public static CodeValidator getValidator(String mimeType)
-   {
-      if (factory.containsKey(mimeType))
-      {
-         return factory.get(mimeType);
-      }
-
-      return new DefaultCodeValidator();
-   }
 
    /**
     * Extract tokens with mimeType from tokenList

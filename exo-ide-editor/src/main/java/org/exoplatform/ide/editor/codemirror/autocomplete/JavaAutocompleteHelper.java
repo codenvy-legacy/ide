@@ -26,8 +26,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
-import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
+import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -40,6 +39,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
 {
 
+   JavaCodeValidator javaCodeValidator = new JavaCodeValidator();
+   
    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition, List<? extends Token> tokenList, String currentLineMimeType)
    {
       return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
@@ -88,7 +89,7 @@ public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
          }
 
          // search fqn among default packages
-         String fqn = ((JavaCodeValidator)CodeValidatorImpl.getValidator(MimeType.APPLICATION_JAVA)).getFqnFromDefaultPackages(nodeContent);
+         String fqn = javaCodeValidator.getFqnFromDefaultPackages(nodeContent);
          if (fqn != null) 
             return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_JAVA, nodeContent, Arrays.asList(Modifier.STATIC), fqn);
          
@@ -113,4 +114,13 @@ public class JavaAutocompleteHelper extends GroovyAutocompleteHelper
       return null;
    }
 
+   public boolean isVariable(String nodeType)
+   {
+      return JavaParser.isJavaVariable(nodeType);
+   }
+   
+   public boolean isPoint(String nodeType, String nodeContent)
+   {
+      return JavaParser.isPoint(nodeType, nodeContent);
+   }
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.codemirror.parser;
 
+import java.util.HashMap;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
@@ -35,6 +37,24 @@ public class GoogleGadgetParser extends CodeMirrorParserImpl
 
    String currentContentMimeType;
 
+   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
+   
+   static
+   {
+      factory.put(MimeType.TEXT_HTML, new HtmlParser());
+      factory.put(MimeType.TEXT_XML, new XmlParser());   
+   }
+
+   protected static CodeMirrorParserImpl getParser(String mimeType)
+   {
+      if (factory.containsKey(mimeType))
+      {
+         return factory.get(mimeType);
+      }
+
+      return null;
+   }
+   
    @Override
    public void init()
    {
@@ -42,7 +62,7 @@ public class GoogleGadgetParser extends CodeMirrorParserImpl
    }
 
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the document
       if (node == null)
@@ -61,7 +81,7 @@ public class GoogleGadgetParser extends CodeMirrorParserImpl
          currentToken = newToken;
 
          currentContentMimeType = MimeType.TEXT_HTML;
-         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
+         getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
 
@@ -71,11 +91,11 @@ public class GoogleGadgetParser extends CodeMirrorParserImpl
          currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
          currentContentMimeType = MimeType.TEXT_XML;
-         CodeMirrorParserImpl.getParser(currentContentMimeType).init();
+         getParser(currentContentMimeType).init();
          node = Node.getNext(node); // pass parsed node
       }
 
-      currentToken = CodeMirrorParserImpl.getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
 
       if (node == null || Node.getName(node).equals("BR"))
       {

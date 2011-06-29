@@ -22,8 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -35,6 +35,10 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class GroovyTemplateAutocompleteHelper extends AutocompleteHelper
 {
+   
+   HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
+   
+   GroovyAutocompleteHelper groovyAutocompleteHelper = new GroovyAutocompleteHelper();
     
    List<? extends Token> groovyCode;
 
@@ -42,13 +46,13 @@ public class GroovyTemplateAutocompleteHelper extends AutocompleteHelper
    {          
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
       {
-         return AutocompleteHelper.getAutocompleteHelper(MimeType.TEXT_HTML).getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
+         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList, currentLineMimeType);
       }
       
       else if (MimeType.APPLICATION_GROOVY.equals(currentLineMimeType))
       {
          groovyCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
-         return AutocompleteHelper.getAutocompleteHelper(MimeType.APPLICATION_GROOVY).getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode, currentLineMimeType);
+         return groovyAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, groovyCode, currentLineMimeType);
       }
       
       return null;

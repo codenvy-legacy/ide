@@ -20,9 +20,10 @@ package org.exoplatform.ide.editor.codemirror.autocomplete;
 
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -91,7 +92,8 @@ public class JavaScriptAutocompleteHelper extends AutocompleteHelper
       
       for (TokenBeenImpl token : tokenList)
       {
-         if (isContainerTokenAfterTheCurrentLine(targetLineNumber, token.getLineNumber()))
+         // test is Container Token After The CurrentLine
+         if (token.getLineNumber() > targetLineNumber)
             break;
 
          searchNearestToken(targetLineNumber, token);
@@ -131,4 +133,13 @@ public class JavaScriptAutocompleteHelper extends AutocompleteHelper
    }
 
 
+   public boolean isVariable(String nodeType)
+   {
+      return JavaScriptParser.isJsVariable(nodeType) || JavaScriptParser.isJsLocalVariable(nodeType);
+   }
+   
+   public boolean isPoint(String nodeType, String nodeContent)
+   {
+      return JavaScriptParser.isPoint(nodeType, nodeContent);
+   }
 }

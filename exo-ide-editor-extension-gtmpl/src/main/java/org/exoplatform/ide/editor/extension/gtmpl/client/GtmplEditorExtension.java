@@ -93,17 +93,19 @@ public class GtmplEditorExtension extends Extension implements InitializeService
                "gtmpl",
                Images.GROOVY_TEMPLATE,
                true,
-               new CodeMirrorConfiguration(
-                  "['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']", // generic code parsers
-                  "['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
+               new CodeMirrorConfiguration().
+                  setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']").
+                  setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
                      + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-                     + CodeMirrorConfiguration.PATH + "css/groovycolors.css']", // code styles
-                  true, // can be outlined
-                  true, // can be autocompleted
-                  new GroovyTemplateParser(), // exoplatform code parser 
-                  new GroovyTemplateAutocompleteHelper(), // autocomplete helper
-                  true, // can be validated
-                  new GroovyTemplateCodeValidator(), templateCodeAssistant, true)));
+                     + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
+                  setParser(new GroovyTemplateParser()).
+                  setCanBeOutlined(true).
+                  setAutocompleteHelper(new GroovyTemplateAutocompleteHelper()).
+                  setCodeAssistant(templateCodeAssistant).
+                  setCodeValidator(new GroovyTemplateCodeValidator()).
+                  setCanHaveSeveralMimeTypes(true)
+            )
+         );
 
    }
 

@@ -45,22 +45,23 @@ public class GadgetEditor extends Extension
    @Override
    public void initialize()
    {
-      CodeMirrorProducer producer =
-         new CodeMirrorProducer(
-            MimeType.GOOGLE_GADGET,
-            "CodeMirror Google Gadget editor",
-            "xml",
-            Images.GOOGLE_GADGET,
-            true,
-            new CodeMirrorConfiguration(
-               "['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']", // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-                  + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']", // code styles
-               true, // can be outlined
-               true, // can be autocompleted
-               new GoogleGadgetParser(), // exoplatform code parser 
-               new HtmlAutocompleteHelper(), // autocomplete helper
-               new HtmlCodeAssistant(), true));
+      CodeMirrorProducer producer = new CodeMirrorProducer(
+         MimeType.GOOGLE_GADGET,
+         "CodeMirror Google Gadget editor",
+         "xml",
+         Images.GOOGLE_GADGET,
+         true,
+         
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+            setParser(new GoogleGadgetParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new HtmlAutocompleteHelper()).
+            setCodeAssistant(new HtmlCodeAssistant()).
+            setCanHaveSeveralMimeTypes(true)
+      );
       
       IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor Google Gadget editor", "xml","", false,
          new CKEditorConfiguration()));

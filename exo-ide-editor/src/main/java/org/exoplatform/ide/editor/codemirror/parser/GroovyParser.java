@@ -115,7 +115,7 @@ public class GroovyParser extends CodeMirrorParserImpl
    }
 
    @Override
-   TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
+   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
    {
       // interrupt at the end of the line or content
       if ((node == null) || Node.getName(node).equals("BR"))

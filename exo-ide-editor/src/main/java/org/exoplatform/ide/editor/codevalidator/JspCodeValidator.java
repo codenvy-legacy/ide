@@ -39,6 +39,8 @@ public class JspCodeValidator extends CodeValidatorImpl
     
    List<? extends Token> javaCode;
    
+   JavaCodeValidator javaCodeValidator = new JavaCodeValidator();
+   
    /**
     * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList 
     * @param tokenList 
@@ -52,7 +54,7 @@ public class JspCodeValidator extends CodeValidatorImpl
 
       javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
 
-      return CodeValidatorImpl.getValidator(MimeType.APPLICATION_JAVA).getCodeErrorList(javaCode);
+      return javaCodeValidator.getCodeErrorList(javaCode);
    }
 
    @Override
@@ -63,7 +65,7 @@ public class JspCodeValidator extends CodeValidatorImpl
          this.javaCode = extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVA);
       }
       
-      if (((JavaCodeValidator)getValidator(MimeType.APPLICATION_JAVA)).shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
+      if (javaCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>) javaCode, fqn))
       {      
          int appropriateLineNumber = JavaCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
          
