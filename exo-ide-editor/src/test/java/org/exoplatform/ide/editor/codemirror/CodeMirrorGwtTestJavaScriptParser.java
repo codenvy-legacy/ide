@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -28,11 +29,13 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledHandler;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
@@ -77,11 +80,16 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
       params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
       params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
       params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);      
-      params.put(EditorParameters.CONFIGURATION, new CodeMirrorConfiguration("['tokenizejavascript.js', 'parsejavascript.js']", // generic code parsers
-         "['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']", true, true, new JavaScriptParser(), new JavaScriptAutocompleteHelper(),
+      params.put(EditorParameters.CONFIGURATION, 
          
-         new MockJavaScriptCodeAssistant()  // replace on our class to intercept autocomplete calling event
-      ));
+         new CodeMirrorConfiguration().
+         setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
+         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
+         setParser(new JavaScriptParser()).
+         setCanBeOutlined(true).
+         setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
+         setCodeAssistant(new MockJavaScriptCodeAssistant())            
+      );
       
       HandlerManager eventBus = new HandlerManager(null);   
       
@@ -117,15 +125,14 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
             cancel();
             System.out.println(">>>>>>>>>>>>>>>> start checking codeMirror");
             
-//            editor.setText("var a = 1; \n function()\n { a. \n  }");
             editor.setText(CodeMirrorTestBundle.INSTANCE.javaScriptParserTest().getText());
             
-//            editor.goToPosition(3, 6);   // set cursor after the "a._"
+            editor.goToPosition(21, 28);   // set cursor after the "a._"
             
             // press Ctrl + Space
 
             // press Ctrl + S
-            keyPress(83, true, false, false, editor.editorId);
+//            keyPress(83, true, false, false, editor.editorId);
 
             new Timer()
             {
@@ -137,16 +144,17 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
                   System.out.println(">>>>>>>>>>>>>>>> check parsing results");                
                   
                   List<TokenBeenImpl> tokenList = (List<TokenBeenImpl>) editor.getTokenList();
-
-//                testTokenList(correctTokenList, tokenList);
                   
-                  assertEquals(2, tokenList.size());
-                  assertEquals("a", tokenList.get(0).getName());
-                  assertEquals(TokenType.VARIABLE, tokenList.get(0).getType());
-                  assertEquals("Number", tokenList.get(0).getElementType());            
-                  assertEquals(null, tokenList.get(0).getInitializationStatement());
-                  assertEquals(1, tokenList.get(0).getLineNumber());           
-
+                  assertEquals(18, tokenList.size());
+                  
+                  // new TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
+                  testToken(tokenList.get(0), new TokenBeenImpl(
+                     "a",
+                     TokenType.VARIABLE,
+                     1,
+                     MimeType.APPLICATION_JAVASCRIPT,
+                     "Number"
+                  ));
                   
                   editor.ctrlSpaceClickHandler();
                   
@@ -173,17 +181,18 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
 //
 //   }
 //
-//   private void testToken(CodeMirrorTokenImpl expectedToken, CodeMirrorTokenImpl testToken)
-//   {
-//      testToken
-//      
-//      assertEquals(tokenList.size(), 1);
-//      assertEquals(tokenList.get(0).getName(), "a");
-//      assertEquals(tokenList.get(0).getType(), TokenType.VARIABLE);
-//      assertEquals(tokenList.get(0).getElementType(), "Number");            
-//      assertEquals(tokenList.get(0).getInitializationStatement(), null);
-//      assertEquals(tokenList.get(0).getLineNumber(), 1);
-//   }
+
+   private void testToken(TokenBeenImpl testToken, TokenBeenImpl expectedToken)
+   {     
+      
+      Iterator<TokenProperty> iterator = expectedToken.getProperties().iterator();
+      
+      while (iterator.hasNext())
+      {
+         TokenProperty testProperty = iterator.next();
+         assertEquals("Test token property: " + testProperty.toString() + ". ", testToken.getProperty(testProperty.toString()), expectedToken.getProperty(testProperty.toString()));
+      }
+   }
    
    class MockJavaScriptCodeAssistant extends org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant
    {
