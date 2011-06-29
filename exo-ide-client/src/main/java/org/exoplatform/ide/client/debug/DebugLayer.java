@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.debug;
 
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.button.ext.IconButton;
-import org.exoplatform.ide.client.Log;
 import org.exoplatform.ide.client.ui.impl.Layer;
 
 import com.google.gwt.event.dom.client.ClickEvent;

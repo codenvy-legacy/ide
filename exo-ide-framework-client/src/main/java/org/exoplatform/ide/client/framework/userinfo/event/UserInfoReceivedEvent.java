@@ -37,17 +37,10 @@ public class UserInfoReceivedEvent extends ServerExceptionEvent<UserInfoReceived
 
    private UserInfo userInfo;
 
-   private Throwable exception;
-
    public UserInfoReceivedEvent(UserInfo userInfo)
    {
+      super(null);
       this.userInfo = userInfo;
-   }
-
-   @Override
-   public void setException(Throwable exception)
-   {
-      this.exception = exception;
    }
 
    @Override
@@ -60,11 +53,6 @@ public class UserInfoReceivedEvent extends ServerExceptionEvent<UserInfoReceived
    public com.google.gwt.event.shared.GwtEvent.Type<UserInfoReceivedHandler> getAssociatedType()
    {
       return TYPE;
-   }
-
-   public Throwable getException()
-   {
-      return exception;
    }
 
    public UserInfo getUserInfo()

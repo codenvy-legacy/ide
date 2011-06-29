@@ -384,12 +384,6 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
             eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), result));
             form.closeForm();
          }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            form.closeForm();
-         }
       });
    }
 

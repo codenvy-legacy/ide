@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.client;
 
+import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.util.Log;
 
 /**
  * Created by The eXo Platform SAS .
@@ -30,23 +34,31 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
  * @version $
  */
 
-public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
+public class IDEExceptionThrownEventHandler
 {
 
-   public static void handlerEvent(ExceptionThrownEvent event)
+   public IDEExceptionThrownEventHandler(ExceptionThrownEvent event)
    {
-      Throwable error = event.getError();
-      System.out.println(event.getErrorMessage());
-      //      error.printStackTrace();
+      Log.info("IDEExceptionThrownEventHandler.IDEExceptionThrownEventHandler()");
+      
+      Throwable error = event.getException();
+      Log.info(event.getErrorMessage());
+      
+      if (error instanceof UnauthorizedException) {
+         return;
+      }
+
+      if (error instanceof ServerDisconnectedException)
+      {
+         showServerDisconnectedDialog((ServerDisconnectedException)error);
+         return;
+      }
 
       if (error instanceof ServerException)
       {
          ServerException serverException = (ServerException)error;
-
-         System.out.println("IDEExceptionThrownEventHandler.handlerEvent() server exc");
          if (serverException.isErrorMessageProvided())
          {
-            System.out.println(">>> err msg prov");
             String html =
                "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
                   + serverException.getMessage();
@@ -54,9 +66,7 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
          }
          else
          {
-            System.out.println(">>> err msg doesn't prov");
             String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-
             if (event.getErrorMessage() != null)
             {
                html += "<br><hr><br>Possible reasons:<br>" + event.getErrorMessage();
@@ -66,7 +76,6 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       }
       else
       {
-         System.out.println("IDEExceptionThrownEventHandler.handlerEvent() not server exc");
          if (error != null)
             Dialogs.getInstance().showError(error.getMessage());
          else
@@ -74,15 +83,28 @@ public class IDEExceptionThrownEventHandler implements ExceptionThrownHandler
       }
    }
 
-   /* 
-    * Handler of any errors which throws by application
-    * 
-    * (non-Javadoc)
-    * @see org.exoplatform.gwt.commons.exceptions.ExceptionThrownHandler#onError(org.exoplatform.gwt.commons.exceptions.ExceptionThrownEvent)
-    */
-   public void onError(ExceptionThrownEvent event)
+
+   private void showServerDisconnectedDialog(final ServerDisconnectedException exception)
    {
-      handlerEvent(event);
+      Log.info("Displays Server Disconnected Dialog....");
+      
+      String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
+      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
+      {
+         @Override
+         public void booleanValueReceived(Boolean value)
+         {
+            if (value != null && value == true)
+            {
+               AsyncRequest asyncRequest = exception.getAsyncRequest();
+               if (asyncRequest != null)
+               {
+                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
+                  asyncRequest.sendRequest();
+               }
+            }
+         }
+      });
    }
 
 }

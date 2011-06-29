@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,28 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.framework.ui.api.event.prototype;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id:
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface CreateFolderDisplay
+
+public interface ViewLoseActivityHandler extends EventHandler
 {
-   
-   HasValue<String> getFolderNameField();
 
-   HasClickHandlers getCreateButton();
-
-   HasClickHandlers getCancelButton();
-
-   HasKeyPressHandlers getFolderNameFiledKeyPressed();
-
-   void closeForm();
+   void onViewLoseActivity(ViewLoseActivityEvent event);
    
 }

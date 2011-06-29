@@ -136,8 +136,25 @@ public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHan
                   openedFiles.put(fileToLoad.getHref(), fileToLoad);
                   preloadNextFile();
                }
+               
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+                  preloadNextFile();
+               }
+               
             });
+            
          }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            //super.onFailure(exception);
+            preloadNextFile();
+         }
+         
       });
    }
 

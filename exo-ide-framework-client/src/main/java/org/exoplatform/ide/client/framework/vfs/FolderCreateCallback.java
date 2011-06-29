@@ -28,14 +28,15 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
  */
 public abstract class FolderCreateCallback extends AsyncRequestCallback<Folder>
 {
-   
+
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)
    {
-      fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+      fireEvent(new ExceptionThrownEvent(exception,
+         "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
    }
 
 }

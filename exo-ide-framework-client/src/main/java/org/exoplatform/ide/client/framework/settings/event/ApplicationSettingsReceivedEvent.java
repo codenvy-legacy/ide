@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.framework.settings.event;
 
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -38,10 +39,9 @@ public class ApplicationSettingsReceivedEvent extends ServerExceptionEvent<Appli
 
    private ApplicationSettings applicationSettings;
 
-   private Throwable exception;
-
    public ApplicationSettingsReceivedEvent(ApplicationSettings applicationSettings)
    {
+      super(null);
       this.applicationSettings = applicationSettings;
    }
 
@@ -60,17 +60,6 @@ public class ApplicationSettingsReceivedEvent extends ServerExceptionEvent<Appli
    public ApplicationSettings getApplicationSettings()
    {
       return applicationSettings;
-   }
-
-   @Override
-   public void setException(Throwable exception)
-   {
-      this.exception = exception;
-   }
-
-   public Throwable getException()
-   {
-      return exception;
    }
 
 }

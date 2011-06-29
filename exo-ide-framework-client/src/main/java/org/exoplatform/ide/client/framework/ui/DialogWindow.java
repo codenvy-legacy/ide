@@ -41,7 +41,7 @@ public class DialogWindow extends Window
       setHeight(height);
       center();
       //setShowMinimizeButton(false);
-      setModal(true);
+      setModal(false);
       //setKeepInParentRect(true);
       
       addCloseClickHandler(new CloseClickHandler()

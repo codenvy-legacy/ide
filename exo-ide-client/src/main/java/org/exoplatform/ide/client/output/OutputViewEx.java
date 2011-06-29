@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.output;
 
 import org.exoplatform.gwtframework.ui.client.button.IconButton;
-import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;

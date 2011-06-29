@@ -16,35 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client;
+package org.exoplatform.ide.client.dialogs;
 
 /**
+ * Interface for feedback from dialog window (which ask for value).
+ * 
+ * Used when ValueCallback is not enough and you need not only 
+ * execute or cancel actions. 
+ * 
+ * E.g. you need to handle not only "Yes" and "Cancel" buttons click, 
+ * but also "No" button click
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public abstract class Log
+public interface ValueDiscardCallback
 {
 
-   private static Log instance;
-
-   protected Log()
-   {
-      instance = this;
-   }
-
-   public abstract void _info(String message);
-
-   public static void info(String message)
-   {
-      System.out.println("[INFO] " + message);
-
-      if (instance != null)
-      {
-         instance._info(message);
-      }
-   }
-
+   void discard();
+   
 }

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.HasBeforeViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.HasViewLoseActivityHandler;
+
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -29,7 +32,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface View
+public interface View extends HasBeforeViewLoseActivityHandler, HasViewLoseActivityHandler
 {
    
    /**
@@ -110,21 +113,21 @@ public interface View
    int getDefaultHeight();
    
    /**
-    * Determines whether or not this button is visible. 
+    * Determines is this view resizeable. 
     * 
-    * @return <b>true</b> if this view can resize
+    * @return <b>true</b> if this view is resizeable.
     */
    boolean canResize();
    
    /**
-    * Sets this view as active.
+    * Makes view activated.
     */
    void activate();
    
    /**
-    * Determines whether window is active.
+    * Determines is this view activated.
     * 
-    * @return <b>true</b> if this view is active, <b>false</b> otherwise.
+    * @return <b>true</b> if this view activated, <b>false</b> otherwise.
     */
    boolean isActive();
    

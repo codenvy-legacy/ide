@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -143,6 +144,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public void onDeleteItem(DeleteItemEvent event)
    {
+      Log.info("DeleteItemPresenter > onDeleteItem");
       if (display == null)
       {
          Display d = GWT.create(Display.class);
@@ -164,6 +166,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          public void onClick(ClickEvent event)
          {
+            Log.info("DeleteItemPresenter > cancel clicked");
             IDE.getInstance().closeView(Display.ID);
          }
       });
@@ -172,6 +175,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          public void onClick(ClickEvent event)
          {
+            Log.info("DeleteItemPresenter > Login clicked");
             deleteNextItem();
          }
       });
@@ -179,6 +183,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private void deleteNextItem()
    {
+      Log.info("selected items > " + selectedItems.size());
+      
       if (selectedItems.size() == 0)
       {
          IDE.getInstance().closeView(Display.ID);
@@ -187,6 +193,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       }
 
       Item item = selectedItems.get(0);
+      Log.info("Item to delete > " + item.getHref());
 
       if (item instanceof File)
       {

@@ -30,11 +30,15 @@
    <inherits name='com.google.gwt.user.RemoteService' />
    <inherits name="com.google.gwt.jsonp.Jsonp" />
 
-   <!-- load GWT Commons Libraries -->
+   <!-- load GWT Framework Libraries -->
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
-   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
+   
+	<!-- IDE Client Framework -->
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+
+   <!-- Initialise Virtual File System -->
+   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    
    <!-- EDITOR EXTENSIONS -->
    <inherits name="org.exoplatform.ide.editor.extension.gadget.GadgetEditorExtension" />

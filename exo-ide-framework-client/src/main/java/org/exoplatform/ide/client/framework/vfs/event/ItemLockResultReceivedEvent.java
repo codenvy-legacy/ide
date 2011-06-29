@@ -36,8 +36,6 @@ public class ItemLockResultReceivedEvent extends ServerExceptionEvent<ItemLockRe
 
    private LockToken lockToken;
 
-   private Throwable exception;
-
    private Item item;
 
    private String errorMessage;
@@ -47,6 +45,7 @@ public class ItemLockResultReceivedEvent extends ServerExceptionEvent<ItemLockRe
     */
    public ItemLockResultReceivedEvent(Item item, LockToken lockToken, String errorMessage)
    {
+      super(null);
       this.item = item;
       this.lockToken = lockToken;
       this.errorMessage = errorMessage;
@@ -78,20 +77,6 @@ public class ItemLockResultReceivedEvent extends ServerExceptionEvent<ItemLockRe
    public Item getItem()
    {
       return item;
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent#setException(java.lang.Throwable)
-    */
-   @Override
-   public void setException(Throwable exception)
-   {
-      this.exception = exception;
-   }
-
-   public Throwable getException()
-   {
-      return exception;
    }
 
    /**

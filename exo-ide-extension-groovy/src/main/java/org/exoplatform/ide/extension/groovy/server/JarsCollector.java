@@ -61,6 +61,8 @@ public class JarsCollector
     */
    public JarsCollector() throws Exception
    {
+      System.out.println("JarsCollector.JarsCollector()");
+      
       String javaClassPath = System.getProperty("java.class.path");
       getJarsFromClasspath(javaClassPath);
 

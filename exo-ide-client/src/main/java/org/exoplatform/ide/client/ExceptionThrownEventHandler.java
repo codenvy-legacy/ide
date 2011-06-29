@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler;
 
 public class ExceptionThrownEventHandler implements ExceptionThrownHandler, EnableStandartErrorsHandlingHandler
 {
+   
    private boolean showErrors = true;
 
    public ExceptionThrownEventHandler(HandlerManager eventBus)
@@ -49,7 +50,7 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler, Enab
    {
       if (showErrors)
       {
-         IDEExceptionThrownEventHandler.handlerEvent(event);
+         new IDEExceptionThrownEventHandler(event);
       }
    }
 

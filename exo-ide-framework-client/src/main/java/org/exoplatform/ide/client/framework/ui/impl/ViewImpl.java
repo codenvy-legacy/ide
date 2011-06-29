@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.ViewLoseActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.ViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleEvent;
@@ -44,8 +40,16 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandl
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
@@ -217,7 +221,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
          setViewVisible();
       }
 
-      ViewHighlightManager.getInstance().selectView(this);
+      ViewHighlightManager.getInstance().activateView(this);
    }
 
    /**
@@ -404,7 +408,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     */
    protected void onMouseDown()
    {
-      ViewHighlightManager.getInstance().selectView(this);
+      ViewHighlightManager.getInstance().activateView(this);
    }
 
    /**
@@ -519,6 +523,25 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    public boolean isActive()
    {
       return activated;
+   }
+
+   @Override
+   public HandlerRegistration addBeforeViewLoseActivityHandler(
+      BeforeViewLoseActivityHandler beforeViewLoseActivityHandler)
+   {
+      return addHandler(beforeViewLoseActivityHandler, BeforeViewLoseActivityEvent.TYPE);
+   }
+
+   @Override
+   public HandlerRegistration addViewLoseActivityHandler(ViewLoseActivityHandler viewLoseActivityHandler)
+   {
+      return addHandler(viewLoseActivityHandler, ViewLoseActivityEvent.TYPE);
+   }
+   
+   @Override
+   public String toString()
+   {
+      return "ViewImpl [ ID: " + id + " ]";
    }
 
 }

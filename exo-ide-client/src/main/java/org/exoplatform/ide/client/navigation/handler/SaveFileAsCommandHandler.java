@@ -25,9 +25,8 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.component.AskForValueDialog;
-import org.exoplatform.ide.client.component.ValueCallback;
-import org.exoplatform.ide.client.component.ValueDiscardCallback;
+import org.exoplatform.ide.client.dialogs.ValueCallback;
+import org.exoplatform.ide.client.dialogs.ValueDiscardCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -48,6 +47,7 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .
@@ -115,11 +115,12 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
    {
       final String newFileName = file.isNewFile() ? file.getName() : PREFIX + " " + file.getName();
       sourceHref = file.getHref();
-      
+
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
-         new AskForValueDialog(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, new ValueCallback()
+         ValueCallback valueCallback = new ValueCallback()
          {
+            @Override
             public void execute(String value)
             {
                if (value == null)
@@ -134,13 +135,15 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
 
                saveFileAs(file, value);
             }
-
-         });
+         };
+         
+         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, valueCallback);
       }
       else
       {
-         new AskForValueDialog(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, new ValueCallback()
+         ValueCallback valueCallback = new ValueCallback()
          {
+            @Override
             public void execute(String value)
             {
                if (value == null)
@@ -153,22 +156,26 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
                   return;
                }
 
-               saveFileAs(file, value);
+               saveFileAs(file, value);               
             }
-
-         }, new ValueDiscardCallback()
+         };
+         
+         ValueDiscardCallback valueDiscardCallback = new ValueDiscardCallback()
          {
+            @Override
             public void discard()
             {
                if (eventFiredOnNo != null)
                {
                   eventBus.fireEvent(eventFiredOnNo);
-               }
+               }               
             }
-         });
+         };
+         
+         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, valueCallback, valueDiscardCallback);
       }
    }
-   
+
    private void saveFileAs(File file, String value)
    {
       String pathToSave = getFilePath(selectedItems.get(0)) + value;
@@ -204,8 +211,9 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
             }            
          }
       });
+
    }
-   
+
    private void saveFileProperties(File file, String lockToken)
    {
       VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()

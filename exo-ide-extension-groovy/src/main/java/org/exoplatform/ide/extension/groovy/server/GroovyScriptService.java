@@ -464,6 +464,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
       catch (Exception e)
       {
+         System.out.println("Exception > " + e.getMessage());
+         e.printStackTrace();
          return createErrorResponse(e, HTTPStatus.INTERNAL_ERROR);
       }
 

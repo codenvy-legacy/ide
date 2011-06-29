@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.logreader.client.ui;
 
+import org.exoplatform.gwtframework.ui.client.button.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.TextButton;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.VPanel;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.logreader.client.LogReaderClientBundle;
+import org.exoplatform.ide.extension.logreader.client.LogReaderExtension;
+import org.exoplatform.ide.extension.logreader.client.LogReaderPresenter;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,16 +37,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
-import org.exoplatform.gwtframework.ui.client.component.TextButton;
-import org.exoplatform.gwtframework.ui.client.component.VPanel;
-import org.exoplatform.gwtframework.ui.client.toolbar.Toolbar;
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.logreader.client.LogReaderClientBundle;
-import org.exoplatform.ide.extension.logreader.client.LogReaderExtension;
-import org.exoplatform.ide.extension.logreader.client.LogReaderPresenter;
 
 /**
  * View for Log reader, contains toolbar, and {@link ScrollPanel} with set of {@link LogRecord}

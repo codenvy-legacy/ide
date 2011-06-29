@@ -340,7 +340,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       {
          public void onError(ExceptionThrownEvent event)
          {
-            event.getError().printStackTrace();
+            event.getException().printStackTrace();
          }
       });
       vfsWebDav.copy(folder, testUrl + copyLocation, new CopyCallback()
@@ -377,7 +377,7 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       {
          public void onError(ExceptionThrownEvent event)
          {
-            assertNotNull(event.getError());
+            assertNotNull(event.getException());
             finishTest();
          }
       });

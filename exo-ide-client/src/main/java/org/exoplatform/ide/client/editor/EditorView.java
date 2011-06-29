@@ -27,6 +27,10 @@ import java.util.Map.Entry;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
@@ -35,6 +39,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -46,77 +51,95 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: EditorView Mar 21, 2011 4:33:38 PM evgen $
  *
  */
-public class EditorView extends ViewImpl
+public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandler, ViewActivatedHandler
 {
 
    private static int i = 0;
-   
+
    private static final String EDITOR_SWITCHER_BACKGROUND = Images.Editor.EDITOR_SWITCHER_BACKGROUND;
-   
+
    private Map<EditorType, Editor> editors = new HashMap<EditorType, Editor>();
-   
+
    private Map<EditorType, ToggleButton> buttons = new HashMap<EditorType, ToggleButton>();
-   
+
    private EditorType currentEditorType = EditorType.DEFAULT;
 
    List<Editor> supportedEditors;
-   
+
    File file;
-   
+
    HandlerManager eventBus;
 
    VerticalPanel editorArea;
-   
+
    int lastEditorHeight = 0;
    
-   private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileIsReadOnly();
-   
+
+   /**
+    * Uses for storing row index of the cursor when Editor View lose focus.
+    */
+   private int frozenCursorRow;
+
+   /**
+    * Uses for storing column index of the cursor when Editor View lose focus.
+    */
+   private int frozenCursorColumn;   
+
+   private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
+      .editorControllerFileIsReadOnly();
+
    private final int BUTTON_WIDTH = 55;
 
    private final int BUTTON_HEIGHT = 22;
-   
+
    private final int EDITOR_SWITCHER_OFFSET = Math.round(BUTTON_HEIGHT / 4);
-   
+
    private final String BUTTON_LABEL_FONT_SIZE = "11px";
-   
+
    /**
     * @param title
     * @param supportedEditors
     */
-   public EditorView(File file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors, int currentEditorIndex)
+   public EditorView(File file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors,
+      int currentEditorIndex)
    {
       super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(file.getIcon()));
-      
+
+      if (supportedEditors == null)
+         return;
+
       this.file = file;
       this.eventBus = eventBus;
       this.supportedEditors = supportedEditors;
-      
-      if (this.supportedEditors == null)
-         return;
-      
+
+      addBeforeViewLoseActivityHandler(this);
+      eventBus.addHandler(ViewActivatedEvent.TYPE, this);
+
       AbsolutePanel editorSwitcherContainer = new AbsolutePanel();
-      DOM.setStyleAttribute(editorSwitcherContainer.getElement(), "background", "#FFFFFF url(" + EDITOR_SWITCHER_BACKGROUND + ") repeat-x");
-      
+      DOM.setStyleAttribute(editorSwitcherContainer.getElement(), "background", "#FFFFFF url("
+         + EDITOR_SWITCHER_BACKGROUND + ") repeat-x");
+
       HorizontalPanel editorSwitcher = new HorizontalPanel();
 
       this.editorArea = new VerticalPanel();
 
       // to respect of button position
-      EditorType[] editorSequence = new EditorType[this.supportedEditors.size()]; 
-      
+      EditorType[] editorSequence = new EditorType[this.supportedEditors.size()];
+
       for (Editor editor : this.supportedEditors)
       {
          EditorType editorType = EditorType.getType(editor.getClass().getName());
          editors.put(editorType, editor);
-      
-         editorSequence[editorType.getPosition() - 1] = editorType; 
-         
+
+         editorSequence[editorType.getPosition() - 1] = editorType;
+
          // add editor switcher only if there are several supported editors
          if (this.supportedEditors.size() > 1)
-         {                     
-            ToggleButton button = createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
+         {
+            ToggleButton button =
+               createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
             buttons.put(editorType, button);
-            
+
             if (editor == this.supportedEditors.get(currentEditorIndex))
             {
                currentEditorType = editorType;
@@ -125,11 +148,11 @@ public class EditorView extends ViewImpl
             }
             else
             {
-               hideEditor(editor);               
+               hideEditor(editor);
             }
-            
+
             editor.setHeight("100%");
-            editorArea.add(editor);            
+            editorArea.add(editor);
          }
          else
          {
@@ -142,16 +165,16 @@ public class EditorView extends ViewImpl
       // to respect of button sequence
       for (int i = 0; i < editorSequence.length; i++)
       {
-         editorSwitcher.add(buttons.get(editorSequence[i])); 
+         editorSwitcher.add(buttons.get(editorSequence[i]));
       }
-      
+
       editorSwitcherContainer.add(editorSwitcher);
       editorSwitcherContainer.setHeight("" + BUTTON_HEIGHT);
-               
+
       editorArea.add(editorSwitcherContainer);
       editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
-      
-      add(editorArea); 
+
+      add(editorArea);
    }
 
    private void showEditor(Editor editor)
@@ -164,7 +187,7 @@ public class EditorView extends ViewImpl
    {
       DOM.setStyleAttribute(editor.getElement(), "display", "none");
    }
-   
+
    /**
     * @return the editor
     */
@@ -172,14 +195,14 @@ public class EditorView extends ViewImpl
    {
       return editors.get(currentEditorType);
    }
-   
+
    /**
     * @return the editor on editorId
     */
    public Editor getEditor(String editorId)
    {
       Collection<Editor> editorList = editors.values();
-      
+
       for (Editor editor : editorList)
       {
          if (editor.getEditorId().equals(editorId))
@@ -187,15 +210,15 @@ public class EditorView extends ViewImpl
             return editor;
          }
       }
-      
+
       return null;
    }
-   
+
    public void setContent(String content)
    {
       editors.get(currentEditorType).setText(content);
    }
-   
+
    /**
     * Create button with label and icon
     * @param label
@@ -208,21 +231,25 @@ public class EditorView extends ViewImpl
       ToggleButton button = new ToggleButton(new Image(iconUrl));
 
       // set button's image + label
-      String buttonFace = "<div id='" + id + "' title='" + label + "' style='width: 100%; height: 100%; text-align: center;'><img src='" + iconUrl + "' style='margin-right: 3px; margin-top: -2px;'/><span style='vertical-align: top; font-size: " + BUTTON_LABEL_FONT_SIZE + "'>" + label + "</span></div>";
-      button.setHTML(buttonFace);    
+      String buttonFace =
+         "<div id='" + id + "' title='" + label + "' style='width: 100%; height: 100%; text-align: center;'><img src='"
+            + iconUrl + "' style='margin-right: 3px; margin-top: -2px;'/><span style='vertical-align: top; font-size: "
+            + BUTTON_LABEL_FONT_SIZE + "'>" + label + "</span></div>";
+      button.setHTML(buttonFace);
       button.setWidth("" + BUTTON_WIDTH);
       button.setHeight("" + BUTTON_HEIGHT);
-      
+
       button.addClickHandler(buttonClickHandler);
-      
+
       return button;
    }
 
-   ClickHandler buttonClickHandler = new ClickHandler() {
+   ClickHandler buttonClickHandler = new ClickHandler()
+   {
 
       public void onClick(ClickEvent event)
       {
-         EditorType nextEditorType = getFirstKeyByValue(buttons, (ToggleButton) event.getSource());
+         EditorType nextEditorType = getFirstKeyByValue(buttons, (ToggleButton)event.getSource());
          if (nextEditorType == null)
          {
             return;
@@ -233,34 +260,36 @@ public class EditorView extends ViewImpl
             downButton(buttons.get(currentEditorType));
             return;
          }
-         
+
          switchToEditor(nextEditorType);
       }
-      
+
    };
-   
+
    private void upButton(ToggleButton button)
    {
       button.setValue(false);
    }
-   
-   
+
    protected void downButton(ToggleButton button)
    {
-      button.setValue(true);      
+      button.setValue(true);
    }
-   
+
    /**
     * Return first editor type key for button value
     * @param buttons
     * @param button
     * @return
     */
-   public static EditorType getFirstKeyByValue(Map<EditorType, ToggleButton> buttons, ToggleButton button) {
-      for (Entry<EditorType, ToggleButton> entry : buttons.entrySet()) {
-          if (entry.getValue().equals(button)) {
-              return entry.getKey();
-          }
+   public static EditorType getFirstKeyByValue(Map<EditorType, ToggleButton> buttons, ToggleButton button)
+   {
+      for (Entry<EditorType, ToggleButton> entry : buttons.entrySet())
+      {
+         if (entry.getValue().equals(button))
+         {
+            return entry.getKey();
+         }
       }
       return null;
    }
@@ -283,12 +312,12 @@ public class EditorView extends ViewImpl
 
       return title;
    }
- 
+
    public void onViewInnerEditorSwitched(Editor editor)
    {
       this.eventBus.fireEvent(new EditorActiveFileChangedEvent(this.file, editor));
    }
-   
+
    public File getFile()
    {
       return this.file;
@@ -298,7 +327,7 @@ public class EditorView extends ViewImpl
    {
       super.setTitle(getFileTitle(file, isFileReadOnly));
    }
-   
+
    private int getEditorAreaHeight()
    {
       return editorArea.getParent().getParent().getOffsetHeight();
@@ -309,8 +338,9 @@ public class EditorView extends ViewImpl
     * @param indexOfEditorToShow
     */
    public void switchToEditor(int indexOfEditorToShow)
-   {      
-      EditorType nextEditorType = EditorType.getType(this.supportedEditors.get(indexOfEditorToShow).getClass().getName());
+   {
+      EditorType nextEditorType =
+         EditorType.getType(this.supportedEditors.get(indexOfEditorToShow).getClass().getName());
       switchToEditor(nextEditorType);
    }
 
@@ -319,43 +349,42 @@ public class EditorView extends ViewImpl
     * @param nextEditorType
     */
    public void switchToEditor(EditorType nextEditorType)
-   {      
+   {
       Editor currentEditor = editors.get(currentEditorType);
       Editor nextEditor = editors.get(nextEditorType);
-    
+
       // actualize the text of next
       if (!currentEditor.getText().equals(nextEditor.getText()))
       {
          nextEditor.setText(currentEditor.getText());
       }
-      
+
       // show next editor
       hideEditor(editors.get(currentEditorType));
       showEditor(editors.get(nextEditorType));
-      
+
       // up current editor button
       upButton(buttons.get(currentEditorType));
-      
+
       // down next editor button (in case of calling this method from editorController)
       downButton(buttons.get(nextEditorType));
-      
+
       currentEditorType = nextEditorType;
-      
+
       onViewInnerEditorSwitched(nextEditor);
    }
-   
+
    @Override
    public void resize(int width, int height)
    {
       super.resize(width, height);
 
       // restore CKEditor height on resize
-      if (currentEditorType == EditorType.DESIGN
-               && getEditorAreaHeight() != lastEditorHeight)
-      {      
+      if (currentEditorType == EditorType.DESIGN && getEditorAreaHeight() != lastEditorHeight)
+      {
          if (this.supportedEditors.size() == 1)
          {
-            lastEditorHeight = editorArea.getOffsetHeight();       
+            lastEditorHeight = editorArea.getOffsetHeight();
             getEditor().setHeight("" + lastEditorHeight);
          }
          else
@@ -363,11 +392,57 @@ public class EditorView extends ViewImpl
             lastEditorHeight = getEditorAreaHeight();
             getEditor().setHeight("" + (lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
          }
-      }      
+      }
    }
 
    public void setFile(File newFile)
    {
       this.file = newFile;
    }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if (!event.getView().getId().equals(getId()))
+      {
+         return;
+      }
+
+      final Editor currentEditor = getEditor();
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            currentEditor.setFocus();
+            currentEditor.goToPosition(frozenCursorRow, frozenCursorColumn);
+         }
+      }.schedule(1000);
+   }
+
+   @Override
+   public void onBeforeViewLoseActivity(BeforeViewLoseActivityEvent event)
+   {
+      Editor currentEditor = getEditor();
+      try
+      {
+         frozenCursorRow = currentEditor.getCursorRow();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         frozenCursorRow = 0;
+      }
+
+      try
+      {
+         frozenCursorColumn = currentEditor.getCursorCol();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         frozenCursorColumn = 0;
+      }
+   }
+
 }

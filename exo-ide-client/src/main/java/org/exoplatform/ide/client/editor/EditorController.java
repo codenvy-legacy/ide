@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
@@ -426,6 +425,10 @@ public class EditorController implements EditorContentChangedHandler,
          return;
       
       activeFile = event.getFile();
+      if (activeFile == null) {
+         return;
+      }
+      
       editorsViews.get(activeFile.getHref()).activate();
    }
 

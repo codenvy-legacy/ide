@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-
+import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -29,7 +27,10 @@ import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
+import org.exoplatform.ide.client.authentication.LoginPresenter;
+import org.exoplatform.ide.client.debug.PopupWindowLogger;
 import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
+import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -56,6 +57,9 @@ import org.exoplatform.ide.client.operation.OperationModule;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .
@@ -105,6 +109,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        */
       IDEIconSet.init();
       
+      new PopupWindowLogger();
+
       /*
        * Initialise SeleniumTestsHelper
        */
@@ -122,11 +128,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new MainMenuControlsFormatter()));
       EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
 
+      new AskForValueDialog(EVENT_BUS);
+      new LoginPresenter(EVENT_BUS);
+
+      Log.info("Creating IDE form..........");
+      
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
       new DownloadForm(EVENT_BUS);
       new ViewHighlightManager(EVENT_BUS);
-
       new ApplicationStateSnapshotListener(EVENT_BUS);
 
       // MODULES INITIALIZATION

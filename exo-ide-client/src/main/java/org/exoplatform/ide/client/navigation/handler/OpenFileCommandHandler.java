@@ -41,7 +41,6 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -99,6 +98,9 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.event.OpenFileHandler#onOpenFile(org.exoplatform.ide.client.framework.event.OpenFileEvent)
+    */
    public void onOpenFile(OpenFileEvent event)
    {
       ignoreErrorsCount = event.getIgnoreErrorsCount();
@@ -125,6 +127,11 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          file = new File(event.getHref());
       }
 
+      getFileProperties(file);
+      
+   }
+   
+   private void getFileProperties(File file) {
       VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
          @Override
@@ -140,33 +147,33 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
             getFileContent(file);
          }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-            if (fileToOpenOnError != null && ignoreErrorsCount > 0)
-            {
-               ignoreErrorsCount--;
-               getFileContent(fileToOpenOnError);
-               return;
-            }
-
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-         }
-      });
+//         @Override
+//         protected void onFailure(Throwable exception)
+//         {
+//            if (fileToOpenOnError != null && ignoreErrorsCount > 0)
+//            {
+//               ignoreErrorsCount--;
+//               getFileContent(fileToOpenOnError);
+//               return;
+//            }
+//
+////            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+//            super.onFailure(exception);
+//         }
+      });      
    }
 
    private void getFileContent(File file)
    {
       fileToOpenOnError = file;
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+//      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
       VirtualFileSystem.getInstance().getContent(file, new FileCallback()
       {
 
          @Override
          protected void onSuccess(File result)
          {
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+//            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
             openFile(result);
          }
       });
@@ -186,7 +193,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          }
 
          EditorProducer producer= EditorFactory.getEditorProducer(file.getContentType(), selectedEditor);
-         System.out.println(producer);
          eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
