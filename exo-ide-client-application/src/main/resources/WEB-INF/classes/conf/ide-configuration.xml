@@ -10,6 +10,24 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
+   
+   <component>
+    <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
+    <init-params>
+      <value-param>
+        <name>rootNodePath</name>
+        <value>/data/</value>
+      </value-param>
+      <value-param>
+        <name>workspaceName</name>
+        <value>production</value>
+      </value-param>
+      <value-param>
+        <name>rootNodeType</name>
+        <value>nt:unstructured</value>
+      </value-param>
+    </init-params>
+  </component>
 
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
