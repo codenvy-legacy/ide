@@ -335,8 +335,8 @@
                         <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                            <fileset dir="${project.build.directory}/packager-conf/unwar" />
                         </war>
-                        <war destfile="${project.build.directory}/tomcat-ide/webapps/rest.war" needxmlfile="false">
-                           <fileset dir="${basedir}/src/main/resources/rest-war" />
+                        <war destfile="${project.build.directory}/tomcat-ide/webapps/auth.war" needxmlfile="false">
+                           <fileset dir="${basedir}/src/main/resources/auth-war" />
                         </war>
                      </tasks>
                   </configuration>

@@ -21,7 +21,7 @@
 
 <body>
 <%
-    String redirectURL = "../IDE/Application.html";
+    String redirectURL = "../auth/index.html";
     response.sendRedirect(redirectURL);
 %>
 </body>

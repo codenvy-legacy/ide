@@ -19,21 +19,9 @@
 <!-- If you add any GWT meta tags, they must   -->
 <!-- be added before this line.                -->
 <!--                                           -->
-<script type="text/javascript" language="javascript">
-var registryURL = "rest/private/registry/repository";
-var configurationURL ="/IDE/rest/private/ide/configuration/init";
-var proxyServiceContext = "/rest/private/proxy";
-var appConfig = {
-  "context" : "rest/private",
-  "sslContext" : "rest/ssl",
-  "publicContext" : "rest",
-  "gadgetServer" : "/IDE/gadgets/",
-  "httpsPort": 8443
-}
+<script type="text/javascript">
+  window.location.replace("../IDE/Application.html")
 </script>
-
-<script type="text/javascript" language="javascript"
-	src="IDE.nocache.js"></script>
 </head>
 
 <!--                                           -->
@@ -42,9 +30,5 @@ var appConfig = {
 <!-- to create a completely dynamic UI.        -->
 <!--                                           -->
 <body>
-<div width="100%" alidn="right" style="position: absolute; top: 2px; right: 2px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">
-<a href="/IDE/login/logout.jsp"><b>Logout</b></a><div>
-<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 </body>
 </html>
