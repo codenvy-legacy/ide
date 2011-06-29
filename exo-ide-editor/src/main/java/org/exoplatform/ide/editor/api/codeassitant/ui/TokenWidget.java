@@ -86,11 +86,6 @@ public abstract class TokenWidget extends Composite implements HasClickHandlers,
     */
    public abstract void setSelectedStyle();
 
-   
-   /**
-    * Calls when mouse over this {@link Widget}
-    */
-   public abstract void setOveredStyle();
 
    /**
     * Calls when clear selection or mouse blur this {@link Widget}

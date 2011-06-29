@@ -18,6 +18,15 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -44,7 +53,6 @@ import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.codeassistant.jsp.JspCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.php.PhpCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.ruby.RubyCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -70,21 +78,10 @@ import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
 import org.exoplatform.ide.editor.codevalidator.JspCodeValidator;
-//import org.exoplatform.ide.editor.extension.php.client.PhpAutocompleteHelper;
-//import org.exoplatform.ide.editor.extension.php.client.PhpParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * This class need for manual testing editor functionality without loading IDE 

@@ -113,15 +113,6 @@ public abstract class JavaTokenWidgetBase extends TokenWidget
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setOveredStyle()
-    */
-   @Override
-   public void setOveredStyle()
-   {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().overedItem());
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setDefaultStyle()
     */
    @Override

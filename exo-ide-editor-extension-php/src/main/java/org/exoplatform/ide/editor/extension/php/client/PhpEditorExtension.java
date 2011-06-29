@@ -32,11 +32,9 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.codeassistant.php.PhpCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-//import org.exoplatform.ide.editor.codemirror.autocomplete.PhpAutocompleteHelper;
-//import org.exoplatform.ide.editor.codemirror.parser.PhpParser;
+import org.exoplatform.ide.editor.extension.php.client.codeassistant.PhpCodeAssistant;
 import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpParser;
 
@@ -74,6 +72,8 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", Images.PHP,
             MimeType.APPLICATION_PHP), DockTarget.NONE, false);
+      
+      PhpClientBundle.INSTANCE.css().ensureInjected();
    }
 
 

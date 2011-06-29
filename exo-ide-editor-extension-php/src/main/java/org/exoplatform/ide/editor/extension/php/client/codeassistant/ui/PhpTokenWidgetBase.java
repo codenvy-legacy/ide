@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.php.ui;
+package org.exoplatform.ide.editor.extension.php.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.php.client.PhpClientBundle;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,16 +88,7 @@ public abstract class PhpTokenWidgetBase extends TokenWidget
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().selectedItem());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setOveredStyle()
-    */
-   @Override
-   public void setOveredStyle()
-   {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().overedItem());
+      setStyleName(PhpClientBundle.INSTANCE.css().selectedItem());
    }
 
    /**
@@ -106,7 +97,7 @@ public abstract class PhpTokenWidgetBase extends TokenWidget
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      setStyleName(PhpClientBundle.INSTANCE.css().item());
    }
 
    /**

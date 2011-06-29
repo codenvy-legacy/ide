@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.php.ui;
+package org.exoplatform.ide.editor.extension.php.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -24,39 +24,66 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.php.client.PhpClientBundle;
 
 /**
- * Ui component that represent PHP constant (class or script)
+ * Ui component that represent PHP Class.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class PhpConstantWidget extends PhpTokenWidgetBase
+public class PhpClassWidget extends PhpTokenWidgetBase
 {
 
    /**
     * @param token
     */
-   public PhpConstantWidget(Token token)
+   public PhpClassWidget(Token token)
    {
       super(token);
-      grid = new Grid(1, 2);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid = new Grid(1, 3);
+      grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.rubyConstant());
-      i.setHeight("16px");
 
+      Image i = getImage();
+      i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
       Label nameLabel = new Label(token.getName(), false);
+      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+
       grid.setWidget(0, 1, nameLabel);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
       grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
       grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+      grid.getCellFormatter().setWidth(0, 2, "100%");
 
       initWidget(grid);
+      setWidth("100%");
+   }
+   
+   /**
+    * Image that represent current token type(Class, Interface or Annotation)
+    * 
+    * @return {@link Image}
+    */
+   private Image getImage()
+   {
+      switch (token.getType())
+      {
+
+         case INTERFACE :
+
+            return new Image(PhpClientBundle.INSTANCE.intrfaceItem());
+            
+         case CLASS :
+         default :
+            return new Image(PhpClientBundle.INSTANCE.classItem());
+
+      }
+
    }
 
 }

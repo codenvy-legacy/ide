@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.php.ui;
+package org.exoplatform.ide.editor.extension.php.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.php.client.PhpClientBundle;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -41,9 +41,9 @@ public class PhpTokenKeyWordWidget extends PhpTokenWidgetBase
    {
       super(token);
       grid = new Grid(1, 2);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.blankImage());
+      Image i = new Image(PhpClientBundle.INSTANCE.blankImage());
       i.setHeight("16px");
 
       grid.setWidget(0, 0, i);
@@ -59,7 +59,7 @@ public class PhpTokenKeyWordWidget extends PhpTokenWidgetBase
    }
 
    /**
-   * @see org.exoplatform.ide.editor.codeassistant.php.ui.PhpTokenWidgetBase#getTokenValue()
+   * @see org.exoplatform.ide.editor.extension.php.client.codeassistant.ui.PhpTokenWidgetBase#getTokenValue()
    */
    @Override
    public String getTokenValue()
