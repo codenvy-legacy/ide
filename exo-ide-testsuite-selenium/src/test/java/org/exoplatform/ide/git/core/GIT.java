@@ -45,7 +45,9 @@ public class GIT
       String NOT_GIT_REPO = "Not a git repository (or any of the parent directories).";
 
       String ADD_SUCCESS = "[INFO] Successfully added to index.";
-
+      
+      String RESET_COMMIT_SUCCESS = "[INFO] Successfully reseted.";
+      
       String NOTHING_TO_COMMIT = "Nothing to commit.";
       
       String RESET_FILES_SUCCESS = "[INFO] Successfully reseted files.";
@@ -95,4 +97,6 @@ public class GIT
    public Status STATUS = new Status();
 
    public ResetFiles RESET_FILES = new ResetFiles();
+   
+   public ResetToCommit RESET_TO_COMMIT = new ResetToCommit();
 }
