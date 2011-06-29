@@ -56,68 +56,85 @@ public class EditorFactory
    static
    {
 
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
-         Images.FileTypes.TXT, true, new CodeMirrorConfiguration().setGenericParsers("['parsexml.js', 'parsecss.js']")
-            .setGenericStyles( // generic code parsers
-               "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']" // code styles
-            )));
+      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
+         Images.FileTypes.TXT, true, new CodeMirrorConfiguration()));
 
+      CodeMirrorConfiguration xmlCodeMirrorConfiguration = new CodeMirrorConfiguration();
+      
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
-         Images.FileTypes.XML, true, new CodeMirrorConfiguration().setGenericParsers("['parsexml.js', 'tokenize.js']")
-            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").setCanBeOutlined(true)
-            .setParser(new XmlParser()).setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))));
+         Images.FileTypes.XML, true, 
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsexml.js', 'tokenize.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
+            setParser(new XmlParser()).
+            setCanBeOutlined(true).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
-         Images.FileTypes.XML, true, new CodeMirrorConfiguration().setGenericParsers("['parsexml.js', 'tokenize.js']")
-         .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").setCanBeOutlined(true)
-         .setParser(new XmlParser()).setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))));
+         Images.FileTypes.XML, true, 
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsexml.js', 'tokenize.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
+            setParser(new XmlParser()).
+            setCanBeOutlined(true).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
          IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
          new CodeMirrorConfiguration().
-         setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-         setParser(new JavaScriptParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-         setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))));
+            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
+            setParser(new JavaScriptParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))            
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(),
-         "js", Images.FileTypes.JAVASCRIPT, true, new CodeMirrorConfiguration().
-         setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-         setParser(new JavaScriptParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-         setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))));
+         "js", Images.FileTypes.JAVASCRIPT, true, 
+         new CodeMirrorConfiguration().
+            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
+            setParser(new JavaScriptParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))            
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT,
          IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
          new CodeMirrorConfiguration().
-         setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-         setParser(new JavaScriptParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-         setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))));
+            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
+            setParser(new JavaScriptParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))            
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, IDE.EDITOR_CONSTANT.codeMirrorCssEditor(), "css",
-         Images.FileTypes.CSS, true,  new CodeMirrorConfiguration().
-         setGenericParsers("['parsecss.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-         setParser(new CssParser()).
-         setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))));
+         Images.FileTypes.CSS, true, 
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsecss.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+            setParser(new CssParser()).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))         
+      ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.codeMirrorHtmlEditor(), "html",
-         Images.FileTypes.HTML, true,  new CodeMirrorConfiguration().
-         setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-            + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-         setParser(new HtmlParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new HtmlAutocompleteHelper()).
-         setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML)).
-         setCanHaveSeveralMimeTypes(true)));
+         Images.FileTypes.HTML, true, 
+         new CodeMirrorConfiguration().
+            setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
+            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+            setParser(new HtmlParser()).
+            setCanBeOutlined(true).
+            setAutocompleteHelper(new HtmlAutocompleteHelper()).
+            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML)).
+            setCanHaveSeveralMimeTypes(true)
+      ));   
 
       addEditor(new CKEditorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.ckEditorHtmlEditor(), "html",
          Images.FileTypes.HTML, false, new CKEditorConfiguration()));
