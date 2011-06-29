@@ -16,30 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
+package org.exoplatform.ide.editor.extension.java.client;
 
+import com.google.gwt.junit.client.GWTTestCase;
 
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @version $Id: Base Feb 25, 2011 10:59:00 AM evgen $
  *
  */
-public class GwtCodeAssistantTestSuite extends TestCase
+public class Base extends GWTTestCase
 {
-   public static Test suite()
+
+   /**
+    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    */
+//   @Override
+   public String getModuleName()
    {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
-       suite.addTestSuite(CssGwtTestCodeAssistant.class );
-       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
-       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
-       suite.addTestSuite(XmlGwtTestCodeAssistant.class);
-       suite.addTestSuite(NetvibesGwtTestCodeAssistant.class);
-       return suite;
+      return "org.exoplatform.ide.editor.EditorTest";
    }
    
+   /**
+    * Takes in a trusted JSON String and evals it.
+    * @param JSON String that you trust
+    * @return JavaScriptObject that you can cast to an Overlay Type
+    */
+   protected native JavaScriptObject parseJson(String json) /*-{
+     return eval('(' + json + ')'); ;
+   }-*/;
+
 }

@@ -31,17 +31,17 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
+import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.GroovyCodeAssistant;
+import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.service.GroovyCodeAssistantService;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -96,7 +96,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
+    * @see org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
     */
    @Override
    public void handleError(Throwable exc)

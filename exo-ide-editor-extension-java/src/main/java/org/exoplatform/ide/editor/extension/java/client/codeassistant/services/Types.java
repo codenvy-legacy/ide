@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,30 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
-
-
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
+package org.exoplatform.ide.editor.extension.java.client.codeassistant.services;
 
 /**
+ * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @version $Id: Dec 15, 2010 5:05:08 PM evgen $
  *
  */
-public class GwtCodeAssistantTestSuite extends TestCase
-{
-   public static Test suite()
-   {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
-       suite.addTestSuite(CssGwtTestCodeAssistant.class );
-       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
-       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
-       suite.addTestSuite(XmlGwtTestCodeAssistant.class);
-       suite.addTestSuite(NetvibesGwtTestCodeAssistant.class);
-       return suite;
-   }
-   
+public enum Types {
+  CLASS, ANNOTATION, INTERFACE; 
+  
+  public String toString() {
+     return this.name().toLowerCase();
+  };
 }

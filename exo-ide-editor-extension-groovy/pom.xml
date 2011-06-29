@@ -31,6 +31,11 @@
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-java</artifactId>
+      </dependency>
+
    </dependencies>
    <build>
       <resources>

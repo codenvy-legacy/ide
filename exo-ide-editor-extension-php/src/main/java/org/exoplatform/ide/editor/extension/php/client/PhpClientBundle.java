@@ -40,7 +40,7 @@ public interface PhpClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/extension/php/client/styles/php.css")
    PhpCss css();
    
-   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/class-item.png")
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/class.gif")
    ImageResource classItem();
 
    @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/innerinterface_public.gif")

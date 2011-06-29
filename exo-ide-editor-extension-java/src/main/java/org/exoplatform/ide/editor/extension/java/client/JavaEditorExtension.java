@@ -31,16 +31,16 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.JavaCodeAssistantService;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -65,6 +65,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Java Class", "Java Class", "Create Java Class", Images.JAVA,
             MimeType.APPLICATION_JAVA), DockTarget.NONE, false);
+      
+      JavaClientBundle.INSTANCE.css().ensureInjected();
    }
 
    /**
@@ -101,7 +103,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    }
 
    /**
-    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
+    * @see org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
     */
    @Override
    public void handleError(Throwable exc)

@@ -31,16 +31,16 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.java.service.CodeAssistantService;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
+import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.service.GroovyCodeAssistantService;
+import org.exoplatform.ide.editor.extension.gtmpl.client.codeassistant.GroovyTemplateCodeAssistant;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
+import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -110,7 +110,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    }
 
    /**
-    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
+    * @see org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
     */
    @Override
    public void handleError(Throwable exc)

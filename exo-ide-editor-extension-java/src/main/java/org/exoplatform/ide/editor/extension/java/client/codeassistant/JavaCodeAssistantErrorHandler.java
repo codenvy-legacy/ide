@@ -16,30 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
-
-
-import com.google.gwt.junit.tools.GWTTestSuite;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
+package org.exoplatform.ide.editor.extension.java.client.codeassistant;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @version $Id: JavaCodeAssistantErrorHandler Mar 3, 2011 12:44:35 PM evgen $
  *
  */
-public class GwtCodeAssistantTestSuite extends TestCase
+public interface JavaCodeAssistantErrorHandler
 {
-   public static Test suite()
-   {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
-       suite.addTestSuite(CssGwtTestCodeAssistant.class );
-       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
-       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
-       suite.addTestSuite(XmlGwtTestCodeAssistant.class);
-       suite.addTestSuite(NetvibesGwtTestCodeAssistant.class);
-       return suite;
-   }
-   
+   void handleError(Throwable exception);
 }

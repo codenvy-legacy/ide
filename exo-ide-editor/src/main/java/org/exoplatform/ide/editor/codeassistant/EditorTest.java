@@ -27,8 +27,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
@@ -43,41 +41,21 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
-import org.exoplatform.ide.editor.codeassistant.groovy.GroovyCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.groovy.service.GroovyCodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.groovytemplate.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler;
-import org.exoplatform.ide.editor.codeassistant.java.JavaTokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.java.service.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.codeassistant.jsp.JspCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.ruby.RubyCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.RubyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
-import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
-import org.exoplatform.ide.editor.codemirror.parser.GroovyTemplateParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
-import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
-import org.exoplatform.ide.editor.codemirror.parser.JspParser;
 import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
-import org.exoplatform.ide.editor.codevalidator.GroovyCodeValidator;
-import org.exoplatform.ide.editor.codevalidator.GroovyTemplateCodeValidator;
-import org.exoplatform.ide.editor.codevalidator.JavaCodeValidator;
-import org.exoplatform.ide.editor.codevalidator.JspCodeValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +68,7 @@ import java.util.Map;
  * @version $Id: EditorTest Feb 24, 2011 10:03:57 AM evgen $
  *
  */
-public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
+public class EditorTest implements EntryPoint
 {
 
    private static final HandlerManager eventBus = new HandlerManager(null);
@@ -137,76 +115,76 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
          }
       });
 
-      GroovyCodeAssistant groovyCodeAssistant =
-         new GroovyCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()),
-            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private" + "/ide/code-assistant/class-doc?fqn="),
-            new JavaCodeAssistantErrorHandler()
-            {
-
-               @Override
-               public void handleError(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException s = (ServerException)exception;
-                     System.out.println(s.getMessage());
-                  }
-                  else
-                     exception.printStackTrace();
-               }
-            });
-      groovyCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
-
-      JavaCodeAssistant javaCodeAssistant =
-         new JavaCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()),
-            new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
-            {
-
-               @Override
-               public void handleError(Throwable exception)
-               {
-
-               }
-            });
-      javaCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
-
-      GroovyTemplateCodeAssistant templateCodeAssistant =
-         new GroovyTemplateCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()),
-            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
-            {
-
-               @Override
-               public void handleError(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException s = (ServerException)exception;
-                     System.out.println(s.getMessage());
-                  }
-                  else
-                     exception.printStackTrace();
-               }
-            });
-      templateCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
-
-      JspCodeAssistant jspCodeAssistant =
-         new JspCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()),
-            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
-            {
-
-               @Override
-               public void handleError(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException s = (ServerException)exception;
-                     System.out.println(s.getMessage());
-                  }
-                  else
-                     exception.printStackTrace();
-               }
-            });
-      jspCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+//      GroovyCodeAssistant groovyCodeAssistant =
+//         new GroovyCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()),
+//            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private" + "/ide/code-assistant/class-doc?fqn="),
+//            new JavaCodeAssistantErrorHandler()
+//            {
+//
+//               @Override
+//               public void handleError(Throwable exception)
+//               {
+//                  if (exception instanceof ServerException)
+//                  {
+//                     ServerException s = (ServerException)exception;
+//                     System.out.println(s.getMessage());
+//                  }
+//                  else
+//                     exception.printStackTrace();
+//               }
+//            });
+//      groovyCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+//
+//      JavaCodeAssistant javaCodeAssistant =
+//         new JavaCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()),
+//            new JavaTokenWidgetFactory(""), new JavaCodeAssistantErrorHandler()
+//            {
+//
+//               @Override
+//               public void handleError(Throwable exception)
+//               {
+//
+//               }
+//            });
+//      javaCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+//
+//      GroovyTemplateCodeAssistant templateCodeAssistant =
+//         new GroovyTemplateCodeAssistant(new GroovyCodeAssistantService(eventBus, "", new EmptyLoader()),
+//            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+//            {
+//
+//               @Override
+//               public void handleError(Throwable exception)
+//               {
+//                  if (exception instanceof ServerException)
+//                  {
+//                     ServerException s = (ServerException)exception;
+//                     System.out.println(s.getMessage());
+//                  }
+//                  else
+//                     exception.printStackTrace();
+//               }
+//            });
+//      templateCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
+//
+//      JspCodeAssistant jspCodeAssistant =
+//         new JspCodeAssistant(new JavaCodeAssistantService(eventBus, "", new EmptyLoader()),
+//            new JavaTokenWidgetFactory("http://127.0.0.1:8888/rest/private"), new JavaCodeAssistantErrorHandler()
+//            {
+//
+//               @Override
+//               public void handleError(Throwable exception)
+//               {
+//                  if (exception instanceof ServerException)
+//                  {
+//                     ServerException s = (ServerException)exception;
+//                     System.out.println(s.getMessage());
+//                  }
+//                  else
+//                     exception.printStackTrace();
+//               }
+//            });
+//      jspCodeAssistant.setactiveFileHref("http://127.0.0.1:8888/rest/private/jcr/repository/dev-monit/1.txt");
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, "CodeMirror text editor", "txt", "", true,
          new CodeMirrorConfiguration()));
@@ -303,77 +281,77 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
             setCanHaveSeveralMimeTypes(true)        
       ));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-            setParser(new GroovyParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new GroovyAutocompleteHelper()).
-            setCodeAssistant(groovyCodeAssistant).
-            setCodeValidator(new GroovyCodeValidator())         
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
+//            setParser(new GroovyParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new GroovyAutocompleteHelper()).
+//            setCodeAssistant(groovyCodeAssistant).
+//            setCodeValidator(new GroovyCodeValidator())         
+//      ));
+//      
+//      addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
+//            setParser(new GroovyParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new GroovyAutocompleteHelper()).
+//            setCodeAssistant(groovyCodeAssistant).
+//            setCodeValidator(new GroovyCodeValidator())         
+//      ));
+//
+//      addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", "", true, 
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
+//            setParser(new GroovyParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new GroovyAutocompleteHelper()).
+//            setCodeAssistant(groovyCodeAssistant).
+//            setCodeValidator(new GroovyCodeValidator())
+//      ));
       
-      addEditor(new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-            setParser(new GroovyParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new GroovyAutocompleteHelper()).
-            setCodeAssistant(groovyCodeAssistant).
-            setCodeValidator(new GroovyCodeValidator())         
-      ));
-
-      addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", "", true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-            setParser(new GroovyParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new GroovyAutocompleteHelper()).
-            setCodeAssistant(groovyCodeAssistant).
-            setCodeValidator(new GroovyCodeValidator())
-      ));
-      
-      addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
-               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-               + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
-            setParser(new GroovyTemplateParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new GroovyTemplateAutocompleteHelper()).
-            setCodeAssistant(templateCodeAssistant).
-            setCodeValidator(new GroovyTemplateCodeValidator()).
-            setCanHaveSeveralMimeTypes(true)
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
+//               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+//               + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
+//            setParser(new GroovyTemplateParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new GroovyTemplateAutocompleteHelper()).
+//            setCodeAssistant(templateCodeAssistant).
+//            setCodeValidator(new GroovyTemplateCodeValidator()).
+//            setCanHaveSeveralMimeTypes(true)
+//      ));
      
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsejava.js', 'tokenizejava.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
-            setParser(new JavaParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new JavaAutocompleteHelper()).
-            setCodeAssistant(javaCodeAssistant).
-            setCodeValidator(new JavaCodeValidator())
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsejava.js', 'tokenizejava.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
+//            setParser(new JavaParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new JavaAutocompleteHelper()).
+//            setCodeAssistant(javaCodeAssistant).
+//            setCodeValidator(new JavaCodeValidator())
+//      ));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JSP, "CodeMirror JSP file editor", "jsp", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
-               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-               + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
-            setParser(new JspParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new JspAutocompleteHelper()).
-            setCodeAssistant(jspCodeAssistant).
-            setCodeValidator(new JspCodeValidator()).
-            setCanHaveSeveralMimeTypes(true)
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JSP, "CodeMirror JSP file editor", "jsp", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
+//               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+//               + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
+//            setParser(new JspParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new JspAutocompleteHelper()).
+//            setCodeAssistant(jspCodeAssistant).
+//            setCodeValidator(new JspCodeValidator()).
+//            setCanHaveSeveralMimeTypes(true)
+//      ));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby file editor", "rb", "", true,
          new CodeMirrorConfiguration().
@@ -436,7 +414,7 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
    @Override
    public void onModuleLoad()
    {
-      new JavaCodeAssistantService(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
+//      new JavaCodeAssistantService(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
       FlowPanel toolbar = new FlowPanel();
       toolbar.setWidth("100%");
       toolbar.setHeight("25px");
@@ -848,14 +826,5 @@ public class EditorTest implements EntryPoint, JavaCodeAssistantErrorHandler
       RootPanel.get().add(panel);
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.codeassistant.java.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
-    */
-   @Override
-   public void handleError(Throwable exception)
-   {
-      // TODO Auto-generated method stub
-
-   }
 
 }
