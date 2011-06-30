@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby.ui;
-
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,9 +41,9 @@ public class RubyKeyWordWidget extends RubyBaseWidget
    {
       super(token);
       grid = new Grid(1, 2);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.blankImage());
+      Image i = new Image(RubyClientBundle.INSTANCE.blankImage());
       i.setHeight("16px");
 
       grid.setWidget(0, 0, i);

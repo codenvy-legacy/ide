@@ -16,35 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby.ui;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: RubyConstantWidget May 10, 2011 12:06:17 PM evgen $
+ * @version $Id: RubyVariableWidget May 10, 2011 2:56:42 PM evgen $
  *
  */
-public class RubyConstantWidget extends RubyBaseWidget
+public class RubyVariableWidget extends RubyBaseWidget
 {
 
    /**
     * @param token
     */
-   public RubyConstantWidget(Token token)
+   public RubyVariableWidget(Token token, ImageResource image)
    {
       super(token);
-      
       grid = new Grid(1, 2);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
       grid.setWidth("100%");
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.rubyConstant());
+      Image i = new Image(image);
       i.setHeight("16px");
 
       grid.setWidget(0, 0, i);

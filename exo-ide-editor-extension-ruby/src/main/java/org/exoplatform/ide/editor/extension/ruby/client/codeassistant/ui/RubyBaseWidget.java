@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby.ui;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -26,8 +26,8 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.Modifiers;
+import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.Modifiers;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -104,7 +104,7 @@ public abstract class RubyBaseWidget extends TokenWidget
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().selectedItem());
+      setStyleName(RubyClientBundle.INSTANCE.css().selectedItem());
    }
 
    /**
@@ -113,7 +113,7 @@ public abstract class RubyBaseWidget extends TokenWidget
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      setStyleName(RubyClientBundle.INSTANCE.css().item());
    }
 
    /**

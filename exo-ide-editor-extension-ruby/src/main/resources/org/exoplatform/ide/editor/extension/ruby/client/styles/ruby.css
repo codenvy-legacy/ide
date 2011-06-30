@@ -1,0 +1,37 @@
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-selected
+{
+	background-color: #FFFFFF;
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-list-item TBODY TR TD DIV,
+.exo-autocomplete-list-item-selected TBODY TR TD DIV
+{
+	font-family: monospace;
+    font-size: 10pt;
+    border: 0 none;
+    padding: 0px;
+}
+
+.exo-autocomplete-list-item,
+.exo-autocomplete-list-item-selected
+{
+	height: 20px;
+	border-collapse: collapse;
+	cursor: default;
+	outline: none;
+}
+@sprite .exo-autocomplete-list-item-selected
+{
+	gwt-image: "itemSelected";
+	background-repeat: repeat-x;
+}
+
+.exo-autocomplete-fqn
+{
+	color: gray;
+}

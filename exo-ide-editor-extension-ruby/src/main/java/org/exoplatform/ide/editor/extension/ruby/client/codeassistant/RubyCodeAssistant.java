@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -37,12 +37,12 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.ClassMetaclass;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.Metaclass;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.MethodInfo;
-import org.exoplatform.ide.editor.codeassistant.ruby.model.BuiltinMethodsDatabase.ModuleMetaclass;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.BuiltinMethodsDatabase;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.BuiltinMethodsDatabase.ClassMetaclass;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.BuiltinMethodsDatabase.Metaclass;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.BuiltinMethodsDatabase.MethodInfo;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model.BuiltinMethodsDatabase.ModuleMetaclass;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,8 +62,9 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
 
    public interface RubyBundle extends ClientBundle
    {
-      @Source("org/exoplatform/ide/editor/public/tokens/ruby_tokens.js")
+      @Source("org/exoplatform/ide/editor/extension/ruby/client/tokens/ruby_tokens.js")
       ExternalTextResource rubyTokens();
+
    }
 
    private static List<Token> defaultTokens;

@@ -11,7 +11,7 @@
  * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
  */
 
-package org.exoplatform.ide.editor.codeassistant.ruby.model;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model;
 
 /**
  * Flags for declaration modifiers

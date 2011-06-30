@@ -43,18 +43,15 @@ import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.ruby.RubyCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.RubyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
-import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 
 import java.util.ArrayList;
@@ -353,15 +350,15 @@ public class EditorTest implements EntryPoint
 //            setCanHaveSeveralMimeTypes(true)
 //      ));
 
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby file editor", "rb", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parseruby.js', 'tokenizeruby.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']").
-            setParser(new RubyParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new RubyAutocompleteHelper()).
-            setCodeAssistant(new RubyCodeAssistant())
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby file editor", "rb", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parseruby.js', 'tokenizeruby.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']").
+//            setParser(new RubyParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new RubyAutocompleteHelper()).
+//            setCodeAssistant(new RubyCodeAssistant())
+//      ));
       
 //      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror php-script editor", "php", "", true,
 //         new CodeMirrorConfiguration().

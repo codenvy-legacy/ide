@@ -16,17 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyClassWidget;
-import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyConstantWidget;
-import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyKeyWordWidget;
-import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyMethodWidget;
-import org.exoplatform.ide.editor.codeassistant.ruby.ui.RubyVariableWidget;
+import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui.RubyClassWidget;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui.RubyConstantWidget;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui.RubyKeyWordWidget;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui.RubyMethodWidget;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui.RubyVariableWidget;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -58,16 +58,16 @@ public class RubyTokenWidgetFactory implements TokenWidgetFactory
 
          case VARIABLE :
          case LOCAL_VARIABLE :
-            return new RubyVariableWidget(token, CodeAssistantClientBundle.INSTANCE.variable());
+            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.variable());
 
          case INSTANCE_VARIABLE :
-            return new RubyVariableWidget(token, CodeAssistantClientBundle.INSTANCE.rubyObjectVariable());
+            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyObjectVariable());
 
          case CLASS_VARIABLE :
-            return new RubyVariableWidget(token, CodeAssistantClientBundle.INSTANCE.rubyClassVariable());
+            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyClassVariable());
             
          case GLOBAL_VARIABLE:
-            return new RubyVariableWidget(token, CodeAssistantClientBundle.INSTANCE.rubyGlobalVariable());
+            return new RubyVariableWidget(token, RubyClientBundle.INSTANCE.rubyGlobalVariable());
 
          default :
             return new RubyKeyWordWidget(token);

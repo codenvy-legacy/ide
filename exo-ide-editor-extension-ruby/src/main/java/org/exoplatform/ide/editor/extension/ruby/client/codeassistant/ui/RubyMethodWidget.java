@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.ruby.ui;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,7 +42,7 @@ public class RubyMethodWidget extends RubyBaseWidget
    {
       super(token);
       grid = new Grid(1, 3);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(RubyClientBundle.INSTANCE.css().item());
 
       Image i = getImage();
       i.setHeight("16px");
@@ -58,7 +58,7 @@ public class RubyMethodWidget extends RubyBaseWidget
 
       String pack = token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue();
       Label label = new Label("-" + pack, false);
-      label.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+      label.setStyleName(RubyClientBundle.INSTANCE.css().fqnStyle());
       grid.setWidget(0, 2, label);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -76,11 +76,11 @@ public class RubyMethodWidget extends RubyBaseWidget
 
       if (modifieres == 0)
       {
-         return new Image(CodeAssistantClientBundle.INSTANCE.publicMethod());
+         return new Image(RubyClientBundle.INSTANCE.publicMethod());
       }
       else
       {
-         return new Image(CodeAssistantClientBundle.INSTANCE.defaultMethod());
+         return new Image(RubyClientBundle.INSTANCE.defaultMethod());
       }
    }
 

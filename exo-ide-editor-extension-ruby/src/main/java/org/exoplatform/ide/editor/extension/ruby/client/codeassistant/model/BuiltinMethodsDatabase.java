@@ -7,7 +7,7 @@
  *
  
  *******************************************************************************/
-package org.exoplatform.ide.editor.codeassistant.ruby.model;
+package org.exoplatform.ide.editor.extension.ruby.client.codeassistant.model;
 
 import java.util.HashMap;
 import java.util.Map;

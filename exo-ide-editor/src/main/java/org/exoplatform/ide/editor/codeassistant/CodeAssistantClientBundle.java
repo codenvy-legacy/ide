@@ -97,15 +97,4 @@ public interface CodeAssistantClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/local.png")
    ImageResource variable();
 
-   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/constant-item.png")
-   ImageResource rubyConstant();
-
-   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/class-variable-item.png")
-   ImageResource rubyClassVariable();
-
-   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/instance-variable-item.png")
-   ImageResource rubyObjectVariable();
-
-   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant/global-variable-item.png")
-   ImageResource rubyGlobalVariable();
 }
