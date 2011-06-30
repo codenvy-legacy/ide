@@ -30,7 +30,6 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
-import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -118,7 +117,7 @@ public class PhpParser extends CodeMirrorParserImpl
 
       if (!currentContentMimeType.equals(MimeType.APPLICATION_PHP))
       {
-         htmlParser.parseLine(javaScriptNode, lineNumber, currentToken, true);  // call child parser
+         currentToken = htmlParser.parseLine(javaScriptNode, lineNumber, currentToken, true);  // call child parser
       }
       else
       {

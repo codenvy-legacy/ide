@@ -27,9 +27,9 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
+import org.exoplatform.ide.editor.codevalidator.CodeValidator;
+import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaAutocompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -55,7 +55,7 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
 
       else if (MimeType.APPLICATION_PHP.equals(currentLineMimeType))
       {
-         List<? extends Token> phpCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_PHP);
+         List<? extends Token> phpCode = CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_PHP);
          return getTokenBeforeCursor(node, lineNumber, cursorPosition, phpCode);
       }
       
@@ -317,7 +317,7 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
             if (genericToken != null) return genericToken;
             
             // search among the parameters of method
-            genericToken = GroovyAutocompleteHelper.searchGenericTokenAmongParameters(nodeContent, nearestToken.getParentToken().getParameters());
+            genericToken = JavaAutocompleteHelper.searchGenericTokenAmongParameters(nodeContent, nearestToken.getParentToken().getParameters());
             if (genericToken != null) return genericToken;            
          }
          
@@ -394,6 +394,16 @@ public class PhpAutocompleteHelper extends AutocompleteHelper
       }
       
       return null;
+   }
+ 
+   public boolean isVariable(String nodeType)
+   {
+      return false;
+   }
+
+   public boolean isPoint(String nodeType, String nodeContent)
+   {
+      return false;
    }
    
 }
