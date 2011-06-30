@@ -90,7 +90,7 @@ public class RestoreVersionTest extends BaseTest
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
       IDE.EDITOR.deleteFileContent();
-      saveAsUsingToolbarButton(FILE_1);
+      IDE.NAVIGATION.saveFileAs(FILE_1);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
 
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
@@ -244,7 +244,7 @@ public class RestoreVersionTest extends BaseTest
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
 
       IDE.EDITOR.deleteFileContent();
-      saveAsUsingToolbarButton(FILE_2);
+      IDE.NAVIGATION.saveFileAs(FILE_2);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
