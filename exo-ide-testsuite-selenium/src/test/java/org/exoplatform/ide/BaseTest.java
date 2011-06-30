@@ -814,7 +814,7 @@ public abstract class BaseTest
    public enum IdeAddress {
       SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), PORTAL(
          "http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"), STANDALONE(
-         "http://localhost:8080/", "http://localhost:8080/IDE/Application.html");
+         "http://localhost:8080/", "http://localhost:8080/site/index.html");
 
       private String baseUrl;
 
