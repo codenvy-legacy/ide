@@ -193,6 +193,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       refreshButton =
          new IconButton(ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refresh()),
             ImageHelper.getImageHTML(GitClientBundle.INSTANCE.refreshDisabled()));
+      refreshButton.setTitle(GitExtension.MESSAGES.refreshRevisionListButtonTitle());
       toolbar.addItem(refreshButton, true);
       toolbar.addDelimiter(true);
 

@@ -392,6 +392,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.history.date.title")
    String historyViewDateTitle();
    
+   @Key("view.history.refresh.button.title")
+   String refreshRevisionListButtonTitle();
+   
    //Pull
    @Key("view.pull.title")
    String pullTitle();
