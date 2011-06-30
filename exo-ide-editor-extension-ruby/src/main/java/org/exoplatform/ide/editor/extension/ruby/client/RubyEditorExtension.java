@@ -34,8 +34,8 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.RubyAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.RubyParser;
+import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyParser;
 import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.RubyCodeAssistant;
 
 /**

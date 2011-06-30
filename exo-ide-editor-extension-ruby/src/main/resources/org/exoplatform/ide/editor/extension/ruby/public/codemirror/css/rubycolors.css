@@ -1,0 +1,97 @@
+html {
+  cursor: text;
+}
+
+.editbox {
+  margin: .4em;
+  padding: 0;
+  font-family: "DejaVu Sans Mono", courier, monospace;
+  font-size: 10pt;
+  color: black;
+  line-height: 16px;
+  background-color: transparent;
+}
+
+pre.code, .editbox {
+  color: #666666;
+}
+
+.editbox p {
+  margin: 0;
+}
+
+.editbox .rb-comment, .editbox .rb-long-comment {
+  color: rgb(63, 127, 95);
+}
+
+.editbox .rb-method-parameter {
+  color: black;
+}
+
+.editbox .rb-variable, .editbox .rb-method-call {
+  color: black;
+}
+
+.editbox .rb-long-comment-whitespace {}
+
+.editbox .rb-symbol {
+  color: red;
+  font-weight: bold;
+}
+
+.editbox .rb-ascii {
+  color: rgb(255, 128, 128);
+  font-weight: bold;
+  font-style: italic;
+}
+
+.editbox .rb-fixnum, .editbox .rb-hexnum, .editbox .rb-binary, .editbox .rb-float {
+  color: rgb(0, 128,255);
+  font-weight: bold;
+}
+
+.editbox .rb-entity {
+  color:#89BDFF;
+}
+
+.editbox .rb-keyword {
+   color: rgb(164, 53, 122);
+   font-weight: bold;
+} 
+
+.editbox .rb-operator {
+  color: black;
+}
+
+.editbox .rb-storage {
+  color:#99CF50;
+}
+
+.editbox .rb-string, .editbox .rb-heredoc, .editbox .rb-exec {
+  color: rgb(42, 0, 255);
+}
+
+.editbox .rb-class, .editbox .rb-constant {
+  color: black;
+}
+
+.editbox .rb-global-variable {
+  color: red;
+}
+
+.editbox .rb-class-var, .editbox .rb-instance-var  {
+  color: rgb(0, 64, 128);
+  font-weight: bold;
+}
+
+.editbox .rb-string .constant {
+  color:#DDF2A4;
+}
+
+.editbox .rb-regexp {
+  color: rgb(90, 30, 160);
+}
+
+.editbox .rb-method {
+  color: black;
+}

@@ -33,14 +33,14 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.JspAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.JspParser;
-import org.exoplatform.ide.editor.codevalidator.JspCodeValidator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.extension.jsp.client.codeassistant.JspCodeAssistant;
+import org.exoplatform.ide.editor.extension.jsp.client.codemirror.JspAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.jsp.client.codemirror.JspCodeValidator;
+import org.exoplatform.ide.editor.extension.jsp.client.codemirror.JspParser;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
