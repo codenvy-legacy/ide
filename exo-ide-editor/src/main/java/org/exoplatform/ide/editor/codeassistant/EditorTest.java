@@ -18,14 +18,9 @@
  */
 package org.exoplatform.ide.editor.codeassistant;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
@@ -41,21 +36,24 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
-import org.exoplatform.ide.editor.codemirror.parser.GoogleGadgetParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * This class need for manual testing editor functionality without loading IDE 
@@ -253,17 +251,17 @@ public class EditorTest implements EntryPoint
             setCanHaveSeveralMimeTypes(true)
       ));      
       
-      addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-            setParser(new GoogleGadgetParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new HtmlAutocompleteHelper()).
-            setCodeAssistant(new HtmlCodeAssistant()).
-            setCanHaveSeveralMimeTypes(true)
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.GOOGLE_GADGET, "CodeMirror Google Gadget editor", "xml", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+//               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+//            setParser(new GoogleGadgetParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new HtmlAutocompleteHelper()).
+//            setCodeAssistant(new HtmlCodeAssistant()).
+//            setCanHaveSeveralMimeTypes(true)
+//      ));
 
 //      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml", "", true,
 //         new CodeMirrorConfiguration().
@@ -407,7 +405,6 @@ public class EditorTest implements EntryPoint
    /**
     * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
     */
-   @Override
    public void onModuleLoad()
    {
 //      new JavaCodeAssistantService(eventBus, "http://127.0.0.1:8888/rest/private", new EmptyLoader());
@@ -503,150 +500,150 @@ public class EditorTest implements EntryPoint
          }
       });
 
-      Button googleGadgetButton = new Button();
-      googleGadgetButton.setTitle("Create Google Gadget CodeMirror Editor");
-      googleGadgetButton.setText("Gadget");
-      googleGadgetButton.addClickHandler(new ClickHandler()
-      {
+//      Button googleGadgetButton = new Button();
+//      googleGadgetButton.setTitle("Create Google Gadget CodeMirror Editor");
+//      googleGadgetButton.setText("Gadget");
+//      googleGadgetButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
+//
+//            editor =
+//               codeEditors.get(MimeType.GOOGLE_GADGET).createEditor(
+//                  ExamplesBundle.INSTANCE.googleGadgetExample().getText(), eventBus, params);
+//
+//            editor.setHotKeyList(new ArrayList<String>()
+//            {
+//               {
+//                  add("Ctrl+70"); // Ctrl+F
+//                  add("Ctrl+68"); // Ctrl+D
+//                  add("Ctrl+83"); // Ctrl+S
+//                  add("Alt+70"); // Alt+F    
+//                  add("Ctrl+78"); // Ctrl+N               
+//               }
+//            });
+//
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
+//
+//      Button netvibesButton = new Button();
+//      netvibesButton.setTitle("Create Netvibes Widget CodeMirror Editor");
+//      netvibesButton.setText("Netvibes");
+//      netvibesButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.UWA_WIDGET);
+//
+//            editor =
+//               codeEditors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
+//                  eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
+//
+//      Button groovyButton = new Button();
+//      groovyButton.setTitle("Create POJO file CodeMirror Editor");
+//      groovyButton.setText("POJO");
+//      groovyButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_GROOVY);
+//
+//            editor =
+//               codeEditors.get(MimeType.APPLICATION_GROOVY).createEditor(
+//                  ExamplesBundle.INSTANCE.groovyExample().getText(), eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
+//
+//      Button groovyServiceButton = new Button();
+//      groovyServiceButton.setTitle("Create Groovy Service CodeMirror Editor");
+//      groovyServiceButton.setText("GroovyService");
+//      groovyServiceButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_SERVICE);
+//
+//            editor =
+//               codeEditors.get(MimeType.GROOVY_SERVICE).createEditor(
+//                  ExamplesBundle.INSTANCE.groovyServiceExample().getText(), eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
+//
+//      Button dataObjectButton = new Button();
+//      dataObjectButton.setTitle("Create Data Object CodeMirror Editor");
+//      dataObjectButton.setText("DataObject");
+//      dataObjectButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
+//
+//            editor =
+//               codeEditors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(
+//                  ExamplesBundle.INSTANCE.dataObjectExample().getText(), eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
+//
+//      Button groovyTemplateButton = new Button();
+//      groovyTemplateButton.setTitle("Create Groovy Template CodeMirror Editor");
+//      groovyTemplateButton.setText("Template");
+//      groovyTemplateButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
+//
+//            editor =
+//               codeEditors.get(MimeType.GROOVY_TEMPLATE).createEditor(
+//                  ExamplesBundle.INSTANCE.groovyTemplateExample().getText(), eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.GOOGLE_GADGET);
-
-            editor =
-               codeEditors.get(MimeType.GOOGLE_GADGET).createEditor(
-                  ExamplesBundle.INSTANCE.googleGadgetExample().getText(), eventBus, params);
-
-            editor.setHotKeyList(new ArrayList<String>()
-            {
-               {
-                  add("Ctrl+70"); // Ctrl+F
-                  add("Ctrl+68"); // Ctrl+D
-                  add("Ctrl+83"); // Ctrl+S
-                  add("Alt+70"); // Alt+F    
-                  add("Ctrl+78"); // Ctrl+N               
-               }
-            });
-
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button netvibesButton = new Button();
-      netvibesButton.setTitle("Create Netvibes Widget CodeMirror Editor");
-      netvibesButton.setText("Netvibes");
-      netvibesButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.UWA_WIDGET);
-
-            editor =
-               codeEditors.get(MimeType.UWA_WIDGET).createEditor(ExamplesBundle.INSTANCE.netvibesExample().getText(),
-                  eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button groovyButton = new Button();
-      groovyButton.setTitle("Create POJO file CodeMirror Editor");
-      groovyButton.setText("POJO");
-      groovyButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_GROOVY);
-
-            editor =
-               codeEditors.get(MimeType.APPLICATION_GROOVY).createEditor(
-                  ExamplesBundle.INSTANCE.groovyExample().getText(), eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button groovyServiceButton = new Button();
-      groovyServiceButton.setTitle("Create Groovy Service CodeMirror Editor");
-      groovyServiceButton.setText("GroovyService");
-      groovyServiceButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_SERVICE);
-
-            editor =
-               codeEditors.get(MimeType.GROOVY_SERVICE).createEditor(
-                  ExamplesBundle.INSTANCE.groovyServiceExample().getText(), eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button dataObjectButton = new Button();
-      dataObjectButton.setTitle("Create Data Object CodeMirror Editor");
-      dataObjectButton.setText("DataObject");
-      dataObjectButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.CHROMATTIC_DATA_OBJECT);
-
-            editor =
-               codeEditors.get(MimeType.CHROMATTIC_DATA_OBJECT).createEditor(
-                  ExamplesBundle.INSTANCE.dataObjectExample().getText(), eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button groovyTemplateButton = new Button();
-      groovyTemplateButton.setTitle("Create Groovy Template CodeMirror Editor");
-      groovyTemplateButton.setText("Template");
-      groovyTemplateButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.GROOVY_TEMPLATE);
-
-            editor =
-               codeEditors.get(MimeType.GROOVY_TEMPLATE).createEditor(
-                  ExamplesBundle.INSTANCE.groovyTemplateExample().getText(), eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
-
-      Button javaButton = new Button();
-      javaButton.setTitle("Create JavaCodeMirror Editor");
-      javaButton.setText("Java");
-      javaButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVA);
-
-            editor =
-               codeEditors.get(MimeType.APPLICATION_JAVA).createEditor(ExamplesBundle.INSTANCE.javaExample().getText(),
-                  eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
+//      Button javaButton = new Button();
+//      javaButton.setTitle("Create JavaCodeMirror Editor");
+//      javaButton.setText("Java");
+//      javaButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVA);
+//
+//            editor =
+//               codeEditors.get(MimeType.APPLICATION_JAVA).createEditor(ExamplesBundle.INSTANCE.javaExample().getText(),
+//                  eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
 
       Button htmlCKEditorButton = new Button();
       htmlCKEditorButton.setTitle("Create HTML CKEditor");
@@ -696,24 +693,24 @@ public class EditorTest implements EntryPoint
          }
       });
 
-      Button jspButton = new Button();
-      jspButton.setTitle("Create JSPCodeMirror Editor");
-      jspButton.setText("JSP");
-      jspButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JSP);
-
-            editor =
-               codeEditors.get(MimeType.APPLICATION_JSP).createEditor(ExamplesBundle.INSTANCE.jspExample().getText(),
-                  eventBus, params);
-            panel.clear();
-            panel.add(editor);
-         }
-      });
+//      Button jspButton = new Button();
+//      jspButton.setTitle("Create JSPCodeMirror Editor");
+//      jspButton.setText("JSP");
+//      jspButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JSP);
+//
+//            editor =
+//               codeEditors.get(MimeType.APPLICATION_JSP).createEditor(ExamplesBundle.INSTANCE.jspExample().getText(),
+//                  eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//         }
+//      });
 
 //      Button phpButton =
 //         new Button();
@@ -758,25 +755,25 @@ public class EditorTest implements EntryPoint
          }
       });
 
-      Button rubyButton = new Button();
-      rubyButton.setTitle("Create CodeMirror Editor for Ruby file");
-      rubyButton.setText("Ruby");
-      rubyButton.addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_RUBY);
-
-            editor =
-               codeEditors.get(MimeType.APPLICATION_RUBY).createEditor(ExamplesBundle.INSTANCE.rubyExample().getText(),
-                  eventBus, params);
-            panel.clear();
-            panel.add(editor);
-
-         }
-      });
+//      Button rubyButton = new Button();
+//      rubyButton.setTitle("Create CodeMirror Editor for Ruby file");
+//      rubyButton.setText("Ruby");
+//      rubyButton.addClickHandler(new ClickHandler()
+//      {
+//
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_RUBY);
+//
+//            editor =
+//               codeEditors.get(MimeType.APPLICATION_RUBY).createEditor(ExamplesBundle.INSTANCE.rubyExample().getText(),
+//                  eventBus, params);
+//            panel.clear();
+//            panel.add(editor);
+//
+//         }
+//      });
 
       Button diffButton = new Button();
       diffButton.setTitle("Create CodeMirror Editor for diff");
@@ -800,15 +797,15 @@ public class EditorTest implements EntryPoint
       toolbar.add(htmlButton);
       toolbar.add(jsButton);
       toolbar.add(xmlButton);
-      toolbar.add(googleGadgetButton);
-      toolbar.add(netvibesButton);
-      toolbar.add(groovyButton);
-      toolbar.add(groovyServiceButton);
-      toolbar.add(dataObjectButton);
-      toolbar.add(groovyTemplateButton);
-      toolbar.add(javaButton);
-      toolbar.add(jspButton);
-      toolbar.add(rubyButton);
+//      toolbar.add(googleGadgetButton);
+//      toolbar.add(netvibesButton);
+//      toolbar.add(groovyButton);
+//      toolbar.add(groovyServiceButton);
+//      toolbar.add(dataObjectButton);
+//      toolbar.add(groovyTemplateButton);
+//      toolbar.add(javaButton);
+//      toolbar.add(jspButton);
+//      toolbar.add(rubyButton);
 //      toolbar.add(phpButton);
       toolbar.add(diffButton);      
       
