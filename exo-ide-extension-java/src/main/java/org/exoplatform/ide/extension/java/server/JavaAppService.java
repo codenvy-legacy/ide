@@ -136,7 +136,7 @@ public class JavaAppService
             return name.endsWith(".war"); // Support only web applications at the moment.
          }
       });
-      if (files.length > 0)
+      if (files != null && files.length > 0)
       {
          Map<String, String> result = new HashMap<String, String>(1);
          result.put("war", //
