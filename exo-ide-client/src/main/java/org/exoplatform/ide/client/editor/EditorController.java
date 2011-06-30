@@ -85,6 +85,8 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
+import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
+import org.exoplatform.ide.client.versioning.event.VersionRestoredHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -113,7 +115,7 @@ public class EditorController implements EditorContentChangedHandler,
    EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler,
    EditorGoToLineHandler, EditorFindTextHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler,
    EditorSetFocusHandler, RefreshHotKeysHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler,
-   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler
+   ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler
 {
    
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerAskCloseFile();
@@ -179,7 +181,8 @@ public class EditorController implements EditorContentChangedHandler,
       handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE, eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
       handlerRegistrations.put(ClosingViewEvent.TYPE, eventBus.addHandler(ClosingViewEvent.TYPE, this));
       handlerRegistrations.put(EditorFocusReceivedEvent.TYPE, eventBus.addHandler(EditorFocusReceivedEvent.TYPE, this));
-
+      handlerRegistrations.put(VersionRestoredEvent.TYPE, eventBus.addHandler(VersionRestoredEvent.TYPE, this));
+      
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -832,6 +835,23 @@ public class EditorController implements EditorContentChangedHandler,
       }
       
       return 1;
+   }
+
+   public void onVersionRestored(VersionRestoredEvent event)
+   {
+      File oldVersionFile = event.getFile();
+      Editor editor = getEditorFromView(oldVersionFile.getHref());
+
+      // ignore changing of non-opened or non-active file
+      if (editor == null 
+               || !oldVersionFile.getHref().equals(activeFile.getHref()))
+      {
+         return;
+      }
+      
+      // file changing should be finished in time of handling EditorContentChangedEvent 
+      ignoreContentChangedList.add(oldVersionFile.getHref());
+      editor.setText(oldVersionFile.getContent());
    }
    
 }
