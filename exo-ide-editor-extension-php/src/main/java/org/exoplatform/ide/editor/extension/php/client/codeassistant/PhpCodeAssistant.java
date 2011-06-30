@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
 {
-   
+
    public interface PhpBundle extends ClientBundle
    {
       @Source("org/exoplatform/ide/editor/extension/php/client/tokens/php_tokens.js")
@@ -76,20 +76,19 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, int cursorPositionY, final List<Token> tokenList,
+   public void autocompleteCalled(final Editor editor, int cursorOffsetX, int cursorOffsetY, final List<Token> tokenList,
       String lineMimeType, final Token currentToken)
    {
       if (!lineMimeType.equals(MimeType.APPLICATION_PHP))
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
-            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, cursorOffsetX,
+            cursorOffsetY, tokenList, lineMimeType, currentToken);
          return;
       }
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
-      currentLine = cursorPositionY;
+      currentLine = editor.getCursorRow();
       if (keyWords == null)
       {
          PhpBundle bundle = GWT.create(PhpBundle.class);
@@ -104,7 +103,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                   JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
                   JSONTokenParser parser = new JSONTokenParser();
                   keyWords = parser.getTokens(parseLenient.isArray());
-                  doAutocomplete(lineContent, cursorPositionX, tokenList, currentToken);
+                  doAutocomplete(editor.getLineContent(currentLine), editor.getCursorCol(), tokenList, currentToken);
                }
 
                @Override
@@ -120,7 +119,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
          }
          return;
       }
-      doAutocomplete(lineContent, cursorPositionX, tokenList, currentToken);
+      doAutocomplete(editor.getLineContent(currentLine), editor.getCursorCol(), tokenList, currentToken);
    }
 
    /**
@@ -139,8 +138,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
          parseTokenLine(lineContent, cursorPositionX);
          //object
          String trimBeforeToken = beforeToken.trim();
-         
-         
+
          if (trimBeforeToken.endsWith("->"))
          {
             if (currentToken != null)
@@ -173,7 +171,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                varType = currentToken.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
             else
                varType = currentToken.getName();
-            
+
             Token type = findTokenForType(varType, tokensFromParser);
             if (type != null)
             {
@@ -605,7 +603,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       {
          return 1;
       }
-      
+
       if (t1.getType() == TokenType.CLASS_CONSTANT)
       {
          return -1;
@@ -614,8 +612,8 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       if (t2.getType() == TokenType.CLASS_CONSTANT)
       {
          return 1;
-      }  
-      
+      }
+
       if (t1.getType() == TokenType.CONSTANT)
       {
          return -1;
@@ -624,7 +622,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
       if (t2.getType() == TokenType.CONSTANT)
       {
          return 1;
-      }    
+      }
 
       if (t1.getType() == TokenType.METHOD || t1.getType() == TokenType.PROPERTY)
       {

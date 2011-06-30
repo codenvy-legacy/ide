@@ -59,16 +59,15 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
-      Token currentToken)
+   public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
+      String lineMimeType, Token currentToken)
    {
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
       try
       {
-         parseTokenLine(lineContent, cursorPositionX);
+         parseTokenLine(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
          if (tokenToComplete.endsWith(" "))
          {
             beforeToken += tokenToComplete;
@@ -99,7 +98,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
          if (t.getName() != null && t.getType() == TokenType.TAG)
          {
             tokens.put(t.getName(), t);
-            t.setProperty(TokenProperties.CODE, new StringProperty("<" + t.getName() + "></" + t.getName() +">"));
+            t.setProperty(TokenProperties.CODE, new StringProperty("<" + t.getName() + "></" + t.getName() + ">"));
          }
          if (t.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && t.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
@@ -144,7 +143,6 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
    {
       return new HtmlTokenWidget(token);
    }
-   
 
    /**
     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)

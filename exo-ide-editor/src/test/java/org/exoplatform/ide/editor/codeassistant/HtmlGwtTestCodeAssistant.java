@@ -84,7 +84,7 @@ public class HtmlGwtTestCodeAssistant extends Base
          }
       }
 
-      new HtmlCodeAssist().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
+      new HtmlCodeAssist().autocompleteCalled(null, 0, 0,
          new ArrayList<Token>(), MimeType.TEXT_HTML, null);
    }
 }

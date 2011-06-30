@@ -74,16 +74,15 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, final int cursorPositionY, final List<Token> tokenList,
-      String lineMimeType, final Token currentToken)
+   public void autocompleteCalled(final Editor editor, final int cursorOffsetX, final int cursorOffsetY,
+      final List<Token> tokenList, String lineMimeType, final Token currentToken)
    {
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
       try
       {
-         parseTokenLine(lineContent, cursorPositionX);
+         parseTokenLine(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
 
          if (defaultTokens == null)
          {
@@ -108,8 +107,8 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
                   {
                      tokensByFQN.put(t.getName().toLowerCase(), t);
                   }
-                  
-                  autocompletion(cursorPositionY, tokenList, currentToken);
+
+                  autocompletion(editor.getCursorRow(), tokenList, currentToken);
                }
 
                @Override
@@ -122,7 +121,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
             return;
          }
 
-         autocompletion(cursorPositionY, tokenList, currentToken);
+         autocompletion(editor.getCursorRow(), tokenList, currentToken);
       }
       catch (Exception e)
       {
@@ -136,8 +135,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
     * @param lineContent
     * @param cursorPositionX
     */
-   private void autocompletion(int lineNum, List<Token> tokenList,
-      Token currentToken)
+   private void autocompletion(int lineNum, List<Token> tokenList, Token currentToken)
    {
 
       List<Token> tokens = new ArrayList<Token>();
@@ -153,7 +151,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
          else
          {
             String fqn = beforeToken.substring(0, beforeToken.length());
-            String[] posFQN =  fqn.split("[^A-Za-z0-9_]+"); 
+            String[] posFQN = fqn.split("[^A-Za-z0-9_]+");
             if (posFQN.length > 0)
             {
                clazz = tokensByFQN.get(posFQN[posFQN.length - 1].toLowerCase());
@@ -173,8 +171,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       Collections.sort(tokens, this);
       openForm(tokens, new JavaScriptTokenWidgetFactory(), this);
    }
- 
-   
+
    /**
     * @param lineNum
     * @param tokenFromParser
@@ -188,7 +185,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       Token tok = null;
       for (Token t : tokenFromParser)
       {
-         if(t.getName() == null)
+         if (t.getName() == null)
          {
             continue;
          }
@@ -221,7 +218,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       {
          for (Token t : tok.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue())
          {
-            if(t.getName() == null)
+            if (t.getName() == null)
             {
                continue;
             }

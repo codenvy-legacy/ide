@@ -108,19 +108,17 @@ public class JspCodeAssistant extends JavaCodeAssistant
     * @see org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
-      Token currentToken)
+   public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
+      String lineMimeType, Token currentToken)
    {
       if (MimeType.APPLICATION_JAVA.equals(lineMimeType))
       {
-         super.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent, cursorPositionX,
-            cursorPositionY, tokenList, lineMimeType, currentToken);
+         super.autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
       }
       else
       {
-         jspHtmlCodeAssistant.autocompleteCalled(editor, mimeType, cursorOffsetX, cursorOffsetY, lineContent,
-            cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         jspHtmlCodeAssistant.autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+            currentToken);
       }
    }
 

@@ -75,7 +75,7 @@ public class JavaScriptGwtTestCodeAssistant extends Base
    private void paseLine(final String line, final String before, final String token, final String after,
       final int curPos)
    {
-     assist.autocompleteCalled(null, "", 0, 0, line, curPos, 0, new ArrayList<Token>(), "", null);
+     assist.autocompleteCalled(null, 0, 0, new ArrayList<Token>(), "", null);
      assertEquals(before, assist.getBeforeToken());
      assertEquals(token, assist.getToken());
      assertEquals(after, assist.getAfterToken());

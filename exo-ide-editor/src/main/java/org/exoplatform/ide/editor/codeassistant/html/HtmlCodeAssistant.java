@@ -127,14 +127,13 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList,
-      String lineMimeType, Token currentToken)
+   public void autocompleteCalled(Editor editor, final int cursorOffsetX, final int cursorOffsetY,
+      List<Token> tokenList, String lineMimeType, Token currentToken)
    {
       if (!MimeType.TEXT_HTML.equals(lineMimeType))
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
-            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenList, lineMimeType, currentToken);
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, cursorOffsetX, cursorOffsetY,
+            tokenList, lineMimeType, currentToken);
          return;
       }
 
@@ -146,11 +145,11 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
          if (htmlTokens.size() == 0)
          {
-            getTokens(lineContent, cursorPositionX);
+            getTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
             return;
          }
 
-         autocompletion(lineContent, cursorPositionX);
+         autocompletion(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
       }
       catch (Exception e)
       {
@@ -298,7 +297,7 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
       {
          beforeToken = tokenLine;
          tokenToComplete = "";
-         isTag  = false;
+         isTag = false;
       }
 
    }

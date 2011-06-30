@@ -61,8 +61,8 @@ public class CssCodeAssistant extends CodeAssistant
    /**
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
-   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
+   public void autocompleteCalled(final Editor editor, final int cursorOffsetX, final int cursorOffsetY,
+       List<Token> tokenList, String lineMimeType,
       Token currentToken)
    {
       try
@@ -82,7 +82,7 @@ public class CssCodeAssistant extends CodeAssistant
                   JSONTokenParser parser = new JSONTokenParser();
                   JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
                   cssProperty = parser.getTokens(tokenArray);
-                  fillTokens(lineContent, cursorPositionX);
+                  fillTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
                }
                
                @Override
@@ -93,7 +93,7 @@ public class CssCodeAssistant extends CodeAssistant
             });
             return;
          }
-         fillTokens(lineContent, cursorPositionX);
+         fillTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
       }
       catch (Exception e)
       {

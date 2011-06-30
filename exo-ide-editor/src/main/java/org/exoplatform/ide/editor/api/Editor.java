@@ -185,4 +185,11 @@ public abstract class Editor extends AbsolutePanel
     * @param fqn
     */
    public abstract void insertImportStatement(String fqn);
+   
+   /**
+    * Get content of the line.
+    * @param line number of line. <b>Must be larger 0 and less the file line count</b>
+    * @return String content of line
+    */
+   public abstract String getLineContent(int line); 
 }

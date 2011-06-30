@@ -102,7 +102,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    protected List<Token> keywords;
 
    private String activeFileHref;
-   
+
    private CodeAssistantService service;
 
    private TokenWidgetFactory factory;
@@ -120,7 +120,8 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
    /**
     * @param factory
     */
-   public JavaCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory, JavaCodeAssistantErrorHandler errorHandler)
+   public JavaCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
+      JavaCodeAssistantErrorHandler errorHandler)
    {
       super();
       this.factory = factory;
@@ -166,16 +167,17 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
-      Token currentToken)
+   public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
+      String lineMimeType, Token currentToken)
    {
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
-//      printTokens(tokenList, 1);
+      //      printTokens(tokenList, 1);
       try
       {
+         currentLineNumber = editor.getCursorRow();
+         String lineContent = editor.getLineContent(currentLineNumber);
          if (lineContent == null)
          {
             beforeToken = "";
@@ -185,10 +187,9 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
             return;
          }
 
-         currentLineNumber = cursorPositionY;
 
-         String subToken = lineContent.substring(0, cursorPositionX - 1);
-         afterToken = lineContent.substring(cursorPositionX - 1);
+         String subToken = lineContent.substring(0, editor.getCursorCol() - 1);
+         afterToken = lineContent.substring(editor.getCursorCol() - 1);
 
          String token = "";
          if (!subToken.endsWith(" "))
@@ -229,27 +230,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                action = Action.ANNOTATION;
                beforeToken += "@";
                tokenToComplete = tokenToComplete.substring(1);
-               service.findType(Types.ANNOTATION, tokenToComplete,
-                  new AsyncRequestCallback<List<Token>>()
-                  {
-
-                     @Override
-                     protected void onSuccess(List<Token> result)
-                     {
-                        filterTokens(result);
-                     }
-
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        errorHandler.handleError(exception);
-                     }
-                  });
-               return;
-            }
-
-            service.findClassesByPrefix(tokenToComplete, activeFileHref,
-               new AsyncRequestCallback<List<Token>>()
+               service.findType(Types.ANNOTATION, tokenToComplete, new AsyncRequestCallback<List<Token>>()
                {
 
                   @Override
@@ -264,6 +245,24 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
                      errorHandler.handleError(exception);
                   }
                });
+               return;
+            }
+
+            service.findClassesByPrefix(tokenToComplete, activeFileHref, new AsyncRequestCallback<List<Token>>()
+            {
+
+               @Override
+               protected void onSuccess(List<Token> result)
+               {
+                  filterTokens(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  errorHandler.handleError(exception);
+               }
+            });
          }
       }
       catch (Exception e)
@@ -277,7 +276,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     * @param subToken
     * @param token
     */
-   protected void showMethods(Token currentToken,   String varToken)
+   protected void showMethods(Token currentToken, String varToken)
    {
 
       if (currentToken == null)
@@ -311,22 +310,21 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
     */
    protected void getClassDescription()
    {
-      service.getClassDescription(curentFqn, activeFileHref,
-         new AsyncRequestCallback<JavaClass>()
+      service.getClassDescription(curentFqn, activeFileHref, new AsyncRequestCallback<JavaClass>()
+      {
+
+         @Override
+         protected void onSuccess(JavaClass result)
          {
+            classDescriptionReceived(result);
+         }
 
-            @Override
-            protected void onSuccess(JavaClass result)
-            {
-               classDescriptionReceived(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               errorHandler.handleError(exception);
-            }
-         });
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            errorHandler.handleError(exception);
+         }
+      });
    }
 
    private List<Token> filterTokenFromParser(List<Token> tokenFromParser, Token currentToken)
@@ -523,7 +521,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       callOpenForm(token);
    }
-   
+
    protected void callOpenForm(List<Token> tokens)
    {
       Collections.sort(tokens, this);
@@ -540,7 +538,7 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
       return new StringProperty(name);
    }
-   
+
    /**
     * Parse JSON token to {@link Token} beens
     * @param resource JSON
@@ -653,7 +651,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
       return tokens;
    }
-   
 
    public void setactiveFileHref(String href)
    {

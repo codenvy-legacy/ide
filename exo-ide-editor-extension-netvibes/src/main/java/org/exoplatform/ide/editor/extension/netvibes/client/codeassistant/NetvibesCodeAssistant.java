@@ -91,14 +91,13 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, final int cursorOffsetX, final int cursorOffsetY,
-      final String lineContent, final int cursorPositionX, final int cursorPositionY,
+   public void autocompleteCalled(Editor editor, final int cursorOffsetX, final int cursorOffsetY,
       final List<Token> tokenFromParser, String lineMimeType, final Token currentToken)
    {
       if (!MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, mimeType, cursorOffsetX,
-            cursorOffsetY, lineContent, cursorPositionX, cursorPositionY, tokenFromParser, lineMimeType, currentToken);
+         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, cursorOffsetX, cursorOffsetY,
+            tokenFromParser, lineMimeType, currentToken);
          return;
       }
       try
@@ -109,9 +108,9 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
          if (defaultTokens == null && nVApiTokens == null)
          {
             NetvibesBundle bundle = GWT.create(NetvibesBundle.class);
-            this.lineContent = lineContent;
-            this.cursorPositionX = cursorPositionX;
-            this.cursorPositionY = cursorPositionY;
+            cursorPositionY = editor.getCursorRow();
+            lineContent = editor.getLineContent(cursorPositionY);
+            cursorPositionX = editor.getCursorCol();
             this.tokenFromParser = tokenFromParser;
             this.currentToken = currentToken;
             bundle.netvibesTokens().getText(this);

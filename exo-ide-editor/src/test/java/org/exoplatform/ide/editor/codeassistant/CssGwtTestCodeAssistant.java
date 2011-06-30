@@ -84,7 +84,7 @@ public class CssGwtTestCodeAssistant extends Base
          }
       }
 
-      new CssAssistant().autocompleteCalled(null, "", 0, 0, line, curPos, 0,
+      new CssAssistant().autocompleteCalled(null, 0, 0,
          new ArrayList<Token>(), "", null);
    }
 

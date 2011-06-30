@@ -48,28 +48,27 @@ public class XmlGwtTestCodeAssistant extends Base
           * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#openForm(int, int, java.util.List, org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory, org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler)
           */
          @Override
-         protected void openForm(List<Token> tokens, TokenWidgetFactory factory,
-            TokenSelectedHandler handler)
+         protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
          {
-           assertEquals(8, tokens.size());
-           assertEquals("context-param", tokens.get(0).getName());
-           assertEquals("display-name", tokens.get(1).getName());
-           assertEquals("filter", tokens.get(2).getName());
-           assertEquals("filter-class", tokens.get(3).getName());
-           assertEquals("filter-name", tokens.get(4).getName());
-           assertEquals("param-name", tokens.get(5).getName());
-           assertEquals("param-value", tokens.get(6).getName());
-           assertEquals("web-app", tokens.get(7).getName());
-           
+            assertEquals(8, tokens.size());
+            assertEquals("context-param", tokens.get(0).getName());
+            assertEquals("display-name", tokens.get(1).getName());
+            assertEquals("filter", tokens.get(2).getName());
+            assertEquals("filter-class", tokens.get(3).getName());
+            assertEquals("filter-name", tokens.get(4).getName());
+            assertEquals("param-name", tokens.get(5).getName());
+            assertEquals("param-value", tokens.get(6).getName());
+            assertEquals("web-app", tokens.get(7).getName());
+
          }
       }
-     JavaScriptObject o = parseJson(CodeAssistantTestBundle.INSTANCE.cssJSON().getText());
-     JSONTokenParser parser = new JSONTokenParser();
-     
-     List<Token> tokens = parser.getTokens(new JSONArray(o));
-     new XMLAssist().autocompleteCalled(null, MimeType.TEXT_XML, 0, 0, "", 1, 1, tokens, "", null);
+      JavaScriptObject o = parseJson(CodeAssistantTestBundle.INSTANCE.cssJSON().getText());
+      JSONTokenParser parser = new JSONTokenParser();
+
+      List<Token> tokens = parser.getTokens(new JSONArray(o));
+      new XMLAssist().autocompleteCalled(null, 0, 0, tokens, "", null);
    }
-   
+
    private void printTokens(List<? extends Token> tokens, int i)
    {
       String spacer = "";
@@ -91,5 +90,5 @@ public class XmlGwtTestCodeAssistant extends Base
          }
       }
    }
-  
+
 }

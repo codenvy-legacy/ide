@@ -70,26 +70,21 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     * @param markOffsetY coordinate X
     * @param fileMimeType mime type of current edited file
     */
-   public abstract void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
-      int markOffsetY, String fileMimeType);
+   public abstract void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
+      String fileMimeType);
 
    /**
     * If editor support autocompletion, he calls this method.  
     * @param editor instance of editor
-    * @param mimeType file mime type
     * @param cursorOffsetX offset x position of cursor
     * @param cursorOffsetY offset y position of cursor
-    * @param lineContent String with current line content
-    * @param cursorPositionX  cursor position in currnt line
-    * @param cursorPositionY line number
     * @param tokenList List of parsed tokens
     * @param lineMimeType line mime type
     * @param currentToken if cursor pleased before dot(i.e. autocompletion called for method or property), 
     * contains token with information of type of variable
     */
-   public abstract void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList, String lineMimeType,
-      Token currentToken);
+   public abstract void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY,
+      List<Token> tokenList, String lineMimeType, Token currentToken);
 
    /**
     * Create and show {@link AutocompletionForm}
@@ -157,9 +152,10 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
             break;
       }
       editor.replaceTextAtCurrentLine(tokenToPaste, newCursorPos);
-      if(value.getToken().hasProperty(TokenProperties.FQN))
+      if (value.getToken().hasProperty(TokenProperties.FQN))
       {
-         editor.insertImportStatement(value.getToken().getProperty(TokenProperties.FQN).isStringProperty().stringValue());
+         editor.insertImportStatement(value.getToken().getProperty(TokenProperties.FQN).isStringProperty()
+            .stringValue());
       }
    }
 
@@ -213,7 +209,6 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
 		return eval('(' + json + ')');
    }-*/;
 
-   
    /**
     * @param tokenFromParser
     */
@@ -230,7 +225,8 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
          if (token.getName() == null)
             continue;
 
-         if (token.getProperty(TokenProperties.MIME_TYPE).isStringProperty().stringValue().equals(MimeType.APPLICATION_JAVASCRIPT))
+         if (token.getProperty(TokenProperties.MIME_TYPE).isStringProperty().stringValue()
+            .equals(MimeType.APPLICATION_JAVASCRIPT))
          {
             // get all subtokens from tag "<script>"
             if (token.getName().equals(tagName) && token.getType().equals(TokenType.TAG))
@@ -244,8 +240,8 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
             {
                tokens.add(token);
             }
-         }  
-         
+         }
+
          else if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST)
             && token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
          {
@@ -255,5 +251,5 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
       }
 
       return tokens;
-   }   
+   }
 }

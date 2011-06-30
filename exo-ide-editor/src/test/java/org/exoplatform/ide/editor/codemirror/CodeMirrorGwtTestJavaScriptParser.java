@@ -52,87 +52,90 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
 {
 
    CodeMirror editor;
+
    HandlerManager eventBus;
-   
-//   final WebClient webClient;
-   
+
+   //   final WebClient webClient;
+
    @Override
    public String getModuleName()
    {
       return "org.exoplatform.ide.editor.EditorTest";
    }
-   
+
    /**
     * @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp()
     */
    @Override
    protected void gwtSetUp() throws Exception
-   {      
+   {
       super.gwtSetUp();
-      
-//      webClient = new WebClient();
-      
+
+      //      webClient = new WebClient();
+
       System.out.println(">>>>>>>>>>>>>>>> create editor with codeMirror instance");
-      
+
       final HashMap<String, Object> params = new HashMap<String, Object>();
 
       params.put(EditorParameters.IS_READ_ONLY, false);
       params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
       params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
-      params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);      
-      params.put(EditorParameters.CONFIGURATION, 
-         
-         new CodeMirrorConfiguration().
-         setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-         setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-         setParser(new JavaScriptParser()).
-         setCanBeOutlined(true).
-         setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-         setCodeAssistant(new MockJavaScriptCodeAssistant())            
-      );
-      
-      HandlerManager eventBus = new HandlerManager(null);   
-      
-      eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, new EditorHotKeyCalledHandler(){
+      params.put(EditorParameters.MIME_TYPE, MimeType.APPLICATION_JAVASCRIPT);
+      params.put(
+         EditorParameters.CONFIGURATION,
+
+         new CodeMirrorConfiguration().setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
+            .setParser(new JavaScriptParser()).setCanBeOutlined(true)
+            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
+            .setCodeAssistant(new MockJavaScriptCodeAssistant()));
+
+      HandlerManager eventBus = new HandlerManager(null);
+
+      eventBus.addHandler(EditorHotKeyCalledEvent.TYPE, new EditorHotKeyCalledHandler()
+      {
 
          public void onEditorHotKeyCalled(EditorHotKeyCalledEvent event)
          {
-            System.out.println(">>>>>>>>>>> onCodeMirrorEditorHotKeyCalled = " + event.getHotKey());                  
+            System.out.println(">>>>>>>>>>> onCodeMirrorEditorHotKeyCalled = " + event.getHotKey());
          }
-                      
+
       });
-      
+
       editor = new CodeMirror("", params, eventBus);
 
-      editor.setHotKeyList(new ArrayList<String>(){{
-         add("Ctrl+70"); // Ctrl+F
-         add("Ctrl+68"); // Ctrl+D
-         add("Ctrl+83"); // Ctrl+S
-         add("Alt+70");  // Alt+F             
-      }});
-      
+      editor.setHotKeyList(new ArrayList<String>()
+      {
+         {
+            add("Ctrl+70"); // Ctrl+F
+            add("Ctrl+68"); // Ctrl+D
+            add("Ctrl+83"); // Ctrl+S
+            add("Alt+70"); // Alt+F             
+         }
+      });
+
       RootPanel.get().add(editor);
    }
-   
+
    public void testJavaScriptVariableParsing()
    {
       new Timer()
       {
-         
+
          @Override
          public void run()
          {
             cancel();
             System.out.println(">>>>>>>>>>>>>>>> start checking codeMirror");
-            
+
             editor.setText(CodeMirrorTestBundle.INSTANCE.javaScriptParserTest().getText());
-            
-            editor.goToPosition(21, 28);   // set cursor after the "a._"
-            
+
+            editor.goToPosition(21, 28); // set cursor after the "a._"
+
             // press Ctrl + Space
 
             // press Ctrl + S
-//            keyPress(83, true, false, false, editor.editorId);
+            //            keyPress(83, true, false, false, editor.editorId);
 
             new Timer()
             {
@@ -141,106 +144,98 @@ public class CodeMirrorGwtTestJavaScriptParser extends Base
                public void run()
                {
                   cancel();
-                  System.out.println(">>>>>>>>>>>>>>>> check parsing results");                
-                  
-                  List<TokenBeenImpl> tokenList = (List<TokenBeenImpl>) editor.getTokenList();
-                  
+                  System.out.println(">>>>>>>>>>>>>>>> check parsing results");
+
+                  List<TokenBeenImpl> tokenList = (List<TokenBeenImpl>)editor.getTokenList();
+
                   assertEquals(18, tokenList.size());
-                  
+
                   // new TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType, String initializationStatement)
-                  testToken(tokenList.get(0), new TokenBeenImpl(
-                     "a",
-                     TokenType.VARIABLE,
-                     1,
-                     MimeType.APPLICATION_JAVASCRIPT,
-                     "Number"
-                  ));
-                  
+                  testToken(tokenList.get(0), new TokenBeenImpl("a", TokenType.VARIABLE, 1,
+                     MimeType.APPLICATION_JAVASCRIPT, "Number"));
+
                   editor.ctrlSpaceClickHandler();
-                  
+
                   finishTest();
-                  
+
                }
 
-
             }.schedule(CODEMIRROR_TEXT_PARSING_PERIOD_MILISEC);
-            
-            
+
          }
       }.schedule(CODEMIRROR_LOADING_PERIOD_MILISEC);
-      
+
       delayTestFinish(DELAY_TEST_FINISH_MILISEC);
    }
 
-//   private void testTokenList(List<CodeMirrorTokenImpl> expectedTokenList, List<CodeMirrorTokenImpl> testTokenList)
-//   {
-//      for (CodeMirrorTokenImpl token: expectedTokenList)
-//      {
-//         testToken();        
-//      }
-//
-//   }
-//
+   //   private void testTokenList(List<CodeMirrorTokenImpl> expectedTokenList, List<CodeMirrorTokenImpl> testTokenList)
+   //   {
+   //      for (CodeMirrorTokenImpl token: expectedTokenList)
+   //      {
+   //         testToken();        
+   //      }
+   //
+   //   }
+   //
 
    private void testToken(TokenBeenImpl testToken, TokenBeenImpl expectedToken)
-   {     
-      
+   {
+
       Iterator<TokenProperty> iterator = expectedToken.getProperties().iterator();
-      
+
       while (iterator.hasNext())
       {
          TokenProperty testProperty = iterator.next();
-         assertEquals("Test token property: " + testProperty.toString() + ". ", testToken.getProperty(testProperty.toString()), expectedToken.getProperty(testProperty.toString()));
+         assertEquals("Test token property: " + testProperty.toString() + ". ",
+            testToken.getProperty(testProperty.toString()), expectedToken.getProperty(testProperty.toString()));
       }
    }
-   
-   class MockJavaScriptCodeAssistant extends org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant
+
+   class MockJavaScriptCodeAssistant extends
+      org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant
    {
 
       @Override
-      protected void openForm(List<Token> tokens, TokenWidgetFactory factory,
-         TokenSelectedHandler handler)
+      protected void openForm(List<Token> tokens, TokenWidgetFactory factory, TokenSelectedHandler handler)
       {
          System.out.println(">>>>>>>>>>>>>>>> openForm");
       }
 
       @Override
-      public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-         String lineContent, int cursorPositionX, int cursorPositionY, List<Token> tokenList,
+      public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
          String lineMimeType, Token currentToken)
       {
          System.out.println(">>>>>>>>>>>>>>>> check autocompleteCalled parameters");
-         
-         assertEquals(MimeType.APPLICATION_JAVASCRIPT, mimeType);
-         assertEquals(" { a. ", lineContent);
-         assertEquals(6, cursorPositionX);         
-         assertEquals(3, cursorPositionY);         
-         assertEquals(MimeType.APPLICATION_JAVASCRIPT, lineMimeType);         
-         
+
+         assertEquals(" { a. ", editor.getLineContent(editor.getCursorRow()));
+         assertEquals(6, editor.getCursorCol());
+         assertEquals(3, editor.getCursorRow());
+         assertEquals(MimeType.APPLICATION_JAVASCRIPT, lineMimeType);
+
          // test current token
-//         testToken(correctToken, currentToken);
+         //         testToken(correctToken, currentToken);
          assertEquals("a", currentToken.getName());
          assertEquals(TokenType.VARIABLE, currentToken.getType());
-         assertEquals("Number", ((TokenBeenImpl)currentToken).getElementType());            
+         assertEquals("Number", ((TokenBeenImpl)currentToken).getElementType());
          assertEquals(null, ((TokenBeenImpl)currentToken).getInitializationStatement());
-         assertEquals(3, ((TokenBeenImpl)currentToken).getLineNumber());                  
+         assertEquals(3, ((TokenBeenImpl)currentToken).getLineNumber());
 
          // test token list
-//       testTokenList(correctTokenList, tokenList);         
+         //       testTokenList(correctTokenList, tokenList);         
          assertEquals(1, tokenList.size());
          assertEquals("a", tokenList.get(0).getName());
          assertEquals(TokenType.VARIABLE, tokenList.get(0).getType());
-         assertEquals("Number", ((TokenBeenImpl)tokenList.get(0)).getElementType());            
+         assertEquals("Number", ((TokenBeenImpl)tokenList.get(0)).getElementType());
          assertEquals(null, ((TokenBeenImpl)tokenList.get(0)).getInitializationStatement());
-         assertEquals(1, ((TokenBeenImpl)tokenList.get(0)).getLineNumber());    
+         assertEquals(1, ((TokenBeenImpl)tokenList.get(0)).getLineNumber());
       }
 
       @Override
-      public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX,
-         int markOffsetY, String fileMimeType)
+      public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
+         String fileMimeType)
       {
          System.out.println(">>>>>>>>>>>>>>>> errorMarckClicked");
-         
+
       }
    }
 

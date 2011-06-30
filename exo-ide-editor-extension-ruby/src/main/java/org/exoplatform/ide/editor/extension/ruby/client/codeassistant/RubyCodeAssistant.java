@@ -86,15 +86,16 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
     * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor, java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String, org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void autocompleteCalled(Editor editor, String mimeType, int cursorOffsetX, int cursorOffsetY,
-      String lineContent, int cursorPositionX, int cursorPositionY, final List<Token> tokenList, String lineMimeType,
-      final Token currentToken)
+   public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, final List<Token> tokenList,
+      String lineMimeType, final Token currentToken)
    {
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;
       try
       {
+         currentLineNumber = editor.getCursorRow();
+         String lineContent = editor.getLineContent(currentLineNumber);
          if (lineContent == null)
          {
             beforeToken = "";
@@ -103,8 +104,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             openForm(new ArrayList<Token>(), widgetFactory, this);
             return;
          }
-         parseTokenLine(lineContent, cursorPositionX);
-         currentLineNumber = cursorPositionY;
+         parseTokenLine(lineContent, editor.getCursorCol());
 
          if (defaultTokens == null)
          {

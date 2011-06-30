@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -32,12 +34,9 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
-import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration.StartupMode;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Label;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -640,5 +639,14 @@ public class CKEditor extends Editor
    public void setHotKeyList(List<String> hotKeyList)
    {
       params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getLineContent(int)
+    */
+   @Override
+   public String getLineContent(int line)
+   {
+      return null;
    }
 }
