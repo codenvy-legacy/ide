@@ -684,6 +684,7 @@
 
       <module>exo-ide-client-application</module>
       <module>exo-ide-rest-war</module>
+      <module>exo-ide-site-war</module>
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-client-gadget</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>

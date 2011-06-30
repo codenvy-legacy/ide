@@ -28,7 +28,6 @@
       </dependency>
    </dependencies>
    <build>
-      <finalName>rest</finalName>
       <plugins>
          <plugin>
             <artifactId>maven-war-plugin</artifactId>
