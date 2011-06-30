@@ -226,7 +226,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    private void hiddenLoadAuthorizationPage(final AsyncRequest asyncRequest)
    {
-      String url = "/site/login.jsp";
+      String url = "/site/index.html";
       try
       {
          RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
