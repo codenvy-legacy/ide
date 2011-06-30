@@ -24,9 +24,6 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
-import org.exoplatform.ide.editor.codemirror.parser.GroovyParser;
-import org.exoplatform.ide.editor.codemirror.parser.JavaParser;
-import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -98,15 +95,17 @@ public abstract class AutocompleteHelper
       }
    }
 
-   public boolean isVariable(String nodeType)
-   {
-      return false;
-   }
+   /**
+    * Is node type of variable
+    * @see org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper#isVariable(java.lang.String)
+    */
+   public abstract boolean isVariable(String nodeType);
 
-   public boolean isPoint(String nodeType, String nodeContent)
-   {
-      return false;
-   }
+   /**
+    * Is node type of point
+    * @see org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper#isVariable(java.lang.String)
+    */
+   public abstract boolean isPoint(String nodeType, String nodeContent);
   
    public static TokenBeenImpl nearestToken;
    

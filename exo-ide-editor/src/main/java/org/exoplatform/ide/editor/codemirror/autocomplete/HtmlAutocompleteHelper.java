@@ -24,7 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
+import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -45,7 +45,7 @@ public class HtmlAutocompleteHelper extends AutocompleteHelper
    {          
       if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
       {
-         javaScriptCode = CodeValidatorImpl.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
+         javaScriptCode = CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_JAVASCRIPT);
 
          return javaScriptAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaScriptCode, currentLineMimeType);
 
@@ -54,4 +54,14 @@ public class HtmlAutocompleteHelper extends AutocompleteHelper
       return null;      
    }
 
+   
+   public boolean isVariable(String nodeType)
+   {
+      return false;
+   }
+
+   public boolean isPoint(String nodeType, String nodeContent)
+   {
+      return false;
+   }
 }

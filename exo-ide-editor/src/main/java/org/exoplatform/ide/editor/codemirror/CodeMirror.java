@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.EditorParameters;
-import org.exoplatform.ide.editor.api.CodeValidator;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -41,7 +40,7 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
-import org.exoplatform.ide.editor.codevalidator.CodeValidatorImpl;
+import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
@@ -461,7 +460,7 @@ public class CodeMirror extends Editor
       String currentLineMimeType = getCurrentLineMimeType();        
       if (configuration.canHaveSeveralMimeTypes() && ! genericMimeType.equals(currentLineMimeType))
       {
-         tokenList = CodeValidatorImpl.extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), currentLineMimeType);
+         tokenList = CodeValidator.extractCode((List<TokenBeenImpl>) tokenList, new LinkedList<TokenBeenImpl>(), currentLineMimeType);
       }
 
       codeAssistant.autocompleteCalled(

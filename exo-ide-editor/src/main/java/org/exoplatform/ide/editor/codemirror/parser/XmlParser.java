@@ -143,12 +143,12 @@ public class XmlParser extends CodeMirrorParserImpl
       return (nodeType != null) && nodeType.equals("xml-tagname");
    };
    
-   static boolean isCDATAOpenNode(String nodeContent)
+   public static boolean isCDATAOpenNode(String nodeContent)
    {
       return nodeContent.matches("&lt;!\\[CDATA\\[.*(\\n)*.*");
    };
    
-   static boolean isCDATACloseNode(String nodeContent)
+   public static boolean isCDATACloseNode(String nodeContent)
    {
       return nodeContent.matches("\\]\\]&gt;.*");
    };   
