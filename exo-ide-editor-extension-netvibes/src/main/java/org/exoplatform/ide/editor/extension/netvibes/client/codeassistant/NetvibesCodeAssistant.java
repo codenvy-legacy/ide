@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant.netvibes;
+package org.exoplatform.ide.editor.extension.netvibes.client.codeassistant;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class NetvibesCodeAssistant extends CodeAssistant implements Comparator<T
    public interface NetvibesBundle extends ClientBundle
    {
 
-      @Source("org/exoplatform/ide/editor/public/tokens/netvibes_tokens.js")
+      @Source("org/exoplatform/ide/editor/extension/netvibes/client/tokens/netvibes_tokens.js")
       ExternalTextResource netvibesTokens();
    }
 

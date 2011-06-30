@@ -20,7 +20,6 @@ package org.exoplatform.ide.editor.codeassistant;
 
 
 import com.google.gwt.junit.tools.GWTTestSuite;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -38,7 +37,6 @@ public class GwtCodeAssistantTestSuite extends TestCase
        suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
        suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
        suite.addTestSuite(XmlGwtTestCodeAssistant.class);
-       suite.addTestSuite(NetvibesGwtTestCodeAssistant.class);
        return suite;
    }
    

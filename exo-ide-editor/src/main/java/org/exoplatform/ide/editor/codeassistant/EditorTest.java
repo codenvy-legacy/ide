@@ -42,7 +42,6 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.netvibes.NetvibesCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
@@ -266,17 +265,17 @@ public class EditorTest implements EntryPoint
             setCanHaveSeveralMimeTypes(true)
       ));
 
-      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml", "", true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-            setParser(new HtmlParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new HtmlAutocompleteHelper()).
-            setCodeAssistant(new NetvibesCodeAssistant()).
-            setCanHaveSeveralMimeTypes(true)        
-      ));
+//      addEditor(new CodeMirrorProducer(MimeType.UWA_WIDGET, "CodeMirror Netvibes editor", "xml", "", true,
+//         new CodeMirrorConfiguration().
+//            setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
+//            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+//               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
+//            setParser(new HtmlParser()).
+//            setCanBeOutlined(true).
+//            setAutocompleteHelper(new HtmlAutocompleteHelper()).
+//            setCodeAssistant(new NetvibesCodeAssistant()).
+//            setCanHaveSeveralMimeTypes(true)        
+//      ));
 
 //      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO file editor", "groovy", "", true,
 //         new CodeMirrorConfiguration().
