@@ -21,6 +21,12 @@
          <version>${project.version}</version>
          <type>war</type>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-rest-war</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
    </dependencies>
    <build>
       <plugins>
@@ -338,6 +344,11 @@
                         <war destfile="${project.build.directory}/tomcat-ide/webapps/auth.war" needxmlfile="false">
                            <fileset dir="${basedir}/src/main/resources/auth-war" />
                         </war>
+                        <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"></echo>
+                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-1.2.0-SNAPSHOT.war" 
+                         tofile="${project.build.directory}/tomcat-ide/webapps/rest.war"
+                         overwrite="true" />
+                        
                      </tasks>
                   </configuration>
                   <goals>

@@ -39,7 +39,7 @@
     function loadTrends() {
       var params = {};  
       params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
-      var url = "http://www.cloud-ide.com/rest/twitter_trends/images?length=4&t=" + new Date().getTime(); //Change here to your tenant
+      var url = "http://www.cloud-ide.com/IDE/rest/twitter_trends/images?length=4&t=" + new Date().getTime(); //Change here to your tenant
       gadgets.io.makeRequest(url, function(response) {
         var data = response.data, html = [];
         $.each(data, function(index, trend) {

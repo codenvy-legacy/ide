@@ -12,7 +12,7 @@
       var SHOPPING_ID = "shopping_id";
       var ADMINISTRATION_ID = "administration_id";
       var tabs = new gadgets.TabSet(__MODULE_ID__, SHOPPING);
-      var serverUrl = "http://localhost:8080/rest/shop"; //Change here to your tenant
+      var serverUrl = "http://www.cloud-ide.com/IDE/rest/shop"; //Change here to your tenant
       
       function init() {
         tabs.addTab(SHOPPING, {
