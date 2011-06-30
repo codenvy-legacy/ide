@@ -21,7 +21,7 @@
 
 <body>
 <%
-    String redirectURL = "../auth/index.html";
+    String redirectURL = "../site/index.html";
     response.sendRedirect(redirectURL);
 %>
 </body>
