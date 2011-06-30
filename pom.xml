@@ -269,6 +269,12 @@
             <artifactId>exo-ide-maven</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-cloudbees</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -675,6 +681,7 @@
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
       <module>exo-ide-extension-openshift</module>
+		<module>exo-ide-extension-cloudbees</module>      
       <module>exo-ide-extension-logreader</module>
 
       <module>exo-ide-docs</module>
