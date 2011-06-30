@@ -35,6 +35,8 @@ public class Output extends AbstractTestModule
     */
    private static final String IDE_OUTPUT_CONTENT_DIV_1S = "//div[@id='ideOutputContent']/div[%1s]/";
 
+   private static final String CLEAR_OUTPUT_BUTTON = "//div[@title='Clear output']";
+
    /**
     * Get Output message text
     * @param messageNumber Number of message. <b>Message count starts with 1 !</b>
@@ -69,7 +71,7 @@ public class Output extends AbstractTestModule
       String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
       waitForElementPresent(locator);
    }
-   
+
    /**
     * Click on error message, pointed by its position in output panel.
     * The index starts from 1.
@@ -81,5 +83,12 @@ public class Output extends AbstractTestModule
       String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageNumber) + "/font/span";
       selenium().click(locator);
    }
-   
+
+   /**
+    * Click clear output button.
+    */
+   public void clickClearButton()
+   {
+      selenium().click(CLEAR_OUTPUT_BUTTON);
+   }
 }

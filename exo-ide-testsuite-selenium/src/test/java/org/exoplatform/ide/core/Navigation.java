@@ -371,7 +371,7 @@ public class Navigation extends AbstractTestModule
     */
    public void saveFileAs(String fileName) throws Exception
    {
-      IDE().TOOLBAR.runCommand("Save As...");
+      IDE().TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
 
       IDE().ASK_FOR_VALUE_DIALOG.waitForPresent();
 

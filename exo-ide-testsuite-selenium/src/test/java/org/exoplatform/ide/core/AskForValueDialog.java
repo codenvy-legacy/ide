@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 
 /**
@@ -33,15 +34,17 @@ public class AskForValueDialog extends AbstractTestModule
    public interface Locator
    {
       
-      String DIALOG_LOCATOR = "ideAskForValueDialog";
+      String VIEW_ID = "ideAskForValueView";
+      
+      String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
+      
+      String OK_BUTTON_LOCATOR = "ideAskForValueViewYesButton";
 
-      String OK_BUTTON_LOCATOR = "ideAskForValueDialogOkButton";
+      String NO_BUTTON_LOCATOR = "ideAskForValueViewNoButton";
 
-      String NO_BUTTON_LOCATOR = "ideAskForValueDialogNoButton";
+      String CANCEL_BUTTON_LOCATOR = "ideAskForValueViewCancelButton";
 
-      String CANCEL_BUTTON_LOCATOR = "ideAskForValueDialogCancelButton";
-
-      String TEXT_FIELD_LOCATOR = "ideAskForValueDialogValueField";
+      String TEXT_FIELD_LOCATOR = "ideAskForValueViewValueField";
 
    }
 
@@ -53,7 +56,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public boolean isOpened()
    {
-      return selenium().isElementPresent(Locator.DIALOG_LOCATOR);
+      return selenium().isElementPresent(Locator.VIEW_LOCATOR);
    }
    
    /**
@@ -62,7 +65,7 @@ public class AskForValueDialog extends AbstractTestModule
     * @throws Exception
     */
    public void waitForPresent() throws Exception {
-      waitForElementPresent(Locator.DIALOG_LOCATOR);
+      waitForElementPresent(Locator.VIEW_LOCATOR);
    }
 
    /**
@@ -72,7 +75,7 @@ public class AskForValueDialog extends AbstractTestModule
     */
    public void waitForAskDialogNotPresent() throws Exception
    {
-      waitForElementNotPresent(Locator.DIALOG_LOCATOR);
+      waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
    
    /**
@@ -81,9 +84,9 @@ public class AskForValueDialog extends AbstractTestModule
     * @throws Exception
     */
    public void closeDialog() throws Exception {
-      String locator = "//div[@id='" + Locator.DIALOG_LOCATOR + "']//tr[@class='dialogTop']//div[@class='dialogTopCenterInner']/img[@title='Close']";
+      String locator = "//div[@id='ideAskForValueView-window']//img[@title='Close']";
       selenium().click(locator);
-      waitForElementNotPresent(Locator.DIALOG_LOCATOR);
+      waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
 
    /**
@@ -94,7 +97,7 @@ public class AskForValueDialog extends AbstractTestModule
    public void clickOkButton() throws Exception
    {
       selenium().click(Locator.OK_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.DIALOG_LOCATOR);
+      waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
 
    /**
@@ -105,7 +108,7 @@ public class AskForValueDialog extends AbstractTestModule
    public void clickNoButton() throws Exception
    {
       selenium().click(Locator.NO_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.DIALOG_LOCATOR);
+      waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
 
    /**
@@ -126,7 +129,7 @@ public class AskForValueDialog extends AbstractTestModule
    public void clickCancelButton() throws Exception
    {
       selenium().click(Locator.CANCEL_BUTTON_LOCATOR);
-      waitForElementNotPresent(Locator.DIALOG_LOCATOR);
+      waitForElementNotPresent(Locator.VIEW_LOCATOR);
    }
 
    /**
