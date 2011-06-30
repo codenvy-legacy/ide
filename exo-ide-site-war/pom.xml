@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<parent>                                                                                                                                                                                                    
+      <groupId>org.exoplatform.ide</groupId>                                                                                                                                                                   
+      <artifactId>exo-ide-parent</artifactId>                                                                                                                                                                  
+      <version>1.2.0-SNAPSHOT</version>                                                                                                                                                                        
+   </parent>                                                                                                                                                                                                   
+   <modelVersion>4.0.0</modelVersion>                                                                                                                                                                          
+   <groupId>org.exoplatform.ide</groupId>                                                                                                                                                                      
+   <artifactId>exo-ide-site-war</artifactId>                                                                                                                                                                   
+   <packaging>war</packaging>                                                                                                                                                                                  
+   <name>eXo IDE :: Site Web Application</name>                                                                                                                                                                
+   <dependencies>                                                                                                                                                                                              
+      <dependency>                                                                                                                                                                                             
+         <groupId>org.exoplatform.ws</groupId>                                                                                                                                                                 
+         <artifactId>exo.ws.rest.core</artifactId>                                                                                                                                                             
+         <scope>provided</scope>                                                                                                                                                                               
+      </dependency>                                                                                                                                                                                            
+      <dependency>                                                                                                                                                                                             
+         <groupId>org.exoplatform.jcr</groupId>                                                                                                                                                                
+         <artifactId>exo.jcr.framework.web</artifactId>                                                                                                                                                        
+         <scope>provided</scope>                                                                                                                                                                               
+      </dependency>                                                                                                                                                                                            
+      <dependency>                                                                                                                                                                                             
+         <groupId>org.exoplatform.core</groupId>                                                                                                                                                               
+         <artifactId>exo.core.component.security.core</artifactId>                                                                                                                                             
+         <scope>provided</scope>                                                                                                                                                                               
+      </dependency>                                                                                                                                                                                            
+   </dependencies>                                                                                                                                                                                             
+   <build>                                                                                                                                                                                                     
+      <plugins>                                                                                                                                                                                                
+         <plugin>                                                                                                                                                                                              
+            <artifactId>maven-war-plugin</artifactId>                                                                                                                                                          
+            <configuration>                                                                                                                                                                                    
+               <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>                                                                                                                                        
+               <archive>                                                                                                                                                                                       
+                  <manifest>                                                                                                                                                                                   
+                     <addClasspath>false</addClasspath>                                                                                                                                                        
+                     <classpathPrefix>lib/</classpathPrefix>                                                                                                                                                   
+                  </manifest>                                                                                                                                                                                  
+               </archive>                                                                                                                                                                                      
+            </configuration>                                                                                                                                                                                   
+         </plugin>                                                                                                                                                                                             
+      </plugins>                                                                                                                                                                                               
+   </build>              
+</project>
