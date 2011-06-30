@@ -57,8 +57,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
 
 /**
@@ -293,33 +291,24 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
 
-      Command command = new Command(){
+      // restore focus of FileTab
+      JavaScriptObject lastFocusedElement = getActiveElement();        
 
-        public void execute() {
-           // restore focus of FileTab
-           JavaScriptObject lastFocusedElement = getActiveElement();        
+      tokens = (List<TokenBeenImpl>)activeEditor.getTokenList();
+      TokenBeenImpl token = new TokenBeenImpl();
+      token.setSubTokenList(tokens);
+      display.getOutlineTree().setValue(token);
+      currentRow = activeEditor.getCursorRow();
+      currentToken = null;
+      
+      if (!selectTokenByRow(tokens))
+      {
+         display.deselectAllTokens();
+      }
 
-           tokens = (List<TokenBeenImpl>)activeEditor.getTokenList();
-           TokenBeenImpl token = new TokenBeenImpl();
-           token.setSubTokenList(tokens);
-           display.getOutlineTree().setValue(token);
-           currentRow = activeEditor.getCursorRow();
-           currentToken = null;
-           
-           if (!selectTokenByRow(tokens))
-           {
-              display.deselectAllTokens();
-           }
-
-           // restore focus of FileTab
-           setElementFocus(lastFocusedElement);
-        }
-      };
-
-      DeferredCommand.addCommand(command);
+      // restore focus of FileTab
+      setElementFocus(lastFocusedElement);
    }
-   
-   
 
    /**
     * Set cursor within the Editor Line into the line with lineNumber and then return focus to the Outline Tree Grid
