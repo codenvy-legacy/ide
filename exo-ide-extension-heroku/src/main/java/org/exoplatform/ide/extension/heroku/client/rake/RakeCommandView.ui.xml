@@ -9,13 +9,19 @@
    			font-family: Verdana,Bitstream Vera Sans,sans-serif;
    			font-size: 11px;
    		}
+   		.align
+   		{
+   			padding: 2px;
+   			font-family: Verdana,Bitstream Vera Sans,sans-serif;
+   			font-size: 11px;
+   		}
    </ui:style>
    
    <f:Border margin="7" borderColor="transparent">
       <g:VerticalPanel spacing="5" horizontalAlignment="center" verticalAlignment="middle" height="100%">
          <g:HorizontalPanel width="100%" spacing="5" verticalAlignment="top">
-            <g:cell width="80px" horizontalAlignment="left">
-               <f:Label value="{locale.rakeViewCommandField}" height="18px" isHTML="true"></f:Label>
+            <g:cell width="35px" horizontalAlignment="left">
+               <f:Label value="{locale.rakeViewCommandField}" height="18px" isHTML="true" styleName="{style.align}"></f:Label>
             </g:cell>
             <g:cell>
                <g:VerticalPanel width="100%" spacing="0">
