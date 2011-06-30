@@ -26,11 +26,23 @@
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
          <groupId>com.google.gwt.google-apis</groupId>
          <artifactId>gwt-gadgets</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -57,6 +69,12 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-gadget</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -133,17 +151,21 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-heroku</artifactId>
       </dependency>
-      
-       <dependency>
+
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-openshift</artifactId>
       </dependency>
-      
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudbees</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-logreader</artifactId>
       </dependency>
-      
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -271,6 +293,10 @@
                      <groupId>pull-parser</groupId>
                      <artifactId>pull-parser</artifactId>
                   </exclusion>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
                </exclusions>
                <scope>runtime</scope>
             </dependency>
@@ -279,11 +305,23 @@
                <artifactId>gwt-dev</artifactId>
                <version>${gwt.version}</version>
                <scope>compile</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>com.google.gwt</groupId>
                <artifactId>gwt-servlet</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
@@ -294,16 +332,34 @@
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.framework.web</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform</groupId>
                <artifactId>exo-jcr-services</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
 
             <dependency>
@@ -315,6 +371,12 @@
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-common</artifactId>
                <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>

@@ -41,9 +41,9 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.java.client.JavaClientService;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Presenter for create java project view.<p/>
@@ -53,7 +53,8 @@ import java.util.Map;
  * @version $Id: CreateJavaProjectPresenter.java Jun 22, 2011 9:52:37 AM vereshchaka $
  *
  */
-public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJavaProjectHandler, ItemsSelectedHandler
+public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJavaProjectHandler, ItemsSelectedHandler, 
+CleanProjectHandler
 {
    
    interface Display extends IsView
@@ -98,6 +99,7 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
    private static final String DEFAULT_PROJECT_NAME = JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectDefaultName();
 
    private Display display;
+   
    /**
     * Events handler.
     */
@@ -115,6 +117,7 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateJavaProjectEvent.TYPE, this);
+      eventBus.addHandler(CleanProjectEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -166,14 +169,14 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       {
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
-      JavaClientService.getInstance().createJavaProject(name, workDir, new AsyncRequestCallback<Map<String, String>>()
+      JavaClientService.getInstance().createJavaProject(name, workDir, new AsyncRequestCallback<MavenResponse>()
       {
          @Override
-         protected void onSuccess(Map<String, String> result)
+         protected void onSuccess(MavenResponse result)
          {
             eventBus.fireEvent(new RefreshBrowserEvent());
             IDE.getInstance().closeView(display.asView().getId());
-            String output = result.get("output");
+            String output = result.getOutput();
             output = output.replace("\n", "<br>");
             eventBus.fireEvent(new OutputEvent(output, Type.INFO));
          }
@@ -220,6 +223,25 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.client.create.CleanProjectHandler#onCleanProject(org.exoplatform.ide.extension.java.client.create.CleanProjectEvent)
+    */
+   @Override
+   public void onCleanProject(CleanProjectEvent event)
+   {
+      JavaClientService.getInstance().cleanProject(event.getProjectDir(), new AsyncRequestCallback<MavenResponse>()
+      {
+         @Override
+         protected void onSuccess(MavenResponse result)
+         {
+            eventBus.fireEvent(new RefreshBrowserEvent());
+            String output = result.getOutput();
+            output = output.replace("\n", "<br>");
+            eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+         }
+      });
    }
 
 }

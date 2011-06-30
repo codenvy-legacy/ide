@@ -19,8 +19,7 @@
 package org.exoplatform.ide.extension.java.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-
-import java.util.Map;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -52,6 +51,22 @@ public abstract class JavaClientService
     * @param workDir - the location of new project
     * @param callback - callback, client has to implement
     */
-   public abstract void createJavaProject(String name, String workDir, AsyncRequestCallback<Map<String, String>> callback);
+   public abstract void createJavaProject(String name, String workDir, AsyncRequestCallback<MavenResponse> callback);
+   
+   /**
+    * Clean project.
+    * 
+    * @param baseDir - the location of project
+    * @param callback - callback, client has to implement
+    */
+   public abstract void cleanProject(String baseDir, AsyncRequestCallback<MavenResponse> callback);
+   
+   /**
+    * Package project.
+    * 
+    * @param baseDir - the location of project
+    * @param callback - callback, client has to implement
+    */
+   public abstract void packageProject(String baseDir, AsyncRequestCallback<MavenResponse> callback);
 
 }

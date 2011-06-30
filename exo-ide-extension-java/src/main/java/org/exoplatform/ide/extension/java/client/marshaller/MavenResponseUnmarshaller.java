@@ -21,27 +21,39 @@ package org.exoplatform.ide.extension.java.client.marshaller;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * Unmarshaller for response from server after creating java application.
+ * Unmarshaller for response from server, when {@link MavenResponse} is returned.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateJavaProjectUnmarshaller.java Jun 22, 2011 5:06:40 PM vereshchaka $
  *
  */
-public class CreateJavaProjectUnmarshaller implements Unmarshallable
+public class MavenResponseUnmarshaller implements Unmarshallable
 {
-   private Map<String, String> mavenResponse;
-   
-   public CreateJavaProjectUnmarshaller(Map<String, String> values)
+   interface Constants
    {
-      this.mavenResponse = values;
+      public static final String RESULT = "result";
+      
+      public static final String EXIT_CODE = "exitCode";
+      
+      public static final String OUTPUT = "output";
+   }
+   
+   private MavenResponse mavenResponse;
+   
+   public MavenResponseUnmarshaller(MavenResponse mavenResponse)
+   {
+      this.mavenResponse = mavenResponse;
    }
 
    /**
@@ -57,16 +69,61 @@ public class CreateJavaProjectUnmarshaller implements Unmarshallable
       if (jsonObject == null)
          return;
 
+      parseObject(jsonObject);
+   }
+   
+   private void parseObject(JSONObject jsonObject)
+   {
       for (String key : jsonObject.keySet())
       {
-         if (jsonObject.get(key).isString() != null)
+         JSONValue jsonValue = jsonObject.get(key);
+         if (key.equals(Constants.EXIT_CODE))
          {
-            String value = jsonObject.get(key).isString().stringValue();
-            mavenResponse.put(key, value);
+            if (jsonValue.isNumber() != null)
+            {
+               mavenResponse.setExitCode((int)jsonValue.isNumber().doubleValue());
+            }
+         }
+         else if (key.equals(Constants.OUTPUT))
+         {
+            if (jsonValue.isString() != null)
+            {
+               mavenResponse.setOutput(jsonValue.isString().stringValue());
+            }
+            else
+            {
+               mavenResponse.setOutput("");
+            }
+            
+         }
+         else if (key.equals(Constants.RESULT))
+         {
+            Map<String, String> result = new HashMap<String, String>();
+            if (jsonValue.isObject() != null)
+            {
+               parseMapValue(key, jsonValue.isObject(), result);
+            }
+            mavenResponse.setResult(result);
          }
       }
    }
    
+   /**
+    * @param key
+    * @param object
+    */
+   private void parseMapValue(String key1, JSONObject jsonObject, Map<String, String> objectsMap)
+   {
+      for (String key : jsonObject.keySet())
+      {
+         JSONValue jsonValue = jsonObject.get(key);
+         if (jsonValue.isString() != null)
+         {
+            objectsMap.put(key, jsonValue.isString().stringValue());
+         }
+      }
+   }
+
    /**
     * Build {@link JavaScriptObject} from string.
     * 

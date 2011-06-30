@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle' />
+   <ui:with field='locale' type='org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant' />
+   <f:Border margin="5" borderColor="transparent">
+      <g:VerticalPanel spacing="3" horizontalAlignment="center">
+         <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
+         <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
+         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+            <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+         </g:HorizontalPanel>
+      </g:VerticalPanel>
+   </f:Border>
+</ui:UiBinder> 

@@ -26,10 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.java.client.marshaller.CreateJavaProjectUnmarshaller;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 /**
  * Implementation of {@link JavaClientService} service.
@@ -41,7 +39,13 @@ import java.util.Map;
 public class JavaClientServiceImpl extends JavaClientService
 {
    
-   private static final String CREATE_JAVA_PROJECT = "/ide/application/java/create";
+   private static final String BASE_URL = "/ide/application/java";
+   
+   private static final String CREATE_PROJECT = BASE_URL + "/create";
+   
+   private static final String CLEAN_PROJECT = BASE_URL + "/clean";
+   
+   private static final String PACKAGE_PROJECT = BASE_URL + "/package";
    
    /**
     * Events handler.
@@ -69,22 +73,64 @@ public class JavaClientServiceImpl extends JavaClientService
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#createWebApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createJavaProject(String name, String workDir, AsyncRequestCallback<Map<String, String>> callback)
+   public void createJavaProject(String name, String workDir, AsyncRequestCallback<MavenResponse> callback)
    {
-      String url = restServiceContext + CREATE_JAVA_PROJECT;
-      String params = (name != null && !name.isEmpty()) ? "name=" + name + "&" : "";
+      final String url = restServiceContext + CREATE_PROJECT;
+      String params = "name=" + name + "&";
       params += "workdir=" + workDir;
 
-      Map<String, String> mavenResponse = new HashMap<String, String>();
+      MavenResponse mavenResponse = new MavenResponse();
       callback.setResult(mavenResponse);
       callback.setEventBus(eventBus);
       
-      CreateJavaProjectUnmarshaller unmarshaller = new CreateJavaProjectUnmarshaller(mavenResponse);
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse); 
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void packageProject(String baseDir, AsyncRequestCallback<MavenResponse> callback)
+   {
+      final String url = restServiceContext + PACKAGE_PROJECT;
+      String params = "workdir=" + baseDir;
+      
+      MavenResponse mavenResponse = new MavenResponse();
+      callback.setResult(mavenResponse);
+      callback.setEventBus(eventBus);
+      
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+      .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void cleanProject(String baseDir, AsyncRequestCallback<MavenResponse> callback)
+   {
+      final String url = restServiceContext + CLEAN_PROJECT;
+      String params = "workdir=" + baseDir;
+      
+      MavenResponse mavenResponse = new MavenResponse();
+      callback.setResult(mavenResponse);
+      callback.setEventBus(eventBus);
+      
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+      .send(callback);
    }
 
 }

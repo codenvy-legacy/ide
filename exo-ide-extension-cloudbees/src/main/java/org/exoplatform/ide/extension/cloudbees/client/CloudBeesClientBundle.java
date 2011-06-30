@@ -16,39 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.client;
+package org.exoplatform.ide.extension.cloudbees.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Java client resources (images).
+ * CloudBees client resources (images).
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: JavaClientBundle.java Jun 21, 2011 4:26:42 PM vereshchaka $
+ * @version $Id: CloudBeesClientBundle.java Jun 23, 2011 10:03:22 AM vereshchaka $
  *
  */
-public interface JavaClientBundle extends ClientBundle
+public interface CloudBeesClientBundle extends ClientBundle
 {
-   JavaClientBundle INSTANCE = GWT.<JavaClientBundle> create(JavaClientBundle.class);
+   CloudBeesClientBundle INSTANCE = GWT.<CloudBeesClientBundle> create(CloudBeesClientBundle.class);
    
-   @Source("org/exoplatform/ide/extension/java/images/java-project.png")
-   ImageResource javaProject();
-   
-   @Source("org/exoplatform/ide/extension/java/images/java-project_Disabled.png")
-   ImageResource javaProjectDisabled();
-   
-   @Source("org/exoplatform/ide/extension/java/images/ok.png")
+   /*
+    * Buttons
+    */
+   @Source("org/exoplatform/ide/extension/cloudbees/images/ok.png")
    ImageResource okButton();
-   
-   @Source("org/exoplatform/ide/extension/java/images/ok_Disabled.png")
+
+   @Source("org/exoplatform/ide/extension/cloudbees/images/ok_Disabled.png")
    ImageResource okButtonDisabled();
    
-   @Source("org/exoplatform/ide/extension/java/images/cancel.png")
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cancel.png")
    ImageResource cancelButton();
-   
-   @Source("org/exoplatform/ide/extension/java/images/cancel_Disabled.png")
+
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cancel_Disabled.png")
    ImageResource cancelButtonDisabled();
+   
+   /*
+    * CloudBees
+    */
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees.png")
+   ImageResource cloudBees();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_Disabled.png")
+   ImageResource cloudBeesDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/initializeApp.png")
+   ImageResource initializeApp();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/initializeApp_Disabled.png")
+   ImageResource initializeAppDisabled();
 
 }
