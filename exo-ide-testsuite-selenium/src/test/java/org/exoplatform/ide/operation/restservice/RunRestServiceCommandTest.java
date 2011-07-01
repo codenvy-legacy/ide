@@ -282,7 +282,7 @@ public class RunRestServiceCommandTest extends BaseTest
 
       //---- 5 -----------------
       //save as dialog appears
-      SaveFileUtils.checkSaveAsDialogAndSave(NEW_FILE_NAME, false);
+      SaveFileUtils.checkSaveAsDialogAndSave(NEW_FILE_NAME, true);
       Thread.sleep(TestConstants.SLEEP);
 
       //check Launch Rest Service form appears
