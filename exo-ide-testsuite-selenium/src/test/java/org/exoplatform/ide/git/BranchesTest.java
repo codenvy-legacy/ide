@@ -163,8 +163,8 @@ public class BranchesTest extends BaseTest
       IDE.GIT.BRANCHES.typeNewBranchName(BRANCH1);
       IDE.GIT.BRANCHES.clickNewBranchOkButton();
       IDE.GIT.BRANCHES.waitForNewBranchViewClosed();
-      waitForLoaderDissapeared();
-
+      IDE.GIT.BRANCHES.waitForBranchesCount(2);
+      
       Assert.assertEquals(2, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
@@ -213,8 +213,8 @@ public class BranchesTest extends BaseTest
       IDE.ASK_DIALOG.waitForAskDialogOpened();
       IDE.ASK_DIALOG.clickYes();
       IDE.ASK_DIALOG.waitForDialogNotPresent();
-      waitForLoaderDissapeared();
-
+      IDE.GIT.BRANCHES.waitForBranchesCount(1);
+      
       //Check branch is deleted:
       Assert.assertEquals(1, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));

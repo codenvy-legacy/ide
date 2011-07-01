@@ -256,4 +256,15 @@ public class Branches extends AbstractTestModule
    {
       selenium().type(Locators.NEW_BRANCH_VALUE_FIELD, newBranch);
    }
+   
+   /**
+    * Wait for the pointed number of the branches.
+    * 
+    * @param count number of branches
+    * @throws Exception
+    */
+   public void waitForBranchesCount(int count) throws Exception
+   {
+      waitForElementPresent("//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]/tbody[1]//tr[" + count + "]");
+   }
 }
