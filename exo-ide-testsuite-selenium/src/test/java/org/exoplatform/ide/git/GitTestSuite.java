@@ -31,7 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({InitRepositoryTest.class, CloneRepositoryTest.class, AddTest.class, ResetFilesTest.class,
-   CommitTest.class, ResetToCommitTest.class, BranchesTest.class})
+   CommitTest.class, ResetToCommitTest.class, BranchesTest.class, RemoveFilesTest.class, ShowHistoryTest.class})
 public class GitTestSuite
 {
 

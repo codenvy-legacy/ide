@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.core;
 
+import junit.framework.Assert;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -55,6 +57,8 @@ public class GIT
       String COMMIT_SUCCESS = "[INFO] Commited with revision";
       
       String DELETE_BRANCH_QUESTION = "Are you sure you want to delete branch %s?";
+      
+      String DELETE_REMOTE_QUESTION = "Are you sure you want to delete remote repository %s?";
    }
 
    public interface DialogTitles
@@ -95,8 +99,14 @@ public class GIT
    public Commit COMMIT = new Commit();
 
    public Status STATUS = new Status();
+   
+   public ShowHistory SHOW_HISTORY = new ShowHistory();
 
    public ResetFiles RESET_FILES = new ResetFiles();
    
+   public RemoveFiles REMOVE_FILES = new RemoveFiles();
+   
    public ResetToCommit RESET_TO_COMMIT = new ResetToCommit();
+   
+   public Remotes REMOTES = new Remotes();
 }

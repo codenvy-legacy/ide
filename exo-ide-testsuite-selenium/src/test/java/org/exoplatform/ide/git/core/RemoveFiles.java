@@ -23,29 +23,29 @@ import org.exoplatform.ide.core.AbstractTestModule;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 24, 2011 3:19:00 PM anya $
+ * @version $Id:  Jun 29, 2011 11:51:46 AM anya $
  *
  */
-public class ResetFiles extends AbstractTestModule
+public class RemoveFiles extends AbstractTestModule
 {
    public interface Locators
    {
-      String VIEW_ID = "ideResetFilesView";
+      String VIEW_ID = "ideRemoveFilesView";
 
       String VIEW_LOCATOR = IDE.getInstance().PERSPECTIVE.getViewLocator(VIEW_ID);
 
-      String RESET_BUTTON_ID = "ideResetFilesViewResetButton";
+      String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
-      String CANCEL_BUTTON_ID = "ideResetFilesViewCancelButton";
+      String CANCEL_BUTTON_ID = "ideRemoveFilesViewCancelButton";
 
       String INDEX_FILES_GRID_ID = "ideIndexFilesGrid";
 
       String ITEM_CHECKBOX_LOCATOR = "//table[@id=\"" + INDEX_FILES_GRID_ID
          + "\"]//tr[contains(., \"%s\")]//input[@type=\"checkbox\"]";
    }
-
+   
    /**
-    * Waits for Reset files view to be opened.
+    * Waits for Remove files view to be opened.
     * 
     * @throws Exception
     */
@@ -56,7 +56,7 @@ public class ResetFiles extends AbstractTestModule
    }
 
    /**
-    * Waits for Reset files view to be closed.
+    * Waits for Remove files view to be closed.
     * 
     * @throws Exception
     */
@@ -74,15 +74,15 @@ public class ResetFiles extends AbstractTestModule
    {
       return selenium().isElementPresent(Locators.INDEX_FILES_GRID_ID)
          && selenium().isElementPresent(Locators.CANCEL_BUTTON_ID)
-         && selenium().isElementPresent(Locators.RESET_BUTTON_ID);
+         && selenium().isElementPresent(Locators.REMOVE_BUTTON_ID);
    }
 
    /**
-    * Click Reset button.
+    * Click Remove button.
     */
-   public void clickResetButton()
+   public void clickRemoveButton()
    {
-      selenium().click(Locators.RESET_BUTTON_ID);
+      selenium().click(Locators.REMOVE_BUTTON_ID);
    }
 
    /**
