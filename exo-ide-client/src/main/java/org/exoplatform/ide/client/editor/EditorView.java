@@ -182,7 +182,11 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
    {
       // to fix bug with displaing within the Google Chrome
       NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
-      editorAreaRows.getItem(editorType.getPosition() - 1).removeAttribute("style");  
+      if (editorAreaRows != null
+               && editorAreaRows.getLength() >= editorType.getPosition())
+      {
+         editorAreaRows.getItem(editorType.getPosition() - 1).removeAttribute("style");
+      }
       
       editors.get(editorType).setFocus();
    }
@@ -191,7 +195,11 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
    {
       // to fix bug with displaing within the Google Chrome
       NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
-      editorAreaRows.getItem(editorType.getPosition() - 1).setAttribute("style", "display: none");
+      if (editorAreaRows != null
+               && editorAreaRows.getLength() >= editorType.getPosition())
+      {
+         editorAreaRows.getItem(editorType.getPosition() - 1).setAttribute("style", "display: none");
+      }
    }
 
    /**

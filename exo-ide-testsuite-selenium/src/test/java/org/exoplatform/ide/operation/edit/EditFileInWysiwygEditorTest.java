@@ -82,6 +82,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
       
+      //------ 2 ---------------
       IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       
       Thread.sleep(TestConstants.SLEEP);
@@ -90,12 +91,16 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       
       Thread.sleep(TestConstants.SLEEP);
 
+      assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
+      
       IDE.EDITOR.checkCkEditorOpened(0);
       
+      //------ 3 ---------------
       IDE.EDITOR.clickSourceButton();
       
       IDE.EDITOR.checkCodeEditorOpened(0);
 
+      assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
       
       final String defaultText =
          "<html>\n <head>\n  <title></title>\n </head>\n <body>\n  <br />\n </body>\n</html>";
@@ -106,6 +111,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.EDITOR.clickDesignButton();
 
       IDE.EDITOR.checkCkEditorOpened(0);
+      
+      assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
       
       //check, that content is empty
       assertEquals("", IDE.EDITOR.getTextFromCKEditor(0));
@@ -162,13 +169,16 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.selectMainFrame();
       IDE.EDITOR.clickSourceButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
+      
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
 
       //------ 9 ---------------
       //      runHotkeyWithinCkEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
 
-      assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(0));
+      assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
       //      Thread.sleep(TestConstants.SLEEP);
 
@@ -180,12 +190,15 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       checkTable2x3Present();
 
+      //------ 10 ---------------
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      //------ 10 ---------------
+      assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
+      
       IDE.EDITOR.selectCkEditorIframe(0);
+      
       //right click on cell
       selenium
          .contextMenuAt(
@@ -198,11 +211,15 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       checkTable2x4Present();
 
       //------ 11 ---------------
       IDE.EDITOR.clickSourceButton();
 
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       final String textWithTable2x4InCkEditor =
          "<html>\n"
             + " <head>\n"
@@ -230,12 +247,18 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       selenium.click("exoAskDialogNoButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      //check file stays in CK editor
+      //check file stays in Code editor
+      IDE.EDITOR.checkCodeEditorOpened(0);
+      
       assertEquals(textWithTable2x4InCkEditor, IDE.EDITOR.getTextFromCodeEditor(0));
 
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       assertEquals(200, VirtualFileSystemUtils.get(URL).getStatusCode());
 
       IDE.EDITOR.clickDesignButton();
+      IDE.EDITOR.checkCkEditorOpened(0);
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
       
       //------ 14 ---------------
       //reopen file with CodeMirror
@@ -252,7 +275,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.EDITOR.checkCodeEditorOpened(0);
-
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       //reopen file with CKEditor
       openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
 
@@ -269,7 +293,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.checkCodeEditorOpened(0);
-
+      assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
+      
       final String table2x3FromCodeEditor =
          "<html><head><title></title></head><body>"
             + "<tableborder=\"1\"cellpadding=\"1\"cellspacing=\"1\"style=\"width:200px;\">"
