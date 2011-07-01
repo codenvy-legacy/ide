@@ -68,5 +68,11 @@ public interface CloudBeesClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/cloudbees/images/appInfo_Disabled.png")
    ImageResource applicationInfoDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/deleteApp.png")
+   ImageResource deleteApplication();
+
+   @Source("org/exoplatform/ide/extension/cloudbees/images/deleteApp_Disabled.png")
+   ImageResource deleteApplicationDisabled();
 
 }

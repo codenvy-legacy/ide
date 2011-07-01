@@ -68,13 +68,22 @@ public abstract class CloudBeesClientService
    public abstract void logout(AsyncRequestCallback<String> callback);
    
    /**
-    * Get the appilcation info.
+    * Get the application info.
     * 
     * @param workDir - the location of work dir on file system
     * @param appId - id of application
-    * @param callback - callcack. that client has to implement
+    * @param callback - callcack, that client has to implement
     */
    public abstract void getApplicationInfo(String workDir, String appId,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+   
+   /**
+    * Delete application from CloudBees.
+    * @param workDir - the location of work dir on file system
+    * @param appId - id of application
+    * @param callback - callcack, that client has to implement
+    */
+   public abstract void deleteApplication(String workDir, String appId,
+      CloudBeesAsyncRequestCallback<String> callback);
 
 }

@@ -28,7 +28,9 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
+import org.exoplatform.ide.extension.cloudbees.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
+import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
@@ -71,11 +73,13 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new CloudBeesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new InitializeApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ApplicationInfoControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       
       new InitializeApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new DeployApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
+      new DeleteApplicationPresenter(eventBus);
    }
 
 }

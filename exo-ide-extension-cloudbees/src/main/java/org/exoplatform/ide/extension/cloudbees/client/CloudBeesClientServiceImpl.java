@@ -182,4 +182,23 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
          .send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    */
+   @Override
+   public void deleteApplication(String workDir, String appId,
+      CloudBeesAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + APPS_DELETE;
+      
+      String params = (appId != null) ? "appid=" + appId + "&" : "";
+      params += "workdir=" + workDir;
+
+      callback.setResult(null);
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .send(callback);
+   }
+
 }
