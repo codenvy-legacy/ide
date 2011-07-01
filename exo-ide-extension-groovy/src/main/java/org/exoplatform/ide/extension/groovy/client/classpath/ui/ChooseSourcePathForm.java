@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.groovy.client.Images;
 
@@ -33,6 +31,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -43,7 +42,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: Jan 10, 2011 $
  *
  */
-public class ChooseSourcePathForm extends DialogWindow implements ChooseSourcePathPresenter.Display
+public class ChooseSourcePathForm extends IDEDialogWindow implements ChooseSourcePathPresenter.Display
 {
    public static final int WIDTH = 450;
 

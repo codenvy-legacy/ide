@@ -18,6 +18,20 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
+import java.util.List;
+import java.util.Map;
+
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.navigation.RenameItemPresenter;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.shared.HandlerManager;
@@ -27,20 +41,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.navigation.RenameItemPresenter;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Form for renaming files and folders.
  * 
@@ -48,7 +48,7 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class RenameItemForm extends DialogWindow implements
+public class RenameItemForm extends IDEDialogWindow implements
    org.exoplatform.ide.client.navigation.RenameItemPresenter.Display
 {
 

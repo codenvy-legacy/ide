@@ -18,21 +18,20 @@
  */
 package org.exoplatform.ide.extension.groovy.client.ui;
 
-import com.google.gwt.user.client.ui.Image;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.extension.groovy.client.Images;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.extension.groovy.client.Images;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,7 +40,7 @@ import org.exoplatform.ide.extension.groovy.client.Images;
  * @version $Id:   ${date} ${time}
  *
  */
-public class GetRestServiceURLForm extends DialogWindow
+public class GetRestServiceURLForm extends IDEDialogWindow
 {
 
    private static final int WIDTH = 500;

@@ -26,7 +26,7 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.GoToLinePresenter;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  *
  */
-public class GoToLineForm extends DialogWindow implements org.exoplatform.ide.client.edit.GoToLinePresenter.Display
+public class GoToLineForm extends IDEDialogWindow implements org.exoplatform.ide.client.edit.GoToLinePresenter.Display
 {
 
    private static final int WIDTH = 400;

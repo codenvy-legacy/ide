@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 
@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:   $
  *
  */
-public class SaveAsTemplateForm extends DialogWindow implements SaveAsTemplatePresenter.Display
+public class SaveAsTemplateForm extends IDEDialogWindow implements SaveAsTemplatePresenter.Display
 {
 
    private static final int WIDTH = 450;

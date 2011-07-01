@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.command.Control;
@@ -31,9 +26,14 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,7 +42,7 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public class CustomizeToolbarForm extends DialogWindow implements CustomizeToolbarPresenter.Display
+public class CustomizeToolbarForm extends IDEDialogWindow implements CustomizeToolbarPresenter.Display
 {
 
    private static final int WIDTH = 700;

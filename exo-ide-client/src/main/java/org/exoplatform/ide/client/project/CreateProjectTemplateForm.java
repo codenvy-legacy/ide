@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.user.client.ui.Image;
-
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -28,7 +26,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.template.ui.TemplateTree;
 
@@ -40,6 +38,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -48,7 +47,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:
  *
  */
-public class CreateProjectTemplateForm extends DialogWindow implements CreateProjectTemplatePresenter.Display
+public class CreateProjectTemplateForm extends IDEDialogWindow implements CreateProjectTemplatePresenter.Display
 {
    
    public static final int WIDTH = 530;

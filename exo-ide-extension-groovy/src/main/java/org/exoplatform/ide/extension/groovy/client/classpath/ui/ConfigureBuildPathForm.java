@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Form for configuring classpath file.
@@ -42,7 +40,7 @@ import java.util.List;
  * @version $Id: Jan 6, 2011 $
  *
  */
-public class ConfigureBuildPathForm extends DialogWindow implements ConfigureBuildPathPresenter.Display
+public class ConfigureBuildPathForm extends IDEDialogWindow implements ConfigureBuildPathPresenter.Display
 {
    public static final int WIDTH = 600;
 

@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -31,11 +26,16 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
 
-import java.util.Map;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  *This class represent form for managing permissions.<br>
@@ -51,8 +51,9 @@ import java.util.Map;
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class PermissionsManagerForm extends DialogWindow implements PermissionsManagerPresenter.Dispaly
+public class PermissionsManagerForm extends IDEDialogWindow implements PermissionsManagerPresenter.Dispaly
 {
+   
    private static final String ID_SAVE = "ideSaveACL";
 
    private static final String ID_ADD_ENTITY = "ideAddEntity";

@@ -21,6 +21,9 @@ package org.exoplatform.ide.client.framework.ui;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Panel;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -28,22 +31,31 @@ import org.exoplatform.gwtframework.ui.client.window.Window;
  * @version $
  */
 
-public class DialogWindow extends Window
+public class IDEDialogWindow extends Window
 {
-   
-   public DialogWindow(int width, int height, String id)
+
+   private static AbsolutePanel ideDialogWindowsRootPanel;
+
+   public static AbsolutePanel getIdeDialogWindowsRootPanel()
+   {
+      return ideDialogWindowsRootPanel;
+   }
+
+   public static void setIdeDialogWindowsRootPanel(AbsolutePanel ideDialogsRootPanel)
+   {
+      IDEDialogWindow.ideDialogWindowsRootPanel = ideDialogsRootPanel;
+   }
+
+   public IDEDialogWindow(int width, int height, String id)
    {
       ClearFocusForm.getInstance().clearFocus();
 
       getElement().setId(id);
-     // setShowShadow(true);
       setWidth(width);
       setHeight(height);
       center();
-      //setShowMinimizeButton(false);
       setModal(false);
-      //setKeepInParentRect(true);
-      
+
       addCloseClickHandler(new CloseClickHandler()
       {
          @Override
@@ -52,6 +64,58 @@ public class DialogWindow extends Window
             destroy();
          }
       });
+   }
+
+   @Override
+   public void show()
+   {
+      if (ideDialogWindowsRootPanel != null)
+      {
+         super.show(ideDialogWindowsRootPanel);
+      }
+      else
+      {
+         super.show();
+      }
+   }
+
+   @Override
+   public void showCentered()
+   {
+      if (ideDialogWindowsRootPanel != null)
+      {
+         super.showCentered(ideDialogWindowsRootPanel);
+      }
+      else
+      {
+         super.showCentered();
+      }
+   }
+
+   @Override
+   public void show(Panel parent)
+   {
+      if (ideDialogWindowsRootPanel != null)
+      {
+         super.show(ideDialogWindowsRootPanel);
+      }
+      else
+      {
+         super.show(parent);
+      }
+   }
+
+   @Override
+   public void showCentered(Panel parent)
+   {
+      if (ideDialogWindowsRootPanel != null)
+      {
+         super.showCentered(ideDialogWindowsRootPanel);
+      }
+      else
+      {
+         super.showCentered(parent);
+      }
    }
 
 }

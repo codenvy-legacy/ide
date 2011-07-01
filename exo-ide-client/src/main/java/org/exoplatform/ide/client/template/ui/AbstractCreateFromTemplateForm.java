@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -27,7 +25,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
 import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
@@ -38,6 +36,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -52,7 +51,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  * @param <T> - type of template (file or project)
  */
-public abstract class AbstractCreateFromTemplateForm<T extends Template> extends DialogWindow 
+public abstract class AbstractCreateFromTemplateForm<T extends Template> extends IDEDialogWindow 
 implements CreateFromTemplateDisplay<T>
 {
 

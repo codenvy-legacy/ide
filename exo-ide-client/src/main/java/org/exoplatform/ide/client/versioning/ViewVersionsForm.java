@@ -23,7 +23,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.Version;
 
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: Sep 27, 2010 $
  *
  */
-public class ViewVersionsForm extends DialogWindow implements ViewVersionsPresenter.Display
+public class ViewVersionsForm extends IDEDialogWindow implements ViewVersionsPresenter.Display
 {
 
    public static final int WIDTH = 460;

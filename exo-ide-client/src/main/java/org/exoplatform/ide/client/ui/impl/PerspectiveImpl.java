@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.HasViews;
@@ -103,7 +105,12 @@ public class PerspectiveImpl extends Layer implements Perspective
       popupWindowsLayer = new WindowsLayer("popup-windows");
       popupWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(popupWindowsLayer);
-
+      
+      Layer dialogsRootLayer = new Layer("ide-dialog-windows");
+      addLayer(dialogsRootLayer);
+      new GWTDialogs(dialogsRootLayer);
+      IDEDialogWindow.setIdeDialogWindowsRootPanel(dialogsRootLayer);
+      
       modalWindowsLayer = new WindowsLayer("modal-windows", true);
       modalWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(modalWindowsLayer);

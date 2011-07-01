@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
 import java.util.LinkedHashMap;
 
 import org.exoplatform.gwtframework.ui.client.component.Align;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.extension.chromattic.client.Images;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -41,8 +40,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class DeployNodeTypeForm extends DialogWindow implements DeployNodeTypePresenter.Display
+public class DeployNodeTypeForm extends IDEDialogWindow implements DeployNodeTypePresenter.Display
 {
+   
    public static final int WIDTH = 475;
 
    public static final int HEIGHT = 180;

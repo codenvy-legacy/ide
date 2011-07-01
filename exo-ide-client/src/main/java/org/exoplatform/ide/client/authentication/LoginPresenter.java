@@ -226,10 +226,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    private void hiddenLoadAuthorizationPage(final AsyncRequest asyncRequest)
    {
-      String url = "/site/index.html";
+      String authorizationPageURL = getAuthorizationPageURL();
       try
       {
-         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, authorizationPageURL);
          requestBuilder.setCallback(new RequestCallback()
          {
             @Override
@@ -266,8 +266,8 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       try
       {
-         String url = "/site/j_security_check";
-         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+         String securityCheckURL = getSecurityCheckURL();
+         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, securityCheckURL);
          requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");
          requestBuilder.sendRequest(postBuilder.toString(), new RequestCallback()
          {
@@ -317,5 +317,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    {
       login = event.getUserInfo().getName();
    }
+   
+   private native String getAuthorizationPageURL() /*-{
+      return $wnd.authorizationPageURL;
+   }-*/;
+   
+   private native String getSecurityCheckURL() /*-{
+      return $wnd.securityCheckURL;
+   }-*/;
 
 }

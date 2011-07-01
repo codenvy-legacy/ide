@@ -18,6 +18,22 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.GwtResources;
+import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
+import org.exoplatform.ide.client.framework.ui.upload.FormFields;
+import org.exoplatform.ide.client.framework.vfs.Item;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -30,22 +46,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.GwtResources;
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
-import org.exoplatform.ide.client.framework.ui.upload.FormFields;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
-import java.util.List;
-
 /**
  * Class for uploading zip file.
  * 
@@ -53,7 +53,7 @@ import java.util.List;
  * @version $Id: Dec 10, 2010 $
  *
  */
-public class UploadForm extends DialogWindow implements UploadPresenter.UploadDisplay
+public class UploadForm extends IDEDialogWindow implements UploadPresenter.UploadDisplay
 {
 
    public static final int WIDTH = 450;

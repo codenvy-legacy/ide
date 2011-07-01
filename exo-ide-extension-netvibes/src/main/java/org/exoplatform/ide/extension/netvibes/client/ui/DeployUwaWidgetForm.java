@@ -18,6 +18,18 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.ui;
 
+import java.util.LinkedHashMap;
+
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.PasswordField;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.extension.netvibes.client.Images;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -27,18 +39,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.Label;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
-import org.exoplatform.ide.extension.netvibes.client.Images;
-
-import java.util.LinkedHashMap;
-
 /**
  * View of the deploy UWA widget operation.
  * 
@@ -46,7 +46,7 @@ import java.util.LinkedHashMap;
  * @version $Id: Nov 29, 2010 $
  *
  */
-public class DeployUwaWidgetForm extends DialogWindow implements DeployUwaWidgetPresenter.Display
+public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWidgetPresenter.Display
 {
 
    public static final int WIDTH = 460;

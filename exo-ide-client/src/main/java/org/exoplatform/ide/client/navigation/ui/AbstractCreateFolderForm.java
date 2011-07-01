@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.ui.DialogWindow;
+import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version @version $Id: $
  */
 
-public abstract class AbstractCreateFolderForm extends DialogWindow implements CreateFolderDisplay
+public abstract class AbstractCreateFolderForm extends IDEDialogWindow implements CreateFolderDisplay
 {
 
    public static final int WIDTH = 400;

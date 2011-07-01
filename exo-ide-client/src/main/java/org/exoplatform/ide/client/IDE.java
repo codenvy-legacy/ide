@@ -20,7 +20,7 @@ package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.gwtframework.ui.client.component.GWTDialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.IDEForm;
