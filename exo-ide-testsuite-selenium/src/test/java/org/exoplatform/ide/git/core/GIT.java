@@ -61,6 +61,8 @@ public class GIT
       String NO_REMOTE_REPOSITORIES = "No remote repositories are found.";
       
       String PUSH_SUCCESS = "[INFO] Successfully pushed to remote repository %s";
+      
+      String PULL_SUCCESS = "[INFO] Successfully pulled from remote repository %s";
    }
 
    public interface DialogTitles
@@ -113,4 +115,6 @@ public class GIT
    public Remotes REMOTES = new Remotes();
    
    public Push PUSH = new Push();
+   
+   public Pull PULL = new Pull();
 }
