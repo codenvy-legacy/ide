@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -140,19 +141,19 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
                createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
             buttons.put(editorType, button);
 
+            editor.setHeight("100%");
+            editorArea.add(editor);
+            
             if (editor == this.supportedEditors.get(currentEditorIndex))
             {
                currentEditorType = editorType;
-               showEditor(editor);
+               showEditor(editorType);
                downButton(button);
             }
             else
             {
-               hideEditor(editor);
+               hideEditor(editorType);
             }
-
-            editor.setHeight("100%");
-            editorArea.add(editor);
          }
          else
          {
@@ -173,19 +174,24 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
 
       editorArea.add(editorSwitcherContainer);
       editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
-
+      
       add(editorArea);
    }
 
-   private void showEditor(Editor editor)
+   private void showEditor(EditorType editorType)
    {
-      DOM.setStyleAttribute(editor.getElement(), "display", "block");
-      editor.setFocus();
+      // to fix bug with displaing within the Google Chrome
+      NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
+      editorAreaRows.getItem(editorType.getPosition() - 1).removeAttribute("style");  
+      
+      editors.get(editorType).setFocus();
    }
 
-   private void hideEditor(Editor editor)
+   private void hideEditor(EditorType editorType)
    {
-      DOM.setStyleAttribute(editor.getElement(), "display", "none");
+      // to fix bug with displaing within the Google Chrome
+      NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
+      editorAreaRows.getItem(editorType.getPosition() - 1).setAttribute("style", "display: none");
    }
 
    /**
@@ -360,8 +366,8 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
       }
 
       // show next editor
-      hideEditor(editors.get(currentEditorType));
-      showEditor(editors.get(nextEditorType));
+      hideEditor(currentEditorType);
+      showEditor(nextEditorType);
 
       // up current editor button
       upButton(buttons.get(currentEditorType));

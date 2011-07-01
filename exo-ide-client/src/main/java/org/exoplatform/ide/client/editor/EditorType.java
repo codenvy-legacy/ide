@@ -38,6 +38,9 @@ public enum EditorType
       
       private String iconUrl;
       
+      /**
+       * Editor position within editor area started from 1.
+       */
       private int position;
       
       EditorType(String label, String icon, int position)
@@ -57,6 +60,10 @@ public enum EditorType
          return iconUrl;
       }
       
+      /**
+       * Get editor position within editor area started from 1.
+       * @return
+       */
       public int getPosition()
       {
          return position;
