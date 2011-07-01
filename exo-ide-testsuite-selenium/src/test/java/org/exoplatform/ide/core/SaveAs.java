@@ -33,7 +33,7 @@ import org.exoplatform.ide.TestConstants;
 public class SaveAs extends AbstractTestModule
 {
    public static final String SAVE_AS_DIALOG_LOCATOR =
-      "//div[@id='ideAskForValueDialog']//div[@class='Caption']/span[text()='Save file as']";
+      "//div[@id='ideAskForValueView-window']//div[@class='Caption']/span[text()='Save file as']";
 
    public void checkIsOpened(boolean isOpened)
    {
@@ -53,21 +53,21 @@ public class SaveAs extends AbstractTestModule
 
    public void clickYes() throws Exception
    {
-      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogOkButton']";
+      String locator = "//div[@id='ideAskForValueView-window']//div[@id='ideAskForValueViewYesButton']";
       selenium().click(locator);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
    public void clickNo() throws Exception
    {
-      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogNoButton']";
+      String locator = "//div[@id='ideAskForValueView-window']//div[@id='ideAskForValueViewNoButton']";
       selenium().click(locator);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public void clickCancel() throws Exception
    {
-      String locator = "//div[@id='ideAskForValueDialog']//div[@id='ideAskForValueDialogCancelButton']";
+      String locator = "//div[@id='ideAskForValueView-window']//div[@id='ideAskForValueViewCancelButton']";
       selenium().click(locator);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }

@@ -41,7 +41,7 @@ public class SearchByMimeTypeTest extends BaseTest
 
    private static final String FOLDER_NAME_2 = "Test";
 
-   private static final String FILE_NAME_2 = "Copy Of Example.js";
+   private static final String FILE_NAME_2 = "CopyOfExample.js";
 
    private static final String FILE_CONTENT = "// CodeMirror main module"
       + "var CodeMirrorConfig = window.CodeMirrorConfig || {};\n"

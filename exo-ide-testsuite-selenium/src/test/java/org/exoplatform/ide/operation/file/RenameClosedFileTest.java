@@ -103,12 +103,12 @@ public class RenameClosedFileTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME);
       
-      System.out.print("/n"+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+(VirtualFileSystemUtils.get("http://localhost:8080/IDE/rest/private/jcr/repository/dev-monit/123/").getStatusCode())+"  <<<<");
+      
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + ORIG_FILE_NAME).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME + "/" + RENAMED_FILE_NAME).getStatusCode());
    }
 
- //  @Test
+   @Test
    public void testChangeMimeType() throws Exception
    {
       selenium.refresh();
@@ -149,7 +149,7 @@ public class RenameClosedFileTest extends BaseTest
       IDE.EDITOR.closeFile(0);
    }
 
-   //@Test
+   @Test
    public void testRenameAndChangeMimeType() throws Exception
    {
       selenium.refresh();

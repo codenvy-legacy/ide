@@ -117,6 +117,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
       //create txt file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      
       saveAsUsingToolbarButton(TEXT_FILE);
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");

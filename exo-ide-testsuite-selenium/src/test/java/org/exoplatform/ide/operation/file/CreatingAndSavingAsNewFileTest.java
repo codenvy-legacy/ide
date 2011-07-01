@@ -123,7 +123,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
-      SaveFileUtils.checkSaveAsDialogAndSave(fileName, false);
+      SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);
 
       IDE.EDITOR.closeFile(1);
 

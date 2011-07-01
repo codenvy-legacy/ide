@@ -372,7 +372,7 @@ public abstract class BaseTest
    protected void saveAsUsingToolbarButton(String name) throws Exception
    {
       IDE.TOOLBAR.runCommand("Save As...");
-      SaveFileUtils.checkSaveAsDialogAndSave(name, false);
+      SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
 
    /**
@@ -391,7 +391,7 @@ public abstract class BaseTest
    {
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
 
-      SaveFileUtils.checkSaveAsDialogAndSave(name, false);
+      SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
 
    protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
