@@ -66,7 +66,7 @@ public class DeleteRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(URL);
-         VirtualFileSystemUtils.mkcol(URL2);
+         VirtualFileSystemUtils.delete(URL2);
       }
       catch (Exception e)
       {
@@ -103,12 +103,13 @@ public class DeleteRepositoryTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
    }
    
-//   public void deleteRepositoryFromNonGitFolder() throws Exception
-//   {
-//      IDE.WORKSPACE.waitForRootItem();
-//      IDE.WORKSPACE.selectItem(URL + "/");
-//      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
-//      IDE.ERROR_DIALOG.checkIsOpened(GIT.DialogTitles.ERROR);
-//      
-//   }
+   @Test
+   public void deleteRepositoryFromNonGitFolder() throws Exception
+   {
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.selectItem(URL2 + "/");
+      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);
+      IDE.ERROR_DIALOG.waitIsOpened();
+      assertTrue(IDE.ERROR_DIALOG.getMessage().contains("Not a git repository (or any of the parent directories)."));
+   }
 }
