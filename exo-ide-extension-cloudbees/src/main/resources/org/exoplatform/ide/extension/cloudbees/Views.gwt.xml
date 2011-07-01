@@ -27,4 +27,8 @@
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.initialize.DeployApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.initialize.DeployApplicationPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display" />
+   </replace-with>
 </module>

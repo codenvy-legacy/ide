@@ -66,5 +66,15 @@ public abstract class CloudBeesClientService
    public abstract void login(String email, String password, AsyncRequestCallback<String> callback);
    
    public abstract void logout(AsyncRequestCallback<String> callback);
+   
+   /**
+    * Get the appilcation info.
+    * 
+    * @param workDir - the location of work dir on file system
+    * @param appId - id of application
+    * @param callback - callcack. that client has to implement
+    */
+   public abstract void getApplicationInfo(String workDir, String appId,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
 
 }

@@ -49,7 +49,7 @@ public interface CloudBeesClientBundle extends ClientBundle
    ImageResource cancelButtonDisabled();
    
    /*
-    * CloudBees
+    * CloudBees controls
     */
    @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees.png")
    ImageResource cloudBees();
@@ -62,5 +62,11 @@ public interface CloudBeesClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/cloudbees/images/initializeApp_Disabled.png")
    ImageResource initializeAppDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/appInfo.png")
+   ImageResource applicationInfo();
+
+   @Source("org/exoplatform/ide/extension/cloudbees/images/appInfo_Disabled.png")
+   ImageResource applicationInfoDisabled();
 
 }

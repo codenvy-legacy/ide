@@ -36,6 +36,9 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("button.cancel")
    String cancelButton();
    
+   @Key("button.ok")
+   String okButton();
+   
    /*
     * Controls.
     */
@@ -56,6 +59,15 @@ public interface CloudBeesLocalizationConstant extends Messages
    
    @Key("control.initializeApp.prompt")
    String initializeAppControlPrompt();
+   
+   @Key("control.appInfo.id")
+   String applicationInfoControlId();
+   
+   @Key("control.appInfo.title")
+   String applicationInfoControlTitle();
+   
+   @Key("control.appInfo.prompt")
+   String applicationInfoControlPrompt();
    
    /*
     * LoginView.
@@ -101,5 +113,20 @@ public interface CloudBeesLocalizationConstant extends Messages
    
    @Key("deployApplication.appInfo")
    String deployApplicationInfo();
+   
+   /*
+    * ApplicationInfoView
+    */
+   @Key("appInfo.title")
+   String applicationInfoTitle();
+   
+   /*
+    * ApplicationInfoGrid
+    */
+   @Key("appInfo.listGrid.field.name")
+   String applicationInfoListGridNameField();
+   
+   @Key("appInfo.listGrid.field.value")
+   String applicationInfoListGridValueField();
 
 }

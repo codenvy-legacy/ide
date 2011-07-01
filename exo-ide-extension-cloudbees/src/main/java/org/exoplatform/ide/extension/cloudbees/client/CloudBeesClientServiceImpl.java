@@ -158,4 +158,28 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationInfo(String workDir, String appId,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+   {
+      final String url = restServiceContext + APPS_INFO;
+      
+      String params = (appId != null) ? "appid=" + appId + "&" : "";
+      params += "workdir=" + workDir;
+
+      Map<String, String> responseMap = new HashMap<String, String>();
+      callback.setResult(responseMap);
+      callback.setEventBus(eventBus);
+      
+      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
 }
