@@ -569,17 +569,12 @@ public class EditorController implements EditorContentChangedHandler,
          updateTabTitle(oldFile);
          return;
       }
-      if (ignoreContentChangedList.contains(oldFile.getHref()))
-      {
-         ignoreContentChangedList.remove(oldFile.getHref());
-         ignoreContentChangedList.add(newFile.getHref());
-      }
-      //TODO 
+
+      ignoreContentChangedList.remove(oldFile.getHref());     
+      ignoreContentChangedList.add(newFile.getHref()); 
       
       EditorView oldFileEditorView = editorsViews.get(oldFile.getHref());
-      
       editorsViews.remove(oldFile.getHref());
-      
       editorsViews.put(newFile.getHref(), oldFileEditorView);
 
       try
@@ -595,9 +590,6 @@ public class EditorController implements EditorContentChangedHandler,
       updateTabTitle(newFile);
       oldFileEditorView.setFile(newFile);
       
-      //   display.replaceFile(oldFile, newFile);
-
-      //   display.updateTabTitle(newFile.getHref());
       eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
    }
 
