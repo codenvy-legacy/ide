@@ -314,6 +314,16 @@
             <artifactId>exo-ide-vfs-webdav-client</artifactId>
             <version>${project.version}</version>
          </dependency>
+	 <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-maven</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+	 <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-maven-webapp-archetype</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -659,6 +669,7 @@
       <module>exo-ide-codeassistant-framework</module>
 
       <module>exo-ide-maven</module>
+      <module>exo-ide-maven-webapp-archetype</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-gadget</module>
