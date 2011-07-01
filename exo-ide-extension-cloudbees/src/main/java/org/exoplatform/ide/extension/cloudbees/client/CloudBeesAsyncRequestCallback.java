@@ -67,8 +67,9 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
          //because of CloudBees returned not 401 status, but 500 status
          //and explanation, that user not autherised in text message,
          //that's why we must parse text message
+         final String exceptionMsg = serverException.getMessage();
          if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus() 
-                  || serverException.getMessage().startsWith("AuthFailure"))
+                  || exceptionMsg.startsWith("AuthFailure") && exceptionMsg.contains("400"))
          {
             eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));
             return;
