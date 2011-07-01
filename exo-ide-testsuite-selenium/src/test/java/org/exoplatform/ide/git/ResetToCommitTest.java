@@ -25,8 +25,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
 import org.exoplatform.ide.git.core.Status;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -39,23 +39,25 @@ import java.util.List;
 public class ResetToCommitTest extends BaseTest
 {
    private static final String INIT_COMMIT_COMMENT = "init";
+   
+   private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/ResetToCommitTest.zip";
 
    private static final String TEST_FOLDER = ResetToCommitTest.class.getSimpleName();
 
-   private static final String TEST_FILE1 = "TestFile1";
+   private static final String TEST_FILE1 = "TestFile1.txt";
 
-   private static final String TEST_FILE2 = "TestFile2";
+   private static final String TEST_FILE2 = "TestFile2.txt";
 
    private static final String FIRST_COMMIT = "Commit 1";
 
    private static final String SECOND_COMMIT = "Commit 2";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
       }
       catch (Exception e)
       {
@@ -63,8 +65,8 @@ public class ResetToCommitTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
@@ -88,24 +90,8 @@ public class ResetToCommitTest extends BaseTest
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET, false);
 
-      //Not Git repository:
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
       //Check Reset commit is available:
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
 
@@ -133,7 +119,7 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
 
       Assert.assertTrue(IDE.GIT.RESET_TO_COMMIT.isViewComponentsPresent());
-      Assert.assertEquals(1, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
+      Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       IDE.GIT.RESET_TO_COMMIT.clickCancelButton();
       IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
@@ -153,25 +139,6 @@ public class ResetToCommitTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
-      //Create new file:
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.NAVIGATION.saveFileAs(TEST_FILE1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + TEST_FILE1);
-      IDE.EDITOR.closeFile(0);
-
-      //Add changes to index
-      IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
-
-      //Commit file:
-      IDE.GIT.COMMIT.commit(FIRST_COMMIT);
-      IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
-      Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
-
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
       IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
@@ -185,8 +152,8 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
 
       //Check successfully reverted message:
-      IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      IDE.OUTPUT.waitForMessageShow(1);
+      String message = IDE.OUTPUT.getOutputMessageText(1);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -195,8 +162,8 @@ public class ResetToCommitTest extends BaseTest
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(4);
-      message = IDE.OUTPUT.getOutputMessageText(4);
+      IDE.OUTPUT.waitForMessageShow(2);
+      message = IDE.OUTPUT.getOutputMessageText(2);
       List<String> notCommited = IDE.GIT.STATUS.getNotCommited(message);
       Assert.assertEquals(1, notCommited.size());
       Assert.assertTrue(notCommited.contains(String.format(Status.Messages.NEW_FILE, TEST_FILE1)));
@@ -223,12 +190,6 @@ public class ResetToCommitTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
-      //Commit file:
-      IDE.GIT.COMMIT.commit(FIRST_COMMIT);
-      IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
-
       //Create new file:
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -238,14 +199,14 @@ public class ResetToCommitTest extends BaseTest
 
       //Add changes to index
       IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
+      IDE.OUTPUT.waitForMessageShow(1);
+      String message = IDE.OUTPUT.getOutputMessageText(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
 
       //Commit file:
       IDE.GIT.COMMIT.commit(SECOND_COMMIT);
-      IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      IDE.OUTPUT.waitForMessageShow(2);
+      message = IDE.OUTPUT.getOutputMessageText(2);
       Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
 
       //Open Reset files view:
@@ -261,8 +222,8 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
 
       //Check successfully reverted message:
-      IDE.OUTPUT.waitForMessageShow(4);
-      message = IDE.OUTPUT.getOutputMessageText(4);
+      IDE.OUTPUT.waitForMessageShow(3);
+      message = IDE.OUTPUT.getOutputMessageText(3);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -272,8 +233,8 @@ public class ResetToCommitTest extends BaseTest
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(5);
-      message = IDE.OUTPUT.getOutputMessageText(5);
+      IDE.OUTPUT.waitForMessageShow(4);
+      message = IDE.OUTPUT.getOutputMessageText(4);
       List<String> untracked = IDE.GIT.STATUS.getUntracked(message);
       Assert.assertEquals(1, untracked.size());
       Assert.assertTrue(untracked.contains(TEST_FILE2));
@@ -300,22 +261,10 @@ public class ResetToCommitTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
-      //Add changes to index
-      IDE.GIT.ADD.addToIndex();
-      IDE.OUTPUT.waitForMessageShow(1);
-      String message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
-
-      //Commit file:
-      IDE.GIT.COMMIT.commit(SECOND_COMMIT);
-      IDE.OUTPUT.waitForMessageShow(2);
-      message = IDE.OUTPUT.getOutputMessageText(2);
-      Assert.assertTrue(message.startsWith(GIT.Messages.COMMIT_SUCCESS));
-
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET);
       IDE.GIT.RESET_TO_COMMIT.waitForViewOpened();
-      Assert.assertEquals(3, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
+      Assert.assertEquals(2, IDE.GIT.RESET_TO_COMMIT.getRevisionsCount());
 
       //Choose "hard" mode, first commit and click "Revert":
       IDE.GIT.RESET_TO_COMMIT.selectHardMode();
@@ -325,8 +274,8 @@ public class ResetToCommitTest extends BaseTest
       IDE.GIT.RESET_TO_COMMIT.waitForViewClosed();
 
       //Check successfully reverted message:
-      IDE.OUTPUT.waitForMessageShow(3);
-      message = IDE.OUTPUT.getOutputMessageText(3);
+      IDE.OUTPUT.waitForMessageShow(1);
+     String message = IDE.OUTPUT.getOutputMessageText(1);
       Assert.assertEquals(GIT.Messages.RESET_COMMIT_SUCCESS, message);
 
       //Check file in tree:
@@ -336,8 +285,8 @@ public class ResetToCommitTest extends BaseTest
 
       //Check status:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
-      IDE.OUTPUT.waitForMessageShow(4);
-      message = IDE.OUTPUT.getOutputMessageText(4);
+      IDE.OUTPUT.waitForMessageShow(2);
+      message = IDE.OUTPUT.getOutputMessageText(2);
       Assert.assertTrue(message.contains(Status.Messages.NOTHING_TO_COMMIT));
 
       //Check number of commits:
