@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.core;
 
 import org.exoplatform.ide.IDE;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
 
 /**
@@ -256,7 +257,7 @@ public class Branches extends AbstractTestModule
    {
       selenium().type(Locators.NEW_BRANCH_VALUE_FIELD, newBranch);
    }
-   
+
    /**
     * Wait for the pointed number of the branches.
     * 
@@ -266,5 +267,22 @@ public class Branches extends AbstractTestModule
    public void waitForBranchesCount(int count) throws Exception
    {
       waitForElementPresent("//table[@id=\"" + Locators.BRANCHES_GRID_ID + "\"]/tbody[1]//tr[" + count + "]");
+   }
+
+   /**
+    * Switch to pointed branch.
+    * 
+    * @param branchName name of the branch
+    * @throws Exception
+    */
+   public void switchBranch(String branchName) throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
+      waitForViewOpened();
+      selectBranchByName(branchName);
+      clickCheckoutButton();
+      waitBranchChecked(branchName);
+      clickCloseButton();
+      waitForViewClosed();
    }
 }

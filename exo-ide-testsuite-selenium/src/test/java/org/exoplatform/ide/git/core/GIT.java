@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.core;
 
-import junit.framework.Assert;
-
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -59,6 +57,10 @@ public class GIT
       String DELETE_BRANCH_QUESTION = "Are you sure you want to delete branch %s?";
       
       String DELETE_REMOTE_QUESTION = "Are you sure you want to delete remote repository %s?";
+      
+      String NO_REMOTE_REPOSITORIES = "No remote repositories are found.";
+      
+      String PUSH_SUCCESS = "[INFO] Successfully pushed to remote repository %s";
    }
 
    public interface DialogTitles
@@ -109,4 +111,6 @@ public class GIT
    public ResetToCommit RESET_TO_COMMIT = new ResetToCommit();
    
    public Remotes REMOTES = new Remotes();
+   
+   public Push PUSH = new Push();
 }
