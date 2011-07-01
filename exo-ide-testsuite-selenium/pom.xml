@@ -13,7 +13,7 @@
    <artifactId>exo-ide-testsuite-selenium</artifactId>
    <packaging>jar</packaging>
    <name>exo-ide-testsuite-selenium</name>
-   
+
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <firefox.profile.dir>target/firefoxProfile</firefox.profile.dir>
@@ -48,6 +48,11 @@
          <version>1.0.2</version>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>commons-httpclient</groupId>
+         <artifactId>commons-httpclient</artifactId>
+         <version>3.1</version>
+      </dependency>
    </dependencies>
    <build>
       <plugins>
@@ -80,8 +85,10 @@
                               <copy todir="${project.build.directory}/firefoxProfile">
                                  <fileset dir="${basedir}/src/test/resources/firefoxProfile" />
                               </copy>
-                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="@@@@@@" value="${java.io.tmpdir}" />
-                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="\" value="\\" />
+                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="@@@@@@"
+                                 value="${java.io.tmpdir}" />
+                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="\"
+                                 value="\\" />
                            </tasks>
                         </configuration>
                         <goals>

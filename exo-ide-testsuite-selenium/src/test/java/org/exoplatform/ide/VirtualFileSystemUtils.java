@@ -18,12 +18,20 @@
  */
 package org.exoplatform.ide;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.NVPair;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -34,8 +42,9 @@ import java.net.URL;
 */
 public class VirtualFileSystemUtils
 {
-   
-   public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl) throws IOException, ModuleException
+
+   public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl)
+      throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
       HTTPConnection connection = Utils.getConnection(url);
@@ -47,9 +56,9 @@ public class VirtualFileSystemUtils
       HTTPResponse response = connection.Put(url.getFile(), data, headers);
       return response.getStatusCode();
    }
-   
-   
-   public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException, ModuleException
+
+   public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException,
+      ModuleException
    {
       URL url = new URL(storageUrl);
       HTTPConnection connection = Utils.getConnection(url);
@@ -60,7 +69,7 @@ public class VirtualFileSystemUtils
       HTTPResponse response = connection.Put(url.getFile(), data, headers);
       return response.getStatusCode();
    }
-   
+
    public static int put(byte[] data, String storageUrl) throws IOException, ModuleException
    {
       URL url = new URL(storageUrl);
@@ -69,10 +78,9 @@ public class VirtualFileSystemUtils
       headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, "application/xml");
       HTTPResponse response = connection.Put(url.getFile(), data, headers);
       return response.getStatusCode();
-      
+
    }
-   
-   
+
    /**
     * @param filePath
     * @param mimeType
@@ -85,6 +93,7 @@ public class VirtualFileSystemUtils
    {
       return put(data, mimeType, TestConstants.NodeTypes.NT_RESOURCE, storageUrl);
    }
+
    /**
     * @param filePath
     * @param mimeType
@@ -97,7 +106,7 @@ public class VirtualFileSystemUtils
    {
       return put(filePath, mimeType, TestConstants.NodeTypes.NT_RESOURCE, storageUrl);
    }
-   
+
    /**
     * @param storageUrl
     * @return HTTPStatus code
@@ -111,7 +120,7 @@ public class VirtualFileSystemUtils
       HTTPResponse response = connection.Delete(url.getFile());
       return response.getStatusCode();
    }
-   
+
    /**
     * @param storageUrl
     * @return HTTPStatus code
@@ -126,8 +135,7 @@ public class VirtualFileSystemUtils
       HTTPResponse response = connection.Get(url.getFile());
       return response;
    }
-   
-   
+
    /**
     * @param storageUrl
     * @return HTTPStatus code
@@ -140,5 +148,17 @@ public class VirtualFileSystemUtils
       HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.MkCol(url.getFile());
       return response.getStatusCode();
+   }
+
+   public static int upoadZipFolder(String zipPath, String storageUrl) throws HttpException, IOException
+   {
+
+      File f = new File(zipPath);
+      PostMethod filePost = new PostMethod("http://localhost:8080/rest/private/ide/upload/folder");
+      Part[] parts = {new StringPart("location", storageUrl), new FilePart("file", f)};
+      filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
+      HttpClient client = Utils.getHttpClient();
+      return client.executeMethod(filePost);
+
    }
 }

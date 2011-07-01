@@ -20,6 +20,10 @@ package org.exoplatform.ide;
 
 import static org.junit.Assert.fail;
 
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.exoplatform.common.http.client.CookieModule;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
@@ -70,6 +74,15 @@ public class Utils
       headers[1] = new NVPair(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED);
       HTTPResponse response = connection.Post(url.getFile(), "", headers);
       return response.getStatusCode();
+   }
+   
+   public static HttpClient getHttpClient()
+   {
+      HttpClient client = new HttpClient();
+      client.getParams().setAuthenticationPreemptive(true);
+      Credentials defaultcreds = new UsernamePasswordCredentials(USER, PASSWD);
+      client.getState().setCredentials(new AuthScope("localhost", 8080, AuthScope.ANY_REALM), defaultcreds);
+      return client;
    }
 
    /**
