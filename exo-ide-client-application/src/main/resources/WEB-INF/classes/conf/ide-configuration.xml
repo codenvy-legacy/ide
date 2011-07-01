@@ -50,6 +50,14 @@
    <component>
      <type>org.exoplatform.ide.maven.TaskService</type>
    </component>
+   
+    <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
