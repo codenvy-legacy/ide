@@ -132,7 +132,7 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
          EditorType editorType = EditorType.getType(editor.getClass().getName());
          editors.put(editorType, editor);
 
-         editorSequence[editorType.getPosition() - 1] = editorType;
+         editorSequence[editorType.getPosition()] = editorType;
 
          // add editor switcher only if there are several supported editors
          if (this.supportedEditors.size() > 1)
@@ -140,20 +140,7 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
             ToggleButton button =
                createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
             buttons.put(editorType, button);
-
             editor.setHeight("100%");
-            editorArea.add(editor);
-            
-            if (editor == this.supportedEditors.get(currentEditorIndex))
-            {
-               currentEditorType = editorType;
-               showEditor(editorType);
-               downButton(button);
-            }
-            else
-            {
-               hideEditor(editorType);
-            }
          }
          else
          {
@@ -166,7 +153,20 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
       // to respect of button sequence
       for (int i = 0; i < editorSequence.length; i++)
       {
-         editorSwitcher.add(buttons.get(editorSequence[i]));
+         EditorType editorType = editorSequence[i];
+         editorSwitcher.add(buttons.get(editorType));
+         editorArea.add(editors.get(editorType));
+         
+         if (editors.get(editorType) == this.supportedEditors.get(currentEditorIndex))
+         {
+            currentEditorType = editorType;
+            showEditor(editorType);
+            downButton(buttons.get(editorType));
+         }
+         else
+         {
+            hideEditor(editorType);
+         }
       }
 
       editorSwitcherContainer.add(editorSwitcher);
@@ -185,7 +185,7 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
       if (editorAreaRows != null
                && editorAreaRows.getLength() >= editorType.getPosition())
       {
-         editorAreaRows.getItem(editorType.getPosition() - 1).removeAttribute("style");
+         editorAreaRows.getItem(editorType.getPosition()).removeAttribute("style");
       }
       
       editors.get(editorType).setFocus();
@@ -198,7 +198,7 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
       if (editorAreaRows != null
                && editorAreaRows.getLength() >= editorType.getPosition())
       {
-         editorAreaRows.getItem(editorType.getPosition() - 1).setAttribute("style", "display: none");
+         editorAreaRows.getItem(editorType.getPosition()).setAttribute("style", "display: none");
       }
    }
 

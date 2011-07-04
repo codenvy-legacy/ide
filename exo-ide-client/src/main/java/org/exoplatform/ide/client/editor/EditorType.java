@@ -30,16 +30,16 @@ import org.exoplatform.ide.editor.codemirror.CodeMirror;
 public enum EditorType
 {
    
-      SOURCE(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 1),
-      DESIGN(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabDesignView(), Images.Editor.DESIGN_BUTTON_ICON, 2),
-      DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 1);
+      SOURCE(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0),
+      DESIGN(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabDesignView(), Images.Editor.DESIGN_BUTTON_ICON, 1),
+      DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 2);
       
       private String label;
       
       private String iconUrl;
       
       /**
-       * Editor position within editor area started from 1.
+       * Editor position within editor area started from 0.
        */
       private int position;
       
@@ -61,7 +61,7 @@ public enum EditorType
       }
       
       /**
-       * Get editor position within editor area started from 1.
+       * Get editor position within editor area started from 0.
        * @return
        */
       public int getPosition()
