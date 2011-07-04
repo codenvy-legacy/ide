@@ -64,8 +64,6 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
 
    private static final String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
 
-   /*Elements titles*/
-
    private static final int BUTTON_HEIGHT = 22;
 
    private static final int BUTTON_WIDTH = 90;
@@ -114,7 +112,8 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       refsLayout.setWidth("100%");
       refsLayout.setSpacing(3);
 
-      localBranchesField = new SelectItem(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewLocalBranchFieldTitle());
+      localBranchesField =
+         new SelectItem(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewLocalBranchFieldTitle());
       localBranchesField.setTitleOrientation(TitleOrientation.TOP);
       localBranchesField.setWidth(210);
 
@@ -123,7 +122,8 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       arrow.setHeight("16px");
       DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
 
-      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewRemoteBranchFieldTitle());
+      remoteBranchesField =
+         createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pushViewRemoteBranchFieldTitle());
 
       refsLayout.add(localBranchesField);
       refsLayout.add(arrow);
@@ -262,7 +262,6 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
       {
          remoteBranchesField.setValue(values[0], true);
       }
-         
    }
 
    /**
@@ -272,6 +271,10 @@ public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.
    public void setLocalBranches(String[] values)
    {
       localBranchesField.setValueMap(values);
+      if (values.length > 0)
+      {
+         localBranchesField.setValue(values[0], true);
+      }
    }
 
    /**

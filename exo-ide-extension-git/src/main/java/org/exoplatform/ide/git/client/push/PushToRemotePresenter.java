@@ -170,14 +170,31 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
          }
       });
+      
       display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            boolean empty = (event.getValue() == null || event.getValue().length() <= 0);
-            empty = empty || display.getLocalBranchesValue().getValue() == null || display.getLocalBranchesValue().getValue().length() <= 0;
+            boolean empty = (event.getValue() == null || event.getValue().isEmpty());
+            empty =
+               empty || display.getLocalBranchesValue().getValue() == null
+                  || display.getLocalBranchesValue().getValue().isEmpty();
+            display.enablePushButton(!empty);
+         }
+      });
+      
+      display.getLocalBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            boolean empty = (event.getValue() == null || event.getValue().isEmpty());
+            empty =
+               empty || display.getRemoteBranchesValue().getValue() == null
+                  || display.getRemoteBranchesValue().getValue().isEmpty();
             display.enablePushButton(!empty);
          }
       });
@@ -217,7 +234,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             @Override
             protected void onFailure(Throwable exception)
             {
-               String errorMessage = (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.pushFail();
+               String errorMessage =
+                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.pushFail();
                eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
             }
          });
@@ -234,7 +252,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       bindDisplay();
       IDE.getInstance().openView(display.asView());
       display.enablePushButton(false);
-      
+
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
       {
@@ -242,7 +260,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
 
       display.setRemoteValues(remoteValues);
-      
+
       getBranches(workDir, false);
       getBranches(workDir, true);
    }
