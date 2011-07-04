@@ -22,13 +22,9 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ide.client.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
-import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
-import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,47 +32,54 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
+ * Formatter to sort controls from "File/New" group.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
 public class NewItemControlsFormatter implements ControlsFormatter
 {
-   private List<String> controlIdsOrder;
+   class Group
+   {
+      private int number;
+      
+      private List<Control> controls;
+      
+      public Group(int number)
+      {
+         this.number = number;
+      }
+      
+      /**
+       * @return the number
+       */
+      public int getNumber()
+      {
+         return number;
+      }
+      
+      /**
+       * @return the controls
+       */
+      public List<Control> getControls()
+      {
+         if (controls == null)
+            controls = new ArrayList<Control>();
+         return controls;
+      }
+   }
    
    /**
-    * Initialize the order of the controls in menu "New".
+    * Each group will be separated by delimiter in menu.
     */
-   private void initControlsOrder()
-   {
-      controlIdsOrder = new ArrayList<String>();
-      controlIdsOrder.add(CreateProjectTemplateControl.ID);
-      controlIdsOrder.add(CreateFolderControl.ID);
-
-      controlIdsOrder.add("File/New/New Google Gadget");
-      controlIdsOrder.add("File/New/New REST Service");
-      controlIdsOrder.add("File/New/New POGO");
-      controlIdsOrder.add("File/New/New Data Object");
-
-      controlIdsOrder.add("File/New/New HTML");
-      controlIdsOrder.add("File/New/New Java Script");
-      controlIdsOrder.add("File/New/New CSS");
-      controlIdsOrder.add("File/New/New Template");
-
-      controlIdsOrder.add("File/New/New XML");
-      controlIdsOrder.add("File/New/New TEXT");
-
-      controlIdsOrder.add(CreateProjectFromTemplateControl.ID);
-      controlIdsOrder.add(CreateFileFromTemplateControl.ID);
-   }
+   private List<Group> groups = new ArrayList<NewItemControlsFormatter.Group>();
    
    /**
     * @param eventBus
     */
    public NewItemControlsFormatter()
    {
-      initControlsOrder();
    }
 
    /**
@@ -84,7 +87,11 @@ public class NewItemControlsFormatter implements ControlsFormatter
     */
    public void format(List<Control> controls)
    {
-      List<Control> newItemControls = sortNewItemsControls(controls);
+      createGroups(controls);
+      Collections.sort(groups, groupComparator);
+      
+      List<Control> newItemControls = sortNewItemsControls();
+      
       //Remove new items controls:
       controls.removeAll(newItemControls);
       //Add sorted items controls:
@@ -93,28 +100,51 @@ public class NewItemControlsFormatter implements ControlsFormatter
       createNewItemGroup(controls);
       fillNewItemPopupControl(controls);
    }
-
-   /**
-    * Sort new items controls and return them.
-    * 
-    * @param controls all controls
-    * @return sorted only new item controls
-    */
-   private List<Control> sortNewItemsControls(List<Control> controls)
+   
+   private List<Control> sortNewItemsControls()
    {
       List<Control> newItemControls = new ArrayList<Control>();
+      for (Group group : groups)
+      {
+         if (newItemControls.size() > 0)
+         {
+            group.getControls().get(0).setDelimiterBefore(true);
+         }
+         newItemControls.addAll(group.getControls());
+      }
+      return newItemControls;
+   }
+   
+   private void createGroups(List<Control> controls)
+   {
       for (Control control : controls)
       {
          if (control.getId().startsWith("File/New/"))
          {
-            newItemControls.add(control);
+            int groupNumber = ((SimpleControl)control).getGroup();
+            
+            Group group = getGroup(groupNumber);
+            if (group == null)
+            {
+               group = new Group(groupNumber);
+               groups.add(group);
+            }
+            
+            group.getControls().add(control);
          }
       }
-      
-      Collections.sort(newItemControls, controlComparator);
-      return newItemControls;
    }
    
+   private Group getGroup(int groupNumber)
+   {
+      for (Group group : groups)
+      {
+         if (group.getNumber() == groupNumber)
+            return group;
+      }
+      return null;
+   }
+
    /**
     * Fill new item popup control with sub controls.
     * 
@@ -145,26 +175,15 @@ public class NewItemControlsFormatter implements ControlsFormatter
       }
    }
 
-   /**
-    * Comparator for items order.
-    */
-   private Comparator<Control> controlComparator = new Comparator<Control>()
+   private Comparator<Group> groupComparator = new Comparator<NewItemControlsFormatter.Group>()
    {
-      public int compare(Control control1, Control control2)
+      @Override
+      public int compare(Group group1, Group group2)
       {
-         if (!control1.getId().startsWith("File/New/") || !control2.getId().startsWith("File/New/"))
-         {
-            return 0;
-         }
+         Integer number1 = group1.getNumber();
+         Integer number2 = group2.getNumber();
          
-         Integer index1 = controlIdsOrder.indexOf(control1.getId());
-         Integer index2 = controlIdsOrder.indexOf(control2.getId());
-         
-         //If item is not found in order list, then put it at the end of the list
-         if (index2 == -1) return -1;
-         if (index1 == -1) return 1;
-         
-         return index1.compareTo(index2);
+         return number1.compareTo(number2);
       }
    };
 

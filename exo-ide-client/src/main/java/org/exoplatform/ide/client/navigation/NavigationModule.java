@@ -176,19 +176,19 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewXmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewXmlPrompt(), Images.FileTypes.XML,
-         MimeType.TEXT_XML).setDelimiterBefore(true)));
+         MimeType.TEXT_XML).setGroup(3)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewHtmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewHtmlPrompt(), Images.FileTypes.HTML,
-         MimeType.TEXT_HTML).setDelimiterBefore(true)));
+         MimeType.TEXT_HTML).setGroup(1)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
-         MimeType.TEXT_PLAIN)));
+         MimeType.TEXT_PLAIN).setGroup(3)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script",
          IDE.IDE_LOCALIZATION_CONSTANT.controlNewJavascriptTitle(), IDE.IDE_LOCALIZATION_CONSTANT
-            .controlNewJavascriptPrompt(), Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT)));
+            .controlNewJavascriptPrompt(), Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT).setGroup(1)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewCssTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewCssPrompt(), Images.FileTypes.CSS,
-         MimeType.TEXT_CSS)));
+         MimeType.TEXT_CSS).setGroup(1)));
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithControl()));

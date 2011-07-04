@@ -73,7 +73,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Ruby File", "Ruby File", "Create Ruby File", Images.RUBY,
-            MimeType.APPLICATION_RUBY), DockTarget.NONE, false);
+            MimeType.APPLICATION_RUBY).setGroup(2), DockTarget.NONE, false);
       
       RubyClientBundle.INSTANCE.css().ensureInjected();
    }

@@ -60,6 +60,7 @@ public class CreateJavaProjectControl extends SimpleControl implements IDEContro
       setPrompt(PROMPT);
       setEvent(new CreateJavaProjectEvent());
       setImages(JavaClientBundle.INSTANCE.javaProject(), JavaClientBundle.INSTANCE.javaProjectDisabled());
+      setGroup(0);
    }
 
    /**

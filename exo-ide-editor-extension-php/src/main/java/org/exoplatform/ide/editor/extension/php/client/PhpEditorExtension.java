@@ -71,7 +71,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", Images.PHP,
-            MimeType.APPLICATION_PHP), DockTarget.NONE, false);
+            MimeType.APPLICATION_PHP).setGroup(2), DockTarget.NONE, false);
       
       PhpClientBundle.INSTANCE.css().ensureInjected();
    }

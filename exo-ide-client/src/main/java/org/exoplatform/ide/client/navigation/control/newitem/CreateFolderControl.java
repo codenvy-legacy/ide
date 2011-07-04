@@ -61,6 +61,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
       setVisible(true);
+      setGroup(0);
    }
 
    /**

@@ -69,7 +69,7 @@ public class GadgetEditor extends Extension
       IDE.getInstance().addEditor(producer);
 
       IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
-         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setDelimiterBefore(true), DockTarget.NONE, false);
+         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroup(1), DockTarget.NONE, false);
    }
 
 }
