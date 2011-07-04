@@ -94,6 +94,10 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       this.selectedItems = event.getSelectedItems();
+      if (selectedItems.size() == 0) {
+         return;
+      }
+      
       workDir = selectedItems.get(0).getHref();
    }
 

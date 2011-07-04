@@ -53,8 +53,9 @@ public class IDEDialogWindow extends Window
       getElement().setId(id);
       setWidth(width);
       setHeight(height);
-      center();
-      setModal(false);
+      //center();
+      setModal(true);
+      setAnimationEnabled(false);
 
       addCloseClickHandler(new CloseClickHandler()
       {
@@ -77,6 +78,8 @@ public class IDEDialogWindow extends Window
       {
          super.show();
       }
+      
+      center();
    }
 
    @Override
@@ -103,6 +106,8 @@ public class IDEDialogWindow extends Window
       {
          super.show(parent);
       }
+      
+      center();
    }
 
    @Override

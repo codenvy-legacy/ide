@@ -143,22 +143,22 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
       }
 
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
-
       window.getElement().setAttribute("id", view.getId() + "-window");
       window.getElement().getStyle().setProperty("zIndex", "auto");
 
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
-      window.center();
+//      window.center();
       window.setCanMaximize(view.canResize());
-      window.show();
+//      window.show();
+      
+      window.showCentered(this);
+      add(window);
 
       windows.put(view.getId(), window);
 
       int left = window.getAbsoluteLeft();
       int top = window.getAbsoluteTop();
-
-      add(window);
       DOM.setStyleAttribute(window.getElement(), "left", left + "px");
       DOM.setStyleAttribute(window.getElement(), "top", top + "px");
       window.add(viewWidget);

@@ -43,6 +43,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display
 {
+   
+   private static final String ID = "ideGetItemURLForm";
 
    private static final int DEFAULT_WIDTH = 500;
 

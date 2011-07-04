@@ -52,8 +52,6 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
    public interface Display extends IsView
    {
 
-      String ID = "ideGetItemURLForm";
-
       HasClickHandlers getOkButton();
 
       HasValue<String> getURLField();
@@ -83,9 +81,9 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
    {
       if (display == null)
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         bindDisplay(d);
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
       }
    }
 
@@ -98,16 +96,14 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
       }
    }
 
-   public void bindDisplay(Display display)
+   public void bindDisplay()
    {
-      this.display = display;
-
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
       
