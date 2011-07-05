@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Label;
+import java.util.HashMap;
+import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorParameters;
@@ -35,8 +33,10 @@ import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * Created by The eXo Platform SAS .

@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Used as base for the most presenters, which work with Git.

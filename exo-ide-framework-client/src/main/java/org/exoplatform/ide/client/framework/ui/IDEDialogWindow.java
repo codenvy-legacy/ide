@@ -49,10 +49,11 @@ public class IDEDialogWindow extends Window
    public IDEDialogWindow(int width, int height, String id)
    {
       ClearFocusForm.getInstance().clearFocus();
-
+      
       getElement().setId(id);
       setWidth(width);
       setHeight(height);
+      
       //center();
       setModal(true);
       setAnimationEnabled(false);
@@ -70,29 +71,16 @@ public class IDEDialogWindow extends Window
    @Override
    public void show()
    {
-      if (ideDialogWindowsRootPanel != null)
-      {
-         super.show(ideDialogWindowsRootPanel);
-      }
-      else
-      {
-         super.show();
-      }
-      
+      parent = ideDialogWindowsRootPanel;
+      super.show();
       center();
    }
 
    @Override
    public void showCentered()
    {
-      if (ideDialogWindowsRootPanel != null)
-      {
-         super.showCentered(ideDialogWindowsRootPanel);
-      }
-      else
-      {
-         super.showCentered();
-      }
+      parent = ideDialogWindowsRootPanel;
+      super.showCentered();
    }
 
    @Override
@@ -100,11 +88,13 @@ public class IDEDialogWindow extends Window
    {
       if (ideDialogWindowsRootPanel != null)
       {
-         super.show(ideDialogWindowsRootPanel);
+         this.parent = ideDialogWindowsRootPanel;
+         super.show();
       }
       else
       {
-         super.show(parent);
+         this.parent = parent;
+         super.show();
       }
       
       center();
@@ -115,11 +105,13 @@ public class IDEDialogWindow extends Window
    {
       if (ideDialogWindowsRootPanel != null)
       {
-         super.showCentered(ideDialogWindowsRootPanel);
+         this.parent = parent;
+         super.showCentered();
       }
       else
       {
-         super.showCentered(parent);
+         this.parent = parent;
+         super.showCentered();
       }
    }
 

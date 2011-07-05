@@ -18,6 +18,15 @@
  */
 package org.exoplatform.ide.client.edit;
 
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
+import org.exoplatform.ide.client.framework.vfs.File;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -25,15 +34,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

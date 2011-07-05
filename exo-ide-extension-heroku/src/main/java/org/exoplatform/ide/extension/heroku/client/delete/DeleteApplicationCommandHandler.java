@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.delete;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,7 +38,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for deleting application from Heroku.

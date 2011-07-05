@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.Collections;
+import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -29,8 +30,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 
-import java.util.Collections;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for opening local file in editor.

@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.dialogs.ValueCallback;
 import org.exoplatform.ide.client.dialogs.ValueDiscardCallback;
@@ -47,7 +47,6 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS .

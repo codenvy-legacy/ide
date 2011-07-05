@@ -38,7 +38,7 @@ package org.exoplatform.ide.client.navigation.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;

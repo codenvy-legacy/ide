@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.git.client.delete;
 
-import com.google.gwt.http.client.URL;
-
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -32,6 +28,9 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 /**
  * Delete repository command handler, performs deleting Git repository.

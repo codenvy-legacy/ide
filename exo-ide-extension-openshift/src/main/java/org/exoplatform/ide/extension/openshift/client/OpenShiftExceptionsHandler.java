@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 
 import com.google.gwt.event.shared.HandlerManager;
 

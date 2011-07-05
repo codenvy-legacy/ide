@@ -106,14 +106,15 @@ public class PerspectiveImpl extends Layer implements Perspective
       popupWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(popupWindowsLayer);
       
-      Layer dialogsRootLayer = new Layer("ide-dialog-windows");
-      addLayer(dialogsRootLayer);
-      new GWTDialogs(dialogsRootLayer);
-      IDEDialogWindow.setIdeDialogWindowsRootPanel(dialogsRootLayer);
-      
       modalWindowsLayer = new WindowsLayer("modal-windows", true);
       modalWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(modalWindowsLayer);
+
+//      Layer dialogsRootLayer = new Layer("ide-dialog-windows");
+//      addLayer(dialogsRootLayer);
+      
+      new GWTDialogs(modalWindowsLayer);
+      IDEDialogWindow.setIdeDialogWindowsRootPanel(modalWindowsLayer);
    }
 
    public Panel addPanel(String panelId, Direction direction, int initialSize)

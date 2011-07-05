@@ -18,15 +18,9 @@
  */
 package org.exoplatform.ide.client.model.configuration.marshal;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window.Location;
-
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -34,6 +28,12 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
 import org.exoplatform.ide.client.model.conversation.marshal.UserInfoUnmarshaller;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
+
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window.Location;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

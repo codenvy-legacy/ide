@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.heroku.client.key;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
-import org.exoplatform.gwtframework.commons.dialogs.BooleanValueReceivedHandler;
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -31,7 +31,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for actions with keys (add, clear).

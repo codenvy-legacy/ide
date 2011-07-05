@@ -79,20 +79,22 @@ public class JarsCollector
       String catalinaHome = System.getProperty("catalina.home");
 
       String commonLoaderPath = System.getProperty("common.loader");
-      String[] commonLoaderPathEntries = commonLoaderPath.split(",");
-      for (String commonLoaderPathEntry : commonLoaderPathEntries)
-      {
-         if (commonLoaderPathEntry.indexOf("${catalina.base}") >= 0)
+      if (commonLoaderPath != null) {
+         String[] commonLoaderPathEntries = commonLoaderPath.split(",");
+         for (String commonLoaderPathEntry : commonLoaderPathEntries)
          {
-            commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.base}", catalinaBase);
-         }
+            if (commonLoaderPathEntry.indexOf("${catalina.base}") >= 0)
+            {
+               commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.base}", catalinaBase);
+            }
 
-         if (commonLoaderPathEntry.indexOf("${catalina.home}") >= 0)
-         {
-            commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.home}", catalinaHome);
-         }
+            if (commonLoaderPathEntry.indexOf("${catalina.home}") >= 0)
+            {
+               commonLoaderPathEntry = commonLoaderPathEntry.replace("${catalina.home}", catalinaHome);
+            }
 
-         getJarsFromClasspath(commonLoaderPathEntry);
+            getJarsFromClasspath(commonLoaderPathEntry);
+         }         
       }
    }
 

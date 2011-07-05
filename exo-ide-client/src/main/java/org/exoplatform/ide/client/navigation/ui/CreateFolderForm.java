@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import org.exoplatform.gwtframework.commons.dialogs.Dialogs;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
@@ -92,7 +90,7 @@ public class CreateFolderForm extends IDEDialogWindow implements CreateFolderDis
 
       createFieldForm();
       createButtons();
-      showCentered(((GWTDialogs)Dialogs.getInstance()).getRootPanel());
+      showCentered();
 
       addCloseClickHandler(new CloseClickHandler()
       {
