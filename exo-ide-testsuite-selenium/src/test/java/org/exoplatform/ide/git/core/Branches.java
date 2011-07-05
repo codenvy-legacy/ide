@@ -51,9 +51,9 @@ public class Branches extends AbstractTestModule
 
       String NEW_BRANCH_VALUE_FIELD = "//div[@id=\"" + NEW_BRANCH_VIEW_ID + "\"]//input[@name=\"valueField\"]";
 
-      String NEW_BRANCH_OK_BUTTON_ID = "exoAskForValueDialogOkButton";
+      String NEW_BRANCH_OK_BUTTON_ID = "OkButton";
 
-      String NEW_BRANCH_CANCEL_BUTTON_ID = "exoAskForValueDialogCancelButton";
+      String NEW_BRANCH_CANCEL_BUTTON_ID = "CancelButton";
    }
 
    /**

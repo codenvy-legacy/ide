@@ -165,7 +165,8 @@ public class ShowHistoryTest extends BaseTest
       //Make one more commit:
       createFileAndCommit(TEST_FILE2, COMMIT2);
       Assert.assertEquals(2, IDE.GIT.SHOW_HISTORY.getRevisionsCount());
-
+      Thread.sleep(2000);
+      
       IDE.GIT.SHOW_HISTORY.clickRefreshRevisionListButton();
       IDE.GIT.SHOW_HISTORY.waitForCommitsCount(3);
       Assert.assertEquals(3, IDE.GIT.SHOW_HISTORY.getRevisionsCount());

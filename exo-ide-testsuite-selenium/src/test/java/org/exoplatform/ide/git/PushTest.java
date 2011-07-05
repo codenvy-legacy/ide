@@ -202,6 +202,8 @@ public class PushTest extends BaseTest
       //Sleep is necessary for file to appear on file system:
       Thread.sleep(3000);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      waitForLoaderDissapeared();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/" + TEST_FILE);
    }
 }

@@ -33,7 +33,7 @@ public class InformationDialog extends AbstractTestModule
 {
    private static final String INFO_DIALOG_ID = "exoInfoDialog";
 
-   private static final String INFO_BUTTON_OK_ID = "exoInfoDialogOkButton";
+   private static final String INFO_BUTTON_OK_ID = "OkButton";
 
    private static final String INFO_MESSAGE_LOCATOR = "//div[@id=\"" + INFO_DIALOG_ID
       + "\"]//div[@class=\"gwt-Label\"]";

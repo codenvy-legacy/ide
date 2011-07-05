@@ -35,7 +35,7 @@ public class ErrorDialog extends AbstractTestModule
 
    private final String WARNING_MESSAGE_LOCATOR = "//div[@id=\"" + WARNING_DIALOG_ID + "\"]//div[@class=\"gwt-Label\"]";
 
-   private final String OK_BUTTON_ID = "exoWarningDialogOkButton";
+   private final String OK_BUTTON_ID = "OkButton";
 
    /**
     * Wait error dialog is opened.
