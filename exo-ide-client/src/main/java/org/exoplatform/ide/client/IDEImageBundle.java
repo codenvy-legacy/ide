@@ -34,6 +34,9 @@ public interface IDEImageBundle extends ClientBundle
 
    public static final IDEImageBundle INSTANCE = GWT.create(IDEImageBundle.class);
 
+   @Source("org/exoplatform/ide/public/images/logo/eXo-IDE-Logo.png")
+   ImageResource ideLogo();
+   
    /*
     * BUTTONS
     */
