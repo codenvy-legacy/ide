@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -134,8 +136,7 @@ public class UploadFilePresenter extends UploadPresenter
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
-      href += fileName;
-      href = encodeURI(href);
+      href += URL.encodePathSegment(fileName);
 
       display.setHiddenFields(href, mimeType, "", contentNodeType);
       display.getUploadForm().submit();

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -93,8 +95,7 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
-      href += fileName;
-      href = encodeURI(href);
+      href += URL.encodePathSegment(fileName);
 
       display.setHiddenFields(href, mimeType, "", contentNodeType);
       display.getUploadForm().submit();

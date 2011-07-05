@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -124,14 +126,6 @@ public class UploadPresenter implements FileSelectedHandler
       display.disableUploadButton();
    }
 
-   /**
-    * @param url
-    * @return result of javaScript function <code>encodeURI(url)</code>
-    */
-   public static native String encodeURI(String url) /*-{
-		return encodeURI(url);
-   }-*/;
-
    protected void uploadFileToForm()
    {
       String fileName = display.getFileNameField().getValue();
@@ -146,9 +140,8 @@ public class UploadPresenter implements FileSelectedHandler
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
-      href += fileName;
-      href = encodeURI(href);
-
+      href += URL.encodePathSegment(fileName);
+      
       display.setHiddenFields(href, "", "", "");
       display.getUploadForm().submit();
    }
