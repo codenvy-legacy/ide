@@ -20,15 +20,14 @@ package org.exoplatform.ide.git;
 
 import junit.framework.Assert;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.Add;
 import org.exoplatform.ide.git.core.GIT;
 import org.exoplatform.ide.git.core.Status;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -42,26 +41,20 @@ public class AddTest extends BaseTest
 {
    private static final String TEST_FOLDER = AddTest.class.getSimpleName();
 
-   private static final String TEST_FILE = "TestFile";
-
    private static final String TEST_ADD_FILE = "TestAddFile";
 
-   private static final String TEST_FILE2 = "TestFile2";
+   private static final String TEST_FILE2 = "TestFile2.txt";
 
    private static final String TEST_FILE_FOR_UPDATE = "TestFileForUpdate";
 
    private static final String TEST_ADD_FOLDER = "TestAddFolder";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
-
-   @BeforeClass
-   public static void setUp() throws Exception
+   @Before
+   public void setUp() throws Exception
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-         VirtualFileSystemUtils.put(new byte[0], MimeType.GROOVY_SERVICE, URL + TEST_FILE);
+         VirtualFileSystemUtils.upoadZipFolder("src/test/resources/org/exoplatform/ide/git/AddTest.zip", WS_URL);
       }
       catch (Exception e)
       {
@@ -69,8 +62,8 @@ public class AddTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
@@ -94,23 +87,7 @@ public class AddTest extends BaseTest
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, false);
 
-      //Not Git repository:
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, true);
-
-      IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
-      IDE.ERROR_DIALOG.waitIsOpened();
-      String message = IDE.ERROR_DIALOG.getMessage();
-      Assert.assertEquals(GIT.Messages.NOT_GIT_REPO, message);
-      IDE.ERROR_DIALOG.clickOk();
-      IDE.ERROR_DIALOG.waitIsClosed();
-
-      //Init repository:
-      IDE.GIT.INIT_REPOSITORY.initRepository();
-      IDE.OUTPUT.waitForMessageShow(1);
-      message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
-
       //Check Add to index is available:
       IDE.MENU.checkCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.ADD, true);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.ADD);
@@ -259,9 +236,7 @@ public class AddTest extends BaseTest
       String statusMessage = IDE.OUTPUT.getOutputMessageText(2);
       //Get list of files in index:
       List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
-      Assert.assertEquals(2, addedFiles.size());
-      //Check list contains added files:
-      Assert.assertTrue(addedFiles.contains(String.format(Status.Messages.NEW_FILE, TEST_ADD_FILE)));
+      Assert.assertEquals(1, addedFiles.size());
       Assert.assertTrue(addedFiles.contains(String.format(Status.Messages.NEW_FILE, TEST_FILE2)));
    }
 
@@ -315,12 +290,6 @@ public class AddTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.STATUS);
       IDE.OUTPUT.waitForMessageShow(2);
       String statusMessage = IDE.OUTPUT.getOutputMessageText(2);
-      //Get list of files in index:
-      List<String> addedFiles = IDE.GIT.STATUS.getNotCommited(statusMessage);
-      Assert.assertEquals(2, addedFiles.size());
-      //Check list contains added files:
-      Assert.assertTrue(addedFiles.contains(String.format(Status.Messages.NEW_FILE, TEST_ADD_FILE)));
-      Assert.assertTrue(addedFiles.contains(String.format(Status.Messages.NEW_FILE, TEST_FILE2)));
 
       //Get list of untracked files:
       List<String> untrackedFiles = IDE.GIT.STATUS.getUntracked(statusMessage);
