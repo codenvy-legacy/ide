@@ -176,13 +176,13 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New XML", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewXmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewXmlPrompt(), Images.FileTypes.XML,
-         MimeType.TEXT_XML).setGroup(3)));
+         MimeType.TEXT_XML).setGroup(1)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New HTML", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewHtmlTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewHtmlPrompt(), Images.FileTypes.HTML,
          MimeType.TEXT_HTML).setGroup(1)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
-         MimeType.TEXT_PLAIN).setGroup(3)));
+         MimeType.TEXT_PLAIN).setGroup(1)));
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New Java Script",
          IDE.IDE_LOCALIZATION_CONSTANT.controlNewJavascriptTitle(), IDE.IDE_LOCALIZATION_CONSTANT
             .controlNewJavascriptPrompt(), Images.FileTypes.JAVASCRIPT, MimeType.APPLICATION_JAVASCRIPT).setGroup(1)));
