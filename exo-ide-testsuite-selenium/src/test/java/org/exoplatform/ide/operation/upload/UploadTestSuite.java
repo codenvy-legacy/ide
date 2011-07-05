@@ -31,7 +31,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({OpenGadgetLocalFileTest.class, OpenGroovyLocalFileTest.class, OpenHtmlLocalFileTest.class,
    UploadingGoogleGadgetTest.class, UploadingGroovyFileTest.class, UploadingHtmlFileTest.class,
    OpenLocalFileTest.class, UploadingZippedFolderTest.class, UploadMimeTypeAutoCompletionTest.class,
-   OpenFileByPathTest.class})
+   OpenFileByPathTest.class, UploadToFolderWithSpacesTest.class})
 public class UploadTestSuite
 {
 
