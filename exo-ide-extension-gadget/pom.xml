@@ -14,7 +14,6 @@
       <dependency>
          <groupId>org.gatein.shindig</groupId>
          <artifactId>shindig-common</artifactId>
-         <version>${shindig.version}</version>
          <exclusions>
             <exclusion>
                <groupId>commons-betwixt</groupId>
@@ -33,13 +32,11 @@
       <dependency>
          <groupId>org.gatein.shindig</groupId>
          <artifactId>shindig-features</artifactId>
-         <version>${shindig.version}</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.gatein.shindig</groupId>
          <artifactId>shindig-gadgets</artifactId>
-         <version>${shindig.version}</version>
          <exclusions>
             <exclusion>
                <groupId>nu.validator.htmlparser</groupId>
@@ -50,7 +47,6 @@
       <dependency>
          <groupId>org.gatein.shindig</groupId>
          <artifactId>shindig-social-api</artifactId>
-         <version>${shindig.version}</version>
          <scope>runtime</scope>
          <exclusions>
             <exclusion>

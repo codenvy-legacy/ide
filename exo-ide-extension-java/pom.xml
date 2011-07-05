@@ -71,7 +71,6 @@
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
-         <version>${org.exoplatform.ws.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
@@ -81,6 +80,10 @@
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.script.groovy</artifactId>
       </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
@@ -106,6 +109,10 @@
          <artifactId>junit</artifactId>
          <version>4.7</version>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.groovy</groupId>
+         <artifactId>groovy-all</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
