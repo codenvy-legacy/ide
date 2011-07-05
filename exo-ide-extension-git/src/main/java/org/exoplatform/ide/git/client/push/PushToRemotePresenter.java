@@ -170,7 +170,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             display.setRemoteBranches(getRemoteBranchesToDisplay(display.getRemoteDisplayValue()));
          }
       });
-      
+
       display.getRemoteBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -184,7 +184,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             display.enablePushButton(!empty);
          }
       });
-      
+
       display.getLocalBranchesValue().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -250,8 +250,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    {
       display = GWT.create(Display.class);
       bindDisplay();
-      IDE.getInstance().openView(display.asView());
       display.enablePushButton(false);
+      IDE.getInstance().openView(display.asView());
 
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
