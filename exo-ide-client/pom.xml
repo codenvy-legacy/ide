@@ -37,6 +37,7 @@
       <dependency>
          <groupId>com.google.gwt.google-apis</groupId>
          <artifactId>gwt-gadgets</artifactId>
+         <version>1.2.0</version>
          <exclusions>
             <exclusion>
                <groupId>xstream</groupId>
@@ -370,6 +371,7 @@
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-common</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
                <exclusions>
                   <exclusion>
@@ -381,16 +383,19 @@
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-features</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-gadgets</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-social-api</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -406,21 +411,25 @@
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice</artifactId>
+               <version>${com.google.code.guice.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>com.google.code.guice</groupId>
                <artifactId>guice-jmx</artifactId>
+               <version>${com.google.code.guice.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>javax.xml.bind</groupId>
                <artifactId>jaxb-api</artifactId>
+               <version>2.1</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>com.sun.xml.bind</groupId>
                <artifactId>jaxb-impl</artifactId>
+               <version>2.1.7</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -430,31 +439,38 @@
                <scope>runtime</scope>
             </dependency>
             <!-- Chromattic -->
+            <!-- 
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.apt</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.api</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.spi</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.core</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
+            -->
          </dependencies>
          <build>
             <plugins>

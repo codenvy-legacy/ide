@@ -34,8 +34,6 @@
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.6</org.slf4j.version>
       <chromattic.version>1.1.0-beta3</chromattic.version>
-      <apache.commons-compress.version>1.0</apache.commons-compress.version>
-      <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <javax.jcr.version>1.0</javax.jcr.version>
       <javax.annotation.version>1.0</javax.annotation.version>
       <groovy.version>1.6.5</groovy.version>
@@ -43,6 +41,7 @@
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>6.0.32</tomcat.version>
+      <com.google.code.guice.version>2.0</com.google.code.guice.version>
       <gwt.test.skip>true</gwt.test.skip>
    </properties>
 
@@ -62,11 +61,6 @@
          <dependency>
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.security.core</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.script.groovy</artifactId>
             <version>${org.exoplatform.core.version}</version>
          </dependency>
          <dependency>
@@ -129,6 +123,8 @@
             <artifactId>exo-jcr-services</artifactId>
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
+         
+         <!-- exo gwt framework -->
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
             <artifactId>exo-gwtframework-commons</artifactId>
@@ -139,6 +135,8 @@
             <artifactId>exo-gwtframework-ui</artifactId>
             <version>${org.exoplatform.gwtframework.version}</version>
          </dependency>
+         
+         <!-- exo ide -->
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-server</artifactId>
@@ -314,16 +312,13 @@
             <artifactId>exo-ide-vfs-webdav-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-	 <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-	 <dependency>
+	 		<dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven-webapp-archetype</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <!-- gwt -->
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -339,35 +334,11 @@
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
          </dependency>
-         <dependency>
-            <groupId>com.google.gwt.google-apis</groupId>
-            <artifactId>gwt-gadgets</artifactId>
-            <version>1.2.0</version>
-         </dependency>
+         
          <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>2.0.0</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-common</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-features</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-gadgets</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-social-api</artifactId>
-            <version>${shindig.version}</version>
          </dependency>
          <dependency>
             <groupId>org.slf4j</groupId>
@@ -380,40 +351,22 @@
             <version>1.5.8</version>
          </dependency>
          <dependency>
-            <groupId>com.google.code.guice</groupId>
-            <artifactId>guice</artifactId>
-            <version>2.0</version>
-         </dependency>
-         <dependency>
-            <groupId>com.google.code.guice</groupId>
-            <artifactId>guice-jmx</artifactId>
-            <version>2.0</version>
-         </dependency>
-         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-         </dependency>
-         <dependency>
             <groupId>javax.jcr</groupId>
             <artifactId>jcr</artifactId>
             <version>1.0</version>
-         </dependency>
+         </dependency>         
          <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
          </dependency>
-         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.1.7</version>
-         </dependency>
+
          <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>jsr250-api</artifactId>
             <version>1.0</version>
          </dependency>
+         
          <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
@@ -440,84 +393,11 @@
             <version>${org.exoplatform.ws.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.frameworks.json</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
             <groupId>org.exoplatform.jcr</groupId>
             <artifactId>jcr.packaging.module</artifactId>
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
-         <!-- Chromattic -->
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.apt</artifactId>
-            <version>${chromattic.version}</version>
-            <scope>compile</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.api</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.spi</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.core</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.ext</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.exo</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.metamodel</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.dataobject</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>${apache.commons-compress.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
-         </dependency>
-           <dependency>
-           <groupId>commons-codec</groupId>
-           <artifactId>commons-codec</artifactId>
-           <version>1.3</version>
-         </dependency>
-         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-         </dependency>
-
-
+         
          <dependency>
             <groupId>org.jboss.cache</groupId>
             <artifactId>jbosscache-core</artifactId>
@@ -529,31 +409,6 @@
                </exclusion>
             </exclusions>
          </dependency>
-
-         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>4.1.0.FINAL</version>
-         </dependency>
-
-         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.44-1</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-invoker</artifactId>
-            <version>2.0.11</version>
-         </dependency>
-
-         <dependency>
-            <groupId>com.cloudbees</groupId>
-            <artifactId>cloudbees-api-client</artifactId>
-            <version>0.8.0</version>
-         </dependency>
-
       </dependencies>
    </dependencyManagement>
    <build>

@@ -53,6 +53,7 @@
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
+         <version>${org.exoplatform.ws.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
@@ -66,6 +67,7 @@
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.script.groovy</artifactId>
+         <version>${org.exoplatform.core.version}</version>
       </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
@@ -100,6 +102,7 @@
       <dependency>
          <groupId>org.codehaus.groovy</groupId>
          <artifactId>groovy-all</artifactId>
+         <version>${groovy.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
