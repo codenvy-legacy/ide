@@ -20,12 +20,12 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
+import java.awt.event.KeyEvent;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
