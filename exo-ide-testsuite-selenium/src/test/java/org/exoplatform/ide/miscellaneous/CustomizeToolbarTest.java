@@ -199,7 +199,7 @@ public class CustomizeToolbarTest extends BaseTest
       assertTrue(items.contains("Run in Sandbox"));
       assertTrue(items.contains("Launch REST Service"));
       assertTrue(items.contains("Preview node type"));
-      assertTrue(items.contains("Initialize repository"));
+      assertTrue(items.contains("Initialize Repository"));
       assertTrue(items.contains("Push..."));
       assertTrue(items.contains("Workspace..."));
       assertTrue(items.contains("REST Services Discovery"));

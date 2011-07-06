@@ -110,7 +110,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
        * 4. Close editor
        */
       IDE.EDITOR.closeFile(0);
-
+Thread.sleep(10000);
       /*
        * 5. Run File > Open With
        */

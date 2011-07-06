@@ -110,7 +110,7 @@ public abstract class BaseTest
    //protected static final String APPLICATION_URL = "http://192.168.0.3:8080/portal/public/default/ide";
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
 
-   protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.CHROME;
+   protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.GOOGLE_CHROME;
 
    public static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
 

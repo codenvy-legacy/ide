@@ -113,7 +113,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //press Ctrl+S
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
-      SaveFileUtils.checkSaveAsDialog(false);
+      SaveFileUtils.checkSaveAsDialog(true);
       //close
       //selenium.click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
