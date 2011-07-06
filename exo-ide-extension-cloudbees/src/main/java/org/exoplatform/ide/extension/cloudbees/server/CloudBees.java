@@ -128,8 +128,8 @@ public class CloudBees
       throws Exception /* from BeesClient */
    {
       BeesClient beesClient = getBeesClient();
-            beesClient.applicationDeployWar(appId, environment, null, warFile, null, false, new DummyUploadProgress());
-            ApplicationInfo ainfo = beesClient.applicationInfo(appId);
+      beesClient.applicationDeployWar(appId, environment, null, warFile, null, false, new DummyUploadProgress());
+      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(ainfo);
       // NOTE : Maven structure expected
       // /myapp
@@ -144,9 +144,11 @@ public class CloudBees
    public Map<String, String> applicationInfo(String appId, File workDir) throws Exception /* from BeesClient */
    {
       if (appId == null || appId.isEmpty())
+      {
          appId = detectApplicationId(workDir);
-      if (appId == null || appId.isEmpty())
-         throw new IllegalStateException("Not cloudbees application. ");
+         if (appId == null || appId.isEmpty())
+            throw new IllegalStateException("Not cloudbees application. ");
+      }
       BeesClient beesClient = getBeesClient();
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       return toMap(ainfo);
@@ -155,9 +157,11 @@ public class CloudBees
    public void deleteApplication(String appId, File workDir) throws Exception /* from BeesClient */
    {
       if (appId == null || appId.isEmpty())
+      {
          appId = detectApplicationId(workDir);
-      if (appId == null || appId.isEmpty())
-         throw new IllegalStateException("Not cloudbees application. ");
+         if (appId == null || appId.isEmpty())
+            throw new IllegalStateException("Not cloudbees application. ");
+      }
       BeesClient beesClient = getBeesClient();
       ApplicationDeleteResponse r = beesClient.applicationDelete(appId);
       if (!r.isDeleted())
@@ -276,7 +280,7 @@ public class CloudBees
                if (r != null)
                   r.close();
             }
-            
+
             if (!found)
             {
                // If .gitignore exists but has not expected line add line to the end of file.
