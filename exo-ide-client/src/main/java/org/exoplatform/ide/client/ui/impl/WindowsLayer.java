@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -117,11 +116,9 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
       }
 
       windows.remove(view.getId());
-
-      window.hide();
       window.destroy();
-
       windowControllers.remove(view.getId());
+      
       return true;
    }
 
@@ -133,8 +130,6 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
       if (hasModalWindows)
       {
          AbsolutePanel lockPanel = new AbsolutePanel();
-//         DOM.setStyleAttribute(lockPanel.getElement(), "background", "#9999FF");
-//         DOM.setStyleAttribute(lockPanel.getElement(), "opacity", "0.3");
          lockPanel.getElement().getStyle().setBackgroundColor("#9999FF");
          lockPanel.getElement().getStyle().setOpacity(0.1);
          add(lockPanel, 0, 0);
@@ -144,23 +139,14 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
 
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
       window.getElement().setAttribute("id", view.getId() + "-window");
-      //window.getElement().getStyle().setProperty("zIndex", "auto");
+      window.getElement().getStyle().setProperty("zIndex", "auto");
 
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());
-//      window.center();
       window.setCanMaximize(view.canResize());
-//      window.show();
-      
       window.showCentered(this);
-      //add(window);
 
       windows.put(view.getId(), window);
-
-      int left = window.getAbsoluteLeft();
-      int top = window.getAbsoluteTop();
-      DOM.setStyleAttribute(window.getElement(), "left", left + "px");
-      DOM.setStyleAttribute(window.getElement(), "top", top + "px");
       window.add(viewWidget);
 
       WindowController controller = new WindowController(view, window);

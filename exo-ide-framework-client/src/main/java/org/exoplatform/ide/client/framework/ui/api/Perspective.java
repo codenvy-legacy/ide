@@ -36,12 +36,32 @@ public interface Perspective extends HasViewVisibilityChangedHandler,
 HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
 {
 
+   /**
+    * Opens View.
+    * 
+    * @param view
+    */
    void openView(View view);
 
+   /**
+    * Closes View.
+    * 
+    * @param viewId
+    */
    void closeView(String viewId);
    
+   /**
+    * Returns map of opened views.
+    * 
+    * @return
+    */
    public Map<String, View> getViews();
 
+   /**
+    * Returns map of opened panels.
+    * 
+    * @return
+    */
    public Map<String, Panel> getPanels();   
 
 }

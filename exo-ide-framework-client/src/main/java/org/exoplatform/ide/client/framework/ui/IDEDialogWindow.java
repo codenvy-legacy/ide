@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-import org.exoplatform.gwtframework.ui.client.window.CloseClickHandler;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -31,6 +30,10 @@ import com.google.gwt.user.client.ui.Panel;
  * @version $
  */
 
+@Deprecated
+/*
+ * To open dialog windows needs to extend the class ViewImpl and call method IDE.getInstance().openView(...).
+ */
 public class IDEDialogWindow extends Window
 {
 
@@ -53,19 +56,7 @@ public class IDEDialogWindow extends Window
       getElement().setId(id);
       setWidth(width);
       setHeight(height);
-      
-      //center();
       setModal(true);
-      setAnimationEnabled(false);
-
-      addCloseClickHandler(new CloseClickHandler()
-      {
-         @Override
-         public void onCloseClick()
-         {
-            destroy();
-         }
-      });
    }
 
    @Override

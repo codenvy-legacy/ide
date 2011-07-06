@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -64,31 +66,70 @@ import com.google.gwt.user.client.ui.Widget;
 public class PerspectiveImpl extends Layer implements Perspective
 {
 
+   /**
+    * Layer for placing popup windows.
+    */
    private WindowsLayer popupWindowsLayer;
 
+   /**
+    * Layer for placing modal windows.
+    */
    private WindowsLayer modalWindowsLayer;
 
+   /**
+    * List of ViewVisibilityChanged handlers.
+    */
    private List<ViewVisibilityChangedHandler> viewVisibilityChangedHandlers =
       new ArrayList<ViewVisibilityChangedHandler>();
 
+   /**
+    * List of ViewOpened handlers.
+    */
    private List<ViewOpenedHandler> viewOpenedHandlers = new ArrayList<ViewOpenedHandler>();
 
+   /**
+    * List of ClosingView handlers.
+    */
    private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
 
+   /**
+    * List of ViewClosed handlers.
+    */
    private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
 
+   /**
+    * Layer for placing views that are controlled by panels.
+    */
    private Layer viewsLayer;
 
+   /**
+    * Layer for placing panels.
+    */
    private Layer panelsLayer;
 
+   /**
+    * Layer for placing IDE layout.
+    */
    private LayoutLayer layoutLayer;
 
+   /**
+    * Map of opened views.
+    */
    private Map<String, View> views = new HashMap<String, View>();
 
+   /**
+    * Map op opened panels.
+    */
    private Map<String, Panel> panels = new HashMap<String, Panel>();
 
+   /**
+    * Map that specifies target panel or window where a view is opened.
+    */
    private Map<String, HasViews> viewTargets = new HashMap<String, HasViews>();
 
+   /**
+    * Creates a new instance of this Perspective.
+    */
    public PerspectiveImpl()
    {
       super("test-perspective");
@@ -105,18 +146,23 @@ public class PerspectiveImpl extends Layer implements Perspective
       popupWindowsLayer = new WindowsLayer("popup-windows");
       popupWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(popupWindowsLayer);
-      
+
       modalWindowsLayer = new WindowsLayer("modal-windows", true);
       modalWindowsLayer.addClosingViewHandler(closingViewHandler);
       addLayer(modalWindowsLayer);
 
-//      Layer dialogsRootLayer = new Layer("ide-dialog-windows");
-//      addLayer(dialogsRootLayer);
-      
       new GWTDialogs(modalWindowsLayer);
       IDEDialogWindow.setIdeDialogWindowsRootPanel(modalWindowsLayer);
    }
 
+   /**
+    * Creates and adds a new panel to perspective's layout.
+    * 
+    * @param panelId
+    * @param direction
+    * @param initialSize
+    * @return
+    */
    public Panel addPanel(String panelId, Direction direction, int initialSize)
    {
       PanelImpl panel = new PanelImpl(panelId);
@@ -153,6 +199,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       return panel;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler#addViewVisibilityChangedHandler(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler)
+    */
    @Override
    public HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler)
    {
@@ -160,6 +209,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       return new ListBasedHandlerRegistration(viewVisibilityChangedHandlers, viewVisibilityChangedHandler);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler#addViewOpenedHandler(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler)
+    */
    @Override
    public HandlerRegistration addViewOpenedHandler(ViewOpenedHandler viewOpenedHandler)
    {
@@ -167,6 +219,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       return new ListBasedHandlerRegistration(viewOpenedHandlers, viewOpenedHandler);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler#addViewClosedHandler(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler)
+    */
    @Override
    public HandlerRegistration addViewClosedHandler(ViewClosedHandler viewClosedHandler)
    {
@@ -174,6 +229,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       return new ListBasedHandlerRegistration(viewClosedHandlers, viewClosedHandler);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler#addClosingViewHandler(org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler)
+    */
    @Override
    public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
    {
@@ -181,12 +239,16 @@ public class PerspectiveImpl extends Layer implements Perspective
       return new ListBasedHandlerRegistration(closingViewHandlers, closingViewHandler);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#openView(org.exoplatform.ide.client.framework.ui.api.View)
+    */
    @Override
    public void openView(View view)
    {
       if (views.containsKey(view.getId()))
       {
-         Window.alert("View [" + view.getId() + "] already opened!");
+         String message = "View <b>" + view.getId() + "</b> already opened!";
+         Window.alert(message);
          return;
       }
 
@@ -211,14 +273,14 @@ public class PerspectiveImpl extends Layer implements Perspective
          }
       }
 
-      if ("popup".equals(view.getType()))
+      if (ViewType.POPUP.equals(view.getType()))
       {
          popupWindowsLayer.addView(view);
          viewTargets.put(view.getId(), popupWindowsLayer);
          fireViewOpenedEvent(view);
          activateView(view);
       }
-      else if ("modal".equals(view.getType()))
+      else if (ViewType.MODAL.equals(view.getType()))
       {
          modalWindowsLayer.addView(view);
          viewTargets.put(view.getId(), modalWindowsLayer);
@@ -227,15 +289,22 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
       else
       {
-         Window.alert("Can't open view [" + view.getId() + "] of type [" + view.getType() + "]");
+         String message = "Can't open view <b>" + view.getId() + "</b> of type <b>" + view.getType() + "</b>";
+         Dialogs.getInstance().showError("IDE", message);
       }
    }
 
+   /**
+    * @param view
+    */
    public void activateView(View view)
    {
       view.activate();
    }
 
+   /**
+    * @param view
+    */
    private void fireViewOpenedEvent(View view)
    {
       ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
@@ -245,6 +314,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#closeView(java.lang.String)
+    */
    @Override
    public void closeView(String viewId)
    {
@@ -274,6 +346,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    }
 
+   /**
+    * 
+    */
    private ViewVisibilityChangedHandler viewVisibilityChangedHandler = new ViewVisibilityChangedHandler()
    {
       @Override
@@ -286,6 +361,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * 
+    */
    private ClosingViewHandler closingViewHandler = new ClosingViewHandler()
    {
       @Override
@@ -303,6 +381,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * 
+    */
    private MaximizePanelHandler maximizePanelHandler = new MaximizePanelHandler()
    {
       @Override
@@ -312,6 +393,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * 
+    */
    private RestorePanelHandler restorePanelHandler = new RestorePanelHandler()
    {
       @Override
@@ -321,6 +405,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * 
+    */
    private ShowPanelHandler showPanelHandler = new ShowPanelHandler()
    {
       @Override
@@ -330,6 +417,9 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * 
+    */
    private HidePanelHandler hidePanelHandler = new HidePanelHandler()
    {
       @Override
@@ -339,12 +429,18 @@ public class PerspectiveImpl extends Layer implements Perspective
       }
    };
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#getViews()
+    */
    @Override
    public Map<String, View> getViews()
    {
       return views;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#getPanels()
+    */
    @Override
    public Map<String, Panel> getPanels()
    {
