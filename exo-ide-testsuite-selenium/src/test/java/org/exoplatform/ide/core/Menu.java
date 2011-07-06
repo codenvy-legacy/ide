@@ -42,7 +42,7 @@ public class Menu extends AbstractTestModule
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
-      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
+      selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
      
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
 
