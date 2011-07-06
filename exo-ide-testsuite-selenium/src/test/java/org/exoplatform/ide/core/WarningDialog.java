@@ -37,7 +37,7 @@ public class WarningDialog extends AbstractTestModule
 
    public static final String WARNING_DIALOG_ID = "exoWarningDialog";
    
-   public static final String OK_BUTTON_ID = "exoWarningDialogOkButton";
+   public static final String OK_BUTTON_ID = "OkButton";
    
    /**
     * <b>Use instead assert methods in your test.</b>
