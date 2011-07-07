@@ -42,7 +42,9 @@ class FilesHelper
       @Override
       public boolean accept(File dir, String name)
       {
-         return ".cloudfoundry-application".equals(name);
+         return ".cloudfoundry-application".equals(name) // eXo IDE specific.  
+            || name.endsWith("~") || name.endsWith(".log") // Do the same as cloud foundry command line tool does. 
+         ;
       }
    };
 
@@ -198,5 +200,4 @@ class FilesHelper
       }
       return fileOrDir.delete();
    }
-
 }

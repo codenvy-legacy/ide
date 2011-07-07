@@ -47,11 +47,9 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -330,7 +328,7 @@ public class Cloudfoundry
    {
       if (workDir == null)
          throw new IllegalArgumentException("Working directory required. ");
-      
+
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(workDir);
@@ -347,6 +345,77 @@ public class Cloudfoundry
       uploadApplication(credentials, app, workDir);
       if ("STARTED".equals(appInfo.getState()))
          restartApplication(credentials, app);
+   }
+
+   public void mapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      if (url == null)
+         throw new IllegalArgumentException("URL for mapping required. ");
+
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+      mapUrl(getCredentials(), app, url);
+   }
+
+   private void mapUrl(CloudfoundryCredentials credentials, String app, String url) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      // Cloud foundry server send URL without schema.
+      if (url.startsWith("http://"))
+         url = url.substring(7);
+      else if (url.startsWith("https://"))
+         url = url.substring(8);
+
+      boolean updated = false;
+      List<String> uris = appInfo.getUris();
+      if (uris == null)
+      {
+         uris = new ArrayList<String>(1);
+         appInfo.setUris(uris);
+         updated = uris.add(url);
+      }
+      else if (!uris.contains(url))
+      {
+         updated = uris.add(url);
+      }
+      // If have something to update then do that.
+      if (updated)
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+   }
+
+   public void unmapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      if (url == null)
+         throw new IllegalArgumentException("URL for unmapping required. ");
+
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+      unmapUrl(getCredentials(), app, url);
+   }
+
+   private void unmapUrl(CloudfoundryCredentials credentials, String app, String url) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      // Cloud foundry server send URL without schema.
+      if (url.startsWith("http://"))
+         url = url.substring(7);
+      else if (url.startsWith("https://"))
+         url = url.substring(8);
+      List<String> uris = appInfo.getUris();
+      if (uris != null && uris.size() > 0 && uris.remove(url))
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
    }
 
    public void deleteApplication(String app, File workDir, boolean deleteServices) throws IOException,
@@ -368,11 +437,11 @@ public class Cloudfoundry
       deleteJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), 200);
       if (deleteServices)
       {
-         String[] services = appInfo.getServices();
-         if (services != null && services.length > 0)
+         List<String> services = appInfo.getServices();
+         if (services != null && services.size() > 0)
          {
-            for (int i = 0; i < services.length; i++)
-               deleteService(credentials, services[i]);
+            for (int i = 0; i < services.size(); i++)
+               deleteService(credentials, services.get(i));
          }
       }
    }
@@ -518,8 +587,8 @@ public class Cloudfoundry
       deleteJson(credentials.getTarget() + "/services/" + name, credentials.getToken(), 200);
    }
 
-   public void bindService(String name, String app, File workDir, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   public void bindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -531,7 +600,7 @@ public class Cloudfoundry
       if (name == null || name.isEmpty())
          throw new IllegalArgumentException("Service name required. ");
 
-      bindService(getCredentials(), name, app, restart);
+      bindService(getCredentials(), name, app, true);
    }
 
    private void bindService(CloudfoundryCredentials credentials, String name, String app, boolean restart)
@@ -539,33 +608,29 @@ public class Cloudfoundry
    {
       CloudfoundryApplication appInfo = applicationInfo(credentials, app);
       findService(credentials, name);
-      String[] cur = appInfo.getServices();
-      String[] newserv = null;
-      if (cur != null && cur.length > 0)
+      boolean updated = false;
+      List<String> services = appInfo.getServices();
+      if (services == null)
       {
-         LinkedHashSet<String> tmp = new LinkedHashSet<String>(Arrays.asList(cur));
-         if (!tmp.contains(name))
-         {
-            tmp.add(name);
-            newserv = tmp.toArray(new String[tmp.size()]);
-         }
+         services = new ArrayList<String>(1);
+         appInfo.setServices(services);
+         updated = services.add(name);
       }
-      else
+      else if (!services.contains(name))
       {
-         newserv = new String[]{name};
+         updated = services.add(name);
       }
 
-      if (newserv != null)
+      if (updated)
       {
-         appInfo.setServices(newserv);
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
          if (restart)
             restartApplication(credentials, app);
       }
    }
 
-   public void unbindService(String name, String app, File workDir, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   public void unbindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -577,7 +642,7 @@ public class Cloudfoundry
       if (name == null || name.isEmpty())
          throw new IllegalArgumentException("Service name required. ");
 
-      unbindService(getCredentials(), name, app, restart);
+      unbindService(getCredentials(), name, app, true);
    }
 
    private void unbindService(CloudfoundryCredentials credentials, String name, String app, boolean restart)
@@ -585,17 +650,94 @@ public class Cloudfoundry
    {
       CloudfoundryApplication appInfo = applicationInfo(credentials, app);
       findService(credentials, name);
-      String[] cur = appInfo.getServices();
-      String[] newserv = null;
-      if (cur != null && cur.length > 0)
+      List<String> services = appInfo.getServices();
+      if (services != null && services.size() > 0 && services.remove(name))
       {
-         LinkedHashSet<String> tmp = new LinkedHashSet<String>(Arrays.asList(cur));
-         if (tmp.remove(name))
-            newserv = tmp.toArray(new String[tmp.size()]);
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         if (restart)
+            restartApplication(credentials, app);
       }
-      if (newserv != null)
+   }
+
+   public void environmentAdd(String app, File workDir, String key, String val) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      if (app == null || app.isEmpty())
       {
-         appInfo.setServices(newserv);
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+
+      if (key == null || key.isEmpty())
+         throw new IllegalArgumentException("Key-value pair required. ");
+
+      environmentAdd(getCredentials(), app, key, val, true);
+   }
+
+   private void environmentAdd(CloudfoundryCredentials credentials, String app, String key, String val, boolean restart)
+      throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      boolean updated = false;
+      List<String> env = appInfo.getEnv();
+      String kv = key + "=" + (val == null ? "" : val);
+      if (env == null)
+      {
+         env = new ArrayList<String>(1);
+         appInfo.setEnv(env);
+         updated = env.add(kv);
+      }
+      else if (!env.contains(kv))
+      {
+         updated = env.add(kv);
+      }
+
+      if (updated)
+      {
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         if (restart)
+            restartApplication(credentials, app);
+      }
+   }
+
+   public void environmentDelete(String app, File workDir, String key) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+
+      if (key == null || key.isEmpty())
+         throw new IllegalArgumentException("Key required. ");
+
+      environmentDelete(getCredentials(), app, key, true);
+   }
+
+   private void environmentDelete(CloudfoundryCredentials credentials, String app, String key, boolean restart)
+      throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      boolean updated = false;
+      List<String> env = appInfo.getEnv();
+      if (env != null && env.size() > 0)
+      {
+         for (Iterator<String> iter = env.iterator(); iter.hasNext() && !updated;)
+         {
+            String[] kv = iter.next().split("=");
+            if (key.equals(kv[0].trim()))
+            {
+               iter.remove();
+               updated = true; // Stop iteration here. Remove first key-value pair in the list ONLY!
+            }
+         }
+      }
+
+      if (updated)
+      {
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
          if (restart)
             restartApplication(credentials, app);

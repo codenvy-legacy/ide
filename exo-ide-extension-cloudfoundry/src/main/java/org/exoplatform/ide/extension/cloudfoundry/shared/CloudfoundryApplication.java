@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.shared;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -25,13 +27,13 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
 public class CloudfoundryApplication
 {
    private String name;
-   private String[] uris;
+   private List<String> uris;
    private int instances;
    private int runningInstances;
    private String state;
-   private String[] services;
+   private List<String> services;
    private String version;
-   private String[] env;
+   private List<String> env;
    private CloudfoundryApplicationResources resources;
    private Staging staging;
 
@@ -45,12 +47,12 @@ public class CloudfoundryApplication
       this.name = name;
    }
 
-   public String[] getUris()
+   public List<String> getUris()
    {
       return uris;
    }
 
-   public void setUris(String[] uris)
+   public void setUris(List<String> uris)
    {
       this.uris = uris;
    }
@@ -85,12 +87,12 @@ public class CloudfoundryApplication
       this.state = state;
    }
 
-   public String[] getServices()
+   public List<String> getServices()
    {
       return services;
    }
 
-   public void setServices(String[] services)
+   public void setServices(List<String> services)
    {
       this.services = services;
    }
@@ -105,12 +107,12 @@ public class CloudfoundryApplication
       this.version = version;
    }
 
-   public String[] getEnv()
+   public List<String> getEnv()
    {
       return env;
    }
 
-   public void setEnv(String[] env)
+   public void setEnv(List<String> env)
    {
       this.env = env;
    }
