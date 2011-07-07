@@ -164,4 +164,30 @@ public class Node
    {
       return "line-break".equals(this.type);
    }
+
+   /** 
+    * @param node
+    * @return clone of node by using DOM cloneNode() function, or null if node is not DOM object  
+    */
+   public native static JavaScriptObject getClone(JavaScriptObject node) /*-{
+      if(node == null || typeof node != 'object' || ! node.cloneNode)
+         return null;
+               
+      return node.cloneNode(true);
+   }-*/;
+
+   public native static JavaScriptObject getContainer(JavaScriptObject editor) /*-{
+      if (editor && editor.editor && editor.editor.container)
+      {
+         return editor.editor.container;
+      }
+      else
+      {
+         return null;
+      }  
+   }-*/;
+   
+   public native static void setContainer(JavaScriptObject editor, JavaScriptObject container) /*-{
+      editor.editor.container = container;
+   }-*/;
 }

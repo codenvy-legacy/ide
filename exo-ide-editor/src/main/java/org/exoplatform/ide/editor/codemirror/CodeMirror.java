@@ -39,6 +39,8 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
+import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
+import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 
@@ -53,7 +55,7 @@ import java.util.List;
  * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
  *
  */
-public class CodeMirror extends Editor
+public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 {
 
    protected String editorId;
@@ -68,7 +70,7 @@ public class CodeMirror extends Editor
 
    private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
-   private boolean needRevalidateCode = false; // revalidate code
+   private boolean needValidateCode = false; // validate code
 
    private boolean showLineNumbers = true;
 
@@ -92,6 +94,8 @@ public class CodeMirror extends Editor
 
    private int cursorPositionRow = 1;
 
+   protected List<CodeLine> codeErrorList = new ArrayList<CodeLine>();
+   
    /**
     * @param file
     * @param params
@@ -123,6 +127,8 @@ public class CodeMirror extends Editor
       genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
 
       codeAssistant = configuration.getCodeAssistant();
+      
+      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
    }
 
    /**
@@ -178,7 +184,6 @@ public class CodeMirror extends Editor
 
 		var activeTokensFunction = function() {
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::needUpdateTokenList = true;
-			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::needRevalidateCode = true;
 		};
 
 		var editor = $wnd.CodeMirror.fromTextArea(id, {
@@ -230,7 +235,6 @@ public class CodeMirror extends Editor
    private void onInitialized()
    {
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
-      this.needRevalidateCode = true;
 
       setText(content);
 
@@ -246,7 +250,7 @@ public class CodeMirror extends Editor
    private void onContentChanged()
    {
       this.needUpdateTokenList = true;
-      this.needRevalidateCode = true;
+            
       eventBus.fireEvent(new EditorContentChangedEvent(getEditorId()));
    }
 
@@ -255,8 +259,7 @@ public class CodeMirror extends Editor
       // highlight current line
       highlightLine(0);
 
-      cursorPositionCol = getCursorCol();
-      cursorPositionRow = getCursorRow();
+      saveCursorPosition();
 
       eventBus.fireEvent(new EditorCursorActivityEvent(editorId, cursorPositionRow, cursorPositionCol));
    }
@@ -579,37 +582,16 @@ public class CodeMirror extends Editor
       eventBus.fireEvent(new EditorFocusReceivedEvent(getEditorId()));
    }
 
-   protected static List<CodeLine> codeErrorList = new ArrayList<CodeLine>();
-
    /**
     * if there is line numbers left field, then validate code and mark lines with errors
     */
    public void validateCode()
    {
-      if (this.needRevalidateCode && showLineNumbers)
-      {
-         needRevalidateCode = false;
-
-         if (needUpdateTokenList)
-         {
-            needUpdateTokenList = false;
-            this.tokenList = (List<TokenBeenImpl>)configuration.getParser().getTokenList(editorObject);
-
-            // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
-            if (this.tokenList == null || this.tokenList.isEmpty())
-            {
-               // clear code error marks
-               for (CodeLine lastCodeError : codeErrorList)
-               {
-                  clearErrorMark(lastCodeError.getLineNumber());
-               }
-               return;
-            }
-
-            List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
-
-            udpateErrorMarks(newCodeErrorList);
-         }
+      if (needUpdateTokenList && showLineNumbers)
+      {         
+//         System.out.println("CodeMirror.validateCode(); editor " + editorId + " (type" + genericMimeType + ")");         
+         needValidateCode = true;
+         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
       }
    }
 
@@ -674,6 +656,11 @@ public class CodeMirror extends Editor
    }
 
    private native void setText(JavaScriptObject editor, String text)/*-{
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+      {
+         return;
+      }
+      
 		if (text === "") {
 			text = "\n"; // fix error with initial cursor position and size (WBT-324)
 		}
@@ -732,9 +719,9 @@ public class CodeMirror extends Editor
       this.showLineNumbers = showLineNumbers;
 
       // to show code error marks in the lineNumbers field
-      if (showLineNumbers)
+      if (showLineNumbers && configuration.canBeValidated())
       {
-         this.needRevalidateCode = true;
+         this.needValidateCode = true;
       }
    };
 
@@ -750,9 +737,12 @@ public class CodeMirror extends Editor
    }
 
    private native void setFocus(JavaScriptObject editor)/*-{
-		if (editor) {
-			editor.focus();
-		}
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+	   {
+		   return;
+	   }
+	   
+		editor.focus();
    }-*/;
 
    /**
@@ -772,7 +762,11 @@ public class CodeMirror extends Editor
    }
 
    private native void goToPosition(JavaScriptObject editor, int row, int column) /*-{
-      if (editor == null) return;
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+             || typeof editor.win.select == 'undefined')
+      {
+              return;
+      }
 
       if (column && !isNaN(Number(column)) && row && !isNaN(Number(row))) {
          if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row))
@@ -919,7 +913,8 @@ public class CodeMirror extends Editor
    }
 
    private native boolean hasUndoChanges(JavaScriptObject editor)/*-{
-		if (editor == null) {
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+      {
 			return false;
 		}
 
@@ -948,10 +943,12 @@ public class CodeMirror extends Editor
       return hasRedoChanges(editorObject);
    }
 
-   private native boolean hasRedoChanges(JavaScriptObject editor)/*-{
-		if (editor == null) {
+   private native boolean hasRedoChanges(JavaScriptObject editor) /*-{
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+      {
 			return false;
 		}
+		
 		return editor.historySize().redo > 0;
    }-*/;
 
@@ -978,7 +975,8 @@ public class CodeMirror extends Editor
    @Override
    public native int getCursorRow() /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor == null)
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor) 
+		      || typeof editor.win.select == 'undefined')
 			return 1;
 
 		switch (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser) {
@@ -1002,7 +1000,8 @@ public class CodeMirror extends Editor
    @Override
    public native int getCursorCol() /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor == null)
+		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+		       || typeof editor.win.select == 'undefined')
 			return 1;
 
 		switch (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser) {
@@ -1037,10 +1036,26 @@ public class CodeMirror extends Editor
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
-         this.tokenList = (List<TokenBeenImpl>)configuration.getParser().getTokenList(editorObject);
+         this.tokenList = (List<TokenBeenImpl>)configuration.getParser().getTokenList(this.editorId, editorObject, eventBus);         
       }
 
       return this.tokenList;
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
+    */
+   @Override
+   public void getTokenListInBackground()
+   {
+      if (needUpdateTokenList)
+      {
+         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+      }
+      else
+      {
+         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, tokenList));
+      }
    }
 
    /**
@@ -1079,10 +1094,13 @@ public class CodeMirror extends Editor
     */
    private native void clearErrorMark(int lineNumber) /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.removeAttribute('class');
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.removeAttribute('title');
+		if (editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1])
+		{
+   		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
+   				.removeAttribute('class');
+   		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
+   				.removeAttribute('title');
+		}
    }-*/;
 
    /** 
@@ -1158,5 +1176,68 @@ public class CodeMirror extends Editor
    public String getLineContent(int line)
    {
       return getLineNumber(editorObject, line);
+   }
+
+   public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
+   {
+      // System.out.println("CodeMirror handler; editor " + this.editorId + " (type" + this.genericMimeType + "), recieved from " + event.getEditorId() + "; needValidateCode=" + needValidateCode);
+      
+      if (! this.editorId.equals(event.getEditorId()))
+      {
+         return;
+      }
+      
+      // restore position for outline panel
+      goToPosition(cursorPositionRow, cursorPositionCol);
+      
+      if (needUpdateTokenList)
+      {
+         needUpdateTokenList = false;
+         this.tokenList = (List<TokenBeenImpl>) event.getTokenList();
+      }
+
+      if (needValidateCode)
+      {
+         needValidateCode = false;
+         
+         // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
+         if (this.tokenList == null || this.tokenList.isEmpty())
+         {
+            // clear code error marks
+            for (CodeLine lastCodeError : codeErrorList)
+            {
+               clearErrorMark(lastCodeError.getLineNumber());
+            }
+            return;
+         }
+
+         List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
+
+         udpateErrorMarks(newCodeErrorList);
+      }
+   }
+ 
+   /**
+    * Check if CodeMirror editor instance consists of neccessery objects.
+    * @param editor
+    * @return
+    */
+   private native boolean checkGenericCodeMirrorObject(JavaScriptObject editor) /*-{
+      return (editor != null) && (typeof editor != 'undefined') && (typeof editor.editor != 'undefined');
+   }-*/;
+   
+   @Override
+   protected void onUnload()
+   {
+       super.onUnload();
+       codeValidateTimer.cancel();
+       eventBus.removeHandler(EditorTokenListPreparedEvent.TYPE, this);
+       configuration.getParser().stopParsing();     
+   }
+
+   public void saveCursorPosition()
+   {
+      cursorPositionCol = getCursorCol();
+      cursorPositionRow = getCursorRow();
    }
 }

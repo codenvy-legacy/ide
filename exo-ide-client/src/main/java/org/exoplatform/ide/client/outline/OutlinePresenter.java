@@ -47,6 +47,9 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
+import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -70,7 +73,8 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler, EditorInitializedHandler
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler, EditorInitializedHandler, 
+   EditorTokenListPreparedHandler
 {
 
    /**
@@ -113,13 +117,18 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
        */
       void deselectAllTokens();
 
+      void setRefreshingMarkInTitle();
+
+      void removeRefreshingMarkFromTitle();
+
+      void clearOutlineTree();
    }
 
    private HandlerManager eventBus;
 
    private Display display;
 
-   private List<TokenBeenImpl> tokens = new ArrayList<TokenBeenImpl>();
+   private List<TokenBeenImpl> tokens = null;
 
    private int currentRow;
 
@@ -146,6 +155,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
       eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
       eventBus.addHandler(EditorInitializedEvent.TYPE, this);      
+      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);      
    }
 
    @Override
@@ -282,7 +292,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    /**
     * Refresh Outline Tree
     * 
-    * @param editor
+    * @param scheduledEditor
     */
    private void refreshOutlineTree()
    {
@@ -291,23 +301,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
 
-      // restore focus of FileTab
-      JavaScriptObject lastFocusedElement = getActiveElement();        
-
-      tokens = (List<TokenBeenImpl>)activeEditor.getTokenList();
-      TokenBeenImpl token = new TokenBeenImpl();
-      token.setSubTokenList(tokens);
-      display.getOutlineTree().setValue(token);
-      currentRow = activeEditor.getCursorRow();
-      currentToken = null;
-      
-      if (!selectTokenByRow(tokens))
-      {
-         display.deselectAllTokens();
-      }
-
-      // restore focus of FileTab
-      setElementFocus(lastFocusedElement);
+//      System.out.println("OutlinePresenter.refreshOutlineTree(); editor " + activeEditor.getEditorId() + " (type" + ((CodeMirror) activeEditor).genericMimeType + ")");    
+      display.setRefreshingMarkInTitle();
+      activeEditor.getTokenListInBackground();
    }
 
    /**
@@ -374,6 +370,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
       if (canShowOutline())
       {
+         display.clearOutlineTree();
          display.setOutlineAvailable(true);
          refreshOutlineTree();
       }
@@ -533,7 +530,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       @Override
       public void run()
       {
-         if (tokens.size() != 0)
+         if (tokens != null && !tokens.isEmpty())
          {
             // restore focus of FileTab
             JavaScriptObject lastFocusedElement = getActiveElement();
@@ -546,12 +543,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             {
                setElementFocus(lastFocusedElement);
             }
-         }
-         
-         // refresh outline just after the opening file tab 
-         else if (activeEditor.getTokenList().size() != 0)
-         {
-            refreshOutlineTree();
          }
       }
    };
@@ -571,5 +562,38 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          display.setOutlineAvailable(true);
          refreshOutlineTree();
       }
+   }
+
+   public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
+   {
+//      System.out.println("OutlinePresenter.onEditorTokenListPrepared(); editor " + activeEditor.getEditorId() + " (type" + ((CodeMirror) activeEditor).genericMimeType + "), recieved from " + event.getEditorId() );
+      
+      if (event.getTokenList() == null 
+               || display == null
+               || ! activeEditor.getEditorId().equals(event.getEditorId()))
+      {
+         return;
+      }
+
+      display.removeRefreshingMarkFromTitle();
+      
+      tokens = (List<TokenBeenImpl>) event.getTokenList();
+      
+      // restore focus of FileTab
+      JavaScriptObject lastFocusedElement = getActiveElement();        
+
+      TokenBeenImpl token = new TokenBeenImpl();
+      token.setSubTokenList(tokens);
+      display.getOutlineTree().setValue(token);
+      currentRow = activeEditor.getCursorRow();
+      currentToken = null;
+      
+      if (!selectTokenByRow(tokens))
+      {
+         display.deselectAllTokens();
+      }
+
+      // restore focus of FileTab
+      setElementFocus(lastFocusedElement);      
    }
 }

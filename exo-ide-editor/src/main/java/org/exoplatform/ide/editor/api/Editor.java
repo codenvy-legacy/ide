@@ -176,6 +176,13 @@ public abstract class Editor extends AbsolutePanel
    public abstract List<? extends Token> getTokenList();
 
    /**
+    * If editor support autocompletion and outline feature,
+    * this method return {@link List} of {@link Token} parsed from current file in background without freezing of browser
+    * @return {@link List} of {@link Token}
+    */
+   public abstract void getTokenListInBackground();
+   
+   /**
     * Replaces current line content and set, in this line, cursor position
     */
    public abstract void replaceTextAtCurrentLine(String line, int cursorPosition);

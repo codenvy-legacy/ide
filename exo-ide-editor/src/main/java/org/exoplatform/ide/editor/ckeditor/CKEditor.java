@@ -649,4 +649,9 @@ public class CKEditor extends Editor
    {
       return null;
    }
+
+   @Override
+   public void getTokenListInBackground()
+   {
+   }
 }

@@ -26,6 +26,7 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -35,7 +36,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class CssParser extends CodeMirrorParserImpl
 {
    @Override
-   public List<TokenBeenImpl> getTokenList(JavaScriptObject editor)
+   public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor, HandlerManager eventBus)
    {
       return new ArrayList<TokenBeenImpl>();
    }

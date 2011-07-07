@@ -270,12 +270,12 @@ public class Outline extends AbstractTestModule
       if (isVisible)
       {
          assertTrue(selenium().isElementPresent(
-            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[contains(text(),'Outline')]"));
       }
       else
       {
          assertFalse(selenium().isElementPresent(
-            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[text()='Outline']"));
+            "//td[contains(@class, 'gwt-TabBarItem-wrapper')]//td[contains(text(),'Outline')]"));
       }
    }
 

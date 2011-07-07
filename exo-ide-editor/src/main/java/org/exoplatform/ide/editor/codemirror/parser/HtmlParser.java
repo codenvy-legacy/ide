@@ -165,7 +165,7 @@ public class HtmlParser extends CodeMirrorParserImpl
    private boolean lastSubTokenIsAutoSelfClosersTag(TokenBeenImpl currentToken)
    {
       List<TokenBeenImpl> subTokenList = currentToken.getSubTokenList();
-      if (subTokenList == null)
+      if (subTokenList == null || subTokenList.isEmpty())
          return false;
       
       TokenBeenImpl lastSubToken = subTokenList.get(subTokenList.size() - 1);

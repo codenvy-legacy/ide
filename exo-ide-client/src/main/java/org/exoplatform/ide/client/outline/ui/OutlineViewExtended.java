@@ -26,11 +26,14 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +57,11 @@ public class OutlineViewExtended extends ViewImpl implements
     */
    private static int HEIGHT = 450;
 
+   private static final String REFRESHING_MARK =
+      " <span title=" + org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_CONSTANT.outlineTitleRefreshingMarkTitle()
+         + " style='position: relative; top: 2px' width='20px;'><img width='15px;' src='"
+         + UIHelper.getGadgetImagesURL() + GWTLoader.LOADER_PROGRESSIMAGE + "'></img></span>";
+   
    private static OutlineViewExtendedUiBinder uiBinder = GWT.create(OutlineViewExtendedUiBinder.class);
 
    interface OutlineViewExtendedUiBinder extends UiBinder<Widget, OutlineViewExtended>
@@ -128,6 +136,35 @@ public class OutlineViewExtended extends ViewImpl implements
    public void deselectAllTokens()
    {
       outlineTreeGrid.deselectAllTokens();
+   }
+
+   /**
+    * Add refrehing outline mark in outline panel title;
+    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#setRefreshingMarkInTitle()
+    */
+   public void setRefreshingMarkInTitle()
+   {
+      if (!asView().getTitle().contains(REFRESHING_MARK))
+      {
+         asView().setTitle(asView().getTitle() + REFRESHING_MARK);
+      }
+   }
+
+   /**
+    * Remove refrehing outline mark from outline panel title;
+    * @see org.exoplatform.ide.client.outline.OutlinePresenter.Display#removeRefreshingMarkFromTitle()
+    */
+   public void removeRefreshingMarkFromTitle()
+   {
+      asView().setTitle(asView().getTitle().replace(REFRESHING_MARK, ""));
+   }
+
+   public void clearOutlineTree()
+   {
+      TokenBeenImpl emptyToken = new TokenBeenImpl();
+      emptyToken.setSubTokenList(new ArrayList<TokenBeenImpl>());
+      
+      getOutlineTree().setValue(emptyToken);
    }
 
 }

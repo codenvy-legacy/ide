@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -31,6 +32,10 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public abstract class Parser
 {   
-   public abstract List<? extends Token> getTokenList(JavaScriptObject editor);
+   public abstract List<? extends Token> getTokenList(String editorId, JavaScriptObject editor, HandlerManager eventBus);
    
+   public abstract void getTokenListInBackground(String editorId, JavaScriptObject editor, HandlerManager eventBus);
+
+   public abstract void stopParsing();
+
 }

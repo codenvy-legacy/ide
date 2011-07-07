@@ -19,15 +19,18 @@
 package org.exoplatform.ide.editor.codemirror.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -35,7 +38,14 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  */
 public class CodeMirrorParserImpl extends Parser
-{  
+{   
+
+   GetTokenListInBackgroundCommand buildCommand = new GetTokenListInBackgroundCommand(this);
+   
+   public void init()
+   {
+   }
+   
    /** 
     * @param node
     * @param lineNumber
@@ -48,26 +58,24 @@ public class CodeMirrorParserImpl extends Parser
       return currentToken;
    }
 
-   public void init()
-   {
-   }
-
    @Override  
-   public List<TokenBeenImpl> getTokenList(JavaScriptObject editor)
-   {
-      List<TokenBeenImpl> emptyTokenList = new ArrayList<TokenBeenImpl>();
-
+   public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor, HandlerManager eventBus)
+   {     
       if (editor == null)
-         return emptyTokenList;
+         return null;
+
+      if (buildCommand.isBusy())
+      {
+         buildCommand.stop();
+      }
+      
+      TokenBeenImpl rootToken = new TokenBeenImpl();
+      rootToken.setSubTokenList(new ArrayList<TokenBeenImpl>());
+      
+      TokenBeenImpl currentToken = rootToken;
 
       init();
-
-      JavaScriptObject node;
-
-      TokenBeenImpl rootToken = new TokenBeenImpl();
-      TokenBeenImpl currentToken = rootToken;
-      currentToken.setSubTokenList(emptyTokenList);
-
+      
       // fix error when editor.nthLine(1) = null
       // parse first line
       if (Node.getFirstLine(editor) != null)
@@ -80,7 +88,7 @@ public class CodeMirrorParserImpl extends Parser
       {
          for (int lineNumber = 2; lineNumber <= Node.getLastLineNumber(editor); lineNumber++)
          {
-            node = Node.get(editor, lineNumber);
+            JavaScriptObject node = Node.get(editor, lineNumber);
 
             // fix error when editor.nthLine(1) = null
             if (node == null)
@@ -91,7 +99,13 @@ public class CodeMirrorParserImpl extends Parser
             currentToken = parseLine(Node.getNext(node), lineNumber, currentToken, false);
          }
       }
-
+      
+      if (buildCommand.isBusy())
+      {
+//         System.out.println("CodeMirrorImpl.getTokenList(); editor " + editorId + " token list prepared directly");
+         eventBus.fireEvent(new EditorTokenListPreparedEvent(editorId, rootToken.getSubTokenList()));
+      }
+      
       return rootToken.getSubTokenList();
    };
    
@@ -161,4 +175,259 @@ public class CodeMirrorParserImpl extends Parser
          }
       }
    }
+      
+   class GetTokenListInBackgroundCommand implements RepeatingCommand
+   {
+      boolean isBusy = false;
+      boolean isReady = false;
+      boolean shouldStop = false;
+            
+      private HandlerManager eventBus;
+      
+      LinkedList<JavaScriptObject> lineNodeList;
+      
+      TokenBeenImpl currentToken;
+      TokenBeenImpl rootToken;
+      
+      int lineNumber;
+      
+      JavaScriptObject cloneEditorContainer;
+
+      List<TokenBeenImpl> preparedTokenList;
+      
+      boolean shouldRebuild = false;  
+      LinkedList<JavaScriptObject> lineNodeListToRebuild;
+      int firstLineNumberToRebuild;
+      private JavaScriptObject cloneEditorContainerToRebuild;
+
+      private CodeMirrorParserImpl parser;
+      
+      private String editorId;
+      
+      public GetTokenListInBackgroundCommand(CodeMirrorParserImpl parser)
+      {
+         this.parser = parser;
+      }
+
+      private void init()
+      {
+         isBusy = true;
+         isReady = false;
+         shouldStop = false;
+         
+         preparedTokenList = new ArrayList<TokenBeenImpl>();
+         
+         rootToken = new TokenBeenImpl();
+         rootToken.setSubTokenList(preparedTokenList);
+         
+         currentToken = rootToken;
+         
+         parser.init();
+      }   
+      
+      /**
+       * Start building token list
+       * @param editor
+       */
+      public void start(JavaScriptObject editor)
+      {         
+         // container substitution is needed to get container clone and the links on the started node of each line of this clone without getting clone of entire editor (this is almost impossible) 
+         JavaScriptObject initialEditorContainer = Node.getContainer(editor);
+         if (initialEditorContainer == null)
+         {
+            return;
+         }         
+         
+         cloneEditorContainer = Node.getClone(initialEditorContainer);
+         Node.setContainer(editor, cloneEditorContainer);
+         
+         lineNodeList = getLineNodeList(editor);
+         
+         // restore initial container node of editor
+         Node.setContainer(editor, initialEditorContainer);
+         
+         // parse first line to fix error when editor.nthLine(1) = null
+         lineNumber = 1;
+         if (Node.getFirstLine(editor) == null)
+         {
+            lineNumber = 2;
+         }        
+         
+         // initialize
+         init();
+         
+         // start parsing of content in background
+         Scheduler.get().scheduleIncremental(this);
+      }
+
+      private LinkedList<JavaScriptObject> getLineNodeList(JavaScriptObject editor)
+      {
+         LinkedList<JavaScriptObject> lineNodeList = new LinkedList<JavaScriptObject>();
+         
+         // parse first line to fix error when editor.nthLine(1) = null
+         if (Node.getFirstLine(editor) != null)
+         {
+            lineNodeList.addLast(Node.getFirstLine(editor));
+         }
+         
+         int lastLineNumber = Node.getLastLineNumber(editor);
+         
+         if (lastLineNumber > 1)
+         {            
+            for (int lineNumber = 2; lineNumber <= lastLineNumber; lineNumber++)
+            {
+               JavaScriptObject node = Node.get(editor, lineNumber);
+             
+               if (node == null)
+               {
+                  return null;
+               }
+             
+               lineNodeList.addLast(Node.getNext(node));
+            }            
+         }
+         
+         return lineNodeList;
+      } 
+      
+      public boolean execute() {
+         if (shouldStop == true)
+         {
+            interrupt();
+            return false;
+         }
+         
+         if (! lineNodeList.isEmpty())
+         {
+            JavaScriptObject currentNode = lineNodeList.poll();
+
+            // fix error when editor.nthLine(1) = null
+            if (currentNode == null)
+            {
+               return true;
+            }
+
+            currentToken = parseLine(currentNode, lineNumber, currentToken, false);
+            
+            lineNumber++;
+            
+//            System.out.println("GetTokenListInBackgroundCommand.execute(); editor " + this.editorId + "; parsing line number " + lineNumber);
+            
+            return true;
+         }
+
+         finish();
+         
+         if (shouldRebuild)
+         {
+            shouldRebuild = false;
+            lineNodeList = lineNodeListToRebuild;
+            lineNumber = firstLineNumberToRebuild;
+            init();
+            return true;
+         }
+         
+         return false;
+      }
+
+      /**
+       * Interrupt building token list
+       */
+      private void interrupt()
+      {
+         isBusy = false;
+         shouldStop = false;
+      }
+
+      /**
+       * Finalize building token list
+       */
+      private void finish()
+      {
+         preparedTokenList = rootToken.getSubTokenList();
+         isReady = true;
+         interrupt();
+//         System.out.println("CodeMirrorImpl.finish(); editor " + this.editorId + " token list prepared in background; shouldRebuild=" + shouldRebuild);
+         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, preparedTokenList));
+      }
+      
+      /**
+       * Stop building token list
+       */
+      public void stop()
+      {
+         shouldStop = true;
+      }
+
+      public boolean isBusy()
+      {
+         return isBusy;
+      }
+
+      public void shouldRebuild(JavaScriptObject editor)
+      {  
+         // container substitution is needed to get container clone and the links on the started node of each line of this clone without getting clone of entire editor (this is almost impossible) 
+         JavaScriptObject initialEditorContainer = Node.getContainer(editor);
+         if (initialEditorContainer == null)
+         {
+            this.shouldRebuild = false;
+            return;
+         }
+       
+         this.shouldRebuild = true;
+         
+         cloneEditorContainerToRebuild = Node.getClone(initialEditorContainer);
+         Node.setContainer(editor, cloneEditorContainerToRebuild);
+         
+         lineNodeListToRebuild = getLineNodeList(editor);
+         
+         // restore initial container node of editor
+         Node.setContainer(editor, initialEditorContainer);
+         
+         // parse first line to fix error when editor.nthLine(1) = null
+         firstLineNumberToRebuild = 1;
+         if (Node.getFirstLine(editor) == null)
+         {
+            firstLineNumberToRebuild = 2;
+         }
+      }
+
+      public void setEventBus(HandlerManager eventBus)
+      {
+         this.eventBus = eventBus;
+      }
+
+      public void setEditorId(String editorId)
+      {
+         this.editorId = editorId;
+      }
+   }
+   
+   public void getTokenListInBackground(String editorId, JavaScriptObject editor, HandlerManager eventBus)
+   {
+      if (editor == null)
+         return;
+      
+      buildCommand.setEventBus(eventBus);
+      buildCommand.setEditorId(editorId);
+      
+      if (! buildCommand.isBusy())
+      {               
+         buildCommand.start(editor);
+      }
+      else
+      {
+         buildCommand.shouldRebuild(editor);
+      }
+   }
+   
+   @Override
+   public void stopParsing()
+   {
+      if (buildCommand.isBusy())
+      {
+         buildCommand.stop();
+      }
+   }
+    
 }
