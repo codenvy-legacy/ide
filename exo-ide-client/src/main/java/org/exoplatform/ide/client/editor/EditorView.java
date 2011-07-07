@@ -29,8 +29,6 @@ import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
@@ -52,7 +50,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: EditorView Mar 21, 2011 4:33:38 PM evgen $
  *
  */
-public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandler, ViewActivatedHandler
+public class EditorView extends ViewImpl implements ViewActivatedHandler
 {
 
    private static int i = 0;
@@ -113,7 +111,6 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
       this.eventBus = eventBus;
       this.supportedEditors = supportedEditors;
 
-      addBeforeViewLoseActivityHandler(this);
       eventBus.addHandler(ViewActivatedEvent.TYPE, this);
 
       AbsolutePanel editorSwitcherContainer = new AbsolutePanel();
@@ -429,34 +426,8 @@ public class EditorView extends ViewImpl implements BeforeViewLoseActivityHandle
          public void run()
          {
             currentEditor.setFocus();
-            currentEditor.goToPosition(frozenCursorRow, frozenCursorColumn);
          }
       }.schedule(1000);
-   }
-
-   @Override
-   public void onBeforeViewLoseActivity(BeforeViewLoseActivityEvent event)
-   {
-      Editor currentEditor = getEditor();
-      try
-      {
-         frozenCursorRow = currentEditor.getCursorRow();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         frozenCursorRow = 0;
-      }
-
-      try
-      {
-         frozenCursorColumn = currentEditor.getCursorCol();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         frozenCursorColumn = 0;
-      }
    }
 
 }
