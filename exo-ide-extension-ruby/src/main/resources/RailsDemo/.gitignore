@@ -1,0 +1,5 @@
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/
+vendor/bundle/ruby/1.8/gems/sqlite3-*

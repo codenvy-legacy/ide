@@ -135,6 +135,12 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
+         <exclusions>
+          <exclusion>
+            <groupId>org.hsqldb</groupId>
+             <artifactId>hsqldb</artifactId>
+          </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -165,6 +171,12 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-logreader</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-ruby</artifactId>
+         <version>${project.version}</version>
       </dependency>
 
       <dependency>
@@ -492,9 +504,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <!-- 
                      <bindAddress>0.0.0.0</bindAddress>
-                      -->
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.git.repo-dir=git -Dorg.exoplatform.ide.server.fs-root-path=git</extraJvmArgs>
                   </configuration>
                </plugin>

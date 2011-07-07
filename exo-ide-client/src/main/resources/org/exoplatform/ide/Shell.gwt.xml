@@ -64,6 +64,7 @@
    <inherits name='org.exoplatform.ide.extension.heroku.HerokuExtension' />
    <inherits name='org.exoplatform.ide.extension.openshift.OpenShiftExtension' />
    <inherits name='org.exoplatform.ide.extension.java.JavaExtension' />
+   <inherits name='org.exoplatform.ide.extension.ruby.RubyExtension' />
 
 	<inherits name='org.exoplatform.ide.Views' />
 
