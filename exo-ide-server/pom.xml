@@ -113,10 +113,12 @@
       <dependency>
          <groupId>org.apache.commons</groupId>
          <artifactId>commons-compress</artifactId>
+         <version>${apache.commons-compress.version}</version>
       </dependency>
       <dependency>
          <groupId>commons-fileupload</groupId>
          <artifactId>commons-fileupload</artifactId>
+         <version>${commons-fileupload.version}</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

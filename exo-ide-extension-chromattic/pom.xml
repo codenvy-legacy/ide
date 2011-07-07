@@ -106,8 +106,8 @@
          <artifactId>exo.kernel.container</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -159,14 +159,15 @@
       <dependency>
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.dataobject</artifactId>
+         <version>${chromattic.version}</version>
          <exclusions>
             <exclusion>
                <groupId> org.exoplatform.ws</groupId>
                <artifactId>exo.ws.testframework</artifactId>
             </exclusion>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -174,16 +175,18 @@
       <dependency>
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.ext</artifactId>
+         <version>${chromattic.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.metamodel</artifactId>
+         <version>${chromattic.version}</version>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.cache</groupId>
          <artifactId>jbosscache-core</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.infinispan</groupId>
-         <artifactId>infinispan-core</artifactId>
       </dependency>
 
       <dependency>

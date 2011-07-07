@@ -70,35 +70,35 @@
                         <artifactItem>
                            <groupId>org.chromattic</groupId>
                            <artifactId>chromattic.apt</artifactId>
-                           <version>${version.chromattic}</version>
+                           <version>${chromattic.version}</version>
                            <type>java-source</type>
                         </artifactItem>
 
                         <artifactItem>
                            <groupId>org.chromattic</groupId>
                            <artifactId>chromattic.api</artifactId>
-                           <version>${version.chromattic}</version>
+                           <version>${chromattic.version}</version>
                            <type>java-source</type>
                         </artifactItem>
 
                         <artifactItem>
                            <groupId>org.chromattic</groupId>
                            <artifactId>chromattic.spi</artifactId>
-                           <version>${version.chromattic}</version>
+                           <version>${chromattic.version}</version>
                            <type>java-source</type>
                         </artifactItem>
 
                         <artifactItem>
                            <groupId>org.chromattic</groupId>
                            <artifactId>chromattic.core</artifactId>
-                           <version>${version.chromattic}</version>
+                           <version>${chromattic.version}</version>
                            <type>java-source</type>
                         </artifactItem>
 
                         <artifactItem>
                            <groupId>org.chromattic</groupId>
                            <artifactId>chromattic.ext</artifactId>
-                           <version>${version.chromattic}</version>
+                           <version>${chromattic.version}</version>
                            <type>java-source</type>
                         </artifactItem>
 

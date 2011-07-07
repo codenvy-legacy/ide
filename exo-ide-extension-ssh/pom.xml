@@ -16,14 +16,15 @@
          <artifactId>exo.jcr.component.core</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>com.jcraft</groupId>
          <artifactId>jsch</artifactId>
+         <version>0.1.44-1</version>
       </dependency>
       <dependency>
          <groupId>javax.ws.rs</groupId>
@@ -46,8 +47,8 @@
                <artifactId>servlet-api</artifactId>
             </exclusion>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -87,6 +88,11 @@
          <groupId>org.hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>${commons-fileupload.version}</version>
       </dependency>
 
       <!-- CLIENT SIDE -->

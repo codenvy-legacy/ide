@@ -320,12 +320,12 @@
             <artifactId>exo-ide-vfs-webdav-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-	 <dependency>
+	 		<dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven</artifactId>
             <version>${project.version}</version>
          </dependency>
-	 <dependency>
+	 		<dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven-webapp-archetype</artifactId>
             <version>${project.version}</version>
@@ -355,11 +355,7 @@
             <artifactId>hsqldb</artifactId>
             <version>2.0.0</version>
          </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-common</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
+         
          <dependency>
             <groupId>org.gatein.shindig</groupId>
             <artifactId>shindig-features</artifactId>
@@ -455,74 +451,6 @@
             <artifactId>jcr.packaging.module</artifactId>
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
-         <!-- Chromattic -->
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.apt</artifactId>
-            <version>${chromattic.version}</version>
-            <scope>compile</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.api</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.spi</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.core</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.ext</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.exo</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.metamodel</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.chromattic</groupId>
-            <artifactId>chromattic.dataobject</artifactId>
-            <version>${chromattic.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-            <version>${apache.commons-compress.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
-         </dependency>
-           <dependency>
-           <groupId>commons-codec</groupId>
-           <artifactId>commons-codec</artifactId>
-           <version>1.3</version>
-         </dependency>
-         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-         </dependency>
-
 
          <dependency>
             <groupId>org.jboss.cache</groupId>
@@ -534,30 +462,6 @@
                   <artifactId>jgroups</artifactId>
                </exclusion>
             </exclusions>
-         </dependency>
-
-         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>4.1.0.FINAL</version>
-         </dependency>
-
-         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.44-1</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-invoker</artifactId>
-            <version>2.0.11</version>
-         </dependency>
-
-         <dependency>
-            <groupId>com.cloudbees</groupId>
-            <artifactId>cloudbees-api-client</artifactId>
-            <version>0.8.0</version>
          </dependency>
 
       </dependencies>

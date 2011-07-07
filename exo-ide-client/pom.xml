@@ -382,6 +382,7 @@
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-common</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
                <exclusions>
                   <exclusion>
@@ -393,16 +394,19 @@
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-features</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-gadgets</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-social-api</artifactId>
+               <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -445,26 +449,31 @@
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.apt</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.api</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.spi</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.core</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.chromattic</groupId>
                <artifactId>chromattic.ext</artifactId>
+               <version>${chromattic.version}</version>
                <scope>runtime</scope>
             </dependency>
          </dependencies>
