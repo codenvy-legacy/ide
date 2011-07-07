@@ -127,6 +127,9 @@ public interface IdeLocalizationConstant extends Constants
    @Key("outline.title")
    String outlineTitle();
 
+   @Key("outline.title.refreshing.mark.title")
+   String outlineTitleRefreshingMarkTitle();
+   
    /*
     * PreviewHTMLView
     */
