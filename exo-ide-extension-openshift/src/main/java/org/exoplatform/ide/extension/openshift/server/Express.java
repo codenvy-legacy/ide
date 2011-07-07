@@ -140,10 +140,10 @@ public class Express
    }
 
    private static String EXPRESS_API = "https://openshift.redhat.com/broker";
-   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
-      "php-5.3.2", //
-      "wsgi-3.2.1", //
-      "rack-1.1.0") //
+   public static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
+      "php-5.3", //
+      //"wsgi-3.2.1", //
+      "rack-1.1") //
       );
    //   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
    //      "php-5.3.2", //
@@ -210,8 +210,8 @@ public class Express
          jsonWriter.writeString(rhlogin);
          jsonWriter.writeKey("debug");
          jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeKey("info");
-         jsonWriter.writeString(Boolean.toString(true));
+//         jsonWriter.writeKey("info");
+//         jsonWriter.writeString(Boolean.toString(true));
          jsonWriter.writeEndObject();
       }
       catch (JsonException jsone)
@@ -553,10 +553,10 @@ public class Express
          jsonWriter.writeString(rhCloudCredentials.getRhlogin());
          jsonWriter.writeKey("debug");
          jsonWriter.writeString(Boolean.toString(debug));
-         jsonWriter.writeKey("info");
-         jsonWriter.writeString(Boolean.toString(userInfo));
-         jsonWriter.writeKey("apps");
-         jsonWriter.writeString(Boolean.toString(appsInfo));
+//         jsonWriter.writeKey("info");
+//         jsonWriter.writeString(Boolean.toString(userInfo));
+//         jsonWriter.writeKey("apps");
+//         jsonWriter.writeString(Boolean.toString(appsInfo));
          jsonWriter.writeEndObject();
       }
       catch (JsonException jsone)

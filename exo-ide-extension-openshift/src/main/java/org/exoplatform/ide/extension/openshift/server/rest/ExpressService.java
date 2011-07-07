@@ -28,6 +28,7 @@ import org.exoplatform.ide.git.server.rest.GitLocation;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -91,6 +92,14 @@ public class ExpressService
       ParsingResponseException
    {
       return express.createApplication(app, type, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+   
+   @GET
+   @Path("apps/type")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Set<String> applicationTypes()
+   {
+      return express.APP_TYPES;
    }
 
    @GET
