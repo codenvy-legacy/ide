@@ -237,6 +237,10 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("applicationInfoGid.field.value")
    String applicationInfoGridValueField();
    
+   /*Error*/
+   @Key("unmarshal.application.types.failed")
+   String applicationTypesUnmarshallerFail();
+   
    /*Application properties*/
    @DefaultMessage("Name")
    @Key("application.name")

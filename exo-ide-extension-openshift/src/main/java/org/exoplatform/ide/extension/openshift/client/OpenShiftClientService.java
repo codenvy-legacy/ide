@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
+import java.util.List;
+
 
 /**
  * OpenShift client service.
@@ -105,4 +107,11 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void getApplicationInfo(String applicationName, String workDir, AsyncRequestCallback<AppInfo> callback);
+
+   /**
+    * Get types of allowed applications.
+    * 
+    * @param callback callback
+    */
+   public abstract void getApplicationTypes(AsyncRequestCallback<List<String>> callback);
 }

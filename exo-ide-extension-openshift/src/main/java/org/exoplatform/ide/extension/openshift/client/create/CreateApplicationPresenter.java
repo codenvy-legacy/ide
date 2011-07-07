@@ -18,7 +18,14 @@
  */
 package org.exoplatform.ide.extension.openshift.client.create;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,14 +49,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for creating new OpenShift application.
@@ -113,15 +113,6 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
       void setApplicationTypeValues(String[] values);
    }
 
-   /**
-    * Types of the application.
-    */
-   private static String[] APP_TYPES = new String[]{"php-5.3.2", //
-    //  "wsgi-3.2.1", //
-    //  "jbossas-7.0.0", //
-    //  "perl-5.10.1", //
-      "rack-1.1.0"};
-
    private Display display;
 
    /**
@@ -147,7 +138,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
       this.eventBus = eventBus;
       eventBus.addHandler(CreateApplicationEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this); 
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -210,18 +201,25 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
          Dialogs.getInstance().showInfo(OpenShiftExtension.LOCALIZATION_CONSTANT.selectFolder());
          return;
       }
-
       workDir = selectedItems.get(0).getHref();
-      if (display == null)
+
+      OpenShiftClientService.getInstance().getApplicationTypes(new AsyncRequestCallback<List<String>>()
       {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.setApplicationTypeValues(APP_TYPES);
-         display.focusInApplicationNameField();
-         display.getWorkDirLocationField().setValue(workDir);
-         display.enableCreateButton(false);
-      }
+         @Override
+         protected void onSuccess(List<String> result)
+         {
+            if (display == null)
+            {
+               display = GWT.create(Display.class);
+               bindDisplay();
+               IDE.getInstance().openView(display.asView());
+               display.setApplicationTypeValues(result.toArray(new String[result.size()]));
+               display.focusInApplicationNameField();
+               display.getWorkDirLocationField().setValue(workDir);
+               display.enableCreateButton(false);
+            }
+         }
+      });
    }
 
    /**
@@ -258,7 +256,8 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
                      return;
                   }
                }
-               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName)));
+               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .createApplicationFail(applicationName)));
             }
          });
    }

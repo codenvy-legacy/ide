@@ -27,10 +27,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.openshift.client.marshaller.AppInfoUmarshaller;
+import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.client.marshaller.CredentialsMarshaller;
 import org.exoplatform.ide.extension.openshift.client.marshaller.RHUserInfoUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The implementation of {@link OpenShiftClientService}.
@@ -66,7 +70,15 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     */
    private static final String USER_INFO = "/ide/openshift/express/user/info";
 
+   /**
+    * Get application's info method's path.
+    */
    private static final String APPLICATION_INFO = "/ide/openshift/express/apps/info";
+
+   /**
+    * Types of the application method's path.
+    */
+   private static final String APPLICATION_TYPES = "/ide/openshift/express/apps/type";
 
    /**
     * Events handler.
@@ -183,6 +195,22 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setEventBus(eventBus);
       String params = (applicationName != null && !applicationName.isEmpty()) ? "app=" + applicationName + "&" : "";
       params += (workDir != null && !workDir.isEmpty()) ? "workdir=" + workDir : "";
-      AsyncRequest.build(RequestBuilder.GET, url + "?" +params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationTypes(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationTypes(AsyncRequestCallback<List<String>> callback)
+   {
+      String url = restServiceContext + APPLICATION_TYPES;
+
+      List<String> types = new ArrayList<String>();
+      ApplicationTypesUnmarshaller unmarshaller = new ApplicationTypesUnmarshaller(types);
+      callback.setResult(types);
+      callback.setPayload(unmarshaller);
+      callback.setEventBus(eventBus);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 }
