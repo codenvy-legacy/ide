@@ -139,7 +139,7 @@ public class Express
       }
    }
 
-   private static String EXPRESS_API = "https://openshift.redhat.com/app/broker";
+   private static String EXPRESS_API = "https://openshift.redhat.com/broker";
    private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
       "php-5.3.2", //
       "wsgi-3.2.1", //
