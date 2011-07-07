@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
@@ -33,7 +28,9 @@ import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
+import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
@@ -42,7 +39,11 @@ import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocomplete
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
-import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -59,28 +60,7 @@ public class EditorFactory
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
          Images.FileTypes.TXT, true, new CodeMirrorConfiguration()));
 
-      CodeMirrorConfiguration xmlCodeMirrorConfiguration = new CodeMirrorConfiguration();
-      
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
-         Images.FileTypes.XML, true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsexml.js', 'tokenize.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
-            setParser(new XmlParser()).
-            setCanBeOutlined(true).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))
-      ));
-
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, IDE.EDITOR_CONSTANT.codeMirrorXmlEditor(), "xml",
-         Images.FileTypes.XML, true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsexml.js', 'tokenize.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
-            setParser(new XmlParser()).
-            setCanBeOutlined(true).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_XML))
-      ));
-
+      JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
          IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
          new CodeMirrorConfiguration().
@@ -89,7 +69,7 @@ public class EditorFactory
             setParser(new JavaScriptParser()).
             setCanBeOutlined(true).
             setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_JAVASCRIPT))            
+            setCodeAssistant(javaScriptCodeAssistant)            
       ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(),
@@ -100,7 +80,7 @@ public class EditorFactory
             setParser(new JavaScriptParser()).
             setCanBeOutlined(true).
             setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_JAVASCRIPT))            
+            setCodeAssistant(javaScriptCodeAssistant)            
       ));
 
       addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT,
@@ -111,7 +91,7 @@ public class EditorFactory
             setParser(new JavaScriptParser()).
             setCanBeOutlined(true).
             setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.APPLICATION_X_JAVASCRIPT))            
+            setCodeAssistant(javaScriptCodeAssistant)            
       ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, IDE.EDITOR_CONSTANT.codeMirrorCssEditor(), "css",
@@ -120,7 +100,7 @@ public class EditorFactory
             setGenericParsers("['parsecss.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
             setParser(new CssParser()).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_CSS))         
+            setCodeAssistant(new CssCodeAssistant())         
       ));
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.codeMirrorHtmlEditor(), "html",
@@ -132,7 +112,7 @@ public class EditorFactory
             setParser(new HtmlParser()).
             setCanBeOutlined(true).
             setAutocompleteHelper(new HtmlAutocompleteHelper()).
-            setCodeAssistant(CodeAssistantFactory.getCodeAssistant(MimeType.TEXT_HTML)).
+            setCodeAssistant(new HtmlCodeAssistant()).
             setCanHaveSeveralMimeTypes(true)
       ));   
 

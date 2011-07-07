@@ -116,7 +116,12 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-php</artifactId>
       </dependency>
-
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-xml</artifactId>
+      </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>

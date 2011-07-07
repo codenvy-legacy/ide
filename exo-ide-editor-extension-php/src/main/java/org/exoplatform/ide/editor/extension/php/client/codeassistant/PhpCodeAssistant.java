@@ -37,7 +37,9 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
+import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 
 import java.util.ArrayList;
@@ -79,12 +81,26 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
    public void autocompleteCalled(final Editor editor, int cursorOffsetX, int cursorOffsetY, final List<Token> tokenList,
       String lineMimeType, final Token currentToken)
    {
-      if (!lineMimeType.equals(MimeType.APPLICATION_PHP))
+      if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, cursorOffsetX,
-            cursorOffsetY, tokenList, lineMimeType, currentToken);
+         new CssCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+            currentToken);
          return;
       }
+
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
+      {
+         new JavaScriptCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList,
+            lineMimeType, currentToken);
+         return;
+      }
+      
+      if(MimeType.TEXT_HTML.equals(lineMimeType))
+      {
+         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
+         return;
+      }
+      
       this.editor = editor;
       this.posX = cursorOffsetX;
       this.posY = cursorOffsetY;

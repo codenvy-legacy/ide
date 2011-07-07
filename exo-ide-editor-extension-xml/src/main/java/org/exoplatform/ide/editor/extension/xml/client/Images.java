@@ -16,26 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
+package org.exoplatform.ide.editor.extension.xml.client;
 
-
-import com.google.gwt.junit.tools.GWTTestSuite;
-import junit.framework.Test;
-import junit.framework.TestCase;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: GwtTestSuite Feb 28, 2011 2:21:56 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: $
  *
  */
-public class GwtCodeAssistantTestSuite extends TestCase
+public interface Images
 {
-   public static Test suite()
-   {
-       GWTTestSuite suite = new GWTTestSuite( "eXo IDE CodeAssistant GWT Tests" );
-       suite.addTestSuite(HtmlGwtTestCodeAssistant.class );
-       suite.addTestSuite(JavaScriptGwtTestCodeAssistant.class );
-       return suite;
-   }
+  public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
    
+   public static final String XML = IMAGE_URL +  "xml/xml.png";
 }

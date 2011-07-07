@@ -16,24 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codeassistant;
+package org.exoplatform.ide.editor.extension.xml.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: CodeAssistantTestBundle Mar 2, 2011 9:51:03 AM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: $
  *
  */
-public interface CodeAssistantTestBundle extends ClientBundle
+public interface XmlConstant extends Messages
 {
 
-   public static CodeAssistantTestBundle INSTANCE = GWT.create(CodeAssistantTestBundle.class);
-   
-   @Source("org/exoplatform/ide/editor/public/cssJSON.txt")
-   TextResource cssJSON();
-   
+   @Key("xmlEditor")
+   String xmlEditor();
 }

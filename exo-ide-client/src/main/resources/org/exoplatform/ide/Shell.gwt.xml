@@ -52,6 +52,7 @@
    <inherits name="org.exoplatform.ide.editor.extension.jsp.JspEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.ruby.RubyEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.extension.php.PhpEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.extension.xml.XmlEditorExtension" />
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />

@@ -18,10 +18,14 @@
  */
 package org.exoplatform.ide.editor.codeassistant.html;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
@@ -34,17 +38,14 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantFactory;
+import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
+import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -56,7 +57,6 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
    public interface HtmlBundle extends ClientBundle
    {
-
       @Source("org/exoplatform/ide/editor/public/tokens/html_tokens.js")
       ExternalTextResource htmlTokens();
    }
@@ -130,10 +130,17 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
    public void autocompleteCalled(Editor editor, final int cursorOffsetX, final int cursorOffsetY,
       List<Token> tokenList, String lineMimeType, Token currentToken)
    {
-      if (!MimeType.TEXT_HTML.equals(lineMimeType))
+      if (MimeType.TEXT_CSS.equals(lineMimeType))
       {
-         CodeAssistantFactory.getCodeAssistant(lineMimeType).autocompleteCalled(editor, cursorOffsetX, cursorOffsetY,
-            tokenList, lineMimeType, currentToken);
+         new CssCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+            currentToken);
+         return;
+      }
+
+      if (MimeType.APPLICATION_JAVASCRIPT.equals(lineMimeType))
+      {
+         new JavaScriptCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList,
+            lineMimeType, currentToken);
          return;
       }
 

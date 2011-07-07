@@ -62,9 +62,6 @@ public interface IdeEditorLocalizationConstant extends Constants
    @Key("codeMirror.textEditor")
    String codeMirrorTextEditor();
    
-   @Key("codeMirror.xmlEditor")
-   String codeMirrorXmlEditor();
-   
    @Key("codeMirror.javascriptEditor")
    String codeMirrorJavascriptEditor();
    
