@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundaryApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryError;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
+import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
@@ -66,57 +67,22 @@ import java.util.zip.ZipInputStream;
  */
 public class Cloudfoundry
 {
-   private static class Framework
-   {
-      private final String type;
-      /** Default memory size in megabytes. */
-      private final int memory;
-      private final String description;
-
-      Framework(String type, int memory, String description)
-      {
-         this.type = type;
-         this.memory = memory;
-         this.description = description;
-      }
-
-      String getType()
-      {
-         return type;
-      }
-
-      int getMemory()
-      {
-         return memory;
-      }
-
-      String getDescription()
-      {
-         return description;
-      }
-
-      @Override
-      public String toString()
-      {
-         return "AppConfig [type=" + type + ", memory=" + memory + "M, description=" + description + "]";
-      }
-   }
-
    private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
    private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
    private static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
    private static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
 
-   private static final Map<String, Framework> FRAMEWORKS = new HashMap<String, Framework>(7);
+   // TODO get list of supported frameworks from Cloud Foundry server.
+   public static final Map<String, Framework> FRAMEWORKS;
    static
    {
-      FRAMEWORKS.put("Rails", new Framework("rails3", 256, "Rails  Application"));
-      FRAMEWORKS.put("Spring", new Framework("spring", 512, "Java SpringSource Spring Application"));
-      FRAMEWORKS.put("Grails", new Framework("grails", 512, "Java SpringSource Grails Application"));
-      FRAMEWORKS.put("Roo", new Framework("spring", 512, "Java SpringSource Roo Application"));
-      FRAMEWORKS.put("JavaWeb", new Framework("spring", 512, "Java Web Application"));
-      FRAMEWORKS.put("Sinatra", new Framework("sinatra", 128, "Sinatra Application"));
-      FRAMEWORKS.put("Node", new Framework("node", 64, "Node.js Application"));
+      Map<String, Framework> fm = new HashMap<String, Framework>(5);
+      fm.put("rails3", new Framework("rails3", "Rails", 256, "Rails  Application"));
+      fm.put("spring", new Framework("spring", "Spring", 512, "Java SpringSource Spring Application"));
+      fm.put("grails", new Framework("grails", "Grails", 512, "Java SpringSource Grails Application"));
+      fm.put("sinatra", new Framework("sinatra", "Sinatra", 128, "Sinatra Application"));
+      fm.put("node", new Framework("node", "Node", 64, "Node.js Application"));
+      FRAMEWORKS = Collections.unmodifiableMap(fm);
    }
 
    private final CloudfoundryAuthenticator authenticator;
@@ -247,8 +213,8 @@ public class Cloudfoundry
       return null;//get(resp.getRedirect(), credentials.getToken(), 200, App.class);
    }
 
-   public CloudfoundryApplication startApplication(String app, File workDir) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public CloudfoundryApplication startApplication(String app, File workDir) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -259,8 +225,8 @@ public class Cloudfoundry
       return startApplication(getCredentials(), app);
    }
 
-   private CloudfoundryApplication startApplication(CloudfoundryCredentials credentials, String app) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private CloudfoundryApplication startApplication(CloudfoundryCredentials credentials, String app)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       CloudfoundryApplication appInfo = applicationInfo(credentials, app);
       // Do nothing if application already started.
@@ -362,6 +328,9 @@ public class Cloudfoundry
    public void updateApplication(String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
+      if (workDir == null)
+         throw new IllegalArgumentException("Working directory required. ");
+      
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(workDir);
@@ -702,7 +671,7 @@ public class Cloudfoundry
    private Framework detectFramework(File path) throws IOException
    {
       if (new File(path, "config/environment.rb").exists())
-         return FRAMEWORKS.get("Rails");
+         return FRAMEWORKS.get("rails3");
 
       // Lookup *.war file. Lookup in 'target' directory, maven project structure expected.
       File[] files = new File(path, "target").listFiles(FilesHelper.WAR_FILE_FILTER);
@@ -722,15 +691,15 @@ public class Cloudfoundry
                String name = e.getName();
                m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
                if (m1.matches())
-                  return FRAMEWORKS.get("Spring");
+                  return FRAMEWORKS.get("spring");
 
                m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
                if (m2.matches())
-                  return FRAMEWORKS.get("Spring");
+                  return FRAMEWORKS.get("spring");
 
                m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
                if (m3.matches())
-                  return FRAMEWORKS.get("Grails");
+                  return FRAMEWORKS.get("grails");
             }
          }
 
@@ -740,8 +709,8 @@ public class Cloudfoundry
                zip.close();
          }
 
-         // Java web application if Spring or Grails frameworks is not detected.
-         return FRAMEWORKS.get("JavaWeb");
+         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
+         return FRAMEWORKS.get("spring");
       }
 
       // Lookup *.rb files. 
@@ -763,7 +732,7 @@ public class Cloudfoundry
                {
                   m = m == null ? SINATRA.matcher(line) : m.reset(line);
                   if (m.matches())
-                     return FRAMEWORKS.get("Sinatra");
+                     return FRAMEWORKS.get("sinatra");
                }
             }
             finally
@@ -784,7 +753,7 @@ public class Cloudfoundry
             if ("app.js".equals(files[i].getName()) //
                || "index.js".equals(files[i].getName()) //
                || "main.js".equals(files[i].getName()))
-               return FRAMEWORKS.get("Node");
+               return FRAMEWORKS.get("node");
          }
       }
 

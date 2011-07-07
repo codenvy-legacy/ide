@@ -11,8 +11,25 @@
    <name>eXo IDE :: Extension :: CLOUDFOUNDRY</name>
    <dependencies>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+         <version>1</version> <!-- TODO add in parent pom.xml -->
       </dependency>
       <dependency>
          <groupId>junit</groupId>
