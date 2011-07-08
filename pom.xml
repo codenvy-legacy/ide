@@ -189,6 +189,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-javascript</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-java</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -232,6 +238,12 @@
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-xml</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-html</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -573,8 +585,9 @@
       <module>exo-ide-maven-webapp-archetype</module>
 
       <module>exo-ide-editor</module>
+      <module>exo-ide-editor-extension-javascript</module>
+      <module>exo-ide-editor-extension-html</module>
       <module>exo-ide-editor-extension-gadget</module>
-      <module>exo-ide-extension-gadget-gatein</module>
       <module>exo-ide-editor-extension-groovy</module>
       <module>exo-ide-editor-extension-gtmpl</module>
       <module>exo-ide-editor-extension-chromattic</module>
@@ -585,6 +598,7 @@
       <module>exo-ide-editor-extension-php</module>
       <module>exo-ide-editor-extension-xml</module>
 
+      <module>exo-ide-extension-gadget-gatein</module>
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-java</module>
