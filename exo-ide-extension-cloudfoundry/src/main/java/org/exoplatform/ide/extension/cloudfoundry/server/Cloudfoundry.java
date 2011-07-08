@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
+import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundaryApplicationStatistics;
@@ -262,17 +263,19 @@ public class Cloudfoundry
             + "M required. ");
       }
 
-      postJson(credentials.getTarget() + "/apps", credentials.getToken(),
-         JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
+      String json =
+         postJson(credentials.getTarget() + "/apps", credentials.getToken(),
+            JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
+      CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
+      CloudfoundryApplication appInfo =
+         JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credentials.getToken(), null, 200),
+            CloudfoundryApplication.class, null);
 
       uploadApplication(credentials, app, workDir);
-
       writeApplicationName(workDir, app);
-
       if (!nostart)
-         startApplication(credentials, app);
+         appInfo = startApplication(credentials, app);
 
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
       return appInfo;
    }
 
@@ -1216,10 +1219,16 @@ public class Cloudfoundry
          if (!uploadDir.mkdir())
             throw new RuntimeException("Cannot create temporary directory for uploaded files. ");
 
-         FilesHelper.copyDir(workDir, uploadDir, FilesHelper.EXCLUDE_FILE_FILTER);
-
          List<File> files = new ArrayList<File>();
-         FilesHelper.fileList(uploadDir, files, FilesHelper.EXCLUDE_FILE_FILTER);
+         // Look up war file first.
+         FilesHelper.fileList(workDir, files, FilesHelper.WAR_FILE_FILTER);
+         if (files.size() > 0)
+            FilesHelper.unzip(files.get(0), uploadDir);
+         else
+            FilesHelper.copyDir(workDir, uploadDir, FilesHelper.UPLOAD_FILE_FILTER);
+
+         files.clear();
+         FilesHelper.fileList(uploadDir, files, FilesHelper.UPLOAD_FILE_FILTER);
 
          long totalSize = 0;
          for (File f : files)
@@ -1264,12 +1273,12 @@ public class Cloudfoundry
          }
 
          files.clear();
-         FilesHelper.fileList(uploadDir, files, FilesHelper.EXCLUDE_FILE_FILTER); // Check do we need upload any files.
+         FilesHelper.fileList(uploadDir, files, FilesHelper.UPLOAD_FILE_FILTER); // Check do we need upload any files.
 
          if (files.size() > 0)
          {
             zip = new File(System.getProperty("java.io.tmpdir"), app + ".zip");
-            FilesHelper.zipDir(uploadDir, zip, FilesHelper.EXCLUDE_FILE_FILTER);
+            FilesHelper.zipDir(uploadDir, zip, FilesHelper.UPLOAD_FILE_FILTER);
          }
 
          if (resources == null)

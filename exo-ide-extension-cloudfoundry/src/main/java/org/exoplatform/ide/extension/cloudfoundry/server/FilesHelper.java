@@ -47,14 +47,13 @@ class FilesHelper
    static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
    static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
 
-   static final FilenameFilter EXCLUDE_FILE_FILTER = new FilenameFilter()
+   static final FilenameFilter UPLOAD_FILE_FILTER = new FilenameFilter()
    {
       @Override
       public boolean accept(File dir, String name)
       {
-         return ".cloudfoundry-application".equals(name) // eXo IDE specific.  
-            || name.endsWith("~") || name.endsWith(".log") // Do the same as cloud foundry command line tool does. 
-         ;
+         return !(".cloudfoundry-application".equals(name) // eXo IDE specific.  
+            || name.endsWith("~") || name.endsWith(".log")); // Do the same as cloud foundry command line tool does. 
       }
    };
 
@@ -78,7 +77,7 @@ class FilesHelper
       }
    }
 
-   static void copyDir(File source, File target, FilenameFilter exclude) throws IOException
+   static void copyDir(File source, File target, FilenameFilter filter) throws IOException
    {
       if (source.isDirectory())
       {
@@ -87,8 +86,8 @@ class FilesHelper
          String[] files = source.list();
          for (int i = 0; i < files.length; i++)
          {
-            if (!exclude.accept(target, files[i]))
-               copyDir(new File(source, files[i]), new File(target, files[i]), exclude);
+            if (filter.accept(target, files[i]))
+               copyDir(new File(source, files[i]), new File(target, files[i]), filter);
          }
       }
       else
@@ -120,14 +119,14 @@ class FilesHelper
       }
    }
 
-   static void fileList(File dir, Collection<File> files, FilenameFilter exclude)
+   static void fileList(File dir, Collection<File> files, FilenameFilter filter)
    {
       File[] list = dir.listFiles();
       for (int i = 0; i < list.length; i++)
       {
          if (list[i].isDirectory())
-            fileList(list[i], files, exclude);
-         else if (!exclude.accept(dir, list[i].getName()))
+            fileList(list[i], files, filter);
+         else if (filter.accept(dir, list[i].getName()))
             files.add(list[i]);
       }
    }
@@ -163,39 +162,93 @@ class FilesHelper
       return b.toString();
    }
 
-   static void zipDir(File dir, File zip, FilenameFilter exclude) throws IOException
+   static void zipDir(File dir, File zip, FilenameFilter filter) throws IOException
    {
-      ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zip));
-      List<File> files = new ArrayList<File>();
-      fileList(dir, files, exclude);
-
-      String dirPath = dir.getAbsolutePath() + "/";
-      for (File f : files)
+      ZipOutputStream zipOut = null;
+      try
       {
-         zipOut.putNextEntry(new ZipEntry(f.getAbsolutePath().replace(dirPath, "")));
-         FileInputStream in = null;
-         try
+         zipOut = new ZipOutputStream(new FileOutputStream(zip));
+         List<File> files = new ArrayList<File>();
+         fileList(dir, files, filter);
+
+         String dirPath = dir.getAbsolutePath() + "/";
+         for (File f : files)
          {
-            in = new FileInputStream(f);
-            byte[] b = new byte[1024];
-            int r;
-            while ((r = in.read(b)) != -1)
-               zipOut.write(b, 0, r);
-         }
-         finally
-         {
+            zipOut.putNextEntry(new ZipEntry(f.getAbsolutePath().replace(dirPath, "")));
+            FileInputStream in = null;
             try
             {
-               if (in != null)
-                  in.close();
+               in = new FileInputStream(f);
+               byte[] b = new byte[1024];
+               int r;
+               while ((r = in.read(b)) != -1)
+                  zipOut.write(b, 0, r);
             }
             finally
             {
-               zipOut.closeEntry();
+               try
+               {
+                  if (in != null)
+                     in.close();
+               }
+               finally
+               {
+                  zipOut.closeEntry();
+               }
             }
          }
       }
-      zipOut.close();
+      finally
+      {
+         if (zipOut != null)
+            zipOut.close();
+      }
+   }
+
+   static void unzip(File zip, File targetDir) throws IOException
+   {
+      ZipInputStream zipIn = null;
+      try
+      {
+         zipIn = new ZipInputStream(new FileInputStream(zip));
+         ZipEntry zipEntry;
+         while ((zipEntry = zipIn.getNextEntry()) != null)
+         {
+            if (!zipEntry.isDirectory())
+            {
+               File file = new File(targetDir, zipEntry.getName());
+               if (!file.getParentFile().exists())
+                  file.getParentFile().mkdirs();
+
+               FileOutputStream fo = null;
+               try
+               {
+                  fo = new FileOutputStream(file);
+                  byte[] b = new byte[1024];
+                  int r;
+                  while ((r = zipIn.read(b)) != -1)
+                     fo.write(b, 0, r);
+               }
+               finally
+               {
+                  try
+                  {
+                     if (fo != null)
+                        fo.close();
+                  }
+                  finally
+                  {
+                     zipIn.closeEntry();
+                  }
+               }
+            }
+         }
+      }
+      finally
+      {
+         if (zipIn != null)
+            zipIn.close();
+      }
    }
 
    static boolean delete(File fileOrDir)
@@ -215,13 +268,14 @@ class FilesHelper
    {
       if (new File(path, "config/environment.rb").exists())
          return "rails3";
-   
-      // Lookup *.war file. Lookup in 'target' directory, maven project structure expected.
-      File[] files = new File(path, "target").listFiles(WAR_FILE_FILTER);
-      if (files != null && files.length > 0)
+
+      // Lookup *.war file recursively.
+      List<File> list = new ArrayList<File>();
+      fileList(path, list, WAR_FILE_FILTER);
+      if (list.size() > 0)
       {
          // Spring application ?
-         File warFile = files[0];
+         File warFile = list.get(0);
          ZipInputStream zip = null;
          try
          {
@@ -235,30 +289,30 @@ class FilesHelper
                m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
                if (m1.matches())
                   return "spring";
-   
+
                m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
                if (m2.matches())
                   return "spring";
-   
+
                m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
                if (m3.matches())
                   return "grails";
             }
          }
-   
+
          finally
          {
             if (zip != null)
                zip.close();
          }
-   
+
          // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
          return "spring";
       }
-   
+
       // Lookup *.rb files. 
-      files = path.listFiles(RUBY_FILE_FILTER);
-   
+      File[] files = path.listFiles(RUBY_FILE_FILTER);
+
       if (files != null && files.length > 0)
       {
          Matcher m = null;
@@ -269,7 +323,7 @@ class FilesHelper
             try
             {
                freader = new BufferedReader(new FileReader(files[i]));
-   
+
                String line;
                while ((line = freader.readLine()) != null)
                {
@@ -285,10 +339,10 @@ class FilesHelper
             }
          }
       }
-   
+
       // Lookup app.js, index.js or main.js files. 
       files = path.listFiles(JS_FILE_FILTER);
-   
+
       if (files != null && files.length > 0)
       {
          for (int i = 0; i < files.length; i++)
@@ -299,7 +353,7 @@ class FilesHelper
                return "node";
          }
       }
-   
+
       return null;
    }
 }
