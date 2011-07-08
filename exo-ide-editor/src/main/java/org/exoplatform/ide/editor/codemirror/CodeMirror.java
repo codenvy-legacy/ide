@@ -1230,9 +1230,17 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    protected void onUnload()
    {
        super.onUnload();
-       codeValidateTimer.cancel();
+       if (configuration.canBeValidated())
+       {
+          codeValidateTimer.cancel();
+       }
+       
        eventBus.removeHandler(EditorTokenListPreparedEvent.TYPE, this);
-       configuration.getParser().stopParsing();     
+       
+       if (configuration.getParser() != null)
+       {
+          configuration.getParser().stopParsing();
+       }
    }
 
    public void saveCursorPosition()
