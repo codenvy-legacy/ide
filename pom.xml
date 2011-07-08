@@ -363,21 +363,6 @@
          </dependency>
          
          <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-features</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-gadgets</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.shindig</groupId>
-            <artifactId>shindig-social-api</artifactId>
-            <version>${shindig.version}</version>
-         </dependency>
-         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.5.8</version>
