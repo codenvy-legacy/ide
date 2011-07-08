@@ -101,7 +101,7 @@ public class CloneRepositoryTest extends BaseTest
       Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("git/repository");
+      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("git/"+REPO_NAME);
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
       IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("");
       Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());

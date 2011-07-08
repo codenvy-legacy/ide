@@ -86,8 +86,8 @@ public class RESTServiceResponseHeadersTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForOutputOpened();
 
-      assertEquals("[INFO] " + BASE_URL + "IDE/rest/private/" + WEBDAV_CONTEXT + "/repository/dev-monit/" + FOLDER_NAME
-         + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(1));
+      assertEquals("[INFO] " + BASE_URL + "IDE/rest/private/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+         + FOLDER_NAME + "/" + FILE_NAME + " deployed successfully.", IDE.OUTPUT.getOutputMessageText(1));
 
       IDE.REST_SERVICE.launchRestService();
 

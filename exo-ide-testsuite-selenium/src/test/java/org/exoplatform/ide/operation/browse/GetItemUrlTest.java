@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class GetItemUrlTest extends BaseTest
 {
-   
+
    private final String WORK_SPACE_LOCATOR = "//div[@ID=\"ideNavigatorItemTreeGrid\"]//div[@class=\"ide-Tree-label\"]/";
 
    private final String content1 = "<p> Hello!!! </p>";
@@ -52,13 +52,13 @@ public class GetItemUrlTest extends BaseTest
 
    private final String folderName = GetItemUrlTest.class.getSimpleName();
 
-   private final String entrypoint = WEBDAV_CONTEXT + "/repository/";
+   private final String entrypoint = WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    @Test
    public void testGetFileUrl() throws Exception
    {
       //Create first file
-      IDE.WORKSPACE.waitForRootItem();      
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       IDE.EDITOR.deleteLinesInEditor(7);
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
@@ -74,7 +74,7 @@ public class GetItemUrlTest extends BaseTest
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, content2);
       saveAsUsingToolbarButton(file2Name);
-      
+
       IDE.EDITOR.closeFile(0);
       IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/" + file2Name);
 
@@ -142,7 +142,7 @@ public class GetItemUrlTest extends BaseTest
       //Click "Search" button
       IDE.SEARCH.clickSearchButton();
       IDE.SEARCH.checkSearchViewClosed();
-      
+
       //Check files are found
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + file1Name);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folderName + "/" + file2Name);
