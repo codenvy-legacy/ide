@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.extension.javascript.client.codeassistant.ui;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorExtension;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -43,7 +43,7 @@ public class JsWidget extends JSBaseWidget
    {
       super(token);
       grid = new Grid(1, 3);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
       grid.setWidth("100%");
 
       Image i = getImage();
@@ -70,7 +70,7 @@ public class JsWidget extends JSBaseWidget
       }
 
       Label l = new Label(pack, false);
-      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+      l.setStyleName(JavaScriptEditorExtension.RESOURCES.css().fqn());
       grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");
@@ -93,15 +93,15 @@ public class JsWidget extends JSBaseWidget
       switch (token.getType())
       {
          case METHOD :
-            return new Image(CodeAssistantClientBundle.INSTANCE.methodItem());
+            return new Image(JavaScriptEditorExtension.RESOURCES.methodItem());
          case VARIABLE :
-            return new Image(CodeAssistantClientBundle.INSTANCE.varItem());
+            return new Image(JavaScriptEditorExtension.RESOURCES.varItem());
          case PROPERTY :
-            return new Image(CodeAssistantClientBundle.INSTANCE.property());
+            return new Image(JavaScriptEditorExtension.RESOURCES.propertyItem());
          case FUNCTION :
-            return new Image(CodeAssistantClientBundle.INSTANCE.functionItem());
+            return new Image(JavaScriptEditorExtension.RESOURCES.functionItem());
          default :
-            return new Image(CodeAssistantClientBundle.INSTANCE.template());
+            return new Image(JavaScriptEditorExtension.RESOURCES.template());
 
       }
 

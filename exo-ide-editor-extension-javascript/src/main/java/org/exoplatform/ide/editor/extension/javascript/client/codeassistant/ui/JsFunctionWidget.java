@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.editor.extension.javascript.client.codeassistant.ui;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorExtension;
 
 /**
  * @author <a href="mailto:dnochevnov@gmail.com">Dmytro Nochevnov</a>
@@ -41,10 +41,10 @@ public class JsFunctionWidget extends JSBaseWidget
    {
       super(token);
       grid = new Grid(1, 3);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
       grid.setWidth("100%");
 
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.functionItem());
+      Image i = new Image(JavaScriptEditorExtension.RESOURCES.functionItem());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 
@@ -56,7 +56,7 @@ public class JsFunctionWidget extends JSBaseWidget
       String pack = "";
 
       Label l = new Label(pack, false);
-      l.setStyleName(CodeAssistantClientBundle.INSTANCE.css().fqnStyle());
+      l.setStyleName(JavaScriptEditorExtension.RESOURCES.css().fqn());
       grid.setWidget(0, 2, l);
 
       grid.getCellFormatter().setWidth(0, 0, "16px");

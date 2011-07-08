@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.editor.extension.javascript.client.codeassistant.ui;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
-import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
+import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
+import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorExtension;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -75,7 +75,7 @@ public abstract class JSBaseWidget extends TokenWidget
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().selectedItem());
+      setStyleName(JavaScriptEditorExtension.RESOURCES.css().selectedItem());
    }
 
    /**
@@ -84,7 +84,7 @@ public abstract class JSBaseWidget extends TokenWidget
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
    }
 
    /**

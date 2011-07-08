@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorExtension;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,10 +41,10 @@ public class JsObjectWidget extends JSBaseWidget
    {
       super(token);
       grid = new Grid(1, 2);
-      grid.setStyleName(CodeAssistantClientBundle.INSTANCE.css().item());
+      grid.setStyleName(JavaScriptEditorExtension.RESOURCES.css().item());
       grid.setWidth("100%");
 
-      Image i = new Image(CodeAssistantClientBundle.INSTANCE.classItem());
+      Image i = new Image(JavaScriptEditorExtension.RESOURCES.classItem());
       i.setHeight("16px");
       grid.setWidget(0, 0, i);
 

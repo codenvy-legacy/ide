@@ -40,12 +40,15 @@ public class JavaScriptEditorExtension extends Extension
    
    public static final JavaScriptMessages MESSAGES = GWT.create(JavaScriptMessages.class);
    
+   public static final JavaScriptClientBundle RESOURCES = GWT.create(JavaScriptClientBundle.class);
+   
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
+      RESOURCES.css().ensureInjected();
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
