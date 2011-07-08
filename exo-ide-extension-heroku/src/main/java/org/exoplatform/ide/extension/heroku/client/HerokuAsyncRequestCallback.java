@@ -45,7 +45,7 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
     * Events handler.
     */
    private HandlerManager eventbus;
-   
+
    private LoggedInHandler loggedInHandler;
 
    /**
@@ -67,7 +67,8 @@ public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<Li
       if (exception instanceof ServerException)
       {
          ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
+         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+            && serverException.getMessage().contains("Authentication required"))
          {
             eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
             eventbus.fireEvent(new LoginEvent());
