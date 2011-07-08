@@ -112,7 +112,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       addSshKey(herokuCredentials);
    }
 
@@ -168,7 +168,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       removeSshKey(herokuCredentials, keyName);
    }
 
@@ -210,7 +210,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return listSshKeys(herokuCredentials, inLongFormat);
    }
 
@@ -301,7 +301,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       removeAllSshKeys(herokuCredentials);
    }
 
@@ -348,7 +348,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return createApplication(herokuCredentials, name, remote, workDir);
    }
 
@@ -460,7 +460,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       destroyApplication(herokuCredentials, name, workDir);
    }
 
@@ -515,7 +515,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return applicationInfo(herokuCredentials, name, inRawFormat, workDir);
    }
 
@@ -629,7 +629,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return renameApplication(herokuCredentials, name, newname, workDir);
    }
 
@@ -719,7 +719,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return listApplications(herokuCredentials);
    }
 
@@ -802,7 +802,7 @@ public class Heroku
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
-         throw new HerokuException(401, "Authentication required.\n", "text/plain");
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       return run(herokuCredentials, name, workDir, command);
    }
 

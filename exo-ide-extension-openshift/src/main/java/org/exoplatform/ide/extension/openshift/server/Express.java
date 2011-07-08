@@ -263,7 +263,7 @@ public class Express
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, "Authentication required.\n", "text/plain");
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
       createDomain(rhCloudCredentials, namespace, alter);
    }
 
@@ -356,7 +356,7 @@ public class Express
 
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, "Authentication required.\n", "text/plain");
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
       return createApplication(rhCloudCredentials, app, type, workDir);
    }
 
@@ -465,7 +465,7 @@ public class Express
 
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, "Authentication required.\n", "text/plain");
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
       destroyApplication(rhCloudCredentials, app);
    }
 
@@ -535,7 +535,7 @@ public class Express
    {
       RHCloudCredentials rhCloudCredentials = readCredentials();
       if (rhCloudCredentials == null)
-         throw new ExpressException(401, "Authentication required.\n", "text/plain");
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
       return userInfo(rhCloudCredentials, appsInfo);
    }
 
