@@ -205,6 +205,30 @@ public class CloudfoundryService
       cloudfoundry.unmapUrl(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, url);
    }
 
+   @Path("apps/mem")
+   @POST
+   public void mem( //
+      @QueryParam("name") String app, //
+      @QueryParam("mem") int mem, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      cloudfoundry.mem(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, mem);
+   }
+
+   @Path("apps/instances")
+   @POST
+   public void instances( //
+      @QueryParam("name") String app, //
+      @QueryParam("expr") String expression, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      cloudfoundry.instances(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, expression);
+   }
+
    @Path("apps/env/add")
    @POST
    public void environmentAdd( //
@@ -297,7 +321,7 @@ public class CloudfoundryService
       cloudfoundry.bindService(name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
-   @Path("services/delete/{name}")
+   @Path("services/unbind/{name}")
    @POST
    public void unbindService( //
       @PathParam("name") String name, //

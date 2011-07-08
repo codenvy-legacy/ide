@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 
 import java.io.BufferedReader;
@@ -56,8 +57,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -65,10 +64,7 @@ import java.util.zip.ZipInputStream;
  */
 public class Cloudfoundry
 {
-   private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
-   private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
-   private static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
-   private static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
+   private static final Pattern INSTANCE_UPDATE_EXPR = Pattern.compile("([+-])?(\\d+)");
 
    // TODO get list of supported frameworks from Cloud Foundry server.
    public static final Map<String, Framework> FRAMEWORKS;
@@ -90,6 +86,16 @@ public class Cloudfoundry
       this.authenticator = authenticator;
    }
 
+   /**
+    * Log in with specified email/password. If login is successful then authentication token from cloudfoundry.com saved
+    * locally and used instead email/password in all next requests.
+    * 
+    * @param email email address that used when create account at cloudfoundry.com
+    * @param password password
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void login(String email, String password) throws CloudfoundryException, IOException, ParsingResponseException
    {
       authenticator.login(email, password);
@@ -143,32 +149,38 @@ public class Cloudfoundry
       String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir)
       throws CloudfoundryException, IOException, ParsingResponseException
    {
-      Framework cfg = frameworkName != null ? FRAMEWORKS.get(frameworkName) : detectFramework(workDir);
+      // Check number of applications.
+      SystemInfo systemInfo = systemInfo(credentials);
+      SystemResources limits = systemInfo.getLimits();
+      SystemResources usage = systemInfo.getUsage();
+      if (limits != null && usage != null && limits.getApps() == usage.getApps())
+         throw new IllegalStateException("Not enough resources to create new application. "
+            + "Max number of applications (" + limits.getApps() + ") reached. ");
+
+      if (frameworkName == null)
+      {
+         frameworkName = FilesHelper.detectFramework(workDir);
+         // If framework cannot be detected.
+         if (frameworkName == null)
+            throw new IllegalStateException("Cannot detect application type. ");
+      }
+
+      Framework cfg = FRAMEWORKS.get(frameworkName);
 
       if (cfg == null)
       {
-         if (frameworkName != null)
+         // If framework specified (detected) but not supported.
+         StringBuilder msg = new StringBuilder();
+         msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
+         int i = 0;
+         for (String t : FRAMEWORKS.keySet())
          {
-            // If framework specified but not supported.
-            StringBuilder msg = new StringBuilder();
-            msg.append("Unsupported framework ");
-            msg.append(frameworkName);
-            msg.append(". Must be ");
-            int i = 0;
-            for (String t : FRAMEWORKS.keySet())
-            {
-               if (i > 0)
-                  msg.append(" or ");
-               msg.append(t);
-               i++;
-            }
-            throw new IllegalArgumentException(msg.toString());
+            if (i > 0)
+               msg.append(" or ");
+            msg.append(t);
+            i++;
          }
-         else
-         {
-            // If framework cannot be detected.
-            throw new IllegalStateException("Cannot detect application type. ");
-         }
+         throw new IllegalArgumentException(msg.toString());
       }
 
       try
@@ -198,6 +210,19 @@ public class Cloudfoundry
 
       String framework = cfg.getType();
 
+      // Check memory capacity.
+      if (!nostart //
+         && limits != null && usage != null //
+         && (instances * memory) > (limits.getMemory() - usage.getMemory()))
+      {
+         throw new IllegalStateException("Not enough resources to create new application. " //
+            + "Available memory " + //
+            (limits.getMemory() - usage.getMemory()) //
+            + "M but " //
+            + (instances * memory) //
+            + "M required. ");
+      }
+
       postJson(credentials.getTarget() + "/apps", credentials.getToken(),
          JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
 
@@ -208,7 +233,8 @@ public class Cloudfoundry
       if (!nostart)
          startApplication(credentials, app);
 
-      return null;//get(resp.getRedirect(), credentials.getToken(), 200, App.class);
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      return appInfo;
    }
 
    public CloudfoundryApplication startApplication(String app, File workDir) throws IOException,
@@ -418,6 +444,105 @@ public class Cloudfoundry
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
    }
 
+   public void mem(String app, File workDir, int memory) throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      if (memory < 0)
+         throw new IllegalArgumentException("Memory reservation for application may not be negative. ");
+
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+      mem(getCredentials(), app, memory, true);
+   }
+
+   private void mem(CloudfoundryCredentials credentials, String app, int memory, boolean restart) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      int currentMem = appInfo.getResources().getMemory();
+      if (memory != currentMem)
+      {
+         SystemInfo systemInfo = systemInfo(credentials);
+         SystemResources limits = systemInfo.getLimits();
+         SystemResources usage = systemInfo.getUsage();
+         if (limits != null && usage != null //
+            && (appInfo.getInstances() * (memory - currentMem)) > (limits.getMemory() - usage.getMemory()))
+         {
+            throw new IllegalStateException("Not enough resources. " //
+               + "Available memory " //
+               + ((limits.getMemory() - usage.getMemory()) + currentMem) //
+               + "M but " //
+               + (appInfo.getInstances() * memory) //
+               + "M required. ");
+         }
+         appInfo.getResources().setMemory(memory);
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         if (restart && "STARTED".equals(appInfo.getState()))
+            restartApplication(credentials, app);
+      }
+   }
+
+   /**
+    * @param name application name to scale application instances up or down. If <code>null</code> then try to determine
+    *           application name. To be able determine application name <code>workDir</code> must not be
+    *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>name</code> parameter must be not <code>null</code>
+    * @param expression how should we change number of instances. Expected are:
+    *           <ul>
+    *           <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
+    *           <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
+    *           <li>&lt;+num&gt; - decrease by &lt;num&gt; of instances</li>
+    *           </ul>
+    * @throws CloudfoundryException if cloud foundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public void instances(String app, File workDir, String expression) throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(workDir);
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+      }
+      instances(getCredentials(), app, expression, true);
+   }
+
+   private void instances(CloudfoundryCredentials credentials, String app, String expression, boolean restart)
+      throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      Matcher m = INSTANCE_UPDATE_EXPR.matcher(expression);
+      if (!m.matches())
+         throw new IllegalArgumentException("Invalid number of instances " + expression + ". ");
+
+      String sign = m.group(1);
+      String val = m.group(2);
+
+      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      int currentInst = appInfo.getInstances();
+      int newInst = sign == null //
+         ? Integer.parseInt(expression) //
+         : sign.equals("-") // 
+            ? currentInst - Integer.parseInt(val) //
+            : currentInst + Integer.parseInt(val);
+      if (newInst < 1)
+         throw new IllegalArgumentException("Invalid number of instances " + newInst //
+            + ". Must be at least one instance. ");
+      if (currentInst != newInst)
+      {
+         appInfo.setInstances(newInst);
+         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         if (restart && "STARTED".equals(appInfo.getState()))
+            restartApplication(credentials, app);
+      }
+   }
+
    public void deleteApplication(String app, File workDir, boolean deleteServices) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
@@ -624,7 +749,7 @@ public class Cloudfoundry
       if (updated)
       {
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
-         if (restart)
+         if (restart && "STARTED".equals(appInfo.getState()))
             restartApplication(credentials, app);
       }
    }
@@ -654,7 +779,7 @@ public class Cloudfoundry
       if (services != null && services.size() > 0 && services.remove(name))
       {
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
-         if (restart)
+         if (restart && "STARTED".equals(appInfo.getState()))
             restartApplication(credentials, app);
       }
    }
@@ -696,13 +821,13 @@ public class Cloudfoundry
       if (updated)
       {
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
-         if (restart)
+         if (restart && "STARTED".equals(appInfo.getState()))
             restartApplication(credentials, app);
       }
    }
 
-   public void environmentDelete(String app, File workDir, String key) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   public void environmentDelete(String app, File workDir, String key) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -739,7 +864,7 @@ public class Cloudfoundry
       if (updated)
       {
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
-         if (restart)
+         if (restart && "STARTED".equals(appInfo.getState()))
             restartApplication(credentials, app);
       }
    }
@@ -808,98 +933,6 @@ public class Cloudfoundry
          }
       }
       return name;
-   }
-
-   private Framework detectFramework(File path) throws IOException
-   {
-      if (new File(path, "config/environment.rb").exists())
-         return FRAMEWORKS.get("rails3");
-
-      // Lookup *.war file. Lookup in 'target' directory, maven project structure expected.
-      File[] files = new File(path, "target").listFiles(FilesHelper.WAR_FILE_FILTER);
-      if (files != null && files.length > 0)
-      {
-         // Spring application ?
-         File warFile = files[0];
-         ZipInputStream zip = null;
-         try
-         {
-            zip = new ZipInputStream(new FileInputStream(warFile));
-            Matcher m1 = null;
-            Matcher m2 = null;
-            Matcher m3 = null;
-            for (ZipEntry e = zip.getNextEntry(); e != null; e = zip.getNextEntry())
-            {
-               String name = e.getName();
-               m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
-               if (m1.matches())
-                  return FRAMEWORKS.get("spring");
-
-               m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
-               if (m2.matches())
-                  return FRAMEWORKS.get("spring");
-
-               m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
-               if (m3.matches())
-                  return FRAMEWORKS.get("grails");
-            }
-         }
-
-         finally
-         {
-            if (zip != null)
-               zip.close();
-         }
-
-         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
-         return FRAMEWORKS.get("spring");
-      }
-
-      // Lookup *.rb files. 
-      files = path.listFiles(FilesHelper.RUBY_FILE_FILTER);
-
-      if (files != null && files.length > 0)
-      {
-         Matcher m = null;
-         // Check each ruby file to include "sinatra" import. 
-         for (int i = 0; i < files.length; i++)
-         {
-            BufferedReader freader = null;
-            try
-            {
-               freader = new BufferedReader(new FileReader(files[i]));
-
-               String line;
-               while ((line = freader.readLine()) != null)
-               {
-                  m = m == null ? SINATRA.matcher(line) : m.reset(line);
-                  if (m.matches())
-                     return FRAMEWORKS.get("sinatra");
-               }
-            }
-            finally
-            {
-               if (freader != null)
-                  freader.close();
-            }
-         }
-      }
-
-      // Lookup app.js, index.js or main.js files. 
-      files = path.listFiles(FilesHelper.JS_FILE_FILTER);
-
-      if (files != null && files.length > 0)
-      {
-         for (int i = 0; i < files.length; i++)
-         {
-            if ("app.js".equals(files[i].getName()) //
-               || "index.js".equals(files[i].getName()) //
-               || "main.js".equals(files[i].getName()))
-               return FRAMEWORKS.get("node");
-         }
-      }
-
-      return null;
    }
 
    private void uploadApplication(CloudfoundryCredentials credentials, String app, File workDir) throws IOException,
@@ -1058,6 +1091,8 @@ public class Cloudfoundry
       }
    }
 
+   /* ------------------------- HTTP --------------------------- */
+
    private String postJson(String url, String authToken, String body, int success) throws CloudfoundryException,
       IOException, ParsingResponseException
    {
@@ -1198,5 +1233,14 @@ public class Cloudfoundry
       seconds -= minutes * 60;
       String s = days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
       return s;
+   }
+
+   public static void main(String[] args) throws Exception
+   {
+      Cloudfoundry cf = new Cloudfoundry(new DefaultCloudfoundryAuthenticator());
+      //System.err.println(JsonHelper.toJson(cf.systemInfo()));
+      cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "-2");
+      /*cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "-1");
+      cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "+3");*/
    }
 }

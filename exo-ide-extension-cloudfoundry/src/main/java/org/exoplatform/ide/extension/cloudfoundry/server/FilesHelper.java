@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.DigestInputStream;
@@ -28,7 +30,10 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -37,6 +42,11 @@ import java.util.zip.ZipOutputStream;
  */
 class FilesHelper
 {
+   static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
+   static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
+   static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
+   static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
+
    static final FilenameFilter EXCLUDE_FILE_FILTER = new FilenameFilter()
    {
       @Override
@@ -199,5 +209,97 @@ class FilesHelper
          }
       }
       return fileOrDir.delete();
+   }
+
+   static String detectFramework(File path) throws IOException
+   {
+      if (new File(path, "config/environment.rb").exists())
+         return "rails3";
+   
+      // Lookup *.war file. Lookup in 'target' directory, maven project structure expected.
+      File[] files = new File(path, "target").listFiles(WAR_FILE_FILTER);
+      if (files != null && files.length > 0)
+      {
+         // Spring application ?
+         File warFile = files[0];
+         ZipInputStream zip = null;
+         try
+         {
+            zip = new ZipInputStream(new FileInputStream(warFile));
+            Matcher m1 = null;
+            Matcher m2 = null;
+            Matcher m3 = null;
+            for (ZipEntry e = zip.getNextEntry(); e != null; e = zip.getNextEntry())
+            {
+               String name = e.getName();
+               m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
+               if (m1.matches())
+                  return "spring";
+   
+               m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
+               if (m2.matches())
+                  return "spring";
+   
+               m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
+               if (m3.matches())
+                  return "grails";
+            }
+         }
+   
+         finally
+         {
+            if (zip != null)
+               zip.close();
+         }
+   
+         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
+         return "spring";
+      }
+   
+      // Lookup *.rb files. 
+      files = path.listFiles(RUBY_FILE_FILTER);
+   
+      if (files != null && files.length > 0)
+      {
+         Matcher m = null;
+         // Check each ruby file to include "sinatra" import. 
+         for (int i = 0; i < files.length; i++)
+         {
+            BufferedReader freader = null;
+            try
+            {
+               freader = new BufferedReader(new FileReader(files[i]));
+   
+               String line;
+               while ((line = freader.readLine()) != null)
+               {
+                  m = m == null ? SINATRA.matcher(line) : m.reset(line);
+                  if (m.matches())
+                     return "sinatra";
+               }
+            }
+            finally
+            {
+               if (freader != null)
+                  freader.close();
+            }
+         }
+      }
+   
+      // Lookup app.js, index.js or main.js files. 
+      files = path.listFiles(JS_FILE_FILTER);
+   
+      if (files != null && files.length > 0)
+      {
+         for (int i = 0; i < files.length; i++)
+         {
+            if ("app.js".equals(files[i].getName()) //
+               || "index.js".equals(files[i].getName()) //
+               || "main.js".equals(files[i].getName()))
+               return "node";
+         }
+      }
+   
+      return null;
    }
 }
