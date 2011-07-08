@@ -1187,9 +1187,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          return;
       }
       
-      // restore position for outline panel
-      goToPosition(cursorPositionRow, cursorPositionCol);
-      
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
