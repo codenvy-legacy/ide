@@ -153,13 +153,14 @@ public class CloudfoundryService
 
    @Path("apps/restart")
    @POST
-   public void restartApplication( //
+   @Produces(MediaType.APPLICATION_JSON)
+   public CloudfoundryApplication restartApplication( //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.restartApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return cloudfoundry.restartApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("apps/rename")

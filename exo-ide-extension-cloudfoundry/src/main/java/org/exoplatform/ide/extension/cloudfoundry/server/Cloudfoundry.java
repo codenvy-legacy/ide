@@ -64,8 +64,6 @@ import java.util.regex.Pattern;
  */
 public class Cloudfoundry
 {
-   private static final Pattern INSTANCE_UPDATE_EXPR = Pattern.compile("([+-])?(\\d+)");
-
    // TODO get list of supported frameworks from Cloud Foundry server.
    public static final Map<String, Framework> FRAMEWORKS;
    static
@@ -372,8 +370,23 @@ public class Cloudfoundry
       }
    }
 
-   public void restartApplication(String app, File workDir) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   /**
+    * Restart application.
+    * 
+    * @param app application. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @return since restart application may take a while time return info with current state of application. If
+    *         {@link CloudfoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
+    *         check status of application later to be sure it started
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public CloudfoundryApplication restartApplication(String app, File workDir) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -381,16 +394,29 @@ public class Cloudfoundry
          if (app == null || app.isEmpty())
             throw new IllegalStateException("Not cloud foundry application. ");
       }
-      restartApplication(getCredentials(), app);
+      return restartApplication(getCredentials(), app);
    }
 
-   private void restartApplication(CloudfoundryCredentials credentials, String app) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private CloudfoundryApplication restartApplication(CloudfoundryCredentials credentials, String app)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       stopApplication(credentials, app);
-      startApplication(credentials, app);
+      return startApplication(credentials, app);
    }
 
+   /**
+    * Rename application.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param newname new name for application
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void renameApplication(String app, String newname, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
@@ -417,6 +443,18 @@ public class Cloudfoundry
       putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
    }
 
+   /**
+    * Update application. Upload all files that has changes to cloud controller.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void updateApplication(String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -441,6 +479,21 @@ public class Cloudfoundry
          restartApplication(credentials, app);
    }
 
+   /**
+    * Register new URL for application. From start application has single URL, e.g. <i>my-app.cloudfoundry.com</i>. This
+    * method adds new URL for application. If parameter <code>url</code> is <i>my-app2.cloudfoundry.com</i> the
+    * application may be accessed with URLs: <i>my-app.cloudfoundry.com</i> and <i>my-app2.cloudfoundry.com</i> .
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param url new URL registered for application
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void mapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -483,6 +536,19 @@ public class Cloudfoundry
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
    }
 
+   /**
+    * Unregister the application from the <code>url</code>.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param url URL unregistered for application. Application not accessible with URL any more
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void unmapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -512,6 +578,20 @@ public class Cloudfoundry
          putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
    }
 
+   /**
+    * Update amount of memory allocated for application.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param memory memory size in megabytes. If application use more than one instance then specified size of memory
+    *           reserved on each instance used by application
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void mem(String app, File workDir, int memory) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -555,6 +635,8 @@ public class Cloudfoundry
    }
 
    /**
+    * Update number of instance of application.
+    * 
     * @param app application name to scale application instances up or down. If <code>null</code> then try to determine
     *           application name. To be able determine application name <code>workDir</code> must not be
     *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
@@ -581,6 +663,9 @@ public class Cloudfoundry
       }
       instances(getCredentials(), app, expression, true);
    }
+
+   /** Instance update expression pattern. */
+   private static final Pattern INSTANCE_UPDATE_EXPR = Pattern.compile("([+-])?(\\d+)");
 
    private void instances(CloudfoundryCredentials credentials, String app, String expression, boolean restart)
       throws IOException, ParsingResponseException, CloudfoundryException
@@ -611,6 +696,19 @@ public class Cloudfoundry
       }
    }
 
+   /**
+    * Delete application.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param deleteServices if <code>true</code> then delete all services bounded to application
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void deleteApplication(String app, File workDir, boolean deleteServices) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
@@ -639,6 +737,20 @@ public class Cloudfoundry
       }
    }
 
+   /**
+    * Get application statistics.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @return statistics of application as Map. In Map key is name (index) of instances and corresponded value is
+    *         application statistic for this instance
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public Map<String, CloudfoundaryApplicationStatistics> applicationStats(String app, File workDir)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
@@ -695,6 +807,14 @@ public class Cloudfoundry
       return Collections.emptyMap();
    }
 
+   /**
+    * Get services available and already in use.
+    * 
+    * @return info about available and used services
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public CloudfoundryServices services() throws IOException, ParsingResponseException, CloudfoundryException
    {
       CloudfoundryCredentials credentials = getCredentials();
@@ -718,17 +838,32 @@ public class Cloudfoundry
          ProvisionedService[].class, null);
    }
 
+   /**
+    * Create new service.
+    * 
+    * @param service type of service to create. Should be one from system service, see {@link #services()}, e.g.
+    *           <i>mysql</i> or <i>mongodb</i>
+    * @param name name for new service (optional). If not specified that random name generated
+    * @param app application name (optional). If other then <code>null</code> than bind newly created service to
+    *           application
+    * @param workDir application working directory (optional). May be <code>null</code> if command executed out of
+    *           working directory
+    * @return info about newly created service
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public ProvisionedService createService(String service, String name, String app, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
+      if (service == null || service.isEmpty())
+         throw new IllegalArgumentException("Service type required. ");
+
       // If application name is null and working directory null or application
       // name cannot be determined in some reasons then not bind new service
       // to any application.
       if (app == null || app.isEmpty())
          app = detectApplicationName(workDir);
-
-      if (service == null || service.isEmpty())
-         throw new IllegalArgumentException("Service type required. ");
 
       return createService(getCredentials(), service, name, app);
    }
@@ -766,6 +901,14 @@ public class Cloudfoundry
       return res;
    }
 
+   /**
+    * Delete provisioned service.
+    * 
+    * @param name name of service to delete
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void deleteService(String name) throws IOException, ParsingResponseException, CloudfoundryException
    {
       if (name == null || name.isEmpty())
@@ -780,6 +923,19 @@ public class Cloudfoundry
       deleteJson(credentials.getTarget() + "/services/" + name, credentials.getToken(), 200);
    }
 
+   /**
+    * Bind provisioned service to application.
+    * 
+    * @param name provisioned service name
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void bindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -822,6 +978,19 @@ public class Cloudfoundry
       }
    }
 
+   /**
+    * Unbind provisioned service to application.
+    * 
+    * @param name provisioned service name
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void unbindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -852,6 +1021,20 @@ public class Cloudfoundry
       }
    }
 
+   /**
+    * Add new environment variable. One key may have multiple values.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param key key
+    * @param val value
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void environmentAdd(String app, File workDir, String key, String val) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
@@ -894,6 +1077,19 @@ public class Cloudfoundry
       }
    }
 
+   /**
+    * Delete environment variable. <b>NOTE</b> If more then one values assigned to the key than remove first one only.
+    * 
+    * @param app application name. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param key key
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void environmentDelete(String app, File workDir, String key) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -955,7 +1151,7 @@ public class Cloudfoundry
    {
       CloudfoundryCredentials credentials = authenticator.readCredentials();
       if (credentials == null)
-         throw new CloudfoundryException(401, "Authentication required.\n", "text/plain");
+         throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
       return credentials;
    }
 
@@ -1301,14 +1497,5 @@ public class Cloudfoundry
       seconds -= minutes * 60;
       String s = days + "d:" + hours + "h:" + minutes + "m:" + seconds + "s";
       return s;
-   }
-
-   public static void main(String[] args) throws Exception
-   {
-      Cloudfoundry cf = new Cloudfoundry(new DefaultCloudfoundryAuthenticator());
-      //System.err.println(JsonHelper.toJson(cf.systemInfo()));
-      cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "-2");
-      /*cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "-1");
-      cf.instances(null, new File("/home/andrew/temp/cloudfoundry/hello"), "+3");*/
    }
 }
