@@ -109,7 +109,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
        */
       IDEIconSet.init();
       
-      new PopupWindowLogger();
+      //new PopupWindowLogger();
 
       /*
        * Initialise SeleniumTestsHelper
@@ -129,12 +129,14 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       EVENT_BUS.fireEvent(new AddControlsFormatterEvent(new NewItemControlsFormatter()));
 
       new AskForValueDialog(EVENT_BUS);
-      new LoginPresenter(EVENT_BUS);
 
       Log.info("Creating IDE form..........");
       
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
+
+      new LoginPresenter(EVENT_BUS);
+
       new DownloadForm(EVENT_BUS);
       new ViewHighlightManager(EVENT_BUS);
       new ApplicationStateSnapshotListener(EVENT_BUS);

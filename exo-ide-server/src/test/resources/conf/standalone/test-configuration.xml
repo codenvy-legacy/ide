@@ -155,8 +155,7 @@
    </component>
 
    <external-component-plugins>
-      <target-component>org.exoplatform.services.naming.InitialContextInitializer
-		</target-component>
+      <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
          <name>bind.datasource</name>
          <set-method>addPlugin</set-method>
@@ -187,50 +186,42 @@
    </external-component-plugins>
 
    <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl
-		</target-component>
+      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
       <component-plugin>
          <name>ws.rs.method.filter</name>
          <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin
-			</type>
+         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
          <init-params>
             <value-param>
                <name>method.access.filter</name>
-               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter
-					</value>
+               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>
             </value-param>
          </init-params>
       </component-plugin>
       <component-plugin>
          <name>ws.rs.method.filter</name>
          <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin
-			</type>
+         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
       </component-plugin>
       <component-plugin>
          <name>ws.rs.entity.provider</name>
          <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin
-			</type>
+         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin</type>
          <init-params>
             <value-param>
                <name>ws.rest.ext.HierarchicalPropertyEntityProvider</name>
-               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider
-					</value>
+               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</value>
             </value-param>
          </init-params>
       </component-plugin>
       <component-plugin>
          <name>ws.rs.request.filter</name>
          <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin
-			</type>
+         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin</type>
          <init-params>
             <value-param>
                <name>ws.rs.request.method-override-filter</name>
-               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter
-					</value>
+               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter</value>
             </value-param>
          </init-params>
       </component-plugin>

@@ -118,7 +118,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
       
       /*
-      // Uncomment this to shows Image on the top of IDE to see how the Login Window looks.
+      // Uncomment this to show Image at the top of IDE to see how the Login Window looks.
       Image showLoginImage = new Image(IDEImageBundle.INSTANCE.browser());
       showLoginImage.getElement().getStyle().setZIndex(Integer.MAX_VALUE);
       RootPanel.get().add(showLoginImage, 300, 0);

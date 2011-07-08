@@ -137,7 +137,7 @@ public class PopupWindowLogger extends Log
    {
       try
       {
-//         log("[INFO] " + message);
+         log("[INFO] " + message);
       }
       catch (Throwable e)
       {

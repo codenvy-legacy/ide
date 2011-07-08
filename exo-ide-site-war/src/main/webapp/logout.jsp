@@ -10,8 +10,8 @@
 <%@page import="java.util.*"%>
 <%
    session.invalidate();
-   response.sendRedirect("/IDE/Application.html");
+   //response.sendRedirect("/IDE/Application.html");
+   response.sendRedirect("/");
 %>
 </body>
 </html>
-

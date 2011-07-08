@@ -11,9 +11,11 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-SNAPSHOT</version>
    </parent>
+   
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
    <packaging>pom</packaging>
    <name>eXo IDE :: Assemblies Tomcat</name>
+   
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -34,6 +36,7 @@
          <type>war</type>
       </dependency>
    </dependencies>
+   
    <build>
       <plugins>
          <plugin>
