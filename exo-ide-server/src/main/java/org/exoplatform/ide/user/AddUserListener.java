@@ -18,14 +18,9 @@
  */
 package org.exoplatform.ide.user;
 
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashSet;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.ws.rs.core.SecurityContext;
 
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
@@ -40,8 +35,6 @@ import org.exoplatform.services.organization.MembershipTypeHandler;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
 
 /**
  * This class handles creation of the user and automatically adds it to the "/ide/users" and "/ide/developers" groups. 
@@ -111,27 +104,20 @@ public class AddUserListener extends UserEventListener
    public void addMember(String userid, String groupid) throws Exception
    {
       String membership = "member";
-      try
-      {
-         User user = organizationService.getUserHandler().findUserByName(userid);
-         if (user == null)
-            throw new OrganizationServiceException("User '" + userid + "' does not exist. ");
-         if (!groupid.startsWith("/"))
-            groupid = "/" + groupid;
-         Group group = organizationService.getGroupHandler().findGroupById(groupid);
-         if (group == null)
-            throw new OrganizationServiceException("Group '" + groupid + "' does not exist. ");
-         org.exoplatform.services.organization.MembershipType membershipType =
-            organizationService.getMembershipTypeHandler().findMembershipType(membership);
-         if (membershipType == null)
-            throw new OrganizationServiceException("MembershipType '" + membership + "' is not defined. ");
-         organizationService.getMembershipHandler().linkMembership(user, group, membershipType, true);
-      }
-      catch (Exception e)
-      {
-         log.error(e.getMessage(), e);
-         throw e;
-      }
+
+      User user = organizationService.getUserHandler().findUserByName(userid);
+      if (user == null)
+         throw new OrganizationServiceException("User '" + userid + "' does not exist. ");
+      if (!groupid.startsWith("/"))
+         groupid = "/" + groupid;
+      Group group = organizationService.getGroupHandler().findGroupById(groupid);
+      if (group == null)
+         throw new OrganizationServiceException("Group '" + groupid + "' does not exist. ");
+      org.exoplatform.services.organization.MembershipType membershipType =
+         organizationService.getMembershipTypeHandler().findMembershipType(membership);
+      if (membershipType == null)
+         throw new OrganizationServiceException("MembershipType '" + membership + "' is not defined. ");
+      organizationService.getMembershipHandler().linkMembership(user, group, membershipType, true);
    }
 
    /**
@@ -143,6 +129,7 @@ public class AddUserListener extends UserEventListener
    private void createUserFolder(String userId) throws RepositoryException
    {
       ManageableRepository repository = repositoryService.getCurrentRepository();
+
       Session session = repository.getSystemSession(WORKSPACE_NAME);
       Node rootNode = session.getRootNode();
 
@@ -150,12 +137,13 @@ public class AddUserListener extends UserEventListener
 
       userNode.addMixin("exo:owneable");
       userNode.addMixin("exo:privilegeable");
-      
+
       ((NodeImpl)userNode).setPermission(userId, PermissionType.ALL);
       ((NodeImpl)userNode).setPermission("*:" + IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
       ((NodeImpl)userNode).removePermission("any");
 
       session.save();
+      session.logout();
    }
 
    /**
@@ -166,7 +154,6 @@ public class AddUserListener extends UserEventListener
    private void ensureMembershipsCreated() throws Exception
    {
       MembershipTypeHandler membershipTypeHandler = organizationService.getMembershipTypeHandler();
-
       if (membershipTypeHandler.findMembershipType("member") == null)
       {
          MembershipType membershipType = membershipTypeHandler.createMembershipTypeInstance();
@@ -190,14 +177,10 @@ public class AddUserListener extends UserEventListener
    {
       super.postSave(user, isNew);
 
-      EnvironmentContext env = new EnvironmentContext();
-      env.put(SecurityContext.class, new DummySecurityContext(new Principal()
+      if (!isNew)
       {
-         public String getName()
-         {
-            return "admin";
-         }
-      }, new HashSet<String>(Arrays.asList("administrators"))));
+         return;
+      }
 
       ensureMembershipsCreated();
 
