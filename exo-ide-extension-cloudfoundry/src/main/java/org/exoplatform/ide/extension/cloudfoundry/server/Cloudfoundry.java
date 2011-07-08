@@ -101,11 +101,22 @@ public class Cloudfoundry
       authenticator.login(email, password);
    }
 
+   /**
+    * Remove locally saved authentication token. Need use {@link #login(String, String)} again.
+    */
    public void logout()
    {
       authenticator.logout();
    }
 
+   /**
+    * Get current account status (available and used resources, owner email, cloud controller description, etc)
+    * 
+    * @return account info
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public SystemInfo systemInfo() throws CloudfoundryException, IOException, ParsingResponseException
    {
       return systemInfo(getCredentials());
@@ -118,6 +129,19 @@ public class Cloudfoundry
          SystemInfo.class, null);
    }
 
+   /**
+    * Get info about application.
+    * 
+    * @param app application name to get info about. If <code>null</code> then try to determine application name. To be
+    *           able determine application name <code>workDir</code> must not be <code>null</code> at least. If name not
+    *           specified and cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @return application info
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public CloudfoundryApplication applicationInfo(String app, File workDir) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
@@ -137,6 +161,23 @@ public class Cloudfoundry
          CloudfoundryApplication.class, null);
    }
 
+   /**
+    * Create new application.
+    * 
+    * @param app application name. This parameter is mandatory.
+    * @param framework type of framework (optional). If <code>null</code> then try determine type of framework by
+    *           discovering content of <code>workDir</code>
+    * @param url URL for new application (optional). If <code>null</code> then URL: &lt;app&gt;.cloudfoundry.com
+    * @param instances number of instances for application. If less of equals zero then assume 1 instance
+    * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value
+    *           which is dependents to framework type
+    * @param nostart if <code>true</code> then do not start newly created application
+    * @param workDir directory that contains source code (Ruby) or compiled and packed java web application
+    * @return info about newly created application
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public CloudfoundryApplication createApplication(String app, String framework, String url, int instances,
       int memory, boolean nostart, File workDir) throws CloudfoundryException, IOException, ParsingResponseException
    {
@@ -237,6 +278,21 @@ public class Cloudfoundry
       return appInfo;
    }
 
+   /**
+    * Start application if it not started yet.
+    * 
+    * @param app application. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @return since start application may take a while time return info with current state of application. If
+    *         {@link CloudfoundryApplication#getState()} gives something other then 'STARTED' caller should wait and
+    *         check status of application later to be sure it started
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public CloudfoundryApplication startApplication(String app, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
@@ -280,6 +336,18 @@ public class Cloudfoundry
       return appInfo;
    }
 
+   /**
+    * Stop application if it not stopped yet.
+    * 
+    * @param app application. If <code>null</code> then try to determine application name. To be able determine
+    *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir application working directory. May be <code>null</code> if command executed out of working
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
    public void stopApplication(String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
@@ -487,11 +555,11 @@ public class Cloudfoundry
    }
 
    /**
-    * @param name application name to scale application instances up or down. If <code>null</code> then try to determine
+    * @param app application name to scale application instances up or down. If <code>null</code> then try to determine
     *           application name. To be able determine application name <code>workDir</code> must not be
     *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
     * @param workDir application working directory. May be <code>null</code> if command executed out of working
-    *           directory in this case <code>name</code> parameter must be not <code>null</code>
+    *           directory in this case <code>app</code> parameter must be not <code>null</code>
     * @param expression how should we change number of instances. Expected are:
     *           <ul>
     *           <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>

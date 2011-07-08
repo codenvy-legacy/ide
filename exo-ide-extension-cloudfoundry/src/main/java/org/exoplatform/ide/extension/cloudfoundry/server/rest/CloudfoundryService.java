@@ -56,6 +56,10 @@ public class CloudfoundryService
    @javax.inject.Inject
    private Cloudfoundry cloudfoundry;
 
+   public CloudfoundryService()
+   {
+   }
+
    protected CloudfoundryService(Cloudfoundry cloudfoundry)
    {
       // Use this constructor when deploy CloudfoundryService as singleton resource.
