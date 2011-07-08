@@ -62,17 +62,8 @@ public interface IdeEditorLocalizationConstant extends Constants
    @Key("codeMirror.textEditor")
    String codeMirrorTextEditor();
    
-   @Key("codeMirror.javascriptEditor")
-   String codeMirrorJavascriptEditor();
-   
    @Key("codeMirror.cssEditor")
    String codeMirrorCssEditor();
-   
-   @Key("codeMirror.htmlEditor")
-   String codeMirrorHtmlEditor();
-   
-   @Key("ckEditor.htmlEditor")
-   String ckEditorHtmlEditor();
    
    /*
     * GoToLineForm

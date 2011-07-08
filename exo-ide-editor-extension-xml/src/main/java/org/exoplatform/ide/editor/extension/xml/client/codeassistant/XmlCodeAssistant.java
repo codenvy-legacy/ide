@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.editor.extension.xml.client.codeassistant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -34,7 +27,14 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlTokenWidget;
+import org.exoplatform.ide.editor.extension.xml.client.codeassistant.ui.XmlTokenWidget;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -141,7 +141,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
    @Override
    public TokenWidget buildTokenWidget(Token token)
    {
-      return new HtmlTokenWidget(token);
+      return new XmlTokenWidget(token);
    }
 
    /**

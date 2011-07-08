@@ -40,12 +40,15 @@ public class XmlEditor extends Extension
    
    public final static XmlConstant CONSTANT = GWT.create(XmlConstant.class);
    
+   public static final XmlClientBundle RESOURCES = GWT.create(XmlClientBundle.class);
+   
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
+      RESOURCES.css().ensureInjected();
       
       CodeAssistant xmlAssistant = new XmlCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml",

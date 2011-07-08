@@ -38,9 +38,9 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.extension.javascript.client.codeassistant.JavaScriptCodeAssistant;
 
 import java.util.ArrayList;
 import java.util.Collections;

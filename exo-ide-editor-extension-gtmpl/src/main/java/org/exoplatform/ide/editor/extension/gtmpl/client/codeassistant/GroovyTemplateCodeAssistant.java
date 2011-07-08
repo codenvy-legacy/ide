@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.GroovyCodeAssistant;
+import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
 

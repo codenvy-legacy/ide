@@ -28,8 +28,8 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
 
 import java.util.List;
 

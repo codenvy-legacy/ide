@@ -25,20 +25,12 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
-import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
-import org.exoplatform.ide.editor.codeassistant.javascript.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.codemirror.parser.CssParser;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
-import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,40 +52,6 @@ public class EditorFactory
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
          Images.FileTypes.TXT, true, new CodeMirrorConfiguration()));
 
-      JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
-         IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-            setParser(new JavaScriptParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(javaScriptCodeAssistant)            
-      ));
-
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(),
-         "js", Images.FileTypes.JAVASCRIPT, true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-            setParser(new JavaScriptParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(javaScriptCodeAssistant)            
-      ));
-
-      addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT,
-         IDE.EDITOR_CONSTANT.codeMirrorJavascriptEditor(), "js", Images.FileTypes.JAVASCRIPT, true,
-         new CodeMirrorConfiguration().
-            setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
-            setParser(new JavaScriptParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
-            setCodeAssistant(javaScriptCodeAssistant)            
-      ));
-
       addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, IDE.EDITOR_CONSTANT.codeMirrorCssEditor(), "css",
          Images.FileTypes.CSS, true, 
          new CodeMirrorConfiguration().
@@ -102,22 +60,6 @@ public class EditorFactory
             setParser(new CssParser()).
             setCodeAssistant(new CssCodeAssistant())         
       ));
-
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.codeMirrorHtmlEditor(), "html",
-         Images.FileTypes.HTML, true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-               + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-            setParser(new HtmlParser()).
-            setCanBeOutlined(true).
-            setAutocompleteHelper(new HtmlAutocompleteHelper()).
-            setCodeAssistant(new HtmlCodeAssistant()).
-            setCanHaveSeveralMimeTypes(true)
-      ));   
-
-      addEditor(new CKEditorProducer(MimeType.TEXT_HTML, IDE.EDITOR_CONSTANT.ckEditorHtmlEditor(), "html",
-         Images.FileTypes.HTML, false, new CKEditorConfiguration()));
 
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();

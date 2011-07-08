@@ -43,6 +43,16 @@
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-html</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-javascript</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-java</artifactId>
       </dependency>
 

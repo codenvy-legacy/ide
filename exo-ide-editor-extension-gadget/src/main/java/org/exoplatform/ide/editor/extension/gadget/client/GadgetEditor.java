@@ -25,11 +25,11 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
-import org.exoplatform.ide.editor.codeassistant.html.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.gadget.client.codemirror.GoogleGadgetParser;
+import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
