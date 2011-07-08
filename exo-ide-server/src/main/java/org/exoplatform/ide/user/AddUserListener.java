@@ -43,7 +43,6 @@ import org.exoplatform.services.organization.UserEventListener;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
 import org.exoplatform.services.rest.tools.DummySecurityContext;
 
-
 /**
  * This class handles creation of the user and automatically adds it to the "/ide/users" and "/ide/developers" groups. 
  * 
@@ -54,8 +53,26 @@ import org.exoplatform.services.rest.tools.DummySecurityContext;
  */
 public class AddUserListener extends UserEventListener
 {
-   
+
+   /**
+    * Name of Workspace in which user's folder will be created.
+    */
    public static final String WORKSPACE_NAME = "dev-monit";
+
+   /**
+    * IDE Developers group.
+    */
+   public static final String IDE_DEVELOPERS_GROUP = "/ide/developers";
+
+   /**
+    * IDE Users group.
+    */
+   public static final String IDE_USERS_GROUP = "/ide/users";
+
+   /**
+    * IDE Administrators group.
+    */
+   public static final String IDE_ADMINISTRATORS_GROUP = "/ide/administrators";
 
    /**
     * ExoLogger instance.
@@ -66,7 +83,7 @@ public class AddUserListener extends UserEventListener
     * Organization Service instance. 
     */
    private OrganizationService organizationService;
-   
+
    /**
     * JCR Repository Service instance.
     */
@@ -84,7 +101,7 @@ public class AddUserListener extends UserEventListener
    }
 
    /**
-    * Adds user as "member" to specified group.
+    * Adds user to "/ide/developers" group.
     * 
     * @param userid
     * @param membership
@@ -116,28 +133,58 @@ public class AddUserListener extends UserEventListener
          throw e;
       }
    }
-   
+
    /**
-    * Creates a user's directory in workspace 'dev-monit'.
+    * Creates user's directory in workspace "dev-monit".
     * 
     * @param userId user's ID
     * @throws RepositoryException 
     */
-   private void createUserFolder(String userId) throws RepositoryException {
+   private void createUserFolder(String userId) throws RepositoryException
+   {
       ManageableRepository repository = repositoryService.getCurrentRepository();
       Session session = repository.getSystemSession(WORKSPACE_NAME);
       Node rootNode = session.getRootNode();
 
       Node userNode = rootNode.addNode(userId, "nt:folder");
+
       userNode.addMixin("exo:owneable");
       userNode.addMixin("exo:privilegeable");
-      session.save();
       
-      ((NodeImpl)userNode).setPermission (userId, PermissionType.ALL);
+      ((NodeImpl)userNode).setPermission(userId, PermissionType.ALL);
+      ((NodeImpl)userNode).setPermission("*:" + IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
       ((NodeImpl)userNode).removePermission("any");
+
       session.save();
    }
 
+   /**
+    * Ensure memberships creates.
+    * 
+    * @throws Exception
+    */
+   private void ensureMembershipsCreated() throws Exception
+   {
+      MembershipTypeHandler membershipTypeHandler = organizationService.getMembershipTypeHandler();
+
+      if (membershipTypeHandler.findMembershipType("member") == null)
+      {
+         MembershipType membershipType = membershipTypeHandler.createMembershipTypeInstance();
+         membershipType.setName("member");
+         membershipTypeHandler.createMembershipType(membershipType, true);
+      }
+
+      if (membershipTypeHandler.findMembershipType("administrator") == null)
+      {
+         MembershipType membershipType = membershipTypeHandler.createMembershipTypeInstance();
+         membershipType.setName("administrator");
+         membershipTypeHandler.createMembershipType(membershipType, true);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.services.organization.UserEventListener#postSave(org.exoplatform.services.organization.User, boolean)
+    */
    @Override
    public void postSave(User user, boolean isNew) throws Exception
    {
@@ -152,41 +199,26 @@ public class AddUserListener extends UserEventListener
          }
       }, new HashSet<String>(Arrays.asList("administrators"))));
 
-      MembershipTypeHandler membershipTypeHandler = organizationService.getMembershipTypeHandler();
-
-      if (membershipTypeHandler.findMembershipType("member") == null)
-      {
-         MembershipType membershipType = membershipTypeHandler.createMembershipTypeInstance();
-         membershipType.setName("member");
-         membershipTypeHandler.createMembershipType(membershipType, true);
-      }
-      
-      if (membershipTypeHandler.findMembershipType("administrator") == null)
-      {
-         MembershipType membershipType = membershipTypeHandler.createMembershipTypeInstance();
-         membershipType.setName("administrator");
-         membershipTypeHandler.createMembershipType(membershipType, true);
-      }
+      ensureMembershipsCreated();
 
       try
       {
-         addMember(user.getUserName(), "/ide/developers");
-         addMember(user.getUserName(), "/ide/users");
+         addMember(user.getUserName(), IDE_DEVELOPERS_GROUP);
+         addMember(user.getUserName(), IDE_USERS_GROUP);
       }
       catch (Exception e)
       {
-         System.out.println("Unhandled exception > " + e.getMessage());
-         e.printStackTrace();
+         log.error("User " + user.getUserName()
+            + " can not be added as a member to /ide/developers and /ide/users groups.", e);
       }
-      
+
       try
       {
          createUserFolder(user.getUserName());
       }
       catch (Exception e)
       {
-         System.out.println("Unhandled exception > " + e.getMessage());
-         e.printStackTrace();
+         log.error("Folder for '" + user.getUserName() + "' can not be created.", e);
       }
 
    }

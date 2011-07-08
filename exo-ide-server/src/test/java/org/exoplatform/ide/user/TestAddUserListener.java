@@ -27,11 +27,14 @@ import org.exoplatform.ide.BaseTest;
  * @version $
  */
 
-public class TestCreateUser extends BaseTest
+public class TestAddUserListener extends BaseTest
 {
    
    public void testCreateUser() {
-      System.out.println("TestCreateUser.testCreateUser( >>>>>>>>>>>>>>>>> )");
+      System.out.println("TestAddUserListener.testCreateUser()");
+      
+      
+      
    }
 
 }
