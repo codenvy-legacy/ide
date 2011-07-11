@@ -112,6 +112,7 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, XML_CONTENT);
 
       saveAsUsingToolbarButton(XML_FILE);
+      System.out.println(WS_URL + "\n\n\n\n\n\n\n\n\n");
       IDE.WORKSPACE.waitForItem(WS_URL + XML_FILE);
 
       assertEquals(XML_FILE, IDE.EDITOR.getTabTitle(0));

@@ -106,17 +106,18 @@ public interface TestConstants
       /**
        * administrators and developers
        */
-      public static final String ROOT = "root";
+      String ROOT = BaseTest.IDE_SETTINGS.getString("ide.user.root.name");
+      
+      String ROOT_PASS = BaseTest.IDE_SETTINGS.getString("ide.user.root.password");
+      
       
       /**
        * developers
        */
-      public static final String JOHN = "john";
+      String DEV = BaseTest.IDE_SETTINGS.getString("ide.user.dev.name");
       
-      /**
-       * administrator
-       */
-      public static final String ADMIN = "admin";
+      String DEV_PASS = BaseTest.IDE_SETTINGS.getString("ide.user.dev.password");
+      
    }
    
    String CODEMIRROR_EDITOR_LOCATOR = "//body[@class='editbox']";

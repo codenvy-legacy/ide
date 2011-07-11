@@ -48,11 +48,6 @@ import java.security.NoSuchAlgorithmException;
 */
 public class Utils
 {
-
-   public static final String USER = "root";
-
-   public static final String PASSWD = "gtn";
-
    public static final String COMMAND = "/ide/groovy/";
 
    public static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
@@ -60,7 +55,7 @@ public class Utils
       HTTPConnection connection = new HTTPConnection(url);
       connection.setAllowUserInteraction(false);
       connection.removeModule(CookieModule.class);
-      connection.addBasicAuthorization(null, USER, PASSWD);
+      connection.addBasicAuthorization(null, BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
       return connection;
    }
 
@@ -80,8 +75,8 @@ public class Utils
    {
       HttpClient client = new HttpClient();
       client.getParams().setAuthenticationPreemptive(true);
-      Credentials defaultcreds = new UsernamePasswordCredentials(USER, PASSWD);
-      client.getState().setCredentials(new AuthScope("localhost", 8080, AuthScope.ANY_REALM), defaultcreds);
+      Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
+      client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM), defaultcreds);
       return client;
    }
 

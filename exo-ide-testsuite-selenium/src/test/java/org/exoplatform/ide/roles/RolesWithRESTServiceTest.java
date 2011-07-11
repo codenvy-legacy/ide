@@ -75,7 +75,7 @@ public class RolesWithRESTServiceTest extends BaseTest
    {
       //fix for run tests where new session start after 7 testcases passes   
       logout();
-      standaloneLogin(TestConstants.Users.ROOT);
+      standaloneLogin(TestConstants.Users.ROOT, TestConstants.Users.ROOT_PASS);
       
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
@@ -96,7 +96,7 @@ public class RolesWithRESTServiceTest extends BaseTest
       //Logout and login as developer
       logout();
       
-      standaloneLogin(TestConstants.Users.JOHN);
+      standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
       IDE.WORKSPACE.waitForRootItem();
       
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
@@ -132,40 +132,6 @@ public class RolesWithRESTServiceTest extends BaseTest
       
       IDE.REST_SERVICE.closeForm();
       IDE.REST_SERVICE.waitForLaunchRestServiceViewClosed();
-      
-     IDE.EDITOR.closeFile(0);
-   }
-
-   /**
-    * Tests allowed commands for work with REST services if user has "administrators" role.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testAdminRoleWithRESTService() throws Exception
-   {
-      selenium.refresh();
-      IDE.WORKSPACE.waitForRootItem();
-      
-      logout();
-      
-      standaloneLogin(TestConstants.Users.ADMIN);
-      IDE.WORKSPACE.waitForRootItem();
-      
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE1, false);
-      IDE.EDITOR.waitTabPresent(0);
-      //Check deploy/undeploy is allowed for administrator
-      checkDeployUndeployAllowed(true);
-      // Check run service is not available for administrator
-      checkRunService(false);
-      //Check set autoload property is allowed for administrator
-      checkSetAutoload(true);
-      //Check deploy/undeploy in sandbox is not available for administrator
-      checkSandbox(false);
-      // Check validate service is allowed for administrator
-      checkValidateService(true);
-      // Check launch service is allowed for administrator
-      checkLaunchService(true);
       
      IDE.EDITOR.closeFile(0);
    }

@@ -154,7 +154,7 @@ public class VirtualFileSystemUtils
    {
 
       File f = new File(zipPath);
-      PostMethod filePost = new PostMethod("http://localhost:8080/rest/private/ide/upload/folder");
+      PostMethod filePost = new PostMethod(BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/upload/folder");
       Part[] parts = {new StringPart("location", storageUrl), new FilePart("file", f)};
       filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
       HttpClient client = Utils.getHttpClient();
