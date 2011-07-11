@@ -96,6 +96,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-jsp</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-css</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

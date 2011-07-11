@@ -76,7 +76,7 @@ public class PhpClassWidget extends PhpTokenWidgetBase
 
          case INTERFACE :
 
-            return new Image(PhpClientBundle.INSTANCE.intrfaceItem());
+            return new Image(PhpClientBundle.INSTANCE.interfaceItem());
             
          case CLASS :
          default :

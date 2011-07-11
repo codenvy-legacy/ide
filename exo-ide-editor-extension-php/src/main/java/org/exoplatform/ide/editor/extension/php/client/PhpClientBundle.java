@@ -44,7 +44,7 @@ public interface PhpClientBundle extends ClientBundle
    ImageResource classItem();
 
    @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/innerinterface_public.gif")
-   ImageResource intrfaceItem();
+   ImageResource interfaceItem();
 
    @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/constant-item.png")
    ImageResource constantItem();

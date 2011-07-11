@@ -26,11 +26,9 @@ import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codeassistant.css.CssCodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,15 +49,6 @@ public class EditorFactory
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
          Images.FileTypes.TXT, true, new CodeMirrorConfiguration()));
-
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, IDE.EDITOR_CONSTANT.codeMirrorCssEditor(), "css",
-         Images.FileTypes.CSS, true, 
-         new CodeMirrorConfiguration().
-            setGenericParsers("['parsecss.js']").
-            setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").
-            setParser(new CssParser()).
-            setCodeAssistant(new CssCodeAssistant())         
-      ));
 
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();

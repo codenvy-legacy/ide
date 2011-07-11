@@ -7,9 +7,9 @@
       <version>1.2.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-editor-extension-html</artifactId>
+   <artifactId>exo-ide-editor-extension-css</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Extension : HTML</name>
+   <name>eXo IDE :: Editor : Extension : CSS</name>
    <dependencies>
 
       <dependency>
@@ -29,16 +29,6 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-javascript</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-css</artifactId>
       </dependency>
       
       <dependency>

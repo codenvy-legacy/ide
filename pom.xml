@@ -243,6 +243,12 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-extension-css</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-extension-html</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -586,6 +592,7 @@
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-extension-javascript</module>
+      <module>exo-ide-editor-extension-css</module>
       <module>exo-ide-editor-extension-html</module>
       <module>exo-ide-editor-extension-gadget</module>
       <module>exo-ide-editor-extension-groovy</module>
