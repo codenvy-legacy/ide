@@ -139,7 +139,7 @@ public class WindowsLayer extends Layer implements HasViews, HasClosingViewHandl
 
       Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
       window.getElement().setAttribute("id", view.getId() + "-window");
-      window.getElement().getStyle().setProperty("zIndex", "auto");
+      //window.getElement().getStyle().setProperty("zIndex", "auto");
 
       window.setWidth(view.getDefaultWidth());
       window.setHeight(view.getDefaultHeight());

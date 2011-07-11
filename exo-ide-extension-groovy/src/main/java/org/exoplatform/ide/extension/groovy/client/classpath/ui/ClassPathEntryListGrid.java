@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
+import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
+import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Image;
-
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.extension.groovy.client.ImageUtil;
-import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 
 /**
  * Grid to display classpath sources.
@@ -85,7 +84,7 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
                      imageSrc = Images.ClassPath.SOURCE_FILE;
                   }
                   Image image = new Image(imageSrc);
-                  String imageHTML = ImageUtil.getHTML(image);
+                  String imageHTML = ImageHelper.getImageHTML(image);
                   String path = item.getPath();
                   return "<span>" + imageHTML + "&nbsp;&nbsp;" + path + "</span>";
                }

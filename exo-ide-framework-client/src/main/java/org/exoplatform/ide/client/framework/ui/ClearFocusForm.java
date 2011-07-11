@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -39,9 +41,10 @@ public class ClearFocusForm
    private ClearFocusForm()
    {
       textBox = new TextBox();
-      textBox.setWidth("10px");
-      textBox.setHeight("10px");
-      RootPanel.get().add(textBox, -100, -100);
+      textBox.getElement().getStyle().setPosition(Position.ABSOLUTE);
+      textBox.getElement().getStyle().setWidth(10, Unit.PX);
+      textBox.getElement().getStyle().setHeight(10, Unit.PX);
+      RootPanel.get().add(textBox, -10000, -10000);
    }
 
    public void clearFocus()

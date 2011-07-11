@@ -194,7 +194,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       getElement().setAttribute("view-id", id);
       getElement().setAttribute("is-active", "false");
       getElement().getStyle().setOverflow(Overflow.HIDDEN);
-
       getElement().getStyle().setLeft(-1000, Unit.PT);
       getElement().getStyle().setTop(-1000, Unit.PT);
 

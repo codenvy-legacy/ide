@@ -84,11 +84,11 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       super.moveHighlight(currentItem);
       if (currentItem.getElement().getFirstChildElement().getOffsetWidth() > tree.getOffsetWidth())
       {
-         hiPanel.setWidth(currentItem.getElement().getFirstChildElement().getOffsetWidth() + 10 + "px");
+         highlighterPanel.setWidth(currentItem.getElement().getFirstChildElement().getOffsetWidth() + 10 + "px");
       }
       else
       {
-         hiPanel.setWidth("100%");
+         highlighterPanel.setWidth("100%");
       }
    }
 
