@@ -70,23 +70,6 @@ public abstract class AbstractTestModule
 
          Thread.sleep(1);
       }
-
-      //      int WAITING_MAX_SECONDS = 10;
-      //
-      //      for (int second = 0;; second++)
-      //      {
-      //         if (second >= WAITING_MAX_SECONDS * 10)
-      //         {
-      //            fail("timeout for element " + locator);
-      //         }
-      //
-      //         if (selenium().isElementPresent(locator))
-      //         {
-      //            break;
-      //         }
-      //
-      //         Thread.sleep(100);
-      //      }
    }
 
    protected void waitForElementTextIsNotEmpty(String locator) throws Exception
