@@ -31,26 +31,11 @@ public interface CodeAssistantCss extends CssResource
    @ClassName("exo-autocomplete-panel")
    String panelStyle(); 
    
-   @ClassName("exo-autocomplete-list-item")
-   String item();
-   
-   @ClassName("exo-autocomplete-list-item-overed")
-   String overedItem();
-   
-   @ClassName("exo-autocomplete-list-item-selected")
-   String selectedItem();
-   
    @ClassName("exo-autocomplete-description")
    String description();
    
    @ClassName("exo-autocomplete-list")
    String listStyle();
-   
-   @ClassName("exo-autocomplete-fqn")
-   String fqnStyle();
-   
-   @ClassName("exo-autocomplete-keyword")
-   String keywordStyle();
    
    @ClassName("exo-autocomplete-edit")
    String edit();  
