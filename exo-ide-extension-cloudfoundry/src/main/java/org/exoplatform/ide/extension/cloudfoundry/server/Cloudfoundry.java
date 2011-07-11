@@ -186,6 +186,8 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
          throw new IllegalStateException("Application name required. ");
+      if (workDir == null && war == null)
+         throw new IllegalArgumentException("Working directory or location to WAR file required. ");
       return createApplication(getCredentials(), app, framework, url, instances, memory, nostart, workDir, war);
    }
 
@@ -293,6 +295,7 @@ public class Cloudfoundry
          else
             uploadApplication(credentials, app, workDir);
 
+         // TODO Add file that contains application name to '.gitignore'.
          writeApplicationName(workDir, app);
          if (!nostart)
             appInfo = startApplication(credentials, app);
