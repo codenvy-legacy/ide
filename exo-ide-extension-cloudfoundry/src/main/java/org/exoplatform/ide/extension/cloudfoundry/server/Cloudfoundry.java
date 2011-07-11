@@ -38,6 +38,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -172,23 +174,26 @@ public class Cloudfoundry
     *           which is dependents to framework type
     * @param nostart if <code>true</code> then do not start newly created application
     * @param workDir directory that contains source code (Ruby) or compiled and packed java web application
+    * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @return info about newly created application
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
    public CloudfoundryApplication createApplication(String app, String framework, String url, int instances,
-      int memory, boolean nostart, File workDir) throws CloudfoundryException, IOException, ParsingResponseException
+      int memory, boolean nostart, File workDir, URL war) throws CloudfoundryException, IOException,
+      ParsingResponseException
    {
       if (app == null || app.isEmpty())
          throw new IllegalStateException("Application name required. ");
-      return createApplication(getCredentials(), app, framework, url, instances, memory, nostart, workDir);
+      return createApplication(getCredentials(), app, framework, url, instances, memory, nostart, workDir, war);
    }
 
    private CloudfoundryApplication createApplication(CloudfoundryCredentials credentials, String app,
-      String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir)
+      String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir, URL war)
       throws CloudfoundryException, IOException, ParsingResponseException
    {
+      // Assume war-file may be located remotely, e.g. if use Jenkins to produce file for us.
       // Check number of applications.
       SystemInfo systemInfo = systemInfo(credentials);
       SystemResources limits = systemInfo.getLimits();
@@ -197,85 +202,106 @@ public class Cloudfoundry
          throw new IllegalStateException("Not enough resources to create new application. "
             + "Max number of applications (" + limits.getApps() + ") reached. ");
 
-      if (frameworkName == null)
-      {
-         frameworkName = FilesHelper.detectFramework(workDir);
-         // If framework cannot be detected.
-         if (frameworkName == null)
-            throw new IllegalStateException("Cannot detect application type. ");
-      }
-
-      Framework cfg = FRAMEWORKS.get(frameworkName);
-
-      if (cfg == null)
-      {
-         // If framework specified (detected) but not supported.
-         StringBuilder msg = new StringBuilder();
-         msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
-         int i = 0;
-         for (String t : FRAMEWORKS.keySet())
-         {
-            if (i > 0)
-               msg.append(" or ");
-            msg.append(t);
-            i++;
-         }
-         throw new IllegalArgumentException(msg.toString());
-      }
-
+      CloudfoundryApplication appInfo;
+      File warFile = null;
       try
       {
-         applicationInfo(credentials, app);
-         throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
+         if (frameworkName == null)
+         {
+            if (war != null)
+            {
+               warFile = downloadWarFile(app, war);
+               frameworkName = FilesHelper.detectFramework(warFile);
+            }
+            else
+            {
+               frameworkName = FilesHelper.detectFramework(workDir);
+            }
+            // If framework cannot be detected.
+            if (frameworkName == null)
+               throw new IllegalStateException("Cannot detect application type. ");
+         }
+
+         Framework cfg = FRAMEWORKS.get(frameworkName);
+
+         if (cfg == null)
+         {
+            // If framework specified (detected) but not supported.
+            StringBuilder msg = new StringBuilder();
+            msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
+            int i = 0;
+            for (String t : FRAMEWORKS.keySet())
+            {
+               if (i > 0)
+                  msg.append(" or ");
+               msg.append(t);
+               i++;
+            }
+            throw new IllegalArgumentException(msg.toString());
+         }
+
+         try
+         {
+            applicationInfo(credentials, app);
+            throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
+         }
+         catch (CloudfoundryException e)
+         {
+            // Need parse error message to check error code.
+            // If application does not exists then expected code is 301.
+            // NOTE this is not HTTP status but status of Cloudfoundry action.
+            CloudfoundryError err = toError(e);
+            if (301 != err.getCode())
+               throw e;
+            // 301 - Good, application name is not used yet.
+         }
+
+         if (appUrl == null)
+            appUrl = app + ".cloudfoundry.com";
+
+         if (instances <= 0)
+            instances = 1;
+
+         if (memory <= 0)
+            memory = cfg.getMemory();
+
+         String framework = cfg.getType();
+
+         // Check memory capacity.
+         if (!nostart //
+            && limits != null && usage != null //
+            && (instances * memory) > (limits.getMemory() - usage.getMemory()))
+         {
+            throw new IllegalStateException("Not enough resources to create new application. " //
+               + "Available memory " + //
+               (limits.getMemory() - usage.getMemory()) //
+               + "M but " //
+               + (instances * memory) //
+               + "M required. ");
+         }
+
+         String json =
+            postJson(credentials.getTarget() + "/apps", credentials.getToken(),
+               JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
+         CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
+         appInfo =
+            JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credentials.getToken(), null, 200),
+               CloudfoundryApplication.class, null);
+
+         if (warFile != null)
+            uploadApplication(credentials, app, warFile);
+         else
+            uploadApplication(credentials, app, workDir);
+
+         writeApplicationName(workDir, app);
+         if (!nostart)
+            appInfo = startApplication(credentials, app);
       }
-      catch (CloudfoundryException e)
+      finally
       {
-         // Need parse error message to check error code.
-         // If application does not exists then expected code is 301.
-         // NOTE this is not HTTP status but status of Cloudfoundry action.
-         CloudfoundryError err = toError(e);
-         if (301 != err.getCode())
-            throw e;
-         // 301 - Good, application name is not used yet.
+         if (warFile != null && warFile.exists())
+            warFile.delete();
       }
-
-      if (appUrl == null)
-         appUrl = app + ".cloudfoundry.com";
-
-      if (instances <= 0)
-         instances = 1;
-
-      if (memory <= 0)
-         memory = cfg.getMemory();
-
-      String framework = cfg.getType();
-
-      // Check memory capacity.
-      if (!nostart //
-         && limits != null && usage != null //
-         && (instances * memory) > (limits.getMemory() - usage.getMemory()))
-      {
-         throw new IllegalStateException("Not enough resources to create new application. " //
-            + "Available memory " + //
-            (limits.getMemory() - usage.getMemory()) //
-            + "M but " //
-            + (instances * memory) //
-            + "M required. ");
-      }
-
-      String json =
-         postJson(credentials.getTarget() + "/apps", credentials.getToken(),
-            JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
-      CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
-      CloudfoundryApplication appInfo =
-         JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credentials.getToken(), null, 200),
-            CloudfoundryApplication.class, null);
-
-      uploadApplication(credentials, app, workDir);
-      writeApplicationName(workDir, app);
-      if (!nostart)
-         appInfo = startApplication(credentials, app);
-
       return appInfo;
    }
 
@@ -454,15 +480,16 @@ public class Cloudfoundry
     *           cannot be determined IllegalStateException thrown
     * @param workDir application working directory. May be <code>null</code> if command executed out of working
     *           directory in this case <code>app</code> parameter must be not <code>null</code>
+    * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void updateApplication(String app, File workDir) throws IOException, ParsingResponseException,
+   public void updateApplication(String app, File workDir, URL war) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
-      if (workDir == null)
-         throw new IllegalArgumentException("Working directory required. ");
+      if (workDir == null && war == null)
+         throw new IllegalArgumentException("Working directory or location to WAR file required. ");
 
       if (app == null || app.isEmpty())
       {
@@ -470,14 +497,33 @@ public class Cloudfoundry
          if (app == null || app.isEmpty())
             throw new IllegalStateException("Not cloud foundry application. ");
       }
-      updateApplication(getCredentials(), app, workDir);
+      updateApplication(getCredentials(), app, workDir, war);
    }
 
-   private void updateApplication(CloudfoundryCredentials credentials, String app, File workDir) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void updateApplication(CloudfoundryCredentials credentials, String app, File workDir, URL war)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       CloudfoundryApplication appInfo = applicationInfo(credentials, app);
-      uploadApplication(credentials, app, workDir);
+
+      File warFile = null;
+      try
+      {
+         if (war != null)
+         {
+            warFile = downloadWarFile(app, war);
+            uploadApplication(credentials, app, warFile);
+         }
+         else
+         {
+            uploadApplication(credentials, app, workDir);
+         }
+      }
+      finally
+      {
+         if (warFile != null && warFile.exists())
+            warFile.delete();
+      }
+
       if ("STARTED".equals(appInfo.getState()))
          restartApplication(credentials, app);
    }
@@ -1202,7 +1248,7 @@ public class Cloudfoundry
       return name;
    }
 
-   private void uploadApplication(CloudfoundryCredentials credentials, String app, File workDir) throws IOException,
+   private void uploadApplication(CloudfoundryCredentials credentials, String app, File path) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       File zip = null;
@@ -1219,15 +1265,12 @@ public class Cloudfoundry
          if (!uploadDir.mkdir())
             throw new RuntimeException("Cannot create temporary directory for uploaded files. ");
 
-         List<File> files = new ArrayList<File>();
-         // Look up war file first.
-         FilesHelper.fileList(workDir, files, FilesHelper.WAR_FILE_FILTER);
-         if (files.size() > 0)
-            FilesHelper.unzip(files.get(0), uploadDir);
+         if (path.isFile() && FilesHelper.WAR_FILE_FILTER.accept(path.getParentFile(), path.getName()))
+            FilesHelper.unzip(path, uploadDir);
          else
-            FilesHelper.copyDir(workDir, uploadDir, FilesHelper.UPLOAD_FILE_FILTER);
+            FilesHelper.copyDir(path, uploadDir, FilesHelper.UPLOAD_FILE_FILTER);
 
-         files.clear();
+         List<File> files = new ArrayList<File>();
          FilesHelper.fileList(uploadDir, files, FilesHelper.UPLOAD_FILE_FILTER);
 
          long totalSize = 0;
@@ -1437,6 +1480,51 @@ public class Cloudfoundry
          if (http != null)
             http.disconnect();
       }
+   }
+
+   private File downloadWarFile(String app, URL url) throws IOException
+   {
+      File war = File.createTempFile("vmc_" + app, ".war");
+      URLConnection conn = null;
+      String protocol = url.getProtocol().toLowerCase();
+      try
+      {
+         conn = url.openConnection();
+         if ("http".equals(protocol) || "https".equals(protocol))
+         {
+            HttpURLConnection http = (HttpURLConnection)conn;
+            http.setInstanceFollowRedirects(false);
+            http.setRequestMethod("GET");
+         }
+         InputStream input = conn.getInputStream();
+         FileOutputStream foutput = null;
+         try
+         {
+            foutput = new FileOutputStream(war);
+            byte[] b = new byte[1024];
+            int r;
+            while ((r = input.read(b)) != -1)
+               foutput.write(b, 0, r);
+         }
+         finally
+         {
+            try
+            {
+               if (foutput != null)
+                  foutput.close();
+            }
+            finally
+            {
+               input.close();
+            }
+         }
+      }
+      finally
+      {
+         if (conn != null && "http".equals(protocol) || "https".equals(protocol))
+            ((HttpURLConnection)conn).disconnect();
+      }
+      return war;
    }
 
    /* ---------------------------------------------------------- */

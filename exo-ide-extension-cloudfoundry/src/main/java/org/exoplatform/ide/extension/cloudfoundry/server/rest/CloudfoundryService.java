@@ -31,6 +31,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 
@@ -121,11 +122,12 @@ public class CloudfoundryService
       @QueryParam("mem") int memory, //
       @QueryParam("nostart") boolean nostart, //
       @QueryParam("workdir") FSLocation workDir, //
+      @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws CloudfoundryException, IOException, ParsingResponseException
    {
       return cloudfoundry.createApplication(app, framework, url, instances, memory, nostart, workDir != null
-         ? new File(workDir.getLocalPath(uriInfo)) : null);
+         ? new File(workDir.getLocalPath(uriInfo)) : null, war);
    }
 
    @Path("apps/start")
@@ -180,10 +182,11 @@ public class CloudfoundryService
    public void updateApplication( //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
+      @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.updateApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.updateApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, war);
    }
 
    @Path("apps/map")

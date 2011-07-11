@@ -122,12 +122,15 @@ class FilesHelper
    static void fileList(File dir, Collection<File> files, FilenameFilter filter)
    {
       File[] list = dir.listFiles();
-      for (int i = 0; i < list.length; i++)
+      if (list != null)
       {
-         if (list[i].isDirectory())
-            fileList(list[i], files, filter);
-         else if (filter.accept(dir, list[i].getName()))
-            files.add(list[i]);
+         for (int i = 0; i < list.length; i++)
+         {
+            if (list[i].isDirectory())
+               fileList(list[i], files, filter);
+            else if (filter.accept(dir, list[i].getName()))
+               files.add(list[i]);
+         }
       }
    }
 
@@ -266,20 +269,13 @@ class FilesHelper
 
    static String detectFramework(File path) throws IOException
    {
-      if (new File(path, "config/environment.rb").exists())
-         return "rails3";
-
-      // Lookup *.war file recursively.
-      List<File> list = new ArrayList<File>();
-      fileList(path, list, WAR_FILE_FILTER);
-      if (list.size() > 0)
+      if (path.isFile() && WAR_FILE_FILTER.accept(path.getParentFile(), path.getName()))
       {
          // Spring application ?
-         File warFile = list.get(0);
          ZipInputStream zip = null;
          try
          {
-            zip = new ZipInputStream(new FileInputStream(warFile));
+            zip = new ZipInputStream(new FileInputStream(path));
             Matcher m1 = null;
             Matcher m2 = null;
             Matcher m3 = null;
@@ -309,6 +305,9 @@ class FilesHelper
          // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
          return "spring";
       }
+
+      if (new File(path, "config/environment.rb").exists())
+         return "rails3";
 
       // Lookup *.rb files. 
       File[] files = path.listFiles(RUBY_FILE_FILTER);

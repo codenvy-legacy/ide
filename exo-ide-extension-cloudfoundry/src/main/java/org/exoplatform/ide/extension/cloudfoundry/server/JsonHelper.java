@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonWriter;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
@@ -45,7 +44,7 @@ import java.util.Map;
 class JsonHelper
 {
    /** Use StringBuilder instead of StringBuffer as it done in {@link java.io.StringWriter}. */
-   private static class FastStrWriter extends Writer
+   static class FastStrWriter extends Writer
    {
       private final StringBuilder buf;
 
@@ -98,166 +97,6 @@ class JsonHelper
       @Override
       public void close()
       {
-      }
-   }
-
-   private static class Json extends JsonValue
-   {
-      JsonValue delegate;
-
-      Json(JsonValue value)
-      {
-         delegate = value;
-      }
-
-      @Override
-      public boolean isObject()
-      {
-         return delegate.isObject();
-      }
-
-      @Override
-      public boolean isArray()
-      {
-         return delegate.isArray();
-      }
-
-      @Override
-      public boolean isNumeric()
-      {
-         return delegate.isNumeric();
-      }
-
-      @Override
-      public boolean isLong()
-      {
-         return delegate.isLong();
-      }
-
-      @Override
-      public boolean isDouble()
-      {
-         return delegate.isDouble();
-      }
-
-      @Override
-      public boolean isString()
-      {
-         return delegate.isString();
-      }
-
-      @Override
-      public boolean isBoolean()
-      {
-         return delegate.isBoolean();
-      }
-
-      @Override
-      public boolean isNull()
-      {
-         return delegate.isNull();
-      }
-
-      @Override
-      public void addElement(JsonValue child)
-      {
-         delegate.addElement(child);
-      }
-
-      @Override
-      public void addElement(String key, JsonValue child)
-      {
-         delegate.addElement(key, child);
-      }
-
-      @Override
-      public Iterator<JsonValue> getElements()
-      {
-         return delegate.getElements();
-      }
-
-      @Override
-      public Iterator<String> getKeys()
-      {
-         return delegate.getKeys();
-      }
-
-      @Override
-      public JsonValue getElement(String key)
-      {
-         return delegate.getElement(key);
-      }
-
-      @Override
-      public int size()
-      {
-         return delegate.size();
-      }
-
-      @Override
-      public String getStringValue()
-      {
-         return toString();
-      }
-
-      @Override
-      public boolean getBooleanValue()
-      {
-         return delegate.getBooleanValue();
-      }
-
-      @Override
-      public Number getNumberValue()
-      {
-         return delegate.getNumberValue();
-      }
-
-      @Override
-      public byte getByteValue()
-      {
-         return delegate.getByteValue();
-      }
-
-      @Override
-      public short getShortValue()
-      {
-         return delegate.getShortValue();
-      }
-
-      @Override
-      public int getIntValue()
-      {
-         return delegate.getIntValue();
-      }
-
-      @Override
-      public long getLongValue()
-      {
-         return delegate.getLongValue();
-      }
-
-      @Override
-      public float getFloatValue()
-      {
-         return delegate.getFloatValue();
-      }
-
-      @Override
-      public double getDoubleValue()
-      {
-         return delegate.getDoubleValue();
-      }
-
-      @Override
-      public String toString()
-      {
-         return delegate.toString();
-      }
-
-      @Override
-      public void writeTo(JsonWriter writer) throws JsonException
-      {
-         delegate.writeTo(writer);
       }
    }
 
@@ -357,7 +196,7 @@ class JsonHelper
          JsonHandler jsonHandler = new JsonDefaultHandler();
          new JsonParserImpl().parse(new StringReader(json), jsonHandler);
          JsonValue jsonValue = jsonHandler.getJsonObject();
-         return new Json(jsonValue);
+         return jsonValue;
       }
       catch (JsonException jsone)
       {
