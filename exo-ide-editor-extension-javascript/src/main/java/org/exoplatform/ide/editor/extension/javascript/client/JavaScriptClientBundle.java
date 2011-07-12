@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.extension.javascript.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -55,4 +56,7 @@ public interface JavaScriptClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/extension/javascript/client/images/method-item.png")
    ImageResource methodItem();
+   
+   @Source("org/exoplatform/ide/editor/extension/javascript/client/images/tag.png")
+   ImageResource tag();
 }

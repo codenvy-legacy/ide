@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.editor.extension.javascript.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.JavaScriptAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.JavaScriptParser;
 import org.exoplatform.ide.editor.extension.javascript.client.codeassistant.JavaScriptCodeAssistant;
+import org.exoplatform.ide.editor.extension.javascript.client.codemirror.JavaScriptAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.javascript.client.codemirror.JavaScriptParser;
+import org.exoplatform.ide.editor.extension.javascript.client.outline.JavaScriptOutlineItemCreator;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -83,6 +84,11 @@ public class JavaScriptEditorExtension extends Extension
             setAutocompleteHelper(new JavaScriptAutocompleteHelper()).
             setCodeAssistant(javaScriptCodeAssistant)            
       ));
+      
+      JavaScriptOutlineItemCreator javaScriptOutlineItemCreator = new JavaScriptOutlineItemCreator();
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVASCRIPT, javaScriptOutlineItemCreator);
+      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_JAVASCRIPT, javaScriptOutlineItemCreator);
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_JAVASCRIPT, javaScriptOutlineItemCreator);
    }
 
 }
