@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.extension.css.client;
 import com.google.gwt.resources.client.ImageResource;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -38,5 +39,8 @@ public interface CssBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/extension/css/client/images/row-selected.png")
    ImageResource itemSelected();
+
+   @Source("org/exoplatform/ide/editor/extension/css/client/images/tag.png")
+   ImageResource tag();
    
 }

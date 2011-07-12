@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.editor.extension.css.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.parser.CssParser;
 import org.exoplatform.ide.editor.extension.css.client.codeassistant.CssCodeAssistant;
+import org.exoplatform.ide.editor.extension.css.client.codemirror.CssParser;
+import org.exoplatform.ide.editor.extension.css.client.outline.CssOutlineItemCreator;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -58,6 +59,8 @@ public class CssEditorExtension extends Extension
             setParser(new CssParser()).
             setCodeAssistant(new CssCodeAssistant())         
       ));
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
    }
 
 }
