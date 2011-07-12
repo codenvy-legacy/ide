@@ -65,7 +65,6 @@
    <inherits name='org.exoplatform.ide.extension.cloudbees.CloudBeesExtension' />
    <inherits name='org.exoplatform.ide.extension.cloudfoundry.CloudFoundryExtension' />
    <inherits name='org.exoplatform.ide.extension.heroku.HerokuExtension' />
-   <inherits name='org.exoplatform.ide.extension.openshift.OpenShiftExtension' />
    <inherits name='org.exoplatform.ide.extension.java.JavaExtension' />
    <inherits name='org.exoplatform.ide.extension.ruby.RubyExtension' />
    

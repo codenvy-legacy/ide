@@ -34,16 +34,8 @@
 						<td style="padding: 2" align="center">User role</td>
 					</tr>
 					<tr>
-						<td style="padding: 2" align="left">root/gtn</td>
-						<td style="padding: 2" align="left">administrators and developers</td>
-					</tr>
-					<tr>
-						<td style="padding: 2" align="left">john/gtn</td>
+						<td style="padding: 2" align="left">exo/exo</td>
 						<td style="padding: 2" align="left">developers</td>
-					</tr>
-					<tr>
-						<td style="padding: 2" align="left">admin/gtn</td>
-						<td style="padding: " align="left">administrators</td>
 					</tr>
 				</table>
 				</td>

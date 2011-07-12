@@ -38,6 +38,10 @@ public class ExpressExceptionMapper implements ExceptionMapper<ExpressException>
    @Override
    public Response toResponse(ExpressException e)
    {
+      if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
+         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+            .entity(e.getMessage()).type(e.getContentType()).build();
+      
       ResponseBuilder rb =
          Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
             .type(e.getContentType());

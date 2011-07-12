@@ -99,12 +99,12 @@ function registerNewUser() {
 
 			<tr>
 				<th align="right">User ID:</th>
-				<td align="left"><input type="text" id="userId" name="j_username" value="john"></td>
+				<td align="left"><input type="text" id="userId" name="j_username" value="exo"></td>
 			</tr>
 
 			<tr>
 				<th align="right">Password:</th>
-				<td align="left"><input type="password" id="userPassword" name="j_password" value="gtn"></td>
+				<td align="left"><input type="password" id="userPassword" name="j_password" value="exo"></td>
 			</tr>
 			
 			<tr>
@@ -129,18 +129,8 @@ function registerNewUser() {
 						</tr>
 	
 						<tr>
-							<td style="padding: 2" align="left">root/gtn</td>
+							<td style="padding: 2" align="left">exo/exo</td>
 							<td style="padding: 2" align="left">administrators and developers</td>
-						</tr>
-	
-						<tr>
-							<td style="padding: 2" align="left">john/gtn</td>
-							<td style="padding: 2" align="left">developers</td>
-						</tr>
-	
-						<tr>
-							<td style="padding: 2" align="left">admin/gtn</td>
-							<td style="padding: " align="left">administrators</td>
 						</tr>
 					</table>
 				</td>

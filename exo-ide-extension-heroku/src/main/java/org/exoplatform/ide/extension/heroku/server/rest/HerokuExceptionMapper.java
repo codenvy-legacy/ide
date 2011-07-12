@@ -37,6 +37,10 @@ public class HerokuExceptionMapper implements ExceptionMapper<HerokuException>
    @Override
    public Response toResponse(HerokuException he)
    {
+      if (he.getResponseStatus() == 200 && "Authentication required.\n".equals(he.getMessage()))
+         return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+            .entity(he.getMessage()).type(he.getContentType()).build();
+      
       return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
          .entity(he.getMessage()).type(he.getContentType()).build();
    }

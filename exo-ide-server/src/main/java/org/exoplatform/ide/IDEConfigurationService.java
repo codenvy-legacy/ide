@@ -270,7 +270,9 @@ public class IDEConfigurationService
 
       RegistryEntry entry = registryService.getEntry(sessionProvider, normalizePath(entryPath));
       Node item = entry.getDocument().getElementsByTagName("configuration").item(0);
-      return item.getFirstChild().getNodeValue();
+      if (item != null)
+         return item.getFirstChild().getNodeValue();
+      return "";
    }
 
    @PUT

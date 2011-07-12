@@ -37,6 +37,10 @@ public class CloudfoundryExceptionMapper implements ExceptionMapper<Cloudfoundry
    @Override
    public Response toResponse(CloudfoundryException e)
    {
+      if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
+         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+            .entity(e.getMessage()).type(e.getContentType()).build();
+      
       return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
          .entity(e.getMessage()).type(e.getContentType()).build();
    }

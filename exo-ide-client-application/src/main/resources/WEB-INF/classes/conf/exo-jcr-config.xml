@@ -41,6 +41,7 @@
                <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
                   <properties>
                      <property name="root-nodetype" value="nt:unstructured" />
+                     <property name="root-permissions" value="any read;*:/ide/administrators read;*:/ide/administrators add_node;*:/ide/administrators set_property;*:/ide/administrators remove" /> 
                   </properties>
                </initializer>
                <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">
@@ -78,6 +79,7 @@
                <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
                   <properties>
                      <property name="root-nodetype" value="nt:folder" />
+                     <property name="root-permissions" value="any read;*:/ide/administrators read;*:/ide/administrators add_node;*:/ide/administrators set_property;*:/ide/administrators remove" />
                   </properties>
                </initializer>
                <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.LinkedWorkspaceStorageCacheImpl">

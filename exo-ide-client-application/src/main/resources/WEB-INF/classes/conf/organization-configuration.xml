@@ -121,7 +121,7 @@
                                  <string>root</string>
                               </field>
                               <field name="password">
-                                 <string>gtn</string>
+                                 <string>eXoUaIde</string>
                               </field>
                               <field name="firstName">
                                  <string>Root</string>
@@ -140,10 +140,10 @@
                         <value>
                            <object type="org.exoplatform.services.organization.OrganizationConfig$User">
                               <field name="userName">
-                                 <string>john</string>
+                                 <string>exo</string>
                               </field>
                               <field name="password">
-                                 <string>gtn</string>
+                                 <string>exo</string>
                               </field>
                               <field name="firstName">
                                  <string>John</string>
@@ -156,50 +156,6 @@
                               </field>
                               <field name="groups">
                                  <string>member:/ide/developers,member:/ide/users</string>
-                              </field>
-                           </object>
-                        </value>
-                        <value>
-                           <object type="org.exoplatform.services.organization.OrganizationConfig$User">
-                              <field name="userName">
-                                 <string>demo</string>
-                              </field>
-                              <field name="password">
-                                 <string>gtn</string>
-                              </field>
-                              <field name="firstName">
-                                 <string>Demo</string>
-                              </field>
-                              <field name="lastName">
-                                 <string>gtn</string>
-                              </field>
-                              <field name="email">
-                                 <string>demo@localhost</string>
-                              </field>
-                              <field name="groups">
-                                 <string>member:/ide/users</string>
-                              </field>
-                           </object>
-                        </value>
-                        <value>
-                           <object type="org.exoplatform.services.organization.OrganizationConfig$User">
-                              <field name="userName">
-                                 <string>admin</string>
-                              </field>
-                              <field name="password">
-                                 <string>gtn</string>
-                              </field>
-                              <field name="firstName">
-                                 <string>Admin</string>
-                              </field>
-                              <field name="lastName">
-                                 <string>Administrator</string>
-                              </field>
-                              <field name="email">
-                                 <string>admin@localhost</string>
-                              </field>
-                              <field name="groups">
-                                 <string>member:/ide/users,member:/ide/administrators</string>
                               </field>
                            </object>
                         </value>
