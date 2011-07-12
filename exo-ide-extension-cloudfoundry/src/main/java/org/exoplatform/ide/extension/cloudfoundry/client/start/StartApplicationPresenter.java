@@ -64,7 +64,6 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
    
    public void bindDisplay(List<Framework> frameworks)
    {
-      
    }
    
    /**
@@ -121,11 +120,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
    
    private void startApplication()
    {
-      String workDir = selectedItems.get(0).getHref();
-      if (selectedItems.get(0) instanceof File)
-      {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
-      }
+      String workDir = getWorkDir();
       
       CloudFoundryClientService.getInstance().startApplication(workDir, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, startLoggedInHandler, null)
@@ -159,11 +154,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
    
    private void stopApplication()
    {
-      String workDir = selectedItems.get(0).getHref();
-      if (selectedItems.get(0) instanceof File)
-      {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
-      }
+      String workDir = getWorkDir();
       final String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(workDir);
       
       CloudFoundryClientService.getInstance().stopApplication(workDir, null,
@@ -175,6 +166,19 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });
+   }
+   
+   private String getWorkDir()
+   {
+      if (selectedItems.size() == 0)
+         return null;
+      
+      String workDir = selectedItems.get(0).getHref();
+      if (selectedItems.get(0) instanceof File)
+      {
+         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
+      }
+      return workDir;
    }
 
 }
