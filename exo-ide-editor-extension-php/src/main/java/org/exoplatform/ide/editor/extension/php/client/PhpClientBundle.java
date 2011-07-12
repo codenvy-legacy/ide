@@ -52,6 +52,12 @@ public interface PhpClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/public-method.png")
    ImageResource publicMethod();
 
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/private-method.png")
+   ImageResource privateMethod();
+   
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/protected-method.png")
+   ImageResource protectedMethod();
+   
    @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/private-field.png")
    ImageResource privateField();
 
@@ -71,6 +77,15 @@ public interface PhpClientBundle extends ClientBundle
    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
    ImageResource itemSelected();
 
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/php-tag.png")
+   ImageResource phpTag();
 
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/namespace-item.png")
+   ImageResource namespace();
 
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/class-constant-item.png")
+   ImageResource classConstant();
+
+   @Source("org/exoplatform/ide/editor/extension/php/client/images/codeassistant/function-item.png")
+   ImageResource function();
 }

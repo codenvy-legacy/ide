@@ -29,8 +29,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
-import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlParser;
+import org.exoplatform.ide.editor.extension.xml.client.codemirror.XmlParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

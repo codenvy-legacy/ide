@@ -20,11 +20,6 @@
 package org.exoplatform.ide.editor.extension.ruby.client;
 
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -34,9 +29,15 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.RubyCodeAssistant;
 import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyParser;
-import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.RubyCodeAssistant;
+import org.exoplatform.ide.editor.extension.ruby.client.outline.RubyOutlineItemCreator;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * 
@@ -92,6 +93,8 @@ public class RubyEditorExtension extends Extension implements InitializeServices
                setCodeAssistant(new RubyCodeAssistant())
          )
       );
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_RUBY, new RubyOutlineItemCreator());
    }
    
 }

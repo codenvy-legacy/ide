@@ -64,5 +64,7 @@ public interface RubyClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/extension/ruby/client/images/row-selected.png")
    ImageResource itemSelected();
-   
+
+   @Source("org/exoplatform/ide/editor/extension/ruby/client/images/module-item.png")
+   ImageResource module();
 }

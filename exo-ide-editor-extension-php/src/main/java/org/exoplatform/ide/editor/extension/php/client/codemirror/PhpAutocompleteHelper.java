@@ -27,8 +27,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codevalidator.CodeValidator;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaAutocompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;

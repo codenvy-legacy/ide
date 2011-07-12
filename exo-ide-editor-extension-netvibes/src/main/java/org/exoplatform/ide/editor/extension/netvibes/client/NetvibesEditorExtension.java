@@ -25,8 +25,9 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlParser;
+import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.netvibes.client.codeassistant.NetvibesCodeAssistant;
 
 /**
@@ -64,6 +65,7 @@ public class NetvibesEditorExtension extends Extension
       IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
          "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET).setGroup(1), DockTarget.NONE,false);
 
+      IDE.getInstance().addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
    }
 
 }

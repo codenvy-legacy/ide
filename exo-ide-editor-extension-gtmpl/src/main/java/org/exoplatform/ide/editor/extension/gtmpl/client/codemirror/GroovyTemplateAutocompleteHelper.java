@@ -25,9 +25,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
