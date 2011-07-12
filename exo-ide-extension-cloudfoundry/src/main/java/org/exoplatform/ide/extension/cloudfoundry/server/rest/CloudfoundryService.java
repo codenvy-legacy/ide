@@ -276,7 +276,7 @@ public class CloudfoundryService
    }
 
    @Path("apps/stats")
-   @POST
+   @GET
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, CloudfoundaryApplicationStatistics> applicationStats( //
       @QueryParam("name") String app, //

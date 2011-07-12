@@ -689,7 +689,7 @@ public class Cloudfoundry
    }
 
    /**
-    * Update number of instance of application.
+    * Update number of instances of application.
     * 
     * @param app application name to scale application instances up or down. If <code>null</code> then try to determine
     *           application name. To be able determine application name <code>workDir</code> must not be
@@ -700,7 +700,7 @@ public class Cloudfoundry
     *           <ul>
     *           <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
     *           <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
-    *           <li>&lt;+num&gt; - decrease by &lt;num&gt; of instances</li>
+    *           <li>&lt;-num&gt; - decrease by &lt;num&gt; of instances</li>
     *           </ul>
     * @throws CloudfoundryException if cloud foundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
