@@ -21,12 +21,10 @@ package org.exoplatform.ide.client.outline.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.editor.api.codeassitant.Modifier;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
@@ -44,66 +42,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.component.Tree<TokenBeenImpl>
 {
-
-   private static final String VAR_ICON = Images.Outline.VAR_ITEM;
-
-   private static final String FUNCTION_ICON = Images.Outline.FUNCTION_ITEM;
-
-   private static final String METHOD_ICON = Images.Outline.METHOD_ITEM;
-
-   private static final String PRIVATE_METHOD_ICON = Images.Outline.PRIVATE_METHOD;
-
-   private static final String PUBLIC_METHOD_ICON = Images.Outline.PUBLIC_METHOD;
-
-   private static final String PROTECTED_METHOD_ICON = Images.Outline.PROTECTED_METHOD;
-
-   private static final String DEFAULT_METHOD_ICON = Images.Outline.DEFAULT_METHOD;
-
-   private static final String PRIVATE_FIELD_ICON = Images.Outline.PRIVATE_FIELD;
-
-   private static final String PUBLIC_FIELD_ICON = Images.Outline.PUBLIC_FIELD;
-
-   private static final String PROTECTED_FIELD_ICON = Images.Outline.PROTECTED_FIELD;
-
-   private static final String DEFAULT_FIELD_ICON = Images.Outline.DEFAULT_FIELD;
-
-   private static final String PROPERTY_ICON = Images.Outline.PROPERTY_ITEM;
-
-   private static final String TAG_ICON = Images.Outline.TAG_ITEM;
-
-   private static final String CDATA_ICON = Images.Outline.CDATA_ITEM;
-
-   private static final String GROOVY_TAG_ICON = Images.Outline.GROOVY_TAG_ITEM;
-
-   private static final String CLASS_ICON = Images.Outline.CLASS_ITEM;
-
-   private static final String OBJECT_ICON = Images.Outline.OBJECT_ITEM;
-
-   private static final String ARRAY_ICON = Images.Outline.ARRAY_ITEM;
-
-   private static final String DATA_ICON = Images.Outline.DATA_ITEM;
-
-   private static final String ERROR_ICON = Images.Outline.ERROR_ITEM;
-
-   private static final String MODULE_ICON = Images.Outline.MODULE_ITEM;
-
-   private static final String INTERFACE_ICON = Images.Outline.INTERFACE_ITEM;
-
-   private static final String LOCAL_VARIABLE_ICON = Images.Outline.LOCAL_VARIABLE_ITEM;
-
-   private static final String GLOBAL_VARIABLE_ICON = Images.Outline.GLOBAL_VARIABLE_ITEM;
-
-   private static final String CLASS_VARIABLE_ICON = Images.Outline.CLASS_VARIABLE_ITEM;
-
-   private static final String INSTANCE_VARIABLE_ICON = Images.Outline.INSTANCE_VARIABLE_ITEM;
-
-   private static final String CONSTANT_ICON = Images.Outline.CONSTANT_ITEM;
-   
-   private static final String PHP_TAG_ICON = Images.Outline.PHP_TAG_ICON;
-   
-   private static final String CLASS_CONSTANT_ICON = Images.Outline.CLASS_CONSTANT_ICON;   
-   
-   private static final String NAMESPACE_ICON = Images.Outline.NAMESPACE_ICON;
 
    public OutlineTreeGrid()
    {
@@ -130,7 +68,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       }
       else
       {
-         TreeItem addItem = tree.addItem(createItemWidget(getTokenIcon(value), getTokenDisplayTitle(value)));
+         TreeItem addItem = tree.addItem(createItemWidget(value));         
          addItem.setUserObject(value);
          addItem.getElement().setId(getIdForToken(value));
          fillTreeItems(addItem, getValue().getSubTokenList());
@@ -138,7 +76,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    }
 
    /**
-    * Generate id for token tree item
+    * Generate id for token tree item for selenium testing
     * @param child token
     * @return String id
     */
@@ -163,7 +101,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       {
          if (child != null && child.getName() != null && child.getType() != null)
          {
-            TreeItem node = parentNode.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
+            TreeItem node = parentNode.addItem(createItemWidget(child));
             node.setUserObject(child);
             node.getElement().setId(getIdForToken(child));
             if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
@@ -188,7 +126,7 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       {
          if (child != null && child.getName() != null && child.getType() != null)
          {
-            TreeItem node = tree.addItem(createItemWidget(getTokenIcon(child), getTokenDisplayTitle(child)));
+            TreeItem node = tree.addItem(createItemWidget(child));
             node.setUserObject(child);
             node.getElement().setId(getIdForToken(child));
             if (child.getSubTokenList() != null && child.getSubTokenList().size() > 0)
@@ -197,317 +135,6 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
             }
          }
       }
-   }
-
-   /**
-    * Get the string to display token.
-    * 
-    * @param token token to display
-    * @return {@link String} display string of the token
-    */
-   private String getTokenDisplayTitle(TokenBeenImpl token)
-   {
-      String label = token.getName();
-
-      //icon, that displays in right bottom corner, if token is CLASS, 
-      //and shows access modifier
-      String modfImg = "";
-      
-      // add special images at the bottom right part of icon to mark access modificators
-      if ((MimeType.APPLICATION_JAVA.equals(token.getMimeType()) || MimeType.APPLICATION_GROOVY.equals(token.getMimeType()))
-          && (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType())))
-      {      
-         if (isPrivate(token))
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
-                  + "\" />";
-         }
-         else if (isProtected(token))
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
-                  + "\" />";
-         }
-         else if (isPublic(token))
-         {
-         }
-         else
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
-                  + "\" />";
-         }
-      }
-
-      String synchImg = "";
-      if (isSynchronized(token))
-      {
-         final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
-         synchImg =
-            "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
-               + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
-               + "outline/clock.png" + "\" />";
-      }
-      
-      String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";
- 
-      label = getModifiersContainer(token) + modfImg + synchImg + "<span class='item-name' " + deprecateSign + " style='margin-left: 5px;' title=\"" + getAnnotationList(token)
-            + "\">" + label + "</span>";            
-
-      // Add parameter list 
-      if (TokenType.FUNCTION.equals(token.getType())
-               || TokenType.METHOD.equals(token.getType()))
-      {
-         label += getParametersList(token); 
-      }
-      
-      // Add field type or method return type
-      if (token.getElementType() != null)
-      {
-         label += "<span style='color:#644a17;' class='item-type' title=\"" + getAnnotationList(token) + "\">" + getElementType(token) + "</span>";
-      }
-      
-      return label;
-   }
-
-   /**
-    * Checks, whether method has deprecated annotation.
-    * 
-    * @param token method
-    * @return boolean whether method is deprecated
-    */
-   private boolean isDeprecated(TokenBeenImpl token)
-   {
-      if (token.getAnnotations() == null)
-         return false;
-
-      for (TokenBeenImpl annotation : token.getAnnotations())
-      {
-         if ("@deprecated".equalsIgnoreCase(annotation.getName()))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   /**
-    * Get icon for token.
-    * 
-    * @param token token
-    * @return icon
-    */
-   private String getTokenIcon(TokenBeenImpl token)
-   {
-      switch (token.getType())
-      {
-         case FUNCTION :
-            return FUNCTION_ICON;
-
-         case VARIABLE :
-            return VAR_ICON;
-
-         case TAG :
-            return TAG_ICON;
-
-         case CDATA :
-            return CDATA_ICON;
-
-         case JSP_TAG :
-         case GROOVY_TAG :
-            return GROOVY_TAG_ICON;
-
-         case METHOD :
-            if (isPrivate(token))
-            {
-               return PRIVATE_METHOD_ICON;
-            }
-            
-            else if (isProtected(token))
-            {
-               return PROTECTED_METHOD_ICON;
-            }
-
-            else if (isPublic(token))
-            {
-               return PUBLIC_METHOD_ICON;
-            }
-
-            else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
-            {
-               return METHOD_ICON;
-            }
-
-            else if (MimeType.APPLICATION_RUBY.equals(token.getMimeType())
-                     || MimeType.APPLICATION_PHP.equals(token.getMimeType())
-                     || MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-                    )
-            {
-               return PUBLIC_METHOD_ICON;
-            }
-
-            return DEFAULT_METHOD_ICON;
-
-         case PROPERTY :
-         case FIELD :            
-            if (isPrivate(token))
-            {
-               return PRIVATE_FIELD_ICON;
-            }
-            
-            else if (isProtected(token))
-            {
-               return PROTECTED_FIELD_ICON;
-            }
-            
-            else if (isPublic(token))
-            {
-               return PUBLIC_FIELD_ICON;
-            }
-
-            else if (MimeType.APPLICATION_JAVASCRIPT.equals(token.getMimeType()))
-            {
-               return PROPERTY_ICON;
-            }
-            
-            else if (MimeType.APPLICATION_PHP.equals(token.getMimeType())
-                     || MimeType.APPLICATION_GROOVY.equals(token.getMimeType())
-                    )
-            {
-               return PUBLIC_FIELD_ICON;
-            }
-
-            return DEFAULT_FIELD_ICON;
-
-         case LOCAL_VARIABLE :
-            return LOCAL_VARIABLE_ICON;
-
-         case GLOBAL_VARIABLE :
-            return GLOBAL_VARIABLE_ICON;
-
-         case CLASS_VARIABLE :
-            return CLASS_VARIABLE_ICON;
-
-         case INSTANCE_VARIABLE :
-            return INSTANCE_VARIABLE_ICON;
-
-         case CONSTANT :
-            return CONSTANT_ICON;
-
-         case MODULE :
-            return MODULE_ICON;
-            
-         case CLASS :
-            return CLASS_ICON;
-
-         case INTERFACE :
-            return INTERFACE_ICON;            
-            
-         case ARRAY :
-            return ARRAY_ICON;
-
-         case PHP_TAG:
-            return PHP_TAG_ICON;  
-            
-         case CLASS_CONSTANT:
-            return CLASS_CONSTANT_ICON;
-
-         case NAMESPACE:
-            return NAMESPACE_ICON;
-            
-         default :
-            return "";
-      }
-   }
-
-   /**
-    * @param token {@link TokenBeenImpl} 
-    * @return html element with modifiers and annotation sign
-    */
-   private String getModifiersContainer(TokenBeenImpl token)
-   {
-      if (isTransient(token)
-          || isVolative(token)
-          || isStatic(token)
-          || isFinal(token)
-          || isAbstract(token)
-          || getAnnotationList(token).length() > 0)
-      {
-      
-         String span =
-            "<span style = \"position: relative; top: -5px; margin-left: -3px; font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 9px; text-align: right;' \">";
-         span += (isTransient(token)) ? "<span class='item-modifier' color ='#6d0000'>t</span>" : "";
-         span += (isVolative(token)) ? "<span class='item-modifier' color ='#6d0000'>v</span>" : "";
-         span += (isStatic(token)) ? "<span class='item-modifier' color ='#6d0000'>s</span>" : "";
-         span += (isFinal(token)) ? "<span class='item-modifier' color ='#174c83'>f</span>" : "";      
-         span += (isAbstract(token)) ? "<span class='item-modifier' color ='#004e00'>a</span>" : "";
-         span += (getAnnotationList(token).length() > 0) ? "<span color ='#000000'>@</span>" : "";
-         span += "</span>";
-         
-         return span;
-      }
-      
-      return "";
-   }
-
-   private boolean isFinal(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.FINAL);
-   }
-
-   private boolean isAbstract(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.ABSTRACT);
-   }
-
-   private boolean isTransient(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.TRANSIENT);
-   }
-
-   private boolean isVolative(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.VOLATILE);
-   }
-
-   private boolean isStatic(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.STATIC);
-   }
-
-   private boolean isProtected(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PROTECTED);
-   }
-
-   private boolean isPrivate(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PRIVATE);
-   }
-
-   private boolean isPublic(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.PUBLIC);
-   }
-
-   private boolean isSynchronized(TokenBeenImpl token)
-   {
-      return token.getModifiers() != null && token.getModifiers().contains(Modifier.SYNCHRONIZED);
-   }
-
-   /**
-    * @param annotationList 
-    * @return HTML code to display "@" sign near the groovy token if annotationList is not empty, or "" otherwise
-    */
-   private static final String getAnnotationSign(String annotationList)
-   {
-      return (!annotationList.isEmpty()
-         ? "<span style = \"font-family: Verdana, Bitstream Vera Sans, sans-serif; color: #525252; position: relative; top: -5px;\">@</span>"
-         : "");
    }
 
    /**
@@ -556,84 +183,6 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
    }
 
    /**
-    * get formatted string with java type from token.getElementType() like " : java.lang.String"
-    * @param token
-    * @return string like " : java.lang.String", or "".
-    */
-   private String getElementType(TokenBeenImpl token)
-   {
-      if (token.getElementType() != null)
-      {
-         return " : " + token.getElementType();
-      }
-      return "";
-   }
-
-   /**
-    * Return parameters list from token.getParameters()
-    * @param token
-    * @return parameters list like '(String, int)', or ($a, $b) for PHP-code, or '()' if there are no parameters
-    */
-   private String getParametersList(TokenBeenImpl token)
-   {
-      String parametersDescription = "(";
-
-      if (token.getParameters() != null && token.getParameters().size() > 0)
-      {
-
-         List<TokenBeenImpl> parameters = token.getParameters();
-
-         for (int i = 0; i < parameters.size(); i++)
-         {
-            TokenBeenImpl parameter = parameters.get(i);
-            if (i > 0)
-            {
-               parametersDescription += ", ";
-            }
-
-            if (MimeType.APPLICATION_PHP.equals(token.getMimeType()))
-            {
-               parametersDescription +=
-                  "<span class='item-parameter'>" + parameter.getName() + "<span style='color:#644a17;' class='item-type'>" + getElementType(parameter) + "</span></span>";               
-            }
-            else
-            {
-               String annotationList = getAnnotationList(parameter);
-   
-               parametersDescription +=
-                  "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                     + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
-            }
-         }
-      }
-
-      return parametersDescription + ")";
-   }
-
-   /**
-    * Return formatted annotation list from token.getAnnotations()
-    * @param token
-    * @return annotations like '@Path; @PathParam(&#34;name&#34;)' or "", if there are no annotations in the token
-    */
-   private String getAnnotationList(TokenBeenImpl token)
-   {
-      if (token.getAnnotations() != null && token.getAnnotations().size() > 0)
-      {
-         String title = "";
-
-         for (TokenBeenImpl annotation : token.getAnnotations())
-         {
-            title += annotation.getName() + "; ";
-         }
-
-         // replace all '"' on HTML Entity "&#34;"
-         return title.replaceAll("\"", "&#34;");
-      }
-
-      return "";
-   }
-
-   /**
     * @see org.exoplatform.gwtframework.ui.client.component.Tree#createItemWidget(java.lang.String, java.lang.String)
     */
    @Override
@@ -658,6 +207,33 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
       return grid;
    }
 
+   protected Widget createItemWidget(Token token)
+   {
+      OutlineItemCreator outlineItemCreator = IDE.getInstance().getOutlineItemCreator(((TokenBeenImpl)token).getMimeType());
+      
+      if (outlineItemCreator != null)
+      {
+         return outlineItemCreator.getOutlineItemWidget(token);
+      }
+      else
+      {
+         Grid grid = new Grid(1, 2);
+         grid.setWidth("100%");
+   
+         Label l = new Label();
+         l.getElement().setInnerHTML(token.getName());
+         l.setWordWrap(false);
+         grid.setWidget(0, 1, l);
+   
+         grid.getCellFormatter().setWidth(0, 0, "16px");
+         grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+         grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+         grid.getCellFormatter().setWidth(0, 1, "100%");
+         DOM.setStyleAttribute(grid.getElement(), "display", "block");
+         return grid;
+      }
+   }
+   
    /**
     * Find {@link TreeItem} in the whole of the pointed token.
     * 

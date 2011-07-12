@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -45,11 +44,8 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -73,7 +69,7 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler, EditorInitializedHandler, 
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ApplicationSettingsReceivedHandler,  
    EditorTokenListPreparedHandler
 {
 
@@ -153,8 +149,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);
-      eventBus.addHandler(EditorInitializedEvent.TYPE, this);      
+      eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);      
       eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);      
    }
 
@@ -300,8 +295,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return;
       }
-
-//      System.out.println("OutlinePresenter.refreshOutlineTree(); editor " + activeEditor.getEditorId() + " (type" + ((CodeMirror) activeEditor).genericMimeType + ")");    
+    
       display.setRefreshingMarkInTitle();
       activeEditor.getTokenListInBackground();
    }
@@ -555,19 +549,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       element.focus();
    }-*/;
 
-   public void onEditorInitialized(EditorInitializedEvent event)
-   {
-      if (display != null && canShowOutline())
-      {
-         display.setOutlineAvailable(true);
-         refreshOutlineTree();
-      }
-   }
-
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
-   {
-//      System.out.println("OutlinePresenter.onEditorTokenListPrepared(); editor " + activeEditor.getEditorId() + " (type" + ((CodeMirror) activeEditor).genericMimeType + "), recieved from " + event.getEditorId() );
-      
+   {      
       if (event.getTokenList() == null 
                || display == null
                || ! activeEditor.getEditorId().equals(event.getEditorId()))

@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
-import org.exoplatform.ide.client.debug.PopupWindowLogger;
 import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.download.DownloadForm;
@@ -38,6 +37,7 @@ import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEv
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagementModule;
@@ -54,6 +54,7 @@ import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
 import org.exoplatform.ide.client.operation.OperationModule;
+import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -222,6 +223,24 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public EditorProducer getEditor(String mimeType) throws EditorNotFoundException
    {
       return EditorFactory.getDefaultEditor(mimeType);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addOutlineItemCreator(java.lang.String, org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator)
+    */
+   @Override
+   public void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator)
+   {
+      OutlineItemCreatorFactory.addOutlineItemCreator(mimeType, outlineItemCreator);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getOutlineItemCreator(java.lang.String)
+    */
+   @Override
+   public OutlineItemCreator getOutlineItemCreator(String mimeType)
+   {
+      return OutlineItemCreatorFactory.getOutlineItemCreator(mimeType);
    }
 
 }

@@ -166,69 +166,6 @@ public interface Images
 
    }
 
-   public interface Outline
-   {
-      public static final String FUNCTION_ITEM = IMAGE_URL + "outline/function-item.png";
-
-      public static final String VAR_ITEM = IMAGE_URL + "outline/var-item.png";
-
-      public static final String METHOD_ITEM = IMAGE_URL + "outline/method-item.png";
-
-      public static final String PROPERTY_ITEM = IMAGE_URL + "outline/property-item.png";
-
-      public static final String TAG_ITEM = IMAGE_URL + "outline/tag.png";
-
-      public static final String CDATA_ITEM = IMAGE_URL + "outline/cdata-item.png";
-
-      public static final String GROOVY_TAG_ITEM = IMAGE_URL + "outline/groovy-tag.png";
-
-      public static final String CLASS_ITEM = IMAGE_URL + "outline/class-item.png";
-
-      public static final String PRIVATE_METHOD = IMAGE_URL + "outline/private-method.png";
-
-      public static final String PUBLIC_METHOD = IMAGE_URL + "outline/public-method.png";
-
-      public static final String PROTECTED_METHOD = IMAGE_URL + "outline/protected-method.png";
-
-      public static final String DEFAULT_METHOD = IMAGE_URL + "outline/default-method.png";
-
-      public static final String PRIVATE_FIELD = IMAGE_URL + "outline/private-field.png";
-
-      public static final String PUBLIC_FIELD = IMAGE_URL + "outline/public-field.png";
-
-      public static final String PROTECTED_FIELD = IMAGE_URL + "outline/protected-field.png";
-
-      public static final String DEFAULT_FIELD = IMAGE_URL + "outline/default-field.png";
-
-      public static final String OBJECT_ITEM = IMAGE_URL + "outline/object.png";
-
-      public static final String ARRAY_ITEM = IMAGE_URL + "outline/array.png";
-
-      public static final String DATA_ITEM = IMAGE_URL + "outline/data.png";
-
-      public static final String ERROR_ITEM = IMAGE_URL + "outline/error.png";
-
-      public static final String INTERFACE_ITEM = IMAGE_URL + "outline/interface-item.png";
-
-      public static final String MODULE_ITEM = IMAGE_URL + "outline/module-item.png";
-
-      public static final String LOCAL_VARIABLE_ITEM = IMAGE_URL + "outline/local-variable-item.png";
-
-      public static final String GLOBAL_VARIABLE_ITEM = IMAGE_URL + "outline/global-variable-item.png";
-
-      public static final String CLASS_VARIABLE_ITEM = IMAGE_URL + "outline/class-variable-item.png";
-
-      public static final String INSTANCE_VARIABLE_ITEM = IMAGE_URL + "outline/instance-variable-item.png";
-
-      public static final String CONSTANT_ITEM = IMAGE_URL + "outline/constant-item.png";
-
-      public static final String PHP_TAG_ICON = IMAGE_URL + "outline/php-tag.png";
-
-      public static final String CLASS_CONSTANT_ICON = IMAGE_URL + "outline/class-constant-item.png";
-
-      public static final String NAMESPACE_ICON = IMAGE_URL + "outline/namespace-item.png";
-   }
-
    public interface Versioning
    {
 
