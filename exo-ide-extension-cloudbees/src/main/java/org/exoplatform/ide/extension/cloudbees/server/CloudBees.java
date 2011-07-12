@@ -28,6 +28,7 @@ import com.cloudbees.api.UploadProgress;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.git.server.GitHelper;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -232,7 +233,7 @@ public class CloudBees
             w.close();
       }
       // Add file to .gitignore
-      addToGitIgnore(workDir, filename);
+      GitHelper.addToGitIgnore(workDir, filename);
    }
 
    private String detectApplicationId(File workDir) throws IOException
@@ -255,56 +256,6 @@ public class CloudBees
          }
       }
       return id;
-   }
-
-   private void addToGitIgnore(File workDir, String fileName) throws IOException
-   {
-      File ignoreFile = new File(workDir, ".gitignore");
-      FileWriter w = null;
-      try
-      {
-         if (ignoreFile.exists() && ignoreFile.length() > 0)
-         {
-            // If file .gitignore check is it contains line : .cloudbees-application
-            BufferedReader r = null;
-            boolean found;
-            try
-            {
-               found = false;
-               r = new BufferedReader(new FileReader(ignoreFile));
-               for (String l = r.readLine(); !found && l != null; l = r.readLine())
-                  found = fileName.equals(l.trim());
-            }
-            finally
-            {
-               if (r != null)
-                  r.close();
-            }
-
-            if (!found)
-            {
-               // If .gitignore exists but has not expected line add line to the end of file.
-               w = new FileWriter(ignoreFile, true);
-               w.write('\n');
-               w.write(fileName);
-               w.write('\n');
-               w.flush();
-            }
-         }
-         else
-         {
-            // If .gitignore not found or empty.
-            w = new FileWriter(ignoreFile);
-            w.write(fileName);
-            w.write('\n');
-            w.flush();
-         }
-      }
-      finally
-      {
-         if (w != null)
-            w.close();
-      }
    }
 
    private CloudBeesCredentials readCredentials()
