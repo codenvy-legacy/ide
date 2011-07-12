@@ -38,6 +38,7 @@ import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.service.
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyCodeValidator;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyParser;
+import org.exoplatform.ide.editor.extension.groovy.client.outline.GroovyOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
@@ -93,6 +94,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
             setCodeValidator(new GroovyCodeValidator())
       ));
 
+      IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
    }
 
    /**
