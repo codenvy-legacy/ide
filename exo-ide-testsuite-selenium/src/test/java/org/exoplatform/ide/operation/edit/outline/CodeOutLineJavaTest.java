@@ -61,7 +61,7 @@ public class CodeOutLineJavaTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_GROOVY, "nt:resource", URL + FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JAVA, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
       {

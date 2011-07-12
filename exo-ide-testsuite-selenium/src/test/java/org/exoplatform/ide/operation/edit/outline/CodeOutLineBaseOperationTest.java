@@ -42,7 +42,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
    
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
-   private final static String TEST_FOLDER = JavaTypeValidationAndFixingTest.class.getSimpleName();
+   private final static String TEST_FOLDER = CodeOutLineBaseOperationTest.class.getSimpleName();
 
    private static final String WAIT_FOR_PARSING_TEST_LOCATOR =
       "//html[@style='border-width: 0pt;']//body[@class='editbox']//span[284][@class='xml-tagname']";
@@ -105,14 +105,17 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       {
          IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
       }
+      
+      Thread.sleep(TestConstants.SLEEP);
+      
       assertEquals("26 : 1", getCursorPositionUsingStatusBar());
       //check outline tree
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       IDE.OUTLINE.doubleClickItem(1);
-      assertEquals("div", IDE.OUTLINE.getItemLabel(13));
+      assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("a1", IDE.OUTLINE.getItemLabel(2));
       //check selection in outline tree
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "div", true);
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "groovy code", true);
 
       //---- 5 -----------------
       //click on editor
