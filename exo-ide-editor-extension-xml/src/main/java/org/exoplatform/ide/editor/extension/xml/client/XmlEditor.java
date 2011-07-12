@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.editor.extension.xml.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.parser.XmlParser;
 import org.exoplatform.ide.editor.extension.xml.client.codeassistant.XmlCodeAssistant;
+import org.exoplatform.ide.editor.extension.xml.client.codemirror.XmlParser;
+import org.exoplatform.ide.editor.extension.xml.client.outline.XmlOutlineItemCreator;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -70,6 +71,8 @@ public class XmlEditor extends Extension
             setCanBeOutlined(true).
             setCodeAssistant(xmlAssistant)
       ));
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_XML, new XmlOutlineItemCreator());
    }
 
 }
