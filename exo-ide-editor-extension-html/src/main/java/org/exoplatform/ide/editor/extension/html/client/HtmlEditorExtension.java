@@ -27,9 +27,10 @@ import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.codemirror.parser.HtmlParser;
 import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlParser;
+import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -68,6 +69,8 @@ public class HtmlEditorExtension extends Extension
       IDE.getInstance().addEditor(new CKEditorProducer(MimeType.TEXT_HTML, MESSAGES.ckEditorHtmlEditor(), "html",
          Images.HTML, false, new CKEditorConfiguration()));
 
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());
    }
 
 }

@@ -48,4 +48,7 @@ public interface HtmlClientBundle extends ClientBundle
   
    @Source("org/exoplatform/ide/editor/extension/html/client/images/row-selected.png")
    ImageResource itemSelected();
+   
+   @Source("org/exoplatform/ide/editor/extension/html/client/images/cdata-item.png")
+   ImageResource cdata();
 }

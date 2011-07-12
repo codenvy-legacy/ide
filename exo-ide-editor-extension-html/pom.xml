@@ -40,7 +40,13 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-extension-css</artifactId>
       </dependency>
-      
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-extension-xml</artifactId>
+      </dependency>
+
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
