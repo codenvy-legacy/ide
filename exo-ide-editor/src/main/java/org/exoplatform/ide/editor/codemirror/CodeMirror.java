@@ -455,9 +455,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          cursorOffsetX += this.lineNumberFieldWidth;
       }
 
-      Token tokenBeforeCursor = getTokenBeforeCursor(currentNode, cursorRow, cursorCol);
-
       List<? extends Token> tokenList = getTokenList();
+      
+      Token tokenBeforeCursor = getTokenBeforeCursor(tokenList, currentNode, cursorRow, cursorCol);
 
       // read mimeType
       String currentLineMimeType = getCurrentLineMimeType();
@@ -525,24 +525,25 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    /**
     * Updates token's FQNs and returns token before "." in position like "address._", or "address.inde_", or "String._" 
+    * @param tokenList
     * @param node the ended node of current line
     * @param lineNumber
     * @param cursorPosition
     * @return FQN of current cursor content before "." symbol or null, if this fqn is unknown 
     */
-   private Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition)
+   private Token getTokenBeforeCursor(List<? extends Token> tokenList, JavaScriptObject node, int lineNumber, int cursorPosition)
    {
       if (configuration.canBeAutocompleted())
       {
          if (configuration.canBeValidated())
          {
-            validateCode(); // to update token's FQNs
+            validateCode(tokenList); // to update token's FQNs
          }
 
          if (configuration.getAutocompleteHelper() != null)
          {
             return configuration.getAutocompleteHelper().getTokenBeforeCursor(node, lineNumber, cursorPosition,
-               (List<Token>)getTokenList(), getCurrentLineMimeType());
+               tokenList, getCurrentLineMimeType());
          }
       }
 
@@ -594,6 +595,29 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
       }
    }
+   
+   private void validateCode(List<? extends Token> tokenList)
+   {
+      if (needUpdateTokenList && showLineNumbers)
+      {
+         needValidateCode = false;
+         
+         // Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList         
+         if (this.tokenList == null || this.tokenList.isEmpty())
+         {
+            // clear code error marks
+            for (CodeLine lastCodeError : codeErrorList)
+            {
+               clearErrorMark(lastCodeError.getLineNumber());
+            }
+            return;
+         }
+
+         List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(this.tokenList);
+
+         udpateErrorMarks(newCodeErrorList);
+      }   
+  }
 
    void udpateErrorMarks(List<CodeLine> newCodeErrorList)
    {
