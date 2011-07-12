@@ -99,7 +99,7 @@
       </init-params>
    </component>
 
-  <component>
+   <component>
       <type>org.exoplatform.ide.testframework.server.MockApplication</type>
    </component>
 

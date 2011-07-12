@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+   site: http://www.fsf.org. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-SNAPSHOT</version>
    </parent>
-   
+
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
    <packaging>pom</packaging>
    <name>eXo IDE :: Assemblies Tomcat</name>
-   
+
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -36,7 +39,7 @@
          <type>war</type>
       </dependency>
    </dependencies>
-   
+
    <build>
       <plugins>
          <plugin>
@@ -272,13 +275,15 @@
                         <requireProperty>
                            <property>exo.projects.directory.dependencies</property>
                            <message>You must define the property exo.projects.directory.dependencies to
-                              give the path to the directory where you store
+                              give the path to
+                              the directory where you store
                               your applications servers</message>
                         </requireProperty>
                         <requireProperty>
                            <property>exo.projects.app.tomcat.version</property>
                            <message>You must define the property exo.projects.app.tomcat.version to
-                              give the name of the directory where is stored
+                              give the name of the
+                              directory where is stored
                               tomcat</message>
                            <regex>[a-z-]+-${tomcat.version}</regex>
                            <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
@@ -323,7 +328,9 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                        <unwar
+                           src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war"
+                           dest="${project.build.directory}/packager-conf/unwar" />
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                               <exclude name="**/conf/*-mysql.xml" />
@@ -350,10 +357,10 @@
                         <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                            <fileset dir="${project.build.directory}/packager-conf/unwar" />
                         </war>
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war"
-                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
+                           tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
+                           tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -425,9 +432,13 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                              <copy
+                                 file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
                                  overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
+                              <copy
+                                 file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
                                  overwrite="true" />
                            </tasks>
                         </configuration>
@@ -445,8 +456,31 @@
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
+         <dependencies>
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-testframework</artifactId>
+            </dependency>
+         </dependencies>
          <build>
             <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-dependencies-testframework</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                           <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <includeTypes>jar</includeTypes>
+                           <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
@@ -455,10 +489,12 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                              <copy
+                                 file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
                                  tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
                                  overwrite="true" />
-                                 <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml"
+                              <copy
+                                 file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml"
                                  tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-configuration.xml"
                                  overwrite="true" />
                               <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html"
