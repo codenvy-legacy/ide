@@ -86,12 +86,32 @@ public abstract class CloudFoundryClientService
       CloudFoundryAsyncRequestCallback<Map<String, String>> callback);
    
    /**
-    * Delete application from CloudBees.
+    * Delete application from CloudFoundry.
     * @param workDir - the location of work dir on file system
     * @param appId - id of application
     * @param callback - callcack, that client has to implement
     */
    public abstract void deleteApplication(String workDir, String appId,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   /**
+    * Start application.
+    * 
+    * @param workDir - the location of application
+    * @param name - application name
+    * @param callback callback, that client has to implement to receive response from server.
+    */
+   public abstract void startApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+   
+   /**
+    * Stop application.
+    * 
+    * @param workDir - the location of application
+    * @param name - application name
+    * @param callback callback, that client has to implement to receive response from server.
+    */
+   public abstract void stopApplication(String workDir, String name,
       CloudFoundryAsyncRequestCallback<String> callback);
 
 }

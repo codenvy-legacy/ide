@@ -59,6 +59,24 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.createApp.prompt")
    String createAppControlPrompt();
    
+   @Key("control.startApp.id")
+   String startAppControlId();
+   
+   @Key("control.startApp.title")
+   String startAppControlTitle();
+   
+   @Key("control.startApp.prompt")
+   String startAppControlPrompt();
+   
+   @Key("control.stopApp.id")
+   String stopAppControlId();
+   
+   @Key("control.stopApp.title")
+   String stopAppControlTitle();
+   
+   @Key("control.stopApp.prompt")
+   String stopAppControlPrompt();
+   
    @Key("control.appInfo.id")
    String applicationInfoControlId();
    
@@ -130,6 +148,18 @@ public interface CloudFoundryLocalizationConstant extends Messages
     */
    @Key("createApp.appCreated")
    String applicationCreatedSuccessfully(String name);
+   
+   /*
+    * StartApplicationPresenter
+    */
+   @Key("startApp.appStarted")
+   String applicationStarted(String name);
+   
+   @Key("startApp.appStarted.uris")
+   String applicationStartedUris(String name, String uris);
+   
+   @Key("startApp.appStopped")
+   String applicationStopped(String name);
    
    
    /*

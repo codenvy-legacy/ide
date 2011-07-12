@@ -28,8 +28,11 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 
 /**
  * CloudFoundry extention for IDE.
@@ -67,12 +70,12 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       
       IDE.getInstance().addControl(new CloudFoundryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new StartApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new StopApplicationControl(), DockTarget.NONE, false);
       
       new CreateApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
-//      new DeployApplicationPresenter(eventBus);
-//      new ApplicationInfoPresenter(eventBus);
-//      new DeleteApplicationPresenter(eventBus);
+      new StartApplicationPresenter(eventBus);
    }
 
 }

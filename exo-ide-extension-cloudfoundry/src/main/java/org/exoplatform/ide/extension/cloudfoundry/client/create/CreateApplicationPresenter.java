@@ -203,7 +203,11 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    private void createApplication()
    {
       final String name = display.getNameField().getValue();
-      final String type = (display.getChangeTypeCheckItem().getValue()) ? null : display.getTypeField().getValue();
+      String type = null;
+      if (!display.getChangeTypeCheckItem().getValue())
+      {
+         type = findFrameworkByName(display.getTypeField().getValue()).getType();
+      }
       final String url = (display.getChangeUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
       final int instances = Integer.parseInt(display.getInstancesField().getValue());
       final int memory =

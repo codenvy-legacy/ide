@@ -53,11 +53,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    
    private static final String FRAMEWORKS = BASE_URL + "/info/frameworks";
    
-   private static final String DEPLOY_WAR = BASE_URL + "/apps/war-deploy";
+   private static final String START = BASE_URL + "/apps/start";
    
-   private static final String APPS_INFO = BASE_URL + "/apps/info";
-   
-   private static final String APPS_DELETE = BASE_URL + "/apps/delete";
+   private static final String STOP = BASE_URL + "/apps/stop";
    
    private static final String LOGIN = BASE_URL + "/login";
    
@@ -185,6 +183,54 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.GET, url, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#startApplication(java.lang.String, java.lang.String)
+    */
+   @Override
+   public void startApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   {
+      final String url = restServiceContext + START;
+      
+      callback.setEventBus(eventBus);
+      
+      CloudfoundryApplication cloudfoundryApplication = new CloudfoundryApplication();
+      
+      CloudfoundryApplicationUnmarshaller unmarshaller = new CloudfoundryApplicationUnmarshaller(cloudfoundryApplication);
+      callback.setPayload(unmarshaller);
+      callback.setResult(cloudfoundryApplication);
+      
+      String params = (name != null) ? "name=" + name : "";
+      String workDirParam = (params.isEmpty()) ? "" : "&";
+      workDirParam += "workdir=" + workDir;
+      params += (workDir != null) ? workDirParam : "";
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#stopApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void stopApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + STOP;
+      
+      callback.setEventBus(eventBus);
+      
+      String params = (name != null) ? "name=" + name : "";
+      String workDirParam = (params.isEmpty()) ? "" : "&";
+      workDirParam += "workdir=" + workDir;
+      params += (workDir != null) ? workDirParam : "";
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }

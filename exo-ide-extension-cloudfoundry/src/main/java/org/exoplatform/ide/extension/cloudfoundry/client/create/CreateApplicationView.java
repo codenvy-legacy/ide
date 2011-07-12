@@ -139,7 +139,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getCreateButton()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getCreateButton()
     */
    @Override
    public HasClickHandlers getCreateButton()
@@ -148,7 +148,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -157,7 +157,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getApplicationNameField()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getApplicationNameField()
     */
    @Override
    public HasValue<String> getTypeField()
@@ -166,7 +166,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getWorkDirLocationField()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getWorkDirLocationField()
     */
    @Override
    public HasValue<String> getNameField()
@@ -175,7 +175,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#enableCreateButton(boolean)
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#enableCreateButton(boolean)
     */
    @Override
    public void enableCreateButton(boolean enable)
@@ -184,7 +184,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#focusInNameField()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#focusInNameField()
     */
    @Override
    public void focusInNameField()
@@ -193,7 +193,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter.Display#getRemoteNameField()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getRemoteNameField()
     */
    @Override
    public HasValue<String> getUrlField()
