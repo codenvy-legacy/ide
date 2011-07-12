@@ -16,6 +16,10 @@
          <artifactId>exo-ide-server</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-git</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
       </dependency>
