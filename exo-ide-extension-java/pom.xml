@@ -24,6 +24,10 @@
          <artifactId>exo-ide-maven</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-git</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
           <exclusions>

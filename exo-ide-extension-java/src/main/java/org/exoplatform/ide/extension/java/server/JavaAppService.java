@@ -23,13 +23,13 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
+import org.exoplatform.ide.git.server.GitHelper;
 import org.exoplatform.ide.maven.InvocationRequestFactory;
 import org.exoplatform.ide.maven.MavenTask;
 import org.exoplatform.ide.maven.TaskService;
 import org.exoplatform.ide.maven.TaskWatcher;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -87,23 +87,9 @@ public class JavaAppService
       if (0 == mvn.getExitCode()) // If other than zero then build fails. 
       {
          File app = new File(dir, name);
+         GitHelper.addToGitIgnore(app, "");
          if (app.exists()) // Be sure application directory created after maven execution.
-         {
-            File ignore = new File(app, ".gitignore");
-            FileWriter w = null;
-            try
-            {
-               w = new FileWriter(ignore);
-               w.write("target/");
-               w.write('\n');
-               w.flush();
-            }
-            finally
-            {
-               if (w != null)
-                  w.close();
-            }
-         }
+            GitHelper.addToGitIgnore(app, "target/");
       }
       return createResponse(mvn);
    }
