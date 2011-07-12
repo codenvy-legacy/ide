@@ -24,6 +24,7 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
@@ -95,4 +96,17 @@ public abstract class IDE
     */
    public abstract EditorProducer getEditor(String mimeType) throws EditorNotFoundException;
 
+   /**
+    * Add new outline item creator extension
+    * @param outlineItemCreator
+    */
+   public abstract void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator);
+   
+   /**
+    * Get OutlineItemCreator for mimeType
+    * @param mimeType of file
+    * @return {@link OutlineItemCreator} for mimeType
+    */
+   public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
+   
 }
