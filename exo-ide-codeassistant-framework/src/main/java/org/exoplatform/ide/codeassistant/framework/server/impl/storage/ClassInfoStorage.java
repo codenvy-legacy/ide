@@ -124,7 +124,8 @@ public class ClassInfoStorage implements Startable
          {
             try
             {
-               addClassesOnStartUp(jars);
+               if (jars != null && jars.size()>0)
+                addClassesOnStartUp(jars);
             }
             catch (Throwable e)
             {

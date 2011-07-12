@@ -106,6 +106,7 @@ public class DocStorage implements Startable
          {
             try
             {
+               if (jars != null && jars.size()>0)
                addJavaDocsOnStartUp(jars);
             }
             catch (Exception e)
