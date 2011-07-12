@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
+import org.exoplatform.ide.git.server.GitHelper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -295,8 +296,9 @@ public class Cloudfoundry
          else
             uploadApplication(credentials, app, workDir);
 
-         // TODO Add file that contains application name to '.gitignore'.
-         writeApplicationName(workDir, app);
+         if (workDir != null)
+            writeApplicationName(workDir, app);
+
          if (!nostart)
             appInfo = startApplication(credentials, app);
       }
@@ -1224,6 +1226,7 @@ public class Cloudfoundry
          if (w != null)
             w.close();
       }
+      GitHelper.addToGitIgnore(workDir, filename);
    }
 
    private String detectApplicationName(File workDir) throws IOException
