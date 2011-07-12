@@ -362,6 +362,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
 
+      refreshOutlineTimer.cancel();
+      
       if (canShowOutline())
       {
          display.clearOutlineTree();
