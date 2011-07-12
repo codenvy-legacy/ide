@@ -77,4 +77,6 @@ public interface JavaClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/extension/java/client/images/row-selected.png")
    ImageResource itemSelected();
    
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/jsp-tag.png")
+   ImageResource jspTagItem();
 }

@@ -33,14 +33,15 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaAutocompleteHelper;
-import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaParser;
-import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.JavaCodeAssistantService;
+import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaCodeValidator;
+import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaParser;
+import org.exoplatform.ide.editor.extension.java.client.outline.JavaOutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -99,7 +100,8 @@ public class JavaEditorExtension extends Extension implements InitializeServices
                setCodeValidator(new JavaCodeValidator())
          )
       );
-
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JavaOutlineItemCreator());
    }
 
    /**
