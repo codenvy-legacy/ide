@@ -27,9 +27,10 @@ import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.codemirror.autocomplete.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.gadget.client.codemirror.GoogleGadgetParser;
 import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -70,6 +71,8 @@ public class GadgetEditor extends Extension
 
       IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
          "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroup(1), DockTarget.NONE, false);
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
    }
 
 }
