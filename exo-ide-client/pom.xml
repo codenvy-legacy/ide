@@ -187,6 +187,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudbees</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -533,9 +538,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
-                     <!--
                      <bindAddress>0.0.0.0</bindAddress>
-                     -->
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.git.repo-dir=git -Dorg.exoplatform.ide.server.fs-root-path=git</extraJvmArgs>
                   </configuration>
                </plugin>

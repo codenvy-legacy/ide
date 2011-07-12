@@ -58,6 +58,18 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.JcrCloudfoundryAuthenticator</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
