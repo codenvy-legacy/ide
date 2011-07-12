@@ -83,8 +83,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
    @Override
    public void onStopApplication(StopApplicationEvent event)
    {
-      // TODO Auto-generated method stub
-      
+      stopApplication();
    }
    
    /**
@@ -96,6 +95,18 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
       public void onLoggedIn()
       {
          startApplication();
+      }
+   };
+   
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler stopLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         stopApplication();
       }
    };
 
@@ -122,7 +133,6 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
             @Override
             protected void onSuccess(CloudfoundryApplication result)
             {
-               System.out.println(">>>>>>>size uris: " + result.getUris().size());
                String appUris = "";
                for (String uri : result.getUris())
                {
@@ -145,6 +155,26 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });      
+   }
+   
+   private void stopApplication()
+   {
+      String workDir = selectedItems.get(0).getHref();
+      if (selectedItems.get(0) instanceof File)
+      {
+         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
+      }
+      final String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(workDir);
+      
+      CloudFoundryClientService.getInstance().stopApplication(workDir, null,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, stopLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               eventBus.fireEvent(new OutputEvent(msg));
+            }
+         });
    }
 
 }
