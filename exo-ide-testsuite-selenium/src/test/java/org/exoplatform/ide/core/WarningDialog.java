@@ -90,8 +90,7 @@ public class WarningDialog extends AbstractTestModule
     */
    public boolean isDialogOpened()
    {
-      fail();
-      return false;
+      return selenium().isElementPresent(WARNING_DIALOG_ID);
    }
    
    public boolean isDialogOpened(String message) {

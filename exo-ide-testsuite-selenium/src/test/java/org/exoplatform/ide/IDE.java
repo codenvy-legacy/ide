@@ -52,6 +52,7 @@ import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
+import org.exoplatform.ide.paas.heroku.core.Heroku;
 
 /**
  * 
@@ -149,6 +150,8 @@ public class IDE
    public RenameDialog RENAME_DIALOG = new RenameDialog();
    
    public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
+   
+   public Heroku HEROKU = new Heroku();
 
    /**
     * Select main frame of IDE.

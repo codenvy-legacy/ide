@@ -275,5 +275,17 @@ public interface MenuCommands
 
       String STATUS = "Status";
    }
+   
+   public interface PaaS
+   {
+      String PAAS = "PaaS";
+      
+      public interface Heroku
+      {
+         String HEROKU = "Heroku";
+         
+         String SWITCH_ACCOUNT = "Switch account...";
+      }
+   }
 
 }
