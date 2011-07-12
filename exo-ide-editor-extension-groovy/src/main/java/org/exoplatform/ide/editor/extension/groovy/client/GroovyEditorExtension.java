@@ -38,6 +38,7 @@ import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.service.
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyCodeValidator;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyParser;
+import org.exoplatform.ide.editor.extension.groovy.client.outline.GroovyOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
@@ -112,6 +113,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
                setCodeValidator(new GroovyCodeValidator())         
          )
       );
+      
+      GroovyOutlineItemCreator groovyOutlineItemCreator = new GroovyOutlineItemCreator();
+      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_GROOVY, groovyOutlineItemCreator);
+      IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_SERVICE, groovyOutlineItemCreator);
 
    }
 

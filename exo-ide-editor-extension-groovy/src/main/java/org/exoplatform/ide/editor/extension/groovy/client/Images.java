@@ -32,4 +32,6 @@ public interface Images
    static final String GROOVY = IMAGE_URL + "groovy.png";
    
    static final String REST_SERVICE = IMAGE_URL + "rest.png";
+   
+   static final String GROOVY_TAG = IMAGE_URL + "groovy-tag.png";
 }
