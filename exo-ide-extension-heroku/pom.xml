@@ -17,6 +17,10 @@
          <artifactId>exo-ide-extension-git</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.frameworks.json</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
@@ -40,7 +44,7 @@
          <artifactId>slf4j-log4j12</artifactId>
          <scope>test</scope>
       </dependency>
-      
+
       <!-- CLIENT SIDE -->
       <dependency>
          <groupId>com.google.gwt</groupId>
