@@ -287,6 +287,8 @@ public interface MenuCommands
          String SWITCH_ACCOUNT = "Switch account...";
 
          String CREATE_APPLICATION = "Create application...";
+         
+         String DELETE_APPLICATION = "Delete application...";
       }
    }
 

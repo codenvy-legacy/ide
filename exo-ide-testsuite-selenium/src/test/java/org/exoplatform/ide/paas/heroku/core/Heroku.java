@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.paas.heroku.core;
 
+import org.exoplatform.common.http.client.HTTPConnection;
+import org.exoplatform.common.http.client.HTTPResponse;
+import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.Utils;
+
+import java.net.URL;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -29,13 +36,25 @@ public class Heroku
   {
      String LOGED_IN = "[INFO] Logged in Heroku successfully.";
      
+     String DELETED = "[INFO] Application is successfully deleted on Heroku.";
+     
      String LOGIN = "test@test.com";
      
      String PASSWORD = "test";
   }
   
-  public SwitchAccount SWITCH_ACCOUNT = new SwitchAccount();
+  public final SwitchAccount SWITCH_ACCOUNT = new SwitchAccount();
   
-  public CreateApplication CREATE_APP = new CreateApplication();
+  public final CreateApplication CREATE_APP = new CreateApplication();
+  
+  public final DeleteApplication DELETE_APP = new DeleteApplication();
+  
+  public static final int logout() throws Exception
+  {
+     URL url = new URL(BaseTest.BASE_URL);
+     HTTPConnection connection = Utils.getConnection(url);
+     HTTPResponse response = connection.Post(BaseTest.REST_CONTEXT + "/ide/heroku/logout");
+     return response.getStatusCode();
+  }
   
 }

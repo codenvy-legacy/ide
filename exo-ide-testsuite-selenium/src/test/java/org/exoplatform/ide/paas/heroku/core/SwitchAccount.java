@@ -30,7 +30,7 @@ public class SwitchAccount extends AbstractTestModule
 {
    
    
-   private static final String LOGIN_FORM = "//div[@view-id='ideLoginView']";
+   public static final String LOGIN_FORM = "//div[@view-id='ideLoginView']";
    
    public static final String EMAIL_FIELD = "ideLoginViewEmailField";
    

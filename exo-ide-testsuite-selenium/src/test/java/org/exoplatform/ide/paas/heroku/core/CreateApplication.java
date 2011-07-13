@@ -19,7 +19,9 @@
 package org.exoplatform.ide.paas.heroku.core;
 
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.exoplatform.ide.paas.heroku.core.Heroku.Messages;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -51,9 +53,28 @@ public class CreateApplication extends AbstractTestModule
       selenium().type(APP_NAME_FIELD, name);
    }
    
-   public void createApp()
+   public void clickCreateApp()
    {
       selenium().click(CREATE_BUTTON);
+   }
+   
+   public void createApplication(String name) throws Exception
+   {
+      
+      openCreateApplicationForm();
+      typeAppName(name);
+      clickCreateApp();
+      
+      Thread.sleep(TestConstants.SLEEP_SHORT);
+      if(selenium().isElementPresent(SwitchAccount.LOGIN_FORM))
+      {
+        IDE().HEROKU.SWITCH_ACCOUNT.typeLogin(Messages.LOGIN);
+        
+        IDE().HEROKU.SWITCH_ACCOUNT.typePassword(Messages.PASSWORD);
+        IDE().HEROKU.SWITCH_ACCOUNT.clickLoginButton();
+      }
+      waitForElementNotPresent(CREATE_APP_FORM);
+      
    }
 
 }

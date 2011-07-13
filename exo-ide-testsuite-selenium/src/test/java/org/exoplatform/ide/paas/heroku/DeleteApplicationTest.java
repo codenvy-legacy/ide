@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.paas.heroku;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.paas.heroku.core.CreateApplication;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.heroku.core.Heroku.Messages;
 import org.junit.After;
@@ -34,19 +34,17 @@ import org.junit.Test;
  * @version $Id: $
  *
  */
-public class CreateApplicationTest extends BaseTest
+public class DeleteApplicationTest extends BaseTest
 {
-   private static final String TEST_FOLDER = "CreateApplicationTest";
-
-   private static final String APP_NAME = "rwetrdsa324214qefd";
-
+   
+   private static final String TEST_FOLDER = DeleteApplicationTest.class.getSimpleName();
    @Before
    public void setUp() throws Exception
    {
       try
       {
-         VirtualFileSystemUtils.upoadZipFolder(
-            "src/test/resources/org/exoplatform/ide/paas/heroku/CreateApplicationTest.zip", WS_URL);
+        System.out.println(VirtualFileSystemUtils.upoadZipFolder(
+            "src/test/resources/org/exoplatform/ide/paas/heroku/DeleteApplicationTest.zip", WS_URL) + "\n\n\n\n\n\n\n\n\n\n");
       }
       catch (Exception e)
       {
@@ -67,36 +65,24 @@ public class CreateApplicationTest extends BaseTest
          e.printStackTrace();
       }
    }
-
+   
    @Test
-   public void testCreateApplication() throws Exception
+   public void testDeleteApplication() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       
-      IDE.HEROKU.SWITCH_ACCOUNT.loginInHeroku(Messages.LOGIN, Messages.PASSWORD);
-      IDE.OUTPUT.waitForMessageShow(1);
-
-      IDE.HEROKU.CREATE_APP.openCreateApplicationForm();
-      assertTrue(selenium.isElementPresent(CreateApplication.APP_NAME_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.WORK_DIR_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.REMOTE_REPO_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.CREATE_BUTTON));
-
-      IDE.HEROKU.CREATE_APP.typeAppName(APP_NAME);
-      IDE.HEROKU.CREATE_APP.clickCreateApp();
-
-      IDE.OUTPUT.waitForMessageShow(2);
-
-      String message = IDE.OUTPUT.getOutputMessageText(2);
-
-      String url = "http://" + APP_NAME + ".heroku.com/";
-      assertTrue(message.contains(url));
+      IDE.HEROKU.CREATE_APP.createApplication(TEST_FOLDER);
+      IDE.HEROKU.DELETE_APP.callDeleteApplication();
+      IDE.ASK_DIALOG.waitForAskDialogOpened();
+      assertTrue(IDE.ASK_DIALOG.isOpened("Delete application from Heroku"));
+      IDE.ASK_DIALOG.clickYes();
       
-      String git = "git@heroku.com:" + APP_NAME + ".git";
-      assertTrue(message.contains(git));
+      IDE.OUTPUT.waitForMessageShow(3);
+      String text = IDE.OUTPUT.getOutputMessageText(3);
+      assertEquals(Messages.DELETED, text);
+      
+      
+      
    }
-
 }

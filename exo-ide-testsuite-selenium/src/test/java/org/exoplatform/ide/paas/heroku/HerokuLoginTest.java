@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.paas.heroku.core.Heroku.Messages;
+import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.heroku.core.SwitchAccount;
 import org.junit.After;
 import org.junit.Before;
@@ -59,6 +60,7 @@ public class HerokuLoginTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         Heroku.logout();
       }
       catch (Exception e)
       {
