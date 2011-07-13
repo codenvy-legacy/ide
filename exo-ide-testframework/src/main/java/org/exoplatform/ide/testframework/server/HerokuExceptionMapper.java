@@ -18,44 +18,28 @@
  */
 package org.exoplatform.ide.testframework.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 6, 2011 11:45:58 AM anya $
- *
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class MockApplication extends Application
+@Provider
+public class HerokuExceptionMapper implements ExceptionMapper<HerokuException>
 {
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
-
-   public MockApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(MockHerokuService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new HerokuExceptionMapper());
-   }
-
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Set<Class<?>> getClasses()
+   public Response toResponse(HerokuException he)
    {
-      return classes;
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
+      if (he.getResponseStatus() == 200 && "Authentication required.\n".equals(he.getMessage()))
+         return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+            .entity(he.getMessage()).type(he.getContentType()).build();
+      
+      return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+         .entity(he.getMessage()).type(he.getContentType()).build();
    }
 }

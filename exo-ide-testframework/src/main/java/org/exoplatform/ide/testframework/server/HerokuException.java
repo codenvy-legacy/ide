@@ -18,44 +18,40 @@
  */
 package org.exoplatform.ide.testframework.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
-
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jul 6, 2011 11:45:58 AM anya $
- *
+ * If heroku server return unexpected or error status for request.
+ * 
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class MockApplication extends Application
+@SuppressWarnings("serial")
+public class HerokuException extends Exception
 {
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+   /** HTTP status of response from heroku server. */
+   private final int responseStatus;
 
-   public MockApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(MockHerokuService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new HerokuExceptionMapper());
-   }
+   /** Content type of response from heroku server. */
+   private final String contentType;
 
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @param responseStatus HTTP status of response from heroku server
+    * @param message text message
+    * @param contentType content type of response from heroku server
     */
-   @Override
-   public Set<Class<?>> getClasses()
+   public HerokuException(int responseStatus, String message, String contentType)
    {
-      return classes;
+      super(message);
+      this.responseStatus = responseStatus;
+      this.contentType = contentType;
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
+   public int getResponseStatus()
    {
-      return singletons;
+      return responseStatus;
+   }
+
+   public String getContentType()
+   {
+      return contentType;
    }
 }

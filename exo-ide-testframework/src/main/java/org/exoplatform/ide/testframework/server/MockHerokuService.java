@@ -99,11 +99,11 @@ public class MockHerokuService
 
    @Path("keys/add")
    @POST
-   public void keysAdd()
+   public void keysAdd() throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
    }
 
@@ -115,11 +115,11 @@ public class MockHerokuService
       @QueryParam("remote") String remote, //
       @QueryParam("workdir") String workDir, //
       @Context UriInfo uriInfo //
-   )
+   ) throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
 
       Random random = new Random();
@@ -236,11 +236,11 @@ public class MockHerokuService
       @QueryParam("name") String name, //
       @QueryParam("workdir") String workDir, //
       @Context UriInfo uriInfo //
-   )
+   ) throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
       HerokuApplication application = null;
       if (name != null)
@@ -272,11 +272,11 @@ public class MockHerokuService
       @QueryParam("raw") boolean inRawFormat, //
       @QueryParam("workdir") String workDir, //
       @Context UriInfo uriInfo //
-   )
+   ) throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
       HerokuApplication application = null;
       if (name != null)
@@ -308,11 +308,11 @@ public class MockHerokuService
       @QueryParam("newname") String newname, //
       @QueryParam("workdir") String workDir, //
       @Context UriInfo uriInfo //
-   )
+   ) throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
 
       //Try to find application:
@@ -363,11 +363,11 @@ public class MockHerokuService
       @QueryParam("workdir") String workDir, //
       @Context UriInfo uriInfo, //
       final String command //
-   )
+   ) throws HerokuException
    {
       if (currentUser == null)
       {
-         createErrorResponse("Unauthorized.", 401);
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
       }
       HerokuApplication application = null;
       if (name != null)
