@@ -63,9 +63,17 @@ public class SwitchAccount extends AbstractTestModule
       return Boolean.valueOf(selenium().getAttribute(LOGIN_BUTTON+"@button-enabled"));
    }
    
-   public void clickLoginButton() throws Exception
+   public void clickLoginButton()
    {
       selenium().click(LOGIN_BUTTON);
+   }
+   
+   public void loginInHeroku(String email, String password) throws Exception
+   {
+      openLoginForm();
+      typeLogin(email);
+      typePassword(password);
+      clickLoginButton();
    }
    
    

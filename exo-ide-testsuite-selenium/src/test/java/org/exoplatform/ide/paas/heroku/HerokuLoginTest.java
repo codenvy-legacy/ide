@@ -40,10 +40,6 @@ public class HerokuLoginTest extends BaseTest
 
    private static final String TEST_FOLDER = HerokuLoginTest.class.getSimpleName();
    
-   private static final String LOGIN = "test@test.com";
-   
-   private static final String PASSWORD = "test";
-   
    @Before
    public void setUp() throws Exception
    {
@@ -83,8 +79,8 @@ public class HerokuLoginTest extends BaseTest
       assertTrue(selenium.isElementPresent(SwitchAccount.CANCEL_BUTTON));
       assertTrue(selenium.isElementPresent(SwitchAccount.TRY_AS_DEMO_BUTTON));
       assertFalse(IDE.HEROKU.SWITCH_ACCOUNT.isLoginButtonEnabled());
-      IDE.HEROKU.SWITCH_ACCOUNT.typeLogin(LOGIN);
-      IDE.HEROKU.SWITCH_ACCOUNT.typePassword(PASSWORD);
+      IDE.HEROKU.SWITCH_ACCOUNT.typeLogin(Messages.LOGIN);
+      IDE.HEROKU.SWITCH_ACCOUNT.typePassword(Messages.PASSWORD);
       
       assertTrue(IDE.HEROKU.SWITCH_ACCOUNT.isLoginButtonEnabled());
       IDE.HEROKU.SWITCH_ACCOUNT.clickLoginButton();
@@ -105,8 +101,8 @@ public class HerokuLoginTest extends BaseTest
       
       IDE.HEROKU.SWITCH_ACCOUNT.openLoginForm();
       
-      IDE.HEROKU.SWITCH_ACCOUNT.typeLogin(LOGIN);
-      IDE.HEROKU.SWITCH_ACCOUNT.typePassword(PASSWORD + System.currentTimeMillis());
+      IDE.HEROKU.SWITCH_ACCOUNT.typeLogin(Messages.LOGIN);
+      IDE.HEROKU.SWITCH_ACCOUNT.typePassword(Messages.PASSWORD + System.currentTimeMillis());
       IDE.HEROKU.SWITCH_ACCOUNT.clickLoginButton();
       
       IDE.WARNING_DIALOG.waitForWarningDialogOpened();

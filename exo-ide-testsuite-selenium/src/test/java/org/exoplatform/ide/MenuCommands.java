@@ -242,7 +242,7 @@ public interface MenuCommands
    public interface Git
    {
       String GIT = "Git";
-      
+
       String ADD = "Add...";
 
       String BRANCHES = "Branches...";
@@ -275,16 +275,18 @@ public interface MenuCommands
 
       String STATUS = "Status";
    }
-   
+
    public interface PaaS
    {
       String PAAS = "PaaS";
-      
+
       public interface Heroku
       {
          String HEROKU = "Heroku";
-         
+
          String SWITCH_ACCOUNT = "Switch account...";
+
+         String CREATE_APPLICATION = "Create application...";
       }
    }
 

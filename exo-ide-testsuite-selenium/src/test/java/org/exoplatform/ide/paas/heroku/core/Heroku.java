@@ -28,7 +28,14 @@ public class Heroku
   public interface Messages
   {
      String LOGED_IN = "[INFO] Logged in Heroku successfully.";
+     
+     String LOGIN = "test@test.com";
+     
+     String PASSWORD = "test";
   }
   
   public SwitchAccount SWITCH_ACCOUNT = new SwitchAccount();
+  
+  public CreateApplication CREATE_APP = new CreateApplication();
+  
 }
