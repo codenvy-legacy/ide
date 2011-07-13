@@ -49,6 +49,8 @@ public class Heroku
   
   public final DeleteApplication DELETE_APP = new DeleteApplication();
   
+  public final RenameApplication RENAME_APP = new RenameApplication();
+  
   public static final int logout() throws Exception
   {
      URL url = new URL(BaseTest.BASE_URL);
