@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -120,16 +119,16 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       //---- 5 -----------------
       //click on editor
       goToLine(27);
-
+      assertEquals("27 : 1", getCursorPositionUsingStatusBar());
+      
       //check outline tree
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
-      assertEquals("div", IDE.OUTLINE.getItemLabel(2));
+      assertEquals("div", IDE.OUTLINE.getItemLabel(12));
 
-      assertEquals("a", IDE.OUTLINE.getItemLabel(3));
-      assertEquals("groovy code", IDE.OUTLINE.getItemLabel(4));
+      assertEquals("a", IDE.OUTLINE.getItemLabel(13));
+      assertEquals("groovy code", IDE.OUTLINE.getItemLabel(14));
       //check selection in outline tree
-      IDE.OUTLINE.checkOutlineTreeNodeSelected(4, "groovy code", true);
-      assertEquals("27 : 1", getCursorPositionUsingStatusBar());
+      IDE.OUTLINE.checkOutlineTreeNodeSelected(14, "groovy code", true);
 
    }
 }

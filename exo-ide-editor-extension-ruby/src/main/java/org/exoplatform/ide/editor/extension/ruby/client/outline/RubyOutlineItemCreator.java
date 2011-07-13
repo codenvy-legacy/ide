@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.extension.ruby.client.outline;
 
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 
 
@@ -68,6 +69,12 @@ public class RubyOutlineItemCreator extends OutlineItemCreatorImpl
    public String getTokenDisplayTitle(TokenBeenImpl token)
    {
       String label = token.getName();
+      
+      // Add "()" to the end of method's label 
+      if (TokenType.METHOD.equals(token.getType()))
+      {
+         label += "()"; 
+      }
       
       if (token.getElementType() != null)
       {
