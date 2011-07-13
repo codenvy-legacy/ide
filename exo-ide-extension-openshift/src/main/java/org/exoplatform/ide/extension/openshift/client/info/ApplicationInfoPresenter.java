@@ -18,18 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.info;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-
-import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -48,6 +39,14 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
 /**
  * Presenter for getting and displaying application's information.
@@ -157,7 +156,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
+               if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

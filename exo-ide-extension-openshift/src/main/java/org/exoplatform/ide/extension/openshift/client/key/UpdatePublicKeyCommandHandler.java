@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.key;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -32,6 +31,8 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for updating public key on OpenShift.
@@ -91,7 +92,8 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
+               if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());
@@ -151,7 +153,8 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
+               if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

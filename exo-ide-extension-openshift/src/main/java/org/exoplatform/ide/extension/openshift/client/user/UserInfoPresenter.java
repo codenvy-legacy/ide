@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.extension.openshift.client.user;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import org.apache.http.HttpStatus;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -43,6 +41,10 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -237,7 +239,8 @@ public class UserInfoPresenter implements ShowUserInfoHandler, ViewClosedHandler
             if (exception instanceof ServerException)
             {
                ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus())
+               if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());

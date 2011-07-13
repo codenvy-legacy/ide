@@ -140,11 +140,13 @@ public class Express
    }
 
    private static String EXPRESS_API = "https://openshift.redhat.com/broker";
+
    public static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
       "php-5.3", //
       //"wsgi-3.2.1", //
       "rack-1.1") //
       );
+
    //   private static Set<String> APP_TYPES = new HashSet<String>(Arrays.asList( //
    //      "php-5.3.2", //
    //      "wsgi-3.2.1", //
@@ -154,13 +156,16 @@ public class Express
    //      );
    private static final Pattern TD_DATE_FORMAT = Pattern
       .compile("(\\d{4})-(\\d{2})-(\\d{2})[Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{1,3}))?([+-])((\\d{2}):(\\d{2}))");
+
    private static final Pattern GIT_URL_PATTERN = Pattern
       .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/\\~/git/(\\w+)\\.git/");
 
    private RepositoryService repositoryService;
+
    private SshKeyProvider keyProvider;
 
    private String workspace;
+
    private String expressConfig = "/";
 
    private final boolean debug = false;
@@ -210,8 +215,8 @@ public class Express
          jsonWriter.writeString(rhlogin);
          jsonWriter.writeKey("debug");
          jsonWriter.writeString(Boolean.toString(debug));
-//         jsonWriter.writeKey("info");
-//         jsonWriter.writeString(Boolean.toString(true));
+         //         jsonWriter.writeKey("info");
+         //         jsonWriter.writeString(Boolean.toString(true));
          jsonWriter.writeEndObject();
       }
       catch (JsonException jsone)
@@ -400,8 +405,8 @@ public class Express
          if (status != 200)
             throw fault(http);
 
-         RHUserInfo userInfo = userInfo(rhCloudCredentials, false);
-         String gitUrl = gitUrl(userInfo, app);
+         AppInfo appInfo = applicationInfo(rhCloudCredentials, app);
+         String gitUrl = appInfo.getGitUrl();
 
          if (workDir != null)
          {
@@ -423,7 +428,7 @@ public class Express
                   git.close();
             }
          }
-         return new AppInfo(app, type, gitUrl, publicUrl(userInfo, app), -1 /* TODO */);
+         return appInfo;
       }
       finally
       {
@@ -441,7 +446,17 @@ public class Express
             throw new IllegalStateException("Not openshift express application. ");
       }
 
-      List<AppInfo> apps = userInfo(true).getApps();
+      RHCloudCredentials rhCloudCredentials = readCredentials();
+      if (rhCloudCredentials == null)
+         throw new ExpressException(200, "Authentication required.\n", "text/plain");
+
+      return applicationInfo(rhCloudCredentials, app);
+   }
+
+   private AppInfo applicationInfo(RHCloudCredentials rhCloudCredentials, String app) throws ExpressException,
+      IOException, ParsingResponseException
+   {
+      List<AppInfo> apps = userInfo(rhCloudCredentials, true).getApps();
       if (apps != null && apps.size() > 0)
       {
          for (AppInfo a : apps)
@@ -553,10 +568,10 @@ public class Express
          jsonWriter.writeString(rhCloudCredentials.getRhlogin());
          jsonWriter.writeKey("debug");
          jsonWriter.writeString(Boolean.toString(debug));
-//         jsonWriter.writeKey("info");
-//         jsonWriter.writeString(Boolean.toString(userInfo));
-//         jsonWriter.writeKey("apps");
-//         jsonWriter.writeString(Boolean.toString(appsInfo));
+         //         jsonWriter.writeKey("info");
+         //         jsonWriter.writeString(Boolean.toString(userInfo));
+         //         jsonWriter.writeKey("apps");
+         //         jsonWriter.writeString(Boolean.toString(appsInfo));
          jsonWriter.writeEndObject();
       }
       catch (JsonException jsone)
@@ -585,10 +600,10 @@ public class Express
             JsonParser jsonParser = new JsonParserImpl();
             JsonHandler handler = new JsonDefaultHandler();
             jsonParser.parse(input, handler);
-            JsonValue resultJson = handler.getJsonObject().getElement("result");
+            JsonValue resultJson = handler.getJsonObject().getElement("data");
 
             // Response in form :
-            // "result":"{\"user_info\":{\"rhc_domain\":\"rhcloud.com\", ... }
+            // "data":"{\"user_info\":{\"rhc_domain\":\"rhcloud.com\", ... }
             // result is String, why not JSON object ???
             // Need parse twice :-(
             String resultSrc = resultJson.getStringValue();
@@ -617,11 +632,12 @@ public class Express
                      String app = keys.next();
                      JsonValue appData = appsInfoJson.getElement(app);
                      String type = appData.getElement("framework").getStringValue();
+                     String uuid = appData.getElement("uuid").getStringValue();
                      Calendar created = parseDate(appData.getElement("creation_time").getStringValue());
                      l.add(new AppInfo( //
                         app, //
                         type, //
-                        gitUrl(rhUserInfo, app), //
+                        gitUrl(rhUserInfo, app, uuid), //
                         publicUrl(rhUserInfo, app), //
                         created != null ? created.getTimeInMillis() : -1 //
                      ));
@@ -807,11 +823,11 @@ public class Express
       }
    }
 
-   private static String gitUrl(RHUserInfo userInfo, String app)
+   private static String gitUrl(RHUserInfo userInfo, String app, String uuid)
    {
       StringBuilder sb = new StringBuilder();
       sb.append("ssh://");
-      sb.append(userInfo.getUuid());
+      sb.append(uuid);
       sb.append('@');
       sb.append(app);
       sb.append('-');
