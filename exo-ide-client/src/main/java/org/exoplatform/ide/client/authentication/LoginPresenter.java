@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -39,6 +40,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -80,9 +84,9 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       void setLoginButtonEnabled(boolean enabled);
 
-      HasValue<String> getLoginField();
+      TextFieldItem getLoginField();
 
-      HasValue<String> getPasswordField();
+      TextFieldItem getPasswordField();
 
    }
 
@@ -131,6 +135,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          }
       });
       */
+      
    }
 
    @Override
@@ -190,9 +195,27 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-
+      
+      KeyPressHandler textFieldsKeyPressHandler = new KeyPressHandler()
+      {
+         @Override
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               try {
+                  doLogin(asyncRequest);               
+               } catch (Exception e) {
+                  e.printStackTrace();
+               }
+            }         
+         }
+      };      
+      
       display.getLoginField().addValueChangeHandler(valueChangeHandler);
+      display.getLoginField().addKeyPressHandler(textFieldsKeyPressHandler);
       display.getPasswordField().addValueChangeHandler(valueChangeHandler);
+      display.getPasswordField().addKeyPressHandler(textFieldsKeyPressHandler);
 
       display.getLoginField().setValue(login);
       display.getPasswordField().setValue(password);
@@ -200,7 +223,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       IDE.getInstance().openView(display.asView());
    }
-
+   
    /**
     * Handle changing of the text in text fields.
     */

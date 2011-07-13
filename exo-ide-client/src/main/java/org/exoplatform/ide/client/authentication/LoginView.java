@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.authentication;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -87,13 +88,13 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
    }
 
    @Override
-   public HasValue<String> getLoginField()
+   public TextFieldItem getLoginField()
    {
       return loginField;
    }
 
    @Override
-   public HasValue<String> getPasswordField()
+   public TextFieldItem getPasswordField()
    {
       return passwordField;
    }
