@@ -60,16 +60,16 @@ public class TokenBeenImpl extends TokenImpl
    }
 
    public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
-      List<Modifier> javaModifiers)
+      List<Modifier> modifiers)
    {
       this(name, type, lineNumber, mimeType, elementType);
-      setModifiers(javaModifiers);
+      setModifiers(modifiers);
    }
 
    public TokenBeenImpl(String name, TokenType type, int lineNumber, String mimeType, String elementType,
-      List<Modifier> javaModifiers, String fqn)
+      List<Modifier> modifiers, String fqn)
    {
-      this(name, type, lineNumber, mimeType, elementType, javaModifiers);
+      this(name, type, lineNumber, mimeType, elementType, modifiers);
       setFqn(fqn);
    }
    
