@@ -50,7 +50,9 @@ public class FileTemplates
       addUWAWidgetContent();
      // addClassPathTemplate();
       addRubyTemplate();
-      addPhpTemplate();      
+      addPhpTemplate();  
+      addJspTemplate();
+      addJavaTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -62,6 +64,35 @@ public class FileTemplates
       }
       return content;
    }
+   
+   private static void addJspTemplate()
+   {
+    String content = 
+       "<%@page contentType=\"text/html\" import=\"java.util.Date\"%>\n"+
+       "<html>\n" +
+       "  <body>\n" +
+       "    <div align=\"center\">\n"+
+       "      <center>\n" +
+       "       <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"460\"   bgcolor=\"#EEFFCA\">\n" +
+       "        <tr><td width=\"100%\"><font size=\"6\" color=\"#008000\">&nbsp;Date example</font></td></tr>\n" +
+       "        <tr><td width=\"100%\"><b>&nbsp;Current Date and time is:&nbsp;<font color=\"#FF0000\"><%=new Date().toString()%> </font></b></td></tr>\n" +
+       "     </table>\n" +
+       "  </center>\n" +
+       " </div>\n" +
+       " </body>\n"+
+       "</html>";
+    templates.put(MimeType.APPLICATION_JSP, content);
+   }
+   
+   private static void addJavaTemplate()
+   {
+      String content = 
+      "class HelloWorldApp {\n" +
+      "    public static void main(String[] args) {\n" +
+      "      System.out.println(\"Hello World!\");\n" +
+      "}";
+      templates.put(MimeType.APPLICATION_JAVA, content);
+  }
 
    private static void addPhpTemplate()
    {
