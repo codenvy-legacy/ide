@@ -126,7 +126,7 @@ public class FileTemplates
       String content = "# Ruby Sample program\n" +
       "class HelloClass\n" +
       "  def sayHello\n"+
-      "    puts( \"Hello, wolrd!\" )\n"+
+      "    puts( \"Hello, world!\" )\n"+
       "  end\n"+
       "end\n\n"+
 

@@ -313,7 +313,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
          writeKey(userKeys, host + ".key", user, buff.toByteArray());
 
          buff.reset();
-         keyPair.writePublicKey(buff, comment != null ? comment : (user + "@ide.exoplaform.local"));
+         keyPair.writePublicKey(buff, comment != null ? comment : (user + "@ide.exoplatform.local"));
          writeKey(userKeys, host + ".pub", user, buff.toByteArray());
 
          session.save();
