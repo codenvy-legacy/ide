@@ -57,6 +57,8 @@ public class Heroku extends AbstractTestModule
   
   public final ApplicationInfo APP_INFO = new ApplicationInfo();
   
+  public final Rake RAKE = new Rake();
+  
   public static final int logout() throws Exception
   {
      URL url = new URL(BaseTest.BASE_URL);

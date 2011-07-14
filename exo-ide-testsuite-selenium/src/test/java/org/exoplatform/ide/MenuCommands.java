@@ -287,14 +287,16 @@ public interface MenuCommands
          String SWITCH_ACCOUNT = "Switch account...";
 
          String CREATE_APPLICATION = "Create application...";
-         
+
          String DELETE_APPLICATION = "Delete application...";
-         
+
          String RENAME_APPLICATION = "Rename application...";
-         
+
          String APPLICATION_INFO = "Application info...";
-         
+
          String DEPLOY_PUBLIC_KEY = "Deploy public key...";
+
+         String RAKE = "Rake...";
       }
    }
 
