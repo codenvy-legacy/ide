@@ -54,7 +54,6 @@ public class HerokuControl extends SimpleControl implements IDEControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setEvent(new AddKeyEvent());
       setImages(HerokuClientBundle.INSTANCE.heroku(), HerokuClientBundle.INSTANCE.herokuDisabled());
    }
 
