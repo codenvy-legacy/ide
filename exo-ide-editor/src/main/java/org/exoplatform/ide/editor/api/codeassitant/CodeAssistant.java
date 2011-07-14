@@ -209,47 +209,4 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
 		return eval('(' + json + ')');
    }-*/;
 
-   /**
-    * @param tokenFromParser
-    */
-   @SuppressWarnings("unchecked")
-   protected List<Token> getTokenJavaScript(List<Token> tokenFromParser)
-   {
-      List<Token> tokens = new ArrayList<Token>();
-
-      String tagName = "script";
-
-      for (int i = 0; i < tokenFromParser.size(); i++)
-      {
-         Token token = tokenFromParser.get(i);
-         if (token.getName() == null)
-            continue;
-
-         if (token.getProperty(TokenProperties.MIME_TYPE).isStringProperty().stringValue()
-            .equals(MimeType.APPLICATION_JAVASCRIPT))
-         {
-            // get all subtokens from tag "<script>"
-            if (token.getName().equals(tagName) && token.getType().equals(TokenType.TAG))
-            {
-               if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST))
-               {
-                  tokens.addAll(token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue());
-               }
-            }
-            else
-            {
-               tokens.add(token);
-            }
-         }
-
-         else if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST)
-            && token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
-         {
-            tokens.addAll(getTokenJavaScript((List<Token>)token.getProperty(TokenProperties.SUB_TOKEN_LIST)
-               .isArrayProperty().arrayValue()));
-         }
-      }
-
-      return tokens;
-   }
 }

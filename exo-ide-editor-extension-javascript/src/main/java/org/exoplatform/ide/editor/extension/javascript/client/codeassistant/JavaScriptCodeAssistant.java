@@ -26,6 +26,7 @@ import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -391,5 +392,49 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       }
 
       return t1.getName().compareTo(t2.getName());
+   }
+   
+   /**
+    * @param tokenFromParser
+    */
+   @SuppressWarnings("unchecked")
+   protected List<Token> getTokenJavaScript(List<Token> tokenFromParser)
+   {
+      List<Token> tokens = new ArrayList<Token>();
+
+      String tagName = "script";
+
+      for (int i = 0; i < tokenFromParser.size(); i++)
+      {
+         Token token = tokenFromParser.get(i);
+         if (token.getName() == null)
+            continue;
+
+         if (token.getProperty(TokenProperties.MIME_TYPE).isStringProperty().stringValue()
+            .equals(MimeType.APPLICATION_JAVASCRIPT))
+         {
+            // get all subtokens from tag "<script>"
+            if (token.getName().equals(tagName) && token.getType().equals(TokenType.TAG))
+            {
+               if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST))
+               {
+                  tokens.addAll(token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue());
+               }
+            }
+            else
+            {
+               tokens.add(token);
+            }
+         }
+
+         else if (token.hasProperty(TokenProperties.SUB_TOKEN_LIST)
+            && token.getProperty(TokenProperties.SUB_TOKEN_LIST).isArrayProperty().arrayValue() != null)
+         {
+            tokens.addAll(getTokenJavaScript((List<Token>)token.getProperty(TokenProperties.SUB_TOKEN_LIST)
+               .isArrayProperty().arrayValue()));
+         }
+      }
+
+      return tokens;
    }
 }
