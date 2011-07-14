@@ -95,6 +95,7 @@ public class MockHerokuService
    public void logout()
    {
       currentUser = null;
+      applications.clear();
    }
 
    @Path("keys/add")
