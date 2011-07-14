@@ -291,6 +291,8 @@ public interface MenuCommands
          String DELETE_APPLICATION = "Delete application...";
          
          String RENAME_APPLICATION = "Rename application...";
+         
+         String APPLICATION_INFO = "Application info...";
       }
    }
 

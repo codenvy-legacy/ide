@@ -51,6 +51,8 @@ public class Heroku
   
   public final RenameApplication RENAME_APP = new RenameApplication();
   
+  public final ApplicationInfo APP_INFO = new ApplicationInfo();
+  
   public static final int logout() throws Exception
   {
      URL url = new URL(BaseTest.BASE_URL);
