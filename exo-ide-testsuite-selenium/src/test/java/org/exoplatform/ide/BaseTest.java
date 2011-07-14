@@ -228,7 +228,7 @@ public abstract class BaseTest
 
    private static void standaloneLogout() throws Exception
    {
-      selenium.clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logaut.url")+"')]", "");
+      selenium.clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url")+"')]", "");
       selenium.waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 

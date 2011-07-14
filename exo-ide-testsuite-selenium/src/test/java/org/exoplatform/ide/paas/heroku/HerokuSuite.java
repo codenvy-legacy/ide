@@ -28,7 +28,8 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({HerokuLoginTest.class,CreateApplicationTest.class, DeleteApplicationTest.class, RenameApplicationTest.class})
+@SuiteClasses({HerokuLoginTest.class, CreateApplicationTest.class, DeleteApplicationTest.class,
+   RenameApplicationTest.class, DeployPublicKeyTest.class})
 public class HerokuSuite
 {
 

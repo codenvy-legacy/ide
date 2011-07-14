@@ -21,7 +21,9 @@ package org.exoplatform.ide.paas.heroku.core;
 import org.exoplatform.common.http.client.HTTPConnection;
 import org.exoplatform.common.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.Utils;
+import org.exoplatform.ide.core.AbstractTestModule;
 
 import java.net.URL;
 
@@ -30,13 +32,15 @@ import java.net.URL;
  * @version $Id: $
  *
  */
-public class Heroku
+public class Heroku extends AbstractTestModule
 {
   public interface Messages
   {
      String LOGED_IN = "[INFO] Logged in Heroku successfully.";
      
      String DELETED = "[INFO] Application is successfully deleted on Heroku.";
+     
+     String KEYS_DEPLOYED = "[INFO] Public keys are successfully deployed on Heroku.";
      
      String LOGIN = "test@test.com";
      
@@ -59,6 +63,11 @@ public class Heroku
      HTTPConnection connection = Utils.getConnection(url);
      HTTPResponse response = connection.Post(BaseTest.REST_CONTEXT + "/ide/heroku/logout");
      return response.getStatusCode();
+  }
+  
+  public void deployPublicKey() throws Exception
+  {
+     IDE().MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.Heroku.HEROKU, MenuCommands.PaaS.Heroku.DEPLOY_PUBLIC_KEY);
   }
   
 }

@@ -293,6 +293,8 @@ public interface MenuCommands
          String RENAME_APPLICATION = "Rename application...";
          
          String APPLICATION_INFO = "Application info...";
+         
+         String DEPLOY_PUBLIC_KEY = "Deploy public key...";
       }
    }
 
