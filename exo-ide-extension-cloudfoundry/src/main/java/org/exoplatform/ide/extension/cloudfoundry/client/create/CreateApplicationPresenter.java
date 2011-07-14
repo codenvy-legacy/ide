@@ -67,6 +67,8 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
       HasValue<String> getNameField();
       
+      HasValue<String> getWarField();
+      
       HasValue<String> getUrlField();
       
       HasValue<Boolean> getChangeUrlCheckItem();
@@ -202,6 +204,11 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    
    private void createApplication()
    {
+      String war = display.getWarField().getValue();
+      if (war == null || war.isEmpty())
+      {
+         war = null;
+      }
       final String name = display.getNameField().getValue();
       String type = null;
       if (!display.getChangeTypeCheckItem().getValue())
@@ -219,7 +226,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
       
-      CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, null,
+      CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, war,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, loggedInHandler, null)
       {
          @Override

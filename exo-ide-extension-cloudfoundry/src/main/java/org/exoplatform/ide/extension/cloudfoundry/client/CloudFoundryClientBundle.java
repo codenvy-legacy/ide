@@ -69,6 +69,18 @@ public interface CloudFoundryClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/startApp_Disabled.png")
    ImageResource startAppDisabled();
    
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/restartApp.png")
+   ImageResource restartApp();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/restartApp_Disabled.png")
+   ImageResource restartAppDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/updateApp.png")
+   ImageResource updateApp();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/updateApp_Disabled.png")
+   ImageResource updateAppDisabled();
+   
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/stopApp.png")
    ImageResource stopApp();
    

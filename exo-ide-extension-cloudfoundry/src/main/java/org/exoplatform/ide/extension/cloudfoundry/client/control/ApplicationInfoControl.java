@@ -24,32 +24,31 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
 
 /**
- * Control to start application on CloudFoundry.
+ * Control to get application information.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
+ * @version $Id: ApplicationInfoControl.java Jul 13, 2011 12:54:25 PM vereshchaka $
  *
  */
-public class StartApplicationControl extends SimpleControl implements IDEControl
+public class ApplicationInfoControl extends SimpleControl implements IDEControl
 {
    
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlId();
+   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlId();
    
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
+   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlTitle();
    
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
+   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
    
-   public StartApplicationControl()
+   public ApplicationInfoControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.startApp(), CloudFoundryClientBundle.INSTANCE.startAppDisabled());
-      setEvent(new StartApplicationEvent());
-      setDelimiterBefore(true);
+      setImages(CloudFoundryClientBundle.INSTANCE.applicationInfo(), CloudFoundryClientBundle.INSTANCE.applicationInfoDisabled());
+      setEvent(new ApplicationInfoEvent());
    }
 
    /**

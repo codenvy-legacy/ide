@@ -28,7 +28,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 500;
 
-   private static final int HEIGHT = 260;
+   private static final int HEIGHT = 320;
 
    private static final String CREATE_BUTTON_ID = "ideCloudFoundryAppViewCreateButton";
 
@@ -68,6 +68,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     */
    @UiField
    TextField nameField;
+   
+   @UiField
+   TextField warField;
 
    /**
     * Application URL field.
@@ -292,5 +295,14 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    {
       memoryField.setEnabled(enable);
       memoryField.setShowDisabled(!enable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getWarField()
+    */
+   @Override
+   public HasValue<String> getWarField()
+   {
+      return warField;
    }
 }

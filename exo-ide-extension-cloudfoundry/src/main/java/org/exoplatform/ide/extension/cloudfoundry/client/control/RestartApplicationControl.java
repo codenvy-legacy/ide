@@ -24,32 +24,31 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 
 /**
- * Control to start application on CloudFoundry.
+ * Control to restart application on CloudFoundry.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
  *
  */
-public class StartApplicationControl extends SimpleControl implements IDEControl
+public class RestartApplicationControl extends SimpleControl implements IDEControl
 {
    
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlId();
+   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlId();
    
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
+   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
    
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
+   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
    
-   public StartApplicationControl()
+   public RestartApplicationControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.startApp(), CloudFoundryClientBundle.INSTANCE.startAppDisabled());
-      setEvent(new StartApplicationEvent());
-      setDelimiterBefore(true);
+      setImages(CloudFoundryClientBundle.INSTANCE.restartApp(), CloudFoundryClientBundle.INSTANCE.restartAppDisabled());
+      setEvent(new RestartApplicationEvent());
    }
 
    /**

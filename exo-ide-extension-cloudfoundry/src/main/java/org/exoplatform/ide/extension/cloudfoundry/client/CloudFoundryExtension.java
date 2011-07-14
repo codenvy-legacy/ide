@@ -26,12 +26,17 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.operations.OperationsApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 
 /**
@@ -70,12 +75,17 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       
       IDE.getInstance().addControl(new CloudFoundryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new UpdateApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ApplicationInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new StartApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new StopApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new RestartApplicationControl(), DockTarget.NONE, false);
       
       new CreateApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new StartApplicationPresenter(eventBus);
+      new ApplicationInfoPresenter(eventBus);
+      new OperationsApplicationPresenter(eventBus);
    }
 
 }

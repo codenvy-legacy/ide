@@ -137,11 +137,10 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
          }
          else if (key.equals(Constants.URIS))
          {
-            //parse list
             List<String> uris = new ArrayList<String>();
-            if (jsonObject.get(key).isArray() != null)
+            if (jsonValue.isArray() != null)
             {
-               JSONArray jsonArray = jsonObject.get(key).isArray();
+               JSONArray jsonArray = jsonValue.isArray();
 
                parseArray(jsonArray, uris);
             }
@@ -196,7 +195,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
 
                parseArray(jsonArray, envs);
             }
-            cloudfoundryApplication.setUris(envs);
+            cloudfoundryApplication.setEnv(envs);
 
          }
          else if (key.equals(Constants.RESOURCES))

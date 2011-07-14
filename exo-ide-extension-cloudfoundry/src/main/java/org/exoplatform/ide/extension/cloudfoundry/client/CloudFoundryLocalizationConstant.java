@@ -68,6 +68,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.startApp.prompt")
    String startAppControlPrompt();
    
+   @Key("control.restartApp.id")
+   String restartAppControlId();
+   
+   @Key("control.restartApp.title")
+   String restartAppControlTitle();
+   
+   @Key("control.restartApp.prompt")
+   String restartAppControlPrompt();
+   
    @Key("control.stopApp.id")
    String stopAppControlId();
    
@@ -76,6 +85,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("control.stopApp.prompt")
    String stopAppControlPrompt();
+   
+   @Key("control.updateApp.id")
+   String updateAppControlId();
+   
+   @Key("control.updateApp.title")
+   String updateAppControlTitle();
+   
+   @Key("control.updateApp.prompt")
+   String updateAppControlPrompt();
    
    @Key("control.appInfo.id")
    String applicationInfoControlId();
@@ -143,6 +161,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("createApp.field.startAfterCreation")
    String createAppStartAfterCreationField();
    
+   @Key("createApp.field.war")
+   String createAppWarField();
+   
    /*
     * CreateApplicationPresenter
     */
@@ -161,6 +182,23 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("startApp.appStopped")
    String applicationStopped(String name);
    
+   @Key("startApp.appRestarted")
+   String applicationRestarted(String name);
+   
+   @Key("startApp.appRestarted.uris")
+   String applicationRestartedUris(String name, String uris);
+   
+   /*
+    * OperationsApplicationPresenter
+    */
+   @Key("update.askWar.title")
+   String updateAskWarTitle();
+   
+   @Key("update.askWar.message")
+   String updateAskWarMessage();
+   
+   @Key("update.applicationUpdated")
+   String updateApplicationSuccess(String name);
    
    /*
     * Messages
@@ -185,6 +223,45 @@ public interface CloudFoundryLocalizationConstant extends Messages
     */
    @Key("appInfo.title")
    String applicationInfoTitle();
+   
+   @Key("appInfo.name")
+   String appInfoName();
+   
+   @Key("appInfo.state")
+   String appInfoState();
+   
+   @Key("appInfo.instances")
+   String appInfoInstances();
+   
+   @Key("appInfo.version")
+   String appInfoVersion();
+   
+   @Key("appInfo.uris")
+   String appInfoUris();
+   
+   @Key("appInfo.resources")
+   String appInfoResources();
+   
+   @Key("appInfo.resources.disk")
+   String appInfoResourcesDisk();
+   
+   @Key("appInfo.resources.memory")
+   String appInfoResourcesMemory();
+   
+   @Key("appInfo.staging")
+   String appInfoStaging();
+   
+   @Key("appInfo.staging.model")
+   String appInfoStagingModel();
+   
+   @Key("appInfo.staging.stack")
+   String appInfoStagingStack();
+   
+   @Key("appInfo.services")
+   String appInfoServices();
+   
+   @Key("appInfo.env")
+   String appInfoEnvironments();
    
    /*
     * ApplicationInfoGrid

@@ -28,7 +28,7 @@
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display" />
    </replace-with>
    
-   <!--replace-with class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display" />
-   </replace-with-->
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display" />
+   </replace-with>
 </module>

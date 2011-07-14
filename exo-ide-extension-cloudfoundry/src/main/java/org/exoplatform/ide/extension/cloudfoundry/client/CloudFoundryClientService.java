@@ -23,7 +23,6 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Client service for CloudFoundry.
@@ -83,7 +82,7 @@ public abstract class CloudFoundryClientService
     * @param callback - callcack, that client has to implement
     */
    public abstract void getApplicationInfo(String workDir, String appId,
-      CloudFoundryAsyncRequestCallback<Map<String, String>> callback);
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
    
    /**
     * Delete application from CloudFoundry.
@@ -112,6 +111,27 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void stopApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   /**
+    * Restart application.
+    * 
+    * @param workDir - the location of application
+    * @param name - application name
+    * @param callback callback, that client has to implement to receive response from server.
+    */
+   public abstract void restartApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+   
+   /**
+    * Update existing application.
+    * 
+    * @param workDir the location of application
+    * @param name application name
+    * @param war location of war file (Java applications only)
+    * @param callback callback, that client has to implement to receive response from server.
+    */
+   public abstract void updateApplication(String workDir, String name, String war,
       CloudFoundryAsyncRequestCallback<String> callback);
 
 }

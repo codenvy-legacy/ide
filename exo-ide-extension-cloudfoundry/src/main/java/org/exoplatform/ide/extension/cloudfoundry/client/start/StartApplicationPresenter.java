@@ -41,7 +41,8 @@ import java.util.List;
  * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
  *
  */
-public class StartApplicationPresenter implements ItemsSelectedHandler, StartApplicationHandler, StopApplicationHandler
+public class StartApplicationPresenter implements ItemsSelectedHandler, StartApplicationHandler, StopApplicationHandler,
+RestartApplicationHandler
 {
    /**
     * Events handler.
@@ -60,6 +61,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(StartApplicationEvent.TYPE, this);
       eventBus.addHandler(StopApplicationEvent.TYPE, this);
+      eventBus.addHandler(RestartApplicationEvent.TYPE, this);
    }
    
    public void bindDisplay(List<Framework> frameworks)
@@ -128,16 +130,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
             @Override
             protected void onSuccess(CloudfoundryApplication result)
             {
-               String appUris = "";
-               for (String uri : result.getUris())
-               {
-                  appUris += ", " + uri;
-               }
-               if (!appUris.isEmpty())
-               {
-                  //crop unnecessary symbols
-                  appUris = appUris.substring(2);
-               }
+               final String appUris = getAppUrisAsString(result);
                String msg = "";
                if (appUris.isEmpty())
                {
@@ -150,6 +143,21 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });      
+   }
+   
+   private String getAppUrisAsString(CloudfoundryApplication application)
+   {
+      String appUris = "";
+      for (String uri : application.getUris())
+      {
+         appUris += ", " + uri;
+      }
+      if (!appUris.isEmpty())
+      {
+         //crop unnecessary symbols
+         appUris = appUris.substring(2);
+      }
+      return appUris;
    }
    
    private void stopApplication()
@@ -179,6 +187,49 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
       return workDir;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent)
+    */
+   @Override
+   public void onRestartApplication(RestartApplicationEvent event)
+   {
+      restartApplication();
+   }
+   
+   private LoggedInHandler restartLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         restartApplication();
+      }
+   };
+   
+   private void restartApplication()
+   {
+      String workDir = getWorkDir();
+      
+      CloudFoundryClientService.getInstance().restartApplication(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, restartLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               final String appUris = getAppUrisAsString(result);
+               String msg = "";
+               if (appUris.isEmpty())
+               {
+                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+               }
+               else
+               {
+                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
+               }
+               eventBus.fireEvent(new OutputEvent(msg));
+            }
+         });
    }
 
 }

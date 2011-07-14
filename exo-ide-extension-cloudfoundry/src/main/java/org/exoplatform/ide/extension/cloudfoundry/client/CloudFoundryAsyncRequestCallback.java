@@ -66,9 +66,8 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
    {
       if (exception instanceof ServerException)
       {
-         System.out.println(">>>>>>>>>>exception");
          ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus()
+         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                   && serverException.getMessage().contains("Authentication required."))
          {
             eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));

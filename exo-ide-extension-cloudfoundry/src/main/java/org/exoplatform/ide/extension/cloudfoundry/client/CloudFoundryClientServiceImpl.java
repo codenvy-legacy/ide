@@ -35,7 +35,6 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -55,11 +54,17 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    
    private static final String START = BASE_URL + "/apps/start";
    
+   private static final String RESTART = BASE_URL + "/apps/restart";
+   
    private static final String STOP = BASE_URL + "/apps/stop";
    
    private static final String LOGIN = BASE_URL + "/login";
    
    private static final String LOGOUT = BASE_URL + "/logout";
+   
+   private static final String APPS_INFO = BASE_URL + "/apps/info";
+   
+   private static final String UPDATE = BASE_URL + "/apps/update";
    
    /**
     * Events handler.
@@ -151,10 +156,23 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationInfo(String workDir, String appId,
-      CloudFoundryAsyncRequestCallback<Map<String, String>> callback)
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
-      // TODO Auto-generated method stub
+      final String url = restServiceContext + APPS_INFO;
       
+      String params = (appId != null) ? "appid=" + appId + "&" : "";
+      params += "workdir=" + workDir;
+
+      callback.setEventBus(eventBus);
+      
+      CloudfoundryApplication application = new CloudfoundryApplication();
+      callback.setResult(application);
+      CloudfoundryApplicationUnmarshaller unmarshaller = new CloudfoundryApplicationUnmarshaller(application);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**
@@ -229,6 +247,57 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String workDirParam = (params.isEmpty()) ? "" : "&";
       workDirParam += "workdir=" + workDir;
       params += (workDir != null) ? workDirParam : "";
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#restartApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void restartApplication(String workDir, String name,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   {
+      final String url = restServiceContext + RESTART;
+      
+      callback.setEventBus(eventBus);
+      
+      CloudfoundryApplication cloudfoundryApplication = new CloudfoundryApplication();
+      
+      CloudfoundryApplicationUnmarshaller unmarshaller = new CloudfoundryApplicationUnmarshaller(cloudfoundryApplication);
+      callback.setPayload(unmarshaller);
+      callback.setResult(cloudfoundryApplication);
+      
+      String params = (name != null) ? "name=" + name : "";
+      String workDirParam = (params.isEmpty()) ? "" : "&";
+      workDirParam += "workdir=" + workDir;
+      params += (workDir != null) ? workDirParam : "";
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void updateApplication(String workDir, String name, String war,
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + UPDATE;
+      callback.setEventBus(eventBus);
+      
+      String result = (workDir != null) ? workDir : name;
+      callback.setResult(result);
+      
+      String params = (name != null) ? "name=" + name : "";
+      String workDirParam = (params.isEmpty()) ? "" : "&";
+      workDirParam += "workdir=" + workDir;
+      params += (workDir != null) ? workDirParam : "";
+      params += (war != null) ? "&war=" + war : "";
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
