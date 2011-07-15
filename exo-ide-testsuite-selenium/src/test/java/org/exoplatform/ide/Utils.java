@@ -175,7 +175,7 @@ public class Utils
          m.reset();
          //add /IDE/ path segment to URL be equals with client URL 
 
-         if (BaseTest.isRunIdeAsShell())
+         if (BaseTest.isRunIdeAsShell() || href.startsWith(BaseTest.BASE_URL + "IDE/"))
          {
             m.update(encoded.getBytes());
          }
