@@ -24,7 +24,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import org.exoplatform.ide.extension.cloudfoundry.client.operations.UpdateApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent;
 
 /**
  * Control to start application on CloudFoundry.

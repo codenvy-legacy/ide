@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.client.operations;
+package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -96,7 +96,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.operations.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide.extension.cloudfoundry.client.operations.UpdateApplicationEvent)
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent)
     */
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)

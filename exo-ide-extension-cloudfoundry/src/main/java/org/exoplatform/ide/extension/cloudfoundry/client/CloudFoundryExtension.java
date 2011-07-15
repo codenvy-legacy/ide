@@ -39,9 +39,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
-import org.exoplatform.ide.extension.cloudfoundry.client.operations.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 
 /**
  * CloudFoundry extention for IDE.
