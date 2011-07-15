@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.operations;
 
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -31,6 +32,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
@@ -41,7 +43,8 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OperationsApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class OperationsApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler
+public class OperationsApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler, 
+DeleteApplicationHandler
 {
    /**
     * Events handler.
@@ -63,11 +66,17 @@ public class OperationsApplicationPresenter implements ItemsSelectedHandler, Upd
     */
    private String workDir;
    
+   /**
+    * The name of application.
+    */
+   private String appName;
+   
    public OperationsApplicationPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
       
       eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
+      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
    
@@ -117,7 +126,10 @@ public class OperationsApplicationPresenter implements ItemsSelectedHandler, Upd
          @Override
          public void stringValueReceived(String value)
          {
-            if (value == null || value.isEmpty())
+            if (value == null)
+               return;
+            
+            if (value.isEmpty())
             {
                war = null;
             }
@@ -140,6 +152,78 @@ public class OperationsApplicationPresenter implements ItemsSelectedHandler, Upd
             {
                eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
                   .updateApplicationSuccess(result), Type.INFO));
+            }
+         });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.operations.DeleteApplicationHandler#onDeleteApplication(org.exoplatform.ide.extension.cloudfoundry.client.operations.DeleteApplicationEvent)
+    */
+   @Override
+   public void onDeleteApplication(DeleteApplicationEvent event)
+   {
+      getApplicationInfo();
+   }
+   
+   private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         getApplicationInfo();
+      }
+   };
+   
+   private void getApplicationInfo()
+   {
+      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, appInfoLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               appName = result.getName();
+               askForDeleting(appName);
+            }
+         });
+   }
+   
+   private void askForDeleting(String appName)
+   {
+      Dialogs.getInstance().ask(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
+         CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appName),
+         new BooleanValueReceivedHandler()
+         {
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if (value != null && value)
+               {
+                  deleteApplication();
+               }
+            }
+         });
+   }
+   
+   private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         deleteApplication();
+      }
+   };
+   
+   private void deleteApplication()
+   {
+      CloudFoundryClientService.getInstance().deleteApplication(workDir, null, false,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, deleteAppLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               eventBus.fireEvent(new OutputEvent(
+                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
             }
          });
    }

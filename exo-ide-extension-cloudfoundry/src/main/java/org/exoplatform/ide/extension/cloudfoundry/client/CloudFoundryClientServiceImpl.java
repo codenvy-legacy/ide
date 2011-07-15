@@ -56,6 +56,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    
    private static final String RESTART = BASE_URL + "/apps/restart";
    
+   private static final String DELETE = BASE_URL + "/apps/delete";
+   
    private static final String STOP = BASE_URL + "/apps/stop";
    
    private static final String LOGIN = BASE_URL + "/login";
@@ -65,6 +67,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    private static final String APPS_INFO = BASE_URL + "/apps/info";
    
    private static final String UPDATE = BASE_URL + "/apps/update";
+   
+   private static final String RENAME = BASE_URL + "/apps/rename";
    
    /**
     * Events handler.
@@ -160,8 +164,17 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + APPS_INFO;
       
-      String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "workdir=" + workDir;
+      String appIdParam = (appId != null) ? "appid=" + appId : null;
+      String workDirParam = (workDir != null) ? "workdir=" + workDir : null;
+      String params = "";
+      if (appIdParam != null && workDirParam != null)
+      {
+         params = appIdParam + "&" + workDirParam;
+      }
+      else
+      {
+         params = (appIdParam != null) ? appIdParam : workDirParam;
+      }
 
       callback.setEventBus(eventBus);
       
@@ -179,10 +192,20 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void deleteApplication(String workDir, String appId, CloudFoundryAsyncRequestCallback<String> callback)
+   public void deleteApplication(String workDir, String appId, boolean deleteServices, 
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
-      // TODO Auto-generated method stub
+      final String url = restServiceContext + DELETE;
       
+      String params = (appId != null) ? "appid=" + appId + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "delete-services=" + String.valueOf(deleteServices);
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**
@@ -299,6 +322,26 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       params += (workDir != null) ? workDirParam : "";
       params += (war != null) ? "&war=" + war : "";
 
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void renameApplication(String workDir, String name, String newName,
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + RENAME;
+      
+      String params = (name != null) ? "name=" + name + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "newname=" + newName;
+
+      callback.setEventBus(eventBus);
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);

@@ -90,7 +90,7 @@ public abstract class CloudFoundryClientService
     * @param appId - id of application
     * @param callback - callcack, that client has to implement
     */
-   public abstract void deleteApplication(String workDir, String appId,
+   public abstract void deleteApplication(String workDir, String appId, boolean deleteServices,
       CloudFoundryAsyncRequestCallback<String> callback);
    
    /**
@@ -132,6 +132,9 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to receive response from server.
     */
    public abstract void updateApplication(String workDir, String name, String war,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   public abstract void renameApplication(String workDir, String name, String newName,
       CloudFoundryAsyncRequestCallback<String> callback);
 
 }

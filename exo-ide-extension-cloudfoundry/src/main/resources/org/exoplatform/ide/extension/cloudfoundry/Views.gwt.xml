@@ -31,4 +31,8 @@
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter.Display" />
+   </replace-with>
 </module>

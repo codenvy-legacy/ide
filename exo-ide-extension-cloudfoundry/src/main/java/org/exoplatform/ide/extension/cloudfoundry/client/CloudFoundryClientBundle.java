@@ -98,5 +98,11 @@ public interface CloudFoundryClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/deleteApp_Disabled.png")
    ImageResource deleteApplicationDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/renameApp.png")
+   ImageResource renameApplication();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/renameApp_Disabled.png")
+   ImageResource renameApplicationDisabled();
 
 }

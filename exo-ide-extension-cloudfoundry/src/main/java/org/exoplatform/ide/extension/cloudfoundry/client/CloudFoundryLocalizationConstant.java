@@ -38,6 +38,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("button.ok")
    String okButton();
    
+   @Key("button.rename")
+   String renameButton();
+   
    /*
     * Controls.
     */
@@ -112,6 +115,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("control.deleteApp.prompt")
    String deleteApplicationControlPrompt();
+   
+   @Key("control.renameApp.id")
+   String renameAppControlId();
+   
+   @Key("control.renameApp.title")
+   String renameAppControlTitle();
+   
+   @Key("control.renameApp.prompt")
+   String renameAppControlPrompt();
    
    /*
     * LoginView.
@@ -273,7 +285,7 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String applicationInfoListGridValueField();
    
    /*
-    * DeleteApplicationEvent
+    * DeleteApplicationPresenter
     */
    @Key("deleteApplication.title")
    String deleteApplicationTitle();
@@ -283,5 +295,18 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("applicationDeleted")
    String applicationDeletedMsg(String applicationTitle);
+   
+   /*
+    * RenameApplicationPresenter
+    */
+   
+   @Key("rename.view.title")
+   String renameApplicationViewTitle();
+   
+   @Key("rename.field.name")
+   String renameApplicationViewNameField();
+   
+   @Key("rename.application.success")
+   String renameApplicationSuccess(String oldName, String newName);
 
 }
