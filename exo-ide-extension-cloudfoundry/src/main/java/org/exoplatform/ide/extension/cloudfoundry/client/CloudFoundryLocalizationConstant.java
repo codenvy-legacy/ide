@@ -204,7 +204,7 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String applicationRestartedUris(String name, String uris);
    
    /*
-    * OperationsApplicationPresenter
+    * UpdateApplicationPresenter
     */
    @Key("update.askWar.title")
    String updateAskWarTitle();

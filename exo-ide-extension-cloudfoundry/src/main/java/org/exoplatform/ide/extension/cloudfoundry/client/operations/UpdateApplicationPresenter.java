@@ -40,7 +40,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OperationsApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class OperationsApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler
+public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler
 {
    /**
     * Events handler.
@@ -62,7 +62,7 @@ public class OperationsApplicationPresenter implements ItemsSelectedHandler, Upd
     */
    private String workDir;
    
-   public OperationsApplicationPresenter(HandlerManager eventbus)
+   public UpdateApplicationPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
       

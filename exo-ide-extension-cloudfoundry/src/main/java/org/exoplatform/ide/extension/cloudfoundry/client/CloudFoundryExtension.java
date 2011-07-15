@@ -39,7 +39,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
-import org.exoplatform.ide.extension.cloudfoundry.client.operations.OperationsApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.operations.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 
@@ -92,7 +92,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new LoginPresenter(eventBus);
       new StartApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
-      new OperationsApplicationPresenter(eventBus);
+      new UpdateApplicationPresenter(eventBus);
       new RenameApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
    }
