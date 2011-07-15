@@ -16,7 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.client.operations;
+package org.exoplatform.ide.extension.cloudfoundry.client.delete;
+
 
 import com.google.gwt.event.shared.EventHandler;
 
