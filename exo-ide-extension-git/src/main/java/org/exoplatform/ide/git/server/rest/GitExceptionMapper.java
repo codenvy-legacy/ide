@@ -18,45 +18,28 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.exoplatform.ide.git.server.GitException;
 
-import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: GitApplication.java 22811 2011-03-22 07:28:35Z andrew00x $
- */
-public class GitApplication extends Application
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public class GitExceptionMapper implements ExceptionMapper<GitException>
 {
-   private Set<Class<?>> classes;
-   
-   private Set<Object> singletons;
-
-   public GitApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(GitService.class);
-      classes.add(GitRepoService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new GitExceptionMapper());
-   }
-
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Set<Class<?>> getClasses()
+   public Response toResponse(GitException e)
    {
-      return classes;
-   }
-   
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
+      // TODO Get correct HTTP status from BeesClientException ??? 
+      return Response.status(500).header("JAXRS-Body-Provided", "Error-Message").entity("<pre>" + e.getMessage() + "</pre>")
+         .type(MediaType.TEXT_PLAIN).build();
    }
 }

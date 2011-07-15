@@ -25,6 +25,7 @@ package org.exoplatform.ide.git.server;
 @SuppressWarnings("serial")
 public class GitException extends Exception
 {
+   
    /**
     * @param message error message
     */

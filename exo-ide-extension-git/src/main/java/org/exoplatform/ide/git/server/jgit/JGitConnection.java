@@ -76,8 +76,11 @@ import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
+import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
@@ -127,6 +130,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -839,7 +843,6 @@ public class JGitConnection implements GitConnection
       try
       {
          PushCommand pushCommand = new Git(repository).push();
-
          String remote = request.getRemote();
          if (request.getRemote() != null)
             pushCommand.setRemote(remote);
@@ -859,7 +862,16 @@ public class JGitConnection implements GitConnection
          if (timeout > 0)
             pushCommand.setTimeout(timeout);
 
-         pushCommand.call();
+         Iterable<PushResult> list = pushCommand.call();
+         for (PushResult pushResult : list)
+         {
+            Collection<RemoteRefUpdate> refUpdates = pushResult.getRemoteUpdates();
+            for (RemoteRefUpdate remoteRefUpdate : refUpdates)
+            {
+               if (!remoteRefUpdate.getStatus().equals(Status.OK))
+                  throw new GitException(pushResult.getMessages());
+            }
+         }
       }
       catch (JGitInternalException e)
       {
