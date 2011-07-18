@@ -44,11 +44,11 @@ public class GroovyObjectCompletionTest extends BaseTest
 
       for (int i = 0; i < 10; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
 
-      selenium.keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyDown("//body[@class='editbox']", "\\35");
      IDE.EDITOR.typeTextIntoEditor(0, ".");
 
       IDE.CODEASSISTANT.openForm();
@@ -61,9 +61,9 @@ public class GroovyObjectCompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("contentEquals(StringBuffer):boolean");
       IDE.CODEASSISTANT.checkElementPresent("contentEquals(CharSequence):boolean");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.CODEASSISTANT.insertSelectedItem();

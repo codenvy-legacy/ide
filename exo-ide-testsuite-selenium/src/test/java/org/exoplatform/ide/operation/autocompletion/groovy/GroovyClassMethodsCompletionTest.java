@@ -54,12 +54,12 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        */
       for (int i = 0; i < 9; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      selenium.keyDown(Locators.EDITOR_LOCATOR, "" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyDown(Locators.EDITOR_LOCATOR, "" + java.awt.event.KeyEvent.VK_END);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       /*
        * 3. Type text "Collections."
@@ -71,12 +71,12 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
        */
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
       Thread.sleep(TestConstants.SLEEP);
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.PANEL_ID));
 
       /*
        * 5. Type to the input field text "so".
        */
-      selenium.focus(CodeAssistant.Locators.INPUT);
+      selenium().focus(CodeAssistant.Locators.INPUT);
       IDE.CODEASSISTANT.typeToInput("so");
 
       /*
@@ -90,19 +90,19 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * 6. Select sort(List, Comparator):void element
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       /*
        * 7. Press Enter to instert element info editor
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       /*
        * Check, that autocomplete form dissapeared, and new text in editor appeared.
        */
-      assertFalse(selenium.isElementPresent(CodeAssistant.Locators.PANEL_ID));
+      assertFalse(selenium().isElementPresent(CodeAssistant.Locators.PANEL_ID));
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List, Comparator)"));
 
       /*

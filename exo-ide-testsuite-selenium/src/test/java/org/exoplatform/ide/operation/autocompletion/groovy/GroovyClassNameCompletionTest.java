@@ -44,11 +44,11 @@ public class GroovyClassNameCompletionTest extends BaseTest
 
       for (int i = 0; i < 9; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
      IDE.EDITOR.typeTextIntoEditor(0, "Colle");
 
       //open autocomplete form
@@ -57,7 +57,7 @@ public class GroovyClassNameCompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("Collections");
       IDE.CODEASSISTANT.checkElementPresent("Collection");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.CODEASSISTANT.insertSelectedItem();

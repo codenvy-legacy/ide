@@ -44,11 +44,11 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
 
       for (int i = 0; i < 8; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
      IDE.EDITOR.typeTextIntoEditor(0, "@");
       
       IDE.CODEASSISTANT.openForm();
@@ -63,11 +63,11 @@ public class GroovyAnnotationAutocompleteTest extends BaseTest
       
       for (int i = 0; i < 3; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Override"));
    }

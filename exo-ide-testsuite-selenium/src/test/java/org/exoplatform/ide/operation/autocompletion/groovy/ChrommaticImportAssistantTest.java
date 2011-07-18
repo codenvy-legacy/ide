@@ -69,11 +69,11 @@ public class ChrommaticImportAssistantTest extends BaseTest
       // 
       Thread.sleep(TestConstants.SLEEP);
       
-      selenium.click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
+      selenium().click("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '2')]");
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
       

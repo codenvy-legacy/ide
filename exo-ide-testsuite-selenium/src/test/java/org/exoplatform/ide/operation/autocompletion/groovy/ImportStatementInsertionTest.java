@@ -85,8 +85,8 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(14);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
@@ -100,8 +100,8 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.EDITOR.deleteLinesInEditor(1);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
@@ -115,8 +115,8 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.EDITOR.deleteLinesInEditor(1);
       IDE.EDITOR.typeTextIntoEditor(0, " ");
       IDE.CODEASSISTANT.openForm();
-      selenium.clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("HelloWorld"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
@@ -144,8 +144,8 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(15);
       IDE.EDITOR.typeTextIntoEditor(1, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium.clickAt(getErrorCorrectionListItemLocator("Base64"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement
@@ -161,8 +161,8 @@ public class ImportStatementInsertionTest extends BaseTest
       IDE.EDITOR.deleteLinesInEditor(1);
       IDE.EDITOR.typeTextIntoEditor(1, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium.clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().clickAt(getErrorCorrectionListItemLocator("BitSet"), "");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 
       // test import statement

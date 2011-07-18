@@ -48,31 +48,31 @@ public class GroovyJavaDocTest extends BaseTest
 
       for (int i = 0; i < 9; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "Collections.");
 
       IDE.CODEASSISTANT.openForm();
 
       for (int i = 0; i < 4; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
       Thread.sleep(TestConstants.SLEEP);
       IDE.CODEASSISTANT.checkDocFormPresent();
       Thread.sleep(TestConstants.SLEEP);
-      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
-      assertFalse(selenium.isElementPresent("//body/pre[text()='Not found']"));
+      selenium().selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
+      assertFalse(selenium().isElementPresent("//body/pre[text()='Not found']"));
       IDE.selectMainFrame();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP);
-      selenium.selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
-      assertFalse(selenium.isElementPresent("//body/pre[text()=\"Not found\"]"));
+      selenium().selectFrame(CodeAssistant.Locators.JAVADOC_DIV);
+      assertFalse(selenium().isElementPresent("//body/pre[text()=\"Not found\"]"));
       IDE.selectMainFrame();
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);

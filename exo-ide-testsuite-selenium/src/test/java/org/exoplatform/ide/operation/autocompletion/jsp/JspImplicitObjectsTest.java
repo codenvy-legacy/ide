@@ -21,17 +21,13 @@ package org.exoplatform.ide.operation.autocompletion.jsp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -87,7 +83,7 @@ public class JspImplicitObjectsTest extends BaseTest
       
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
       IDE.CODEASSISTANT.checkDocFormPresent();
-      assertEquals(docMessage, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(docMessage, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
       
       IDE.CODEASSISTANT.closeForm();
       

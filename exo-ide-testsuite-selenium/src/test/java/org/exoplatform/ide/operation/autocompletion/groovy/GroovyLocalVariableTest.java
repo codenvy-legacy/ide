@@ -127,8 +127,8 @@ public class GroovyLocalVariableTest extends BaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("d:Double");
       IDE.CODEASSISTANT.checkElementNotPresent("ii:Integer");
       IDE.CODEASSISTANT.closeForm();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
@@ -159,7 +159,7 @@ public class GroovyLocalVariableTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       for (int i = 0; i < row; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
    }
