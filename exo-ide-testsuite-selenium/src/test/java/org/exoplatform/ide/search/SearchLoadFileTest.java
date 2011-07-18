@@ -185,7 +185,7 @@ public class SearchLoadFileTest extends BaseTest
       //TODO test selected
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + restFileName);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
-      
+
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM, true);
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM, true);
@@ -207,8 +207,8 @@ public class SearchLoadFileTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException, ModuleException
    {
-      cleanRepository(URL + TEST_FOLDER);
+      VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
    }
 }

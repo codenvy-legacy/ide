@@ -81,7 +81,7 @@ public class ViewVersionHistoryTest extends BaseTest
    @Test
    public void testViewVersionHistoryButton() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       // open folder
@@ -104,7 +104,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       //File content is changed, but not saved yet:
@@ -172,7 +172,7 @@ public class ViewVersionHistoryTest extends BaseTest
    @Test
    public void testViewVersionHistoryOneFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -189,7 +189,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
@@ -231,7 +231,7 @@ public class ViewVersionHistoryTest extends BaseTest
    @Test
    public void testOpenCloseVersionPanel() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
 
@@ -247,7 +247,7 @@ public class ViewVersionHistoryTest extends BaseTest
       //Go to end of document
       IDE.EDITOR.clickOnEditor();
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //Edit file and save:
       IDE.EDITOR.typeTextIntoEditor(0, version2Text);
@@ -285,7 +285,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
@@ -310,7 +310,7 @@ public class ViewVersionHistoryTest extends BaseTest
    @Test
    public void testVersionPanelForFewFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       // open folder
@@ -344,7 +344,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
       //Edit second file and save
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(1, version1Text);
       saveCurrentFile();
@@ -399,7 +399,7 @@ public class ViewVersionHistoryTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(2, version1Text);
       saveCurrentFile();

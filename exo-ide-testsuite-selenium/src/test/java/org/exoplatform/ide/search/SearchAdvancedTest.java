@@ -18,12 +18,16 @@
  */
 package org.exoplatform.ide.search;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -32,14 +36,14 @@ import org.junit.Test;
  */
 public class SearchAdvancedTest extends BaseTest
 {
-   
-   private final String googleGadgetFileName = "Тестовый гаджет.xml";
+
+   private static final String googleGadgetFileName = "Тестовый гаджет.xml";
 
    private final String googleGadgetFileContent =
 
-      "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
-         + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
-   
+   "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n" + "<ModulePrefs title=\"Hello World!\" />\n"
+      + "<Content type=\"html\">\n" + "<![CDATA[ Привет, свет! Test]]></Content></Module>";
+
    /**
     * IDE-34:Advanced search test.
     * 
@@ -54,23 +58,23 @@ public class SearchAdvancedTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.EDITOR.deleteLinesInEditor(7);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, googleGadgetFileContent);
-      
+
       saveAsByTopMenu(googleGadgetFileName);
       Thread.sleep(TestConstants.SLEEP);
       IDE.WORKSPACE.selectItem(WS_URL + googleGadgetFileName);
       IDE.WORKSPACE.selectRootItem();
-      
+
       //Step 5
       IDE.SEARCH.performSearch("/", "text", "");
       IDE.SEARCH.waitSearchResultsPresent();
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
-      
+
       //Step 6
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       IDE.SEARCH.performSearch("/", "", "script/groovy");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + googleGadgetFileName);
-      
+
       //Step 7
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       IDE.SEARCH.performSearch("/", "Привет, свет!", "script/groovy");
@@ -82,19 +86,19 @@ public class SearchAdvancedTest extends BaseTest
       IDE.SEARCH.performSearch("/", "", "");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
-      
+
       //Step 9
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       IDE.SEARCH.performSearch("/", "Привет, свет!", "");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
-      
+
       //Step 10
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       IDE.SEARCH.performSearch("/", "", "application/x-google-gadget");
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + googleGadgetFileName);
-      
+
       //Step 11
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
       IDE.SEARCH.performSearch("/", "Test", "application/x-google-gadget");
@@ -108,10 +112,10 @@ public class SearchAdvancedTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + googleGadgetFileName);
    }
-   
+
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException, ModuleException
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      VirtualFileSystemUtils.delete(WS_URL + googleGadgetFileName);
    }
 }

@@ -215,7 +215,7 @@ public class RestoreVersionTest extends BaseTest
       //View newer version:
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.VIEW_NEWER_VERSION);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.captureScreenshot("1.png");
+      selenium().captureScreenshot("1.png");
       IDE.VERSIONS.checkOlderVersionButtonState(true);
       IDE.VERSIONS.checkRestoreVersionButtonState(true);
       IDE.VERSIONS.checkNewerVersionButtonState(true);
@@ -234,7 +234,7 @@ public class RestoreVersionTest extends BaseTest
    @Test
    public void testRestoreVersionAndEditFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.checkCommandVisibility(MenuCommands.View.VIEW, MenuCommands.View.VERSION_HISTORY, false);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");

@@ -154,7 +154,7 @@ public class NavigateVersionsTest extends BaseTest
       /*
        * 4. Create 2, 3, 4 versions.
        */
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -324,7 +324,7 @@ public class NavigateVersionsTest extends BaseTest
 
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       //See issue IDE-832--------------------------
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       //-------------------------------------------
       saveAsUsingToolbarButton(FILE_2);
 
@@ -333,7 +333,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
       // 2. Create new version.
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -454,13 +454,13 @@ public class NavigateVersionsTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       //See issue IDE-832--------------------------
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       //-------------------------------------------
       saveAsUsingToolbarButton(FILE_3);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -494,7 +494,7 @@ public class NavigateVersionsTest extends BaseTest
       //Edit file and save
       IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version6Text);
       saveCurrentFile();
@@ -523,7 +523,7 @@ public class NavigateVersionsTest extends BaseTest
       //Edit file and save
       IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version7Text);
       saveCurrentFile();
@@ -570,13 +570,13 @@ public class NavigateVersionsTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       //See issue IDE-832--------------------------
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       //-------------------------------------------
       saveAsUsingToolbarButton(FILE_4);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
 
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -635,7 +635,7 @@ public class NavigateVersionsTest extends BaseTest
       //Edit file and save
       IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + KeyEvent.VK_END);
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, version6Text);
       saveCurrentFile();

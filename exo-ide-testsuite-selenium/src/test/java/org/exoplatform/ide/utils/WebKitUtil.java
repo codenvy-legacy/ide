@@ -48,7 +48,7 @@ public class WebKitUtil extends AbstractTextUtil
    @Override
    public void typeTextToEditor(String locator, String text) throws Exception
    {
-    //  selenium.typeKeys(locator, text);
+    //  selenium().typeKeys(locator, text);
       for (int i = 0; i < text.length(); i++)
       {
          char symbol = text.charAt(i);

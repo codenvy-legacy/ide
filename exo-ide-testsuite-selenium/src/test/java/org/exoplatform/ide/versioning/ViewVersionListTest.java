@@ -123,7 +123,7 @@ public class ViewVersionListTest extends BaseTest
      IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      selenium.keyPressNative(""+KeyEvent.VK_END);
+      selenium().keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
      IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
@@ -153,7 +153,7 @@ public class ViewVersionListTest extends BaseTest
      IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
-      selenium.keyPressNative(""+KeyEvent.VK_END);
+      selenium().keyPressNative(""+KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();

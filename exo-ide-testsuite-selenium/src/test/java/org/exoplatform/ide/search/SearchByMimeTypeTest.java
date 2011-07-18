@@ -20,12 +20,15 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -93,8 +96,9 @@ public class SearchByMimeTypeTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException, ModuleException
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_2);
    }
 }

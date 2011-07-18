@@ -20,13 +20,17 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
+import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,9 +41,9 @@ import org.junit.Test;
  */
 public class SearchInRootFolderTest extends BaseTest
 {
-   private final String folder1Name = "Users";
+   private static final String folder1Name = "Users";
 
-   private final String folder2Name = "Test";
+   private static final String folder2Name = "Test";
 
    private final String restFileName = "Example.groovy";
 
@@ -113,9 +117,10 @@ public class SearchInRootFolderTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public static void tearDown() throws IOException, ModuleException
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      VirtualFileSystemUtils.delete(WS_URL + folder1Name);
+      VirtualFileSystemUtils.delete(WS_URL + folder2Name);
    }
 
 }

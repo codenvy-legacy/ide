@@ -147,7 +147,7 @@ public class UseOfClasspathEntriesTest extends BaseTest
       /*
        * Click Send button.
        */
-      selenium.click(IDE.REST_SERVICE.LAUNCH_SEND_BTN);
+      selenium().click(IDE.REST_SERVICE.LAUNCH_SEND_BTN);
       Thread.sleep(TestConstants.SLEEP);
 
       /*
