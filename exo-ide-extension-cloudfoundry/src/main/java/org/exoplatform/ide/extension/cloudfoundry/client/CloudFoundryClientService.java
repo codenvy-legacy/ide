@@ -136,5 +136,17 @@ public abstract class CloudFoundryClientService
    
    public abstract void renameApplication(String workDir, String name, String newName,
       CloudFoundryAsyncRequestCallback<String> callback);
+   
+   public abstract void mapUrl(String workDir, String name, String url,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   public abstract void unmapUrl(String workDir, String name, String url,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   public abstract void updateMemory(String workDir, String name, int mem,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   public abstract void updateInstances(String workDir, String name, String expression,
+      CloudFoundryAsyncRequestCallback<String> callback);
 
 }

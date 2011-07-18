@@ -104,5 +104,29 @@ public interface CloudFoundryClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/renameApp_Disabled.png")
    ImageResource renameApplicationDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_map_url.png")
+   ImageResource mapUrl();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_map_url_Disabled.png")
+   ImageResource mapUrlDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_unmap_url.png")
+   ImageResource unmapUrl();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_unmap_url_Disabled.png")
+   ImageResource unmapUrlDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_instances.png")
+   ImageResource appInstances();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_instances_Disabled.png")
+   ImageResource appInstancesDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_memory.png")
+   ImageResource appMemory();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_memory_Disabled.png")
+   ImageResource appMemoryDisabled();
 
 }

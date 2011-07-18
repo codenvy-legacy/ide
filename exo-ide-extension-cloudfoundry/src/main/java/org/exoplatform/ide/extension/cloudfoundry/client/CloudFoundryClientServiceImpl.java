@@ -70,6 +70,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    
    private static final String RENAME = BASE_URL + "/apps/rename";
    
+   private static final String MAP_URL = BASE_URL + "/apps/map";
+   
+   private static final String UNMAP_URL = BASE_URL + "/apps/unmap";
+   
+   private static final String UPDATE_MEMORY = BASE_URL + "/apps/mem";
+   
+   private static final String UPDATE_INSTANCES = BASE_URL + "/apps/instances";
+   
    /**
     * Events handler.
     */
@@ -339,6 +347,83 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String params = (name != null) ? "name=" + name + "&" : "";
       params += (workDir != null) ? "workdir=" + workDir + "&" : "";
       params += "newname=" + newName;
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#mapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void mapUrl(String workDir, String name, String url, CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String requestUrl = restServiceContext + MAP_URL;
+      
+      String params = (name != null) ? "name=" + name + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "url=" + url;
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#unmapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void unmapUrl(String workDir, String name, String url, CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String requestUrl = restServiceContext + UNMAP_URL;
+      
+      String params = (name != null) ? "name=" + name + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "url=" + url;
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateMemory(java.lang.String, java.lang.String, int, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void updateMemory(String workDir, String name, int mem, CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + UPDATE_MEMORY;
+      
+      String params = (name != null) ? "name=" + name + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "mem=" + mem;
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateInstances(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void updateInstances(String workDir, String name, String expression,
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String url = restServiceContext + UPDATE_INSTANCES;
+      
+      String params = (name != null) ? "name=" + name + "&" : "";
+      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += "expr=" + expression;
 
       callback.setEventBus(eventBus);
       

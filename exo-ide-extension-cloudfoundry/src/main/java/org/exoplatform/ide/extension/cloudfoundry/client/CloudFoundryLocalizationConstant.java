@@ -128,6 +128,42 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.renameApp.prompt")
    String renameAppControlPrompt();
    
+   @Key("control.mapUrl.id")
+   String mapUrlControlId();
+   
+   @Key("control.mapUrl.title")
+   String mapUrlControlTitle();
+   
+   @Key("control.mapUrl.prompt")
+   String mapUrlControlPrompt();
+   
+   @Key("control.unmapUrl.id")
+   String unmapUrlControlId();
+   
+   @Key("control.unmapUrl.title")
+   String unmapUrlControlTitle();
+   
+   @Key("control.unmapUrl.prompt")
+   String unmapUrlControlPrompt();
+   
+   @Key("control.updMemory.id")
+   String updateMemoryControlId();
+   
+   @Key("control.updMemory.title")
+   String updateMemoryTitle();
+   
+   @Key("control.updMemory.prompt")
+   String updateMemoryPrompt();
+   
+   @Key("control.updInstances.id")
+   String updateInstancesControlId();
+   
+   @Key("control.updInstances.title")
+   String updateInstancesControlTitle();
+   
+   @Key("control.updInstances.prompt")
+   String updateInstancesControlPrompt();
+   
    /*
     * LoginView.
     */
@@ -303,9 +339,56 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String deleteApplicationAskDeleteServices();
    
    /*
+    * MapUnmapUrlPresenter
+    */
+   @Key("mapUrl.dialog.title")
+   String mapUrlDialogTitle();
+   
+   @Key("mapUrl.dialog.message")
+   String mapUrlDialogMessage();
+   
+   @Key("unmapUrl.dialog.title")
+   String unmapUrlDialogTitle();
+   
+   @Key("unmapUrl.dialog.message")
+   String unmapUrlDialogMessage();
+   
+   @Key("mapUrl.success")
+   String mapUrlRegisteredSuccess(String url);
+   
+   @Key("unmapUrl.success")
+   String unmapUrlUnregisteredSuccess(String url);
+   
+   /*
+    * UpdatePropertiesPresenter
+    */
+   @Key("updateMemory.dialog.title")
+   String updateMemoryDialogTitle();
+   
+   @Key("updateMemory.dialog.message")
+   String updateMemoryDialogMessage();
+   
+   @Key("updateMemory.success")
+   String updateMemorySuccess(String memory);
+   
+   @Key("updateMemory.dialog.invalidNumber.message")
+   String updateMemoryInvalidNumberMessage();
+   
+   @Key("updateInstances.dialog.title")
+   String updateInstancesDialogTitle();
+   
+   @Key("updateInstances.dialog.message")
+   String updateInstancesDialogMessage();
+   
+   @Key("updateInstances.success")
+   String updateInstancesSuccess(String expression);
+   
+   @Key("updateInstances.invalidValue.message")
+   String updateInstancesInvalidValueMessage();
+   
+   /*
     * RenameApplicationPresenter
     */
-   
    @Key("rename.view.title")
    String renameApplicationViewTitle();
    

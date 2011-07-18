@@ -30,11 +30,15 @@ import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfo
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.MapUrlControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.UnmapUrlControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateInstancesControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.UpdateMemoryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
@@ -42,6 +46,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.url.MapUnmapUrlPresenter;
 
 /**
  * CloudFoundry extention for IDE.
@@ -88,6 +94,12 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new StopApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RestartApplicationControl(), DockTarget.NONE, false);
       
+      IDE.getInstance().addControl(new MapUrlControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new UnmapUrlControl(), DockTarget.NONE, false);
+      
+      IDE.getInstance().addControl(new UpdateMemoryControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new UpdateInstancesControl(), DockTarget.NONE, false);
+      
       new CreateApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new StartApplicationPresenter(eventBus);
@@ -95,6 +107,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new UpdateApplicationPresenter(eventBus);
       new RenameApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
+      new MapUnmapUrlPresenter(eventBus);
+      new UpdatePropertiesPresenter(eventBus);
    }
 
 }
