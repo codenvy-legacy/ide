@@ -183,11 +183,8 @@ public class CKEditor extends Editor
          
                    
          // set init callback
-         editor.exoInitCallback = function() {
+         editor.exoInitCallback = function() {          
            instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onInitialized()(); 
-           instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onEditorResizeListenerId = $wnd.setInterval(function() {
-             instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onResize()();
-           }, @org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration::CONTINUOUS_SCANNING || 200);
          }
          
          editor.on('instanceReady', editor.exoInitCallback);
@@ -281,9 +278,12 @@ public class CKEditor extends Editor
    private native void setData(String data)/*-{
       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
       if (editor != null) {
-         editor.setData(data);           
+         editor.setData(data, function()
+         {
+            editor.checkDirty();    // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setData)
+         });
+                     
          editor.exoSavedContent = data;
-         editor.resetDirty();  // reset ckeditor content changed indicator         
          editor.focus();
       }
    }-*/;
@@ -322,8 +322,9 @@ public class CKEditor extends Editor
       var instance = this;
       if (editor != null) {
          $wnd.setTimeout(function(a, b){
+            editor.resize("100%", instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()());
+            editor.focus();
             instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
-            editor.focus();         
          }, 200);
       }
    }-*/;
@@ -379,21 +380,6 @@ public class CKEditor extends Editor
      var onEditorResizeListenerId = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::onEditorResizeListenerId;
      if (onEditorResizeListenerId !== null) {
         $wnd.clearInterval(onEditorResizeListenerId);      
-     }
-   }-*/;
-
-   /*
-    * onResize Listener to set editor height into the 100%
-    */
-   protected native void onResize() /*-{
-     var labelOffsetHeight = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()();    
-     // check if editor was resized
-     var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
-     if (editor !== null) {
-       if (!editor.labelOffsetHeight || (editor.labelOffsetHeight !== labelOffsetHeight)) {
-          editor.labelOffsetHeight = labelOffsetHeight;
-          editor.resize("100%", labelOffsetHeight);
-       }
      }
    }-*/;
 

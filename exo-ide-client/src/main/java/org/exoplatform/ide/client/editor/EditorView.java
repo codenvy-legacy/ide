@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -33,6 +34,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -128,6 +130,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       {
          EditorType editorType = EditorType.getType(editor.getClass().getName());
          editors.put(editorType, editor);
+         editor.setHeight("100%");
 
          editorSequence[editorType.getPosition()] = editorType;
 
@@ -177,12 +180,19 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private void showEditor(EditorType editorType)
    {
-      // to fix bug with displaing within the Google Chrome
+      // to fix bug with displaying within the Google Chrome and IE
       NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
       if (editorAreaRows != null
                && editorAreaRows.getLength() >= editorType.getPosition())
       {
-         editorAreaRows.getItem(editorType.getPosition()).removeAttribute("style");
+         if (BrowserResolver.CURRENT_BROWSER.equals(BrowserResolver.Browser.IE))
+         {
+            setDisplayBlock(editorAreaRows.getItem(editorType.getPosition()));
+         }
+         else
+         {
+            editorAreaRows.getItem(editorType.getPosition()).removeAttribute("style");
+         }
       }
       
       editors.get(editorType).setFocus();
@@ -195,10 +205,32 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       if (editorAreaRows != null
                && editorAreaRows.getLength() >= editorType.getPosition())
       {
-         editorAreaRows.getItem(editorType.getPosition()).setAttribute("style", "display: none");
+         if (BrowserResolver.CURRENT_BROWSER.equals(BrowserResolver.Browser.IE))
+         {
+            setDisplayNone(editorAreaRows.getItem(editorType.getPosition()));
+         }
+         else
+         {
+            editorAreaRows.getItem(editorType.getPosition()).setAttribute("style", "display: none");
+         }
       }
+      
    }
 
+   private native void setDisplayBlock(JavaScriptObject element) /*-{
+      if (element)
+      {
+         element.style.display = "block";
+      }
+   }-*/;
+   
+   private native void setDisplayNone(JavaScriptObject element) /*-{
+      if (element)
+      {
+         element.style.display = "none";
+      }   
+   }-*/;
+   
    /**
     * @return the editor
     */

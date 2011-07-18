@@ -164,8 +164,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContentChanged()();
 		};
 
-		var cursorActivity = function() {
-			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onCursorActivity()();
+		var cursorActivity = function(cursor) {
+			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onCursorActivity(Lcom/google/gwt/core/client/JavaScriptObject;)(cursor);
 		};
 
 		var onLineNumberClick = function(lineNumber) {
@@ -254,12 +254,28 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       eventBus.fireEvent(new EditorContentChangedEvent(getEditorId()));
    }
 
-   private void onCursorActivity()
+   private void onCursorActivity(JavaScriptObject cursor)
    {
+      cursorPositionCol = getCursorCol();
+      
+      if (BrowserResolver.CURRENT_BROWSER == Browser.IE)
+      {
+         if (getLastLineNumber(getText()) == 1)
+         {
+            cursorPositionRow = 1;
+         }
+         else
+         {
+            cursorPositionRow = getCursorActivityRow(cursor, cursorPositionCol);
+         }
+      }
+      else
+      {
+         cursorPositionRow = getNativeCursorRow();
+      }
+      
       // highlight current line
-      highlightLine(0);
-
-      saveCursorPosition();
+      highlightLine(cursorPositionRow);
 
       eventBus.fireEvent(new EditorCursorActivityEvent(editorId, cursorPositionRow, cursorPositionCol));
    }
@@ -313,7 +329,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		var cursorOffsetY = 0;
 
 		if (!currentLine) {
-			currentLine = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()();
+			currentLine = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
 		}
 
 		cursorOffsetY = (currentLine - 1)
@@ -441,13 +457,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
-      int cursorRow = getCursorRow();
+      int cursorRow = cursorPositionRow;
 
       // calculate cursorOffsetY
       int cursorOffsetY = getAbsoluteTop() + getCursorOffsetY(0);
 
       // calculate cursorOffsetX
-      int cursorCol = getCursorCol();
+      int cursorCol = cursorPositionCol;
       int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + 11; // 8px per symbol 
 
       if (this.showLineNumbers)
@@ -512,7 +528,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       if (configuration.canHaveSeveralMimeTypes())
       {
-         String mimeType = CodeMirrorParserImpl.getLineMimeType(getCursorRow(), (List<TokenBeenImpl>)getTokenList());
+         String mimeType = CodeMirrorParserImpl.getLineMimeType(cursorPositionRow, (List<TokenBeenImpl>)getTokenList());
 
          if (mimeType != null)
          {
@@ -822,7 +838,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (editor == null) return;
 
-      var currentLineNumber = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getCursorRow()();
+      var currentLineNumber = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
       var currentLine = editor.nthLine(currentLineNumber);
 
       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
@@ -837,9 +853,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
         editor.removeLine(currentLine);
       }
 
-      currentLineNumber = editor.lineNumber(currentLine);
+//      currentLineNumber = editor.lineNumber(currentLine);
 
-      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);
+//      this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);
    }-*/;
 
    /**
@@ -992,32 +1008,38 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       return (Boolean)params.get(EditorParameters.IS_READ_ONLY);
    }
-
+   
+   @Override
+   public int getCursorRow()
+   {
+      return cursorPositionRow;
+   }
+   
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getCursorRow()
     */
-   @Override
-   public native int getCursorRow() /*-{
-		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+   public native int getNativeCursorRow() /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor) 
-		      || typeof editor.win.select == 'undefined')
-			return 1;
+            || typeof editor.win.select == 'undefined')
+         return 1;
 
-		switch (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser) {
-		case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE:
-			if (editor.editor.selectionSnapshot) {
-				return editor
-						.lineNumber(editor.editor.selectionSnapshot.from.node);
-			} else {
-				return 1;
-			}
+      switch (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser) {
+      case @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE:
+         if (editor.editor.selectionSnapshot) {
+            return editor
+                  .lineNumber(editor.editor.selectionSnapshot.from.node);
+         } else {
+            return 1;
+         }
 
-		default:
-			var cursor = editor.cursorPosition(true);
-			return editor.lineNumber(cursor.line) || 1;
-		}
+      default:
+         var cursor = editor.cursorPosition(true);
+         return editor.lineNumber(cursor.line) || 1;
+      }
    }-*/;
 
+   
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getCursorCol()
     */
@@ -1042,6 +1064,31 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		}
    }-*/;
 
+   /**
+    * @param cursor object - the argument of native codemirror cursorActivity event 
+    * @return editor.lineNumber(cursor) - 1
+    */
+   private native int getCursorActivityRow(JavaScriptObject cursor, int cursorCol) /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+             || typeof editor.win.select == 'undefined'
+             || !cursor)
+      {
+         return 1;
+      }
+
+      // hack of position of cursor row at first line and first column 
+      if (editor.nthLine(editor.lineNumber(cursor)) == cursor)  
+      {
+         if (cursorCol == 1)
+         {
+            return editor.lineNumber(cursor);
+         }  
+      }
+      
+      return editor.lineNumber(cursor) - 1;
+   }-*/;
+   
    /**
     * @see org.exoplatform.ide.editor.api.Editor#setHotKeyList(java.util.List)
     */
@@ -1262,11 +1309,5 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
        {
           configuration.getParser().stopParsing();
        }
-   }
-
-   public void saveCursorPosition()
-   {
-      cursorPositionCol = getCursorCol();
-      cursorPositionRow = getCursorRow();
    }
 }
