@@ -48,27 +48,27 @@ public class DialogAboutTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
       //      Thread.sleep(TestConstants.SLEEP);
       //check About form
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
-      assertTrue(selenium.isElementPresent("ideAboutViewOkButton"));
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
-      assertTrue(selenium.isTextPresent(PRODUCT_NAME));
-      assertTrue(selenium.isTextPresent(COMPANY));
-      assertTrue(selenium.isTextPresent("Revision:"));
-      assertTrue(selenium.isTextPresent("Build Time:"));
+      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]"));
+      assertTrue(selenium().isElementPresent("ideAboutViewOkButton"));
+      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
+      assertTrue(selenium().isTextPresent(PRODUCT_NAME));
+      assertTrue(selenium().isTextPresent(COMPANY));
+      assertTrue(selenium().isTextPresent("Revision:"));
+      assertTrue(selenium().isTextPresent("Build Time:"));
 
       //click Ok button
-      selenium.click("ideAboutViewOkButton");
+      selenium().click("ideAboutViewOkButton");
       waitForElementNotPresent("ideAboutViewOkButton");
 
       //check About form dissapeared
-      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]"));
-      assertFalse(selenium.isElementPresent("ideAboutFormOkButton"));
-      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
-      assertFalse(selenium.isTextPresent("About"));
-      assertFalse(selenium.isTextPresent(PRODUCT_NAME));
-      //      assertFalse(selenium.isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
-      assertFalse(selenium.isTextPresent(COMPANY));
-      assertFalse(selenium.isTextPresent("Revision:"));
-      assertFalse(selenium.isTextPresent("Build Time:"));
+      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]"));
+      assertFalse(selenium().isElementPresent("ideAboutFormOkButton"));
+      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
+      assertFalse(selenium().isTextPresent("About"));
+      assertFalse(selenium().isTextPresent(PRODUCT_NAME));
+      //      assertFalse(selenium().isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
+      assertFalse(selenium().isTextPresent(COMPANY));
+      assertFalse(selenium().isTextPresent("Revision:"));
+      assertFalse(selenium().isTextPresent("Build Time:"));
    }
 }

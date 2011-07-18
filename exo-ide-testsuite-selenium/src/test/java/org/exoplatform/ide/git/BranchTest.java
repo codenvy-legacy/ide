@@ -43,9 +43,6 @@ public class BranchTest extends BaseTest
 
    private static final String SECOND_BRANCH_FILE = "File2.txt";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
-
    private static final String BRANCH1 = "branch1";
 
    private static final String BRANCH2 = "branch2";
@@ -73,7 +70,7 @@ public class BranchTest extends BaseTest
    {
       try
       {
-         int status = VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
       catch (Exception e)
       {
@@ -88,7 +85,7 @@ public class BranchTest extends BaseTest
    @Test
    public void testBranchesCommand() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectRootItem();
@@ -118,7 +115,7 @@ public class BranchTest extends BaseTest
 
       IDE.GIT.BRANCHES.clickCloseButton();
       IDE.GIT.BRANCHES.waitForViewClosed();
-      
+
    }
 
    /**
@@ -128,7 +125,7 @@ public class BranchTest extends BaseTest
    @Test
    public void testBranchesView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -138,7 +135,7 @@ public class BranchTest extends BaseTest
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
       IDE.GIT.BRANCHES.waitForViewOpened();
-      
+
       IDE.GIT.BRANCHES.selectBranchByName("master");
       Assert.assertTrue(IDE.GIT.BRANCHES.isViewComponentsPresent());
       Assert.assertFalse(IDE.GIT.BRANCHES.isCheckoutButtonEnabled());
@@ -159,7 +156,7 @@ public class BranchTest extends BaseTest
    @Test
    public void testCreateBranch() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -193,8 +190,8 @@ public class BranchTest extends BaseTest
    @Test
    public void testDeleteBranch() throws Exception
    {
-      selenium.refresh();
-      
+      selenium().refresh();
+
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
@@ -245,7 +242,7 @@ public class BranchTest extends BaseTest
    @Test
    public void testCheckoutBranch() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -283,7 +280,7 @@ public class BranchTest extends BaseTest
    @Test
    public void testSwitchBranches() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -302,7 +299,7 @@ public class BranchTest extends BaseTest
       IDE.GIT.BRANCHES.waitBranchChecked(BRANCH1);
       IDE.GIT.BRANCHES.clickCloseButton();
       IDE.GIT.BRANCHES.waitForViewClosed();
-      
+
       Thread.sleep(2000);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);

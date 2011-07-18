@@ -128,7 +128,7 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
       try
       {
          zipFile = new ZipFile(zipPath);
-         Enumeration entries = zipFile.entries();
+         Enumeration<?> entries = zipFile.entries();
          while (entries.hasMoreElements())
          {
             ZipEntry entry = (ZipEntry)entries.nextElement();

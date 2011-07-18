@@ -18,23 +18,20 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.thoughtworks.selenium.Wait;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -91,7 +88,7 @@ public class CookiesTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //Chek cookies
-      String[] cookies = selenium.getCookie().split("; ");
+      String[] cookies = selenium().getCookie().split("; ");
 
       assertTrue(cookies.length > 0);
 

@@ -87,10 +87,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 5 ------------
       //set another hotkey
-      selenium.controlKeyDown();
-      selenium.keyDown(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
-      selenium.keyUp(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
+      selenium().keyUp(TEXT_FIELD_LOCATOR, "" + java.awt.event.KeyEvent.VK_K);
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       checkBindButtonEnabled(true);
@@ -134,10 +134,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 3 ------------
       //Press Ctrl+M, press Bind button, press Save button
-      selenium.controlKeyDown();
-      selenium.keyDown(TEXT_FIELD_LOCATOR, "M");
-      selenium.keyUp(TEXT_FIELD_LOCATOR, "M");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown(TEXT_FIELD_LOCATOR, "M");
+      selenium().keyUp(TEXT_FIELD_LOCATOR, "M");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check no message
@@ -151,10 +151,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 4 ------------
       //Press Ctrl+M
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "M");
-      selenium.keyUp("//", "M");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "M");
+      selenium().keyUp("//", "M");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check new Css file is createed
@@ -180,10 +180,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 6 ------------
       //Press Ctrl+M
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "M");
-      selenium.keyUp("//", "M");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "M");
+      selenium().keyUp("//", "M");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check new Css file is createed
@@ -212,10 +212,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 31 ------------
       //Press Ctrl+M
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "M");
-      selenium.keyUp("//", "M");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "M");
+      selenium().keyUp("//", "M");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //Nothing or default browser event works out
       IDE.EDITOR.checkIsTabPresentInEditorTabset("Untitled file.css", false);
@@ -252,29 +252,29 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selectRow(Commands.NEW_TEXT_FILE);
       
       //Double set focus to TEXT_FIELD_LOCATOR to test work :(
-      selenium.focus(TEXT_FIELD_LOCATOR);
+      selenium().focus(TEXT_FIELD_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.focus(TEXT_FIELD_LOCATOR);
+      selenium().focus(TEXT_FIELD_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.click(TEXT_FIELD_LOCATOR);
+      selenium().click(TEXT_FIELD_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.click(TEXT_FIELD_LOCATOR);
+      selenium().click(TEXT_FIELD_LOCATOR);
 
       //press Shift+N
       Robot bot = new Robot();
       bot.keyPress(KeyEvent.VK_SHIFT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_N);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_N);
       bot.keyRelease(KeyEvent.VK_SHIFT);
       
       checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
 
       //press Y
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
 
       //press 8
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_8);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_8);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
 
@@ -285,7 +285,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //select row with Css file
       selectRow(Commands.NEW_CSS_FILE);
       //press Ctrl
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check message
@@ -296,7 +296,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       checkBindButtonEnabled(false);
 
       //press alt
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ALT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ALT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check message
       checkMessage(INFO_MESSAGE_STYLE, "Holt Ctrl or Alt, then press key", true);
@@ -314,10 +314,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selectRow(Commands.NEW_CSS_FILE);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       //Press Ctrl+C
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "C");
-      selenium.keyUp("//", "C");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "C");
+      selenium().keyUp("//", "C");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check text in text field
@@ -332,10 +332,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //Binding hotkeys, that are bound to another commands
 
       //Press Ctrl+D
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "D");
-      selenium.keyUp("//", "D");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "D");
+      selenium().keyUp("//", "D");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check text in text field
       assertEquals("Ctrl+D", getTextFromTextField());
@@ -346,10 +346,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       checkSaveButtonEnabled(false);
 
       //Press Ctrl+P, check Bind button is enabled and no error message
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "P");
-      selenium.keyUp("//", "P");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "P");
+      selenium().keyUp("//", "P");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check no message
@@ -365,10 +365,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //Try to bind the same hotkeys
 //      selectRow(Commands.NEW_CSS_FILE);
       //press Ctrl+P
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "P");
-      selenium.keyUp("//", "P");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "P");
+      selenium().keyUp("//", "P");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check hotkeys in text field
       assertEquals("Ctrl+P", getTextFromTextField());
@@ -388,10 +388,10 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       //TODO 1 step not work, shold be fix call hotkey form; see issue 729
       //check Ctrl+N calls Create File From Template window
       //press Ctrl+N
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       checkCreateFileFromTemplateFormAndClose();
@@ -410,14 +410,14 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //----- 4 ------------
       //press Ctrl+N
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check no Crate File From Template form
-      assertFalse(selenium.isElementPresent(Templates.FILE_FROM_TEMPLATE_FORM_ID));
+      assertFalse(selenium().isElementPresent(Templates.FILE_FROM_TEMPLATE_FORM_ID));
 
       //----- 5 ------------
       //Call "Customize Hotkeys" window

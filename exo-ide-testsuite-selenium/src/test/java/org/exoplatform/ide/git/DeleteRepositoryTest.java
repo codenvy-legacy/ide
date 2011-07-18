@@ -96,10 +96,10 @@ public class DeleteRepositoryTest extends BaseTest
       String message = IDE.OUTPUT.getOutputMessageText(2);
       assertTrue(message.endsWith(GIT.Messages.DELETE_SUCCESS));
       
-      selenium.open(URL);
-      selenium.waitForPageToLoad(""+5000);
-      assertFalse(selenium.isElementPresent("link=.git"));
-      selenium.goBack();
+      selenium().open(URL);
+      selenium().waitForPageToLoad(""+5000);
+      assertFalse(selenium().isElementPresent("link=.git"));
+      selenium().goBack();
       IDE.WORKSPACE.waitForRootItem();
    }
    

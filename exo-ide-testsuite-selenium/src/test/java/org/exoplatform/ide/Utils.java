@@ -70,13 +70,14 @@ public class Utils
       HTTPResponse response = connection.Post(url.getFile(), "", headers);
       return response.getStatusCode();
    }
-   
+
    public static HttpClient getHttpClient()
    {
       HttpClient client = new HttpClient();
       client.getParams().setAuthenticationPreemptive(true);
       Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
-      client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM), defaultcreds);
+      client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
+         defaultcreds);
       return client;
    }
 
@@ -123,7 +124,7 @@ public class Utils
       reader.close();
       return fileData.toString();
    }
-   
+
    /**
     * Encode names of folder and filed in href
     * (need to get correct if of item in navigatin tree).
@@ -149,7 +150,7 @@ public class Utils
       }
       for (int i = 0; i < pathSegments.length; i++)
       {
-         pathSegments[i] = BaseTest.selenium.getEval("encodeURIComponent('" + pathSegments[i] + "')");
+         pathSegments[i] = IDE.getInstance().getSelenium().getEval("encodeURIComponent('" + pathSegments[i] + "')");
          encoded += "/" + pathSegments[i];
       }
       if (href.endsWith("/"))
@@ -181,9 +182,9 @@ public class Utils
          }
          else
          {
-            m.update((BaseTest.BASE_URL + "IDE/" + encoded.substring(BaseTest.BASE_URL.length())).getBytes());            
+            m.update((BaseTest.BASE_URL + "IDE/" + encoded.substring(BaseTest.BASE_URL.length())).getBytes());
          }
-         
+
          byte[] digest = m.digest();
          BigInteger bigInt = new BigInteger(1, digest);
          String hashtext = bigInt.toString(16);
@@ -202,7 +203,7 @@ public class Utils
       return "";
 
    }
-   
+
    /**
     * Encode string in md5 hash
     * @param string to encode

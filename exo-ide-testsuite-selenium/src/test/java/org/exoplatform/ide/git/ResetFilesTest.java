@@ -123,7 +123,7 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFilesView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -162,7 +162,7 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFolderFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -227,7 +227,7 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testCancelResetFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -272,7 +272,7 @@ public class ResetFilesTest extends BaseTest
    @Test
    public void testResetFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");

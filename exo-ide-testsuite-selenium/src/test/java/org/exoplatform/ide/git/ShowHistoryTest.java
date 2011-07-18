@@ -118,7 +118,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testShowHistoryView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -145,7 +145,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testRefreshRevisionList() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -182,7 +182,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testChangesMode() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -253,7 +253,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testDiffWithPrevVersion() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -272,9 +272,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -284,9 +284,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());
@@ -295,9 +295,9 @@ public class ShowHistoryTest extends BaseTest
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
       //Test buttons states
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -312,7 +312,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testDiffWithIndex() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -332,9 +332,9 @@ public class ShowHistoryTest extends BaseTest
       //Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -343,9 +343,9 @@ public class ShowHistoryTest extends BaseTest
       //Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -354,9 +354,9 @@ public class ShowHistoryTest extends BaseTest
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());
@@ -370,7 +370,7 @@ public class ShowHistoryTest extends BaseTest
    @Test
    public void testDiffWithWorkingTreeMode() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -390,9 +390,9 @@ public class ShowHistoryTest extends BaseTest
       //Select first commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT1);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       String diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertFalse(diffContent.contains(TEST_FILE1));
@@ -401,9 +401,9 @@ public class ShowHistoryTest extends BaseTest
       //Select init commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(INIT_COMMIT_COMMENT);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.contains(TEST_FILE1));
@@ -412,9 +412,9 @@ public class ShowHistoryTest extends BaseTest
       //Select second commit:
       IDE.GIT.SHOW_HISTORY.selectRevisionByComment(COMMIT2);
       waitForLoaderDissapeared();
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
-      Assert.assertFalse(selenium.isTextPresent(ShowHistory.Locators.INDEX_STATE));
-      Assert.assertTrue(selenium.isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.NOTHING_FOR_COMPARANCE));
+      Assert.assertFalse(selenium().isTextPresent(ShowHistory.Locators.INDEX_STATE));
+      Assert.assertTrue(selenium().isTextPresent(ShowHistory.Locators.WORKING_TREE_STATE));
       //Check diff content:
       diffContent = IDE.GIT.SHOW_HISTORY.getDiffText();
       Assert.assertTrue(diffContent.isEmpty());

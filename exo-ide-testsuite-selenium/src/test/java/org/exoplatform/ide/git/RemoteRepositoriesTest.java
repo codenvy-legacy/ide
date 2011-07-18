@@ -118,7 +118,7 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testRemoteRepositoriesView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -147,7 +147,7 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testAddRemoteRepository() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -201,7 +201,7 @@ public class RemoteRepositoriesTest extends BaseTest
    @Test
    public void testDeleteRemoteRepository() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");

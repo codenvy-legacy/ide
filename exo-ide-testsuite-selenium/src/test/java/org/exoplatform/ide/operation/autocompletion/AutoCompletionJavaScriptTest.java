@@ -54,18 +54,18 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "<script>");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       IDE.EDITOR.typeTextIntoEditor(0, "</script>");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       IDE.EDITOR.pressEnter();
 
@@ -83,17 +83,17 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyDown("//body[@class='editbox']", "\\" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyDown("//body[@class='editbox']", "\\" + java.awt.event.KeyEvent.VK_END);
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "<script>");
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "</script>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "<script>");
@@ -103,11 +103,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "<st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       IDE.EDITOR.typeTextIntoEditor(0, "le>");
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "</st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       IDE.EDITOR.typeTextIntoEditor(0, "le>");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
@@ -119,7 +119,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       for (int i = 0; i < 9; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       }
 
       IDE.EDITOR.pressEnter();
@@ -161,11 +161,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
 
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "<st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       IDE.EDITOR.typeTextIntoEditor(0, "le>");
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "</st");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
       IDE.EDITOR.typeTextIntoEditor(0, "le>");
 
       IDE.EDITOR.pressEnter();
@@ -173,11 +173,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.typeTextIntoEditor(0, "</script>");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       javaScriptTestVar();
       javaScriptTestFunction();
@@ -211,7 +211,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, "    };");
       IDE.EDITOR.pressEnter();
       IDE.EDITOR.pressEnter();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       IDE.CODEASSISTANT.openForm();
 
@@ -248,7 +248,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("a()");
       IDE.CODEASSISTANT.checkElementPresent("b()");
 
-      selenium.keyDown(CodeAssistant.Locators.INPUT, "\\40");
+      selenium().keyDown(CodeAssistant.Locators.INPUT, "\\40");
       IDE.CODEASSISTANT.insertSelectedItem();
 
       String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
@@ -257,7 +257,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       // remove created text
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
       IDE.EDITOR.pressEnter();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }
 
    /**
@@ -277,11 +277,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       // remove created text
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
 
       IDE.EDITOR.pressEnter();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }
 
 }

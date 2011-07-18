@@ -263,7 +263,7 @@ public class Navigation extends AbstractTestModule
       IDE().TOOLBAR.runCommand(ToolbarCommands.File.DELETE);
 
       //check deletion form
-      //assertTrue(selenium.isElementPresent("//div[@view-id='ideDeleteItemsView']"));
+      //assertTrue(selenium().isElementPresent("//div[@view-id='ideDeleteItemsView']"));
       waitForElementPresent("//div[@view-id='ideDeleteItemsView']");
       assertTrue(selenium().isElementPresent("ideDeleteItemFormOkButton"));
       assertTrue(selenium().isElementPresent("ideDeleteItemFormCancelButton"));

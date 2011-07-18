@@ -478,7 +478,7 @@ public class Editor extends AbstractTestModule
       // Get the delta between of toolbar browser area
       int deltaX = Integer.parseInt(selenium().getEval("window.outerWidth-window.innerWidth"));
       // Get the position on screen of the editor
-      //      int x = selenium.getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
+      //      int x = selenium().getElementPositionLeft("//div[@class='tabSetContainer']/div/div[2]//iframe").intValue() + deltaX;
       int x =
          selenium().getElementPositionLeft("//div[@panel-id='editor' and @tab-index='0' ]//iframe").intValue() + deltaX;
       return x;
@@ -516,7 +516,7 @@ public class Editor extends AbstractTestModule
     * Sometimes, if you can't type text to editor,
     * try before to click on editor:
     * 
-    * selenium.clickAt("//body[@class='editbox']", "5,5");
+    * selenium().clickAt("//body[@class='editbox']", "5,5");
     * 
     * @param tabIndex begins from 0
     * @param text (can be used '\n' as line break)
@@ -783,7 +783,7 @@ public class Editor extends AbstractTestModule
       if (isSourceActive)
       {
 
-         //  assertTrue(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+         //  assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
          //   + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
 
          assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"

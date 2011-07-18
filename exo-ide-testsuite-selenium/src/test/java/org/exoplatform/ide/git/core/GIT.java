@@ -36,7 +36,7 @@ public class GIT
 
       String CLONE_SUCCESS = "Repository was successfully cloned.";
 
-      String CLONE_REPO_EXISTS = "[ERROR] Repository already exists: %1s";
+      String CLONE_REPO_EXISTS = "[ERROR] Repository already exists:";
 
       String GIT_REPO_EXISTS = "Git repository already exists in this folder or parent one.";
 

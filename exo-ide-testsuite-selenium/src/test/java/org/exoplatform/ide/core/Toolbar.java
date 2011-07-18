@@ -223,11 +223,11 @@ public class Toolbar extends AbstractTestModule
       //
       //      if (present)
       //      {
-      //         assertTrue(selenium.isElementPresent(locator));
+      //         assertTrue(selenium().isElementPresent(locator));
       //      }
       //      else
       //      {
-      //         assertFalse(selenium.isElementPresent(locator));
+      //         assertFalse(selenium().isElementPresent(locator));
       //      }
 
    }

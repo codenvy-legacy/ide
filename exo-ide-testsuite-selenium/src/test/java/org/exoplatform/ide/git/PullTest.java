@@ -89,7 +89,7 @@ public class PullTest extends BaseTest
    @Test
    public void testPullCommand() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -132,7 +132,7 @@ public class PullTest extends BaseTest
    @Test
    public void testPullView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -172,7 +172,7 @@ public class PullTest extends BaseTest
    @Test
    public void testPullFromRemote() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 

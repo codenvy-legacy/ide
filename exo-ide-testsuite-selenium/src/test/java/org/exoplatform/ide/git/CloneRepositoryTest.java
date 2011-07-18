@@ -48,7 +48,7 @@ public class CloneRepositoryTest extends BaseTest
    private static final String TEST_FILE2 = "File2.txt";
 
    private static final String DEFAULT_REMOTE_NAME = "origin";
-   
+
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/clone-test.zip";
 
    @BeforeClass
@@ -86,7 +86,7 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepositoryView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
@@ -101,7 +101,7 @@ public class CloneRepositoryTest extends BaseTest
       Assert.assertEquals(DEFAULT_REMOTE_NAME, IDE.GIT.CLONE_REPOSITORY.getRemoteNameFieldValue());
 
       //Check Clone button is disabled, when remote URI field is empty:
-      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("git/"+REPO_NAME);
+      IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("git/" + REPO_NAME);
       Assert.assertTrue(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
       IDE.GIT.CLONE_REPOSITORY.typeToRemoteUriField("");
       Assert.assertFalse(IDE.GIT.CLONE_REPOSITORY.isCloneButtonEnabled());
@@ -119,7 +119,7 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepositoryInWorkspace() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -141,7 +141,7 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepositoryWithSelectedFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -163,7 +163,7 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepository() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER + "/");
@@ -189,12 +189,12 @@ public class CloneRepositoryTest extends BaseTest
       //Sleep is necessary for files to appear in Davfs:
       Thread.sleep(3000);
 
-      selenium.open(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER);
-      selenium.waitForPageToLoad("" + 5000);
-      Assert.assertTrue(selenium.isElementPresent("link=.git"));
-      Assert.assertTrue(selenium.isElementPresent("link=" + TEST_FILE1));
-      Assert.assertTrue(selenium.isElementPresent("link=" + TEST_FILE2));
-      selenium.goBack();
+      selenium().open(WS_URL + TEST_FOLDER + "/" + CLONE_FOLDER);
+      selenium().waitForPageToLoad("" + 5000);
+      Assert.assertTrue(selenium().isElementPresent("link=.git"));
+      Assert.assertTrue(selenium().isElementPresent("link=" + TEST_FILE1));
+      Assert.assertTrue(selenium().isElementPresent("link=" + TEST_FILE2));
+      selenium().goBack();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -213,7 +213,7 @@ public class CloneRepositoryTest extends BaseTest
    @Test
    public void testCloneRepositoryIfExists() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -228,8 +228,8 @@ public class CloneRepositoryTest extends BaseTest
 
       IDE.OUTPUT.waitForMessageShow(1);
       String message = IDE.OUTPUT.getOutputMessageText(1);
-      Assert.assertEquals(
-         String.format(GIT.Messages.CLONE_REPO_EXISTS, "git/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/"
-            + REPOSITORY + "/.git"), message);
+      Assert.assertTrue(message.startsWith(GIT.Messages.CLONE_REPO_EXISTS));
+      Assert.assertTrue(message.endsWith("git/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER + "/" + REPOSITORY
+         + "/.git"));
    }
 }

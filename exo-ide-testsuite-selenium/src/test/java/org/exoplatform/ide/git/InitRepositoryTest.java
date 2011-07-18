@@ -20,7 +20,6 @@ package org.exoplatform.ide.git;
 
 import junit.framework.Assert;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -40,14 +39,11 @@ public class InitRepositoryTest extends BaseTest
    private static final String TEST_FOLDER = InitRepositoryTest.class.getSimpleName();
 
    private static final String INIT_FOLDER = "forInit";
-   
+
    private static final String REPOSITORY = "repository";
-   
+
    private static final String TEST_FILE = "TestFile.html";
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + TEST_FOLDER + "/";
-   
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/init-test.zip";
 
    @BeforeClass
@@ -86,7 +82,7 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -115,7 +111,7 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryInWorkspace() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -137,7 +133,7 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryWithSelectedFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -161,16 +157,17 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepository() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER + "/");
-      
+
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitForViewOpened();
-      Assert.assertTrue(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().endsWith(TEST_FOLDER + "/" + INIT_FOLDER + "/"));
+      Assert
+         .assertTrue(IDE.GIT.INIT_REPOSITORY.getWorkDirectoryValue().endsWith(TEST_FOLDER + "/" + INIT_FOLDER + "/"));
 
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
       IDE.GIT.INIT_REPOSITORY.waitForViewClosed();
@@ -179,10 +176,10 @@ public class InitRepositoryTest extends BaseTest
       String message = IDE.OUTPUT.getOutputMessageText(1);
       Assert.assertTrue(message.endsWith(GIT.Messages.INIT_SUCCESS));
 
-      selenium.open(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER);
-      selenium.waitForPageToLoad("" + 5000);
-      Assert.assertTrue(selenium.isElementPresent("link=.git"));
-      selenium.goBack();
+      selenium().open(WS_URL + TEST_FOLDER + "/" + INIT_FOLDER);
+      selenium().waitForPageToLoad("" + 5000);
+      Assert.assertTrue(selenium().isElementPresent("link=.git"));
+      selenium().goBack();
       IDE.WORKSPACE.waitForRootItem();
    }
 
@@ -194,13 +191,13 @@ public class InitRepositoryTest extends BaseTest
    @Test
    public void testInitRepositoryIfExists() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
-      
+
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
 
       IDE.INFORMATION_DIALOG.waitForInfoDialog();

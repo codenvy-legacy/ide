@@ -105,7 +105,7 @@ public class AddTest extends BaseTest
    @Test
    public void testAddFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -157,7 +157,7 @@ public class AddTest extends BaseTest
    @Test
    public void testAddFolder() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -196,7 +196,7 @@ public class AddTest extends BaseTest
    @Test
    public void testAllChanges() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -248,7 +248,7 @@ public class AddTest extends BaseTest
    @Test
    public void testAddOnlyUpdate() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 

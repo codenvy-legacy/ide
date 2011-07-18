@@ -104,39 +104,39 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE,"Google Gadget",false);
       
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
+      selenium().click("//body");
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+A to select all text
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //Press Ctrl+B
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "B");
-      selenium.keyUp("//", "B");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "B");
+      selenium().keyUp("//", "B");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became bold
-      assertTrue(selenium.isElementPresent("//body/strong[text()='Hello, world! ']"));
+      assertTrue(selenium().isElementPresent("//body/strong[text()='Hello, world! ']"));
       
       //Press Ctrl+I
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "I");
-      selenium.keyUp("//", "I");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "I");
+      selenium().keyUp("//", "I");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became italic
-      assertTrue(selenium.isElementPresent("//body/em/strong[text()='Hello, world! ']"));
+      assertTrue(selenium().isElementPresent("//body/em/strong[text()='Hello, world! ']"));
       
       //Press Ctrl+U
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "U");
-      selenium.keyUp("//", "U");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "U");
+      selenium().keyUp("//", "U");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became underline
-      assertTrue(selenium.isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
+      assertTrue(selenium().isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
       IDE.selectMainFrame();
       
       //----- 4 ------------
@@ -166,27 +166,27 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //check Ctrl+F
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
+      selenium().click("//body");
       Thread.sleep(TestConstants.SLEEP);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body", "F");
-      selenium.keyUp("//body", "F");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body", "F");
+      selenium().keyUp("//body", "F");
+      selenium().controlKeyUp();
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       
       //check find-replace form doesn't appear
-//      assertFalse(selenium.isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+//      assertFalse(selenium().isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
       IDE.FINDREPLACE.checkFindReplaceFormNotAppeared();
       
       //check Ctrl+D
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body", "D");
-      selenium.keyUp("//body", "D");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body", "D");
+      selenium().keyUp("//body", "D");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.selectMainFrame();
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
@@ -194,26 +194,26 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       //check Ctrl+L
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body", "L");
-      selenium.keyUp("//body", "L");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body", "L");
+      selenium().keyUp("//body", "L");
+      selenium().controlKeyUp();
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
-      assertFalse(selenium.isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
+      assertFalse(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
       
-      assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
+      assertTrue(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
       
       try
       {
-         selenium.clickAt("//div[@class='cke_dialog_body']/div[@class='cke_dialog_close_button']/span", "2,2");
+         selenium().clickAt("//div[@class='cke_dialog_body']/div[@class='cke_dialog_close_button']/span", "2,2");
       }
       catch (Exception e)
       {
       }
       Thread.sleep(TestConstants.SLEEP);
-      assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
+      assertFalse(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
    }
    
    @Test
@@ -228,42 +228,42 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
       //select all
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().click("//body");
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //press Ctrl+X
-      selenium.controlKeyDown();
-      selenium.keyPress("//body", "x");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body", "x");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertEquals("", selenium.getText("//body"));
+      assertEquals("", selenium().getText("//body"));
       
       //press Ctrl+Z
-      selenium.controlKeyDown();
-      selenium.keyPress("//body", "z");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body", "z");
+      selenium().controlKeyUp();
       
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertEquals(DEFAULT_TEXT_IN_GADGET, selenium.getText("//body"));
-      selenium.keyDown("//body", "Y");
+      assertEquals(DEFAULT_TEXT_IN_GADGET, selenium().getText("//body"));
+      selenium().keyDown("//body", "Y");
       IDE.selectMainFrame();
       
       
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+Y
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().click("//body");
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP);
-      assertEquals("", selenium.getText("//body"));
+      assertEquals("", selenium().getText("//body"));
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.selectMainFrame();
@@ -278,30 +278,30 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
+      selenium().click("//body");
       //select All text
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP);
       
       //press Ctrl+C
-      selenium.controlKeyDown();
-      selenium.keyPress("//body", "c");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body", "c");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
       
       //press Del to delete selected text
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
       //press Ctrl+V twice
-      selenium.controlKeyDown();
-      selenium.keyPress("//body", "v");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body", "v");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
       
-      assertEquals(textForCopyPaste, selenium.getText("//body"));
+      assertEquals(textForCopyPaste, selenium().getText("//body"));
       IDE.selectMainFrame();
       
    }
@@ -315,10 +315,10 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       
       //----- 1 ------------
       //press Ctrl+N to check hotkey
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       
       checkCreateFileFromTemplateFormAndClose();
@@ -334,7 +334,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    private String getTextFromCkEditor(int tabIndex) throws Exception
    {
      IDE.EDITOR.selectIFrameWithEditor(tabIndex);
-      String text = selenium.getText("//body");
+      String text = selenium().getText("//body");
       IDE.selectMainFrame();
       return text;
    }

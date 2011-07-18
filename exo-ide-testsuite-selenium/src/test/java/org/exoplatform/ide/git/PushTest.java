@@ -85,7 +85,7 @@ public class PushTest extends BaseTest
    @Test
    public void testPushCommand() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -128,7 +128,7 @@ public class PushTest extends BaseTest
    @Test
    public void testPushView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -165,7 +165,7 @@ public class PushTest extends BaseTest
    @Test
    public void testPushToRemote() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 

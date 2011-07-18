@@ -69,38 +69,38 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //Press Ctrl+F
       //Find-replace form appeared
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "F");
-      selenium.keyUp("//body[@class='editbox']", "F");
-      selenium.controlKeyUp();
+      selenium().click("//body");
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "F");
+      selenium().keyUp("//body[@class='editbox']", "F");
+      selenium().controlKeyUp();
       IDE.selectMainFrame();
       //check find-replace form appeared
-      assertTrue(selenium.isElementPresent(FIND_REPLACE_FORM_LOCATOR));
+      assertTrue(selenium().isElementPresent(FIND_REPLACE_FORM_LOCATOR));
       //close form
-      selenium.click("ideFindReplaceTextFormCancelButton");
+      selenium().click("ideFindReplaceTextFormCancelButton");
       waitForElementNotPresent(FIND_REPLACE_FORM_LOCATOR);
 
       //----- 3 ------------
       //check Ctrl+D
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "D");
-      selenium.keyUp("//body[@class='editbox']", "D");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "D");
+      selenium().keyUp("//body[@class='editbox']", "D");
+      selenium().controlKeyUp();
       IDE.selectMainFrame();
       assertEquals("",IDE.EDITOR.getTextFromCodeEditor(0));
 
       //----- 4 ------------
       //check Ctrl+L
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "L");
-      selenium.keyUp("//body[@class='editbox']", "L");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "L");
+      selenium().keyUp("//body[@class='editbox']", "L");
+      selenium().controlKeyUp();
       IDE.selectMainFrame();
       //check go to line window dialog appeared
-      assertTrue(selenium.isElementPresent(GO_TO_LINE_FORM_LOCATOR));
+      assertTrue(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       //close
       closeForm(GO_TO_LINE_FORM_LOCATOR);
       IDE.selectMainFrame();
@@ -125,61 +125,61 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
      IDE.EDITOR.typeTextIntoEditor(0, textToEdit);
 
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
+      selenium().click("//body");
 
       //select all text
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       //copy text by Ctrl+C
-      selenium.controlKeyDown();
-      selenium.keyPress("//body[@class='editbox']", "c");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body[@class='editbox']", "c");
+      selenium().controlKeyUp();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "\n");
 
       //paste text by pressing Ctrl+V
-      selenium.controlKeyDown();
-      selenium.keyPress("//body[@class='editbox']", "v");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body[@class='editbox']", "v");
+      selenium().controlKeyUp();
 
       //check text
-      assertEquals(textToEdit + "\n" + textToEdit, selenium.getText("//body[@class='editbox']"));
+      assertEquals(textToEdit + "\n" + textToEdit, selenium().getText("//body[@class='editbox']"));
 
       //----- 11 ------------
       //check Ctrl+X
       //delete all text
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "D");
-      selenium.keyUp("//body[@class='editbox']", "D");
-      selenium.controlKeyUp();
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "D");
-      selenium.keyUp("//body[@class='editbox']", "D");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "D");
+      selenium().keyUp("//body[@class='editbox']", "D");
+      selenium().controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "D");
+      selenium().keyUp("//body[@class='editbox']", "D");
+      selenium().controlKeyUp();
 
       final String textToCut = "text to cut";
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, textToCut);
 
       //select all text
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
 
-      selenium.controlKeyDown();
-      selenium.keyPress("//body[@class='editbox']", "x");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyPress("//body[@class='editbox']", "x");
+      selenium().controlKeyUp();
 
-      assertEquals("", selenium.getText("//body[@class='editbox']"));
+      assertEquals("", selenium().getText("//body[@class='editbox']"));
       //paste text by pressing Ctrl+V
-      selenium.controlKeyDown();
-      selenium.keyPress("//body[@class='editbox']", "v");
-      selenium.controlKeyUp();
-      assertEquals(textToCut, selenium.getText("//body[@class='editbox']"));
+      selenium().controlKeyDown();
+      selenium().keyPress("//body[@class='editbox']", "v");
+      selenium().controlKeyUp();
+      assertEquals(textToCut, selenium().getText("//body[@class='editbox']"));
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
@@ -203,30 +203,30 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //change text
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "5");
 
-      assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
+      assertEquals(textToRevert + "5", selenium().getText("//body[@class='editbox']"));
       IDE.selectMainFrame();
       //press Ctrl+Z
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.click("//body");
+      selenium().click("//body");
 
       //----- 4 -------
       //ctrl+z
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "90");
-      selenium.keyUp("//", "90");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "90");
+      selenium().keyUp("//", "90");
+      selenium().controlKeyUp();
 
-      assertEquals(textToRevert, selenium.getText("//body[@class='editbox']"));
+      assertEquals(textToRevert, selenium().getText("//body[@class='editbox']"));
       IDE.selectMainFrame();
 
       //----- 5 -------
       //press Ctrl+Y
      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//body[@class='editbox']", "89");
-      selenium.keyUp("//body[@class='editbox']", "89");
-      selenium.controlKeyUp();
-      assertEquals(textToRevert + "5", selenium.getText("//body[@class='editbox']"));
+      selenium().controlKeyDown();
+      selenium().keyDown("//body[@class='editbox']", "89");
+      selenium().keyUp("//body[@class='editbox']", "89");
+      selenium().controlKeyUp();
+      assertEquals(textToRevert + "5", selenium().getText("//body[@class='editbox']"));
       IDE.selectMainFrame();
       //TODO: Ctrl+Home, Ctrl+End
 
@@ -251,11 +251,11 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 32);
 
       //check autocomplete form appears
-      assertTrue(selenium.isElementPresent("//td/div[@class='gwt-Label']"));
+      assertTrue(selenium().isElementPresent("//td/div[@class='gwt-Label']"));
 
       //close autocoplete form
-      selenium.keyDown("//", "13");
-      selenium.keyUp("//", "13");
+      selenium().keyDown("//", "13");
+      selenium().keyUp("//", "13");
 
       //close file
      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);

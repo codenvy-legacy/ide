@@ -108,7 +108,7 @@ public class ResetToCommitTest extends BaseTest
    @Test
    public void testResetFilesView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -133,7 +133,7 @@ public class ResetToCommitTest extends BaseTest
    @Test
    public void testSoftReset() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -184,7 +184,7 @@ public class ResetToCommitTest extends BaseTest
    @Test
    public void testMixedReset() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -255,7 +255,7 @@ public class ResetToCommitTest extends BaseTest
    @Test
    public void testHardReset() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");

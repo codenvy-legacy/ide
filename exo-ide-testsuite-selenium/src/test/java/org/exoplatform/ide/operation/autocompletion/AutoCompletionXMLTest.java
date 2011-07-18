@@ -46,26 +46,26 @@ public class AutoCompletionXMLTest extends BaseTest
 
      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      //      selenium.keyDown("//body[@class='editbox']", "\\35");
+      //      selenium().keyDown("//body[@class='editbox']", "\\35");
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.typeTextIntoEditor(0, "<root>");
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.typeTextIntoEditor(0, "</root>");
-      selenium.keyPressNative("" + KeyEvent.VK_UP);
+      selenium().keyPressNative("" + KeyEvent.VK_UP);
 
      IDE.EDITOR.typeTextIntoEditor(0, "<rot>");
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.typeTextIntoEditor(0, "</rot>");
-      selenium.keyPressNative("" + KeyEvent.VK_UP);
+      selenium().keyPressNative("" + KeyEvent.VK_UP);
 
      IDE.EDITOR.typeTextIntoEditor(0, "<rt>");
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.pressEnter();
      IDE.EDITOR.typeTextIntoEditor(0, "</rt>");
 
-      selenium.keyPressNative("" + KeyEvent.VK_UP);
+      selenium().keyPressNative("" + KeyEvent.VK_UP);
 
       IDE.CODEASSISTANT.openForm();
 

@@ -115,7 +115,7 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -146,7 +146,7 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitNewFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
@@ -193,7 +193,7 @@ public class CommitTest extends BaseTest
    @Test
    public void testCommitWithoutAdd() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");

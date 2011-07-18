@@ -54,28 +54,28 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();      
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       //************fixed**********
       for (int i = 0; i < 16; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       //****************************
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<style>\n");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "</style>");
       Thread.sleep(300);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       cssTest();
 
@@ -85,27 +85,27 @@ public class AutoCompletionCSSTest extends BaseTest
    @Test
    public void testHTML() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.PAGE_LOAD_PERIOD);
       IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<script>\n</script>");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CODEMIRROR_EDITOR_LOCATOR, "<style>\n\n</style>");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
       cssTest();
 
@@ -118,7 +118,7 @@ public class AutoCompletionCSSTest extends BaseTest
     */
    private void cssTest() throws Exception
    {
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
       IDE.EDITOR.typeTextIntoEditor(0, "main{");
       IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
 
@@ -126,11 +126,11 @@ public class AutoCompletionCSSTest extends BaseTest
 
       IDE.CODEASSISTANT.typeToInput("list-st");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.CODEASSISTANT.insertSelectedItem();
 

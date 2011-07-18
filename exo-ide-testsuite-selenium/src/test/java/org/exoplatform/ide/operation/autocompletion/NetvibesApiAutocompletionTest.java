@@ -87,7 +87,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 2. Go inside <code><script></code> tag.
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.CODEASSISTANT.openForm();
@@ -96,7 +96,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("UWA");
 
       IDE.CODEASSISTANT.typeToInput("w");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.EDITOR.typeTextIntoEditor(0, ".");
@@ -106,7 +106,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("createElement(tagName,options) : Element");
 
       IDE.CODEASSISTANT.typeToInput("getE");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("widget.getElement(selector)"));
@@ -125,7 +125,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("Widget");
 
       IDE.CODEASSISTANT.typeToInput("Data");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("UWA.Data"));
@@ -145,7 +145,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
 
       IDE.CODEASSISTANT.typeToInput("getF");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("UWA.Data.getFeed(url, callback)"));
@@ -154,8 +154,8 @@ public class NetvibesApiAutocompletionTest extends BaseTest
    @Test
    public void testNetvibesLocalVar() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+      selenium().refresh();
+      selenium().waitForPageToLoad("30000");
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
@@ -167,7 +167,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       /*
        * 2. Go inside <code><script></code> tag.
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.EDITOR.typeTextIntoEditor(0, "var a = new Array(); \n var b = new UWA.Element(); \n a.");
@@ -181,7 +181,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
       IDE.CODEASSISTANT.checkElementPresent("length:Number");
       IDE.CODEASSISTANT.typeToInput("som");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("a.some(fn, bind)"));
@@ -202,7 +202,7 @@ public class NetvibesApiAutocompletionTest extends BaseTest
 
       IDE.CODEASSISTANT.typeToInput("setOpa");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("b.setOpacity(value)"));

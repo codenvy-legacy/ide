@@ -54,11 +54,11 @@ public class CustomizeToolbarTest extends BaseTest
        */
       checkAppearCustomizeToolbarForm();
       //store first element for chek appear after close coostomize toolbar
-      String storeTextFirstElementGrid = selenium.getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
+      String storeTextFirstElementGrid = selenium().getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
       //click on first element, and cancel not save changes
-      selenium.click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
-      selenium.click("ideCustomizeToolbarFormDeleteButton");
-      selenium.click("ideCustomizeToolbarFormCancelButton");
+      selenium().click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
+      selenium().click("ideCustomizeToolbarFormDeleteButton");
+      selenium().click("ideCustomizeToolbarFormCancelButton");
       checkDisAppearCustomizeToolbarForm();
       // ---------2------------
       //run customize toolbar
@@ -67,10 +67,10 @@ public class CustomizeToolbarTest extends BaseTest
       checkAppearCustomizeToolbarForm();
       //store first element into second variable for chek appear after close coostomize toolbar
       String storeTextFirstElementGridAfterCloseForm =
-         selenium.getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
+         selenium().getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
       //check first element
       assertEquals(storeTextFirstElementGrid, storeTextFirstElementGridAfterCloseForm);
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       checkDisAppearCustomizeToolbarForm();
       // ------------3-----------
       //run customize toolbar
@@ -78,12 +78,12 @@ public class CustomizeToolbarTest extends BaseTest
       waitForElementPresent("ideCustomizeToolbarForm");
       checkAppearCustomizeToolbarForm();
       //delete first element
-      selenium.click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
-      selenium.click("ideCustomizeToolbarFormDeleteButton");
+      selenium().click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td");
+      selenium().click("ideCustomizeToolbarFormDeleteButton");
       //check deleted element
-      assertFalse(storeTextFirstElementGrid == selenium
-         .getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td"));
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      assertFalse(storeTextFirstElementGrid == selenium().getText(
+         "//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[1]/td"));
+      selenium().click("ideCustomizeToolbarFormOkButton");
       checkDisAppearCustomizeToolbarForm();
 
       // ---------5--------
@@ -91,12 +91,12 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       checkAppearCustomizeToolbarForm();
       // Control defoult settings
-      selenium.click("ideCustomizeToolbarFormRestoreDefaultsButton");
+      selenium().click("ideCustomizeToolbarFormRestoreDefaultsButton");
       //check appear list grid basic elements
       checkAppearCustomizeToolbarForm();
       chekIdeToolbarItemListGrid();
       chekToollbarItemExListGrid();
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
 
       // ------6-------
       IDE.WORKSPACE.waitForRootItem();
@@ -104,11 +104,11 @@ public class CustomizeToolbarTest extends BaseTest
       waitForElementPresent("ideCustomizeToolbarForm");
       //select first element and move down
       clickOnToolbarElement(2);
-      selenium.click("ideCustomizeToolbarFormMoveDownButton");
+      selenium().click("ideCustomizeToolbarFormMoveDownButton");
       //check element after move
       checkElementPresentInItemListGrid("New * [Popup]", 3);
       //confirm selection
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // ---------7-------
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -116,7 +116,7 @@ public class CustomizeToolbarTest extends BaseTest
       checkAppearCustomizeToolbarForm();
       //check moved element
       checkElementPresentInItemListGrid("New * [Popup]", 3);
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // ----------- 8 ---------
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -124,8 +124,8 @@ public class CustomizeToolbarTest extends BaseTest
       checkAppearCustomizeToolbarForm();
       clickOnToolbarElement(3);
       //delete moved element
-      selenium.click("ideCustomizeToolbarFormDeleteButton");
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormDeleteButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // ----------9---------
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -134,24 +134,24 @@ public class CustomizeToolbarTest extends BaseTest
       checkElementPresentInItemListGrid("Save", 3);
       //click on first element and push delimitier
       clickOnToolbarElement(3);
-      selenium.click("ideCustomizeToolbarFormDelimeterButton");
+      selenium().click("ideCustomizeToolbarFormDelimeterButton");
       // control create delimiter
       checkElementPresentInItemListGrid("Delimiter", 4);
       clickOnToolbarElement(2);
-      selenium.click("ideCustomizeToolbarFormMoveDownButton");
+      selenium().click("ideCustomizeToolbarFormMoveDownButton");
       // control position delimiter
       checkElementPresentInItemListGrid("Delimiter", 3);
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // ----10-----
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       // delete delimiter
       clickOnToolbarElement(3);
-      selenium.click("ideCustomizeToolbarFormDeleteButton");
+      selenium().click("ideCustomizeToolbarFormDeleteButton");
       // control delete delimiter
       checkElementPresentInItemListGrid("Delimiter", 3);
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // -------11------
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
@@ -160,19 +160,19 @@ public class CustomizeToolbarTest extends BaseTest
       clickOnComandToolbarElement(2);
       clickOnToolbarElement(2);
       //change position new element
-      selenium.click("ideCustomizeToolbarFormAddButton");
-      selenium.click("ideCustomizeToolbarFormMoveDownButton");
-      selenium.click("ideCustomizeToolbarFormMoveDownButton");
+      selenium().click("ideCustomizeToolbarFormAddButton");
+      selenium().click("ideCustomizeToolbarFormMoveDownButton");
+      selenium().click("ideCustomizeToolbarFormMoveDownButton");
       //check new element in new position
       checkElementPresentInItemListGrid("New * [Popup]", 5);
       // -----12------
-      selenium.click("ideCustomizeToolbarFormOkButton");
+      selenium().click("ideCustomizeToolbarFormOkButton");
       // -----15------
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       waitForElementPresent("ideCustomizeToolbarForm");
       //restore default settings and check
-      selenium.click("ideCustomizeToolbarFormRestoreDefaultsButton");
+      selenium().click("ideCustomizeToolbarFormRestoreDefaultsButton");
       chekToollbarItemExListGrid();
       chekIdeToolbarItemListGrid();
    }
@@ -244,12 +244,12 @@ public class CustomizeToolbarTest extends BaseTest
    public void checkAppearCustomizeToolbarForm() throws Exception
    {
       waitForElementPresent("ideCustomizeToolbarForm");
-      assertTrue(selenium.isElementPresent("ideCustomizeToolbarForm"));
-      assertTrue(selenium.isElementPresent("//div//span[\"Customize Toolbar\"]"));
-      assertTrue(selenium.isElementPresent("ideToolbarItemListGrid"));
-      assertTrue(selenium.isElementPresent("ideCustomizeToolbarFormCancelButton"));
-      assertTrue(selenium.isElementPresent("ideCustomizeToolbarFormRestoreDefaultsButton"));
-      assertTrue(selenium.isElementPresent("ideCustomizeToolbarFormOkButton"));
+      assertTrue(selenium().isElementPresent("ideCustomizeToolbarForm"));
+      assertTrue(selenium().isElementPresent("//div//span[\"Customize Toolbar\"]"));
+      assertTrue(selenium().isElementPresent("ideToolbarItemListGrid"));
+      assertTrue(selenium().isElementPresent("ideCustomizeToolbarFormCancelButton"));
+      assertTrue(selenium().isElementPresent("ideCustomizeToolbarFormRestoreDefaultsButton"));
+      assertTrue(selenium().isElementPresent("ideCustomizeToolbarFormOkButton"));
    }
 
    /**
@@ -258,12 +258,12 @@ public class CustomizeToolbarTest extends BaseTest
    public void checkDisAppearCustomizeToolbarForm() throws InterruptedException
    {
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      assertFalse(selenium.isElementPresent("ideCustomizeToolbarForm"));
-      assertFalse(selenium.isElementPresent("//div//span[\"Customize Toolbar\"]"));
-      assertFalse(selenium.isElementPresent("ideToolbarItemListGrid"));
-      assertFalse(selenium.isElementPresent("ideCustomizeToolbarFormCancelButton"));
-      assertFalse(selenium.isElementPresent("ideCustomizeToolbarFormRestoreDefaultsButton"));
-      assertFalse(selenium.isElementPresent("ideCustomizeToolbarFormOkButton"));
+      assertFalse(selenium().isElementPresent("ideCustomizeToolbarForm"));
+      assertFalse(selenium().isElementPresent("//div//span[\"Customize Toolbar\"]"));
+      assertFalse(selenium().isElementPresent("ideToolbarItemListGrid"));
+      assertFalse(selenium().isElementPresent("ideCustomizeToolbarFormCancelButton"));
+      assertFalse(selenium().isElementPresent("ideCustomizeToolbarFormRestoreDefaultsButton"));
+      assertFalse(selenium().isElementPresent("ideCustomizeToolbarFormOkButton"));
    }
 
    /**
@@ -272,7 +272,7 @@ public class CustomizeToolbarTest extends BaseTest
    public void clickOnComandToolbarElement(int indexElement)
    {
 
-      selenium.click("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]/td");
+      selenium().click("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]/td");
    }
 
    /**
@@ -283,16 +283,16 @@ public class CustomizeToolbarTest extends BaseTest
    public void clickOnToolbarElement(int indexElement)
    {
 
-      selenium.click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]/td");
+      selenium().click("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]/td");
    }
 
    private List<String> getCommands(String tableId)
    {
       List<String> res = new ArrayList<String>();
-      Number count = selenium.getXpathCount("//table[@id=\"" + tableId + "\"]/tbody/tr");
+      Number count = selenium().getXpathCount("//table[@id=\"" + tableId + "\"]/tbody/tr");
       for (int i = 1; i < count.intValue(); i++)
       {
-         String text = selenium.getText("//table[@id=\"" + tableId + "\"]//tr[position()=" + i + "]");
+         String text = selenium().getText("//table[@id=\"" + tableId + "\"]//tr[position()=" + i + "]");
          res.add(text);
       }
       return res;
@@ -307,7 +307,7 @@ public class CustomizeToolbarTest extends BaseTest
    public void checkIdeCommandItemExListGrid(String elementTitle, int indexElement)
    {
       assertEquals(elementTitle,
-         selenium.getText("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]//div"));
+         selenium().getText("//table[@ID=\"ideCommandItemExListGrid\"]/tbody/tr[" + indexElement + "]//div"));
    }
 
    /**
@@ -317,7 +317,7 @@ public class CustomizeToolbarTest extends BaseTest
    public void checkElementPresentInItemListGrid(String elementTitle, int indexElement)
    {
       assertEquals(elementTitle,
-         selenium.getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]//div"));
+         selenium().getText("//table[@ID=\"ideToolbarItemListGrid\"]/tbody/tr[" + indexElement + "]//div"));
    }
 
 }

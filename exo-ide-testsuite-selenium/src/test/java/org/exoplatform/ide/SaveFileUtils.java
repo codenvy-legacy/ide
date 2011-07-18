@@ -60,12 +60,12 @@ public class SaveFileUtils
       }
    
       IDE.getInstance().ASK_FOR_VALUE_DIALOG.clickOkButton();
-//      selenium.click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
+//      selenium().click(ASK_FOR_VALUE_OK_BUTTON_LOCATOR);
       
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
 
       assertFalse(IDE.getInstance().ASK_FOR_VALUE_DIALOG.isOpened());
-      //assertFalse(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
+      //assertFalse(selenium().isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
    }
    
    /**
@@ -79,14 +79,14 @@ public class SaveFileUtils
       assertTrue(IDE.getInstance().ASK_FOR_VALUE_DIALOG.isOpened());
       assertEquals(noButtonPresent, IDE.getInstance().ASK_FOR_VALUE_DIALOG.isNoButtonPresent());
       
-//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
-//      assertTrue(selenium.isTextPresent("Save file as"));
-//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR));
-//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_OK_BUTTON_LOCATOR));
-//      assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR));
+//      assertTrue(selenium().isElementPresent(ASK_FOR_VALUE_DIALOG_LOCATOR));
+//      assertTrue(selenium().isTextPresent("Save file as"));
+//      assertTrue(selenium().isElementPresent(ASK_FOR_VALUE_TEXT_FIELD_LOCATOR));
+//      assertTrue(selenium().isElementPresent(ASK_FOR_VALUE_OK_BUTTON_LOCATOR));
+//      assertTrue(selenium().isElementPresent(ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR));
 //      if (noButtonPresent)
 //      {
-//         assertTrue(selenium.isElementPresent(ASK_FOR_VALUE_NO_BUTTON_LOCATOR));
+//         assertTrue(selenium().isElementPresent(ASK_FOR_VALUE_NO_BUTTON_LOCATOR));
 //      }
    }
    

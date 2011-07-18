@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide;
 
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 
 import org.exoplatform.common.http.client.HTTPConnection;
@@ -35,15 +37,9 @@ import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -51,9 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+;
 
 /**
  * Created by The eXo Platform SAS.
@@ -69,31 +63,34 @@ import javax.xml.parsers.ParserConfigurationException;
 public abstract class BaseTest
 {
    public static final ResourceBundle IDE_SETTINGS = ResourceBundle.getBundle("conf/ide-selenium");
-
+   
+   public static final String SELENIUM_HOST = IDE_SETTINGS.getString("selenium.host");
+   
+   public static final String SELENIUM_PORT = IDE_SETTINGS.getString("selenium.port");
+   
    /**
     * Default workspace.
     */
    public static final String WS_NAME = IDE_SETTINGS.getString("ide.ws.name");
-   
+
    /**
     * Second workspace. Needed in some tests.
     */
    protected static final String WS_NAME_2 = IDE_SETTINGS.getString("ide.ws.name2");
-   
-   public static final String IDE_HOST = IDE_SETTINGS.getString("ide.host");
-   
+
+   public static String IDE_HOST = IDE_SETTINGS.getString("ide.host");
+
    public static final int IDE_PORT = Integer.valueOf(IDE_SETTINGS.getString("ide.port"));
 
-   public static final String BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
-   
+   public static String BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
+
    //   protected static final String USER_NAME = "__anonim";
    // For portal 
    public static final String USER_NAME = IDE_SETTINGS.getString("ide.user.root.name");
 
    public static final String USER_PASSWORD = IDE_SETTINGS.getString("ide.user.root.password");
-   
 
-   protected static final String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
+   protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
    public static final String REST_CONTEXT = IDE_SETTINGS.getString("ide.rest.context");
 
@@ -101,13 +98,13 @@ public abstract class BaseTest
 
    public static final String WEBDAV_CONTEXT = IDE_SETTINGS.getString("ide.webdav.context");
 
-   public static final String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+   public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    //this two variables add after change in URL IDE
    public static final String REST_CONTEXT_IDE = IDE_SETTINGS.getString("ide.rest.contenxt.ide");
 
-   public static final String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/"
-      + REPO_NAME + "/";
+   public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
+      + "/";
 
    /**
     * Default workspace URL.
@@ -122,9 +119,12 @@ public abstract class BaseTest
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.valueOf(IDE_SETTINGS
       .getString("selenium.browser.commad"));
 
-   public static final Selenium selenium = new DefaultSelenium("localhost", 4444, BROWSER_COMMAND.toString(), BASE_URL);
-
-   public static final IDE IDE = new IDE(selenium);
+   public Selenium selenium()
+   {
+      return session();
+   }
+   
+   public IDE IDE;
 
    /**
     * URL of default workspace in IDE.
@@ -134,69 +134,83 @@ public abstract class BaseTest
    private static int maxRunTestsOnOneSession = 5;
 
    private static int testsCounter = 0;
-
-   @BeforeClass
-   public static void startSelenium() throws Exception
+   
+   /**
+    * @throws Exception 
+    * 
+    */
+   public BaseTest()
    {
-      cleanDefaultWorkspace();
+      try
+      {
+         startSelenium();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   public void startSelenium() throws Exception
+   {
+      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
+      IDE = new IDE(selenium());
 
       switch (BROWSER_COMMAND)
       {
          case GOOGLE_CHROME :
          case SAFARI :
-            new WebKitUtil(selenium);
+            new WebKitUtil(selenium());
             break;
 
          case IE_EXPLORE_PROXY :
-            new InternetExplorerUtil(selenium);
+            new InternetExplorerUtil(selenium());
             break;
 
          default :
-            new TextUtil(selenium);
+            new TextUtil(selenium());
       }
 
       //      testsCounter++;
       //      if (testsCounter % maxRunTestsOnOneSession == 1)
       //      {
       //         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
-      //         selenium.start();
-      //         selenium.windowFocus();
-      //         selenium.windowMaximize();
-      //         selenium.open(APPLICATION_URL);
-      //         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      //         selenium().start();
+      //         selenium().windowFocus();
+      //         selenium().windowMaximize();
+      //         selenium().open(APPLICATION_URL);
+      //         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       //         standaloneLogin(USER_NAME);
       //      }
       //      
       //      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
-      //      selenium.open(APPLICATION_URL);
-      //      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
+      //      selenium().open(APPLICATION_URL);
+      //      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
 
       try
       {
-         selenium.start();
-         selenium.windowFocus();
-         selenium.windowMaximize();
-         selenium.open(APPLICATION_URL);
-         selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+         selenium().windowFocus();
+         selenium().windowMaximize();
+         selenium().open(APPLICATION_URL);
+         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
 
-         System.out.println("isRunIdeUnderPortal() >>> " + isRunIdeUnderPortal());
          if (isRunIdeUnderPortal())
          {
             loginInPortal();
-            selenium.open(APPLICATION_URL);
-            selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+            selenium().open(APPLICATION_URL);
+            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
             Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-            // selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-            // selenium.selectFrame("remote_iframe_0");
+            // selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
+            // selenium().selectFrame("remote_iframe_0");
 
             // selectMainForm()
-            if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
+            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
             {
-               selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
             }
             else
             {
-               selenium.selectFrame("relative=top");
+               selenium().selectFrame("relative=top");
             }
          }
          else if (isRunIdeAsStandalone())
@@ -226,40 +240,29 @@ public abstract class BaseTest
       }
    }
 
-   private static void standaloneLogout() throws Exception
+   private void standaloneLogout() throws Exception
    {
-      selenium.clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url")+"')]", "");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
+      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url")+"')]", "");
+      selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 
-   protected static void standaloneLogin(String userName, String password) throws InterruptedException
+   protected void standaloneLogin(String userName, String password) throws Exception
    {
-      String inputFieldLocator = "//input[@type='text' and @name='j_username']";
-      int dSecond = 0;
-      while (!selenium.isElementPresent(inputFieldLocator))
-      {
-         Thread.sleep(10);
-         dSecond++;
-         if (dSecond > 500)
-         {
-            fail();
-         }
-      }
-
-      selenium.type("//input[@name='j_username']", userName);
-      selenium.type("//input[@name='j_password']", password);
-      selenium.click("//input[@value='Log In']");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      waitForElementPresent("//input[@name='j_username']");
+      selenium().type("//input[@name='j_username']", userName);
+      selenium().type("//input[@name='j_password']", password);
+      selenium().click("//input[@value='Log In']");
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
-   private static void loginInPortal() throws Exception
+   private void loginInPortal() throws Exception
    {
-      selenium.open(REGISTER_IN_PORTAL);
+      selenium().open(REGISTER_IN_PORTAL);
       Thread.sleep(TestConstants.SLEEP);
-      selenium.type("//input[@name='username']", USER_NAME);
-      selenium.type("//input[@name='password']", USER_PASSWORD);
-      selenium.click("//div[@id='UIPortalLoginFormAction']");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().type("//input[@name='username']", USER_NAME);
+      selenium().type("//input[@name='password']", USER_PASSWORD);
+      selenium().click("//div[@id='UIPortalLoginFormAction']");
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    @AfterClass
@@ -267,11 +270,10 @@ public abstract class BaseTest
    {
       //      if (testsCounter % maxRunTestsOnOneSession == 0)
       //      {
-      //         selenium.stop();
+      //         selenium().stop();
       //      }
 
-      selenium.stop();
-
+      closeSeleniumSession();
       //      try
       //      {
       //         standaloneLogout();
@@ -291,7 +293,7 @@ public abstract class BaseTest
     */
    protected String getSelectedText()
    {
-      return selenium.getEval("if (window.getSelection) { window.getSelection();}");
+      return selenium().getEval("if (window.getSelection) { window.getSelection();}");
    }
 
    /**
@@ -339,17 +341,17 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
-      selenium.click("//table[@id=\"ideOpenFileWithListGrid\"]/tbody/tr");
-      selenium.click("ideOpenFileWithOkButton");
+      selenium().click("//table[@id=\"ideOpenFileWithListGrid\"]/tbody/tr");
+      selenium().click("ideOpenFileWithOkButton");
 
       Thread.sleep(TestConstants.SLEEP_SHORT * 2);
 
       //TODO After fix bug the error relates to the reappearance "OpenWithForm", shold be remove  
-      if (selenium.isElementPresent("exoAskDialog"))
+      if (selenium().isElementPresent("exoAskDialog"))
       {
-         selenium.click("exoAskDialogYesButton");
+         selenium().click("exoAskDialogYesButton");
          Thread.sleep(TestConstants.SLEEP_SHORT);
-         selenium.click("ideOpenFileWithCancelButton");
+         selenium().click("ideOpenFileWithCancelButton");
          Thread.sleep(TestConstants.SLEEP_SHORT);
       }
    }
@@ -366,16 +368,16 @@ public abstract class BaseTest
       //TODO add check form
       IDE.WORKSPACE.selectItem(fileURL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      selenium.click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " "
+      selenium().click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " "
          + typeFile + " " + "editor" + "'" + "]");
       if (checkDefault)
       {
          //click on checkbox Use as default editor
-         selenium
+         selenium()
             .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
          Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
-      selenium.click("ideOpenFileWithOkButton");
+      selenium().click("ideOpenFileWithOkButton");
       Thread.sleep(TestConstants.SLEEP);
       //time remaining to open CK editor
    }
@@ -396,11 +398,11 @@ public abstract class BaseTest
       IDE.TOOLBAR.runCommand("New");
 
       String locator = "//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()='" + itemName + "']";
-      selenium.mouseOver(locator);
+      selenium().mouseOver(locator);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       String hoverLocator = "//td[@class=\"exo-popupMenuTitleFieldOver\"]//nobr[text()='" + itemName + "']";
-      selenium.mouseDownAt(hoverLocator, "");
+      selenium().mouseDownAt(hoverLocator, "");
       //time to wait while gadget open new file
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
@@ -420,16 +422,16 @@ public abstract class BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
       waitForElementPresent(getItemUrlFormLocator);
-      assertTrue(selenium.isElementPresent(getItemUrlFormLocator));
-      assertTrue(selenium.isElementPresent(okButtonId));
-      assertTrue(selenium.isElementPresent(urlFieldName));
+      assertTrue(selenium().isElementPresent(getItemUrlFormLocator));
+      assertTrue(selenium().isElementPresent(okButtonId));
+      assertTrue(selenium().isElementPresent(urlFieldName));
 
-      final String url = selenium.getValue(urlFieldName);
+      final String url = selenium().getValue(urlFieldName);
 
       //Close form
-      selenium.click(okButtonId);
+      selenium().click(okButtonId);
       waitForElementNotPresent(getItemUrlFormLocator);
-      assertFalse(selenium.isElementPresent(getItemUrlFormLocator));
+      assertFalse(selenium().isElementPresent(getItemUrlFormLocator));
       return url;
    }
 
@@ -438,7 +440,7 @@ public abstract class BaseTest
     */
    protected void selectWorkspaceTab()
    {
-      selenium.click("//div[@panel-id='navigation']//td[text()='Workspace']");
+      selenium().click("//div[@panel-id='navigation']//td[text()='Workspace']");
    }
 
    /**
@@ -449,7 +451,7 @@ public abstract class BaseTest
    @Deprecated
    protected String getStatusbarText()
    {
-      return selenium.getText("//table[@class='exo-statusText-table']");
+      return selenium().getText("//table[@class='exo-statusText-table']");
    }
 
    /**
@@ -518,7 +520,7 @@ public abstract class BaseTest
    @Deprecated
    protected String getCursorPositionUsingStatusBar()
    {
-      return selenium
+      return selenium()
          .getText("//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
    }
 
@@ -543,12 +545,12 @@ public abstract class BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent("ideUploadForm"));
-      assertTrue(selenium.isElementPresent("ideUploadFormBrowseButton"));
+      assertTrue(selenium().isElementPresent("ideUploadForm"));
+      assertTrue(selenium().isElementPresent("ideUploadFormBrowseButton"));
       try
       {
          File file = new File(filePath);
-         selenium.type("//input[@type='file']", file.getCanonicalPath());
+         selenium().type("//input[@type='file']", file.getCanonicalPath());
       }
       catch (Exception e)
       {
@@ -556,15 +558,15 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.SLEEP);
 
       assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
-         selenium.getValue("ideUploadFormFilenameField"));
+         selenium().getValue("ideUploadFormFilenameField"));
 
-      selenium.type("ideUploadFormMimeTypeField", mimeType);
-      assertTrue(selenium.isElementPresent("ideUploadFormUploadButton"));
+      selenium().type("ideUploadFormMimeTypeField", mimeType);
+      assertTrue(selenium().isElementPresent("ideUploadFormUploadButton"));
 
-      selenium.click("ideUploadFormUploadButton");
+      selenium().click("ideUploadFormUploadButton");
       Thread.sleep(TestConstants.SLEEP);
 
-      assertFalse(selenium.isElementPresent("ideUploadForm"));
+      assertFalse(selenium().isElementPresent("ideUploadForm"));
    }
 
    /**
@@ -591,13 +593,13 @@ public abstract class BaseTest
     */
    protected void useTemplateForm(String templateName, String fileName) throws Exception
    {
-      assertTrue(selenium.isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='"
+      assertTrue(selenium().isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='"
          + templateName + "']"));
 
-      selenium.mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
+      selenium().mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
 
-      selenium.mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
+      selenium().mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
          + "']", "2,2");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -605,12 +607,12 @@ public abstract class BaseTest
       if (fileName != null)
       {
          //type file name into name field
-         selenium.type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
+         selenium().type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
             + "name=ideCreateFileFromTemplateFormFileNameField||title=File Name]/element", fileName);
       }
 
       //click Create Button
-      selenium.click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
+      selenium().click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -619,69 +621,69 @@ public abstract class BaseTest
     */
    public void clearFocus() throws Exception
    {
-      selenium
+      selenium()
          .focus("//body/input[@class='gwt-TextBox' and contains(@style,'position: absolute; left: -100px; top: -100px;')]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   protected static void cleanDefaultWorkspace()
-   {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
-   }
+   /* protected static void cleanDefaultWorkspace()
+    {
+       cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+    }*/
 
-   protected static void cleanRepository(String repositoryUrl)
-   {
-      HTTPConnection connection;
-      URL url;
-      try
-      {
-         url = new URL(BASE_URL + repositoryUrl);
-         connection = Utils.getConnection(url);
-         HTTPResponse response = connection.PropfindAllprop(BASE_URL + repositoryUrl, 1);
-         ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getData());
-         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
-         NodeList nodeList = document.getElementsByTagName("D:href");
-         for (int i = 0; i < nodeList.getLength(); i++)
-         {
-            Node node = nodeList.item(i);
-            String href = node.getFirstChild().getNodeValue();
-            if (!href.equals(repositoryUrl))
-            {
-               connection = Utils.getConnection(url);
-               response = connection.Delete(href);
-            }
+   /* protected static void cleanRepository(String repositoryUrl)
+    {
+       HTTPConnection connection;
+       URL url;
+       try
+       {
+          url = new URL(BASE_URL + repositoryUrl);
+          connection = Utils.getConnection(url);
+          HTTPResponse response = connection.PropfindAllprop(BASE_URL + repositoryUrl, 1);
+          ByteArrayInputStream inputStream = new ByteArrayInputStream(response.getData());
+          Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputStream);
+          NodeList nodeList = document.getElementsByTagName("D:href");
+          for (int i = 0; i < nodeList.getLength(); i++)
+          {
+             Node node = nodeList.item(i);
+             String href = node.getFirstChild().getNodeValue();
+             if (!href.equals(repositoryUrl))
+             {
+                connection = Utils.getConnection(url);
+                response = connection.Delete(href);
+             }
 
-         }
-      }
-      catch (MalformedURLException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ProtocolNotSuppException e)
-      {
-         e.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-      catch (SAXException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ParserConfigurationException e)
-      {
-         e.printStackTrace();
-      }
-      catch (FactoryConfigurationError e)
-      {
-         e.printStackTrace();
-      }
-   }
+          }
+       }
+       catch (MalformedURLException e)
+       {
+          e.printStackTrace();
+       }
+       catch (ProtocolNotSuppException e)
+       {
+          e.printStackTrace();
+       }
+       catch (IOException e)
+       {
+          e.printStackTrace();
+       }
+       catch (ModuleException e)
+       {
+          e.printStackTrace();
+       }
+       catch (SAXException e)
+       {
+          e.printStackTrace();
+       }
+       catch (ParserConfigurationException e)
+       {
+          e.printStackTrace();
+       }
+       catch (FactoryConfigurationError e)
+       {
+          e.printStackTrace();
+       }
+    }*/
 
    protected static void cleanRegistry()
    {
@@ -718,7 +720,7 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-      try
+     /* try
       {
          if (System.getProperty("os.name").equals("Linux"))
          {
@@ -728,41 +730,40 @@ public abstract class BaseTest
       catch (IOException e)
       {
          e.printStackTrace();
-      }
-
+      }*/
    }
 
-//   public enum IdeAddress {
-//      SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), PORTAL(
-//         "http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"), STANDALONE(
-//         "http://localhost:8080/", "http://localhost:8080/site/index.html");
-//
-//      private String baseUrl;
-//
-//      private String applicationUrl;
-//
-//      IdeAddress(String baseUrl, String applicationUrl)
-//      {
-//         this.baseUrl = baseUrl;
-//         this.applicationUrl = applicationUrl;
-//      }
-//
-//      public String getBaseUrl()
-//      {
-//         return this.baseUrl;
-//      }
-//
-//      public String getApplicationUrl()
-//      {
-//         return this.applicationUrl;
-//      }
-//
-//   }
+   //   public enum IdeAddress {
+   //      SHELL("http://127.0.0.1:8888/", "http://127.0.0.1:8888/IDE/Shell.html?gwt.codesvr=127.0.0.1:9997"), PORTAL(
+   //         "http://127.0.0.1:8080/", "http://127.0.0.1:8080/portal/private/default/ide"), STANDALONE(
+   //         "http://localhost:8080/", "http://localhost:8080/site/index.html");
+   //
+   //      private String baseUrl;
+   //
+   //      private String applicationUrl;
+   //
+   //      IdeAddress(String baseUrl, String applicationUrl)
+   //      {
+   //         this.baseUrl = baseUrl;
+   //         this.applicationUrl = applicationUrl;
+   //      }
+   //
+   //      public String getBaseUrl()
+   //      {
+   //         return this.baseUrl;
+   //      }
+   //
+   //      public String getApplicationUrl()
+   //      {
+   //         return this.applicationUrl;
+   //      }
+   //
+   //   }
 
    protected static boolean isRunIdeUnderPortal()
    {
       //      return APPLICATION_URL.equals(IdeAddress.PORTAL.getApplicationUrl());
-      
+
       //now ide not run under portal
       return false;
    }
@@ -777,35 +778,35 @@ public abstract class BaseTest
       return Boolean.valueOf(IDE_SETTINGS.getString("ide.run.in.shell"));
    }
 
-   protected static boolean isRunTestUnderWindowsOS()
+   protected boolean isRunTestUnderWindowsOS()
    {
-      return selenium.getEval("/Win/.test(navigator.platform)").equals("true");
+      return selenium().getEval("/Win/.test(navigator.platform)").equals("true");
    }
 
    /**
     * remove all cookies which can be stored by IDE
     */
-   protected static void deleteCookies()
+   protected void deleteCookies()
    {
-      if (selenium.isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
+      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
       {
-         selenium.deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
+         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("eXo-IDE-" + USER_NAME + "-opened-files_list"))
+      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-opened-files_list"))
       {
-         selenium.deleteCookie("eXo-IDE-" + USER_NAME + "-opened-files_list", "path=/, recurse=true");
+         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-opened-files_list", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("eXo-IDE-" + USER_NAME + "-active-file_str"))
+      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-active-file_str"))
       {
-         selenium.deleteCookie("eXo-IDE-" + USER_NAME + "-active-file_str", "path=/, recurse=true");
+         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-active-file_str", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
+      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
       {
-         selenium.deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
+         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
       }
-      if (selenium.isCookiePresent("eXo-IDE-" + USER_NAME + "-lock-tokens_map"))
+      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-lock-tokens_map"))
       {
-         selenium.deleteCookie("eXo-IDE-" + USER_NAME + "-lock-tokens_map", "path=/, recurse=true");
+         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-lock-tokens_map", "path=/, recurse=true");
       }
    }
 
@@ -825,31 +826,31 @@ public abstract class BaseTest
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
       Thread.sleep(TestConstants.SLEEP);
-      selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
+      selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
 
       // click "UP" to go to previous workspace in the list
-      selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // test if "Ok" button is enabled
-      if (selenium
+      if (selenium()
          .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
       {
-         secondWorkspaceUrl = selenium.getText(SELECTED_WORKSPACE_LOCATOR);
+         secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
       }
       else
       {
          // click "DOWN" to go to next workspace in the list
-         selenium.keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         selenium.keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(TestConstants.REDRAW_PERIOD);
 
          // test if "Ok" button is enabled
-         if (selenium
+         if (selenium()
             .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
          {
-            secondWorkspaceUrl = selenium.getText(SELECTED_WORKSPACE_LOCATOR);
+            secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
          }
       }
 
@@ -859,7 +860,7 @@ public abstract class BaseTest
       }
 
       // click the "Cancel" button
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
+      selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
 
       // remove text before workspace name
       String secondWorkspaceName = secondWorkspaceUrl.toLowerCase().replace((ENTRY_POINT_URL).toLowerCase(), "");
@@ -883,26 +884,26 @@ public abstract class BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
-      // selenium.click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
+      // selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
 
-      selenium.mouseDownAt(
+      selenium().mouseDownAt(
          "//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/"
             + workspaceName + "/')]", "");
-      selenium.mouseUpAt(
+      selenium().mouseUpAt(
          "//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/"
             + workspaceName + "/')]", "");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       // test is "Ok" button enabled
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"));
 
       // click the "Ok" button 
-      selenium.click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
+      selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
       Thread.sleep(TestConstants.SLEEP);
 
       // test is workspace opened
-      assertTrue(selenium.isTextPresent(workspaceName));
+      assertTrue(selenium().isTextPresent(workspaceName));
       Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -917,11 +918,11 @@ public abstract class BaseTest
 
       waitForElementPresent("ideGoToLineForm");
       // Type line number
-      selenium.type(Locators.GoToLineWindow.GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
+      selenium().type(Locators.GoToLineWindow.GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
 
       // click "Go" button
-      selenium.click(Locators.GoToLineWindow.GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
+      selenium().click(Locators.GoToLineWindow.GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
@@ -934,8 +935,8 @@ public abstract class BaseTest
     */
    public void refresh() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       //      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //Wait while "dev-monit" appears in navigation tree.
@@ -961,7 +962,7 @@ public abstract class BaseTest
 
       while (true)
       {
-         if (selenium.isElementPresent(locator))
+         if (selenium().isElementPresent(locator))
          {
             break;
          }
@@ -992,7 +993,7 @@ public abstract class BaseTest
 
          try
          {
-            if (!selenium.isElementPresent("locator"))
+            if (!selenium().isElementPresent("locator"))
                break;
          }
 
@@ -1019,7 +1020,7 @@ public abstract class BaseTest
          }
       }
 
-      selenium.captureScreenshot("screenshots/" + this.getClass().getName() + "." + testMethodName + ".png");
+      selenium().captureScreenshot("screenshots/" + this.getClass().getName() + "." + testMethodName + ".png");
    }
 
    /**
@@ -1030,7 +1031,7 @@ public abstract class BaseTest
     */
    protected void closeForm(String locator) throws Exception
    {
-      selenium.click(locator + "CancelButton");
+      selenium().click(locator + "CancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -1044,4 +1045,15 @@ public abstract class BaseTest
       waitForElementNotPresent("//div[contains(@url, loader-background-element.png)]");
    }
 
+   /**
+    * @param host
+    */
+   public static void updateAllUrls(String host)
+   {
+      IDE_HOST = host;
+      BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
+      APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
+      ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+      ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+   }
 }

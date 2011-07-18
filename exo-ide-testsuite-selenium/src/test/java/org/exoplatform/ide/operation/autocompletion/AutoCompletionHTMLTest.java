@@ -36,8 +36,8 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      selenium().refresh();
+      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // select root folder
@@ -48,10 +48,10 @@ public class AutoCompletionHTMLTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       htmlTest();
       
@@ -66,8 +66,8 @@ public class AutoCompletionHTMLTest extends BaseTest
    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      selenium().refresh();
+      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // select root folder
@@ -77,10 +77,10 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
       //************fixed
       GoogleGadgetTest();
@@ -92,8 +92,8 @@ public class AutoCompletionHTMLTest extends BaseTest
     @Test
    public void testGroovyTemplate() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
+      selenium().refresh();
+      selenium().waitForPageToLoad(TestConstants.IDE_LOAD_PERIOD + "");
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
       // select root folder
@@ -107,30 +107,30 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       
      IDE.EDITOR.typeTextIntoEditor(0, "<div class=\"ItemDetail\" style=\"display:block\">");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
      IDE.EDITOR.typeTextIntoEditor(0,"<div class=\"NoneAppsMessage\" style=\"display:block\">");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
      IDE.EDITOR.typeTextIntoEditor(0, "<%=_ctx.appRes(\"UIAddNewApplication.label.NoneApp\")%>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
      IDE.EDITOR.typeTextIntoEditor(0, "</div>");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
      IDE.EDITOR.typeTextIntoEditor(0,"</div>");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
 
-      selenium.keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyDown("//body[@class='editbox']", "\\35");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
 
-      selenium.keyDown("//body[@class='editbox']", "\\36");
+      selenium().keyDown("//body[@class='editbox']", "\\36");
 
       IDE.CODEASSISTANT.openForm();
 
@@ -144,16 +144,16 @@ public class AutoCompletionHTMLTest extends BaseTest
 
    private void htmlTest() throws Exception
    {
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
 
-      selenium.typeKeys("//body[@class='editbox']", "<t");
+      selenium().typeKeys("//body[@class='editbox']", "<t");
 
       IDE.CODEASSISTANT.openForm();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.CODEASSISTANT.insertSelectedItem();
       
       String textAfter =IDE.EDITOR.getTextFromCodeEditor(0);
@@ -163,14 +163,14 @@ public class AutoCompletionHTMLTest extends BaseTest
 
       IDE.CODEASSISTANT.openForm();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.CODEASSISTANT.insertSelectedItem();
      
       String textA =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -181,21 +181,21 @@ public class AutoCompletionHTMLTest extends BaseTest
 
    private void GoogleGadgetTest() throws Exception
    {
-      selenium.keyDown("//body[@class='editbox']", "\\35");
-      selenium.keyDown("//body[@class='editbox']", "\\13");
+      selenium().keyDown("//body[@class='editbox']", "\\35");
+      selenium().keyDown("//body[@class='editbox']", "\\13");
       
       for (int i = 0; i < 16; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
      IDE.EDITOR.typeTextIntoEditor(0, "<t");
 
       IDE.CODEASSISTANT.openForm();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.CODEASSISTANT.insertSelectedItem();
       
       String textAfter =IDE.EDITOR.getTextFromCodeEditor(0);
@@ -205,14 +205,14 @@ public class AutoCompletionHTMLTest extends BaseTest
       
       IDE.CODEASSISTANT.openForm();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.CODEASSISTANT.insertSelectedItem();
       
       String textA =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(textA.contains("<p class=\"\""));
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
 
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.insertSelectedItem();

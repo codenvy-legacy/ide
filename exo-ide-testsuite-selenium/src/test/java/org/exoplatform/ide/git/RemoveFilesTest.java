@@ -126,7 +126,7 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveFilesView() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -164,7 +164,7 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 
@@ -212,7 +212,7 @@ public class RemoveFilesTest extends BaseTest
    @Test
    public void testRemoveEditedFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
 
       IDE.WORKSPACE.waitForRootItem();
 

@@ -88,8 +88,8 @@ public class RestServicesDiscoveryTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
-      assertTrue(selenium.isElementPresent("exoRestServicesDiscoveryOkButton"));
+      assertTrue(selenium().isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
+      assertTrue(selenium().isElementPresent("exoRestServicesDiscoveryOkButton"));
       
       openNode(Utils.md5old("/aa"));
       waitForElementPresent(Utils.md5old("/aa/testService11/"));
@@ -98,35 +98,35 @@ public class RestServicesDiscoveryTest extends BaseTest
 
       openNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
       waitForElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
-      assertTrue(selenium.isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST"));
-      assertTrue(selenium.isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":GET"));
+      assertTrue(selenium().isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST"));
+      assertTrue(selenium().isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":GET"));
 
       selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
 
-      assertFalse(selenium.isVisible("ideRestServiceDiscoveryParameters"));
-      assertFalse(selenium.isVisible("ideResponseType"));
-      assertFalse(selenium.isVisible("ideRequestType"));
+      assertFalse(selenium().isVisible("ideRestServiceDiscoveryParameters"));
+      assertFalse(selenium().isVisible("ideResponseType"));
+      assertFalse(selenium().isVisible("ideRequestType"));
 
       selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
 
-      assertEquals("application/xml", selenium.getValue("ideRequestType"));
+      assertEquals("application/xml", selenium().getValue("ideRequestType"));
 
-      assertEquals("*/*", selenium.getValue("ideResponseType"));
+      assertEquals("*/*", selenium().getValue("ideResponseType"));
 
       selectNode(Utils.md5old("/aa/testService11/") + ":OPTIONS");
 
-      assertEquals("n/a", selenium.getValue("ideRequestType"));
+      assertEquals("n/a", selenium().getValue("ideRequestType"));
 
-      assertEquals("application/vnd.sun.wadl+xml", selenium.getValue("ideResponseType"));
+      assertEquals("application/vnd.sun.wadl+xml", selenium().getValue("ideResponseType"));
 
-      selenium.click("exoRestServicesDiscoveryOkButton");
+      selenium().click("exoRestServicesDiscoveryOkButton");
 
    }
 
    private void openNode(String id)
    {
       String locator = "//div[@id='" + id + "']/table/tbody/tr/td[1]/img";
-      selenium.clickAt(locator, "0");
+      selenium().clickAt(locator, "0");
    }
 
    /**
@@ -134,9 +134,9 @@ public class RestServicesDiscoveryTest extends BaseTest
     * @param rowID
     * @throws Exception
     */
-   protected static void selectNode(String rowID) throws Exception
+   protected void selectNode(String rowID) throws Exception
    {
-      selenium.clickAt(rowID, "0");
+      selenium().clickAt(rowID, "0");
    }
 
    @AfterClass

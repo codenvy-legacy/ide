@@ -97,7 +97,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 2. Go inside <code><script></code> tag.
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       /*
@@ -132,8 +132,8 @@ public class AutocompleteNetvibesJsTest extends BaseTest
        * Check, that javadoc (description) panel appeared.
        */
 
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
-      assertEquals(FLASH_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(FLASH_CONTENT, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
 
       //      Autocomplete.moveCursorDown(4);
       //      Thread.sleep(TestConstants.SLEEP);
@@ -141,29 +141,29 @@ public class AutocompleteNetvibesJsTest extends BaseTest
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
-      assertEquals(JSON_REQUEST_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(JSON_REQUEST_CONTENT, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
 
       IDE.CODEASSISTANT.typeToInput("pager", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
-      assertEquals(PAGER_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(PAGER_CONTENT, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
 
       IDE.CODEASSISTANT.typeToInput("tabs", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
 
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
-      assertEquals(TABS_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(TABS_CONTENT, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
 
       IDE.CODEASSISTANT.typeToInput("thumbnailed", true);
 
       waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV);
       
-      assertTrue(selenium.isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
-      assertEquals(THUMBNAILED_CONTENT, selenium.getText(CodeAssistant.Locators.JAVADOC_DIV));
+      assertTrue(selenium().isElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
+      assertEquals(THUMBNAILED_CONTENT, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV));
       
       IDE.CODEASSISTANT.closeForm();
    }
@@ -246,7 +246,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
       /*
        * 2. Go inside <code><script></code> tag.
        */
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       /*
@@ -264,7 +264,7 @@ public class AutocompleteNetvibesJsTest extends BaseTest
        */
       IDE.CODEASSISTANT.typeToInput(name);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       checkText(IDE.EDITOR.getTextFromCodeEditor(0), snippetTemplate);

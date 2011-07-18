@@ -98,10 +98,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //----- 1 ------------
       //Press Ctrl+N
       //TODO 1 step not work, shold be fix call template form; see issue 729
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
       //check, that Create file from template window appeared
       checkCreateFileFromTemplateFormAndClose();
@@ -115,7 +115,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //check, that Save As dialog window appeared
       SaveFileUtils.checkSaveAsDialog(true);
       //close
-      //selenium.click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
+      //selenium().click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
       
       //waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
@@ -153,10 +153,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       selectRow(Commands.NEW_HTML_FILE);
 
       //press Ctrl+H
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "H");
-      selenium.keyUp("//", "H");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "H");
+      selenium().keyUp("//", "H");
+      selenium().controlKeyUp();
       //check Bind button is enabled
       checkBindButtonEnabled(true);
       //check, Ctrl+H text appears in text field
@@ -170,10 +170,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //Select "Create File From Template" and bind Alt+N to this command. Press Save button
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
       //press Alt+N
-      selenium.altKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.altKeyUp();
+      selenium().altKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().altKeyUp();
 
       //click Bind button
       clickButton(BIND_BUTTON_LOCATOR);
@@ -267,10 +267,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //(Press Ctrl+H, press "Bind" button)
       selectRow(Commands.NEW_HTML_FILE);
       //press Ctrl+H
-      selenium.controlKeyDown();
-      selenium.keyDown("//", "H");
-      selenium.keyUp("//", "H");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "H");
+      selenium().keyUp("//", "H");
+      selenium().controlKeyUp();
 
       //click Bind button
       clickButton(BIND_BUTTON_LOCATOR);
@@ -278,10 +278,10 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //Select "Create File From Template" and bind Alt+N to this command. Press Save button
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
       //press Alt+N
-      selenium.altKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.altKeyUp();
+      selenium().altKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().altKeyUp();
 
       //click Bind button
       clickButton(BIND_BUTTON_LOCATOR);
@@ -297,18 +297,18 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       refresh();
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.altKeyDown();
-      selenium.keyDown("//", "N");
-      selenium.keyUp("//", "N");
-      selenium.altKeyUp();
+      selenium().altKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().altKeyUp();
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
 
-      selenium.controlKeyDown();
-      selenium.keyDown("//body", "H");
-      selenium.keyUp("//body", "H");
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//body", "H");
+      selenium().keyUp("//body", "H");
+      selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
 
       //check new html file created
