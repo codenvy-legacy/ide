@@ -31,5 +31,5 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface OutlineItemCreator
 {
-   public abstract Widget getOutlineItemWidget(Token token);
+   Widget getOutlineItemWidget(Token token);
 }
