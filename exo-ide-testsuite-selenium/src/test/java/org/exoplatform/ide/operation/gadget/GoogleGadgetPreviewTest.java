@@ -77,11 +77,11 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
       
-      assertTrue(selenium.isElementPresent("//div[@class='LeftCalculator']"));
+      assertTrue(selenium().isElementPresent("//div[@class='LeftCalculator']"));
 
-      assertTrue(selenium.isElementPresent("//div[@class='Display']"));
+      assertTrue(selenium().isElementPresent("//div[@class='Display']"));
 
-      assertTrue(selenium.isElementPresent("//div[@class='Number']"));
+      assertTrue(selenium().isElementPresent("//div[@class='Number']"));
 
       //this method call error in deleteFileContent() method. 
       //Select not content in code editor but all IDE spase
@@ -101,7 +101,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
 
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
+      assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
       
       //close preview
       IDE.PREVIEW.close();
@@ -112,7 +112,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
       waitForElementPresent(Preview.Locators.GADGET_PREVIEW);
 
-      assertTrue(selenium.isElementPresent("//div[contains(text(), 'Hello,world!')]"));
+      assertTrue(selenium().isElementPresent("//div[contains(text(), 'Hello,world!')]"));
       
       IDE.EDITOR.closeFile(0);
    }

@@ -127,11 +127,11 @@ public class RESTServiceAnnotationInheritanceTest extends BaseTest
 
       assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
-      assertEquals("", selenium.getText(IDE.REST_SERVICE.QUERY_TABLE));
+      assertEquals("", selenium().getText(IDE.REST_SERVICE.QUERY_TABLE));
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("", selenium.getText(IDE.REST_SERVICE.HEADER_TABLE));
+      assertEquals("", selenium().getText(IDE.REST_SERVICE.HEADER_TABLE));
 
       IDE.REST_SERVICE.selectQueryParametersTab();
    }

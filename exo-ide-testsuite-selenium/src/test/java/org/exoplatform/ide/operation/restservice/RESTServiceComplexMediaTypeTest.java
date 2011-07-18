@@ -98,7 +98,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest {
 		IDE.REST_SERVICE.sendRequst();
 
 		// Expected 3
-		assertFalse(selenium
+		assertFalse(selenium()
 				.isElementPresent(IDE.REST_SERVICE.REST_SERVICE_FORM));
 
 		// Check received message:
@@ -134,7 +134,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest {
 
 		IDE.REST_SERVICE.selectBodyTab();
 
-		selenium.type(IDE.REST_SERVICE.BODY_TEXT_FIELD,
+		selenium().type(IDE.REST_SERVICE.BODY_TEXT_FIELD,
 				"{\"value\" : \"value4\"}");
 		IDE.REST_SERVICE.sendRequst();
 
@@ -170,7 +170,7 @@ public class RESTServiceComplexMediaTypeTest extends BaseTest {
 		IDE.REST_SERVICE.typeToPathField("/testMediaTypes/InnerPath");
 
 		IDE.REST_SERVICE.selectBodyTab();
-		selenium.type(IDE.REST_SERVICE.BODY_TEXT_FIELD,
+		selenium().type(IDE.REST_SERVICE.BODY_TEXT_FIELD,
 				"{\"value\" : \"value4\"}");
 		Thread.sleep(TestConstants.SLEEP);
 

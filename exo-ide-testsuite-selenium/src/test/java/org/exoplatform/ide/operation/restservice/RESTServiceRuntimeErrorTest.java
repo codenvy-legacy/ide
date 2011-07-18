@@ -55,9 +55,9 @@ public class RESTServiceRuntimeErrorTest extends BaseTest
 
       for (int i = 0; i < 10; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       }
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
       IDE.EDITOR.typeTextIntoEditor(0, " / 0");
 

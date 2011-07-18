@@ -86,23 +86,23 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-      selenium.controlKeyDown();
+      selenium().controlKeyDown();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
-      selenium.controlKeyUp();
+      selenium().controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
-      //  assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
+      //  assertTrue(selenium().isTextPresent("exact:Selected: 2 items"));
 
       //      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
-      selenium.controlKeyDown();
+      selenium().controlKeyDown();
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_3 + "/");
-      selenium.controlKeyUp();
+      selenium().controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
-      //assertTrue(selenium.isTextPresent("exact:Selected: 2 items"));
+      //assertTrue(selenium().isTextPresent("exact:Selected: 2 items"));
 
       IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, true);
@@ -110,7 +110,7 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       IDE.NAVIGATION.deleteSelectedItems();
 
       // TODO After of capability select the few elements in IDE navigator
-      // assertTrue(selenium.isTextPresent("exact:Do you want to delete 2 items?"));
+      // assertTrue(selenium().isTextPresent("exact:Do you want to delete 2 items?"));
 
       chekDisappearDeleteItemForm();
 
@@ -125,13 +125,13 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
 
    public void chekDisappearDeleteItemForm()
    {
-      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
-      assertFalse(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
-      assertFalse(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
-      assertFalse(selenium
+      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
+      assertFalse(selenium().isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
+      assertFalse(selenium().isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
+      assertFalse(selenium()
          .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
-      assertFalse(selenium.isElementPresent("ideDeleteItemFormOkButton"));
-      assertFalse(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+      assertFalse(selenium().isElementPresent("ideDeleteItemFormOkButton"));
+      assertFalse(selenium().isElementPresent("ideDeleteItemFormCancelButton"));
    }
 
    @AfterClass

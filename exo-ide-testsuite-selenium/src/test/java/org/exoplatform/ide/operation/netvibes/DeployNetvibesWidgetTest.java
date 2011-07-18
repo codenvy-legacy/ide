@@ -149,7 +149,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, false, false);
 
       //Click "Next" button and go to step 2:
-      selenium.click(NEXT_BUTTON_ID);
+      selenium().click(NEXT_BUTTON_ID);
       waitForElementPresent(TITLE_FIELD_NAME);
       
       checkStepTwoLayout();
@@ -166,7 +166,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
       //Click "Next" button and go to step 3:
-      selenium.click(NEXT_BUTTON_ID);
+      selenium().click(NEXT_BUTTON_ID);
       waitForElementPresent(LOGIN_FIELD_NAME);
       checkStepThreeLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
@@ -187,7 +187,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       AbstractTextUtil.getInstance().typeToInput(SECRET_FIELD_NAME, "SecreteKey", true);
       checkButtonStateById(DEPLOY_BUTTON_ID, true, true);
 
-      selenium.click(CANCEL_BUTTON_ID);
+      selenium().click(CANCEL_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_WIDGET_FORM_ID);
       checkDeployFormPresent(false);
    }
@@ -233,7 +233,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, false, false);
 
       //Click "Next" button and go to step 2:
-      selenium.click(NEXT_BUTTON_ID);
+      selenium().click(NEXT_BUTTON_ID);
       Thread.sleep(TestConstants.SLEEP);
       checkStepTwoLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
@@ -252,9 +252,9 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
       //Go back
-      selenium.click(BACK_BUTTON_ID);
+      selenium().click(BACK_BUTTON_ID);
       checkStepOneLayout();
-      assertEquals("http://example", selenium.getValue(URL_FIELD_NAME));
+      assertEquals("http://example", selenium().getValue(URL_FIELD_NAME));
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
@@ -269,7 +269,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(NEXT_BUTTON_ID, true, true);
 
       //Click "Next" button and go to step 2:
-      selenium.click(NEXT_BUTTON_ID);
+      selenium().click(NEXT_BUTTON_ID);
       Thread.sleep(TestConstants.SLEEP);
       checkStepTwoLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
@@ -278,12 +278,12 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Check fields values:
-      assertEquals("Test Title", selenium.getValue(TITLE_FIELD_NAME));
-      assertEquals("Test Description", selenium.getValue(DESCRIPTION_FIELD_NAME));
-      assertEquals("1", selenium.getValue(VERSION_FIELD_NAME));
+      assertEquals("Test Title", selenium().getValue(TITLE_FIELD_NAME));
+      assertEquals("Test Description", selenium().getValue(DESCRIPTION_FIELD_NAME));
+      assertEquals("1", selenium().getValue(VERSION_FIELD_NAME));
 
       //Click "Next" button and go to step 3:
-      selenium.click(NEXT_BUTTON_ID);
+      selenium().click(NEXT_BUTTON_ID);
       Thread.sleep(TestConstants.SLEEP);
       checkStepThreeLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, true, false);
@@ -305,7 +305,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(DEPLOY_BUTTON_ID, true, true);
 
       //Go back
-      selenium.click(BACK_BUTTON_ID);
+      selenium().click(BACK_BUTTON_ID);
       checkStepTwoLayout();
       checkButtonStateById(DEPLOY_BUTTON_ID, false, false);
       checkButtonStateById(CANCEL_BUTTON_ID, true, true);
@@ -313,11 +313,11 @@ public class DeployNetvibesWidgetTest extends BaseTest
       checkButtonStateById(BACK_BUTTON_ID, true, true);
 
       //Check fields values:
-      assertEquals("Test Title", selenium.getValue(TITLE_FIELD_NAME));
-      assertEquals("Test Description", selenium.getValue(DESCRIPTION_FIELD_NAME));
-      assertEquals("1", selenium.getValue(VERSION_FIELD_NAME));
+      assertEquals("Test Title", selenium().getValue(TITLE_FIELD_NAME));
+      assertEquals("Test Description", selenium().getValue(DESCRIPTION_FIELD_NAME));
+      assertEquals("1", selenium().getValue(VERSION_FIELD_NAME));
 
-      selenium.click(CANCEL_BUTTON_ID);
+      selenium().click(CANCEL_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_WIDGET_FORM_ID);
 
       checkDeployFormPresent(false);
@@ -348,7 +348,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
     */
    private void checkDeployFormPresent(boolean isPresent)
    {
-      assertEquals(isPresent, selenium.isElementPresent(DEPLOY_WIDGET_FORM_ID));
+      assertEquals(isPresent, selenium().isElementPresent(DEPLOY_WIDGET_FORM_ID));
    }
 
    /**
@@ -356,27 +356,27 @@ public class DeployNetvibesWidgetTest extends BaseTest
     */
    private void checkStepOneLayout()
    {
-      assertTrue(selenium.isElementPresent(URL_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(URL_FIELD_NAME));
    }
 
    private void checkStepTwoLayout()
    {
-      assertTrue(selenium.isElementPresent(TITLE_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(DESCRIPTION_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(VERSION_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(KEYWORDS_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(TUMBNAIL_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(LANGUAGE_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(REGION_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(CATEGORY_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(TITLE_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(DESCRIPTION_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(VERSION_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(KEYWORDS_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(TUMBNAIL_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(LANGUAGE_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(REGION_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(CATEGORY_FIELD_NAME));
    }
 
    private void checkStepThreeLayout()
    {
-      assertTrue(selenium.isElementPresent(LOGIN_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(PASSWORD_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(API_KEY_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(SECRET_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(LOGIN_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(PASSWORD_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(API_KEY_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(SECRET_FIELD_NAME));
    }
 
    /**
@@ -389,7 +389,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
    private void checkButtonStateById(String buttonId, boolean isVisible, boolean isEnabled)
    {
       assertEquals(isVisible,
-         !selenium.isElementPresent("//div[@id='" + buttonId + "' and contains(@style, 'display: none')]"));
+         !selenium().isElementPresent("//div[@id='" + buttonId + "' and contains(@style, 'display: none')]"));
 
       if (isVisible)
       {
@@ -399,7 +399,7 @@ public class DeployNetvibesWidgetTest extends BaseTest
 
    private void checkButtonEnabledById(String buttonId, boolean isEnabled)
    {
-      assertTrue(selenium.isElementPresent("//div[@id='" + DEPLOY_WIDGET_FORM_ID + "']//div[@id='" + buttonId
+      assertTrue(selenium().isElementPresent("//div[@id='" + DEPLOY_WIDGET_FORM_ID + "']//div[@id='" + buttonId
          + "' and @button-enabled='" + isEnabled + "']"));
    }
 

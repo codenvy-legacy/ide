@@ -122,8 +122,8 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
    @Test
    public void testUndeloyOnCancel() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("30000");
+      selenium().refresh();
+      selenium().waitForPageToLoad("30000");
       IDE.WORKSPACE.waitForRootItem();
       //open file
 

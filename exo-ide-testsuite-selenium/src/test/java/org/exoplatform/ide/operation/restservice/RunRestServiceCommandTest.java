@@ -161,8 +161,8 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testRunGroovyServiceWithNonValidFile() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file
@@ -213,8 +213,8 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testRunGroovyServiceWithChangedFile() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file
@@ -257,8 +257,8 @@ public class RunRestServiceCommandTest extends BaseTest
    @Test
    public void testRunGroovyServiceWithNewFile() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       IDE.WORKSPACE.waitForRootItem();
       //---- 1 -----------------
       //open file

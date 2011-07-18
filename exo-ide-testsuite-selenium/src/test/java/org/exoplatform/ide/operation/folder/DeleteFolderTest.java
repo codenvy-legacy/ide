@@ -21,14 +21,10 @@ package org.exoplatform.ide.operation.folder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -43,14 +39,14 @@ public class DeleteFolderTest extends BaseTest
 
    private final static String FOLDER_NAME_MENU = "deleteFolderMenuTest";
 
-   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
 
-   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME_MENU;
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -109,17 +105,17 @@ public class DeleteFolderTest extends BaseTest
 
    public void chekDisappearDeleteItemForm()
    {
-      assertFalse(selenium.isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
-      assertFalse(selenium.isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
-      assertFalse(selenium.isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
-      assertFalse(selenium
+      assertFalse(selenium().isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
+      assertFalse(selenium().isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
+      assertFalse(selenium().isElementPresent("//img[contains(@src,'http://localhost:8080/IDE/images/dialog/ask.png')]"));
+      assertFalse(selenium()
       .isElementPresent("//div[@class=\"gwt-Label\"]/br[\"Do you want to delete  \"]|/b[\"New Folder\"]"));
-      assertFalse(selenium.isElementPresent("ideDeleteItemFormOkButton"));
-      assertFalse(selenium.isElementPresent("ideDeleteItemFormCancelButton"));
+      assertFalse(selenium().isElementPresent("ideDeleteItemFormOkButton"));
+      assertFalse(selenium().isElementPresent("ideDeleteItemFormCancelButton"));
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {

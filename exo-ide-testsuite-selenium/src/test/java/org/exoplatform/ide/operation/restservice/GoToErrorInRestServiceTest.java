@@ -94,7 +94,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void testGoToErrorInClosedFile() throws Exception
    {
       //refresh, to clear console and close it
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
@@ -130,7 +130,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void testGoToErrorIfOtherTabSelected() throws Exception
    {
       //refresh, to clear console and close it
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
@@ -168,7 +168,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void testGoToErrorIfFileIsDeleted() throws Exception
    {
       //refresh, to clear console and close it
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       openAndValidateRestService();
@@ -210,7 +210,7 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void testGoToErrorAfterChangingFile() throws Exception
    {
       //refresh, to clear console and close it
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
@@ -241,11 +241,11 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //go to error
       for (int i = 0; i < 6; i++)
       {
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       //delete# unnecessary  space
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_BACK_SPACE);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP * 2);
@@ -290,9 +290,9 @@ public class GoToErrorInRestServiceTest extends BaseTest
       //go to middle
       IDE.EDITOR.selectIFrameWithEditor(0);
       //select all
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       IDE.selectMainFrame();
 

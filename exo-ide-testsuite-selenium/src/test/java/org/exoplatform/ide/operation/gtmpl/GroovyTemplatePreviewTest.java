@@ -88,7 +88,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
       waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(selenium.isTextPresent("root"));
+      assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();
       
       //close preview tab and open again
@@ -98,7 +98,7 @@ public class GroovyTemplatePreviewTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
       waitForElementPresent(Preview.Locators.GROOVY_TEMPLATE_PREVIEW);
       IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(selenium.isTextPresent("root"));
+      assertTrue(selenium().isTextPresent("root"));
       IDE.selectMainFrame();
    }
 

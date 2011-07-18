@@ -24,8 +24,8 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -39,14 +39,14 @@ public class RenameFolderTest extends BaseTest
 
    private final static String NEW_FOLDER_NAME = "FolderRenamed";
 
-   private final static String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final String ORIG_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME;
 
-   private final static String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final String RENAME_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + NEW_FOLDER_NAME;
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -73,12 +73,13 @@ public class RenameFolderTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       chekAppearRenameForm();
       //set cursor on rename field
-      selenium.click("ideRenameItemFormRenameField");
+      selenium().click("ideRenameItemFormRenameField");
       //check default name folder in rename field
-      assertEquals(FOLDER_NAME, selenium.getValue("ideRenameItemFormRenameField"));
+      assertEquals(FOLDER_NAME, selenium().getValue("ideRenameItemFormRenameField"));
       //type new name and press "enter"
-      selenium.type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
-      selenium.keyPress("ideRenameItemFormRenameField", "\\13");
+      selenium().type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
+      selenium().keyDown("ideRenameItemFormRenameField", "\\13");
+      selenium().keyUp("ideRenameItemFormRenameField", "\\13");
       // check appear folder with new name
       waitForElementPresent(IDE.NAVIGATION.getItemId(RENAME_URL + "/"));
       IDE.NAVIGATION.assertItemNotVisible(ORIG_URL + "/");
@@ -92,13 +93,13 @@ public class RenameFolderTest extends BaseTest
     */
    public void chekAppearRenameForm()
    {
-      assertTrue(selenium.isElementPresent("ideRenameItemForm"));
-      assertTrue(selenium.isElementPresent("ideRenameItemFormRenameField"));
-      assertTrue(selenium.isElementPresent("ideRenameItemFormRenameField"));
+      assertTrue(selenium().isElementPresent("ideRenameItemForm"));
+      assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
+      assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {

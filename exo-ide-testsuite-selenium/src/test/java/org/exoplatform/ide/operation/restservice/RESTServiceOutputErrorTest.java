@@ -112,11 +112,11 @@ public class RESTServiceOutputErrorTest extends BaseTest
       assertEquals("application/vnd.sun.wadl+xml", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
       assertEquals("",
-         selenium.getText(IDE.REST_SERVICE.QUERY_TABLE));
+         selenium().getText(IDE.REST_SERVICE.QUERY_TABLE));
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
       assertEquals("",
-         selenium.getText(IDE.REST_SERVICE.HEADER_TABLE));
+         selenium().getText(IDE.REST_SERVICE.HEADER_TABLE));
 
       IDE.REST_SERVICE.selectQueryParametersTab();
 

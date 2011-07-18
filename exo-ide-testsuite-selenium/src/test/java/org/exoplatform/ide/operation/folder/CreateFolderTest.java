@@ -57,17 +57,17 @@ public class CreateFolderTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //****************
-      selenium.focus("//input[@name='ideCreateFolderFormNameField']");
+      selenium().focus("//input[@name='ideCreateFolderFormNameField']");
       // clear dafault name in textfield
-      selenium.type("ideCreateFolderFormNameField", "");
+      selenium().type("ideCreateFolderFormNameField", "");
       //type name folder
-      selenium.typeKeys("ideCreateFolderFormNameField", FOLDER_NAME_TOOLBAR);
+      selenium().typeKeys("ideCreateFolderFormNameField", FOLDER_NAME_TOOLBAR);
       //TODO Don't work native press Enter
-      selenium.keyPress("ideCreateFolderFormNameField", "\\13");
+      selenium().keyPress("ideCreateFolderFormNameField", "\\13");
      
       waitForElementNotPresent("ideCreateFolderFormNameField");
-      assertFalse(selenium.isElementPresent("ideCreateFolderFormNameField"));
-      assertTrue(selenium.isTextPresent(FOLDER_NAME_TOOLBAR));
+      assertFalse(selenium().isElementPresent("ideCreateFolderFormNameField"));
+      assertTrue(selenium().isTextPresent(FOLDER_NAME_TOOLBAR));
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME_TOOLBAR + "/");
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
@@ -81,17 +81,17 @@ public class CreateFolderTest extends BaseTest
    public void testCreateFolderMenu() throws Exception
    {
       //refresh page
-      selenium.refresh();
+      selenium().refresh();
       //wait...
       IDE.WORKSPACE.waitForRootItem();
       
       //run command for create folder
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       //create folder
-      selenium.click("ideCreateFolderFormCreateButton");
+      selenium().click("ideCreateFolderFormCreateButton");
       Thread.sleep(2000);
       //check disapear menu after create of folder
-      assertFalse(selenium.isElementPresent("ideCreateFolderForm"));
+      assertFalse(selenium().isElementPresent("ideCreateFolderForm"));
       //check folder in tread menu
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME_DEFOLT + "/");
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());

@@ -74,8 +74,8 @@ public class RESTServiceDeployWrongTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       Thread.sleep(TestConstants.SLEEP);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
       IDE.EDITOR.typeTextIntoEditor(0, "1");
       Thread.sleep(TestConstants.SLEEP_SHORT);

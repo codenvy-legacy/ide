@@ -187,14 +187,14 @@ public class RESTServiceOutputTest extends BaseTest
     */
    private void typeToPathField()
    {
-      selenium.focus(IDE.REST_SERVICE.REST_SERVICE_PATH);
+      selenium().focus(IDE.REST_SERVICE.REST_SERVICE_PATH);
 
       for (int i = 0; i < 15; i++)
       {
-         selenium.keyPress(IDE.REST_SERVICE.REST_SERVICE_PATH, "\\8");
+         selenium().keyPress(IDE.REST_SERVICE.REST_SERVICE_PATH, "\\8");
       }
 
-      selenium.typeKeys(IDE.REST_SERVICE.REST_SERVICE_PATH, "param1");
+      selenium().typeKeys(IDE.REST_SERVICE.REST_SERVICE_PATH, "param1");
    }
 
    private void checkFields(String path, String method, String request, String response)

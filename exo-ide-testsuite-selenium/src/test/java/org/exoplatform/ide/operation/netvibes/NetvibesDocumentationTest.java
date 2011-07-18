@@ -63,30 +63,30 @@ public class NetvibesDocumentationTest extends BaseTest
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_DOCUMENTATION);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
-      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
       IDE.EDITOR.waitTabPresent(1);
       waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
-      assertFalse(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertFalse(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       IDE.EDITOR.selectTab(0);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
-      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       saveAsByTopMenu(FILE_NAME);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
-      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       IDE.EDITOR.selectTab(1);
       waitForElementNotPresent(IDE_DOCUMENTATION_FRAME);
-      assertFalse(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertFalse(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
       refresh();
       IDE.WORKSPACE.waitForItem(WS_URL + FILE_NAME);
       waitForElementPresent(IDE_DOCUMENTATION_FRAME);
       
-      assertTrue(selenium.isElementPresent(IDE_DOCUMENTATION_FRAME));
+      assertTrue(selenium().isElementPresent(IDE_DOCUMENTATION_FRAME));
 
    }
 
