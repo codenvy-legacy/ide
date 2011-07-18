@@ -54,8 +54,9 @@ public final class HttpChunkReader
     * @return set of bytes from heroku server or empty array if data not ready yet. If empty array returned then caller
     *         should check method {@link #eof()} and try again if end of file is not reached yet
     * @throws IOException if any i/o error occurs
+    * @throws HerokuException if heroku server return unexpected or error status for request
     */
-   public byte[] next() throws IOException
+   public byte[] next() throws IOException, HerokuException
    {
       if (eof())
          throw new IllegalStateException("End of output reached. ");
@@ -72,7 +73,7 @@ public final class HttpChunkReader
          int status = http.getResponseCode();
 
          if (!(status == 200 || status == 204))
-            Heroku.fault(http);
+            throw Heroku.fault(http);
 
          byte[] data = NO_DATA;
 

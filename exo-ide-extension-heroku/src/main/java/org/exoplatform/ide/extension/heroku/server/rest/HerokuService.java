@@ -41,6 +41,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
@@ -171,7 +172,17 @@ public class HerokuService
             output.write('\n');
             while (!chunkReader.eof())
             {
-               byte[] b = chunkReader.next();
+               byte[] b;
+               try
+               {
+                  b = chunkReader.next();
+               }
+               catch (HerokuException he)
+               {
+                  throw new WebApplicationException(Response.status(he.getResponseStatus())
+                     .header("JAXRS-Body-Provided", "Error-Message").entity(he.getMessage()).type(he.getContentType())
+                     .build());
+               }
                if (b.length > 0)
                {
                   output.write(b);
