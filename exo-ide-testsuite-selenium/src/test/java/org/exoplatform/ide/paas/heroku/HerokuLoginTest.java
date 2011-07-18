@@ -75,11 +75,11 @@ public class HerokuLoginTest extends BaseTest
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       
       IDE.HEROKU.SWITCH_ACCOUNT.openLoginForm();
-      assertTrue(selenium.isElementPresent(SwitchAccount.PASSWORD_FIELD));
-      assertTrue(selenium.isElementPresent(SwitchAccount.EMAIL_FIELD));
-      assertTrue(selenium.isElementPresent(SwitchAccount.LOGIN_BUTTON));
-      assertTrue(selenium.isElementPresent(SwitchAccount.CANCEL_BUTTON));
-      assertTrue(selenium.isElementPresent(SwitchAccount.TRY_AS_DEMO_BUTTON));
+      assertTrue(selenium().isElementPresent(SwitchAccount.PASSWORD_FIELD));
+      assertTrue(selenium().isElementPresent(SwitchAccount.EMAIL_FIELD));
+      assertTrue(selenium().isElementPresent(SwitchAccount.LOGIN_BUTTON));
+      assertTrue(selenium().isElementPresent(SwitchAccount.CANCEL_BUTTON));
+      assertTrue(selenium().isElementPresent(SwitchAccount.TRY_AS_DEMO_BUTTON));
       assertFalse(IDE.HEROKU.SWITCH_ACCOUNT.isLoginButtonEnabled());
       IDE.HEROKU.SWITCH_ACCOUNT.typeLogin(Messages.LOGIN);
       IDE.HEROKU.SWITCH_ACCOUNT.typePassword(Messages.PASSWORD);

@@ -84,10 +84,10 @@ public class RakeConsoleTest extends BaseTest
       
       IDE.HEROKU.RAKE.openRakeConsole();
       
-      assertTrue(selenium.isElementPresent(Rake.COMMAND_FIELD));
-      assertTrue(selenium.isElementPresent(Rake.RUN_BUTTON));
-      assertTrue(selenium.isElementPresent(Rake.HELP_BUTTON));
-      assertTrue(selenium.isElementPresent(Rake.CLOSE_BUTTON));
+      assertTrue(selenium().isElementPresent(Rake.COMMAND_FIELD));
+      assertTrue(selenium().isElementPresent(Rake.RUN_BUTTON));
+      assertTrue(selenium().isElementPresent(Rake.HELP_BUTTON));
+      assertTrue(selenium().isElementPresent(Rake.CLOSE_BUTTON));
       
       assertFalse(IDE.HEROKU.RAKE.isRunButtonEnabled());
       

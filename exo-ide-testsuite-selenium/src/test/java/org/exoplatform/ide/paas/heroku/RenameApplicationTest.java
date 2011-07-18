@@ -84,9 +84,9 @@ public class RenameApplicationTest extends BaseTest
       
       IDE.HEROKU.RENAME_APP.openRenameForm();
       
-      assertTrue(selenium.isElementPresent(RenameApplication.NEW_NAME_FIELD));
-      assertTrue(selenium.isElementPresent(RenameApplication.RENAME_BUTTON));
-      assertTrue(selenium.isElementPresent(RenameApplication.CANCEL_BUTTON));
+      assertTrue(selenium().isElementPresent(RenameApplication.NEW_NAME_FIELD));
+      assertTrue(selenium().isElementPresent(RenameApplication.RENAME_BUTTON));
+      assertTrue(selenium().isElementPresent(RenameApplication.CANCEL_BUTTON));
       
       IDE.HEROKU.RENAME_APP.typeNewApplication(NEW_APP_NAME);
       IDE.HEROKU.RENAME_APP.clickReanmeButton();

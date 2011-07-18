@@ -208,14 +208,14 @@ public class CreateFileFromTemplateTest extends BaseTest
 //      IDE.TEMPLATES.checkButtonState(Templates.DELETE_BUTTON_ID, false);
 //      
 //      
-//      String text = selenium.getValue(Templates.FILE_NAME_INPUT_LOCATOR);
+//      String text = selenium().getValue(Templates.FILE_NAME_INPUT_LOCATOR);
 //      assertEquals("Untitled file.html", text);
 //      
 //      //---- 3 ----------
 //      //deselect template
-//      selenium.controlKeyDown();
+//      selenium().controlKeyDown();
 //      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-//      selenium.controlKeyUp();
+//      selenium().controlKeyUp();
 //      Thread.sleep(TestConstants.REDRAW_PERIOD);
 //      
 //      IDE.TEMPLATES.checkInputFieldState(false);
@@ -225,9 +225,9 @@ public class CreateFileFromTemplateTest extends BaseTest
 //      //---- 4 ----------
 //      //select several templates
 //      IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-//      selenium.controlKeyDown();
+//      selenium().controlKeyDown();
 //      IDE.TEMPLATES.selectFileTemplate(EMPTY_TEXT);
-//      selenium.controlKeyUp();
+//      selenium().controlKeyUp();
 //      Thread.sleep(TestConstants.REDRAW_PERIOD*20);
 //      
 //      IDE.TEMPLATES.checkInputFieldState(false);

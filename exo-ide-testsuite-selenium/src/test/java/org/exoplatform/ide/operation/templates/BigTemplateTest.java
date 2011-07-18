@@ -87,9 +87,9 @@ public class BigTemplateTest extends BaseTest
 
       IDE.SAVE_AS_TEMPLATE.checkSaveAsTemplateWindow();
 
-      selenium.type(SaveAsTemplate.NAME_FIELD_ID, "Calc");
+      selenium().type(SaveAsTemplate.NAME_FIELD_ID, "Calc");
 
-      selenium.click(SaveAsTemplate.SAVE_BUTTON_ID);
+      selenium().click(SaveAsTemplate.SAVE_BUTTON_ID);
       IDE.INFORMATION_DIALOG.waitForInfoDialog("Template created successfully!");
 
       //check info dialog, that template crated successfully

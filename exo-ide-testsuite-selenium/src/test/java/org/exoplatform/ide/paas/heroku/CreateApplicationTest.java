@@ -80,10 +80,10 @@ public class CreateApplicationTest extends BaseTest
       IDE.OUTPUT.waitForMessageShow(1);
 
       IDE.HEROKU.CREATE_APP.openCreateApplicationForm();
-      assertTrue(selenium.isElementPresent(CreateApplication.APP_NAME_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.WORK_DIR_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.REMOTE_REPO_FIELD));
-      assertTrue(selenium.isElementPresent(CreateApplication.CREATE_BUTTON));
+      assertTrue(selenium().isElementPresent(CreateApplication.APP_NAME_FIELD));
+      assertTrue(selenium().isElementPresent(CreateApplication.WORK_DIR_FIELD));
+      assertTrue(selenium().isElementPresent(CreateApplication.REMOTE_REPO_FIELD));
+      assertTrue(selenium().isElementPresent(CreateApplication.CREATE_BUTTON));
 
       IDE.HEROKU.CREATE_APP.typeAppName(APP_NAME);
       IDE.HEROKU.CREATE_APP.clickCreateApp();

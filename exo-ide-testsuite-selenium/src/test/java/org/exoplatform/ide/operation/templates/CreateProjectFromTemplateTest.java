@@ -324,9 +324,9 @@ public class CreateProjectFromTemplateTest extends BaseTest
 //         /*
 //          * 3. Deselect one template
 //          */
-//         selenium.controlKeyDown();
+//         selenium().controlKeyDown();
 //         selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME);
-//         selenium.controlKeyUp();
+//         selenium().controlKeyUp();
 //         Thread.sleep(TestConstants.REDRAW_PERIOD);
 //         
 //         /*
@@ -341,10 +341,10 @@ public class CreateProjectFromTemplateTest extends BaseTest
 //          */
 //         selectProjectTemplate(selenium, TemplateUtils.DEFAULT_PROJECT_TEMPLATE_NAME);
 //         Thread.sleep(TestConstants.REDRAW_PERIOD);
-//         selenium.controlKeyDown();
+//         selenium().controlKeyDown();
 //         selectProjectTemplate(selenium, PROJECT_TEMPLATE_NAME_2);
 //         Thread.sleep(TestConstants.REDRAW_PERIOD);
-//         selenium.controlKeyUp();
+//         selenium().controlKeyUp();
 //         
 //         /*
 //          * Name field, Delete and Create buttons are disabled
@@ -369,7 +369,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
 //         /*
 //          * 6. Remove text from name field
 //          */
-//         selenium.type(NAME_FIELD_LOCATOR, "");
+//         selenium().type(NAME_FIELD_LOCATOR, "");
 //         Thread.sleep(TestConstants.REDRAW_PERIOD);
 //         
 //         /*
@@ -380,7 +380,7 @@ public class CreateProjectFromTemplateTest extends BaseTest
 //         /*
 //          * 7. Type some text to name field
 //          */
-//         selenium.type(NAME_FIELD_LOCATOR, "a");
+//         selenium().type(NAME_FIELD_LOCATOR, "a");
 //         Thread.sleep(TestConstants.REDRAW_PERIOD);
 //         
 //         /*

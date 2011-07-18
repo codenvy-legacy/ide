@@ -108,29 +108,29 @@ public class OpenFileByPathTest extends BaseTest
       // call Open File By Path form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
       waitForElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
-      assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
-      assertTrue(selenium.isElementPresent(FILE_PATH_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
+      assertTrue(selenium().isElementPresent(FILE_PATH_FIELD_NAME));
       checkButtonState(OPEN_BUTTON_ID, false);
       checkButtonState(CANCEL_BUTTON_ID, true);
 
       // trying to type file path
-      selenium.type(FILE_PATH_FIELD_NAME, "h");
+      selenium().type(FILE_PATH_FIELD_NAME, "h");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       checkButtonState(OPEN_BUTTON_ID, true);
 
       // empty file path field
-      selenium.type(FILE_PATH_FIELD_NAME, "");
+      selenium().type(FILE_PATH_FIELD_NAME, "");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       checkButtonState(OPEN_BUTTON_ID, false);
 
       // close form by clicking "Cancel" button
-      selenium.click(CANCEL_BUTTON_ID);
+      selenium().click(CANCEL_BUTTON_ID);
       waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
 
       // trying to open file by wrong url
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
-      selenium.type(FILE_PATH_FIELD_NAME, "h");
-      selenium.click(OPEN_BUTTON_ID);
+      selenium().type(FILE_PATH_FIELD_NAME, "h");
+      selenium().click(OPEN_BUTTON_ID);
 
       IDE.WARNING_DIALOG.waitForWarningDialogOpened();
       IDE.WARNING_DIALOG.checkIsOpened(NOT_FOUND_ERROR_MESSAGE);
@@ -138,23 +138,23 @@ public class OpenFileByPathTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
+      assertTrue(selenium().isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
 
       // close window
-      selenium.click(CANCEL_BUTTON_ID);
+      selenium().click(CANCEL_BUTTON_ID);
       waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
 
       // trying to open file by correct url and using "Open" key
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
       waitForElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
-      assertTrue(selenium.isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
-      assertTrue(selenium.isElementPresent(FILE_PATH_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(OPEN_FILE_BY_PATH_WINDOW_ID));
+      assertTrue(selenium().isElementPresent(FILE_PATH_FIELD_NAME));
       checkButtonState(OPEN_BUTTON_ID, false);
       checkButtonState(CANCEL_BUTTON_ID, true);
-      selenium.type(FILE_PATH_FIELD_NAME, fileUrl);
+      selenium().type(FILE_PATH_FIELD_NAME, fileUrl);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       checkButtonState(OPEN_BUTTON_ID, true);
-      selenium.click(OPEN_BUTTON_ID);
+      selenium().click(OPEN_BUTTON_ID);
       waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_ID);
       IDE.EDITOR.waitTabPresent(0);
 
@@ -172,7 +172,7 @@ public class OpenFileByPathTest extends BaseTest
     */
    public void checkButtonState(String buttonId, boolean isEnabled)
    {
-      assertTrue(selenium.isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='"
+      assertTrue(selenium().isElementPresent("//div[@id='" + buttonId + "' and @button-enabled='"
          + String.valueOf(isEnabled) + "']"));
    }
 
