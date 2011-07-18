@@ -44,15 +44,16 @@ public class CodeOutLineGroovyTest extends BaseTest
 
    private final static String FOLDER = CodeOutLineGroovyTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
+
    private OulineTreeHelper outlineTreeHelper;
-   
+
    public CodeOutLineGroovyTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
    }
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -60,7 +61,8 @@ public class CodeOutLineGroovyTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(URL);
-         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_GROOVY, "exo:groovyResourceContainer", URL + FILE_NAME);
+         VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_GROOVY, "exo:groovyResourceContainer", URL
+            + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -85,7 +87,7 @@ public class CodeOutLineGroovyTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
@@ -93,40 +95,41 @@ public class CodeOutLineGroovyTest extends BaseTest
       // check for presence and visibility of outline tab
       IDE.OUTLINE.assertOutlineTreePresent();
       IDE.OUTLINE.checkOutlinePanelVisibility(true);
-      
+
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
-      
+
       // create outline tree map
       OulineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TestJSON", 6);
       outlineTreeHelper.addOutlineItem("a1 : java.lang.A", 7);
       outlineTreeHelper.addOutlineItem("a2 : java.lang.A", 7, false);
-      outlineTreeHelper.addOutlineItem("a3 : java.lang.A", 7, false);      
+      outlineTreeHelper.addOutlineItem("a3 : java.lang.A", 7, false);
       outlineTreeHelper.addOutlineItem("b1 : java.lang.B", 8);
       outlineTreeHelper.addOutlineItem("b2 : java.lang.B", 8, false);
       outlineTreeHelper.addOutlineItem("b3 : String", 8, false);
-      outlineTreeHelper.addOutlineItem("getValue1() : java.lang.String", 10); 
+      outlineTreeHelper.addOutlineItem("getValue1() : java.lang.String", 10);
       outlineTreeHelper.addOutlineItem("c1 : String", 11);
       outlineTreeHelper.addOutlineItem("identity : Identity", 19);
       outlineTreeHelper.addOutlineItem("c2 : String", 27);
-      outlineTreeHelper.addOutlineItem("d : java.lang.String", 31); 
+      outlineTreeHelper.addOutlineItem("d : java.lang.String", 31);
       outlineTreeHelper.addOutlineItem("setValue2(@String) : void", 33);
       outlineTreeHelper.addOutlineItem("printClosureInner", 35);
-      outlineTreeHelper.addOutlineItem("printClosureOuter", 40);      
+      outlineTreeHelper.addOutlineItem("printClosureOuter", 40);
       outlineTreeHelper.addOutlineItem("hello()", 42);
       outlineTreeHelper.addOutlineItem("name4 : String", 44);
       outlineTreeHelper.addOutlineItem("g : String", 47, false); // false, because outline node is not highlighted from test, but highlighted when goto this line manually     
-      
+
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
    }
 
-   @Ignore      //TODO Issue IDE - 466
+   @Ignore
+   //TODO Issue IDE - 466
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFile(0);
-      cleanDefaultWorkspace();
+      IDE.EDITOR.closeFile(0);
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER);
    }
 }

@@ -154,8 +154,8 @@ public class FindReplaceTest extends BaseTest
 
       // Step 5. Put cursor at the start of the document and click "Find"
       // button.
-      selenium.fireEvent("ideFindReplaceTextFormFindField", "blur");
-      selenium.fireEvent("//", "focus");
+      selenium().fireEvent("ideFindReplaceTextFormFindField", "blur");
+      selenium().fireEvent("//", "focus");
 
       // Make system mouse click on editor space
       IDE.EDITOR.clickOnEditor();
@@ -237,7 +237,7 @@ public class FindReplaceTest extends BaseTest
    @Test
    public void testReplaceTextInFile() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
@@ -357,7 +357,7 @@ public class FindReplaceTest extends BaseTest
    @Test
    public void testfindReplaceInFewFiles() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);

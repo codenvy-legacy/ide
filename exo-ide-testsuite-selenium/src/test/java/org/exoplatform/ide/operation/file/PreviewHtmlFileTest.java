@@ -115,8 +115,8 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
       IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
-      assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
+      assertTrue(selenium().isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
 
       /*
@@ -145,8 +145,8 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       IDE.PREVIEW.checkPreviewHTMLIsOpened(true);
       IDE.PREVIEW.selectIFrame(WS_URL_IDE + FOLDER_NAME + "/" + FILE_NAME);
-      assertTrue(selenium.isElementPresent("//p/b/i[text()='Changed Content.']"));
-      assertTrue(selenium.isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
+      assertTrue(selenium().isElementPresent("//p/b/i[text()='Changed Content.']"));
+      assertTrue(selenium().isElementPresent("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']"));
       IDE.selectMainFrame();
 
       /*

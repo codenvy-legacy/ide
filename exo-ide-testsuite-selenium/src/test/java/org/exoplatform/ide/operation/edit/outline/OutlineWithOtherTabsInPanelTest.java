@@ -18,14 +18,10 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -33,8 +29,6 @@ import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 //http://jira.exoplatform.org/browse/IDE-417
 /**
@@ -81,7 +75,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public void tearDown()
    {
       deleteCookies();
       try

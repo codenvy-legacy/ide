@@ -73,7 +73,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    }
    
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
      IDE.EDITOR.closeFile(0);
       try

@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -43,10 +39,10 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
 
    ////fix for run tests where new session start after 7 testcases passes (Outline panel  remains is open after the previous test )
    @BeforeClass
-   public static void chekOutliePresentAfterPrevTest() throws InterruptedException
+   public void chekOutliePresentAfterPrevTest() throws InterruptedException
    {
       Thread.sleep(3000);
-      if (selenium.isElementPresent("ideOutlineTreeGrid"))
+      if (selenium().isElementPresent("ideOutlineTreeGrid"))
       {
          IDE.OUTLINE.closeOutline();
       }
@@ -56,11 +52,10 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public void tearDown()
    {
       deleteCookies();
       cleanRegistry();
-      cleanDefaultWorkspace();
    }
 
    //Check, that Outline tab correctly works, when we
@@ -73,7 +68,7 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
       //---- 1 --------------
       //open new javascript file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      
+
       //no outline panel
       IDE.OUTLINE.assertOutlineTreeNotPresent();
 

@@ -117,10 +117,10 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
 
-      assertTrue(selenium.isTextPresent("Untitled file." + fileExtention));
+      assertTrue(selenium().isTextPresent("Untitled file." + fileExtention));
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
 
-      assertTrue(selenium.isTextPresent("Untitled file 1." + fileExtention));
+      assertTrue(selenium().isTextPresent("Untitled file 1." + fileExtention));
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE_AS);
       SaveFileUtils.checkSaveAsDialogAndSave(fileName, true);

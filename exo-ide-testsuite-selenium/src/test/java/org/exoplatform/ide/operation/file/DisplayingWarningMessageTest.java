@@ -177,34 +177,34 @@ public class DisplayingWarningMessageTest extends BaseTest
 
    private void changeFileContent() throws Exception
    {
-      selenium.mouseDownAt("//body[@class='editbox']//span[2]", "");
-      selenium.mouseUpAt("//body[@class='editbox']//span[2]", "");
+      selenium().mouseDownAt("//body[@class='editbox']//span[2]", "");
+      selenium().mouseUpAt("//body[@class='editbox']//span[2]", "");
 
       //change file content
-      selenium.keyDown("//body[@class='editbox']/", "\\35");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
+      selenium().keyDown("//body[@class='editbox']/", "\\35");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
       Thread.sleep(100);
-      selenium.typeKeys("//body[@class='editbox']/", "<test>");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "<settings>");
-      selenium.typeKeys("//body[@class='editbox']/", "param");
-      selenium.typeKeys("//body[@class='editbox']/", "</settings>");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "<bean>");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "<name>");
-      selenium.typeKeys("//body[@class='editbox']/", "MineBean");
-      selenium.typeKeys("//body[@class='editbox']/", "</name>");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "</bean>");
-      selenium.keyDown("//body[@class='editbox']/", "\\13");
-      selenium.keyUp("//body[@class='editbox']/", "\\13");
-      selenium.typeKeys("//body[@class='editbox']/", "</test>");
+      selenium().typeKeys("//body[@class='editbox']/", "<test>");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
+      selenium().typeKeys("//body[@class='editbox']/", "<settings>");
+      selenium().typeKeys("//body[@class='editbox']/", "param");
+      selenium().typeKeys("//body[@class='editbox']/", "</settings>");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
+      selenium().typeKeys("//body[@class='editbox']/", "<bean>");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
+      selenium().typeKeys("//body[@class='editbox']/", "<name>");
+      selenium().typeKeys("//body[@class='editbox']/", "MineBean");
+      selenium().typeKeys("//body[@class='editbox']/", "</name>");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
+      selenium().typeKeys("//body[@class='editbox']/", "</bean>");
+      selenium().keyDown("//body[@class='editbox']/", "\\13");
+      selenium().keyUp("//body[@class='editbox']/", "\\13");
+      selenium().typeKeys("//body[@class='editbox']/", "</test>");
    }
 
 }

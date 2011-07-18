@@ -44,15 +44,16 @@ public class CodeOutLineRubyTest extends BaseTest
 
    private final static String FOLDER = CodeOutLineRubyTest.class.getSimpleName();
 
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
-   
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/" + FOLDER + "/";
+
    private OulineTreeHelper outlineTreeHelper;
-   
+
    public CodeOutLineRubyTest()
    {
       this.outlineTreeHelper = new OulineTreeHelper();
    }
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -85,7 +86,7 @@ public class CodeOutLineRubyTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP);
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       Thread.sleep(TestConstants.SLEEP);
@@ -93,26 +94,26 @@ public class CodeOutLineRubyTest extends BaseTest
       // check for presence and visibility of outline tab
       IDE.OUTLINE.assertOutlineTreePresent();
       IDE.OUTLINE.checkOutlinePanelVisibility(true);
-      
+
       // expand outline tree
       outlineTreeHelper.expandOutlineTree();
-      
+
       // create outline tree map
       OulineTreeHelper.init();
       outlineTreeHelper.addOutlineItem("TOPLEVEL_CONSTANT : String", 5, TokenType.CONSTANT);
-      outlineTreeHelper.addOutlineItem("@@n2 : Array", 7, TokenType.CLASS_VARIABLE);      
+      outlineTreeHelper.addOutlineItem("@@n2 : Array", 7, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("$global : nil", 11, TokenType.GLOBAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("@n1 : nil", 12, TokenType.INSTANCE_VARIABLE);
       outlineTreeHelper.addOutlineItem("ClassName", 17, TokenType.CLASS);
-      outlineTreeHelper.addOutlineItem("CLASS_CONSTANT : Fixnum", 20, TokenType.CONSTANT);      
+      outlineTreeHelper.addOutlineItem("CLASS_CONSTANT : Fixnum", 20, TokenType.CONSTANT);
       outlineTreeHelper.addOutlineItem("$global1 : Object", 22, TokenType.GLOBAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("@@class_variable : Regexp", 23, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("@field : Object", 24, TokenType.INSTANCE_VARIABLE);
-      outlineTreeHelper.addOutlineItem("initialize()", 26, TokenType.METHOD);      
+      outlineTreeHelper.addOutlineItem("initialize()", 26, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("@@char : Ascii", 29, false, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("$myFile : File", 33, TokenType.GLOBAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("scale : String", 35, TokenType.LOCAL_VARIABLE);
-      outlineTreeHelper.addOutlineItem("f : Object", 38, TokenType.LOCAL_VARIABLE);      
+      outlineTreeHelper.addOutlineItem("f : Object", 38, TokenType.LOCAL_VARIABLE);
       outlineTreeHelper.addOutlineItem("@str4 : String", 40, TokenType.INSTANCE_VARIABLE);
       outlineTreeHelper.addOutlineItem("@n1 : Float", 52, TokenType.INSTANCE_VARIABLE);
       outlineTreeHelper.addOutlineItem("@@n2 : Float", 53, TokenType.CLASS_VARIABLE);
@@ -126,18 +127,19 @@ public class CodeOutLineRubyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("method()", 72, TokenType.METHOD);
       outlineTreeHelper.addOutlineItem("@@t : TrueClass", 73, TokenType.CLASS_VARIABLE);
       outlineTreeHelper.addOutlineItem("A : Symbol", 76, TokenType.CONSTANT);
-      outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE);   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
-      outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);      
-      
+      outlineTreeHelper.addOutlineItem("ascii1 : Ascii", 77, false, TokenType.LOCAL_VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      outlineTreeHelper.addOutlineItem("@field : nil", 78, TokenType.INSTANCE_VARIABLE);
+
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
    }
 
-   @Ignore      //TODO Issue IDE - 466
+   @Ignore
+   //TODO Issue IDE - 466
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFile(0);
-      cleanDefaultWorkspace();
+      IDE.EDITOR.closeFile(0);
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER);
    }
 }

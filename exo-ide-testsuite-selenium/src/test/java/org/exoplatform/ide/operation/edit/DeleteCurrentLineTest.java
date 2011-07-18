@@ -132,8 +132,8 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 3 -----------
       //Move cursor down on 2 lines
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       //      Thread.sleep(TestConstants.SLEEP_SHORT);
 
       //----- 4 -----------

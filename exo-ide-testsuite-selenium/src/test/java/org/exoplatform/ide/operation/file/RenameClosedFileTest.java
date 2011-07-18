@@ -111,8 +111,8 @@ public class RenameClosedFileTest extends BaseTest
    @Test
    public void testChangeMimeType() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
 
@@ -152,8 +152,8 @@ public class RenameClosedFileTest extends BaseTest
    @Test
    public void testRenameAndChangeMimeType() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       

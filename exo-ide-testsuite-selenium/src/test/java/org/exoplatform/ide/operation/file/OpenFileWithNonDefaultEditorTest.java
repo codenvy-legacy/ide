@@ -47,7 +47,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
    @BeforeClass
-   public static void setUp()
+   public void setUp()
    {
       deleteCookies();
       cleanRegistry();
@@ -64,7 +64,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
 
    /**
     * Clean up cookie, registry, repository after each test of in the each class:<br>
-    *   - selenium.deleteAllVisibleCookies();<br>
+    *   - selenium().deleteAllVisibleCookies();<br>
     *   - cleanRegistry();<br>
     *   - cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");<>
     * @throws IOException

@@ -117,9 +117,9 @@ public class CodeOutLineJavaTest extends BaseTest
 
    @Ignore      //TODO Issue IDE - 466
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
      IDE.EDITOR.closeFile(0);
-      cleanDefaultWorkspace();
+     VirtualFileSystemUtils.delete(WS_URL + FOLDER);
    }
 }

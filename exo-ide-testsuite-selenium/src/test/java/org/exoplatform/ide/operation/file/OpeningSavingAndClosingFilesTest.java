@@ -159,8 +159,8 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       String GG =
          "Change file\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[ \n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
       assertEquals(GG, IDE.EDITOR.getTextFromCodeEditor(1));
-      //      assertEquals(GG, selenium.getText("//body[@class='editbox']"));
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertEquals(GG, selenium().getText("//body[@class='editbox']"));
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
 
       //      // check changed string in Groovy file
@@ -169,8 +169,8 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
          "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
       assertEquals(Groovy, IDE.EDITOR.getTextFromCodeEditor(2));
 
-      //      assertEquals(Groovy, selenium.getText("//body[@class='editbox']"));
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertEquals(Groovy, selenium().getText("//body[@class='editbox']"));
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
 
       // check changed string in HTML file
@@ -179,8 +179,8 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       String HTML =
          "Change file\n<html>\n<head>\n  <title>HTML Example</title>\n  <script type='text/javascript'>\n    function foo(bar, baz) {\n      alert('quux');\n      return bar + baz + 1;\n    }\n  </script>\n  <style type='text/css'>\n    div.border {\n      border: 1px solid black;\n      padding: 3px;\n    }\n    #foo code {\n      font-family: courier, monospace;\n      font-size: 80%;\n      color: #448888;\n    }\n  </style>\n</head>\n<body>\n  <p>Hello</p>\n</body>\n</html>";
       assertEquals(HTML, IDE.EDITOR.getTextFromCodeEditor(3));
-      //      assertEquals(HTML, selenium.getText("//body[@class='editbox']"));
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertEquals(HTML, selenium().getText("//body[@class='editbox']"));
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
 
       // check changed string in JS file
@@ -189,16 +189,16 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       String JS =
          "Change file\n  //Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will \n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
       assertEquals(JS, IDE.EDITOR.getTextFromCodeEditor(4));
-      //      assertEquals(JS, selenium.getText("//body[@class='editbox']"));
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertEquals(JS, selenium().getText("//body[@class='editbox']"));
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
 
       // check changed string in TXT file
       IDE.EDITOR.selectTab(5);
       String TXT = "text content";
       assertEquals(TXT, IDE.EDITOR.getTextFromCodeEditor(5));
-      //      assertEquals(TXT, selenium.getText("//body[@class='editbox']"));
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      assertEquals(TXT, selenium().getText("//body[@class='editbox']"));
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
    }
 
@@ -232,83 +232,83 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // reopenFiles
       // Open Css:
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
+      selenium().click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[3]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium().mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
       //      Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isTextPresent("Open File With"));
-      assertTrue(selenium.isTextPresent("Name"));
-      assertTrue(selenium.isTextPresent("Code Editor [Default]"));
-      assertTrue(selenium.isTextPresent("Use as default editor"));
-      assertTrue(selenium
+      assertTrue(selenium().isTextPresent("Open File With"));
+      assertTrue(selenium().isTextPresent("Name"));
+      assertTrue(selenium().isTextPresent("Code Editor [Default]"));
+      assertTrue(selenium().isTextPresent("Use as default editor"));
+      assertTrue(selenium()
          .isElementPresent("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]"));
-      selenium
+      selenium()
          .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]");
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
+      selenium().click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
       Thread.sleep(4000);
-      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[2]//iframe"));
+      assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[2]//iframe"));
       // Open HTML:
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[6]/col[1]");
+      selenium().click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[6]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium().mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
       //      Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isTextPresent("Open File With"));
-      assertTrue(selenium.isTextPresent("Name"));
-      assertTrue(selenium.isTextPresent("Code Editor [Default]"));
-      assertTrue(selenium.isTextPresent("Use as default editor"));
-      assertTrue(selenium
+      assertTrue(selenium().isTextPresent("Open File With"));
+      assertTrue(selenium().isTextPresent("Name"));
+      assertTrue(selenium().isTextPresent("Code Editor [Default]"));
+      assertTrue(selenium().isTextPresent("Use as default editor"));
+      assertTrue(selenium()
          .isElementPresent("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]"));
-      selenium
+      selenium()
          .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]");
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
+      selenium().click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
       Thread.sleep(3000);
-      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[4]//iframe"));
+      assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[4]//iframe"));
       // Open JavaScript:
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
+      selenium().click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[7]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium().mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
       //      Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isTextPresent("Open File With"));
-      assertTrue(selenium.isTextPresent("Name"));
-      assertTrue(selenium.isTextPresent("Code Editor [Default]"));
-      assertTrue(selenium.isTextPresent("Use as default editor"));
-      assertTrue(selenium
+      assertTrue(selenium().isTextPresent("Open File With"));
+      assertTrue(selenium().isTextPresent("Name"));
+      assertTrue(selenium().isTextPresent("Code Editor [Default]"));
+      assertTrue(selenium().isTextPresent("Use as default editor"));
+      assertTrue(selenium()
          .isElementPresent("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]"));
-      selenium
+      selenium()
          .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]");
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
+      selenium().click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
       Thread.sleep(3000);
-      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[5]//iframe"));
+      assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[5]//iframe"));
       // Open XML:
-      selenium.click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[9]/col[1]");
+      selenium().click("scLocator=//TreeGrid[ID=\"ideNavigatorItemTreeGrid\"]/body/row[9]/col[1]");
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
 
-      //      selenium.mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
-      //      selenium.mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
+      //      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and @menubartitle='File']", "");
+      //      selenium().mouseDownAt("//td[@class='exo-popupMenuTitleField']/nobr[contains(text(), \"Open With...\")]", "");
       //      Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium.isTextPresent("Open File With"));
-      assertTrue(selenium.isTextPresent("Name"));
-      assertTrue(selenium.isTextPresent("Code Editor [Default]"));
-      assertTrue(selenium.isTextPresent("Use as default editor"));
-      assertTrue(selenium
+      assertTrue(selenium().isTextPresent("Open File With"));
+      assertTrue(selenium().isTextPresent("Name"));
+      assertTrue(selenium().isTextPresent("Code Editor [Default]"));
+      assertTrue(selenium().isTextPresent("Use as default editor"));
+      assertTrue(selenium()
          .isElementPresent("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]"));
-      selenium
+      selenium()
          .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[0][Class=\"ListGrid\"]/body/row[0]/col[0]");
-      selenium.click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
+      selenium().click("scLocator=//IButton[ID=\"ideOpenFileWithOkButton\"]/end");
       Thread.sleep(3000);
-      assertTrue(selenium.isElementPresent("//div[@class='tabSetContainer']/div/div[6]//iframe"));
+      assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[6]//iframe"));
    }
 
    public void saveAndCloseFile() throws InterruptedException, Exception
@@ -343,7 +343,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.closeFile(0);
       //      Thread.sleep(500);
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
       //      //**********TODO**********
       //      checkSaveDialog();
@@ -351,11 +351,11 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       //      // close TXTFile
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.closeFile(0);
-      //      selenium.click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
+      //      selenium().click("scLocator=//TabSet[ID=\"ideEditorFormTabSet\"]/tab[index=0]/icon");
       //      Thread.sleep(TestConstants.SLEEP);
       //      //*****TODO************
       //      checkSaveDialog();
-      //      assertFalse(selenium.isElementPresent("//body[@class='editbox']"));
+      //      assertFalse(selenium().isElementPresent("//body[@class='editbox']"));
 
    }
 
@@ -468,9 +468,9 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    //****************TODO fix  Task IDE-445
    public void checkSaveDialog() throws InterruptedException
    {
-      if (selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member/"))
+      if (selenium().isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]/header/member/"))
       {
-         selenium.click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
+         selenium().click("scLocator=//Dialog[ID=\"isc_globalWarn\"]/noButton/");
          Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       }
       else

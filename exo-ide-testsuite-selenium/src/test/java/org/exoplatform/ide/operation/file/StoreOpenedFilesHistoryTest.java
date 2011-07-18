@@ -27,7 +27,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Editor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,7 +57,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    private static final String CK_EDITOR_FRAME_LOCATOR = "//div[@panel-id='editor' and @tab-index='1']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
 
    @BeforeClass
-   public static void setUp()
+   public void setUp()
    {
       try
       {
@@ -73,7 +72,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown()
+   public void tearDown()
    {
       try
       {
@@ -168,11 +167,11 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
          e.printStackTrace();
       }
 
-      selenium.open("http://www.google.com.ua/");
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().open("http://www.google.com.ua/");
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
 
-      selenium.goBack();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().goBack();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
 
       //IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/");

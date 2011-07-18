@@ -65,7 +65,7 @@ public class OutlineClosingTest extends BaseTest
 
       // check for presence of tab outline
       IDE.OUTLINE.assertOutlineTreePresent();
-      assertEquals("Outline", selenium.getText(OUTLINE_TAB_LABEL));
+      assertEquals("Outline", selenium().getText(OUTLINE_TAB_LABEL));
 
       IDE.OUTLINE.closeOutline();
       waitForElementNotPresent("ideOutlineTreeGrid");

@@ -80,18 +80,18 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //steps 3-5
       //select iframe in first tab
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String defaultText = selenium.getText("//body/");
+      final String defaultText = selenium().getText("//body/");
       assertEquals("", defaultText);
 
       //type text
-      selenium.typeKeys("//body/", "1");
-      selenium.keyDown("//body/", "\\13");
-      selenium.keyUp("//body/", "\\13");
-      selenium.typeKeys("//body/", "2");
-      selenium.keyDown("//body/", "\\13");
-      selenium.keyUp("//body/", "\\13");
-      selenium.typeKeys("//body[@class='cke_show_borders']/", "3");
-      final String typedText = selenium.getText("//body/");
+      selenium().typeKeys("//body/", "1");
+      selenium().keyDown("//body/", "\\13");
+      selenium().keyUp("//body/", "\\13");
+      selenium().typeKeys("//body/", "2");
+      selenium().keyDown("//body/", "\\13");
+      selenium().keyUp("//body/", "\\13");
+      selenium().typeKeys("//body[@class='cke_show_borders']/", "3");
+      final String typedText = selenium().getText("//body/");
       assertEquals("1\n2\n3", typedText);
 
       IDE.selectMainFrame();
@@ -101,21 +101,21 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
       //select iframe in first tab
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText = selenium.getText("//body/");
+      final String revertedText = selenium().getText("//body/");
       IDE.selectMainFrame();
       assertEquals("1\n2", revertedText);
 
       //step 7
       IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.controlKeyUp();
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.controlKeyUp();
-      final String revertedText2 = selenium.getText("//body/");
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().controlKeyUp();
+      final String revertedText2 = selenium().getText("//body/");
       IDE.selectMainFrame();
 
       assertEquals("1", revertedText2);
@@ -125,22 +125,22 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //get and check text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText3 = selenium.getText("//body/");
+      final String revertedText3 = selenium().getText("//body/");
       IDE.selectMainFrame();
       assertEquals("", revertedText3);
 
       //step 9
       IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.controlKeyUp();
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
+      selenium().controlKeyUp();
       //get text
-      final String revertedText4 = selenium.getText("//body/");
+      final String revertedText4 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("", revertedText4);
@@ -153,7 +153,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //get and check text
 
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText = selenium.getText("//body/");
+      final String restoredText = selenium().getText("//body/");
       IDE.selectMainFrame();
       assertEquals("1", restoredText);
 
@@ -162,23 +162,23 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //get and check text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText2 = selenium.getText("//body/");
+      final String restoredText2 = selenium().getText("//body/");
       IDE.selectMainFrame();
       assertEquals("1\n2", restoredText2);
 
       //step 12
       IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().controlKeyUp();
       //Thread.sleep(TestConstants.SLEEP);
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().controlKeyUp();
       //get text
-      final String restoredText3 = selenium.getText("//body/");
+      final String restoredText3 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2\n3", restoredText3);
@@ -186,16 +186,16 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //step 13
       IDE.EDITOR.selectIFrameWithEditor(0);
       //click ctrl+Y
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.controlKeyUp();
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().controlKeyUp();
       //get text
-      final String restoredText4 = selenium.getText("//body/");
+      final String restoredText4 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2\n3", restoredText4);
@@ -206,7 +206,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       //check text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText5 = selenium.getText("//body/");
+      final String revertedText5 = selenium().getText("//body/");
       IDE.selectMainFrame();
       assertEquals("1\n2", revertedText5);
 
@@ -214,18 +214,18 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.EDITOR.selectIFrameWithEditor(0);
       //IDE.EDITOR.selectIFrameWithEditor(0);
       //type text
-      selenium.typeKeys("//body/", "a");
+      selenium().typeKeys("//body/", "a");
       IDE.selectMainFrame();
 
       //step 16
       IDE.EDITOR.selectIFrameWithEditor(0);
       //click ctrl+Y
-      selenium.controlKeyDown();
-      selenium.keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium.controlKeyUp();
+      selenium().controlKeyDown();
+      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
+      selenium().controlKeyUp();
       //get text
-      final String restoredText5 = selenium.getText("//body/");
+      final String restoredText5 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2a", restoredText5);
@@ -234,7 +234,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
       //get text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText6 = selenium.getText("//body/");
+      final String revertedText6 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2", revertedText6);
@@ -246,7 +246,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.REDO_TYPING);
       //get text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText6 = selenium.getText("//body/");
+      final String restoredText6 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2a", restoredText6);
@@ -255,7 +255,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
       //get text
       IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText7 = selenium.getText("//body/");
+      final String revertedText7 = selenium().getText("//body/");
       IDE.selectMainFrame();
       //check text
       assertEquals("1\n2", revertedText7);
@@ -271,7 +271,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       //changed content
 
       IDE.EDITOR.selectIFrameWithEditor(1);
-      selenium.typeKeys("//body/", "1111 ");
+      selenium().typeKeys("//body/", "1111 ");
       IDE.selectMainFrame();
 
       //step 23
@@ -304,9 +304,9 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + htmlFile, false);
 
       //TODO may be remove after fix ask dialog after reopen file
-      if (selenium.isElementPresent("exoAskDialog"))
+      if (selenium().isElementPresent("exoAskDialog"))
       {
-         selenium.click("exoAskDialogYesButton");
+         selenium().click("exoAskDialogYesButton");
          waitForElementNotPresent("exoAskDialog");
       }
       saveCurrentFile();
@@ -337,10 +337,10 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       String divIndex = "0";
 
       //check Code Editor is not present in tab 0
-      assertFalse(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+      assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
          + "//div[@class='CodeMirror-wrapping']/iframe"));
       //check CK editor is not present in tab 0
-      assertFalse(selenium.isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+      assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
          + "//div[@class='CodeMirror-wrapping']/iframe"));
    }
 

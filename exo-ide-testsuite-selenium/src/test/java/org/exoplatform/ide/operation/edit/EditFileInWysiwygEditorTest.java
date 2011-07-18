@@ -119,48 +119,48 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //------ 5 ---------------
       //click on button Table in CK editor
-      selenium.clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "");
+      selenium().clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "");
       Thread.sleep(TestConstants.SLEEP);
 
       //check Table Properties dialog window appeared
-      assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
-      assertEquals("Table Properties", selenium.getText("//div[@class='cke_dialog_body']/div"));
+      assertTrue(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
+      assertEquals("Table Properties", selenium().getText("//div[@class='cke_dialog_body']/div"));
 
       //TODO fix problem in issue IDE-762
       //------ 6 ---------------
       //type qwe to Height field
-      selenium
+      selenium()
          .typeKeys(
             "//table[@class='cke_dialog_contents']/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/div/table/tbody//tr[2]/td/table/tbody/tr/td/div/div[2]/div/input",
             "qwe");
 
       //click Ok button
-      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
+      selenium().click("//div[@class='cke_dialog_footer']//span[text()='OK']");
 
       //warning dialog
 
       //------ 7 ---------------
       //click Ok button in warning dialog
       waitForElementPresent("exoWarningDialog");
-      selenium.click("//div[@id='exoWarningDialogOkButton']");
+      selenium().click("//div[@id='exoWarningDialogOkButton']");
       waitForElementNotPresent("exoWarningDialog");
 
       //click Cancel button in Table Properties dialog
       waitForElementPresent("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
-      selenium.click("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
+      selenium().click("//div[@class='cke_dialog_footer']//span[text()='Cancel']");
       Thread.sleep(TestConstants.SLEEP);
       //check Table Properties dialog disappeared
-      assertFalse(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
+      assertFalse(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
 
       //------ 8 ---------------
       //click on button Table in CK editor
-      selenium.clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "");
+      selenium().clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "");
       Thread.sleep(TestConstants.SLEEP);
       //check Table Properties dialog window appeared
-      assertTrue(selenium.isElementPresent("//div[@class='cke_dialog_body']"));
-      assertEquals("Table Properties", selenium.getText("//div[@class='cke_dialog_body']/div"));
+      assertTrue(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
+      assertEquals("Table Properties", selenium().getText("//div[@class='cke_dialog_body']/div"));
       //click Ok button
-      selenium.click("//div[@class='cke_dialog_footer']//span[text()='OK']");
+      selenium().click("//div[@class='cke_dialog_footer']//span[text()='OK']");
       Thread.sleep(TestConstants.SLEEP);
 
       //check table with 2 columns and 3 rows added to ck editor
@@ -183,7 +183,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       //      Thread.sleep(TestConstants.SLEEP);
 
       //check is Preview tab appeared
-      assertTrue(selenium.isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
+      assertTrue(selenium().isElementPresent("//div[@view-id=\"idePreviewHTMLView\"]"));
 
       //select iframe in Preview tab
       IDE.PREVIEW.selectIFrame(IDE_URL + FILE_NAME);
@@ -200,14 +200,14 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.EDITOR.selectCkEditorIframe(0);
       
       //right click on cell
-      selenium
+      selenium()
          .contextMenuAt(
             "//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[1]",
             "");
       IDE.selectMainFrame();
 
-      selenium.clickAt("//span[text()='Row']", "");
-      selenium.clickAt("//span[text()='Insert Row After']", "");
+      selenium().clickAt("//span[text()='Row']", "");
+      selenium().clickAt("//span[text()='Insert Row After']", "");
 
       Thread.sleep(TestConstants.SLEEP);
 
@@ -244,7 +244,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       checkDeleteConfirmationDialogOfModifiedText();
 
       //click No button in confirmation dialog
-      selenium.click("exoAskDialogNoButton");
+      selenium().click("exoAskDialogNoButton");
       Thread.sleep(TestConstants.SLEEP);
 
       //check file stays in Code editor
@@ -265,13 +265,13 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //reopen confirmation dialog
-      assertTrue(selenium.isElementPresent("exoAskDialog"));
-      assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
-      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
-      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialog"));
+      assertEquals("IDE", selenium().getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
+      assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
 
       //click Yes button
-      selenium.click("exoAskDialogYesButton");
+      selenium().click("exoAskDialogYesButton");
       Thread.sleep(TestConstants.SLEEP);
       
       IDE.EDITOR.checkCodeEditorOpened(0);
@@ -281,13 +281,13 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
 
       //reopen confirmation dialog
-      assertTrue(selenium.isElementPresent("exoAskDialog"));
-      assertEquals("IDE", selenium.getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
-      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
-      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialog"));
+      assertEquals("IDE", selenium().getText("//div[@id='exoAskDialog']//div[@class='Caption']/span['info']"));
+      assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
 
       //click No button
-      selenium.click("exoAskDialogNoButton");
+      selenium().click("exoAskDialogNoButton");
       
       IDE.OPENWITH.clickCancelButton();
       Thread.sleep(TestConstants.SLEEP);
@@ -318,76 +318,76 @@ public class EditFileInWysiwygEditorTest extends BaseTest
     */
    private void checkDeleteConfirmationDialogOfModifiedText()
    {
-      assertTrue(selenium.isElementPresent("exoAskDialog"));
-      assertTrue(selenium.isElementPresent("exoAskDialogYesButton"));
-      assertTrue(selenium.isElementPresent("exoAskDialogNoButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialog"));
+      assertTrue(selenium().isElementPresent("exoAskDialogYesButton"));
+      assertTrue(selenium().isElementPresent("exoAskDialogNoButton"));
    }
 
    private void checkTable2x4Present()
    {
       //check table
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody"));
       //check first row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]/td[2]"));
       //check second row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]/td[2]"));
       //check third row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[2]"));
       //check fourth row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[4]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[4]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[4]/td[2]"));
    }
 
    private void checkTable2x3Present()
    {
       //                        check table   table  cellspacing="1"      cellpadding="1"      border="1"       style="height: 200px; width: 200px;"
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody"));
       //check first row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[1]/td[2]"));
       //check second row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[2]/td[2]"));
       //check third row
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[1]"));
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[2]"));
    }
 
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
      IDE.EDITOR.closeTabIgnoringChanges(0);
       try

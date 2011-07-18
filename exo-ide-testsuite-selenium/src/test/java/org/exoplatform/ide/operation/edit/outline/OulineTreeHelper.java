@@ -247,7 +247,7 @@ public class OulineTreeHelper extends BaseTest
       do
       {
          // Press down key on keyboard.         
-         selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+         selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
          Thread.sleep(Outline.Locators.SELECT_OUTLINE_DELAY * 2);
       } 
       while ((fileLineNumbers -= 1) > 0);
@@ -293,17 +293,17 @@ public class OulineTreeHelper extends BaseTest
     * @param iconText
     * @param isSelected row
     */
-   protected static void checkIconNearToken(int rowNumber, String iconText, boolean isSelected)
+   protected void checkIconNearToken(int rowNumber, String iconText, boolean isSelected)
    {
       String divIndex = String.valueOf(rowNumber + 1);
       if (isSelected)
       {
-         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
+         assertTrue(selenium().isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
             + "]//table[@class='treeCellSelected']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
       }
       else
       {
-         assertTrue(selenium.isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
+         assertTrue(selenium().isElementPresent("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex 
             + "]//table[@class='treeCell']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
       }
    }
@@ -314,9 +314,9 @@ public class OulineTreeHelper extends BaseTest
     * @param rowNumber startign from 0
     * @throws Exception
     */
-   protected static void clickNode(int rowNumber) throws Exception
+   protected void clickNode(int rowNumber) throws Exception
    {
-      selenium.click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
+      selenium().click("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber)
          + "]/col[1]");
       Thread.sleep(TestConstants.SLEEP);
    }
