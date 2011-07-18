@@ -67,11 +67,11 @@ public abstract class ParsingLockTokensInIETest extends BaseTest
       
      IDE.EDITOR.closeFile(0);
       
-      assertFalse(selenium.isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
+      assertFalse(selenium().isElementPresent("scLocator=//Dialog[ID=\"isc_globalWarn\"]"));
    }
    
    @AfterClass
-   public static void tierDown()
+   public void tearDown()
    {
       deleteCookies();
       try

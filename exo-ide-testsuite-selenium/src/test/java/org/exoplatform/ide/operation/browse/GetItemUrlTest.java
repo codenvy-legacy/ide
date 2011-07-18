@@ -88,10 +88,10 @@ public class GetItemUrlTest extends BaseTest
 
       //Open url and check file and folder are present
       openLink(url);
-      assertTrue(selenium.isElementPresent("link=" + file1Name));
-      assertTrue(selenium.isElementPresent("link=" + folderName));
-      selenium.goBack();
-      selenium.waitForPageToLoad("12000");
+      assertTrue(selenium().isElementPresent("link=" + file1Name));
+      assertTrue(selenium().isElementPresent("link=" + folderName));
+      selenium().goBack();
+      selenium().waitForPageToLoad("12000");
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for file in root of the tree
@@ -108,9 +108,9 @@ public class GetItemUrlTest extends BaseTest
 
       //Open url and check file and folder are present
       openLink(url);
-      assertTrue(selenium.isElementPresent("link=" + file2Name));
-      selenium.goBack();
-      selenium.waitForPageToLoad("12000");
+      assertTrue(selenium().isElementPresent("link=" + file2Name));
+      selenium().goBack();
+      selenium().waitForPageToLoad("12000");
       Thread.sleep(TestConstants.SLEEP);
 
       //Check get URL for the file in the folder
@@ -147,7 +147,7 @@ public class GetItemUrlTest extends BaseTest
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + file1Name);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folderName + "/" + file2Name);
 
-      String workspaceName = selenium.getText(WORK_SPACE_LOCATOR);
+      String workspaceName = selenium().getText(WORK_SPACE_LOCATOR);
 
       //Check get URL for first file
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL + file1Name);
@@ -176,8 +176,8 @@ public class GetItemUrlTest extends BaseTest
     */
    private void openLink(String link) throws Exception
    {
-      selenium.open(link);
-      selenium.waitForPageToLoad("6000");
+      selenium().open(link);
+      selenium().waitForPageToLoad("6000");
       Thread.sleep(TestConstants.SLEEP);
    }
 }

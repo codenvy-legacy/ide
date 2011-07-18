@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -64,10 +60,10 @@ public class HighlightOutlineTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
       deleteCookies();
-      cleanDefaultWorkspace();
+      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME);
    }
 
    @Test
@@ -83,20 +79,20 @@ public class HighlightOutlineTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       waitForElementPresent("ideOutlineTreeGrid");
 
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForRootItem();
 
       // TODO fix problem return highlighter to back (in Outlinepanel)
       //IDE.PERSPECTIVE.checkViewIsActive("ideOutlineView");
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_F);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_O);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_B);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_A);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_R);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_F);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_O);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_O);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_B);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_R);
 
       // TODO fix problem return highlighter in workspace
       // IDE.PERSPECTIVE.checkViewIsNotActive("editor-0");

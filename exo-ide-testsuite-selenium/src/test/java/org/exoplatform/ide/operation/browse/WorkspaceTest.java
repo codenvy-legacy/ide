@@ -37,7 +37,7 @@ import org.junit.Test;
 public class WorkspaceTest extends BaseTest
 {
    @AfterClass
-   public static void tearDown()
+   public void tearDown()
    {
       deleteCookies();
    }
@@ -62,13 +62,13 @@ public class WorkspaceTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       IDE.SELECT_WORKSPACE.waitForDialog();
       //check select workspace window
-      assertTrue(selenium.isElementPresent(SelectWorkspace.SELECT_WORKSPACE_FORM_LOCATOR));
-      assertTrue(selenium.isElementPresent(IDE.SELECT_WORKSPACE.getGwtDialogCaptionLocator("Workspace")));
-      assertTrue(selenium.isElementPresent(SelectWorkspace.OK_BUTTON_ID));
-      assertTrue(selenium.isElementPresent(SelectWorkspace.CANCEL_BUTTON_ID));
-      assertTrue(selenium.isElementPresent(SelectWorkspace.LIST_GRID_ID));
-      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME_2 + "/"));
-      assertTrue(selenium.isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME + "/"));
+      assertTrue(selenium().isElementPresent(SelectWorkspace.SELECT_WORKSPACE_FORM_LOCATOR));
+      assertTrue(selenium().isElementPresent(IDE.SELECT_WORKSPACE.getGwtDialogCaptionLocator("Workspace")));
+      assertTrue(selenium().isElementPresent(SelectWorkspace.OK_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(SelectWorkspace.CANCEL_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(SelectWorkspace.LIST_GRID_ID));
+      assertTrue(selenium().isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME_2 + "/"));
+      assertTrue(selenium().isTextPresent(ENTRY_POINT_URL_IDE + WS_NAME + "/"));
 
       //check Ok button is disabled
       assertFalse(IDE.SELECT_WORKSPACE.getOkButtonState());
@@ -78,7 +78,7 @@ public class WorkspaceTest extends BaseTest
       IDE.SELECT_WORKSPACE.clickCancelButton();
       IDE.SELECT_WORKSPACE.waitForDialogNotPresent();
       //check workspace doesn't changed
-      assertEquals(WS_NAME, selenium.getText(IDE.NAVIGATION.getItemId(WS_URL)));
+      assertEquals(WS_NAME, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL)));
 
       //----- 2 ---------------
       //check changing of workspace

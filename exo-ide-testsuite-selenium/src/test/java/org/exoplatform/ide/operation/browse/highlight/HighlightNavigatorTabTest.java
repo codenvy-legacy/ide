@@ -79,7 +79,7 @@ public class HighlightNavigatorTabTest extends BaseTest
    }
 
    @AfterClass
-   public static void tierDown()
+   public void tierDown()
    {
       deleteCookies();
       try

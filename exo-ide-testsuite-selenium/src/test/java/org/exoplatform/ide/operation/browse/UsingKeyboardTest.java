@@ -20,8 +20,6 @@ package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -33,6 +31,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -91,17 +91,17 @@ public class UsingKeyboardTest extends BaseTest
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       IDE.WORKSPACE.waitForRootItem();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       IDE.WORKSPACE.waitForRootItem();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
@@ -110,9 +110,9 @@ public class UsingKeyboardTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GOOGLE_GADGET_FILE);
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       IDE.WORKSPACE.waitForRootItem();
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       IDE.WORKSPACE.waitForRootItem();
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
@@ -148,17 +148,17 @@ public class UsingKeyboardTest extends BaseTest
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.NAVIGATION.assertItemNotVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       //IDE.NAVIGATION.selectItemInSerchTree(WS_URL);
 
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FOLDER + "/" + TEST_FILE);
@@ -207,9 +207,9 @@ public class UsingKeyboardTest extends BaseTest
       IDE.EDITOR.selectTab(0);
       IDE.EDITOR.clickOnEditor();
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
 
       Thread.sleep(TestConstants.SLEEP);
@@ -227,15 +227,15 @@ public class UsingKeyboardTest extends BaseTest
       // open "Content" node in the Outline Panel and got to "CDATA" node
 
       IDE.OUTLINE.selectItemInOutlineTree("Content");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_RIGHT);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       // check outline tree     

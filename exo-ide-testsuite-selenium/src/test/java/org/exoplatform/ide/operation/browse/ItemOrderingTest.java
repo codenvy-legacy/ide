@@ -25,6 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,22 +52,16 @@ public class ItemOrderingTest extends BaseTest
 
    private static final String TEST_FILE_1_2 = "file-1-2";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      cleanRepository(WS_URL);
-   }
-
    @Test
    public void testItemOrdering() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();      
+      IDE.WORKSPACE.waitForRootItem();
       // create test files
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1_2, 0);
-      
+
       IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, UPPERCASE_TEST_FILE_1, 0);
-      
+
       IDE.WORKSPACE.selectRootItem();
       createSaveAndCloseFile(MenuCommands.New.XML_FILE, TEST_FILE_1, 0);
 
@@ -127,7 +122,12 @@ public class ItemOrderingTest extends BaseTest
    @AfterClass
    public static void tearDown() throws Exception
    {
-      cleanRepository(REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME);
+      VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER_1);
+      VirtualFileSystemUtils.delete(WS_URL + UPPERCASE_TEST_FOLDER_1);
+      VirtualFileSystemUtils.delete(WS_URL + TEST_FILE_1);
+      VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER_1_2);
+      VirtualFileSystemUtils.delete(WS_URL + UPPERCASE_TEST_FILE_1);
+      VirtualFileSystemUtils.delete(WS_URL + TEST_FILE_1_2);
    }
 
 }

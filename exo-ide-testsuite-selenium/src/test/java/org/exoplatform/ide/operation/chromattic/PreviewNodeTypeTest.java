@@ -135,13 +135,13 @@ public class PreviewNodeTypeTest extends BaseTest
       waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //check dialog
-      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_DIALOG_ID));
-      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_FORMAT_FIELD));
-      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID));
-      assertTrue(selenium.isElementPresent(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_DIALOG_ID));
+      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_FORMAT_FIELD));
+      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID));
 
       //Click "Cancel" button
-      selenium.click(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID);
+      selenium().click(GENERATE_NODE_TYPE_CANCEL_BUTTON_ID);
       waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click preview node type button and check dialog window appears
@@ -149,16 +149,16 @@ public class PreviewNodeTypeTest extends BaseTest
       waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click "Generate" button
-      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
       waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertTrue(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertTrue(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       //Close file and check view with generated code is closed.
       IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -167,7 +167,7 @@ public class PreviewNodeTypeTest extends BaseTest
    @Test
    public void testGenerateExoFormat() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
@@ -182,7 +182,7 @@ public class PreviewNodeTypeTest extends BaseTest
       waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Click "Generate" button
-      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
       waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
 
       //Check generated code:
@@ -201,7 +201,7 @@ public class PreviewNodeTypeTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
 
    /**
@@ -212,7 +212,7 @@ public class PreviewNodeTypeTest extends BaseTest
    @Test
    public void testGenerateCndFormat() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
@@ -227,10 +227,10 @@ public class PreviewNodeTypeTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       waitForElementPresent(GENERATE_NODE_TYPE_DIALOG_ID);
       
-      selenium.select(GENERATE_NODE_TYPE_FORMAT_FIELD, "label=CND");
+      selenium().select(GENERATE_NODE_TYPE_FORMAT_FIELD, "label=CND");
 
       //Click "Generate" button
-      selenium.click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
+      selenium().click(GENERATE_NODE_TYPE_GENERATE_BUTTON_ID);
       waitForElementNotPresent(GENERATE_NODE_TYPE_DIALOG_ID);
       waitForElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
 
@@ -249,7 +249,7 @@ public class PreviewNodeTypeTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
       waitForElementNotPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR);
-      assertFalse(selenium.isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertFalse(selenium().isElementPresent(DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
    }
    
    /**
@@ -260,9 +260,9 @@ public class PreviewNodeTypeTest extends BaseTest
    public String getTextFromNodeTypePreviewTab() throws Exception
    {
       final String iframeLocator = DeployNodeTypeTest.IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR + "//iframe";
-      selenium.selectFrame(iframeLocator);
+      selenium().selectFrame(iframeLocator);
       waitForElementPresent(Editor.Locators.CODE_MIRROR_EDITOR);
-      final String text = selenium.getText(Editor.Locators.CODE_MIRROR_EDITOR);
+      final String text = selenium().getText(Editor.Locators.CODE_MIRROR_EDITOR);
       IDE.selectMainFrame();
       return text;
    }

@@ -18,17 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import com.thoughtworks.selenium.Wait;
-
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -92,7 +83,7 @@ public class ChangeHighlightTest extends BaseTest
    }
 
    @AfterClass
-   public static void tierDown()
+   public void tearDown()
    {
       deleteCookies();
       try

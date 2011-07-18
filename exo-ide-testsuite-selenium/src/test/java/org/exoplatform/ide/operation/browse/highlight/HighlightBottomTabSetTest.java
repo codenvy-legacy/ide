@@ -21,7 +21,6 @@ package org.exoplatform.ide.operation.browse.highlight;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -75,8 +74,8 @@ public class HighlightBottomTabSetTest extends BaseTest
     
       IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
       
-      // assertTrue(selenium.isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
-      selenium.click(SHOW_PROPERTIES_ICON_LOCATOR);
+      // assertTrue(selenium().isElementPresent("//div[@eventproxy='isc_PropertiesForm_0'  and contains(@style, 'border: 3px solid rgb(122, 173, 224)')]/"));
+      selenium().click(SHOW_PROPERTIES_ICON_LOCATOR);
       IDE.PERSPECTIVE.checkViewIsActive("ideFilePropertiesView");
       
       
@@ -95,7 +94,7 @@ public class HighlightBottomTabSetTest extends BaseTest
    }
 
    @AfterClass
-   public static void tierDown()
+   public void tearDown()
    {
       deleteCookies();
       try

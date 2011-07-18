@@ -129,10 +129,10 @@ public class CutFileTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       /*
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
-      assertTrue(selenium.isTextPresent("412 Precondition Failed"));
-      assertTrue(selenium.isTextPresent("Precondition Failed"));
-      assertTrue(selenium.isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
+      assertTrue(selenium().isElementPresent(Dialogs.Locators.SC_WARN_DIALOG));
+      assertTrue(selenium().isTextPresent("412 Precondition Failed"));
+      assertTrue(selenium().isTextPresent("Precondition Failed"));
+      assertTrue(selenium().isElementPresent(Dialogs.Locators.SC_WARN_DIALOG_OK_BTN));
       IDE.dialogs().clickOkButton();
       */
 

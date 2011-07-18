@@ -114,14 +114,14 @@ public class DeployNodeTypeTest extends BaseTest
       waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //check, that Deploy Node Type form is present
-      assertTrue(selenium.isElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID));
-      assertTrue(selenium.isElementPresent(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME));
-      assertTrue(selenium.isElementPresent(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID));
-      assertTrue(selenium.isElementPresent(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID));
+      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME));
+      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID));
+      assertTrue(selenium().isElementPresent(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID));
 
       //Click "Cancel" button
-      selenium.click(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID);
+      selenium().click(DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Click preview node type button and check dialog window appears
@@ -129,17 +129,17 @@ public class DeployNodeTypeTest extends BaseTest
       waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Select CND format:
-      selenium.select(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME, "label=CND");
+      selenium().select(DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME, "label=CND");
 
       //Click deploy button:
-      selenium.click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
+      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Check error message that CND format is not supported:
       IDE.WARNING_DIALOG.waitForWarningDialogOpened();
-      assertTrue(selenium.isElementPresent(WarningDialog.WARNING_DIALOG_ID));
-      assertTrue(selenium.isElementPresent(WarningDialog.OK_BUTTON_ID));
-      assertTrue(selenium.isTextPresent("Unsupported content type:text/x-jcr-cnd"));
+      assertTrue(selenium().isElementPresent(WarningDialog.WARNING_DIALOG_ID));
+      assertTrue(selenium().isElementPresent(WarningDialog.OK_BUTTON_ID));
+      assertTrue(selenium().isTextPresent("Unsupported content type:text/x-jcr-cnd"));
       IDE.WARNING_DIALOG.clickOk();
 
       IDE.EDITOR.closeFile(0);
@@ -153,7 +153,7 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testDeployIgnoreIfExist() throws Exception
    {
-      selenium.refresh();
+      selenium().refresh();
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
@@ -168,7 +168,7 @@ public class DeployNodeTypeTest extends BaseTest
       waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Click deploy button:
-      selenium.click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
+      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       IDE.INFORMATION_DIALOG.waitForInfoDialog("Node type successfully deployed.");
@@ -176,7 +176,7 @@ public class DeployNodeTypeTest extends BaseTest
       IDE.INFORMATION_DIALOG.waitForInfoDialogNotPresent();
 
       //check, that there is no view with generated code
-      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertFalse(selenium().isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       IDE.EDITOR.closeFile(0);
    }
@@ -204,17 +204,17 @@ public class DeployNodeTypeTest extends BaseTest
       waitForElementPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       //Select "fail if exist" behavior:
-      selenium.select(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME, "label=fail if exists");
+      selenium().select(DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME, "label=fail if exists");
 
       //Click deploy button:
-      selenium.click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
+      selenium().click(DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID);
       waitForElementNotPresent(DEPLOY_NODE_TYPE_DIALOG_ID);
 
       IDE.WARNING_DIALOG.waitForWarningDialogOpened();
       IDE.WARNING_DIALOG.clickOk();
 
       //check, that there is no view with generated code
-      assertFalse(selenium.isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
+      assertFalse(selenium().isElementPresent(IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR));
 
       IDE.EDITOR.closeFile(0);
    }

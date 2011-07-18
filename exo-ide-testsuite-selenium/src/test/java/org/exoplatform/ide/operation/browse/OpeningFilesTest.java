@@ -21,7 +21,6 @@ package org.exoplatform.ide.operation.browse;
 import static org.junit.Assert.assertEquals;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Editor;

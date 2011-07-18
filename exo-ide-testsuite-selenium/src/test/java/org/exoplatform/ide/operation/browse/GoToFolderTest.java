@@ -129,8 +129,8 @@ public class GoToFolderTest extends BaseTest
    @Test
    public void testGoToFolderSearchPanel() throws Exception
    {
-      selenium.refresh();
-      selenium.waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+      selenium().refresh();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
       
       IDE.WORKSPACE.waitForRootItem();
 

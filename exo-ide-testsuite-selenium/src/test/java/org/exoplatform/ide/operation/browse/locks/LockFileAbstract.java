@@ -35,7 +35,7 @@ public abstract class LockFileAbstract extends BaseTest
 {
 
    @BeforeClass
-   public static void clearCookies()
+   public void clearCookies()
    {
       deleteCookies();
    }
@@ -56,21 +56,21 @@ public abstract class LockFileAbstract extends BaseTest
       if (isLocked)
 
       {
-         assertTrue(selenium.isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
+         assertTrue(selenium().isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
       }
       else
 
       {
-         assertFalse(selenium.isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
+         assertFalse(selenium().isElementPresent("//div[@id=" + "'" + name + "'" + "]" + "//img[@id='resourceLocked']"));
       }
    }
 
    protected void deleteLockTokensCookies()
    {
       String cookieName = "eXo-IDE-" + USER_NAME + "-lock-tokens_map";
-      if (selenium.isCookiePresent(cookieName))
+      if (selenium().isCookiePresent(cookieName))
       {
-         selenium.deleteCookie(cookieName, "path=/, recurse=true");
+         selenium().deleteCookie(cookieName, "path=/, recurse=true");
       }
       else
       {
@@ -80,7 +80,7 @@ public abstract class LockFileAbstract extends BaseTest
 
    protected void checkIsFileReadOnlyInEditorTab()
    {
-      assertTrue(selenium
+      assertTrue(selenium()
          .isElementPresent("//table//span[@title=\"File opened in read only mode. Use SaveAs command.\"]/img[@id='fileReadonly']"));
    }
 

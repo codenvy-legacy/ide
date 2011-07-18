@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -61,7 +57,7 @@ public class HighlightEditorsTabTest extends BaseTest
    }
 
    @AfterClass
-   public static void tierDown()
+   public void tierDown()
    {
       deleteCookies();
       try

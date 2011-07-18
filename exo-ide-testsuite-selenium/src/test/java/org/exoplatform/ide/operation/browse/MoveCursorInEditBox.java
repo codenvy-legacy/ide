@@ -44,24 +44,24 @@ public class MoveCursorInEditBox extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       String locator =
          "//form[@id=\"ideCreateFolderFormDynamicForm\"]/div/input[@name=\"ideCreateFolderFormNameField\"]";
-      selenium.focus(locator);
+      selenium().focus(locator);
 
       IDE.EDITOR.deleteFileContent();
-      selenium.typeKeys(locator, "FooBr");
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
-      selenium.typeKeys(locator, "a");
+      selenium().typeKeys(locator, "FooBr");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
+      selenium().typeKeys(locator, "a");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertEquals("FooBar", selenium.getValue(locator));
+      assertEquals("FooBar", selenium().getValue(locator));
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_HOME);
 
-      selenium.typeKeys(locator, "eXo ");
-      assertEquals("eXo FooBar", selenium.getValue(locator));
+      selenium().typeKeys(locator, "eXo ");
+      assertEquals("eXo FooBar", selenium().getValue(locator));
 
-      selenium.keyPressNative("" + java.awt.event.KeyEvent.VK_END);
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_END);
 
-      selenium.typeKeys(locator, " UA");
-      assertEquals("eXo FooBar UA", selenium.getValue(locator));
+      selenium().typeKeys(locator, " UA");
+      assertEquals("eXo FooBar UA", selenium().getValue(locator));
 
    }
 

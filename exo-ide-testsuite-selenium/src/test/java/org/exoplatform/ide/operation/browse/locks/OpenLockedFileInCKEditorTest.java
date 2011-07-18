@@ -130,7 +130,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.MENU.checkCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE, false);
 
       IDE.EDITOR.closeFile(0);
-      assertFalse(selenium.isElementPresent("exoAskDialog"));
+      assertFalse(selenium().isElementPresent("exoAskDialog"));
    }
 
 }

@@ -92,7 +92,7 @@ public class HighlightCKEditorTest extends BaseTest {
 	}
 
 	@AfterClass
-	public static void tierDown() {
+	public void tierDown() {
 		deleteCookies();
 		try {
 			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
