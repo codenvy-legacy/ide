@@ -375,7 +375,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    private int getEditorAreaHeight()
    {
-      return editorArea.getParent().getParent().getOffsetHeight();
+      if (editorArea.getParent() != null && editorArea.getParent().getParent() != null)
+      {
+         return editorArea.getParent().getParent().getOffsetHeight();
+      }
+
+      return 0;
    }
 
    /**
@@ -430,9 +435,9 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    /**
     * restore CKEditor height on resize
    **/
-   private void restoreEditorHeight(EditorType editorType)
+   private void restoreEditorHeight(final EditorType editorType)
    {
-      if (editorType == EditorType.DESIGN && getEditorAreaHeight() != lastEditorHeight)
+      if (editorType == EditorType.DESIGN)
       {
          if (this.supportedEditors.size() == 1)
          {
