@@ -39,6 +39,11 @@
          <version>3.0</version>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform</groupId>
+         <artifactId>log-reader-service</artifactId>
+         <version>1.0-M1-SNAPSHOT</version>
+      </dependency>
 
    </dependencies>
    <build>

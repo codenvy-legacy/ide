@@ -8,7 +8,7 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <component>
+<!--    <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
       <init-params>
@@ -39,7 +39,7 @@
 
          </properties-param>
       </init-params>
-   </component>
+   </component> -->
 
    <component>
       <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>

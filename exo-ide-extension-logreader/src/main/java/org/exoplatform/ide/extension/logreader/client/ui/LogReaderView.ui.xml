@@ -1,18 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
-	<c:Border margin="1" borderColor="transparent">
-		
-		<c:VPanel ui:field="basePanel">
-			<c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
+   <ui:style>
+      .content {
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      	color: #000077;
+      }
+   </ui:style>
 
-			<g:ScrollPanel ui:field="scrollPanel">
-				<g:FlowPanel width="100%" ui:field="contentPanel"></g:FlowPanel>
-			</g:ScrollPanel>
-		</c:VPanel>
-		
-	</c:Border>
+   <c:Border margin="1" borderColor="transparent">
+
+      <c:VPanel ui:field="basePanel">
+         <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
+
+         <g:ScrollPanel ui:field="scrollPanel">
+            <g:HTML>
+               <pre ui:field="content" class='{style.content}'></pre>
+            </g:HTML>
+         </g:ScrollPanel>
+      </c:VPanel>
+
+   </c:Border>
 </ui:UiBinder> 

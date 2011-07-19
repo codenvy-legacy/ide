@@ -18,26 +18,21 @@
  */
 package org.exoplatform.ide.extension.logreader.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Command;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.logreader.client.event.LogReaderSettingsChangedEvent;
-import org.exoplatform.ide.extension.logreader.client.event.LogReaderSettingsChangedHandler;
 import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent;
 import org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderHandler;
+import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
 import org.exoplatform.ide.extension.logreader.client.ui.LogReaderView;
-
-import java.util.Date;
 
 /**
  * Presenter for {@link LogReaderView}
@@ -45,35 +40,33 @@ import java.util.Date;
  * @version $Id: $
  *
  */
-public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandler, LogReaderSettingsChangedHandler
+public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandler
 {
    public interface Display extends IsView
    {
       String ID = "ideExtensionLogReaderView";
 
-      HasClickHandlers getLogButton();
-
-      HasClickHandlers getClearLogButton();
-
-      HasClickHandlers getSettingsButton();
-
-      void addLogs(String logs);
-
       void clearLogs();
 
       void setNextButtonText(String text);
 
-      void addNextButtonCommand(Command command);
+      void addNextLogButtonCommand(Command command);
+
+      void addPrevLogButtonCommand(Command command);
+
+      void addRefreshLogButtonCommand(Command command);
+
+      void addLog(String logContent);
+
+      void addLog(String logContent, boolean append);
+      
+      void setPrevLogButtonEnabled(boolean enabled);
 
    }
 
    private Display display;
 
-   private int offset;
-
-   private int limit;
-
-   private Date date = new Date();
+   private String currentToken;
 
    /**
     * 
@@ -82,9 +75,6 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    {
       IDE.EVENT_BUS.addHandler(ShowLogReaderEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(LogReaderSettingsChangedEvent.TYPE, this);
-      date.setTime(0);
-
    }
 
    /**
@@ -93,9 +83,6 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    @Override
    public void onShowlogReader(ShowLogReaderEvent event)
    {
-      offset = 0;
-      date.setTime(0);
-      limit = 10;
       if (display == null)
       {
          display = GWT.create(Display.class);
@@ -115,38 +102,90 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void bind()
    {
-
-      display.addNextButtonCommand(new Command()
+      display.addNextLogButtonCommand(new Command()
       {
 
          @Override
          public void execute()
          {
-            offset += limit;
-            getLogs();
+            getNextLog();
          }
       });
 
-      display.getClearLogButton().addClickHandler(new ClickHandler()
+      display.addPrevLogButtonCommand(new Command()
       {
 
          @Override
-         public void onClick(ClickEvent event)
+         public void execute()
          {
-            display.clearLogs();
+            prevLog();
          }
       });
 
-      display.getSettingsButton().addClickHandler(new ClickHandler()
+      display.addRefreshLogButtonCommand(new Command()
       {
+
          @Override
-         public void onClick(ClickEvent event)
+         public void execute()
          {
-            new LogReaderSettingsPresenter(date, limit, offset);
+            refreshLog();
          }
       });
+   }
 
-      display.setNextButtonText(LogReaderExtension.MESSAGES.getNextButtonMessage(limit));
+   /**
+    * 
+    */
+   protected void refreshLog()
+   {
+      LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      {
+
+         @Override
+         protected void onSuccess(LogEntry result)
+         {
+            display.addLog(result.getContent());
+         }
+      });
+   }
+
+   /**
+    * 
+    */
+   protected void prevLog()
+   {
+      LogReaderService.get().getPrevLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      {
+
+         @Override
+         protected void onSuccess(LogEntry result)
+         {
+            currentToken = result.getToken();
+            display.addLog(result.getContent());
+         }
+
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               ServerException ex = (ServerException)exception;
+               if ("Previous token not found.".equals(ex.getMessage()))
+               {
+                  display.setPrevLogButtonEnabled(false);
+               }
+               else
+                  super.onFailure(exception);
+            }
+            else
+            {
+               super.onFailure(exception);
+            }
+         }
+      });
    }
 
    /**
@@ -154,18 +193,54 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void getLogs()
    {
-      LogReaderService.get().getLogs(date.getTime(), limit, offset, new AsyncRequestCallback<String>()
+      LogReaderService.get().getLastLog(new AsyncRequestCallback<LogEntry>()
       {
 
          @Override
-         protected void onSuccess(String result)
+         protected void onSuccess(LogEntry result)
          {
-            if (result.isEmpty())
-               return;
-            display.addLogs(result);
+            display.addLog(result.getContent());
+            currentToken = result.getToken();
+         }
+
+      });
+   }
+
+   private void getNextLog()
+   {
+      LogReaderService.get().getNextLog(currentToken, new AsyncRequestCallback<LogEntry>()
+      {
+
+         @Override
+         protected void onSuccess(LogEntry result)
+         {
+            currentToken = result.getToken();
+            display.addLog(result.getContent());
+         }
+
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+
+            if (exception instanceof ServerException)
+            {
+               ServerException ex = (ServerException)exception;
+               if ("Next token not found.".equals(ex.getMessage()))
+               {
+                  //next log file not exist, so skip error 
+               }
+               else
+                  super.onFailure(exception);
+            }
+            else
+            {
+               super.onFailure(exception);
+            }
          }
       });
-
    }
 
    /**
@@ -178,17 +253,5 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
       {
          display = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.event.LogReaderSettingsChangedHandler#onLogRederSettingsChanged(org.exoplatform.ide.extension.logreader.client.event.LogReaderSettingsChangedEvent)
-    */
-   @Override
-   public void onLogRederSettingsChanged(LogReaderSettingsChangedEvent event)
-   {
-      this.date = event.getDate();
-      this.limit = event.getLimit();
-      this.offset = event.getOffset();
-      display.setNextButtonText(LogReaderExtension.MESSAGES.getNextButtonMessage(limit));
    }
 }

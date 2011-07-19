@@ -16,6 +16,12 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform</groupId>
+         <artifactId>log-reader-service</artifactId>
+         <version>1.0-M1-SNAPSHOT</version>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>

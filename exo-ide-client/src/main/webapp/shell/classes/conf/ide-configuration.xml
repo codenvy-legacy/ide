@@ -42,6 +42,10 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+     <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>

@@ -18,11 +18,18 @@
  */
 package org.exoplatform.ide.extension.logreader.client.model.marshal;
 
+import com.google.gwt.json.client.JSONObject;
+
+import com.google.gwt.json.client.JSONValue;
+
+import com.google.gwt.json.client.JSONParser;
+
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 
 /**
  * Dummy unmarshaller, need for pass response text to callback
@@ -33,15 +40,15 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 public class LogReaderUnmarshaller implements Unmarshallable
 {
 
-   private AsyncRequestCallback<String> callback;
+   private LogEntry logEntry;
 
    /**
     * @param callback
     */
-   public LogReaderUnmarshaller(AsyncRequestCallback<String> callback)
+   public LogReaderUnmarshaller(LogEntry logEntry)
    {
       super();
-      this.callback = callback;
+      this.logEntry = logEntry;
    }
 
    /**
@@ -50,10 +57,18 @@ public class LogReaderUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      callback.setResult(response.getText());
+      try
+      {
+         JSONValue parseStrict = JSONParser.parseStrict(response.getText());
+         JSONObject object = parseStrict.isObject();
+         logEntry.setContent(object.get("content").isString().stringValue());
+         logEntry.setToken(object.get("token").isString().stringValue());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new UnmarshallerException("Can't parse log.");
+      }
    }
-   
-   
-   
-   
+
 }

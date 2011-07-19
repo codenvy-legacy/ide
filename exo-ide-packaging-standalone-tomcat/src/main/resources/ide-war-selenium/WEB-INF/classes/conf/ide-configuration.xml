@@ -48,6 +48,15 @@
    </component>
    
    <component>
+     <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
+   </component>
+   
+   <component>
+     <key>org.exoplatform.logreader.LogPathProvider</key>
+     <type>org.exoplatform.logreader.SystemLogPathProvider</type>
+   </component>
+   
+   <component>
      <type>org.exoplatform.ide.maven.TaskService</type>
    </component>
    

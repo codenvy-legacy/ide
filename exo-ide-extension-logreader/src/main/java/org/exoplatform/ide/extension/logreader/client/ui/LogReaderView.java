@@ -18,7 +18,15 @@
  */
 package org.exoplatform.ide.extension.logreader.client.ui;
 
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.TextButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.component.VPanel;
@@ -28,15 +36,7 @@ import org.exoplatform.ide.extension.logreader.client.LogReaderClientBundle;
 import org.exoplatform.ide.extension.logreader.client.LogReaderExtension;
 import org.exoplatform.ide.extension.logreader.client.LogReaderPresenter;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.LogRecord;
 
 /**
  * View for Log reader, contains toolbar, and {@link ScrollPanel} with set of {@link LogRecord}
@@ -57,7 +57,7 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
    ScrollPanel scrollPanel;
 
    @UiField
-   FlowPanel contentPanel;
+   Element content;
 
    @UiField
    Toolbar toolbar;
@@ -65,57 +65,31 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
    @UiField
    VPanel basePanel;
 
-   private IconButton clearLogButton;
+   private TextButton nextLogButton;
 
-   private IconButton settingsButton;
-
-   private TextButton logButton;
-
-   private boolean odd = true;
-
+   private TextButton prevLogButton;
+   
+   private TextButton refreshLogButton;
+  
+   
    public LogReaderView()
    {
       super(ID, ViewType.OPERATION, "Log Reader", new Image(LogReaderClientBundle.INSTANCE.logReader()));
       add(uiBinder.createAndBindUi(this));
 
-      settingsButton =
-         new IconButton(new Image(LogReaderClientBundle.INSTANCE.logRederSettings()), new Image(
-            LogReaderClientBundle.INSTANCE.logRederSettings()));
-      settingsButton.setTitle(LogReaderExtension.MESSAGES.getSettingsTitle());
-      toolbar.addItem(settingsButton);
-
+      prevLogButton = new TextButton(LogReaderExtension.MESSAGES.getPrevLogButton());
+      toolbar.addItem(prevLogButton);
       toolbar.addDelimiter();
       
-      logButton = new TextButton(LogReaderExtension.MESSAGES.getLogButton());
-      toolbar.addItem(logButton);
+      refreshLogButton = new TextButton(LogReaderExtension.MESSAGES.getRefreshLogButton());
+      toolbar.addItem(refreshLogButton);
       toolbar.addDelimiter();
-
-      clearLogButton =
-         new IconButton(new Image(LogReaderClientBundle.INSTANCE.clearOutput()), new Image(
-            LogReaderClientBundle.INSTANCE.clearOutput()));
-      toolbar.addItem(clearLogButton, true);
+      
+      nextLogButton = new TextButton(LogReaderExtension.MESSAGES.getNextLogButton());
+      toolbar.addItem(nextLogButton);
 
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getLogButton()
-    */
-   @Override
-   public HasClickHandlers getLogButton()
-   {
-      return null; //logButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLogs(java.lang.String)
-    */
-   @Override
-   public void addLogs(String logs)
-   {
-      contentPanel.add(new LogRecord(logs, odd));
-      scrollPanel.scrollToBottom();
-      odd = !odd;
-   }
 
    /**
     * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#clearLogs()
@@ -123,26 +97,8 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
    @Override
    public void clearLogs()
    {
-      contentPanel.clear();
+      content.setInnerText("");
       scrollPanel.scrollToTop();
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getClearLogButton()
-    */
-   @Override
-   public HasClickHandlers getClearLogButton()
-   {
-      return clearLogButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getSettingsButton()
-    */
-   @Override
-   public HasClickHandlers getSettingsButton()
-   {
-      return settingsButton;
    }
 
    /**
@@ -151,16 +107,62 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
    @Override
    public void setNextButtonText(String text)
    {
-      logButton.setText(text);
+      nextLogButton.setText(text);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addNextButtonCommand(com.google.gwt.user.client.Command)
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addNextLogButtonCommand(com.google.gwt.user.client.Command)
     */
    @Override
-   public void addNextButtonCommand(Command command)
+   public void addNextLogButtonCommand(Command command)
    {
-      logButton.setCommand(command);
+      nextLogButton.setCommand(command);
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String)
+    */
+   @Override
+   public void addLog(String logContent)
+   {
+      content.setInnerText(logContent);
+      scrollPanel.scrollToTop();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String, boolean)
+    */
+   @Override
+   public void addLog(String logContent, boolean append)
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addPrevLogButtonCommand(com.google.gwt.user.client.Command)
+    */
+   @Override
+   public void addPrevLogButtonCommand(Command command)
+   {
+      prevLogButton.setCommand(command);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addRefreshLogButtonCommand(com.google.gwt.user.client.Command)
+    */
+   @Override
+   public void addRefreshLogButtonCommand(Command command)
+   {
+      refreshLogButton.setCommand(command);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#setPrevLogButtonEnabled(boolean)
+    */
+   @Override
+   public void setPrevLogButtonEnabled(boolean enabled)
+   {
+//      prevLogButton.
+   }
+
 
 }

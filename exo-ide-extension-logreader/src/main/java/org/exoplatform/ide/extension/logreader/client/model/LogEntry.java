@@ -16,50 +16,67 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.logreader.client;
-
-import com.google.gwt.i18n.client.Messages;
+package org.exoplatform.ide.extension.logreader.client.model;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-
-public interface LogReaderMessages extends Messages
+public class LogEntry
 {
+   private String token;
 
-//   @Key("log.reader.next.button")
-//   String getNextButtonMessage(int count);
-   
-   @Key("log.reader.next")
-   String getNextLogButton();
-   
-   @Key("log.reader.prev")
-   String getPrevLogButton();
-   
-   @Key("log.reader.refresh")
-   String getRefreshLogButton();
-   
-   @Key("log.reader.offset")
-   String getOffset();
-   
-   @Key("log.reader.limit")
-   String getLimit();
-   
-   @Key("log.reder.settings.ok")
-   String getOkButton();
-   
-   @Key("log.reder.settings.cancel")
-   String getCancelButton();
-   
-   @Key("log.reder.settings.data")
-   String getDate();
-   
-//   @Key("log.reader.time.label")
-//   String getTimeLabelTitle();
-//   
-//   @Key("log.reader.settings.title")
-//   String getSettingsTitle();
-   
+   private String content;
+
+   /**
+    * 
+    */
+   public LogEntry()
+   {
+   }
+
+   /**
+    * @param token
+    * @param content
+    */
+   public LogEntry(String token, String content)
+   {
+      super();
+      this.token = token;
+      this.content = content;
+   }
+
+   /**
+    * @return the token
+    */
+   public String getToken()
+   {
+      return token;
+   }
+
+   /**
+    * @param token the token to set
+    */
+   public void setToken(String token)
+   {
+      this.token = token;
+   }
+
+   /**
+    * @return the content
+    */
+   public String getContent()
+   {
+      return content;
+   }
+
+   /**
+    * @param content the content to set
+    */
+   public void setContent(String content)
+   {
+      this.content = content;
+   }
+
 }

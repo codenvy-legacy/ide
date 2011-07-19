@@ -58,21 +58,36 @@ public class LogReaderService
       instance = this;
    }
 
-   /**
-    * @param timeStamp the date from which message should be added to response. 
-    *            This is not mandatory query parameter, by default its set to 0 which means that start time is not limited;
-    * @param limit number of messages what should be added to the response. Note that one message can have more then one line. 
-    *        This is not mandatory query parameter, by default its set to 0. In this case you will receive all log messages from specified times
-    * @param offset number of messages what will be obtained for specified timestamp with respect to limit parameter (if any).
-    *        This is not mandatory query parameter, by default its set to 0. In this case messages will be obtained from specified timestamp.
-    * @param callback
-    */
-   public void getLogs(long timeStamp, int limit, int offset, AsyncRequestCallback<String> callback)
+   public void getLastLog(AsyncRequestCallback<LogEntry> callback)
    {
-      String url =
-         restContext + "/cloud/logreader-service/log?timestamp=" + timeStamp + "&limit=" + limit + "&offset=" + offset;
-      LogReaderUnmarshaller unmarshaller = new LogReaderUnmarshaller(callback);
+      String url = restContext + "/log-reader-service/last-log";
+      sendRequest(url, callback);
+   }
+
+   public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback)
+   {
+      String url = restContext + "/log-reader-service/prev-log?token=" + token;
+      sendRequest(url, callback);
+   }
+
+   public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback)
+   {
+      String url = restContext + "/log-reader-service/next-log?token=" + token;
+      sendRequest(url, callback);
+   }
+
+   public void getLog(String token, AsyncRequestCallback<LogEntry> callback)
+   {
+      String url = restContext + "/log-reader-service/log?token=" + token;
+      sendRequest(url, callback);
+   }
+
+   private void sendRequest(String url, AsyncRequestCallback<LogEntry> callback)
+   {
+      LogEntry logEntry = new LogEntry();
+      LogReaderUnmarshaller unmarshaller = new LogReaderUnmarshaller(logEntry);
       callback.setPayload(unmarshaller);
+      callback.setResult(logEntry);
       callback.setEventBus(IDE.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
