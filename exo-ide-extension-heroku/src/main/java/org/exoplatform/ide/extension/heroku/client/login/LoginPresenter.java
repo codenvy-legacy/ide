@@ -22,12 +22,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -62,7 +65,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
-      
+
       /**
        * Get login as demo user button click handler.
        * 
@@ -80,9 +83,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
       /**
        * Get password field.
        * 
-       * @return {@link HasValue}
+       * @return {@link TextFieldItem}
        */
-      HasValue<String> getPasswordField();
+      TextFieldItem getPasswordField();
 
       /**
        * Change the enable state of the login button.
@@ -100,7 +103,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
    private Display display;
 
    private HandlerManager eventBus;
-   
+
    private boolean loggedIn;
 
    public LoginPresenter(HandlerManager eventBus)
@@ -154,7 +157,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             }
          }
       });
-      
+
       display.getLoginDemoButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -196,6 +199,18 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          public void onValueChange(ValueChangeEvent<String> event)
          {
             display.enableLoginButton(isFieldsFullFilled());
+         }
+      });
+
+      display.getPasswordField().addKeyUpHandler(new KeyUpHandler()
+      {
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
+            {
+               doLogin(display.getEmailField().getValue(), display.getPasswordField().getValue());
+            }
          }
       });
 
@@ -275,7 +290,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          openLoginForm();
       }
    }
-   
+
    /**
     * Open form to login to Heroku
     */

@@ -25,6 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -141,7 +142,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * @see org.exoplatform.ide.extension.heroku.client.login.LoginPresenter.Display#getPasswordField()
     */
    @Override
-   public HasValue<String> getPasswordField()
+   public TextFieldItem getPasswordField()
    {
       return passwordField;
    }

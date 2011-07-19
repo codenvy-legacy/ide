@@ -22,12 +22,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -74,9 +77,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       /**
        * Get password field.
        * 
-       * @return {@link HasValue}
+       * @return {@link TextFieldItem}
        */
-      HasValue<String> getPasswordField();
+      TextFieldItem getPasswordField();
 
       /**
        * Change the enable state of the login button.
@@ -147,6 +150,19 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          }
       });
 
+      display.getPasswordField().addKeyUpHandler(new KeyUpHandler()
+      {
+
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
+            {
+               doLogin();
+            }
+         }
+      });
+
    }
 
    /**
@@ -205,7 +221,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new LoggedInEvent(true));
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.loginFailed()));
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .loginFailed()));
          }
       });
    }
