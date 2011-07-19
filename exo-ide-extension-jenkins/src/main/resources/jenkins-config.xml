@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<maven2-moduleset>
+   <actions />
+   <description></description>
+   <logRotator>
+      <daysToKeep>60</daysToKeep>
+      <numToKeep>-1</numToKeep>
+      <artifactDaysToKeep>-1</artifactDaysToKeep>
+      <artifactNumToKeep>20</artifactNumToKeep>
+   </logRotator>
+   <keepDependencies>false</keepDependencies>
+   <properties>
+      <hudson.plugins.googlecode.GoogleCodeProjectProperty />
+   </properties>
+   <scm class="hudson.plugins.git.GitSCM">
+      <configVersion>1</configVersion>
+      <remoteRepositories>
+         <org.spearce.jgit.transport.RemoteConfig>
+            <string>origin</string>
+            <int>5</int>
+            <string>fetch</string>
+            <string>+refs/heads/*:refs/remotes/origin/*</string>
+            <string>receivepack</string>
+            <string>git-upload-pack</string>
+            <string>uploadpack</string>
+            <string>git-upload-pack</string>
+            <string>url</string>
+            <string>${git-repository}</string>
+            <string>tagopt</string>
+            <string></string>
+         </org.spearce.jgit.transport.RemoteConfig>
+      </remoteRepositories>
+      <branches>
+         <hudson.plugins.git.BranchSpec>
+            <name>**</name>
+         </hudson.plugins.git.BranchSpec>
+      </branches>
+      <mergeOptions />
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+      <authorOrCommitter>false</authorOrCommitter>
+      <clean>false</clean>
+      <wipeOutWorkspace>false</wipeOutWorkspace>
+      <userName>${user-name}</userName>
+      <userEmail>${user-email}</userEmail>
+      <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser" />
+      <gitTool>Default</gitTool>
+      <submoduleCfg class="list" />
+   </scm>
+   <canRoam>true</canRoam>
+   <disabled>false</disabled>
+   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+   <jdk>(Default)</jdk>
+   <triggers class="vector" />
+   <concurrentBuild>false</concurrentBuild>
+   <mavenName>Maven 2.2.1</mavenName>
+   <aggregatorStyleBuild>true</aggregatorStyleBuild>
+   <incrementalBuild>false</incrementalBuild>
+   <usePrivateRepository>true</usePrivateRepository>
+   <ignoreUpstremChanges>true</ignoreUpstremChanges>
+   <archivingDisabled>false</archivingDisabled>
+   <resolveDependencies>false</resolveDependencies>
+   <processPlugins>false</processPlugins>
+   <mavenValidationLevel>-1</mavenValidationLevel>
+   <reporters />
+   <publishers />
+   <buildWrappers />
+</maven2-moduleset>

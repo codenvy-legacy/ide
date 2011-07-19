@@ -308,6 +308,18 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-jenkins</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -623,6 +635,7 @@
       <module>exo-ide-extension-openshift</module>
       <module>exo-ide-extension-cloudbees</module>      
       <module>exo-ide-extension-cloudfoundry</module>
+      <module>exo-ide-extension-jenkins</module>
       <module>exo-ide-extension-ruby</module>
       <module>exo-ide-extension-logreader</module>            
 

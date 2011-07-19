@@ -47,6 +47,10 @@
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-jenkins</artifactId>
+      </dependency>
+      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
