@@ -322,7 +322,6 @@ public class CKEditor extends Editor
       var instance = this;
       if (editor != null) {
          $wnd.setTimeout(function(a, b){
-            editor.resize("100%", instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::getLabelOffsetHeight()());
             editor.focus();
             instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onFocusReceived()();
          }, 200);

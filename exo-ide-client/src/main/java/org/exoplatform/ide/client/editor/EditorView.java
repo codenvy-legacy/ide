@@ -195,6 +195,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
          }
       }
       
+      restoreEditorHeight(editorType);
+      
       editors.get(editorType).setFocus();
    }
 
@@ -422,18 +424,26 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    {
       super.resize(width, height);
 
-      // restore CKEditor height on resize
-      if (currentEditorType == EditorType.DESIGN && getEditorAreaHeight() != lastEditorHeight)
+      restoreEditorHeight(currentEditorType);
+   }
+
+   /**
+    * restore CKEditor height on resize
+   **/
+   private void restoreEditorHeight(EditorType editorType)
+   {
+      if (editorType == EditorType.DESIGN && getEditorAreaHeight() != lastEditorHeight)
       {
          if (this.supportedEditors.size() == 1)
          {
             lastEditorHeight = editorArea.getOffsetHeight();
-            getEditor().setHeight("" + lastEditorHeight);
+            editors.get(editorType).setHeight("" + lastEditorHeight);
          }
-         else
+         
+         else if (getEditorAreaHeight() > BUTTON_HEIGHT + EDITOR_SWITCHER_OFFSET)
          {
             lastEditorHeight = getEditorAreaHeight();
-            getEditor().setHeight("" + (lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
+            editors.get(editorType).setHeight("" + (lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
          }
       }
    }
