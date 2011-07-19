@@ -32,7 +32,7 @@
       <gwt.maven.plugin.version>2.2.0</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
-      <org.slf4j.version>1.5.6</org.slf4j.version>
+      <org.slf4j.version>1.5.8</org.slf4j.version>
       <chromattic.version>1.1.0-beta3</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
@@ -401,12 +401,12 @@
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.8</version>
+            <version>${org.slf4j.version}</version>
          </dependency>
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.8</version>
+            <version>${org.slf4j.version}</version>
          </dependency>
          <dependency>
             <groupId>com.google.code.guice</groupId>
