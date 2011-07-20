@@ -174,7 +174,7 @@ public class Cloudfoundry
     * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value
     *           which is dependents to framework type
     * @param nostart if <code>true</code> then do not start newly created application
-    * @param workDir directory that contains source code (Ruby) or compiled and packed java web application
+    * @param workDir directory that contains source code
     * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @return info about newly created application
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
