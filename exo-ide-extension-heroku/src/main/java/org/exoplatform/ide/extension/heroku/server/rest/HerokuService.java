@@ -23,7 +23,7 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
-import org.exoplatform.ide.git.server.rest.GitLocation;
+import org.exoplatform.ide.FSLocation;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class HerokuService
    public Map<String, String> appsCreate( //
       @QueryParam("name") String name, //
       @QueryParam("remote") String remote, //
-      @QueryParam("workdir") GitLocation workDir, //
+      @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws HerokuException, IOException, ParsingResponseException
    {
@@ -115,7 +115,7 @@ public class HerokuService
    @POST
    public void appsDestroy( //
       @QueryParam("name") String name, //
-      @QueryParam("workdir") GitLocation workDir, //
+      @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws HerokuException, IOException
    {
@@ -128,7 +128,7 @@ public class HerokuService
    public Map<String, String> appsInfo( //
       @QueryParam("name") String name, //
       @QueryParam("raw") boolean inRawFormat, //
-      @QueryParam("workdir") GitLocation workDir, //
+      @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws HerokuException, IOException, ParsingResponseException
    {
@@ -142,7 +142,7 @@ public class HerokuService
    public Map<String, String> appsRename( //
       @QueryParam("name") String name, //
       @QueryParam("newname") String newname, //
-      @QueryParam("workdir") GitLocation workDir, //
+      @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws HerokuException, IOException, ParsingResponseException
    {
@@ -155,7 +155,7 @@ public class HerokuService
    @Produces(MediaType.TEXT_PLAIN)
    public StreamingOutput run( //
       @QueryParam("name") String name, //
-      @QueryParam("workdir") GitLocation workDir, //
+      @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo, //
       final String command //
    ) throws HerokuException, IOException, ParsingResponseException

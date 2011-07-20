@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.server.rest;
 
+import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
 import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
-import org.exoplatform.ide.git.server.rest.GitLocation;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class ExpressService
    @Path("apps/create")
    @Produces(MediaType.APPLICATION_JSON)
    public AppInfo createApplication(@QueryParam("app") String app, @QueryParam("type") String type,
-      @QueryParam("workdir") GitLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException,
+      @QueryParam("workdir") FSLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException,
       ParsingResponseException
    {
       return express.createApplication(app, type, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
@@ -105,7 +105,7 @@ public class ExpressService
    @GET
    @Path("apps/info")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") GitLocation workDir,
+   public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
       @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
    {
       return express.applicationInfo(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
@@ -113,7 +113,7 @@ public class ExpressService
 
    @POST
    @Path("apps/destroy")
-   public void destroyApplication(@QueryParam("app") String app, @QueryParam("workdir") GitLocation workDir,
+   public void destroyApplication(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
       @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
    {
       express.destroyApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
