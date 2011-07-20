@@ -30,21 +30,23 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
 
 /**
- * Presenter for map and unmap URLs to application.
+ * Presenter for maping (registering) URL to application.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: MapUnmapUrlPresenter.java Jul 18, 2011 9:22:02 AM vereshchaka $
+ * @version $Id: MapUrlPresenter.java Jul 19, 2011 1:06:17 PM vereshchaka $
  *
  */
-public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler, UnmapUrlHandler
+public class MapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
 {
-
+   
+   private CloudFoundryLocalizationConstant localeBundle = CloudFoundryExtension.LOCALIZATION_CONSTANT;
+   
    /**
     * Events handler.
     */
@@ -57,19 +59,12 @@ public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
    
    private String mapUrl;
    
-   private String unmapUrl;
-   
-   public MapUnmapUrlPresenter(HandlerManager eventbus)
+   public MapUrlPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
       
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(MapUrlEvent.TYPE, this);
-      eventBus.addHandler(UnmapUrlEvent.TYPE, this);
-   }
-   
-   public void bindDisplay(List<Framework> frameworks)
-   {
    }
    
    /**
@@ -81,7 +76,6 @@ public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
       selectedItems = event.getSelectedItems();
    }
 
-   
    /**
     * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
@@ -105,8 +99,8 @@ public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
    
    private void askForUrlToMap()
    {
-      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.mapUrlDialogTitle(), 
-         CloudFoundryExtension.LOCALIZATION_CONSTANT.mapUrlDialogMessage(), "", new StringValueReceivedHandler()
+      Dialogs.getInstance().askForValue(localeBundle.mapUrlDialogTitle(), 
+         localeBundle.mapUrlDialogMessage(), "", new StringValueReceivedHandler()
       {
          @Override
          public void stringValueReceived(String value)
@@ -135,7 +129,7 @@ public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
             @Override
             protected void onSuccess(String result)
             {
-               String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.mapUrlRegisteredSuccess(url);
+               String msg = localeBundle.mapUrlRegisteredSuccess(url);
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });     
@@ -152,61 +146,6 @@ public class MapUnmapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
       return workDir;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent)
-    */
-   @Override
-   public void onUnmapUrl(UnmapUrlEvent event)
-   {
-      askForUrlToUnmap();
-   }
-   
-   private void askForUrlToUnmap()
-   {
-      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlDialogTitle(), 
-         CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlDialogMessage(), "", new StringValueReceivedHandler()
-      {
-         @Override
-         public void stringValueReceived(String value)
-         {
-            if (value == null)
-            {
-               return;
-            }
-            else
-            {
-               unmapUrl = value;
-               unmapUrl(value);
-            }
-         }
-      });
-   }
-   
-   private LoggedInHandler unmapUrlLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         unmapUrl(unmapUrl);
-      }
-   };
-   
-   private void unmapUrl(final String unmapUrl)
-   {
-      String workDir = getWorkDir();
-      
-      CloudFoundryClientService.getInstance().unmapUrl(workDir, null, unmapUrl,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, unmapUrlLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlUnregisteredSuccess(unmapUrl);
-               eventBus.fireEvent(new OutputEvent(msg));
-            }
-         });
    }
 
 }

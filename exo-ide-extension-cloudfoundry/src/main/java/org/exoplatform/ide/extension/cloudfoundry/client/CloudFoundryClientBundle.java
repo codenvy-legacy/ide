@@ -48,6 +48,12 @@ public interface CloudFoundryClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/cancel_Disabled.png")
    ImageResource cancelButtonDisabled();
    
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/delete.png")
+   ImageResource deleteButton();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/delete_Disabled.png")
+   ImageResource deleteButtonDisabled();
+   
    /*
     * cloudfoundry controls
     */

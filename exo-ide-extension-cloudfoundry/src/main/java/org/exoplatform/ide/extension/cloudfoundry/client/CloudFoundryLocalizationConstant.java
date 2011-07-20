@@ -44,6 +44,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("button.delete")
    String deleteButton();
    
+   @Key("button.close")
+   String closeButton();
+   
    /*
     * Controls.
     */
@@ -315,13 +318,16 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String appInfoEnvironments();
    
    /*
-    * ApplicationInfoGrid
+    * UnmapUrlGrid
     */
-   @Key("appInfo.listGrid.field.name")
-   String applicationInfoListGridNameField();
+   @Key("unmapUrl.listGrid.field.url")
+   String applicationUnmapUrlGridUrlField();
    
-   @Key("appInfo.listGrid.field.value")
-   String applicationInfoListGridValueField();
+   /*
+    * UnmapUrlsView
+    */
+   @Key("unmapUrl.view.title")
+   String unmapUrlViewTitle();
    
    /*
     * DeleteApplication
@@ -358,6 +364,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("unmapUrl.success")
    String unmapUrlUnregisteredSuccess(String url);
+   
+   @Key("unmapUrl.confirmationDialog.title")
+   String unmapUrlConfirmationDialogTitle();
+   
+   @Key("unmapUrl.confirmationDialog.message")
+   String unmapUrlConfirmationDialogMessage();
    
    /*
     * UpdatePropertiesPresenter

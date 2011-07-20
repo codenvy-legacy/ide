@@ -47,7 +47,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
-import org.exoplatform.ide.extension.cloudfoundry.client.url.MapUnmapUrlPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.url.MapUrlPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 
 /**
  * CloudFoundry extention for IDE.
@@ -107,7 +108,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new UpdateApplicationPresenter(eventBus);
       new RenameApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
-      new MapUnmapUrlPresenter(eventBus);
+      new MapUrlPresenter(eventBus);
+      new UnmapUrlPresenter(eventBus);
       new UpdatePropertiesPresenter(eventBus);
    }
 

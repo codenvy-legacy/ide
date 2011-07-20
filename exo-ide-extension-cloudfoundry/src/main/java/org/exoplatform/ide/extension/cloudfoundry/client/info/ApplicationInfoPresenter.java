@@ -160,13 +160,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
                display.getApplicationUrisGrid().setValue(result.getUris());
                display.getApplicationServicesGrid().setValue(result.getServices());
                display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
-//               Iterator<Entry<String, String>> it = result.entrySet().iterator();
-//               List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String,String>>();
-//               while (it.hasNext())
-//               {
-//                  valueList.add(it.next());
-//               }
-//               display.getApplicationInfoGrid().setValue(valueList);
             }
          });
    }
