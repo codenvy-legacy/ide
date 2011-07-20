@@ -18,21 +18,16 @@
  */
 package org.exoplatform.ide.extension.logreader.client.model.marshal;
 
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
-
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.http.client.Response;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.logreader.client.model.LogEntry;
 
 /**
- * Dummy unmarshaller, need for pass response text to callback
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
@@ -47,7 +42,6 @@ public class LogReaderUnmarshaller implements Unmarshallable
     */
    public LogReaderUnmarshaller(LogEntry logEntry)
    {
-      super();
       this.logEntry = logEntry;
    }
 
@@ -63,6 +57,8 @@ public class LogReaderUnmarshaller implements Unmarshallable
          JSONObject object = parseStrict.isObject();
          logEntry.setContent(object.get("content").isString().stringValue());
          logEntry.setToken(object.get("token").isString().stringValue());
+         logEntry.setHasNext(object.get("hasNext").isBoolean().booleanValue());
+         logEntry.setHasPrevious(object.get("hasPrevious").isBoolean().booleanValue());
       }
       catch (Exception e)
       {

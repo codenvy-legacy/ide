@@ -19,15 +19,27 @@
 package org.exoplatform.ide.extension.logreader.client.model;
 
 /**
+ * Class represent log one logical Log file.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
 public class LogEntry
 {
+   
+   /**
+    * Identifier for log file
+    */
    private String token;
 
+   /**
+    * Content of log file
+    */
    private String content;
+
+   private boolean hasNext;
+
+   private boolean hasPrevious;
 
    /**
     * 
@@ -77,6 +89,38 @@ public class LogEntry
    public void setContent(String content)
    {
       this.content = content;
+   }
+
+   /**
+    * @return the hasNext
+    */
+   public boolean isHasNext()
+   {
+      return hasNext;
+   }
+
+   /**
+    * @param hasNext the hasNext to set
+    */
+   public void setHasNext(boolean hasNext)
+   {
+      this.hasNext = hasNext;
+   }
+
+   /**
+    * @return the hasPrevious
+    */
+   public boolean isHasPrevious()
+   {
+      return hasPrevious;
+   }
+
+   /**
+    * @param hasPrevious the hasPrevious to set
+    */
+   public void setHasPrevious(boolean hasPrevious)
+   {
+      this.hasPrevious = hasPrevious;
    }
 
 }

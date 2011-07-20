@@ -19,8 +19,9 @@
 package org.exoplatform.ide.extension.logreader.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Command;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -46,21 +47,17 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    {
       String ID = "ideExtensionLogReaderView";
 
-      void clearLogs();
-
-      void setNextButtonText(String text);
-
-      void addNextLogButtonCommand(Command command);
-
-      void addPrevLogButtonCommand(Command command);
-
-      void addRefreshLogButtonCommand(Command command);
+      HasClickHandlers getNexLogButton();
+      
+      HasClickHandlers getPrevLogButton();
+      
+      HasClickHandlers getRefreshLogButton();
 
       void addLog(String logContent);
 
-      void addLog(String logContent, boolean append);
-      
       void setPrevLogButtonEnabled(boolean enabled);
+      
+      void setNextLogButtonEnabled(boolean enabled);
 
    }
 
@@ -102,31 +99,32 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void bind()
    {
-      display.addNextLogButtonCommand(new Command()
+      
+      display.getNexLogButton().addClickHandler(new ClickHandler()
       {
-
+         
          @Override
-         public void execute()
+         public void onClick(ClickEvent event)
          {
             getNextLog();
          }
       });
-
-      display.addPrevLogButtonCommand(new Command()
+      
+      display.getPrevLogButton().addClickHandler(new ClickHandler()
       {
-
+         
          @Override
-         public void execute()
+         public void onClick(ClickEvent event)
          {
             prevLog();
          }
       });
-
-      display.addRefreshLogButtonCommand(new Command()
+      
+      display.getRefreshLogButton().addClickHandler(new ClickHandler()
       {
-
+         
          @Override
-         public void execute()
+         public void onClick(ClickEvent event)
          {
             refreshLog();
          }
@@ -136,7 +134,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    /**
     * 
     */
-   protected void refreshLog()
+   private void refreshLog()
    {
       LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>()
       {
@@ -145,6 +143,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          protected void onSuccess(LogEntry result)
          {
             display.addLog(result.getContent());
+            updateButtonState(result);
          }
       });
    }
@@ -152,7 +151,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    /**
     * 
     */
-   protected void prevLog()
+   private void prevLog()
    {
       LogReaderService.get().getPrevLog(currentToken, new AsyncRequestCallback<LogEntry>()
       {
@@ -162,6 +161,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          {
             currentToken = result.getToken();
             display.addLog(result.getContent());
+            updateButtonState(result);
          }
 
          /**
@@ -187,6 +187,12 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          }
       });
    }
+   
+   private void updateButtonState(LogEntry log)
+   {
+      display.setNextLogButtonEnabled(log.isHasNext());
+      display.setPrevLogButtonEnabled(log.isHasPrevious());
+   }
 
    /**
     * Send request to LogReader service
@@ -201,6 +207,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          {
             display.addLog(result.getContent());
             currentToken = result.getToken();
+            updateButtonState(result);
          }
 
       });
@@ -216,6 +223,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
          {
             currentToken = result.getToken();
             display.addLog(result.getContent());
+            updateButtonState(result);
          }
 
          /**

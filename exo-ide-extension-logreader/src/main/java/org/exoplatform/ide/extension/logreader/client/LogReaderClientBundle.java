@@ -46,4 +46,22 @@ public interface LogReaderClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/logreader/client/images/log-reder-settings.png")
    ImageResource logRederSettings();
 
+   @Source("org/exoplatform/ide/extension/logreader/client/images/next_Disabled.png")
+   ImageResource next_Disabled();
+
+   @Source("org/exoplatform/ide/extension/logreader/client/images/next.png")
+   ImageResource next();
+
+   @Source("org/exoplatform/ide/extension/logreader/client/images/prev_Disabled.png")
+   ImageResource prev_Disabled();
+
+   @Source("org/exoplatform/ide/extension/logreader/client/images/prev.png")
+   ImageResource prev();
+
+   @Source("org/exoplatform/ide/extension/logreader/client/images/refresh_Disabled.png")
+   ImageResource refresh_Disabled();
+
+   @Source("org/exoplatform/ide/extension/logreader/client/images/refresh.png")
+   ImageResource refresh();
+
 }
