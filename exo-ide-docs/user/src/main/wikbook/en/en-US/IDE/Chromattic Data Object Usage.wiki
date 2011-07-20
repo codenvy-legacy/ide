@@ -1,12 +1,14 @@
 _Chromattic Data Object_ files has MIME type *application/x-chromattic+groovy*. With eXo IDE you can create _Chromattic Data Object_ file, create and preview node type.
 
+
 h1. Create Data Object
 
 To create new data object click the *New > Data Object* _Toolbar_ button; or go to *File > New > Data Object* on the top menu. New file will be opened in editor, so you will be able to edit and save it.
 
+
 h1. Preview Node Type
 
-To generate the node type definition and preview it, do the follows:
+To generate the node type definition and preview it, do as follows:
 
 *Step 1.* Click *Preview node type* button on _Toolbar_ or go to *Run > Preview node type* from the top menu.
 
@@ -21,18 +23,19 @@ To generate the node type definition and preview it, do the follows:
 
 *Illustration. Preview node type definition*
 
+
 h1. Create Node Type
 
 To create new node type, do as follows:
 * *Step 1.* Click *Deploy node type* button on _Toolbar_ or go to *Run > Deploy node type* on the top menu.
 * *Step 2.* Select required format of node type in the appeared dialog window.
-* *Step 3.* Choose the action in case of such node type is already existed:
+* *Step 3.* Choose the action in case if such node type already exists:
 
- - *ignore if exists* \- if the pointed node type is existed, then ignore the creation operation.
- 
- - *fail if exists* \- if the pointed node type is existed, then fail.
- 
- - *replace if exists* \- if the pointed node type is existed, then replace it with new one.
+- *ignore if exists* \- if the pointed node type, then ignore the creation operation.
+
+- *fail if exists* \- if the pointed node type already exists, then fail.
+
+- *replace if exists* \- if the pointed node type already exists, then replace it with new one.
 
 * *Step 4.* Click *Deploy* button.
 

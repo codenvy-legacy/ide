@@ -7,7 +7,7 @@ To create a folder, do as follows:
 * *Step 4:* Click *Create* to complete creating your new folder.
 
 {note}
-* If any file is selected in the Workspace Panel, there will be a folder created in the parent folder of this file. 
+* If any file is selected in the Workspace Panel, there will be a folder created in the parent folder of this file.
 
 * In case no item is selected in the Workspace Panel, the created folder is placed in the root folder.
 
@@ -24,7 +24,7 @@ To delete a folder, do as follows:
 Files opened in the _Content Panel_ are closed after the folder containing them has been removed.
 
 {note}
-* You cannot remove:
+You cannot remove:
 
 - Workspace root folder;
 
@@ -32,6 +32,8 @@ Files opened in the _Content Panel_ are closed after the folder containing them 
 
 * The "Delete Item(s)" function is disabled in case of selecting the root item and/or multiple items on different levels in the "Workspace Panel".
 {note}
+
+
 
 h1. Rename Folder
 
@@ -42,7 +44,7 @@ To rename a folder, do as follows:
 * *Step 4:* Click *Rename* to accept.
 
 
-If any files are opened but unsaved from the folder which is being renamed or its sub-folder in the _Content Panel_, you can save them after renaming the folder.
+You can rename folders and sub folders containing opened but unsaved files.  You can save them after renaming the folder, no data will be lost.
 
 If the new folder name has been existing in the target folder, you will receive an error message as below.
 
@@ -52,9 +54,12 @@ If the new folder name has been existing in the target folder, you will receive 
 You cannot rename the workspace root folder.
 {note}
 
+
 {warning}
 Remember to undeploy all earlier deployed REST Services within the moved folder or sub-folder before renaming the folder.
 {warning}
+
+
 
 h1. Download Zipped Folder
 
@@ -68,4 +73,3 @@ The zip-archive with folder content is prepared on the server and sent to the cl
 {note}
 The archive uses UTF-8 encoding in entry names. Be sure that your zip extractor supports UTF-8 in file names. The Windows Explorer does not support it, you may use 7zip to unzip the archive. In Linux, the unzip (6.0 or below) command also does not support UTF-8 (depending on distributive). If you use KDE 4 as DE, you may configure Dolphin to use archive as folder by going to "Settings > Configure Dolphin.. > Navigation", and then selecting the "Open archive as folder" checkbox.
 {note}
-

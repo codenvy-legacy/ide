@@ -1,30 +1,32 @@
 The _Template_ file is a combination of HTML code and Groovy code blocks. In eXo IDE, you can create and edit those files in editor.
 
-h1. Create and Edit ECM Template
 
-To create a new ECM template, do as follows:
+h1. Create and Edit Template
+
+To create a new Groovy template, do as follows:
 * *Step 1:* Click the *New* icon on the toolbar and then select *Template* from the drop-down menu; or select *File > New > Template* on the top menu. A new file is opened in the editor.
 * *Step 2:* Add content.
-* *Step 3:* Save the file by selecting *File > Save As* on the top menu, or by clicking the *Save As* icon on the toolbar. 
-Both _Outline Panel_ and Autocomplete form can be used to edit the ECM Template.
+* *Step 3:* Save the file by selecting *File > Save As* on the top menu, or by clicking the *Save As* icon on the toolbar.
+Both _Outline Panel_ and Autocomplete form can be used to edit the Groovy Template.
 
 !groovy_template.png|border=1!
 
 *Illustration. Operations with ECM templates*
 
-h1. View ECM Template's Properties
 
-To view properties of the ECM template, click the *Show Properties* button on the right corner of the toolbar.
+h1. View Template's Properties
 
-h1. Preview ECM Template
+To view properties of the Template, click the *Show Properties* button on the right corner of the toolbar.
+
+
+h1. Preview Template
 
 To preview the ECM template, do as follows:
 
-* *Step 1:* Open your desired ECM template in the _Content Panel_.
+* *Step 1:* Open your desired Groovy template in the _Content Panel_.
 * *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
 The selected template is opened in the _Gadget Container_ of the _Preview Tab_ as below:
 
 !gtmpl_operations.png|border=1!
 
-*Illustration. ECM Templates preview*
-
+*Illustration. Groovy Templates preview*

@@ -1,10 +1,11 @@
-The Google Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In eXo IDE, you can do the following actions on the Google Gadget files: 
+h0. Operations With Google Gadget
+
+The Google Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In eXo IDE, you can do the following actions on the Google Gadget files:
 
 * Create *.xml* files.
 * Edit *.xml* files in the _Code_ or _WYSIWYG Editor_.
 * Preview them in the _Preview Tab_.
-* *Deploy/Undeploy* them on the server through the shindig-library.
-* Add the deployed gadgets to some pages in the portal if you logged in as the administrator.
+
 
 h1. Create Google Gadget
 
@@ -16,49 +17,14 @@ To create the Google Gadget within eXo IDE, do one of the following ways:
 
 3. Open the existing gadget from the local system by selecting *File > Open Local File* on the top menu.
 
-4. Upload the existing gadget directly to JCR by selecting *File > Upload File...* on the top menu.
+4. Upload the existed gadget directly to JCR by selecting *File > Upload File...* on the top menu.
 
-For the third and forth ways, you must select the MIME type as _"application/x-google-gadget"_.
+For the third and forth ways, you must select the MIME type: _"application/x-google-gadget"_.
 
 !ide-gadget_operations.png!
 
 *Illustration. Google Gadget Operations*
 
-h1. Deploy/Undeploy Google Gadget to GateIn
-
-This function is for administrators only.
-
-To deploy the Google Gadget to GateIn portal, do as follows:
-
-* *Step 1:* Open desired Google Gadget file in the _Content Panel_.
-* *Step 2:* Click the *Deploy Gadget to GateIn* button on the toolbar; or select *Run > Deploy Gadget to GateIn* on the top menu.
-
-The deployment request is then sent to the server. In case of the successful deployment, you will receive a notification message in the _Output Tab_ as below:
-
-{screen}
-\[INFO\]/rest/private/ide/gadget/deploy?gadgetURL=http://192.168.0.130:8080/rest/private%2
-Fjcr/repository/dev-monit/Test+Gadget+File.xml&privateContext=/rest/private&publicContext/rest deployed successfully.
- {screen}
-
-It means that gadget was deployed to the portal with the title set in the gadget's '<ModulePrefs title="Hello World\!" />', for example:
-
-!ide-deploy_gadget.png!
-
-*Illustration. Deploy Gadget*
-
-
-To undeploy the Google Gadget, do as follows:
-
-* *Step 1:* Select the Google Gadget file which was deployed in the _Workspace Panel_.
-* *Step 2:* Double-click the selected file to open it in the _Content Panel_.
-* *Step 3:* Click the *UnDeploy Gadget from GateIn* button on the toolbar, or go to *Run > UnDeploy Gadget from GateIn* on the top menu.
-
-If the undeployment is successful, you will receive a message in the _Outline Panel_ as below:
-
-{screen}
-\[INFO\]/rest/private/ide/gadget/undeploy?gadgetURL=http://192.168.0.130:8080/rest/private
-/jcr/repository/dev-monit/Test+Gadget+File.xml&privateContext=/rest/private&publicContext/rest undeployed successfully.
-{screen}
 
 h1. Preview Google Gadget
 
@@ -66,4 +32,3 @@ To preview the Google Gadget, do as follows:
 * *Step 1:* Open your desired Goodgle Gadget file which was previously saved.
 * *Step 2:* Click the *Show Preview* button on the toolbar; or select *Run > Show Preview* on the top menu.
 The gadget is opened in the _Gadget Container_ of the _Preview Tab_ as described in the *Illustration. Google Gadget Operations* above.
-

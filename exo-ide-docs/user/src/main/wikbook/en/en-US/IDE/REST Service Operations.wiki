@@ -1,12 +1,12 @@
-The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the portal, or installing additional programs:
+The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the server, or installing additional programs:
 
 *Table. Accessibility of REST Service Operations*
 || Operation || User with "developer" role || User with "administrator" role ||
 | *Validate* | Enabled | Enabled |
 | *Deploy* | Disabled | Enabled |
 | *Undeploy* | Disabled | Enabled |
-| *Deploy in Sandbox* | Enabled | Enabled  |
-| *Undeploy from Sandbox* | Enabled | Enabled  |
+| *Deploy in Sandbox* | Enabled | Enabled |
+| *Undeploy from Sandbox* | Enabled | Enabled |
 | *Set/Unset Autoload* | Disabled | Enabled |
 | *Run in Sandbox* | Enabled | Enabled |
 | *Launch REST Service* | Disabled | Enabled |
@@ -21,41 +21,45 @@ All _REST Service_ commands are placed at the right part of the toolbar and in t
 
 To clear the _Output Panel_, use the special button at the right top corner of this panel.
 
+
 h1. Validate REST Service
 
 You can verify the REST Service content by using the special validation service before saving.
 To do that, simply click the *Validate REST Service* button, or go to *Run > Validate* on the top menu. In case of no errors in the service, there will be a message in the _Output Tab_:
 
-{screen}\[INFO\]rennes.groovy validated successfully".{screen}
+{code}[INFO]rennes.groovy validated successfully".{code}
+
 
 Otherwise, there will be an error message displayed in the _Output Tab_:
 
-{screen}
+{code}
 [ERROR] rennes.groovy validation failed. Error (400: Bad Request)
 Unexpected error. Error occurs when parse stream, compiler error:
 startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
-@ line 4, column 1.rennes.groovy: 8: unable to resolve class Path , unable to find class for annotation
-@ line 8, column 1.rennes.groovy: 11: unable to resolve class Path , unable to find class for annotation
+@ line 4, column 1.rennes.groovy: 8: unable to resolve classpath , unable to find class for annotation
+@ line 8, column 1.rennes.groovy: 11: unable to resolve classpath , unable to find class for annotation
 @ line 11, column 3.
 3 errors
-{screen}
+{code}
+
 
 You can click the error message in the _Output Panel_ to go to the line with error in the REST Service file. In case the file has been closed, eXo IDE will automatically open it. Make sure that you do not delete or rename this file after the error message has been displayed in the _Outline Panel_.
 
+
 h1. Deploy/Undeploy REST Service
 
-This function is for users with the administrator role only.
+This function is for users with the _administrator's_ role only.
 
 To deploy a REST Service, do as follows:
 
 * *Step 1:* Save the file before deploying.
 * *Step 2:* Open the saved file in the _Content Panel_.
 * *Step 3:* Click the *Deploy REST Service* button on the toolbar; or go to *Run > Deploy*.
-The deployment request is sent to the server. In case of no errors, the message is displayed in the _Output Tab_ as below:
-{screen}\[INFO\]rennes.groovy deployed successfully{screen}
+The deployment request is sent to the server. In case of no errors, the message is displayed in the _Output Tab_ as shown below:
+{code}[INFO]rennes.groovy deployed successfully{code}
 
 Otherwise, there will be an error message, for example:
-{screen}
+{code}
 [ERROR] rennes.groovy deploy failed. Error (400: Bad Request)
 Unexpected error. Error occurs when parse stream, compiler error:
 startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
@@ -65,13 +69,15 @@ find class for annotation
 find class for annotation
 @ line 11, column 3.
 3 errors
-{screen}
+{code}
+
 
 {warning}
 * It is impossible to deploy the service with the registered URI pattern, if the path (including name) of the new service is different from the original one.
 To cope with it, first undeploy the service with the registered URI pattern.
 * It is necessary to validate the Groovy scripts used by the service before deploying it by selecting "Run > Validate" on the top menu.
 {warning}
+
 
 To undeploy a Rest Service, do as follows:
 * *Step 1:* Select the service deployed in the _Workspace_.
@@ -80,7 +86,8 @@ To undeploy a Rest Service, do as follows:
 
 In case of no errors, there is a success message in the _Output Tab_.
 
-{screen}\[INFO\] /repository/collaboration/rennes.groovy undeployed successfully.{screen}
+{code}[INFO] /repository/collaboration/rennes.groovy undeployed successfully.{code}
+
 
 You can deploy multiple REST Services, and double-deploy the services. However, you cannot undeploy services which were not previously deployed. In this case, you will receive an error message from the server as below:
 
@@ -91,23 +98,27 @@ Can not unbind script rennes.groovy, not bound or has wrong mapping to the
 resource class
 {code}
 
+
 {warning}
 Deleting the service will not make it undeploy. Please undeploy the service before deleting it. In other cases, the workaround is to create it again in the same place and then undeploy.
 {warning}
 
+
+
 h1. Use Autoload Property
 
-This function is for users with the administrator role only.
+This function is for users with the _administrators_ role only.
 
-REST Service is deployed automatically on the server after being saved, if the *Autoload* property is set to _True_. You can view this property in the _Property Tab_  by clicking the *Show Properties* button. To set or unset the *Autoload* property, use the *Set Autoload* or *Unset Autoload* commands respectively. These commands are displayed to the current status of the *Autoload* property, so you can invert this property. The default value of the *Autoload* property is set to _False_. For more details, see the illustration below:
+REST Service is deployed automatically on the server after being saved, if the *Autoload* property is set to _True_. You can view this property in the _Property Tab_ by clicking the *Show Properties* button. To manage the *Autoload* property use *Set/Unset Autoload* commands respectively. These commands are displayed to the current status of the *Autoload* property, so you can invert this property. The default value of the *Autoload* property is set to _False_. For more details, see the illustration below:
 
 !ide_change_autoload_property.png!
 
 *Illustration. Change Autoload service property*
 
+
 h1. Launch REST Service with set parameters and Preview Server Console Messages in the _Output Tab_
 
-With eXo IDE, you can not only write and deploy the service, but also make requests with your own _header_, _query_ and _path parameters_ and _body content_ using one of _supported methods_, view _WADL-description_ of method, launch those services methods and view service response in the _Output Tab_. To do that, simply call the *Launch REST Service...* button on the toolbar, or select *Run > Launch REST Service...* on the top menu as follows:
+With eXo IDE, you can not only write and deploy services, but launch these services and view service response in the _Output Tab_. You can view _WADL-description_ of methods, make requests with your own _header_, _query_, _path parameters_ and _body content_ using one of the _supported methods_.  To do that, simply call the *Launch REST Service...* button on the toolbar, or select *Run > Launch REST Service...* on the top menu as follows:
 * *Step 1:* Select the deployed REST Service.
 * *Step 2:* Click the *Launch REST Service...* button to get the REST Service form which is relied on the WADL-description of _REST Service_.
 * *Step 3:* Select and type the path to the service in the *Path* field. Path parameters are enclosed in curly braces.
@@ -123,7 +134,7 @@ You will receive a success message if the path is verified to be correct or an e
 
 To learn about launching REST Service, see the *REST Service operations* illustration above.
 
-*Table. Reproducing service annotations in the *Launch REST Service* dialog*
+*Table. Reproducing service annotations in the \*Launch REST Service* dialog\*
 || REST Service Annotation || Element of *Launch REST Service* dialog ||
 | _@Path_ | The *Path* field |
 | _@GET, @POST,..._ | The *Method* field. |
@@ -134,6 +145,7 @@ To learn about launching REST Service, see the *REST Service operations* illustr
 | _@QueryParam_ | The *Query Parameter* tab of the bottom table. |
 | _@DefaultValue_ | The *By default* column of the bottom table. |
 
+
 h1. Get URL of REST Service
 
 From the *Send request* window, you can also get the URL of REST Service as follows:
@@ -141,11 +153,12 @@ From the *Send request* window, you can also get the URL of REST Service as foll
 * *Step 2:* Click the *Launch REST Service...* button to get the REST Service form.
 * *Step 3:* Click the *Get URL* button to view the REST Service URL.
 
+
 h1. Review of the response headers from REST Service
 
 You can view headers, status code and status text in the _Output Panel_ after sending your requests as below:
 
-{screen}
+{code}
 [OUTPUT] - -Status - - - - - - - -
 200 OK
 - -Headers- - - - - - - -
@@ -154,11 +167,14 @@ Transfer-Encoding : chunked
 Server : Jetty(6.1.x)
 - -Text - - - - - - - - -
 Hello steve
-{screen}
+{code}
 
 
-h1. Deploy to Sandbox, Undeploy from Sanbox, Run in Sandbox
-This function is for users with the both developer and administrator role.
+
+
+h1. Deploy to Sandbox, Undeploy from Sandbox, Run in Sandbox
+
+This function is for users with both developer and administrator role.
 
 In eXo IDE, developers can secure deploy untested REST Service for testing in an isolated environment named _Sandbox_. To do this, click the *Deploy REST Service to Sandbox* button on the toolbar or go to *Run > Deploy to Sandbox* on the top menu.
 
@@ -172,22 +188,23 @@ To undeploy from sandbox, select the *Undeploy REST Service from Sandbox* button
 If REST Service is previously deployed by other user, you will not be able to deploy it.
 {note}
 
+
 To run REST Service faster, you can use the special command *Run > Run in Sandbox* which is a sequence of next operations: *Save*, *Deploy to Sandbox*, *Undeploy from Sandbox*, *Launch REST Service*. Simply click the *Run in Sandbox* button at the right corner of the toolbar, or go to *Run > Run in Sandbox* on the top menu.
+
 
 
 h1. REST Service Discovery
 
-In the eXo IDE, you can explore all REST Services which is available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
+In the eXo IDE, you can explore all REST Services which are available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
 
 !RestServiceDiscovery.png|border=1!
 
 *Illustration. REST Service Discovery form*
 
+
 h1. Configure Classpath
 
-The configuring of classpath means setting the list of paths (source files or folders with sources), that will be available during the compilation of project's sources,
-to which this classpath belongs to. Classpath file is located in the root of the project's directory, but it's not visible in browser tree,
-because can not be directly edited by user. So, to view the sources paths of the project, do as follows:
+The  class path configuration means the setting of paths to the  source files or folders. This class path will be used for project sources compilation. Classpath file is located in the root of the project's directory, but it's not visible in browser tree, because can not be directly edited by user. So, to view the sources paths of the project, do as follows:
 * *Step 1.* Select the created project item in _Workspace Panel_.
 * *Step 2.* Go to *File > Configure Classpath...* on the top menu to open the *Configure Classpath* window as below:
 
@@ -201,6 +218,8 @@ because can not be directly edited by user. So, to view the sources paths of the
 {note}
 If selected in "Workspace Panel" item is not a project or part of it, then you will get an error message.
 {note}
+
+
 
 
 h2. Add Source to Classpath
@@ -218,9 +237,12 @@ To add source to classpath, do as follows:
 Use "CTRL" key to select more than one item in the tree.
 {tip}
 
+
 {note}
 The "Ok" button is disabled if workspace root folder is selected in the "Choose source path" dialog.
 {note}
+
+
 
 h2. Remove Source from Classpath
 
@@ -229,6 +251,8 @@ To remove source(s) from project's classpath, select source in the tree of *Conf
 {note}
 The "Remove" button is disabled if there is no source selected in the tree.
 {note}
+
+
 
 h1. Example: REST service with complex media types output preview
 
@@ -254,7 +278,7 @@ public class TestService {
     @HeaderParam("Test-Header1") String testHeader,
     @QueryParam("Test Query Parameter 1") String testQueryParam,
     String body) {
-      return "PathParam 1:" + pathParam + "; Test Query Parameter 1: " + testQueryParam 
+      return "PathParam 1:" + pathParam + "; Test Query Parameter 1: " + testQueryParam
       + "; Test-Header1: " + testHeader + "; Body: " + body;
   }
 
@@ -267,7 +291,7 @@ public class TestService {
     @HeaderParam("Test-Header2") String testHeader,
     @QueryParam("Test Query Parameter 2") String testQueryParam,
     String body) {
-      return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam 
+      return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam
       + "; Test-Header2: " + testHeader + "; Body: " + body;
   }
 
@@ -289,11 +313,11 @@ The OPTIONS-request is sent. You will see the response in the _Output Tab_. For 
             </response>
          </method>
          <resource path="InnerPath/{pathParam}">
-            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" 
+            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template"
        name="pathParam" />
             <method name="POST" id="post1">
                <request>
-                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header"
        name="Test-Header1" />
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
                      name="Test Query Parameter 1" />
@@ -305,7 +329,7 @@ The OPTIONS-request is sent. You will see the response in the _Output Tab_. For 
             </method>
             <method name="POST" id="post2">
                <request>
-                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header" 
+                  <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="header"
        name="Test-Header2" />
                   <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query"
                      name="Test Query Parameter 2" />
@@ -324,13 +348,14 @@ The OPTIONS-request is sent. You will see the response in the _Output Tab_. For 
 
 {code}"/testMediaTypes/InnerPath/{pathParam}"{code}
 
+
 * *Step 5:* Select the *Response Media Type =* "text/html" item.
 * *Step 6:* Enter "/testMediaTypes/InnerPath/value1" in the *Path* field. In the _Query Parameter_ tab, set "Test Query Parameter 1"="value2". In the _Header Parameter_ tab, set "Test-Header1"="value3". In the _Body_ tab, type "example".
 * *Step 7:* Click the *Send* button.
 
 The request is created and then sent. You will see the response in the _Output Tab_:
 
-{screen}
+{code}
 [OUTPUT] - -Status - - - - - - - -
 200 OK
 - -Headers- - - - - - - -
@@ -340,5 +365,4 @@ Transfer-Encoding : chunked
 Date : Mon, 05 Jul 2010 09:06:55 GMT
 - -Text - - - - - - - - -
 PathParam 1:value1; Test Query Parameter 1: value2; Test-Header1: value3; Body: example
-{screen}
-
+{code}

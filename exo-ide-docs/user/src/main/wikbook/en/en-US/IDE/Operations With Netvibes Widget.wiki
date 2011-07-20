@@ -4,8 +4,10 @@ The UWA widget consists of combinations from XHTML/XML, JavaScript/Ajax, CSS cod
 In eXo IDE, you can create the Netvibes widget, preview it and deploy to [Netvibes Ecosystem|http://eco.netvibes.com].
 
 {info}
-If you want to get acquainted with writing your own widgets, refer page http://dev.netvibes.com/doc/.
+If you want to get acquainted with writing your own widgets, refer [here|http://dev.netvibes.com/doc/].
 {info}
+
+
 
 h1. Create Netvibes Widget
 
@@ -17,6 +19,7 @@ The new Netvibes Widget file is opened in the editor, enabling you to edit and s
 
 *Illustration. Create new Netvibes widget*
 
+
 h1. Preview Netvibes Widget
 
 To preview the Netvibes widget, do as follows:
@@ -24,6 +27,7 @@ To preview the Netvibes widget, do as follows:
 * *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
 
 The selected widget is opened in the _Preview Tab_.
+
 
 h1. Deploy Netvibes Widget To Netvibes Ecosystem
 
@@ -41,7 +45,9 @@ There are a couple of ways to deploy a _Netvibes widget_. You can do it manually
 * *Step 4:* Fill-in the form and finish the process. The widget is now available in the ecosystem.
 
 
-*For deployment using our wizard, you need to contact Netvibes at [business@netvibes.com|mailto:business@netvibes.com] and ask for your API key.*
+
+
+*For deployment using our wizard, you need to contact Netvibes at* *[business@netvibes.com|mailto:business@netvibes.com]* *and ask for your API key.*
 
 
 * *Step 1:* Get the url of your netvibes widget. To do this, select your widget and click on the menu *View > Get URL*. Copy the url..
@@ -52,12 +58,11 @@ There are a couple of ways to deploy a _Netvibes widget_. You can do it manually
 
 *Illustration. Deploy UWA widget to Netvibes Ecosystem*
 
-* *Step 3:* Paste the url of your gadget, and don’t forget to remove the "/*private*" part from it, or netvibes will not be able to access it
+* *Step 3:* Paste the url of your gadget, and don’t forget to remove the “/*private*” part from it, or netvibes will not be able to access it
 
 * *Step 4:* Enter the information about the widget in the fields in the *Step 2* form. The fields marked with asterisks (*\**), including "*Title*", "*Description*", "*Main language*", "*Most appropriate region*" and "*Most appropriate category*" are required.
 
 Click *Next* after completing your details.
-
 !step2.png|border=1!
 
 *Illustration. Dialog "Step 2. Detailed Information"*
@@ -68,7 +73,7 @@ Click *Next* after completing your details.
 
 *Illustration. Dialog "Step 3. Private Information"*
 
-Details: 
+Details:
 
 || Field || Description ||
 | Login | Your login at Netvibes Ecosystem. |
@@ -80,21 +85,26 @@ Details:
 Click the "Back" button to return to the previous step to edit your entered information.
 {tip}
 
+
 * *Step 6:* Click the *Deploy* button to start deploying the widget to the _Netvibes Ecosystem_.
 
-The result is displayed in the _Output Panel_. If the deployment is successful, you will receive the message below:
+The result will be displayed in the _Output Panel_. If the deployment is successful, you will receive the message as shown below:
 
-{screen}
+{code}
 \[INFO\]*[http://78.137.4.16:53081/rest/ide-vfs-webdav/repository/dev-monit/TestWidget.html] deployed successfully.
-{screen}
+{code}
+
 
 If unsuccessful, you will receive the error message which varies, depending on each case.
 
-{screen}\[ERROR\] Error: The link already exists.{screen}
+{code}\[ERROR\] Error: The link already exists.{code}
+
 
 {info}
-The deployed widget can be found at the Ecosystem page (http://eco.netvibes.com/mine/widgets) on the "My creations" tab.
+The deployed widget can be found at the Ecosystem page ([http://eco.netvibes.com/mine/widgets]) on the "My creations" tab.
 {info}
+
+
 
 h1. View Netvibes Documentation
 
@@ -102,6 +112,6 @@ There is a convenient way to view the developer's documentation, while creating 
 
 Top menu item and a panel with loaded documentation will be opened at the right part of the application.
 
-!netvibes-documentation.png|border=1,width=949,height=338!
 
+!netvibes-documentation.png|border=1!
 *Illustration. View Netvibes Documentation*

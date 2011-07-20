@@ -2,6 +2,7 @@ h1. View information about eXo IDE
 
 To view information about the current version of eXo IDE, go to *Help > About* on the top menu.
 
+
 h1. Customize Toolbar
 
 If you want to customize the toolbar, such as adding or removing some buttons, changing their positions or delimiters, select *Window > Customize Toolbar...* on the top menu. This dialog will show typical interfaces and commands set for such operations:
@@ -10,11 +11,12 @@ If you want to customize the toolbar, such as adding or removing some buttons, c
 
 *Illustration. Customize _Toolbar_*
 
+
 h1. Customize Hotkeys
 
-The hotkey manager enables you to customize hotkeys applied for eXo IDE. If your customized hotkeys are matching with browser hotkeys, only eXo IDE hotkeys work out.
+The hotkey manager enables you to customize hotkeys applied for eXo IDE. If your customized hotkeys are matching with browser hotkeys, only eXo IDE hotkeys will work out.
 
-If hotkeys of the browser and of eXo IDE are not overidden, they will work as usual.
+If hotkeys of the browser and of eXo IDE are not overridden, they will work as usual.
 
 To customize your own hotkeys, do as follows:
 
@@ -24,11 +26,11 @@ To customize your own hotkeys, do as follows:
 
 *Illustration. Customize hotkeys*
 
-The *Customize hotkeys* dialog consists of the list grid with all commands divided to groups and their hotkeys. 
+The *Customize hotkeys* dialog consists of the list grid with all commands divided to groups and their hotkeys.
 
 * *Step 2:* Click your desired action in the *Customize hotkeys* dialog.
 * *Step 3:* Enter the hotkeys combination in the *Hotkey* field. The first key should be "Ctrl" or "Alt".
-If the hotkeys combination is valid, the *Bind* button will be active. Otherwise, the error message is shown under the *Hotkey* field. For example:
+If the hotkeys combination is not already assigned to another command, the *Bind* button will be active. Otherwise, the error message is shown under the *Hotkey* field. For example:
 
 !customize-hotkeys-error.png!
 
@@ -50,6 +52,7 @@ To unbind hotkeys for one command, do as follows:
 
 * If you still want to bind the hotkeys which are the same as the predefined hotkeys, except those of the "Editor hotkeys" group, first select and unbind the predefined hotkeys.
 {note}
+
 
 The following is the list of predefined hotkeys:
 
@@ -77,4 +80,3 @@ The following is the list of predefined hotkeys:
 | *Ctrl+A* | Select all |
 | *Ctrl+Home* | Go to the start of document |
 | *Ctrl+End* | Go to the end of document |
-

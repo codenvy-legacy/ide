@@ -1,9 +1,9 @@
-eXo IDE enables you to search by file content and MIME type. The file search in repository is based on _[Lucene|http://wiki.exoplatform.org/xwiki/bin/view/JCR/Fulltext+Search]_ and depends on _MIME type_ of files. To find some files, do as follows:
+eXo IDE enables you to search by file content and MIME type. To find, do as follows:
 * *Step 1:* Select the target folder or root folder in the _Workspace Panel_.
 * *Step 2:* Click the *Search...* icon on the toolbar; or go to *File > Search...* on the top menu to open the *Search* dialog.
 * *Step 3:* Set parameters for two criteria fields, including *Containing text* and *MIME type*. If those fields are empty, the gadget will display all files in the search results.
 * *Step 4:* Click *Search*.
-The found results are displayed in the _Search Panel_ on the left of gadget:
+The found results are displayed in the _Search Panel_ on the left part of the application:
 
 !ide-search.png!
 
@@ -12,4 +12,3 @@ The found results are displayed in the _Search Panel_ on the left of gadget:
 Within the _Search Panel_, you can only open found files, edit, save, save as template, or perform some specific operations, such as deploying for services, and going to the parent folder in the _Workspace Panel_.
 
 If you maximize the _Editor Panel_, _Properties, Output_, _Outline_ or other panels, the default perspective will be restored to show the _Search Tab_ when you receive search results.
-

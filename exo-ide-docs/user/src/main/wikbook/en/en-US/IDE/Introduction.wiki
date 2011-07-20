@@ -1,22 +1,19 @@
-eXo IDE is a powerful Web application which provides a rich environment for developing different content, scripts, and services. eXo IDE has the modular architecture and can be built and delivered as either the standalone web application or the Google Gadget plugged into the portal environment.
+eXo IDE is a powerful Web application which provides a rich environment for developing different content, scripts, and services. It requires no additional installations, runs in a browser and allows to access and work with files online from anywhere. eXo IDE offers:
 
-The eXo IDE User Guide aims at providing explanations and step-by-step instructions of functions in eXo IDE. Information in this guide is organized and based on the eXo IDE gadget deployed in eXo Platform.
+* Work with the Remote File System through _Virtual File System_ including Browsing, File Locking, File Search, Versioning.
+* Code Editor with syntax highlighting for many popular languages ??and advanced features such as: Code Autocomplete, Code Outline and WYSIWYG Editor for HTML
+* Support for multiple programming and descriptive languages such as: JavaScript, HTML, XML, CSS, Groovy, etc.
+* Tools for developing client side applications including technologies such as Netvibes Widgets, Google Gadgets and Groovy Templates;
+* Development of server-side applications, running, debugging, and interaction with the client side via REST Service.
 
-h1. Access eXo IDE
+The eXo IDE User Guide aims at providing explanations and step-by-step instructions of functions in eXo IDE.
 
-Before working with the eXo IDE gadget, make sure that you are logged in the portal as the role of an administrator or developer. If logged in as the administrator, you can do all functions; while as the developer, you still have the same abilities as the administrator, but can only deploy and run REST services in sandbox and cannot deploy the Google gadgets in the portal.  
-
-Next, hover your cursor on *My Spaces* on the administration bar and then select *Developers > IDE* to open the eXo IDE gadget.
-
-!eXo_IDE_gadget_in_platform.png!
-
-*Illustration. Access the eXo IDE gadget in eXo Platform 3.0*
+eXo IDE serves two types of J2EE roles: *administrators* and *developers*. Before working with the eXo IDE, make sure (ask your system admin) that your credentials contain one of the listed roles. eXo IDE offers pretty the same functionality for them except that *developers* can not deploy theirs REST services on common environment and uses kind of "sandbox" to deploy them.
 
 h1. Requirements
 
 Supported Web browsers:
 
-* Mozilla Firefox 3.0\+
-* Internet Explorer 7.0\+
-* Safari 3.2\+
-* Google Chrome 5.0\+
+* Mozilla Firefox 3.6\+
+* Safari 5.0\+
+* Google Chrome 11.0\+

@@ -20,14 +20,17 @@ h1. Search Files
 h1. REST Service Operations
 {include:document="IDE/REST Service Operations.wiki" /}
 
+h1. GIT Version Control System
+{include:document="IDE/GIT Version Control System.wiki" /}
+
 h1. Operations With POGO File
 {include:document="IDE/POGO File Operations.wiki" /}
 
 h1. Operations With Google Gadget
 {include:document="IDE/Google Gadget Operations.wiki" /}
 
-h1. Operations With ECM Groovy Templates 
-{include:document="IDE/OperationsWithECMGroovyTemplates.wiki" /}
+h1. Operations With Templates 
+{include:document="IDE/Operations With Templates.wiki" /}
 
 h1. Operations With Netvibes Widget 
 {include:document="IDE/Operations With Netvibes Widget.wiki" /}
@@ -38,6 +41,9 @@ h1. Chromattic Data Object Usage
 h1. Versioning
 {include:document="IDE/Versioning.wiki" /}
 
+h1. PaaS Deployment
+{include:document="IDE/PaaS Deployment.wiki" /}
+
 h1. Miscellaneous and Tips
 {include:document="IDE/Miscellaneous.wiki" /}
 
@@ -47,4 +53,3 @@ h1. Links
 * [What are gadgets powered by Google|http://www.google.com/webmasters/gadgets]
 * [RESTful Web Services|http://www.oracle.com/technetwork/articles/javase/index-137171.html]
 * [Netvibes Documentation|http://dev.netvibes.com/doc/]
-
