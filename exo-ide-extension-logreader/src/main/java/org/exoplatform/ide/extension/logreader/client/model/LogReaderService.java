@@ -58,24 +58,43 @@ public class LogReaderService
       instance = this;
    }
 
+   /**
+    * Get last log file
+    * @param callback
+    */
    public void getLastLog(AsyncRequestCallback<LogEntry> callback)
    {
       String url = restContext + "/log-reader-service/last-log";
       sendRequest(url, callback);
    }
 
+   /**
+    * Get previous log file for current log file
+    * @param token of current log
+    * @param callback
+    */
    public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback)
    {
       String url = restContext + "/log-reader-service/prev-log?token=" + token;
       sendRequest(url, callback);
    }
 
+   /**
+    * Get nex log file for current log
+    * @param token of current log
+    * @param callback
+    */
    public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback)
    {
       String url = restContext + "/log-reader-service/next-log?token=" + token;
       sendRequest(url, callback);
    }
 
+   /**
+    * Update log
+    * @param token of log
+    * @param callback
+    */
    public void getLog(String token, AsyncRequestCallback<LogEntry> callback)
    {
       String url = restContext + "/log-reader-service/log?token=" + token;

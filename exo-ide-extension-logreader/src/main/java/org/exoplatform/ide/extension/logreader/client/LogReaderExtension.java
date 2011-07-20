@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.logreader.client.control.LogReaderControl;
 import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
 
 /**
+ * IDE Extension for log reader feature.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *

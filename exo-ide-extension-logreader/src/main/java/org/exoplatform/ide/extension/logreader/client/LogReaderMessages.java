@@ -29,9 +29,6 @@ import com.google.gwt.i18n.client.Messages;
 public interface LogReaderMessages extends Messages
 {
 
-//   @Key("log.reader.next.button")
-//   String getNextButtonMessage(int count);
-   
    @Key("log.reader.next")
    String getNextLogButton();
    
@@ -55,11 +52,5 @@ public interface LogReaderMessages extends Messages
    
    @Key("log.reder.settings.data")
    String getDate();
-   
-//   @Key("log.reader.time.label")
-//   String getTimeLabelTitle();
-//   
-//   @Key("log.reader.settings.title")
-//   String getSettingsTitle();
    
 }

@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -48,15 +47,15 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
       String ID = "ideExtensionLogReaderView";
 
       HasClickHandlers getNexLogButton();
-      
+
       HasClickHandlers getPrevLogButton();
-      
+
       HasClickHandlers getRefreshLogButton();
 
       void addLog(String logContent);
 
       void setPrevLogButtonEnabled(boolean enabled);
-      
+
       void setNextLogButtonEnabled(boolean enabled);
 
    }
@@ -99,30 +98,30 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void bind()
    {
-      
+
       display.getNexLogButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
             getNextLog();
          }
       });
-      
+
       display.getPrevLogButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
             prevLog();
          }
       });
-      
+
       display.getRefreshLogButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
@@ -149,7 +148,7 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
    }
 
    /**
-    * 
+    * Get previous log
     */
    private void prevLog()
    {
@@ -164,30 +163,13 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
             updateButtonState(result);
          }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException ex = (ServerException)exception;
-               if ("Previous token not found.".equals(ex.getMessage()))
-               {
-                  display.setPrevLogButtonEnabled(false);
-               }
-               else
-                  super.onFailure(exception);
-            }
-            else
-            {
-               super.onFailure(exception);
-            }
-         }
       });
    }
-   
+
+   /**
+    * Update log navigation control enabling
+    * @param log
+    */
    private void updateButtonState(LogEntry log)
    {
       display.setNextLogButtonEnabled(log.isHasNext());
@@ -213,6 +195,9 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
       });
    }
 
+   /**
+    * Get next log
+    */
    private void getNextLog()
    {
       LogReaderService.get().getNextLog(currentToken, new AsyncRequestCallback<LogEntry>()
@@ -224,29 +209,6 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
             currentToken = result.getToken();
             display.addLog(result.getContent());
             updateButtonState(result);
-         }
-
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-
-            if (exception instanceof ServerException)
-            {
-               ServerException ex = (ServerException)exception;
-               if ("Next token not found.".equals(ex.getMessage()))
-               {
-                  //next log file not exist, so skip error 
-               }
-               else
-                  super.onFailure(exception);
-            }
-            else
-            {
-               super.onFailure(exception);
-            }
          }
       });
    }
