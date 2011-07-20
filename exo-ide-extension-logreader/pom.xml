@@ -40,9 +40,9 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform</groupId>
+         <groupId>org.exoplatform.log-reader</groupId>
          <artifactId>log-reader-service</artifactId>
-         <version>1.0-M1-SNAPSHOT</version>
+         <version>1.0-M1</version>
       </dependency>
 
    </dependencies>
