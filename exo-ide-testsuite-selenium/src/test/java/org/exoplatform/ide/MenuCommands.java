@@ -113,21 +113,23 @@ public interface MenuCommands
 
    public interface View
    {
-      public static final String VIEW = "View";
+      String VIEW = "View";
 
-      public static final String GO_TO_FOLDER = "Go to Folder";
+      String GO_TO_FOLDER = "Go to Folder";
 
-      public static final String GET_URL = "Get URL...";
+      String GET_URL = "Get URL...";
 
-      public static final String SHOW_PROPERTIES = "Properties";
+      String SHOW_PROPERTIES = "Properties";
 
-      public static final String VERSION_HISTORY = "Version History...";
+      String VERSION_HISTORY = "Version History...";
 
-      public static final String VERSION_LIST = "Version...";
+      String VERSION_LIST = "Version...";
 
-      public static final String NEWER_VERSION = "Newer Version";
+      String NEWER_VERSION = "Newer Version";
 
-      public static final String OLDER_VERSION = "Older Version";
+      String OLDER_VERSION = "Older Version";
+      
+      String LOG_READER = "LogReader";
 
    }
 
