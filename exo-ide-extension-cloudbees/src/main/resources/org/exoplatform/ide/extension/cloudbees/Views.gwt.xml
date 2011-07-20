@@ -24,8 +24,8 @@
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.extension.cloudbees.client.initialize.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.initialize.DeployApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter.Display" />
    </replace-with>
    
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoView">

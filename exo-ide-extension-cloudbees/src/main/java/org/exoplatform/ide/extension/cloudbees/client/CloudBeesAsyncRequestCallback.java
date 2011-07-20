@@ -68,8 +68,8 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
          //and explanation, that user not autherised in text message,
          //that's why we must parse text message
          final String exceptionMsg = serverException.getMessage();
-         if (HTTPStatus.UNAUTHORIZED == serverException.getHTTPStatus() 
-                  || exceptionMsg.startsWith("AuthFailure") && exceptionMsg.contains("400"))
+         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()  && serverException.getMessage() != null
+                  && exceptionMsg.contains("AuthFailure"))
          {
             eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));
             return;

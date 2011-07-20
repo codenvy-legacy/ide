@@ -123,6 +123,9 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("deployApplication.appInfo")
    String deployApplicationInfo();
    
+   @Key("deployApplication.failure")
+   String deployApplicationFailureMessage();
+   
    /*
     * ApplicationInfoView
     */

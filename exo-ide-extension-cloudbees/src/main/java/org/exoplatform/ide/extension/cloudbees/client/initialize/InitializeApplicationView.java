@@ -21,7 +21,7 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
  * @version $Id: ApplicationNameView.java Jun 27, 2011 12:03:57 PM vereshchaka $
  *
  */
-public class DeployApplicationView extends ViewImpl implements DeployApplicationPresenter.Display
+public class InitializeApplicationView extends ViewImpl implements InitializeApplicationPresenter.Display
 {
    private static final String ID = "ideCreateApplicationView";
 
@@ -41,7 +41,7 @@ public class DeployApplicationView extends ViewImpl implements DeployApplication
 
    private static ApplicationNameViewUiBinder uiBinder = GWT.create(ApplicationNameViewUiBinder.class);
 
-   interface ApplicationNameViewUiBinder extends UiBinder<Widget, DeployApplicationView>
+   interface ApplicationNameViewUiBinder extends UiBinder<Widget, InitializeApplicationView>
    {
    }
 
@@ -75,7 +75,7 @@ public class DeployApplicationView extends ViewImpl implements DeployApplication
    @UiField
    ImageButton cancelButton;
 
-   public DeployApplicationView()
+   public InitializeApplicationView()
    {
       super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.appNameTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
