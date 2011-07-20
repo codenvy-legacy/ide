@@ -24,13 +24,7 @@ setlocal ENABLEDELAYEDEXPANSION
 for %%i in ( !%~f0! )         do set BIN_DIR=%%~dpi
 for %%i in ( !%BIN_DIR%\..! ) do set TOMCAT_HOME=%%~dpni
 
-rem Sets some variables
-set LOG_OPTS="-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.Log4JLogger"
-set SECURITY_OPTS="-Djava.security.auth.login.config=%TOMCAT_HOME%\conf\jaas.conf"
-set EXO_OPTS="-Djavasrc=%JAVA_HOME%\src.zip" "-Djre.lib=%JAVA_HOME%\jre\lib -Dorg.exoplatform.mimetypes=conf\mimetypes.properties -Dorg.exoplatform.ide.git.repo-dir=git -Dorg.exoplatform.ide.server.fs-root-path=git"
-set JAVA_OPTS=-Xshare:auto -Xms128m -Xmx512m %LOG_OPTS% %SECURITY_OPTS% %EXO_OPTS%
-
-
+rem Sets some variable
 rem Launches the server
 cd %BIN_DIR%
 call catalina.bat %*
