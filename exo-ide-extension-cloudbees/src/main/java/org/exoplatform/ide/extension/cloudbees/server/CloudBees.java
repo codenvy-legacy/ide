@@ -37,10 +37,15 @@ import org.exoplatform.services.security.IdentityConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -67,6 +72,8 @@ public class CloudBees
       {
       }
    }
+
+   private static UploadProgress UPLOAD_PROGRESS = new DummyUploadProgress();
 
    private RepositoryService repositoryService;
    private String workspace;
@@ -125,21 +132,102 @@ public class CloudBees
       return domains;
    }
 
-   public Map<String, String> warDeploy(String appId, String warFile, String environment, String message)
-      throws Exception /* from BeesClient */
+   /**
+    * @param appId id of application
+    * @param message message that describes application
+    * @param workDir directory that contains source code
+    * @param war URL to pre-builded war file
+    * @return
+    * @throws Exception any error from BeesClient
+    */
+   public Map<String, String> createApplication(String appId, String message, File workDir, URL war) throws Exception /* from BeesClient */
    {
+      if (war == null)
+         throw new IllegalArgumentException("Location to WAR file required. ");
+
+      File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
-      beesClient.applicationDeployWar(appId, environment, null, warFile, null, false, new DummyUploadProgress());
+      beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(ainfo);
-      // NOTE : Maven structure expected
-      // /myapp
-      //    /src
-      //    /target
-      //       myapp.war
-      File workDir = new File(warFile).getParentFile().getParentFile(); // Go two levels up.
-      writeApplicationId(workDir, appId);
+      if (workDir != null && workDir.exists())
+         writeApplicationId(workDir, appId);
+      if (warFile.exists())
+         warFile.delete();
       return info;
+   }
+
+   /**
+    * @param appId id of application
+    * @param message message that describes update
+    * @param workDir directory that contains source code
+    * @param war URL to pre-builded war file
+    * @return
+    * @throws Exception any error from BeesClient
+    */
+   public Map<String, String> updateApplication(String appId, String message, File workDir, URL war) throws Exception /* from BeesClient */
+   {
+      if (war == null)
+         throw new IllegalArgumentException("Location to WAR file required. ");
+      if (appId == null || appId.isEmpty())
+      {
+         appId = detectApplicationId(workDir);
+         if (appId == null || appId.isEmpty())
+            throw new IllegalStateException("Not cloudbees application. ");
+      }
+      File warFile = downloadWarFile(appId, war);
+      BeesClient beesClient = getBeesClient();
+      beesClient.applicationDeployWar(appId, message, null, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
+      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
+      Map<String, String> info = toMap(ainfo);
+      if (warFile.exists())
+         warFile.delete();
+      return info;
+   }
+
+   private File downloadWarFile(String app, URL url) throws IOException
+   {
+      File war = File.createTempFile("bees_" + app.replace('/', '_'), ".war");
+      URLConnection conn = null;
+      String protocol = url.getProtocol().toLowerCase();
+      try
+      {
+         conn = url.openConnection();
+         if ("http".equals(protocol) || "https".equals(protocol))
+         {
+            HttpURLConnection http = (HttpURLConnection)conn;
+            http.setInstanceFollowRedirects(false);
+            http.setRequestMethod("GET");
+         }
+         InputStream input = conn.getInputStream();
+         FileOutputStream foutput = null;
+         try
+         {
+            foutput = new FileOutputStream(war);
+            byte[] b = new byte[1024];
+            int r;
+            while ((r = input.read(b)) != -1)
+               foutput.write(b, 0, r);
+         }
+         finally
+         {
+            try
+            {
+               if (foutput != null)
+                  foutput.close();
+            }
+            finally
+            {
+               input.close();
+            }
+         }
+      }
+      finally
+      {
+         if (conn != null && "http".equals(protocol) || "https".equals(protocol))
+            ((HttpURLConnection)conn).disconnect();
+      }
+      return war;
    }
 
    public Map<String, String> applicationInfo(String appId, File workDir) throws Exception /* from BeesClient */
@@ -167,6 +255,10 @@ public class CloudBees
       ApplicationDeleteResponse r = beesClient.applicationDelete(appId);
       if (!r.isDeleted())
          throw new RuntimeException("Unable delete application " + appId + ". ");
+      String filename = ".cloudbees-application";
+      File idfile = new File(workDir, filename);
+      if (idfile.exists())
+         idfile.delete();
    }
 
    public List<String> listApplications() throws Exception /* from BeesClient */

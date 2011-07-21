@@ -22,6 +22,7 @@ import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -79,17 +80,34 @@ public class CloudBeesService
       return cloudbees.getDomains();
    }
 
-   @Path("apps/war-deploy")
+   @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> warDeploy( //
+   public Map<String, String> createApplication( //
       @QueryParam("appid") String appId, //
-      @QueryParam("war") FSLocation warFile, //
       @QueryParam("message") String message, // Optional
+      @QueryParam("workdir") FSLocation workDir, //
+      @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws Exception
    {
-      return cloudbees.warDeploy(appId, warFile.getLocalPath(uriInfo), null, message);
+      return cloudbees.createApplication(appId, message, workDir != null ? new File(workDir.getLocalPath(uriInfo))
+         : null, war);
+   }
+
+   @Path("apps/update")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> updateApplication( //
+      @QueryParam("appid") String appId, //
+      @QueryParam("message") String message, // Optional
+      @QueryParam("workdir") FSLocation workDir, //
+      @QueryParam("war") URL war, //
+      @Context UriInfo uriInfo //
+   ) throws Exception
+   {
+      return cloudbees.updateApplication(appId, message, workDir != null ? new File(workDir.getLocalPath(uriInfo))
+         : null, war);
    }
 
    @Path("apps/info")
