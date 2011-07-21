@@ -16,12 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.server.rest;
+package org.exoplatform.ide.extension.jenkins.server.rest;
 
-import org.exoplatfrom.ide.extension.jenkins.server.JenkinsClient;
-import org.exoplatfrom.ide.extension.jenkins.server.JenkinsException;
-import org.exoplatfrom.ide.extension.jenkins.shared.Job;
-import org.exoplatfrom.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
+import org.exoplatform.ide.extension.jenkins.shared.Job;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 import java.io.IOException;
 import java.util.Map;

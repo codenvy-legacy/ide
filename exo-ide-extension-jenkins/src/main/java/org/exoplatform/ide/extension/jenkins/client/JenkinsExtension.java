@@ -16,56 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.shared;
+package org.exoplatform.ide.extension.jenkins.client;
+
+import org.exoplatform.ide.client.framework.module.Extension;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
+ *
  */
-public class Job
+public class JenkinsExtension extends Extension
 {
-   private String name;
-   private String buildUrl;
-   private String statusUrl;
 
-   public Job(String name, String buildUrl, String statusUrl)
+   /**
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
+    */
+   @Override
+   public void initialize()
    {
-      this.name = name;
-      this.buildUrl = buildUrl;
-      this.statusUrl = statusUrl;
+      System.out.println("JenkinsExtension.initialize()");
    }
 
-   public Job()
-   {
-   }
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   public String getBuildUrl()
-   {
-      return buildUrl;
-   }
-
-   public void setBuildUrl(String buildUrl)
-   {
-      this.buildUrl = buildUrl;
-   }
-
-   public String getStatusUrl()
-   {
-      return statusUrl;
-   }
-
-   public void setStatusUrl(String statusUrl)
-   {
-      this.statusUrl = statusUrl;
-   }
 }

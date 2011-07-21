@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.server;
+package org.exoplatform.ide.extension.jenkins.server;
 
-import org.exoplatfrom.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;

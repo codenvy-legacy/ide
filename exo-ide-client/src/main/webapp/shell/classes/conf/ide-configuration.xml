@@ -44,6 +44,10 @@
    </component>
    
    <component>
+     <type>org.exoplatfrom.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+   </component>
+   
+   <component>
      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
 

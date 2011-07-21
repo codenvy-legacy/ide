@@ -71,6 +71,7 @@
    <inherits name='org.exoplatform.ide.extension.java.JavaExtension' />
    <inherits name='org.exoplatform.ide.extension.ruby.RubyExtension' />
    <inherits name='org.exoplatform.ide.extension.logreader.LogReaderExtension' />
+   <inherits name='org.exoplatform.ide.extension.jenkins.JenkinsExtension' />
 
 	<inherits name='org.exoplatform.ide.Views' />
 

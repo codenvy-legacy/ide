@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.server.rest;
+package org.exoplatform.ide.extension.jenkins.server.rest;
 
-import org.exoplatfrom.ide.extension.jenkins.server.JenkinsException;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

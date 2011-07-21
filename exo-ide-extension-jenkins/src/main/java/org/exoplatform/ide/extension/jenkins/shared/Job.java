@@ -16,45 +16,56 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.server.rest;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+package org.exoplatform.ide.extension.jenkins.shared;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JenkinsApplication extends Application
+public class Job
 {
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+   private String name;
+   private String buildUrl;
+   private String statusUrl;
 
-   public JenkinsApplication()
+   public Job(String name, String buildUrl, String statusUrl)
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(JenkinsService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new JenkinsExceptionMapper());
+      this.name = name;
+      this.buildUrl = buildUrl;
+      this.statusUrl = statusUrl;
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
+   public Job()
    {
-      return classes;
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
+   public String getName()
    {
-      return singletons;
+      return name;
+   }
+
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   public String getBuildUrl()
+   {
+      return buildUrl;
+   }
+
+   public void setBuildUrl(String buildUrl)
+   {
+      this.buildUrl = buildUrl;
+   }
+
+   public String getStatusUrl()
+   {
+      return statusUrl;
+   }
+
+   public void setStatusUrl(String statusUrl)
+   {
+      this.statusUrl = statusUrl;
    }
 }

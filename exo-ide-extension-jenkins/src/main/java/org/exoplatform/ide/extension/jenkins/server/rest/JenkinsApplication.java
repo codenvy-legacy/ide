@@ -16,40 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatfrom.ide.extension.jenkins.server;
+package org.exoplatform.ide.extension.jenkins.server.rest;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@SuppressWarnings("serial")
-public class JenkinsException extends Exception
+public class JenkinsApplication extends Application
 {
-   /** HTTP status of response from Jenkins. */
-   private final int responseStatus;
+   private Set<Class<?>> classes;
+   private Set<Object> singletons;
 
-   /** Content type of response from Jenkins. */
-   private final String contentType;
+   public JenkinsApplication()
+   {
+      classes = new HashSet<Class<?>>(1);
+      classes.add(JenkinsService.class);
+      singletons = new HashSet<Object>(1);
+      singletons.add(new JenkinsExceptionMapper());
+   }
 
    /**
-    * @param responseStatus HTTP status of response from Jenkins
-    * @param message text message
-    * @param contentType content type of response from Jenkins
+    * @see javax.ws.rs.core.Application#getClasses()
     */
-   public JenkinsException(int responseStatus, String message, String contentType)
+   @Override
+   public Set<Class<?>> getClasses()
    {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
+      return classes;
    }
 
-   public int getResponseStatus()
+   /**
+    * @see javax.ws.rs.core.Application#getSingletons()
+    */
+   @Override
+   public Set<Object> getSingletons()
    {
-      return responseStatus;
-   }
-
-   public String getContentType()
-   {
-      return contentType;
+      return singletons;
    }
 }
