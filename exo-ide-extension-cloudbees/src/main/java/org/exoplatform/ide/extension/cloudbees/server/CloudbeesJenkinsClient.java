@@ -20,9 +20,9 @@ package org.exoplatform.ide.extension.cloudbees.server;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatfrom.ide.extension.jenkins.server.JenkinsClient;
-import org.exoplatfrom.ide.extension.jenkins.server.JenkinsException;
-import org.exoplatfrom.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
+import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 import java.io.IOException;
 import java.io.OutputStream;
