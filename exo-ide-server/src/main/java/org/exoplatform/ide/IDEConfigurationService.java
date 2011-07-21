@@ -272,7 +272,7 @@ public class IDEConfigurationService
       Node item = entry.getDocument().getElementsByTagName("configuration").item(0);
       if (item != null)
          return item.getFirstChild().getNodeValue();
-      return "";
+      return "{}"; //TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings  
    }
 
    @PUT
