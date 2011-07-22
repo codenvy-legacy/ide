@@ -49,9 +49,4 @@
       </xs:copy>
    </xs:template>
 
-   <!-- NOTE: At the moment remove publishers. -->
-   <xs:template match="publishers">
-      <xs:copy />
-   </xs:template>
-
 </xs:stylesheet>

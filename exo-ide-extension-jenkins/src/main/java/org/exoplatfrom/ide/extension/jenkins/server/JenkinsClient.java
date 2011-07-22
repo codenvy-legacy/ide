@@ -16,17 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.jenkins.server;
+package org.exoplatfrom.ide.extension.jenkins.server;
 
-import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
-import org.exoplatform.ide.git.server.GitHelper;
+import org.exoplatfrom.ide.extension.jenkins.shared.JobStatus;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -60,24 +55,14 @@ public abstract class JenkinsClient
       this.baseURL = baseURL;
    }
 
-   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void createJob(String jobName, String git, String user, String email) throws IOException, JenkinsException
    {
       URL url = new URL(baseURL + "/createItem?name=" + jobName);
       postJob(url, configXml(git, user, email));
-      if (workDir != null && workDir.exists())
-         writeJenkinsJobName(workDir, jobName);
    }
 
-   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void updateJob(String jobName, String git, String user, String email) throws IOException, JenkinsException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
-      {
-         jobName = readJenkinsJobName(workDir);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
-      }
       URL url = new URL(baseURL + "/job/" + jobName + "/config.xml");
       postJob(url, configXml(git, user, email));
    }
@@ -249,14 +234,8 @@ public abstract class JenkinsClient
       }
    }
 
-   public void build(String jobName, File workDir) throws IOException, JenkinsException
+   public void build(String jobName) throws IOException, JenkinsException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
-      {
-         jobName = readJenkinsJobName(workDir);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
-      }
       HttpURLConnection http = null;
       try
       {
@@ -276,31 +255,17 @@ public abstract class JenkinsClient
       }
    }
 
-   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
+   public JobStatus jobStatus(String jobName) throws IOException, JenkinsException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
-      {
-         jobName = readJenkinsJobName(workDir);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
-      }
-
       if (inQueue(jobName))
-         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null, null);
+         return new JobStatus(jobName, JobStatus.Status.QUEUE, null);
 
       HttpURLConnection http = null;
       try
       {
          URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/api/xml" + //
             "?xpath=" + //
-            "concat(" + //
-            "/mavenModuleSetBuild/building" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/url" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/result" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/artifact/relativePath)");
+            "concat(/mavenModuleSetBuild/building,'%20',/mavenModuleSetBuild/result)");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          authenticate(http);
@@ -309,7 +274,7 @@ public abstract class JenkinsClient
          {
             // May be newly created job. Such job does not have last build yet.
             getJob(jobName); // Check job exists or not.
-            return new JobStatus(jobName, JobStatus.Status.END, null, null, null);
+            return new JobStatus(jobName, JobStatus.Status.END, null);
          }
          else if (responseCode != 200)
          {
@@ -332,45 +297,12 @@ public abstract class JenkinsClient
          }
          if (body != null && body.length() > 0)
          {
-            JobStatus status = null;
             String[] tmp = body.split(" ");
-            if (tmp.length == 4)
-            {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-               String buildUrl = tmp[1];
-               String result = tmp[2];
-               String artifact = tmp[3];
-
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", //
-                     "SUCCESS".equals(result) ? (buildUrl + "artifact/" + artifact) : null);
-            }
-            else if (tmp.length == 3)
-            {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-               String result = tmp[2];
-
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, result, null, null);
-            }
-            else if (tmp.length == 2)
-            {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, null, null, null);
-            }
-
-            if (status != null)
-               return status;
+            if (tmp.length == 2)
+               return new JobStatus(jobName, JobStatus.Status.END, tmp[1]);
+            else if (tmp.length == 1)
+               return new JobStatus(jobName, Boolean.parseBoolean(tmp[0]) ? JobStatus.Status.BUILD : null, null);
          }
-         // Unexpected result from Jenkins.
          throw new RuntimeException("Unable get job status. ");
       }
       finally
@@ -466,49 +398,4 @@ public abstract class JenkinsClient
    }
 
    protected abstract void authenticate(HttpURLConnection http) throws IOException;
-
-   /* ============================================================ */
-   
-   private void writeJenkinsJobName(File workDir, String jobName) throws IOException
-   {
-      String filename = ".jenkins-job";
-      File idfile = new File(workDir, filename);
-      FileWriter w = null;
-      try
-      {
-         w = new FileWriter(idfile);
-         w.write(jobName);
-         w.write('\n');
-         w.flush();
-      }
-      finally
-      {
-         if (w != null)
-            w.close();
-      }
-      // Add file to .gitignore
-      GitHelper.addToGitIgnore(workDir, filename);
-   }
-
-   private String readJenkinsJobName(File workDir) throws IOException
-   {
-      String filename = ".jenkins-job";
-      File jobfile = new File(workDir, filename);
-      String jobName = null;
-      if (jobfile.exists())
-      {
-         BufferedReader r = null;
-         try
-         {
-            r = new BufferedReader(new FileReader(jobfile));
-            jobName = r.readLine();
-         }
-         finally
-         {
-            if (r != null)
-               r.close();
-         }
-      }
-      return jobName;
-   }
 }

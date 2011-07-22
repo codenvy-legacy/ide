@@ -63,6 +63,11 @@
    <processPlugins>false</processPlugins>
    <mavenValidationLevel>-1</mavenValidationLevel>
    <reporters />
-   <publishers />
+   <publishers>
+      <hudson.tasks.ArtifactArchiver>
+         <artifacts>**/target/*.war</artifacts>
+         <latestOnly>true</latestOnly>
+      </hudson.tasks.ArtifactArchiver>
+   </publishers>
    <buildWrappers />
 </maven2-moduleset>

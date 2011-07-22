@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.extension.jenkins.server.rest;
 
+import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -58,34 +58,42 @@ public class JenkinsService
 
    @Path("job/create")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Job createJob(Map<String, String> job, @Context UriInfo uriInfo) throws IOException, JenkinsException
+   public Job createJob( //
+      @QueryParam("name") String name, //
+      @QueryParam("git") String git, //
+      @QueryParam("user") String user, //
+      @QueryParam("email") String email, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, JenkinsException
    {
-      String name = job.get("name");
-      jenkins.createJob( //
-         name, //
-         job.get("git"), //
-         job.get("user"), //
-         job.get("email") //
-         );
+      jenkins.createJob(name, git, user, email, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
       String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
       String statusUrl = uriInfo.getBaseUriBuilder().path(getClass(), "jobStatus").build(name).toString();
       return new Job(name, buildUrl, statusUrl);
    }
 
-   @Path("job/build/{name}")
+   @Path("job/build")
    @POST
-   public void build(@PathParam("name") String jobName) throws IOException, JenkinsException
+   public void build( //
+      @QueryParam("name") String jobName, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, JenkinsException
    {
-      jenkins.build(jobName);
+      jenkins.build(jobName, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
-   @Path("job/status/{name}")
+   @Path("job/status")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public JobStatus jobStatus(@PathParam("name") String jobName) throws IOException, JenkinsException
+   public JobStatus jobStatus( //
+      @QueryParam("name") String jobName, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, JenkinsException
    {
-      return jenkins.jobStatus(jobName);
+      return jenkins.jobStatus(jobName, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 }

@@ -27,7 +27,7 @@ public class JobStatus
    public enum Status {
       QUEUE("in queue"), //
       BUILD("building"), //
-      END("end");
+      END("end"); //
 
       private final String value;
 
@@ -43,15 +43,31 @@ public class JobStatus
       }
    }
 
+   /** Job name. */
    private String name;
+
+   /** Current job status. */
    private Status status;
+
+   /** Result of last build. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
    private String lastBuildResult;
 
-   public JobStatus(String name, Status status, String lastBuildResult)
+   /**
+    * URL to download artifact. Should be always <code>null</code> if {@link #status} other then {@link Status#END} and
+    * {@link #lastBuildResult} other then 'SUCCESS'.
+    */
+   private String artifactUrl;
+
+   /** URL to get console output. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
+   private String outputUrl;
+
+   public JobStatus(String name, Status status, String lastBuildResult, String outputUrl, String artifactUrl)
    {
       this.name = name;
       this.status = status;
       this.lastBuildResult = lastBuildResult;
+      this.outputUrl = outputUrl;
+      this.artifactUrl = artifactUrl;
    }
 
    public JobStatus()
@@ -88,9 +104,30 @@ public class JobStatus
       this.lastBuildResult = lastBuildResult;
    }
 
+   public String getOutputUrl()
+   {
+      return outputUrl;
+   }
+
+   public void setOutputUrl(String outputUrl)
+   {
+      this.outputUrl = outputUrl;
+   }
+
+   public String getArtifactUrl()
+   {
+      return artifactUrl;
+   }
+
+   public void setArtifactUrl(String artifactUrl)
+   {
+      this.artifactUrl = artifactUrl;
+   }
+
    @Override
    public String toString()
    {
-      return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult + "]";
+      return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult
+         + ", artifactUrl=" + artifactUrl + ", outputUrl=" + outputUrl + "]";
    }
 }

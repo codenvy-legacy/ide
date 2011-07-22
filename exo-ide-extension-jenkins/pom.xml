@@ -19,6 +19,10 @@
          <artifactId>javax.inject</artifactId>
          <version>1</version> <!-- TODO add in parent pom.xml -->
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-git</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>com.google.gwt</groupId>
