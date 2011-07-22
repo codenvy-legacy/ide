@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -46,6 +45,9 @@ import org.exoplatform.ide.git.client.marshaller.InitRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.LogRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.Merge;
+import org.exoplatform.ide.git.client.marshaller.MergeRequestMarshaller;
+import org.exoplatform.ide.git.client.marshaller.MergeUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.PullRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.PushRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteAddRequestMarshaller;
@@ -72,6 +74,8 @@ import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
+import org.exoplatform.ide.git.shared.MergeRequest;
+import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.PullRequest;
 import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
@@ -116,6 +120,8 @@ public class GitClientServiceImpl extends GitClientService
    public static final String INIT = "/ide/git/init";
 
    public static final String LOG = "/ide/git/log";
+
+   public static final String MERGE = "/ide/git/merge";
 
    public static final String STATUS = "/ide/git/status";
 
@@ -181,7 +187,8 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String workDir, String remoteUri, String remoteName, AsyncRequestCallback<String> callback)
+   public void cloneRepository(String workDir, String remoteUri, String remoteName,
+      AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + CLONE;
       callback.setEventBus(eventBus);
@@ -226,12 +233,12 @@ public class GitClientServiceImpl extends GitClientService
    @Override
    public void getWorkDir(String workDir, AsyncRequestCallback<WorkDirResponse> callback)
    {
-      
+
       //decode path segment, because URL is encoded
       //decodePathSegment used, because we must have possibility to
       //decode @ symbol
       String location = URL.decodePathSegment(workDir);
-      
+
       String url = restServiceContext + WORKDIR;
       callback.setEventBus(eventBus);
 
@@ -289,7 +296,8 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#push(java.lang.String, java.lang.String[], java.lang.String, boolean)
     */
    @Override
-   public void push(String workDir, String[] refSpec, String remote, boolean force, AsyncRequestCallback<String> callback)
+   public void push(String workDir, String[] refSpec, String remote, boolean force,
+      AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + PUSH;
       callback.setEventBus(eventBus);
@@ -310,7 +318,8 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteList(java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void remoteList(String workDir, String remoteName, boolean verbose, AsyncRequestCallback<List<Remote>> callback)
+   public void remoteList(String workDir, String remoteName, boolean verbose,
+      AsyncRequestCallback<List<Remote>> callback)
    {
       String url = restServiceContext + REMOTE_LIST;
       callback.setEventBus(eventBus);
@@ -644,11 +653,34 @@ public class GitClientServiceImpl extends GitClientService
       //decodePathSegment used, because we must have possibility to
       //decode @ symbol
       String location = URL.decodePathSegment(href);
-      
+
       String url = restServiceContext + WORKDIR;
       callback.setEventBus(eventBus);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location)
+         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void merge(String workDir, String commit, AsyncRequestCallback<MergeResult> callback)
+   {
+      String url = restServiceContext + MERGE;
+
+      callback.setEventBus(eventBus);
+      MergeRequest mergeRequest = new MergeRequest(commit);
+      MergeRequestMarshaller marshaller = new MergeRequestMarshaller(mergeRequest);
+
+      Merge merge = new Merge();
+      MergeUnmarshaller unmarshaller = new MergeUnmarshaller(merge);
+      callback.setResult(merge);
+      callback.setPayload(unmarshaller);
+
+      String params = "workdir=" + workDir;
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
 }

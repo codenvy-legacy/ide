@@ -24,6 +24,7 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
@@ -302,6 +303,16 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback);
+   
+   /**
+    * Merge the pointed commit with current HEAD.
+    * 
+    * @param workDir working directory of the Git repository
+    * @param commit commit's reference to merge with 
+    * @param callback callback
+    */
+   public abstract void merge(String workDir, String commit, AsyncRequestCallback<MergeResult> callback);
+   
 
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.

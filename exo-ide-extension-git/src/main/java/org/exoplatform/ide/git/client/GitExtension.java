@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -38,6 +37,7 @@ import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.DeleteRepositoryControl;
 import org.exoplatform.ide.git.client.control.FetchControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
+import org.exoplatform.ide.git.client.control.MergeControl;
 import org.exoplatform.ide.git.client.control.PullControl;
 import org.exoplatform.ide.git.client.control.PushToRemoteControl;
 import org.exoplatform.ide.git.client.control.RemoteControl;
@@ -51,6 +51,7 @@ import org.exoplatform.ide.git.client.create.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryCommandHandler;
 import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.history.HistoryPresenter;
+import org.exoplatform.ide.git.client.merge.MergePresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.client.remote.RemotePresenter;
@@ -70,9 +71,9 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
-   
+
    private HandlerManager eventBus;
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -81,7 +82,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    {
       this.eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       //Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
@@ -92,15 +93,16 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new RemoveFilesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new BranchesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new MergeControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new FetchControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new PullControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RemoteControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RemotesControl(), DockTarget.NONE, false);
-      
+
       IDE.getInstance().addControl(new ShowHistoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
-      
+
       //Create presenters:
       new CloneRepositoryPresenter(eventBus);
       new InitRepositoryPresenter(eventBus);
@@ -110,7 +112,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new ResetFilesPresenter(eventBus);
       new ResetToCommitPresenter(eventBus);
       new RemotePresenter(eventBus);
-      
+
       new CommitPresenter(eventBus);
       new PushToRemotePresenter(eventBus);
       new BranchPresenter(eventBus);
@@ -118,6 +120,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new PullPresenter(eventBus);
       new HistoryPresenter(eventBus);
       new DeleteRepositoryCommandHandler(eventBus);
+      new MergePresenter(eventBus);
    }
 
    /**

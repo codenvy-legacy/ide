@@ -1,0 +1,259 @@
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.git.client.merge;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.merge.Reference.RefType;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.MergeResult;
+
+import java.util.List;
+
+/**
+ * Presenter to perform merge reference with current HEAD commit.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Jul 20, 2011 12:38:39 PM anya $
+ *
+ */
+public class MergePresenter extends GitPresenter implements MergeHandler, ViewClosedHandler
+{
+
+   interface Display extends IsView
+   {
+      HasClickHandlers getMergeButton();
+
+      HasClickHandlers getCancelButton();
+
+      TreeGridItem<Reference> getRefTree();
+
+      void enableMergeButton(boolean enable);
+
+      Reference getSelectedReference();
+   }
+
+   private Display display;
+
+   /**
+    * @param eventBus
+    */
+   public MergePresenter(HandlerManager eventBus)
+   {
+      super(eventBus);
+      eventBus.addHandler(MergeEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+   }
+
+   /**
+    * Bind display with presenter.
+    */
+   public void bindDisplay()
+   {
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+      });
+
+      display.getMergeButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            doMerge();
+         }
+      });
+
+      display.getRefTree().addSelectionHandler(new SelectionHandler<Reference>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<Reference> event)
+         {
+            boolean enabled = (event.getSelectedItem() != null && event.getSelectedItem().getRefType() != null);
+            display.enableMergeButton(enabled);
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.merge.MergeHandler#onMerge(org.exoplatform.ide.git.client.merge.MergeEvent)
+    */
+   @Override
+   public void onMerge(MergeEvent event)
+   {
+      getWorkDir();
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
+    */
+   @Override
+   public void onWorkDirReceived()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+         display.enableMergeButton(false);
+      }
+
+      GitClientService.getInstance().branchList(workDir, false, new AsyncRequestCallback<List<Branch>>()
+      {
+
+         @Override
+         protected void onSuccess(List<Branch> result)
+         {
+            if (result == null || result.size() == 0)
+               return;
+            setReferences(result, true);
+         }
+      });
+
+      GitClientService.getInstance().branchList(workDir, true, new AsyncRequestCallback<List<Branch>>()
+      {
+
+         @Override
+         protected void onSuccess(List<Branch> result)
+         {
+            if (result == null || result.size() == 0)
+               return;
+            setReferences(result, false);
+         }
+      });
+   }
+
+   /**
+    * Set references values.
+    * 
+    * @param branches list of branches
+    * @param isLocal if <code>true</code> then list of local branches is provided
+    */
+   public void setReferences(List<Branch> branches, boolean isLocal)
+   {
+      for (Branch branch : branches)
+      {
+         if (!branch.isActive())
+         {
+            if (isLocal)
+            {
+               display.getRefTree().setValue(
+                  new Reference(branch.getName(), branch.getDisplayName(), RefType.LOCAL_BRANCH));
+            }
+            else
+            {
+               display.getRefTree().setValue(
+                  new Reference(branch.getName(), branch.getDisplayName(), RefType.REMOTE_BRANCH));
+            }
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   /**
+    * Perform merge.
+    */
+   public void doMerge()
+   {
+      Reference reference = display.getSelectedReference();
+      if (reference == null)
+      {
+         return;
+      }
+
+      GitClientService.getInstance().merge(workDir, reference.getDisplayName(), new AsyncRequestCallback<MergeResult>()
+      {
+
+         @Override
+         protected void onSuccess(MergeResult result)
+         {
+            eventBus.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+            IDE.getInstance().closeView(display.asView().getId());
+            eventBus.fireEvent(new RefreshBrowserEvent());
+         }
+      });
+   }
+
+   /**
+    * Form the result message of the merge operation.
+    * 
+    * @param mergeResult
+    * @return {@link String} merge result message
+    */
+   private String formMergeMessage(MergeResult mergeResult)
+   {
+      String conflicts = "";
+      if (mergeResult.getConflicts() != null && mergeResult.getConflicts().length > 0)
+      {
+         for (String conflict : mergeResult.getConflicts())
+         {
+            conflicts += "- " + conflict + "<br>";
+         }
+      }
+      String commits = "";
+      if (mergeResult.getMergedCommits() != null && mergeResult.getMergedCommits().length > 0)
+      {
+         for (String commit : mergeResult.getMergedCommits())
+         {
+            commits += "- " + commit + "<br>";
+         }
+      }
+
+      String message = "<b>" + mergeResult.getMergeStatus().toString() + "</b><br/>";
+      message += (conflicts.length() > 0) ? GitExtension.MESSAGES.mergedConflicts(conflicts) : "";
+      message += (commits.length() > 0) ? GitExtension.MESSAGES.mergedCommits(commits) : "";
+      message +=
+         (mergeResult.getNewHead() != null) ? GitExtension.MESSAGES.mergedNewHead(mergeResult.getNewHead()) : "";
+      return message;
+   }
+}

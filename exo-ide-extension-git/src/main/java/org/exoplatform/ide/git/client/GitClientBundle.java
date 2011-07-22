@@ -84,6 +84,12 @@ public interface GitClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/git/images/controls/deleteRepo.png")
    ImageResource deleteRepo();
+   
+   @Source("org/exoplatform/ide/git/images/controls/merge.png")
+   ImageResource merge();
+   
+   @Source("org/exoplatform/ide/git/images/controls/merge_Disabled.png")
+   ImageResource mergeDisabled();
 
    @Source("org/exoplatform/ide/git/images/controls/deleteRepo_Disabled.png")
    ImageResource deleteRepoDisabled();
@@ -210,4 +216,13 @@ public interface GitClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/git/images/controls/revert.png")
    ImageResource revert();
+   
+   @Source("org/exoplatform/ide/git/images/branch/branch.png")
+   ImageResource branch();
+   
+   @Source("org/exoplatform/ide/git/images/branch/local_branches.png")
+   ImageResource localBanches();
+   
+   @Source("org/exoplatform/ide/git/images/branch/remote_branches.png")
+   ImageResource remoteBranches();
 }

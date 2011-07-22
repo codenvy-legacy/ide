@@ -71,4 +71,8 @@
    <replace-with class="org.exoplatform.ide.git.client.history.HistoryView">
       <when-type-is class="org.exoplatform.ide.git.client.history.HistoryPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.git.client.merge.MergeView">
+      <when-type-is class="org.exoplatform.ide.git.client.merge.MergePresenter.Display" />
+   </replace-with>
 </module>

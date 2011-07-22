@@ -72,6 +72,9 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("button.pull")
    String buttonPull();
+
+   @Key("button.merge")
+   String buttonMerge();
    
    //MESSAGES
    @Key("messages.not_git_repository")
@@ -193,6 +196,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
+   
+   //Unmarshaller Errors
+   @Key("merge.unmarshal.failed")
+   String mergeUnmarshallerFailed();
    
    //----VIEWS------------------------------------------------------------------
 
@@ -408,6 +415,19 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.pull.local.branches.title")
    String pullLocalBranches();
    
+   //Merge
+   @Key("view.merge.title")
+   String mergeTitle();
+   
+   @Key("merged.commits")
+   String mergedCommits(String commits);
+   
+   @Key("merged.new.head")
+   String mergedNewHead(String newHead);
+
+   @Key("merged.conflicts")
+   String mergedConflicts(String conflicts);
+   
    /*Controls*/
    @Key("control.add.id")
    String addControlId();
@@ -471,7 +491,16 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.init.prompt")
    String initControlPrompt();
-
+   
+   @Key("control.merge.id")
+   String mergeControlId();
+   
+   @Key("control.merge.title")
+   String mergeControlTitle();
+   
+   @Key("control.merge.prompt")
+   String mergeControlPrompt();
+   
    @Key("control.pull.id")
    String pullControlId();
 

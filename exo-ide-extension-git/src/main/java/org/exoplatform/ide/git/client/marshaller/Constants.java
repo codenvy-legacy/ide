@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
+
 /**
  * Used for marshallers and unmarshallers.
  * 
@@ -106,5 +107,13 @@ public interface Constants
    public static final String URL = "url";
    
    public static final String VERBOSE = "verbose";
+   
+   public static final String NEW_HEAD = "newHead";
+   
+   public static final String MERGE_STATUS = "mergeStatus";
+   
+   public static final String MERGED_COMMITS = "mergedCommits";
+   
+   public static final String CONFLICTS = "conflicts";
    
 }
