@@ -20,6 +20,9 @@ package org.exoplatform.ide.extension.jenkins.server;
 
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.git.server.GitHelper;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +38,8 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -43,6 +48,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -276,6 +285,8 @@ public abstract class JenkinsClient
       }
    }
 
+   //   xpath=/mavenModuleSetBuild/artifact|/mavenModuleSetBuild/url|/mavenModuleSetBuild/result|/mavenModuleSetBuild/building&wrapper=status
+
    public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
    {
       if ((jobName == null || jobName.isEmpty()) && workDir != null)
@@ -291,16 +302,17 @@ public abstract class JenkinsClient
       HttpURLConnection http = null;
       try
       {
-         URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/api/xml" + //
-            "?xpath=" + //
-            "concat(" + //
-            "/mavenModuleSetBuild/building" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/url" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/result" + //
-            ",'%20'," + //
-            "/mavenModuleSetBuild/artifact/relativePath)");
+         final String root = "status";
+         String xpathRequest = new StringBuilder() //
+            .append("/mavenModuleSetBuild/building") //
+            .append("|/mavenModuleSetBuild/url") //
+            .append("|/mavenModuleSetBuild/result") //
+            .append("|/mavenModuleSetBuild/artifact") //
+            .toString();
+         URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/api/xml" //
+            + "?xpath=" + xpathRequest //
+            + "&wrapper=" + root);
+
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          authenticate(http);
@@ -332,45 +344,75 @@ public abstract class JenkinsClient
          }
          if (body != null && body.length() > 0)
          {
-            JobStatus status = null;
-            String[] tmp = body.split(" ");
-            if (tmp.length == 4)
+            try
             {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-               String buildUrl = tmp[1];
-               String result = tmp[2];
-               String artifact = tmp[3];
+               DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
+               Document doc = df.newDocumentBuilder().parse(new InputSource(new StringReader(body)));
+               XPath xpath = XPathFactory.newInstance().newXPath();
+               String building = xpath.evaluate("/" + root + "/building", doc);
 
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", //
-                     "SUCCESS".equals(result) ? (buildUrl + "artifact/" + artifact) : null);
+               if (Boolean.parseBoolean(building)) // Building in progress.
+                  return new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
+
+               String result = xpath.evaluate("/" + root + "/result", doc);
+               String buildUrl = xpath.evaluate("/" + root + "/url", doc);
+               if ("SUCCESS".equals(result))
+               {
+                  // If build successful provide URL to download artifact.
+
+                  // In some reason Jenkins may provide more then one artifact tags, e.g. it happens if artifact was renamed. 
+                  int artifacts =
+                     ((Double)xpath.evaluate("count(/" + root + "/artifact)", doc, XPathConstants.NUMBER)).intValue();
+
+                  if (artifacts == 1)
+                  {
+                     // Good, only one artifact tag.
+                     String relativePath = xpath.evaluate("/" + root + "/artifact/relativePath", doc);
+                     return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", buildUrl
+                        + "artifact/" + relativePath);
+                  }
+                  else if (artifacts >= 1)
+                  {
+                     // More then one artifact :-( . Try to find what correct one.
+                     if (workDir != null && workDir.exists())
+                     {
+                        // Get name of output file from pom.xml if any.
+                        String artifactFileName = getArtifactFileName(workDir);
+                        if (artifactFileName != null)
+                        {
+                           // Get relative path if file name matched. 
+                           String relativePath = xpath.evaluate( //
+                              "/" + root + "/artifact[fileName='" + artifactFileName + "']/relativePath", //
+                              doc);
+
+                           if (relativePath != null & relativePath.length() > 0)
+                              return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText",
+                                 buildUrl + "artifact/" + relativePath);
+                        }
+                     }
+                  }
+               }
+               // Cannot provide URL for download, e.g. build failed, canceled, etc.
+               return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", null);
             }
-            else if (tmp.length == 3)
+            catch (SAXException e)
             {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-               String result = tmp[2];
-
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, result, null, null);
+               throw new RuntimeException(e.getMessage(), e);
             }
-            else if (tmp.length == 2)
+            catch (IOException e)
             {
-               boolean building = Boolean.parseBoolean(tmp[0]);
-
-               if (building)
-                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-               else
-                  status = new JobStatus(jobName, JobStatus.Status.END, null, null, null);
+               throw new RuntimeException(e.getMessage(), e);
             }
-
-            if (status != null)
-               return status;
+            catch (ParserConfigurationException e)
+            {
+               throw new RuntimeException(e.getMessage(), e);
+            }
+            catch (XPathExpressionException e)
+            {
+               throw new RuntimeException(e.getMessage(), e);
+            }
          }
-         // Unexpected result from Jenkins.
+         // Unexpected or empty result from Jenkins.
          throw new RuntimeException("Unable get job status. ");
       }
       finally
@@ -379,6 +421,118 @@ public abstract class JenkinsClient
             http.disconnect();
       }
    }
+
+   //   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
+   //   {
+   //      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+   //      {
+   //         jobName = readJenkinsJobName(workDir);
+   //         if (jobName == null || jobName.isEmpty())
+   //            throw new IllegalArgumentException("Job name required. ");
+   //      }
+   //
+   //      if (inQueue(jobName))
+   //         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null, null);
+   //
+   //      HttpURLConnection http = null;
+   //      try
+   //      {
+   //         // Need to read artifact filename!
+   //         // Jenkins may return more then one artifact (why? :-(). 
+   //         String artifactFileName = null;
+   //         if (workDir != null && workDir.exists())
+   //            artifactFileName = getArtifactFileName(workDir);
+   //         String xpath = new StringBuilder() //
+   //            .append("concat(") //
+   //            .append("/mavenModuleSetBuild/building") //
+   //            .append(",'%20',") //
+   //            .append("/mavenModuleSetBuild/url") //
+   //            .append(",'%20',") //
+   //            .append("/mavenModuleSetBuild/result") //
+   //            .append(",'%20',") //
+   //            .append((artifactFileName == null) //
+   //               ? "/mavenModuleSetBuild/artifact/relativePath" //
+   //               : "/mavenModuleSetBuild/artifact[fileName='" + artifactFileName + "']/relativePath") //
+   //            .append(')').toString();
+   //         URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/api/xml" + "?xpath=" + xpath);
+   //         http = (HttpURLConnection)url.openConnection();
+   //         http.setRequestMethod("GET");
+   //         authenticate(http);
+   //         int responseCode = http.getResponseCode();
+   //         if (responseCode == 404)
+   //         {
+   //            // May be newly created job. Such job does not have last build yet.
+   //            getJob(jobName); // Check job exists or not.
+   //            return new JobStatus(jobName, JobStatus.Status.END, null, null, null);
+   //         }
+   //         else if (responseCode != 200)
+   //         {
+   //            throw fault(http);
+   //         }
+   //
+   //         InputStream input = http.getInputStream();
+   //         int contentLength = http.getContentLength();
+   //         String body = null;
+   //         if (input != null)
+   //         {
+   //            try
+   //            {
+   //               body = readBody(input, contentLength);
+   //            }
+   //            finally
+   //            {
+   //               input.close();
+   //            }
+   //         }
+   //         if (body != null && body.length() > 0)
+   //         {
+   //            JobStatus status = null;
+   //            String[] tmp = body.split(" ");
+   //            if (tmp.length == 4)
+   //            {
+   //               boolean building = Boolean.parseBoolean(tmp[0]);
+   //               String buildUrl = tmp[1];
+   //               String result = tmp[2];
+   //               String artifact = tmp[3];
+   //
+   //               if (building)
+   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
+   //               else
+   //                  status = new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", //
+   //                     "SUCCESS".equals(result) ? (buildUrl + "artifact/" + artifact) : null);
+   //            }
+   //            else if (tmp.length == 3)
+   //            {
+   //               boolean building = Boolean.parseBoolean(tmp[0]);
+   //               String result = tmp[2];
+   //
+   //               if (building)
+   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
+   //               else
+   //                  status = new JobStatus(jobName, JobStatus.Status.END, result, null, null);
+   //            }
+   //            else if (tmp.length == 2)
+   //            {
+   //               boolean building = Boolean.parseBoolean(tmp[0]);
+   //
+   //               if (building)
+   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
+   //               else
+   //                  status = new JobStatus(jobName, JobStatus.Status.END, null, null, null);
+   //            }
+   //
+   //            if (status != null)
+   //               return status;
+   //         }
+   //         // Unexpected result from Jenkins.
+   //         throw new RuntimeException("Unable get job status. ");
+   //      }
+   //      finally
+   //      {
+   //         if (http != null)
+   //            http.disconnect();
+   //      }
+   //   }
 
    private boolean inQueue(String jobName) throws IOException, JenkinsException
    {
@@ -415,6 +569,49 @@ public abstract class JenkinsClient
       {
          if (http != null)
             http.disconnect();
+      }
+   }
+
+   private String getArtifactFileName(File workDir)
+   {
+      File pom = new File(workDir, "pom.xml");
+      if (!pom.exists())
+         return null;
+
+      XPath xpath = XPathFactory.newInstance().newXPath();
+      DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
+      df.setNamespaceAware(false);
+      try
+      {
+         Document doc = df.newDocumentBuilder().parse(pom);
+         String filename = xpath.evaluate("/project/build/finalName", doc);
+         if (filename != null && filename.length() > 0)
+         {
+            filename += ".war";
+         }
+         else
+         {
+            String artifactId = xpath.evaluate("/project/artifactId", doc);
+            String version = xpath.evaluate("/project/version", doc);
+            filename = artifactId + "-" + version + ".war";
+         }
+         return filename;
+      }
+      catch (SAXException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+      catch (ParserConfigurationException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+      catch (XPathExpressionException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
       }
    }
 
@@ -468,7 +665,7 @@ public abstract class JenkinsClient
    protected abstract void authenticate(HttpURLConnection http) throws IOException;
 
    /* ============================================================ */
-   
+
    private void writeJenkinsJobName(File workDir, String jobName) throws IOException
    {
       String filename = ".jenkins-job";
