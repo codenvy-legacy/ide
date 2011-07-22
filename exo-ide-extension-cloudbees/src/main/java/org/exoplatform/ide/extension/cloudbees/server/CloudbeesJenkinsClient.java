@@ -24,6 +24,7 @@ import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.CookieHandler;
@@ -78,17 +79,17 @@ public class CloudbeesJenkinsClient extends JenkinsClient
    }
 
    @Override
-   public void createJob(String jobName, String git, String user, String email) throws IOException, JenkinsException
+   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException, JenkinsException
    {
       doLogin();
-      super.createJob(jobName, git, user, email);
+      super.createJob(jobName, git, user, email, workDir);
    }
 
    @Override
-   public void updateJob(String jobName, String git, String user, String email) throws IOException, JenkinsException
+   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException, JenkinsException
    {
       doLogin();
-      super.updateJob(jobName, git, user, email);
+      super.updateJob(jobName, git, user, email, workDir);
    }
 
    @Override
@@ -99,17 +100,17 @@ public class CloudbeesJenkinsClient extends JenkinsClient
    }
 
    @Override
-   public void build(String jobName) throws IOException, JenkinsException
+   public void build(String jobName, File workDir) throws IOException, JenkinsException
    {
       doLogin();
-      super.build(jobName);
+      super.build(jobName, workDir);
    }
 
    @Override
-   public JobStatus jobStatus(String jobName) throws IOException, JenkinsException
+   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
    {
       doLogin();
-      return super.jobStatus(jobName);
+      return super.jobStatus(jobName, workDir);
    }
 
    private synchronized void doLogin() throws IOException, JenkinsException
