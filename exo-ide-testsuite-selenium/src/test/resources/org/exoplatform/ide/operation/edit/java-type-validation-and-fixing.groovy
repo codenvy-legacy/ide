@@ -2,6 +2,7 @@
 import Path
 import javax.ws.rs.GET
 import some.pack.String
+import javax.inject.Inject 
 
 @Path("/my-service")
 public class HelloWorld {
@@ -19,6 +20,11 @@ public class HelloWorld {
     name = macpro
     name = 0;
     
+    cart.items.each { data.ItemToPurchase item ->
+      def row = [:];
+      row["quantity"] = "" + item.quantity;
+    }
+    
     return "Hello " + name
   }
   
@@ -29,4 +35,8 @@ public class HelloWorld {
   ResourceBundle.Control classFromJavaUtilPackage;
 
   java.util.prefs.Base64 c;
+  
+  @javax.inject.Inject ChromatticSession session1;  
+  
+  @Inject ChromatticSession session2;  
 }

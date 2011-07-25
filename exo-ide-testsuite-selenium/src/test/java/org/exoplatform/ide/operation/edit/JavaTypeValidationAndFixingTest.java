@@ -79,7 +79,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    //      line 10: 'List' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Map' cannot be resolved to a type;
    //      line 11: 'List' cannot be resolved to a type;
 
-   @Test
+   //@Test  Test should be updated to verify bug IDE-928
    public void testServiceFile() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -207,7 +207,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    }
 
    // IDE-499: "Recognize error "cannot resolve to a type" within the Groovy Template file in the Code Editor."
-   @Test
+   //@Test  Test should be updated to verify bug IDE-928
    public void testTemplateFile() throws Exception
    {
       // Open template file with test content
