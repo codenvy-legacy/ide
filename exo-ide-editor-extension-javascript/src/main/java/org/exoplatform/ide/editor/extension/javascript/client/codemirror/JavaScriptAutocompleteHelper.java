@@ -23,7 +23,7 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
+import org.exoplatform.ide.editor.codemirror.AutocompleteHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

@@ -25,8 +25,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.javascript.client.codeassistant.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.extension.javascript.client.codemirror.JavaScriptAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.javascript.client.codemirror.JavaScriptOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.javascript.client.codemirror.JavaScriptParser;
-import org.exoplatform.ide.editor.extension.javascript.client.outline.JavaScriptOutlineItemCreator;
 
 import com.google.gwt.core.client.GWT;
 

@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;

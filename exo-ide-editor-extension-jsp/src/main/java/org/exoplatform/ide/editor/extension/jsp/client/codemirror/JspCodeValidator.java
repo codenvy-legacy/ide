@@ -27,7 +27,7 @@ import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.CodeLine.CodeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.codevalidator.CodeValidator;
+import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaCodeValidator;
 
 

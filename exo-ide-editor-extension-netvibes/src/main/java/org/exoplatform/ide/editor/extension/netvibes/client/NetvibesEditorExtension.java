@@ -26,8 +26,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlParser;
-import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.netvibes.client.codeassistant.NetvibesCodeAssistant;
 
 /**

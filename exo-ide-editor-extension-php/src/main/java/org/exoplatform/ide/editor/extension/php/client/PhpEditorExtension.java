@@ -31,8 +31,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.php.client.codeassistant.PhpCodeAssistant;
 import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.php.client.codemirror.PhpParser;
-import org.exoplatform.ide.editor.extension.php.client.outline.PhpOutlineItemCreator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Messages;

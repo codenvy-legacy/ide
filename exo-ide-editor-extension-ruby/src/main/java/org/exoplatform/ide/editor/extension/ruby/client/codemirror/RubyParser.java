@@ -25,8 +25,8 @@ import java.util.Stack;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
-import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

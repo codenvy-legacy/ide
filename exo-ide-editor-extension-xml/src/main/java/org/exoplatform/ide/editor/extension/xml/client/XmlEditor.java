@@ -25,8 +25,8 @@ import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.xml.client.codeassistant.XmlCodeAssistant;
+import org.exoplatform.ide.editor.extension.xml.client.codemirror.XmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.xml.client.codemirror.XmlParser;
-import org.exoplatform.ide.editor.extension.xml.client.outline.XmlOutlineItemCreator;
 
 import com.google.gwt.core.client.GWT;
 

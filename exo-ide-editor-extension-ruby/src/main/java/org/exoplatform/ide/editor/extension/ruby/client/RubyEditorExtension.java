@@ -31,8 +31,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.ruby.client.codeassistant.RubyCodeAssistant;
 import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.ruby.client.codemirror.RubyParser;
-import org.exoplatform.ide.editor.extension.ruby.client.outline.RubyOutlineItemCreator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.Messages;
