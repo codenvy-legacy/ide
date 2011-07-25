@@ -29,8 +29,8 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlParser;
-import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

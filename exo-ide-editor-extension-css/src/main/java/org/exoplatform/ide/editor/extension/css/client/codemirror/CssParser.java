@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;

@@ -40,8 +40,8 @@ import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.C
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaCodeValidator;
+import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaParser;
-import org.exoplatform.ide.editor.extension.java.client.outline.JavaOutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

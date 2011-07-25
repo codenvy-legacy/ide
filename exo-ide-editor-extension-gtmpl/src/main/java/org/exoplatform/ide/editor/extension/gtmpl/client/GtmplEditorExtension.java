@@ -38,7 +38,7 @@ import org.exoplatform.ide.editor.extension.gtmpl.client.codeassistant.GroovyTem
 import org.exoplatform.ide.editor.extension.gtmpl.client.codemirror.GroovyTemplateAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.gtmpl.client.codemirror.GroovyTemplateCodeValidator;
 import org.exoplatform.ide.editor.extension.gtmpl.client.codemirror.GroovyTemplateParser;
-import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.services.CodeAssistantService;

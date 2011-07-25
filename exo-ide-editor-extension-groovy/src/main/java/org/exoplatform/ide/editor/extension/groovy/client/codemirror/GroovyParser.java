@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorParserImpl;
 import org.exoplatform.ide.editor.codemirror.Node;
-import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -206,7 +206,9 @@ public class GroovyParser extends CodeMirrorParserImpl
      
       // recognize open brace "{"
       else if (isOpenBrace(nodeType, nodeContent))
-      {        
+      {    
+         currentJavaType = lastJavaType = "";  // clear type for cases like "cart.items.each { ItemToPurchase item ->"
+         
          // filter code like this "boolean isSelected = false; /n for(category in categories) {"
          if (wereMethodBrackets
                     && currentToken.getLastSubToken() != null

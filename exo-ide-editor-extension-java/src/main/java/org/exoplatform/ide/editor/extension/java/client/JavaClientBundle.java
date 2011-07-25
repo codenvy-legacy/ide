@@ -79,4 +79,16 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/extension/java/client/images/jsp-tag.png")
    ImageResource jspTagItem();
+
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/class-private.png")
+   ImageResource classPrivateItem();
+   
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/class-protected.png")
+   ImageResource classProtectedItem();
+   
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/class-default.png")
+   ImageResource classDefaultItem();
+   
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/clock.png")
+   ImageResource clockItem();
 }

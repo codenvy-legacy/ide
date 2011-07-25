@@ -101,12 +101,6 @@ var tokenizeGroovy = (function() {
     // ------------------- groovy keywords
     var keywordsList = {};
 
-    // GJDK methods
-    keywordsList['groovyGsdkMethod'] = new Array('abs','any','append','asList','asWritable','collect','compareTo','count','div','dump','each','eachByte','eachFile','eachLine','every','find','findAll','getAt','getErr','getIn','getOut','getText','grep','inject','inspect','intersect','isCase','join','leftShift','minus','multiply','mixin','newInputStream','newOutputStream','newPrintWriter','newReader','newWriter','next','plus','pop','power','previous','print','println','push','putAt','readBytes','readLines','reverse','reverseEach','round','size','sort','splitEachLine','step','subMap','times','toInteger','toList','tokenize','upto','waitForOrKill','withPrintWriter','withReader','withStream','withWriterAppend','write','writeLine');
-    for (var i = 0; i < keywordsList['groovyGsdkMethod'].length; i++) {
-        allKeywords[keywordsList['groovyGsdkMethod'][i]] = result("groovyGsdkMethod", "groovyGsdkMethod");
-    }
-
     // keywords that optionally take an expression, and form a statement (return)
     keywordsList['groovyKeywordC'] = new Array('assert', 'property');
     for (var i = 0; i < keywordsList['groovyKeywordC'].length; i++) {

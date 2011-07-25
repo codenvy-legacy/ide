@@ -28,12 +28,6 @@
   line-height: 16px;
 }
 
-/* new style */
-span.groovyGsdkMethod {
-  color: rgb(102,204,255);
-  font-weight: bold;
-}
-
 /* inherited from 'js-keyword' */
 span.groovyKeyword {
   color: rgb(0,153,102);

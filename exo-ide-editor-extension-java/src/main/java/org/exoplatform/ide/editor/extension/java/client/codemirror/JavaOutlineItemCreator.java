@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.extension.java.client.outline;
+package org.exoplatform.ide.editor.extension.java.client.codemirror;
 
 import java.util.List;
 
@@ -110,15 +110,13 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
          {
             modfImg =
                "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
-                  + "\" />";
+                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classPrivateItem().getURL() + "\" />";
          }
          else if (isProtected(token))
          {
             modfImg =
                "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
-                  + "\" />";
+                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classProtectedItem().getURL() + "\" />";
          }
          else if (isPublic(token))
          {
@@ -127,8 +125,7 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
          {
             modfImg =
                "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
-                  + "\" />";
+                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classDefaultItem().getURL() + "\" />";
          }
       }
 
@@ -138,8 +135,7 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
          final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
          synchImg =
             "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
-               + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
-               + "outline/clock.png" + "\" />";
+               + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.clockItem().getURL() + "\" />";
       }
       
       String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";

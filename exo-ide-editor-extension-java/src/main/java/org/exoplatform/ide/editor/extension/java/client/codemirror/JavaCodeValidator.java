@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.api.CodeLine.CodeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codevalidator.CodeValidator;
+import org.exoplatform.ide.editor.codemirror.CodeValidator;
 
 
 /**
@@ -139,15 +139,18 @@ public class JavaCodeValidator extends CodeValidator
       String javaType = currentToken.getElementType();
       if (javaType != null && !javaType.isEmpty())
       {
-         // filter FQN type for full java types like "javax.ws.rs.GET", but parse type like "ResourceBundle.Control"
-//         if (javaType.contains(".")
-//                && javaType.split("[.]").length > 2)
-//         {
-//            currentToken.setFqn(javaType);
-//         }
-//         
-//         else 
-//         {  
+         // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like "ResourceBundle.Control"
+         if (javaType.contains(".")
+                && (javaType.split("[.]").length > 2
+                    || javaType.split("[.]").length == 2 && javaType.matches("^[a-z].*")  // to parse fqn like "data.ProductItem", not "ResourceBundle.Control"
+                )
+            )
+         {
+            currentToken.setFqn(javaType);
+         }
+         
+         else 
+         {  
             // verifying if this type is from import statements
             String foundImport = findImport(javaType, importStatementBlock);
             if (foundImport != null)
@@ -176,7 +179,7 @@ public class JavaCodeValidator extends CodeValidator
                   }
                }
             }
-//         }
+         }
       }
 
       // validate parameters

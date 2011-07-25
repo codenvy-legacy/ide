@@ -37,8 +37,8 @@ import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.GroovyCo
 import org.exoplatform.ide.editor.extension.groovy.client.codeassistant.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyAutocompleteHelper;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyCodeValidator;
+import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.groovy.client.codemirror.GroovyParser;
-import org.exoplatform.ide.editor.extension.groovy.client.outline.GroovyOutlineItemCreator;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.extension.java.client.codeassistant.JavaTokenWidgetFactory;

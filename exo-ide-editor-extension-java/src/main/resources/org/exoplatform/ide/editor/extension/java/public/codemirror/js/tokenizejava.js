@@ -64,6 +64,8 @@ var tokenizeJava = (function() {
   var isOperatorChar = /[+\-*&%=<>!?|]/;
   var isHexDigit = /[0-9A-Fa-f]/;
   var isWordChar = /[\w\$_]/;
+  var isAnnotationChar = /^[\w\.]$/;
+  
   // Wrapper around javaToken that helps maintain parser state (whether
   // we are inside of a multi-line comment and whether the next token
   // could be a regular expression).
@@ -158,7 +160,7 @@ var tokenizeJava = (function() {
     }
     // for reading annotations (word based)
     function readAnnotation(){
-    	source.nextWhileMatches(isWordChar);
+    	source.nextWhileMatches(isAnnotationChar);
     	var word = source.get();
     	return {type: "annotation", style: "java-annotation", content:word};
     }

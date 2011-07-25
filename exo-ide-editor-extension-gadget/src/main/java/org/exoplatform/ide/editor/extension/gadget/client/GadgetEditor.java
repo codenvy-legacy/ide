@@ -30,7 +30,7 @@ import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.extension.gadget.client.codemirror.GoogleGadgetParser;
 import org.exoplatform.ide.editor.extension.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlAutocompleteHelper;
-import org.exoplatform.ide.editor.extension.html.client.outline.HtmlOutlineItemCreator;
+import org.exoplatform.ide.editor.extension.html.client.codemirror.HtmlOutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
