@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
+ * This interface is used to create code outline item widget from OutlineTreeGrid class of exo.ide.client library. 
+ * Function getOutlineItemWidget(Token token) is realized in the specific {FileType}OutlineItemCreator classes of exo-ide-editor-extension-{FileType} library     
  * 
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $
