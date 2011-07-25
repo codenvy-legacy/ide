@@ -16,14 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.autocomplete;
+package org.exoplatform.ide.editor.codemirror;
 
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -97,13 +96,13 @@ public abstract class AutocompleteHelper
 
    /**
     * Is node type of variable
-    * @see org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper#isVariable(java.lang.String)
+    * @see org.exoplatform.ide.editor.codemirror.AutocompleteHelper#isVariable(java.lang.String)
     */
    public abstract boolean isVariable(String nodeType);
 
    /**
     * Is node type of point
-    * @see org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper#isVariable(java.lang.String)
+    * @see org.exoplatform.ide.editor.codemirror.AutocompleteHelper#isVariable(java.lang.String)
     */
    public abstract boolean isPoint(String nodeType, String nodeContent);
   

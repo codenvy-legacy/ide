@@ -20,8 +20,6 @@ package org.exoplatform.ide.editor.codemirror;
 
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
-import org.exoplatform.ide.editor.codemirror.autocomplete.AutocompleteHelper;
-import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 
 import com.google.gwt.core.client.GWT;
 

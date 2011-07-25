@@ -41,8 +41,6 @@ import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorSaveContentEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
-import org.exoplatform.ide.editor.codemirror.parser.CodeMirrorParserImpl;
-import org.exoplatform.ide.editor.codevalidator.CodeValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

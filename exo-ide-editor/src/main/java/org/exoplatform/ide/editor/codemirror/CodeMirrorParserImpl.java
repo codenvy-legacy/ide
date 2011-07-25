@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.codemirror.parser;
+package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,7 +25,6 @@ import java.util.List;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
-import org.exoplatform.ide.editor.codemirror.Node;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
