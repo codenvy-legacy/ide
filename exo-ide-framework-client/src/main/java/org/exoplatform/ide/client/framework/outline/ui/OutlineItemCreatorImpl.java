@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.framework.outline.ui;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -33,8 +32,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Created by The eXo Platform SAS .
- * 
+ * This implementation of interface OutlineItemCreatorImpl which is used to create code outline item widget from OutlineTreeGrid class of exo.ide.client library. 
+ * Also consists of some utility functions to select outline item icon and define its display label.
+ * Function getOutlineItemWidget(Token token) is extended in the specific {FileType}OutlineItemCreator classes of exo-ide-editor-extension-{FileType} libraries.
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $
  */
