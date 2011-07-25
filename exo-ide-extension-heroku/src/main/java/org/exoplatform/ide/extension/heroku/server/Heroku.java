@@ -22,6 +22,7 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
@@ -51,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -969,7 +971,13 @@ public class Heroku
                byte[] b = new byte[length];
                for (int point = -1, off = 0; (point = errorStream.read(b, off, length - off)) > 0; off += point) //
                ;
-               error = new HerokuException(http.getResponseCode(), new String(b), http.getContentType());
+               String message = new String(b);
+               //On invalid credentials the login form is sent (HTML).
+               //Check body contains action with login path and element with id "login".
+               error =
+                  (HTTPStatus.NOT_FOUND == http.getResponseCode() && (message.contains("action=\"/login\"") || message.contains("id=\"login\""))) ? 
+                     new HerokuException(HTTPStatus.BAD_REQUEST, "Authentication failed.", MediaType.TEXT_PLAIN) : 
+                     new HerokuException(http.getResponseCode(), message, http.getContentType());
             }
             else if (length == 0)
             {
