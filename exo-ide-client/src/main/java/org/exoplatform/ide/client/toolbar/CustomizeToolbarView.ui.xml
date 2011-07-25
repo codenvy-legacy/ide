@@ -1,0 +1,52 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder 
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:t="urn:import:org.exoplatform.ide.client.toolbar"
+	>
+	
+	<ui:style>
+	</ui:style>
+	
+	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+	<ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="idepreferences"></ui:with>
+
+	<c:Border margin="5" borderColor="transparent">
+		<c:VPanel>
+			<c:HPanel>
+				<c:Border margin="5">
+					<t:CommandsListGrid ui:field="availableCommandsListGrid"></t:CommandsListGrid>
+				</c:Border>
+				<g:HTMLPanel width="180px">
+					<center>
+						<div style="height:5px; width:1px;"></div>
+						<c:ImageButton text="{idelocal.addButton}" ui:field="addCommandButton" buttonId="ide.core.customize-toolbar.add-button" imageName="add" width="120px"></c:ImageButton>
+						<div style="height:15px; width:1px;"></div>
+						<c:ImageButton text="{idepreferences.customizeToolbarDelimiterButton}" ui:field="addDelimiterButton" buttonId="ide.core.customize-toolbar.delimiter-button" imageName="add" width="120px"></c:ImageButton>
+						<div style="height:15px; width:1px;"></div>
+						<c:ImageButton text="{idelocal.deleteButton}" ui:field="deleteButton" buttonId="ide.core.customize-toolbar.delete-button" imageName="remove"></c:ImageButton>
+						<div style="height:30px; width:1px;"></div>
+						<c:ImageButton text="{idepreferences.customizeToolbarMoveUpButton}" ui:field="moveUpButton" buttonId="ide.core.customize-toolbar.move-up-button" imageName="up" width="120px"></c:ImageButton>
+						<div style="height:15px; width:1px;"></div>
+						<c:ImageButton text="{idepreferences.customizeToolbarMoveDownButton}" ui:field="moveDownButton" buttonId="ide.core.customize-toolbar.move-down-button" imageName="down" width="120px"></c:ImageButton>
+					</center>
+				</g:HTMLPanel>
+				<c:Border margin="5">
+					<t:ToolbarItemListGrid ui:field="toolbarItemsListGrid"></t:ToolbarItemListGrid>
+				</c:Border>
+			</c:HPanel>
+		
+			<g:VerticalPanel horizontalAlignment="ALIGN_CENTER" height="50px">
+					<g:HorizontalPanel spacing="10" height="100%" verticalAlignment="ALIGN_MIDDLE">
+						<c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="ide.core.customize-toolbar.ok-button" width="100px"></c:ImageButton>
+						<c:ImageButton text="{idelocal.cancelButton}" imageName="cancel" ui:field="cancelButton" buttonId="ide.core.customize-tolbar.cancel-button" width="100px"></c:ImageButton>
+						<c:ImageButton text="{idepreferences.customizeToolbarDefaultButton}" imageName="defaults" ui:field="defaultsButton" buttonId="ide.core.customize-toolbar.defaults-button" width="100px"></c:ImageButton>
+				</g:HorizontalPanel>
+			</g:VerticalPanel>
+		
+		</c:VPanel>
+	</c:Border>
+
+</ui:UiBinder>
+ 

@@ -210,7 +210,7 @@ public class CreateProjectTemplateForm extends IDEDialogWindow implements Create
       deleteButton.setButtonId(ID_DELETE_BUTTON);
       deleteButton.setWidth(BUTTONS_WIDTH);
       deleteButton.setHeight(BUTTONS_HEIGHT);
-      deleteButton.setImage(new Image(Images.Buttons.DELETE));
+      deleteButton.setImage(new Image(Images.Buttons.REMOVE));
 
       buttonsLayout.add(addFolderButton);
       buttonsLayout.add(addFileButton);

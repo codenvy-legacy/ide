@@ -137,8 +137,6 @@ public interface Images
    public interface Buttons
    {
 
-      //public static final String OK = IMAGE_URL + "buttons/ok.png";
-
       public static final String NO = IMAGE_URL + "buttons/no.png";
 
       public static final String CANCEL = IMAGE_URL + "buttons/cancel.png";
@@ -147,15 +145,16 @@ public interface Images
 
       public static final String SEARCH = IMAGE_URL + "buttons/search.png";
 
-      public static final String ADD = IMAGE_URL + "buttons/add.png";
 
-      public static final String DELETE = IMAGE_URL + "buttons/remove.png";
+      public static final String ADD = IMAGE_URL + "bundled/actions/add.png";
 
-      public static final String UP = IMAGE_URL + "buttons/up.png";
+      public static final String REMOVE = IMAGE_URL + "bundled/actions/remove.png";
 
-      public static final String DOWN = IMAGE_URL + "buttons/down.png";
+      public static final String UP = IMAGE_URL + "bundled/actions/up.png";
 
-      public static final String DEFAULTS = IMAGE_URL + "buttons/defaults.png";
+      public static final String DOWN = IMAGE_URL + "bundled/actions/down.png";
+
+      public static final String DEFAULTS = IMAGE_URL + "bundled/actions/defaults.png";
 
    }
 

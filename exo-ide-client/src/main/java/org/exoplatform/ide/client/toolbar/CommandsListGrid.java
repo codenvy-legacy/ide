@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public class CommandItemExListGrid extends ListGrid<CommandItemEx>
+public class CommandsListGrid extends ListGrid<CommandItemEx>
 {
 
    public interface Style
@@ -48,15 +48,14 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
 
    private final static String TITLE = IDE.PREFERENCES_CONSTANT.commandListGridCommandColumn();
 
-   private final static String ID = "ideCommandItemExListGrid";
+   private final static String ID = "ide.core.customize-toolbar.commands-list";
 
-   public CommandItemExListGrid()
+   public CommandsListGrid()
    {
       super();
       setID(ID);
 
       initColumns();
-
    }
    
    private void initColumns()
@@ -88,7 +87,7 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
    private String getDivider(String title, String style)
    {
       String divider =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
+         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:16px;\">"
             + "<tr><td><hr></td><td class=\"" + style + "\">&nbsp;" + title + "&nbsp;</td><td><hr></td></tr>"
             + "</table>";
 
@@ -104,42 +103,45 @@ public class CommandItemExListGrid extends ListGrid<CommandItemEx>
          title = getDivider(title, Style.GROUP);
          return title;
       }
-      else
+      
+      String title = "";
+      String imageHTML = null;      
+      String commandName = item.getCommand().getId();
+      if (commandName.indexOf("/") >= 0)
       {
-         String title = "";
-         String commandName = item.getCommand().getId();
-         if (commandName.indexOf("/") >= 0)
-         {
-            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
-         }
-
-         while (commandName.indexOf("\\") >= 0)
-         {
-            commandName = commandName.replace("\\", "/");
-         }
-
-         if (item.getCommand() instanceof PopupMenuControl)
-         {
-            commandName += "&nbsp;[Popup]";
-         }
-
-         if (item.getCommand().getNormalImage() != null)
-         {
-            Image image = new Image(item.getCommand().getNormalImage());
-            String imageHTML = ImageHelper.getImageHTML(image);
-            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
-         }
-         else if (item.getCommand().getIcon() != null)
-         {
-            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
-         }
-         else
-         {
-            title = "<span>" + commandName + "</span>";
-         }
-
-         return title;
+         commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
       }
+
+      while (commandName.indexOf("\\") >= 0)
+      {
+         commandName = commandName.replace("\\", "/");
+      }
+
+      if (item.getCommand() instanceof PopupMenuControl)
+      {
+         commandName += "&nbsp;[Popup]";
+      }
+
+      if (item.getCommand().getNormalImage() != null)
+      {
+         Image image = new Image(item.getCommand().getNormalImage());
+         imageHTML = ImageHelper.getImageHTML(image);
+      }
+      else if (item.getCommand().getIcon() != null)
+      {
+         imageHTML = "<img src = \"" + item.getCommand().getIcon() + "\"/>";
+      }
+      
+      title = build(imageHTML, commandName);
+
+      return title;
+   }
+   
+   private String build(String image, String command) {
+      String h ="<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">" +
+         (image != null ? "<div style=\"width:16px; height:16px; overflow:hidden; float:left;\">" + image + "</div>" : "") +
+      	"<div style=\"float:left;\">&nbsp;" + command + "</div></div>";      
+      return  h;
    }
 
 }

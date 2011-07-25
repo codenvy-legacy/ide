@@ -38,6 +38,12 @@ public class IDEIconSet
       ImageFactory.addImage("search", IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
       ImageFactory.addImage("delete", IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
       ImageFactory.addImage("properties", IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
+      
+      ImageFactory.addImage("add", IDEImageBundle.INSTANCE.add(), IDEImageBundle.INSTANCE.addDisabled());
+      ImageFactory.addImage("remove", IDEImageBundle.INSTANCE.remove(), IDEImageBundle.INSTANCE.removeDisabled());
+      ImageFactory.addImage("up", IDEImageBundle.INSTANCE.up(), IDEImageBundle.INSTANCE.upDisabled());
+      ImageFactory.addImage("down", IDEImageBundle.INSTANCE.down(), IDEImageBundle.INSTANCE.downDisabled());
+      ImageFactory.addImage("defaults", IDEImageBundle.INSTANCE.defaults(), IDEImageBundle.INSTANCE.defaultsDisabled());
    }
 
 }

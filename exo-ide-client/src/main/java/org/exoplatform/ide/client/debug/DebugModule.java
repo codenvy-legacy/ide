@@ -33,7 +33,7 @@ public class DebugModule
    public DebugModule(HandlerManager eventBus)
    {
 
-      //new ShowImagesPresenter(eventBus);
+      new ShowImagesPresenter(eventBus);
       
    }
 

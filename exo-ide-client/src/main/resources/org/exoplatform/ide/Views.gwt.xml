@@ -85,6 +85,10 @@
 		<when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
 	</replace-with>
 
+	<replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
+		<when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display" />
+	</replace-with>
+
 	<replace-with class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysView">
 		<when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display" />
 	</replace-with>

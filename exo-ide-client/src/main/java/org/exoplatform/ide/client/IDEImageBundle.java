@@ -52,6 +52,40 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("bundled-images/cancel-disabled.png")
    ImageResource cancelDisabled();
+   
+   /*
+    * Actions
+    */
+   
+   @Source("../public/images/bundled/actions/add.png")
+   ImageResource add();
+
+   @Source("../public/images/bundled/actions/add_Disabled.png")
+   ImageResource addDisabled();
+
+   @Source("../public/images/bundled/actions/remove.png")
+   ImageResource remove();
+
+   @Source("../public/images/bundled/actions/remove_Disabled.png")
+   ImageResource removeDisabled();
+
+   @Source("../public/images/bundled/actions/up.png")
+   ImageResource up();
+
+   @Source("../public/images/bundled/actions/up_Disabled.png")
+   ImageResource upDisabled();
+
+   @Source("../public/images/bundled/actions/down.png")
+   ImageResource down();
+
+   @Source("../public/images/bundled/actions/down_Disabled.png")
+   ImageResource downDisabled();
+
+   @Source("../public/images/bundled/actions/defaults.png")
+   ImageResource defaults();
+
+   @Source("../public/images/bundled/actions/defaults_Disabled.png")
+   ImageResource defaultsDisabled();
 
    /*
     * BROWSER
@@ -243,62 +277,6 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/file/create_project_template_Disabled.png")
    ImageResource createProjectTemplateDisabled();
-
-   /*
-    * GADGET
-    */
-
-   //   @Source("../public/images/bundled/gadget/deploy_gadget.png")
-   //   ImageResource deployGadget();
-   //
-   //   @Source("../public/images/bundled/gadget/deploy_gadget_Disabled.png")
-   //   ImageResource deployGadgetDisabled();
-   //
-   //   @Source("../public/images/bundled/gadget/undeploy_gadget.png")
-   //   ImageResource undeployGadget();
-   //
-   //   @Source("../public/images/bundled/gadget/undeploy_gadget_Disabled.png")
-   //   ImageResource undeployGadgetDisabled();
-
-   /*
-    * GROOVY
-    */
-
-   //   @Source("../public/images/bundled/groovy/set_autoload.png")
-   //   ImageResource setAutoLoad();
-   //
-   //   @Source("../public/images/bundled/groovy/set_autoload_Disabled.png")
-   //   ImageResource setAutoLoadDisabled();
-   //
-   //   @Source("../public/images/bundled/groovy/unset_autoload.png")
-   //   ImageResource unsetAutoLoad();
-   //
-   //   @Source("../public/images/bundled/groovy/unset_autoload_Disabled.png")
-   //   ImageResource unsetAutoLoadDisabled();
-   //
-   //   @Source("../public/images/bundled/groovy/validate.png")
-   //   ImageResource validateGroovy();
-   //
-   //   @Source("../public/images/bundled/groovy/validate_Disabled.png")
-   //   ImageResource validateGroovyDisabled();
-   //
-   //   @Source("../public/images/bundled/groovy/deploy.png")
-   //   ImageResource deployGroovy();
-   //
-   //   @Source("../public/images/bundled/groovy/deploy_Disabled.png")
-   //   ImageResource deployGroovyDisabled();
-   //
-   //   @Source("../public/images/bundled/groovy/undeploy.png")
-   //   ImageResource undeployGroovy();
-   //
-   //   @Source("../public/images/bundled/groovy/undeploy_Disabled.png")
-   //   ImageResource undeployGroovyDisabled();
-   //
-   //   @Source("../public/images/bundled/groovy/output.png")
-   //   ImageResource groovyOutput();
-   //
-   //   @Source("../public/images/bundled/groovy/output_Disabled.png")
-   //   ImageResource groovyOutputDisabled();
 
    /*
     * HELP

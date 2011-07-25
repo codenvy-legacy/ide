@@ -37,10 +37,7 @@ import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryControl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
-import org.exoplatform.ide.client.toolbar.CustomizeToolbarCommand;
-import org.exoplatform.ide.client.toolbar.CustomizeToolbarEvent;
-import org.exoplatform.ide.client.toolbar.CustomizeToolbarForm;
-import org.exoplatform.ide.client.toolbar.CustomizeToolbarHandler;
+import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.workspace.SelectWorkspaceControl;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
 
@@ -52,7 +49,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  */
 
-public class PreferencesModule implements InitializeServicesHandler, ControlsUpdatedHandler, CustomizeToolbarHandler,
+public class PreferencesModule implements InitializeServicesHandler, ControlsUpdatedHandler,
    ApplicationSettingsReceivedHandler
 {
 
@@ -69,17 +66,30 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       this.eventBus = eventBus;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
-      eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
+      /*
+       * Select Workspace ability.
+       */
       eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutControl(eventBus)));
-      eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
-
-      new RestServicesDiscoveryPresenter(eventBus);
       new SelectWorkspacePresenter(eventBus);
+
+      /*
+       * Customizing of Toollbars.
+       */
+      new CustomizeToolbarPresenter(eventBus);
+
+      /*
+       * About IDE.
+       */
+      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutControl(eventBus)));
       new AboutIDEPresenter(eventBus);
+
+      /*
+       * Rest Services Discovery.
+       */
+      eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
+      new RestServicesDiscoveryPresenter(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -92,16 +102,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
    public void onControlsUpdated(ControlsUpdatedEvent event)
    {
       controls = event.getControls();
-   }
-
-   public void onCustomizeToolBar(CustomizeToolbarEvent event)
-   {
-      if (controls == null || applicationSettings == null)
-      {
-         return;
-      }
-
-      new CustomizeToolbarForm(eventBus, applicationSettings, controls);
    }
 
    @Override

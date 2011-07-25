@@ -198,7 +198,7 @@ implements CreateFromTemplateDisplay<T>
       deleteButton.setButtonId(ID_DELETE_BUTTON);
       deleteButton.setWidth(BUTTON_W);
       deleteButton.setHeight(BUTTON_H);
-      deleteButton.setImage(new Image(Images.Buttons.DELETE));
+      deleteButton.setImage(new Image(Images.Buttons.REMOVE));
 
      buttonsLayout.add(deleteButton);
      buttonsLayout.add(createButton);

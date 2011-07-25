@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.toolbar;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -34,16 +33,26 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.TextInputControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.toolbar.ToolbarItem.Type;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -52,95 +61,139 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public class CustomizeToolbarPresenter
+public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, ApplicationSettingsReceivedHandler,
+   CustomizeToolbarHandler, ViewClosedHandler
 {
 
-   public interface Display
+   /**
+    *
+    */
+   public interface Display extends IsView
    {
 
-      void closeForm();
-
-      ListGridItem<CommandItemEx> getCommandItemListGrid();
+      ListGridItem<CommandItemEx> getCommandsListGrid();
 
       ListGridItem<ToolbarItem> getToolbarItemsListGrid();
 
-      void toolbarItemsListGridSelectItem(ToolbarItem item);
+      void selectToolbarItem(ToolbarItem item);
 
       HasClickHandlers getAddCommandButton();
 
       HasClickHandlers getAddDelimiterButton();
 
-      HasClickHandlers getDeleteCommandButton();
+      HasClickHandlers getDeleteButton();
 
       HasClickHandlers getMoveUpButton();
 
       HasClickHandlers getMoveDownButton();
 
-      HasClickHandlers getApplyButton();
+      HasClickHandlers getOkButton();
 
       HasClickHandlers getCancelButton();
 
       HasClickHandlers getDefaultsButton();
 
-      void enableAddCommandButton();
+      void setAddCommandButtonEnabled(boolean enabled);
 
-      void disableAddCommandButton();
+      void setAddDelimiterButtonEnabled(boolean enabled);
 
-      void enableAddDelimiterButton();
+      void setDeleteButtonEnabled(boolean enabled);
 
-      void disableAddDelimiterButton();
+      void setMoveUpButtonEnabled(boolean enabled);
 
-      void enableDeleteCommandButton();
-
-      void disableDeleteCommandButton();
-
-      void enableMoveUpButton();
-
-      void disableMoveUpButton();
-
-      void enableMoveDownButton();
-
-      void disableMoveDownButton();
+      void setMoveDownButtonEnabled(boolean enabled);
 
    }
-   
+
+   /**
+    * Save settings failed message.
+    */
    private static final String SAVE_SETTINGS_FAILURE = IDE.ERRORS_CONSTANT.customizeToolbarSaveFailure();
 
+   /**
+    * Instance of Event Bus.
+    */
    private HandlerManager eventBus;
 
+   /**
+    * Instance of binded display.
+    */
    private Display display;
 
+   /**
+    * Currently selected command.
+    */
    private CommandItemEx selectedCommandItem;
 
+   /**
+    * Currently selected toolbar item.
+    */
    private ToolbarItem selectedToolbarItem;
 
+   /**
+    * List of toolbar items.
+    */
    private ArrayList<ToolbarItem> toolbarItems = new ArrayList<ToolbarItem>();
 
+   /**
+    * Application settings.
+    */
    private ApplicationSettings applicationSettings;
 
-   private List<Control> controls;
+   /**
+    * List of available controls.
+    */
+   private List<Control> controls = new ArrayList<Control>();
 
-   public CustomizeToolbarPresenter(HandlerManager eventBus, ApplicationSettings applicationSettings,
-      List<Control> controls)
+   /**
+    * Creates a new instance of CustomizeToolbarPresenter.
+    * 
+    * @param eventBus Event Bus
+    */
+   public CustomizeToolbarPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.applicationSettings = applicationSettings;
-      this.controls = controls;
+
+      eventBus.addHandler(ControlsUpdatedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
+
+      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
    }
 
-   public void destroy()
+   @Override
+   public void onControlsUpdated(ControlsUpdatedEvent event)
    {
+      controls = event.getControls();
    }
 
-   public void bindDisplay(Display d)
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      display = d;
+      applicationSettings = event.getApplicationSettings();
+   }
 
+   @Override
+   public void onCustomizeToolBar(CustomizeToolbarEvent event)
+   {
+      if (display != null)
+      {
+         return;
+      }
+
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+   }
+
+   public void bindDisplay()
+   {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            display.closeForm();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -160,7 +213,7 @@ public class CustomizeToolbarPresenter
          }
       });
 
-      display.getDeleteCommandButton().addClickHandler(new ClickHandler()
+      display.getDeleteButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
@@ -184,7 +237,7 @@ public class CustomizeToolbarPresenter
          }
       });
 
-      display.getApplyButton().addClickHandler(new ClickHandler()
+      display.getOkButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
@@ -194,13 +247,14 @@ public class CustomizeToolbarPresenter
 
       display.getDefaultsButton().addClickHandler(new ClickHandler()
       {
+         @Override
          public void onClick(ClickEvent event)
          {
             restoreDefaults();
          }
       });
 
-      display.getCommandItemListGrid().addSelectionHandler(new SelectionHandler<CommandItemEx>()
+      display.getCommandsListGrid().addSelectionHandler(new SelectionHandler<CommandItemEx>()
       {
          public void onSelection(SelectionEvent<CommandItemEx> event)
          {
@@ -216,11 +270,11 @@ public class CustomizeToolbarPresenter
          }
       });
 
-      display.disableAddCommandButton();
-      display.disableAddDelimiterButton();
-      display.disableDeleteCommandButton();
-      display.disableMoveUpButton();
-      display.disableMoveDownButton();
+      display.setAddCommandButtonEnabled(false);
+      display.setAddDelimiterButtonEnabled(false);
+      display.setDeleteButtonEnabled(false);
+      display.setMoveUpButtonEnabled(false);
+      display.setMoveDownButtonEnabled(false);
 
       fillCommandListGrid();
 
@@ -271,7 +325,7 @@ public class CustomizeToolbarPresenter
          }
       }
 
-      display.getCommandItemListGrid().setValue(commandList);
+      display.getCommandsListGrid().setValue(commandList);
    }
 
    private void addCommand(HashMap<String, List<Control>> groups, Control command)
@@ -361,7 +415,7 @@ public class CustomizeToolbarPresenter
 
       checkDeleteToolbarItemButton();
 
-      display.enableAddDelimiterButton();
+      display.setAddDelimiterButtonEnabled(true);
 
       checkMoveCommands();
    }
@@ -370,7 +424,7 @@ public class CustomizeToolbarPresenter
    {
       if (selectedToolbarItem == null)
       {
-         display.disableAddCommandButton();
+         display.setAddCommandButtonEnabled(false);
          return;
       }
 
@@ -381,11 +435,11 @@ public class CustomizeToolbarPresenter
 
       if (selectedCommandItem.isGroup())
       {
-         display.disableAddCommandButton();
+         display.setAddCommandButtonEnabled(false);
       }
       else
       {
-         display.enableAddCommandButton();
+         display.setAddCommandButtonEnabled(true);
       }
    }
 
@@ -393,17 +447,17 @@ public class CustomizeToolbarPresenter
    {
       if (selectedToolbarItem == null)
       {
-         display.disableDeleteCommandButton();
+         display.setDeleteButtonEnabled(false);
          return;
       }
 
       if (selectedToolbarItem.getType() == Type.SPACER)
       {
-         display.disableDeleteCommandButton();
+         display.setDeleteButtonEnabled(false);
       }
       else
       {
-         display.enableDeleteCommandButton();
+         display.setDeleteButtonEnabled(true);
       }
    }
 
@@ -412,20 +466,20 @@ public class CustomizeToolbarPresenter
       int index = toolbarItems.indexOf(selectedToolbarItem);
       if (index == 0)
       {
-         display.disableMoveUpButton();
+         display.setMoveUpButtonEnabled(false);
       }
       else
       {
-         display.enableMoveUpButton();
+         display.setMoveUpButtonEnabled(true);
       }
 
       if (index < toolbarItems.size() - 1)
       {
-         display.enableMoveDownButton();
+         display.setMoveDownButtonEnabled(true);
       }
       else
       {
-         display.disableMoveDownButton();
+         display.setMoveDownButtonEnabled(false);
       }
    }
 
@@ -440,7 +494,7 @@ public class CustomizeToolbarPresenter
       display.getToolbarItemsListGrid().setValue(toolbarItems);
 
       selectedToolbarItem = item;
-      display.toolbarItemsListGridSelectItem(item);
+      display.selectToolbarItem(item);
 
       checkMoveCommands();
    }
@@ -454,7 +508,7 @@ public class CustomizeToolbarPresenter
 
       display.getToolbarItemsListGrid().setValue(toolbarItems);
       selectedToolbarItem = delimiter;
-      display.toolbarItemsListGridSelectItem(delimiter);
+      display.selectToolbarItem(delimiter);
 
       checkMoveCommands();
    }
@@ -471,7 +525,7 @@ public class CustomizeToolbarPresenter
       }
 
       selectedToolbarItem = toolbarItems.get(index);
-      display.toolbarItemsListGridSelectItem(selectedToolbarItem);
+      display.selectToolbarItem(selectedToolbarItem);
 
       checkAddCommandButton();
       checkDeleteToolbarItemButton();
@@ -488,7 +542,7 @@ public class CustomizeToolbarPresenter
 
       checkMoveCommands();
 
-      display.toolbarItemsListGridSelectItem(selectedToolbarItem);
+      display.selectToolbarItem(selectedToolbarItem);
    }
 
    private void moveDown()
@@ -501,7 +555,7 @@ public class CustomizeToolbarPresenter
 
       checkMoveCommands();
 
-      display.toolbarItemsListGridSelectItem(selectedToolbarItem);
+      display.selectToolbarItem(selectedToolbarItem);
    }
 
    private List<String> itemsToUpdate;
@@ -526,16 +580,15 @@ public class CustomizeToolbarPresenter
             itemsToUpdate.add("---");
          }
       }
-      
-      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings, 
+
+      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
          new AsyncRequestCallback<ApplicationSettings>()
          {
-
             @Override
             protected void onSuccess(ApplicationSettings result)
             {
                eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
-               display.closeForm();
+               IDE.getInstance().closeView(display.asView().getId());
             }
 
             @Override
@@ -544,7 +597,6 @@ public class CustomizeToolbarPresenter
                eventBus.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
             }
          });
-      
    }
 
    private void restoreDefaults()
@@ -558,11 +610,21 @@ public class CustomizeToolbarPresenter
 
       fillToolbarListGrid(toolbarDefaultItems);
       selectedToolbarItem = null;
-      display.disableAddCommandButton();
-      display.disableAddDelimiterButton();
-      display.disableDeleteCommandButton();
-      display.disableMoveUpButton();
-      display.disableMoveDownButton();
+
+      display.setAddCommandButtonEnabled(false);
+      display.setAddDelimiterButtonEnabled(false);
+      display.setDeleteButtonEnabled(false);
+      display.setMoveUpButtonEnabled(false);
+      display.setMoveDownButtonEnabled(false);
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
 }

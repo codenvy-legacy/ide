@@ -42,22 +42,26 @@ public class Menu extends AbstractTestModule
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
+      String menuItemLocator = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']";
+      
       selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']");
-     
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-
-      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
+      waitForElementPresent(menuItemLocator);
+      selenium().click(menuItemLocator);
+      
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception {
+      String menuItemLocator1 = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']";
+      String menuItemLocator2 = "//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']";
+      
       selenium().mouseDown("//td[@class='exo-menuBarItem' and text()='" + menuName + "']");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
-      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + commandName + "']");
+      selenium().click(menuItemLocator1);
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
       
-      selenium().click("//td[@class='exo-popupMenuTitleField']/nobr[text()='" + subCommandName + "']");
+      selenium().click(menuItemLocator2);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 

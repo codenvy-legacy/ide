@@ -180,7 +180,7 @@ public class PermissionsManagerForm extends IDEDialogWindow implements Permissio
       removeButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.deleteButton());
       removeButton.setWidth("90px");
       removeButton.setHeight("22px");
-      removeButton.setImage(new Image(Images.Buttons.DELETE));
+      removeButton.setImage(new Image(Images.Buttons.REMOVE));
 
       HorizontalPanel buttonsLayout = new HorizontalPanel();
       buttonsLayout.setWidth("100%");
