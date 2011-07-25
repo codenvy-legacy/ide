@@ -53,6 +53,7 @@
    <jdk>(Default)</jdk>
    <triggers class="vector" />
    <concurrentBuild>false</concurrentBuild>
+   <goals>clean install</goals>
    <mavenName>Maven 2.2.1</mavenName>
    <aggregatorStyleBuild>true</aggregatorStyleBuild>
    <incrementalBuild>false</incrementalBuild>

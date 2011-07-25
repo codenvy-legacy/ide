@@ -360,7 +360,7 @@ public abstract class JenkinsClient
                {
                   // If build successful provide URL to download artifact.
 
-                  // In some reason Jenkins may provide more then one artifact tags, e.g. it happens if artifact was renamed. 
+                  // Be sure only one artifact provided.
                   int artifacts =
                      ((Double)xpath.evaluate("count(/" + root + "/artifact)", doc, XPathConstants.NUMBER)).intValue();
 
@@ -370,26 +370,6 @@ public abstract class JenkinsClient
                      String relativePath = xpath.evaluate("/" + root + "/artifact/relativePath", doc);
                      return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", buildUrl
                         + "artifact/" + relativePath);
-                  }
-                  else if (artifacts >= 1)
-                  {
-                     // More then one artifact :-( . Try to find what correct one.
-                     if (workDir != null && workDir.exists())
-                     {
-                        // Get name of output file from pom.xml if any.
-                        String artifactFileName = getArtifactFileName(workDir);
-                        if (artifactFileName != null)
-                        {
-                           // Get relative path if file name matched. 
-                           String relativePath = xpath.evaluate( //
-                              "/" + root + "/artifact[fileName='" + artifactFileName + "']/relativePath", //
-                              doc);
-
-                           if (relativePath != null & relativePath.length() > 0)
-                              return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText",
-                                 buildUrl + "artifact/" + relativePath);
-                        }
-                     }
                   }
                }
                // Cannot provide URL for download, e.g. build failed, canceled, etc.
@@ -569,49 +549,6 @@ public abstract class JenkinsClient
       {
          if (http != null)
             http.disconnect();
-      }
-   }
-
-   private String getArtifactFileName(File workDir)
-   {
-      File pom = new File(workDir, "pom.xml");
-      if (!pom.exists())
-         return null;
-
-      XPath xpath = XPathFactory.newInstance().newXPath();
-      DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-      df.setNamespaceAware(false);
-      try
-      {
-         Document doc = df.newDocumentBuilder().parse(pom);
-         String filename = xpath.evaluate("/project/build/finalName", doc);
-         if (filename != null && filename.length() > 0)
-         {
-            filename += ".war";
-         }
-         else
-         {
-            String artifactId = xpath.evaluate("/project/artifactId", doc);
-            String version = xpath.evaluate("/project/version", doc);
-            filename = artifactId + "-" + version + ".war";
-         }
-         return filename;
-      }
-      catch (SAXException e)
-      {
-         throw new RuntimeException(e.getMessage(), e);
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e.getMessage(), e);
-      }
-      catch (ParserConfigurationException e)
-      {
-         throw new RuntimeException(e.getMessage(), e);
-      }
-      catch (XPathExpressionException e)
-      {
-         throw new RuntimeException(e.getMessage(), e);
       }
    }
 
