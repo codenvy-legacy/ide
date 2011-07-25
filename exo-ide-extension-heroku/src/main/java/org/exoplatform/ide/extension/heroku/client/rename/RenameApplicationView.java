@@ -121,6 +121,7 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
    @Override
    public void selectValueInRenameField()
    {
+      nameField.focusInItem();
       nameField.selectValue();
    }
 
