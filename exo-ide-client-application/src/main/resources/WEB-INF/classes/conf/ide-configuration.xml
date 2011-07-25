@@ -44,6 +44,25 @@
    </component>
    
    <component>
+      <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudbeesJenkinsClient</type>
+      <init-params>
+         <value-param>
+            <name>jenkins-user</name>
+            <value>evidolob@exoplatform.com</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-password</name>
+            <value>1234qwer</value>
+         </value-param>
+      </init-params>
+   </component>
+   
+   <component>
      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
    

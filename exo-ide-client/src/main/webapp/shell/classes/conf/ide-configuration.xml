@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+   site: http://www.fsf.org. -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
@@ -42,13 +45,28 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
-     <type>org.exoplatfrom.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+      <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
-   
+
    <component>
-     <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
+      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudbeesJenkinsClient</type>
+      <init-params>
+         <value-param>
+            <name>jenkins-user</name>
+            <value>evidolob@exoplatform.com</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-password</name>
+            <value>1234qwer</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
 
    <component>
@@ -66,15 +84,15 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.JcrCloudfoundryAuthenticator</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
@@ -82,7 +100,7 @@
    <component>
       <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
