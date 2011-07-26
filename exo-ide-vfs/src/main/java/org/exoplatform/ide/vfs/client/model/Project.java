@@ -33,10 +33,18 @@ import java.util.List;
 public class Project extends org.exoplatform.ide.vfs.shared.Project 
 implements ItemContext
 {
-   public Project(String name, String path, String parentId, String type, List<Property> properties)
+   
+   private org.exoplatform.ide.vfs.shared.Folder parent;
+   
+   private boolean persisted;
+   
+   @SuppressWarnings("unchecked")
+   public Project(String name, org.exoplatform.ide.vfs.shared.Folder parent, String type, List<Property> properties)
    {
-      super(null, name, PROJECT_MIME_TYPE, path, parentId, new Date().getTime(), 
+      super(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), 
          properties, new HashMap<String, Link>(), type);
+      this.parent = parent;
+      this.persisted = false;
    }
    
 //   public Project(org.exoplatform.ide.vfs.shared.Project persistedProject)
@@ -62,8 +70,27 @@ implements ItemContext
    @Override
    public void setProject(Project proj)
    {
+   }
+
+   @Override
+   public org.exoplatform.ide.vfs.shared.Folder getParent()
+   {
+      return parent;
+   }
+
+   @Override
+   public void setParent(org.exoplatform.ide.vfs.shared.Folder parent)
+   {
+      this.parent = parent;
 
    }
+
+   @Override
+   public boolean isPersisted()
+   {
+      return persisted;
+   }
+   
    
    
 }

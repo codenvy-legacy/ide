@@ -24,21 +24,21 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.vfs.client.model.File;
 import org.exoplatform.ide.vfs.client.model.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FilderContentUnmarshaller Feb 2, 2011 2:59:31 PM evgen $
  *
  */
-public class ChildrenUnmarshaller implements Unmarshallable
+public class ChildrenUnmarshaller implements Unmarshallable <List<Item>>
 {
 
    /**
@@ -46,15 +46,16 @@ public class ChildrenUnmarshaller implements Unmarshallable
     */
    private static final String TYPE = "itemType";
    
-   private Folder folder;
+   private final List<Item> items;
 
    /**
     * @param items
     */
-   public ChildrenUnmarshaller(Folder folder)
+   public ChildrenUnmarshaller(final List<Item> items)
    {
       super();
-      this.folder = folder;
+      this.items = items;
+      this.items.clear();
    }
 
    /**
@@ -76,6 +77,14 @@ public class ChildrenUnmarshaller implements Unmarshallable
          throw new UnmarshallerException(message);
       }
    } 
+   
+   
+
+   @Override
+   public List<Item> getPayload()
+   {
+      return this.items;
+   }
 
    /**
     * Parse JSON Array to List of Item
@@ -84,7 +93,8 @@ public class ChildrenUnmarshaller implements Unmarshallable
     */
    private void parseItems(JSONArray itemsArray)
    {
-      ArrayList<Item> items = new ArrayList<Item>();
+      //ArrayList<Item> items = new ArrayList<Item>();
+//      items.clear();
       
       for (int i = 0; i < itemsArray.size(); i++)
       {
@@ -97,7 +107,7 @@ public class ChildrenUnmarshaller implements Unmarshallable
             items.add(new File(object));
       }
       
-      this.folder.getChildren().setItems(items);
+      //this.folder.getChildren().setItems(items);
    }
 
 }

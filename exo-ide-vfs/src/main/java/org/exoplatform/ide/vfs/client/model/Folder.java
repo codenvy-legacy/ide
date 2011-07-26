@@ -46,17 +46,27 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
    private ItemList<Item> children = new ItemList<Item>();
    
    private Project project;
+   
+   private org.exoplatform.ide.vfs.shared.Folder parent;
+   
+   private boolean persisted;
  
-   public Folder(String name, String path, String parentId)
+   @SuppressWarnings("unchecked")
+   public Folder(String name, org.exoplatform.ide.vfs.shared.Folder parent)
    {
-      super(null, name, FOLDER_MIME_TYPE, path, parentId, new Date().getTime(), 
+      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), 
     		new ArrayList<Property>(), new HashMap<String, Link>());
+      this.parent = parent;
+      this.persisted = false;
    }
    
-   public Folder(String name, String path, String parentId,Map<String, Link> links)
+   @SuppressWarnings("unchecked")
+   public Folder(String name, org.exoplatform.ide.vfs.shared.Folder parent, Map<String, Link> links)
    {
-      super(null, name, FOLDER_MIME_TYPE, path, parentId, new Date().getTime(), 
+      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), 
          new ArrayList<Property>(), links);
+      this.parent = parent;
+      this.persisted = false;
    }
 
 
@@ -70,7 +80,15 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
             (long)itemObject.get("creationDate").isNumber().doubleValue(),     
             JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties")),     
             JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links")));
+      
+      this.persisted = true;
 
+   }
+   
+   public void init(JSONObject itemObject)
+   {
+      super.init(itemObject);
+      this.persisted = true;
    }
    
 
@@ -80,6 +98,7 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
    }
    
 
+ 
    /**
     * @return the children
     */
@@ -109,6 +128,28 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
       
    }
 
+   @Override
+   public org.exoplatform.ide.vfs.shared.Folder getParent()
+   {
+      return parent;
+   }
+
+   @Override
+   public void setParent(org.exoplatform.ide.vfs.shared.Folder parent)
+   {
+      this.parent = parent;
+   }
+
+   @Override
+   public boolean isPersisted()
+   {
+      return persisted;
+   }
+   
+   
+
+
+   
    
 
 }

@@ -21,23 +21,22 @@ package org.exoplatform.ide.vfs.client.marshal;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.ide.vfs.client.model.Folder;
 
 /**
  * @version $Id:$
  *
  */
-public class ItemUnmarshaller implements Unmarshallable
+public class FolderUnmarshaller implements Unmarshallable<Folder>
 {
    
    
-   private Item item;
+   private final Folder item;
    
-   public ItemUnmarshaller(Item item)
+   public FolderUnmarshaller(Folder item)
    {
-      super();
       
       this.item = item;
 
@@ -62,5 +61,13 @@ public class ItemUnmarshaller implements Unmarshallable
       }
 
    }
+
+   @Override
+   public Folder getPayload()
+   {
+      return this.item;
+   }
+   
+   
 
 }

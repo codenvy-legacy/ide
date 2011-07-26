@@ -22,7 +22,6 @@ package org.exoplatform.ide.vfs.client.model;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 
 
@@ -44,7 +42,7 @@ import java.util.List;
 public class File extends org.exoplatform.ide.vfs.shared.File implements ItemContext
 {
 
-   private boolean newFile;
+   private boolean persisted;
 
    private String content = null;
 
@@ -56,17 +54,21 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
    
    private Project project;
    
-   private Folder parent;
+   private org.exoplatform.ide.vfs.shared.Folder parent;
 
-   public File(String name, String path, String mimeType, String content, Folder parent)
+   @SuppressWarnings("unchecked")
+   public File(String name, String mimeType, String content, 
+         org.exoplatform.ide.vfs.shared.Folder parent)
    {
-	  super(null, name, path, parent.getId(), new Date().getTime(), 
+	  super(null, name, parent.createPath(name), parent.getId(), new Date().getTime(), 
 			new Date().getTime(), null /*versionId*/,
 			mimeType, 0, false, new ArrayList<Property>(),
 			new HashMap<String, Link>());
-      this.newFile = true;
+      this.persisted = false;
       this.content = content;
       this.parent = parent;
+      
+      fixMimeType();
    }
 
    public File() 
@@ -89,13 +91,27 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
             (boolean)itemObject.get("locked").isBoolean().booleanValue(),                
             JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties")),     
             JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links")));
-      this.newFile = false;
+     
+      fixMimeType();
+      
+      this.persisted = true;
+   }
+   
+   private void fixMimeType()
+   {
+      // Firefox adds ";charset=utf-8" to mimetype
+      // lets clear it
+      int index = mimeType.indexOf(';'); 
+      if(index > 0)
+        mimeType = mimeType.substring(0, index);
    }
    
    public void init(JSONObject itemObject)
    {
       super.init(itemObject);
       setLength((long)itemObject.get("length").isNumber().doubleValue());
+      this.persisted = true;
+      fixMimeType();
    }
 
    /**
@@ -114,23 +130,6 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
       this.content = content;
    }
 
-//   /**
-//    * @return the contentChanged
-//    */
-//   public boolean isContentChanged()
-//   {
-//      return contentChanged;
-//   }
-//
-//   /**
-//    * @param contentChanged the contentChanged to set
-//    */
-//   public void setContentChanged(boolean contentChanged)
-//   {
-//      this.contentChanged = contentChanged;
-//   }
-
-   
    public HashSet<File> getVersionHistory()
    {
       return versionHistory;
@@ -165,16 +164,16 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
    }
 
 
-   public boolean isNewFile()
-   {
-      return newFile;
-   }
-
-
-   public void setNewFile(boolean newFile)
-   {
-      this.newFile = newFile;
-   }
+//   public boolean isNewFile()
+//   {
+//      return newFile;
+//   }
+//
+//
+//   public void setNewFile(boolean newFile)
+//   {
+//      this.newFile = newFile;
+//   }
 
 
    @Override
@@ -190,9 +189,23 @@ public class File extends org.exoplatform.ide.vfs.shared.File implements ItemCon
       
    }
 
-   public final Folder getParent()
+   @Override
+   public final org.exoplatform.ide.vfs.shared.Folder getParent()
    {
       return parent;
+   }
+
+   @Override
+   public void setParent(org.exoplatform.ide.vfs.shared.Folder parent)
+   {
+      this.parent = parent;
+   }
+
+   @Override
+   public boolean isPersisted()
+   {
+      // TODO Auto-generated method stub
+      return persisted;
    }
 
    

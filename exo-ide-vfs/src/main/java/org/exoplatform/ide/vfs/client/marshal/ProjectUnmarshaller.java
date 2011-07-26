@@ -19,42 +19,55 @@
 package org.exoplatform.ide.vfs.client.marshal;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.client.model.File;
+import org.exoplatform.ide.vfs.client.model.Project;
 
-/** 
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
+/**
+ * @version $Id:$
  *
  */
-public class FileContentUnmarshaller implements Unmarshallable<File>
+public class ProjectUnmarshaller implements Unmarshallable<Project>
 {
-
-   private final File file;
- 
-   public FileContentUnmarshaller(File file)
+   
+   
+   private final Project item;
+   
+   public ProjectUnmarshaller(Project item)
    {
-     this.file = file;
+      
+      this.item = item;
+
    }
 
-
-
-   @Override
-   public File getPayload()
-   {
-      return file;
-   }
-
-
-
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      file.setContent(response.getText());
+      try
+      {        
+         item.init(JSONParser.parseLenient(response.getText()).isObject());
+      }
+      catch (Exception exc)
+      {
+         exc.printStackTrace();
+
+         String message = "Can't parse item "+response.getText();
+         throw new UnmarshallerException(message);
+      }
+
    }
 
- 
+   @Override
+   public Project getPayload()
+   {
+      return this.item;
+   }
+   
+   
 
 }

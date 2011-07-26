@@ -22,8 +22,8 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.client.model.Folder;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -35,10 +35,10 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
  * @version $Id: VFSInfoUnmarshaller Feb 2, 2011 2:16:15 PM evgen $
  *
  */
-public class VFSInfoUnmarshaller implements Unmarshallable
+public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo>
 {
  
-   private VirtualFileSystemInfo virtualFileSystemInfo;
+   private final VirtualFileSystemInfo virtualFileSystemInfo;
 
    /**
     * @param virtualFileSystemInfo
@@ -81,5 +81,13 @@ public class VFSInfoUnmarshaller implements Unmarshallable
     
       virtualFileSystemInfo.setRoot(new Folder(root)); 
    }
+
+   @Override
+   public VirtualFileSystemInfo getPayload()
+   {
+      return this.virtualFileSystemInfo;
+   }
+   
+   
 
 }

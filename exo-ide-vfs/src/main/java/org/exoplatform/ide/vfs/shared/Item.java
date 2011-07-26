@@ -270,4 +270,9 @@ public class Item
    {
       return "Item [id=" + id + ", name=" + name + ", type=" + itemType + "]";
    }
+   
+   public String createPath(String childName)
+   {
+      return this.path+"/"+childName;
+   }
 }
