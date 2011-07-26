@@ -47,7 +47,7 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
 {
    private RepositoryService repositoryService;
    private String workspace;
-   private String config = "/";
+   private String config = "/ide-home/users/";
 
    public JcrCloudfoundryAuthenticator(RepositoryService repositoryService, InitParams initParams)
    {
@@ -146,28 +146,19 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
          checkConfigNode(repository);
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userPath = config + user;
-         
-         Node userNode;
-         try
-         {
-            userNode = (Node)session.getItem(userPath);
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            userNode = ((Node)session.getItem(config)).addNode(user, "nt:folder");
-         }
+         String cloudFoundryPath = config + user + "/cloud_foundry";
 
          Node cloudFoundry;
          try
          {
-            cloudFoundry = userNode.getNode("cloud_foundry");
+            cloudFoundry = (Node)session.getItem(cloudFoundryPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            cloudFoundry = userNode.addNode("cloud_foundry", "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, cloudFoundryPath);
+            cloudFoundry = (Node)session.getItem(cloudFoundryPath);
          }
-         
+
          ExtendedNode fileNode;
          Node contentNode;
          try
@@ -217,26 +208,9 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
       {
          // Create node for users configuration under system session.
          sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-         Node configNode;
-         try
+         if (!(sys.itemExists(config)))
          {
-            configNode = (Node)sys.getItem(config);
-         }
-         catch (PathNotFoundException e)
-         {
-            String[] pathSegments = config.substring(1).split("/");
-            configNode = sys.getRootNode();
-            for (int i = 0; i < pathSegments.length; i++)
-            {
-               try
-               {
-                  configNode = configNode.getNode(pathSegments[i]);
-               }
-               catch (PathNotFoundException e1)
-               {
-                  configNode = configNode.addNode(pathSegments[i], "nt:folder");
-               }
-            }
+            org.exoplatform.ide.Utils.putFolders(sys, config);
             sys.save();
          }
       }
