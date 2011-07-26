@@ -64,12 +64,6 @@ public class JenkinsJobStatusUnmarshaller implements Unmarshallable
             jobStatus.setLastBuildResult(lastBuild.isString().stringValue());
          }
 
-         JSONValue outputUrl = object.get("outputUrl");
-         if (outputUrl.isString() != null)
-         {
-            jobStatus.setOutputUrl(outputUrl.isString().stringValue());
-         }
-
          JSONValue artifactUrl = object.get("artifactUrl");
          if (artifactUrl.isString()!= null)
          {
