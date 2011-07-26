@@ -293,6 +293,8 @@ public abstract class JenkinsClient
          http.setRequestMethod("GET");
          authenticate(http);
          int responseCode = http.getResponseCode();
+         if (responseCode == 404)
+            throw new JenkinsException(404, "Job '" + jobName + "' not found.\n", "text/plain");
          if (responseCode != 200)
             throw fault(http);
          InputStream input = http.getInputStream();
@@ -506,8 +508,8 @@ public abstract class JenkinsClient
             throw new IllegalArgumentException("Job name required. ");
       }
 
-      if (inQueue(jobName))
-         return null; // Do not show output if job in queue for build.
+      if (jobStatus(jobName, workDir).getStatus() != JobStatus.Status.END)
+         return null; // Do not show output if job in queue for build or building now.
 
       HttpURLConnection http = null;
       try
@@ -521,7 +523,7 @@ public abstract class JenkinsClient
             throw fault(http);
          return new HttpStream(http);
       }
-      catch (IOException e) 
+      catch (IOException e)
       {
          if (http != null)
             http.disconnect();
