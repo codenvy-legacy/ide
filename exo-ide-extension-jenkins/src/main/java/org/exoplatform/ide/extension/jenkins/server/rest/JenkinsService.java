@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -95,5 +96,17 @@ public class JenkinsService
    ) throws IOException, JenkinsException
    {
       return jenkins.jobStatus(jobName, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("job/console-output")
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   public InputStream consoleOutput( //
+      @QueryParam("name") String jobName, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws IOException, JenkinsException
+   {
+      return jenkins.consoleOutput(jobName, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 }

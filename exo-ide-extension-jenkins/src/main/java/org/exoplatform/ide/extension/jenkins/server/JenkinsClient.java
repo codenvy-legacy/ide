@@ -59,6 +59,66 @@ import javax.xml.xpath.XPathFactory;
  */
 public abstract class JenkinsClient
 {
+   protected class HttpStream extends InputStream
+   {
+      private final HttpURLConnection http;
+      private InputStream in;
+      private boolean closed;
+
+      public HttpStream(HttpURLConnection http)
+      {
+         this.http = http;
+      }
+
+      public int read() throws IOException
+      {
+         if (closed)
+            return -1;
+         if (in == null)
+            in = http.getInputStream();
+         int i = in.read();
+         if (i == -1)
+         {
+            if (!closed)
+            {
+               try
+               {
+                  close();
+               }
+               catch (IOException ignored)
+               {
+                  // Ignore errors occurs when try close.
+               }
+            }
+         }
+         return i;
+      }
+
+      public void close() throws IOException
+      {
+         in.close();
+         http.disconnect();
+         closed = true;
+      }
+
+      @Override
+      protected void finalize() throws Throwable
+      {
+         if (!closed)
+         {
+            try
+            {
+               close();
+            }
+            catch (IOException ignored)
+            {
+               // Ignore errors occurs when try close.
+            }
+         }
+         super.finalize();
+      }
+   }
+
    protected final String baseURL;
 
    private String jobTemplate;
@@ -285,8 +345,6 @@ public abstract class JenkinsClient
       }
    }
 
-   //   xpath=/mavenModuleSetBuild/artifact|/mavenModuleSetBuild/url|/mavenModuleSetBuild/result|/mavenModuleSetBuild/building&wrapper=status
-
    public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
    {
       if ((jobName == null || jobName.isEmpty()) && workDir != null)
@@ -297,7 +355,7 @@ public abstract class JenkinsClient
       }
 
       if (inQueue(jobName))
-         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null, null);
+         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null);
 
       HttpURLConnection http = null;
       try
@@ -321,7 +379,7 @@ public abstract class JenkinsClient
          {
             // May be newly created job. Such job does not have last build yet.
             getJob(jobName); // Check job exists or not.
-            return new JobStatus(jobName, JobStatus.Status.END, null, null, null);
+            return new JobStatus(jobName, JobStatus.Status.END, null, null);
          }
          else if (responseCode != 200)
          {
@@ -352,7 +410,7 @@ public abstract class JenkinsClient
                String building = xpath.evaluate("/" + root + "/building", doc);
 
                if (Boolean.parseBoolean(building)) // Building in progress.
-                  return new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
+                  return new JobStatus(jobName, JobStatus.Status.BUILD, null, null);
 
                String result = xpath.evaluate("/" + root + "/result", doc);
                String buildUrl = xpath.evaluate("/" + root + "/url", doc);
@@ -368,12 +426,11 @@ public abstract class JenkinsClient
                   {
                      // Good, only one artifact tag.
                      String relativePath = xpath.evaluate("/" + root + "/artifact/relativePath", doc);
-                     return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", buildUrl
-                        + "artifact/" + relativePath);
+                     return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "artifact/" + relativePath);
                   }
                }
                // Cannot provide URL for download, e.g. build failed, canceled, etc.
-               return new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", null);
+               return new JobStatus(jobName, JobStatus.Status.END, result, null);
             }
             catch (SAXException e)
             {
@@ -401,118 +458,6 @@ public abstract class JenkinsClient
             http.disconnect();
       }
    }
-
-   //   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
-   //   {
-   //      if ((jobName == null || jobName.isEmpty()) && workDir != null)
-   //      {
-   //         jobName = readJenkinsJobName(workDir);
-   //         if (jobName == null || jobName.isEmpty())
-   //            throw new IllegalArgumentException("Job name required. ");
-   //      }
-   //
-   //      if (inQueue(jobName))
-   //         return new JobStatus(jobName, JobStatus.Status.QUEUE, null, null, null);
-   //
-   //      HttpURLConnection http = null;
-   //      try
-   //      {
-   //         // Need to read artifact filename!
-   //         // Jenkins may return more then one artifact (why? :-(). 
-   //         String artifactFileName = null;
-   //         if (workDir != null && workDir.exists())
-   //            artifactFileName = getArtifactFileName(workDir);
-   //         String xpath = new StringBuilder() //
-   //            .append("concat(") //
-   //            .append("/mavenModuleSetBuild/building") //
-   //            .append(",'%20',") //
-   //            .append("/mavenModuleSetBuild/url") //
-   //            .append(",'%20',") //
-   //            .append("/mavenModuleSetBuild/result") //
-   //            .append(",'%20',") //
-   //            .append((artifactFileName == null) //
-   //               ? "/mavenModuleSetBuild/artifact/relativePath" //
-   //               : "/mavenModuleSetBuild/artifact[fileName='" + artifactFileName + "']/relativePath") //
-   //            .append(')').toString();
-   //         URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/api/xml" + "?xpath=" + xpath);
-   //         http = (HttpURLConnection)url.openConnection();
-   //         http.setRequestMethod("GET");
-   //         authenticate(http);
-   //         int responseCode = http.getResponseCode();
-   //         if (responseCode == 404)
-   //         {
-   //            // May be newly created job. Such job does not have last build yet.
-   //            getJob(jobName); // Check job exists or not.
-   //            return new JobStatus(jobName, JobStatus.Status.END, null, null, null);
-   //         }
-   //         else if (responseCode != 200)
-   //         {
-   //            throw fault(http);
-   //         }
-   //
-   //         InputStream input = http.getInputStream();
-   //         int contentLength = http.getContentLength();
-   //         String body = null;
-   //         if (input != null)
-   //         {
-   //            try
-   //            {
-   //               body = readBody(input, contentLength);
-   //            }
-   //            finally
-   //            {
-   //               input.close();
-   //            }
-   //         }
-   //         if (body != null && body.length() > 0)
-   //         {
-   //            JobStatus status = null;
-   //            String[] tmp = body.split(" ");
-   //            if (tmp.length == 4)
-   //            {
-   //               boolean building = Boolean.parseBoolean(tmp[0]);
-   //               String buildUrl = tmp[1];
-   //               String result = tmp[2];
-   //               String artifact = tmp[3];
-   //
-   //               if (building)
-   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-   //               else
-   //                  status = new JobStatus(jobName, JobStatus.Status.END, result, buildUrl + "consoleText", //
-   //                     "SUCCESS".equals(result) ? (buildUrl + "artifact/" + artifact) : null);
-   //            }
-   //            else if (tmp.length == 3)
-   //            {
-   //               boolean building = Boolean.parseBoolean(tmp[0]);
-   //               String result = tmp[2];
-   //
-   //               if (building)
-   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-   //               else
-   //                  status = new JobStatus(jobName, JobStatus.Status.END, result, null, null);
-   //            }
-   //            else if (tmp.length == 2)
-   //            {
-   //               boolean building = Boolean.parseBoolean(tmp[0]);
-   //
-   //               if (building)
-   //                  status = new JobStatus(jobName, JobStatus.Status.BUILD, null, null, null);
-   //               else
-   //                  status = new JobStatus(jobName, JobStatus.Status.END, null, null, null);
-   //            }
-   //
-   //            if (status != null)
-   //               return status;
-   //         }
-   //         // Unexpected result from Jenkins.
-   //         throw new RuntimeException("Unable get job status. ");
-   //      }
-   //      finally
-   //      {
-   //         if (http != null)
-   //            http.disconnect();
-   //      }
-   //   }
 
    private boolean inQueue(String jobName) throws IOException, JenkinsException
    {
@@ -549,6 +494,44 @@ public abstract class JenkinsClient
       {
          if (http != null)
             http.disconnect();
+      }
+   }
+
+   public InputStream consoleOutput(String jobName, File workDir) throws IOException, JenkinsException
+   {
+      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+      {
+         jobName = readJenkinsJobName(workDir);
+         if (jobName == null || jobName.isEmpty())
+            throw new IllegalArgumentException("Job name required. ");
+      }
+
+      if (inQueue(jobName))
+         return null; // Do not show output if job in queue for build.
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(baseURL + "/job/" + jobName + "/lastBuild/consoleText");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         authenticate(http);
+         int responseCode = http.getResponseCode();
+         if (responseCode != 200)
+            throw fault(http);
+         return new HttpStream(http);
+      }
+      catch (IOException e) 
+      {
+         if (http != null)
+            http.disconnect();
+         throw e;
+      }
+      catch (JenkinsException e)
+      {
+         if (http != null)
+            http.disconnect();
+         throw e;
       }
    }
 

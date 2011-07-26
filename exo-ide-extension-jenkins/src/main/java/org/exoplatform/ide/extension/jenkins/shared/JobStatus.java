@@ -58,15 +58,11 @@ public class JobStatus
     */
    private String artifactUrl;
 
-   /** URL to get console output. Should be always <code>null</code> if {@link #status} other then {@link Status#END}. */
-   private String outputUrl;
-
-   public JobStatus(String name, Status status, String lastBuildResult, String outputUrl, String artifactUrl)
+   public JobStatus(String name, Status status, String lastBuildResult, String artifactUrl)
    {
       this.name = name;
       this.status = status;
       this.lastBuildResult = lastBuildResult;
-      this.outputUrl = outputUrl;
       this.artifactUrl = artifactUrl;
    }
 
@@ -104,16 +100,6 @@ public class JobStatus
       this.lastBuildResult = lastBuildResult;
    }
 
-   public String getOutputUrl()
-   {
-      return outputUrl;
-   }
-
-   public void setOutputUrl(String outputUrl)
-   {
-      this.outputUrl = outputUrl;
-   }
-
    public String getArtifactUrl()
    {
       return artifactUrl;
@@ -128,6 +114,6 @@ public class JobStatus
    public String toString()
    {
       return "JobStatus [name=" + name + ", status=" + status + ", lastBuildResult=" + lastBuildResult
-         + ", artifactUrl=" + artifactUrl + ", outputUrl=" + outputUrl + "]";
+         + ", artifactUrl=" + artifactUrl + "]";
    }
 }
