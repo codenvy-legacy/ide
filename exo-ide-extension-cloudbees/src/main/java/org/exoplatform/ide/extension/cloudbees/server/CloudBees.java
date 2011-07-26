@@ -77,25 +77,24 @@ public class CloudBees
 
    private RepositoryService repositoryService;
    private String workspace;
-   private String cloudBeesConfig = "/";
+   private String config = "/ide-home/users/";
 
    public CloudBees(RepositoryService repositoryService, InitParams initParams)
    {
-      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "cloudbees-config"));
+      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
    }
 
-   protected CloudBees(RepositoryService repositoryService, String workspace, String cloudBeesConfig)
+   protected CloudBees(RepositoryService repositoryService, String workspace, String config)
    {
       this.repositoryService = repositoryService;
       this.workspace = workspace;
-      if (cloudBeesConfig != null)
+      if (config != null)
       {
-         if (!(cloudBeesConfig.startsWith("/")))
-            throw new IllegalArgumentException("Invalid path " + cloudBeesConfig
-               + ". Absolute path to cloud bees configuration required. ");
-         this.cloudBeesConfig = cloudBeesConfig;
-         if (!this.cloudBeesConfig.endsWith("/"))
-            this.cloudBeesConfig += "/";
+         if (!(config.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
+         this.config = config;
+         if (!this.config.endsWith("/"))
+            this.config += "/";
       }
    }
 
@@ -357,7 +356,7 @@ public class CloudBees
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
          session = repository.login(workspace);
-         String keyPath = cloudBeesConfig + session.getUserID() + "/cloudbees-credentials";
+         String keyPath = config + session.getUserID() + "/cloud_bees/cloudbees-credentials";
 
          Item item = null;
          try
@@ -412,51 +411,32 @@ public class CloudBees
       try
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
+         checkConfigNode(repository);
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = cloudBeesConfig + user;
+         String cloudBeesPath = config + user + "/cloud_bees";
 
-         Node userKeys;
+         Node cloudBees;
          try
          {
-            userKeys = (Node)session.getItem(userKeysPath);
+            cloudBees = (Node)session.getItem(cloudBeesPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            Node expressConfigNode;
-            try
-            {
-               expressConfigNode = (Node)session.getItem(cloudBeesConfig);
-            }
-            catch (PathNotFoundException e)
-            {
-               String[] pathSegments = cloudBeesConfig.substring(1).split("/");
-               expressConfigNode = session.getRootNode();
-               for (int i = 0; i < pathSegments.length; i++)
-               {
-                  try
-                  {
-                     expressConfigNode = expressConfigNode.getNode(pathSegments[i]);
-                  }
-                  catch (PathNotFoundException e1)
-                  {
-                     expressConfigNode = expressConfigNode.addNode(pathSegments[i], "nt:folder");
-                  }
-               }
-            }
-            userKeys = expressConfigNode.addNode(user, "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, cloudBeesPath);
+            cloudBees = (Node)session.getItem(cloudBeesPath);
          }
 
          ExtendedNode fileNode;
          Node contentNode;
          try
          {
-            fileNode = (ExtendedNode)userKeys.getNode("cloudbees-credentials");
+            fileNode = (ExtendedNode)cloudBees.getNode("cloudbees-credentials");
             contentNode = fileNode.getNode("jcr:content");
          }
          catch (PathNotFoundException pnfe)
          {
-            fileNode = (ExtendedNode)userKeys.addNode("cloudbees-credentials", "nt:file");
+            fileNode = (ExtendedNode)cloudBees.addNode("cloudbees-credentials", "nt:file");
             contentNode = fileNode.addNode("jcr:content", "nt:resource");
          }
 
@@ -484,6 +464,30 @@ public class CloudBees
       }
    }
 
+   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   {
+      String _workspace = workspace;
+      if (_workspace == null)
+         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+
+      Session sys = null;
+      try
+      {
+         // Create node for users configuration under system session.
+         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+         if (!(sys.itemExists(config)))
+         {
+            org.exoplatform.ide.Utils.putFolders(sys, config);
+            sys.save();
+         }
+      }
+      finally
+      {
+         if (sys != null)
+            sys.logout();
+      }
+   }
+
    private void removeCredentials()
    {
       Session session = null;
@@ -492,7 +496,7 @@ public class CloudBees
          ManageableRepository repository = repositoryService.getCurrentRepository();
          session = repository.login(workspace);
          String user = session.getUserID();
-         String keyPath = cloudBeesConfig + user + "/cloudbees-credentials";
+         String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
          Item item = session.getItem(keyPath);
          item.remove();
          session.save();
