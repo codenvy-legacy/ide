@@ -39,6 +39,10 @@
          <artifactId>exo.ws.rest.core</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
          <exclusions>

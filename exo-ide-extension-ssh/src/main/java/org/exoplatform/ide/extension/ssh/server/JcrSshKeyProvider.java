@@ -64,8 +64,8 @@ import javax.jcr.Session;
  *          &lt;value&gt;ws&lt;/value&gt;
  *       &lt;/value-param&gt;
  *       &lt;value-param&gt;
- *          &lt;name&gt;key-store&lt;/name&gt;
- *          &lt;value&gt;/ssh_keys/&lt;/value&gt;
+ *          &lt;name&gt;user-config&lt;/name&gt;
+ *          &lt;value&gt;/ide-home/users/&lt;/value&gt;
  *       &lt;/value-param&gt;
  *    &lt;/init-params&gt;
  * &lt;/component&gt;
@@ -82,7 +82,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
    private String workspace;
 
    /** JCR node that is root node for storing SSH keys. */
-   private String keyStore = "/";
+   private String config = "/ide-home/users/";
 
    /** JCR RepositoryService. */
    private RepositoryService repositoryService;
@@ -92,7 +92,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
 
    public JcrSshKeyProvider(RepositoryService repositoryService, InitParams initParams)
    {
-      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "key-store"));
+      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
    }
 
    private static String readValueParam(InitParams initParams, String paramName)
@@ -106,18 +106,17 @@ public class JcrSshKeyProvider implements SshKeyProvider
       return null;
    }
 
-   protected JcrSshKeyProvider(RepositoryService repositoryService, String workspace, String keyStore)
+   protected JcrSshKeyProvider(RepositoryService repositoryService, String workspace, String config)
    {
       this.repositoryService = repositoryService;
       this.workspace = workspace;
-      if (keyStore != null)
+      if (config != null)
       {
-         if (!(keyStore.startsWith("/")))
-            throw new IllegalArgumentException("Invalid path " + keyStore
-               + ". Absolute path to SSH keys storage required. ");
-         this.keyStore = keyStore;
-         if (!this.keyStore.endsWith("/"))
-            this.keyStore += "/";
+         if (!(config.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to config node required. ");
+         this.config = config;
+         if (!this.config.endsWith("/"))
+            this.config += "/";
       }
       genJsch = new JSch();
    }
@@ -132,22 +131,28 @@ public class JcrSshKeyProvider implements SshKeyProvider
       try
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
+         checkConfigNode(repository);
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = keyStore + user;
+         String sshPath = config + user + "/ssh";
 
-         Node userKeys;
+         Node sshKeys;
          try
          {
-            userKeys = (Node)session.getItem(userKeysPath);
+            sshKeys = (Node)session.getItem(sshPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = createKeyStore(session).addNode(user, "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, sshPath);
+            sshKeys = (Node)session.getItem(sshPath);
          }
 
-         writeKey(userKeys, host + ".key", user, key);
+         final String privateKey = host + ".key";
+         if (sshKeys.hasNode(privateKey))
+            throw new IllegalStateException("Private key for host: '" + host + "' already exists. ");
+
+         writeKey(sshKeys, privateKey, user, key);
 
          session.save();
       }
@@ -223,22 +228,23 @@ public class JcrSshKeyProvider implements SshKeyProvider
     */
    private SshKey readKey(Session session, String name, boolean findParent) throws IOException, RepositoryException
    {
-      String userKeysPath = keyStore + session.getUserID();
+      String sshPath = config + session.getUserID() + "/ssh";
       Node keyNode = null;
       try
       {
-         keyNode = (Node)session.getItem(userKeysPath + "/" + name);
+         keyNode = (Node)session.getItem(sshPath + "/" + name);
       }
       catch (PathNotFoundException pnfe)
       {
       }
 
+      // Try find key for parent domain, e.g. if there is key for host 'b.c.com' we can try to use it for 'a.b.c.com'. 
       if (keyNode == null && findParent)
       {
          try
          {
-            Node userKeys = (Node)session.getItem(userKeysPath);
-            for (NodeIterator iter = userKeys.getNodes(); iter.hasNext();)
+            Node sshKeys = (Node)session.getItem(sshPath);
+            for (NodeIterator iter = sshKeys.getNodes(); iter.hasNext();)
             {
                Node nextNode = iter.nextNode();
                if (name.endsWith("." + nextNode.getName()))
@@ -293,28 +299,39 @@ public class JcrSshKeyProvider implements SshKeyProvider
          keyPair.setPassphrase(passphrase);
 
          ManageableRepository repository = repositoryService.getCurrentRepository();
-         // Login with current identity. ConversationState.getCurrent(). 
+         checkConfigNode(repository);
+         // Login with current identity. ConversationState.getCurrent().
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = keyStore + user;
+         String sshPath = config + user + "/ssh";
 
-         Node userKeys;
+         Node sshKeys;
          try
          {
-            userKeys = (Node)session.getItem(userKeysPath);
+            sshKeys = (Node)session.getItem(sshPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            userKeys = createKeyStore(session).addNode(user, "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, sshPath);
+            sshKeys = (Node)session.getItem(sshPath);
          }
+
+         final String privateKey = host + ".key";
+         final String publicKey = host + ".pub";
+
+         // Be sure key nodes not created yet.
+         if (sshKeys.hasNode(privateKey))
+            throw new IllegalStateException("Private key for host: '" + host + "' already exists. ");
+         if (sshKeys.hasNode(publicKey))
+            throw new IllegalStateException("Public key for host: '" + host + "' already exists. ");
 
          ByteArrayOutputStream buff = new ByteArrayOutputStream();
          keyPair.writePrivateKey(buff);
-         writeKey(userKeys, host + ".key", user, buff.toByteArray());
+         writeKey(sshKeys, privateKey, user, buff.toByteArray());
 
          buff.reset();
          keyPair.writePublicKey(buff, comment != null ? comment : (user + "@ide.exoplatform.local"));
-         writeKey(userKeys, host + ".pub", user, buff.toByteArray());
+         writeKey(sshKeys, publicKey, user, buff.toByteArray());
 
          session.save();
       }
@@ -358,12 +375,13 @@ public class JcrSshKeyProvider implements SshKeyProvider
          session = repository.login(workspace);
          String user = session.getUserID();
 
-         for (String keyPath : new String[]{keyStore + user + "/" + host + ".key",
-            keyStore + user + "/" + host + ".pub"})
+         String[] toRemove = new String[]{config + user + "/ssh/" + host + ".key", //
+            config + user + "/ssh/" + host + ".pub"};
+         for (int i = 0; i < toRemove.length; i++)
          {
             try
             {
-               Node hostKeys = (Node)session.getItem(keyPath);
+               Node hostKeys = (Node)session.getItem(toRemove[i]);
                hostKeys.remove();
             }
             catch (PathNotFoundException pnfe)
@@ -396,7 +414,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = keyStore + user;
+         String userKeysPath = config + user + "/ssh";
          try
          {
             Node userKeys = (Node)session.getItem(userKeysPath);
@@ -426,29 +444,27 @@ public class JcrSshKeyProvider implements SshKeyProvider
       }
    }
 
-   private Node createKeyStore(Session session) throws RepositoryException
+   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
    {
-      Node keyStoreNode;
+      String _workspace = workspace;
+      if (_workspace == null)
+         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+
+      Session sys = null;
       try
       {
-         keyStoreNode = (Node)session.getItem(keyStore);
-      }
-      catch (PathNotFoundException e)
-      {
-         String[] pathSegments = keyStore.substring(1).split("/");
-         keyStoreNode = session.getRootNode();
-         for (int i = 0; i < pathSegments.length; i++)
+         // Create node for users configuration under system session.
+         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+         if (!(sys.itemExists(config)))
          {
-            try
-            {
-               keyStoreNode = keyStoreNode.getNode(pathSegments[i]);
-            }
-            catch (PathNotFoundException e1)
-            {
-               keyStoreNode = keyStoreNode.addNode(pathSegments[i], "nt:folder");
-            }
+            org.exoplatform.ide.Utils.putFolders(sys, config);
+            sys.save();
          }
       }
-      return keyStoreNode;
+      finally
+      {
+         if (sys != null)
+            sys.logout();
+      }
    }
 }
