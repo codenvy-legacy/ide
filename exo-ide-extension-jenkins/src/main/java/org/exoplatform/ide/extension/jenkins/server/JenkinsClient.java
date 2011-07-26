@@ -519,6 +519,8 @@ public abstract class JenkinsClient
          http.setRequestMethod("GET");
          authenticate(http);
          int responseCode = http.getResponseCode();
+         if (responseCode == 404)
+            return null; // Job exists (checked before) but there is no last-build yet. 
          if (responseCode != 200)
             throw fault(http);
          return new HttpStream(http);
