@@ -20,6 +20,7 @@ package org.exoplatform.ide;
 
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -27,38 +28,31 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import java.io.InputStream;
 import java.util.Calendar;
 
-import javax.jcr.ItemExistsException;
+import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
 
 /**
- * Utils class, that contains methods for creation of folders and files
- * nodes in jcr.
+ * Utils class, that contains methods for creation of folders and files nodes in jcr.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Utils.java Apr 8, 2011 2:51:02 PM vereshchaka $
- *
+ * 
  */
 public class Utils
 {
    public static final String DEFAULT_JCR_CONTENT_NODE_TYPE = "nt:resource";
-   
+
    public static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
-   
+
    /**
     * Get session.
     * 
     * @param repoName - the repository name, e.g.: db1
     * @param repoPath - the repository path, e.g.: dev-monit/test.txt (need to get the name of workspace)
     * @return {@link Session}
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
     */
    public static Session getSession(RepositoryService repositoryService,
       ThreadLocalSessionProviderService sessionProviderService, String repoName, String repoPath)
@@ -87,78 +81,91 @@ public class Utils
    /**
     * Creates new file node.
     * 
-    * @param session - the session
-    * @param resourcePath - path to parent node.
+    * @param session - the JCR session
+    * @param parentPath - path to parent node
     * @param filePath - path to new file (from parent node)
-    * @param data - file's data
+    * @param data - file data as stream
     * @param mimeType - mime type of file
     * @param fileNodeType - file node type
-    * @param jcrContentNodeType - jcr:content node type
-    * 
-    * @throws PathNotFoundException
-    * @throws RepositoryException
+    * @param contentNodeType - jcr:content node type
     */
-   public static void putFile(Session session, String resourcePath, String filePath, InputStream data, String mimeType,
-      String fileNodeType, String jcrContentNodeType)
-      throws PathNotFoundException, RepositoryException
+   public static void putFile(Session session, String parentPath, String fileName, InputStream data, String mimeType,
+      String fileNodeType, String contentNodeType) throws RepositoryException
    {
-      Node base;
-      if (resourcePath != null)
-      {
-         base = session.getRootNode().getNode(resourcePath);
-      }
-      else
-      {
-         base = session.getRootNode();
-      }
-      
-      if (fileNodeType == null)
-      {
-         fileNodeType = DEFAULT_FILE_NODE_TYPE;
-      }
-      
-      if (jcrContentNodeType == null)
-      {
-         jcrContentNodeType = DEFAULT_JCR_CONTENT_NODE_TYPE;
-      }
-      
-      base = base.addNode(filePath, fileNodeType);
-      base = base.addNode("jcr:content", jcrContentNodeType);
-      base.setProperty("jcr:data", data);
-      base.setProperty("jcr:lastModified", Calendar.getInstance());
-      base.setProperty("jcr:mimeType", mimeType);
+      Node file = createFile(session, parentPath, fileName, mimeType, fileNodeType, contentNodeType);
+      file.getNode("jcr:content").setProperty("jcr:data", data);
+   }
+
+   /**
+    * Creates new file node.
+    * 
+    * @param session - the JCR session
+    * @param parentPath - path to parent node
+    * @param filePath - path to new file (from parent node)
+    * @param data - file data as String
+    * @param mimeType - media type of file
+    * @param fileNodeType - file node type
+    * @param contentNodeType - jcr:content node type
+    * @param secret - if <code>true</code> then make newly created file protected by ACL. Only owner of
+    *           <code>session</code> has access to file
+    */
+   public static void putFile(Session session, String parentPath, String fileName, String data, String mimeType,
+      String fileNodeType, String contentNodeType) throws RepositoryException
+   {
+      Node file = createFile(session, parentPath, fileName, mimeType, fileNodeType, contentNodeType);
+      file.getNode("jcr:content").setProperty("jcr:data", data);
+   }
+
+   private static Node createFile(Session session, String parentPath, String fileName, String mimeType,
+      String fileNodeType, String contentNodeType) throws RepositoryException
+   {
+      Node parent = parentPath != null ? session.getRootNode().getNode(parentPath) : session.getRootNode();
+      ExtendedNode file = (ExtendedNode)parent.addNode(fileName, fileNodeType != null ? fileNodeType : "nt:file");
+      Node content = file.addNode("jcr:content", contentNodeType != null ? contentNodeType : "nt:resource");
+      content.setProperty("jcr:lastModified", Calendar.getInstance());
+      content.setProperty("jcr:mimeType", mimeType);
+      return file;
    }
 
    /**
     * Creates new folder node.
     * 
-    * @param session - the session 
-    * @param parentFolderPath - path to the parent node
-    * @param folderPath - path to the new folder node (from parent node)
-    * 
-    * @throws ItemExistsException
-    * @throws PathNotFoundException
-    * @throws NoSuchNodeTypeException
-    * @throws LockException
-    * @throws VersionException
-    * @throws ConstraintViolationException
-    * @throws RepositoryException
+    * @param session - the session
+    * @param parentPath - path to the parent node
+    * @param folderPath - name the new folder node
     */
-   public static void putFolder(Session session, String parentFolderPath, String folderPath) throws ItemExistsException,
-      PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException,
-      RepositoryException
+   public static void putFolder(Session session, String parentPath, String folderPath) throws RepositoryException
    {
-      Node base;
-      if (parentFolderPath != null)
+      Node parent = parentPath != null ? session.getRootNode().getNode(parentPath) : session.getRootNode();
+      parent.addNode(folderPath, "nt:folder");
+   }
+
+   public static void putFolders(Session session, String folderPath) throws RepositoryException
+   {
+      if (!(folderPath.startsWith("/")))
+         throw new IllegalArgumentException("Absolute folder path required. ");
+
+      try
       {
-         base = session.getRootNode().getNode(parentFolderPath);
+         Item item = session.getItem(folderPath);
+         if (!(item.isNode()))
+            throw new IllegalArgumentException("Item " + folderPath + " exists and it is not node. ");
       }
-      else
+      catch (PathNotFoundException e)
       {
-         base = session.getRootNode();
+         String[] pathSegments = folderPath.substring(1).split("/");
+         Node folder = session.getRootNode();
+         for (int i = 0; i < pathSegments.length; i++)
+         {
+            try
+            {
+               folder = folder.getNode(pathSegments[i]);
+            }
+            catch (PathNotFoundException e1)
+            {
+               folder = folder.addNode(pathSegments[i], "nt:folder");
+            }
+         }
       }
-   
-      base.addNode(folderPath, "nt:folder");
-   
    }
 }
