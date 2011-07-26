@@ -29,7 +29,6 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class GIT
 {
-
    public interface Messages
    {
       String INIT_SUCCESS = "Repository was successfully initialized.";
@@ -45,23 +44,23 @@ public class GIT
       String NOT_GIT_REPO = "Not a git repository (or any of the parent directories).";
 
       String ADD_SUCCESS = "[INFO] Successfully added to index.";
-      
+
       String RESET_COMMIT_SUCCESS = "[INFO] Successfully reseted.";
-      
+
       String NOTHING_TO_COMMIT = "Nothing to commit.";
-      
+
       String RESET_FILES_SUCCESS = "[INFO] Successfully reseted files.";
-      
+
       String COMMIT_SUCCESS = "[INFO] Commited with revision";
-      
+
       String DELETE_BRANCH_QUESTION = "Are you sure you want to delete branch %s?";
-      
+
       String DELETE_REMOTE_QUESTION = "Are you sure you want to delete remote repository %s?";
-      
+
       String NO_REMOTE_REPOSITORIES = "No remote repositories are found.";
-      
+
       String PUSH_SUCCESS = "[INFO] Successfully pushed to remote repository %s";
-      
+
       String PULL_SUCCESS = "[INFO] Successfully pulled from remote repository %s";
    }
 
@@ -97,24 +96,26 @@ public class GIT
    public CloneRepository CLONE_REPOSITORY = new CloneRepository();
 
    public Add ADD = new Add();
-   
+
    public Branches BRANCHES = new Branches();
-   
+
    public Commit COMMIT = new Commit();
 
+   public Merge MERGE = new Merge();
+
    public Status STATUS = new Status();
-   
+
    public ShowHistory SHOW_HISTORY = new ShowHistory();
 
    public ResetFiles RESET_FILES = new ResetFiles();
-   
+
    public RemoveFiles REMOVE_FILES = new RemoveFiles();
-   
+
    public ResetToCommit RESET_TO_COMMIT = new ResetToCommit();
-   
+
    public Remotes REMOTES = new Remotes();
-   
+
    public Push PUSH = new Push();
-   
+
    public Pull PULL = new Pull();
 }

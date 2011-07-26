@@ -150,6 +150,7 @@ public class Utils
       }
       for (int i = 0; i < pathSegments.length; i++)
       {
+         System.out.println("Utils.encodeHref()"+IDE.getInstance().getSelenium());
          pathSegments[i] = IDE.getInstance().getSelenium().getEval("encodeURIComponent('" + pathSegments[i] + "')");
          encoded += "/" + pathSegments[i];
       }

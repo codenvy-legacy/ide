@@ -74,9 +74,10 @@ public class IDE
       return instance;
    }
 
-   public IDE(Selenium selenium)
+   public IDE(Selenium selenium, String workspaceURL)
    {
       this.selenium = selenium;
+      this.workspaceURL = workspaceURL;
       instance = this;
    }
 

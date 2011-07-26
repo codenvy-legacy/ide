@@ -25,8 +25,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -50,14 +50,13 @@ public class PushTest extends BaseTest
 
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/push-test.zip";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
          VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + NOT_GIT);
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL + TEST_FOLDER + "/");
       }
       catch (Exception e)
       {
@@ -65,12 +64,13 @@ public class PushTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -130,12 +130,15 @@ public class PushTest extends BaseTest
    {
       selenium().refresh();
 
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+         + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitForViewOpened();
@@ -146,13 +149,13 @@ public class PushTest extends BaseTest
 
       Assert.assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
       Assert.assertTrue(IDE.GIT.PUSH.isCancelButtonEnabled());
-      
+
       //Test Push button enabled state:
       IDE.GIT.PUSH.typeToRemoteBranch("");
       Assert.assertFalse(IDE.GIT.PUSH.isPushButtonEnabled());
       IDE.GIT.PUSH.typeToRemoteBranch(TEST_BRANCH);
       Assert.assertTrue(IDE.GIT.PUSH.isPushButtonEnabled());
-      
+
       IDE.GIT.PUSH.clickCancelButton();
       IDE.GIT.PUSH.waitForViewClosed();
    }
@@ -167,8 +170,8 @@ public class PushTest extends BaseTest
    {
       selenium().refresh();
 
-      IDE.WORKSPACE.waitForRootItem();
-
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REMOTE + "/");
@@ -177,6 +180,9 @@ public class PushTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + REMOTE + "/" + TEST_FILE);
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+         + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PUSH);
       IDE.GIT.PUSH.waitForViewOpened();

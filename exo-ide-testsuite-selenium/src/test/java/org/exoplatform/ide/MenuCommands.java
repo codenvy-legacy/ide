@@ -258,6 +258,8 @@ public interface MenuCommands
       String FETCH = "Fetch...";
 
       String INIT = "Initialize Repository";
+      
+      String MERGE = "Merge...";
 
       String PULL = "Pull...";
 

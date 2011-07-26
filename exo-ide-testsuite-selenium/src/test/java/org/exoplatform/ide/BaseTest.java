@@ -37,6 +37,7 @@ import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
@@ -63,11 +64,13 @@ import java.util.ResourceBundle;
 public abstract class BaseTest
 {
    public static final ResourceBundle IDE_SETTINGS = ResourceBundle.getBundle("conf/ide-selenium");
-   
+
    public static final String SELENIUM_HOST = IDE_SETTINGS.getString("selenium.host");
-   
+
    public static final String SELENIUM_PORT = IDE_SETTINGS.getString("selenium.port");
-   
+
+   public static final String GIT_PATH = IDE_SETTINGS.getString("git.location");
+
    /**
     * Default workspace.
     */
@@ -123,8 +126,6 @@ public abstract class BaseTest
    {
       return session();
    }
-   
-   public IDE IDE;
 
    /**
     * URL of default workspace in IDE.
@@ -134,28 +135,21 @@ public abstract class BaseTest
    private static int maxRunTestsOnOneSession = 5;
 
    private static int testsCounter = 0;
+
+   private static boolean beforeClass = false;
    
-   /**
-    * @throws Exception 
-    * 
-    */
-   public BaseTest()
-   {
-      try
-      {
-         startSelenium();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-   
+   public IDE IDE = new IDE(selenium(), WS_URL);
+
+   @Before
    public void startSelenium() throws Exception
    {
-      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
-      IDE = new IDE(selenium());
+      if (beforeClass)
+         return;
 
+      beforeClass = true;
+      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
+      IDE = new IDE(selenium(), WS_URL);
+      
       switch (BROWSER_COMMAND)
       {
          case GOOGLE_CHROME :
@@ -222,8 +216,6 @@ public abstract class BaseTest
       {
          e.printStackTrace();
       }
-
-      IDE.setWorkspaceURL(WS_URL);
    }
 
    protected void logout() throws Exception
@@ -242,7 +234,7 @@ public abstract class BaseTest
 
    private void standaloneLogout() throws Exception
    {
-      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url")+"')]", "");
+      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "");
       selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 
@@ -274,6 +266,7 @@ public abstract class BaseTest
       //      }
 
       closeSeleniumSession();
+      beforeClass = false;
       //      try
       //      {
       //         standaloneLogout();
@@ -368,13 +361,15 @@ public abstract class BaseTest
       //TODO add check form
       IDE.WORKSPACE.selectItem(fileURL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      selenium().click("//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " "
-         + typeFile + " " + "editor" + "'" + "]");
+      selenium().click(
+         "//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " " + typeFile + " "
+            + "editor" + "'" + "]");
       if (checkDefault)
       {
          //click on checkbox Use as default editor
          selenium()
-            .click("scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
+            .click(
+               "scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
          Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
       selenium().click("ideOpenFileWithOkButton");
@@ -521,7 +516,8 @@ public abstract class BaseTest
    protected String getCursorPositionUsingStatusBar()
    {
       return selenium()
-         .getText("//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
+         .getText(
+            "//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
    }
 
    /**
@@ -593,22 +589,23 @@ public abstract class BaseTest
     */
    protected void useTemplateForm(String templateName, String fileName) throws Exception
    {
-      assertTrue(selenium().isElementPresent("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='"
-         + templateName + "']"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
 
-      selenium().mouseDownAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
-         + "']", "2,2");
+      selenium().mouseDownAt(
+         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
 
-      selenium().mouseUpAt("//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName
-         + "']", "2,2");
+      selenium().mouseUpAt(
+         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       if (fileName != null)
       {
          //type file name into name field
-         selenium().type("scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
-            + "name=ideCreateFileFromTemplateFormFileNameField||title=File Name]/element", fileName);
+         selenium().type(
+            "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
+               + "name=ideCreateFileFromTemplateFormFileNameField||title=File Name]/element", fileName);
       }
 
       //click Create Button
@@ -621,8 +618,8 @@ public abstract class BaseTest
     */
    public void clearFocus() throws Exception
    {
-      selenium()
-         .focus("//body/input[@class='gwt-TextBox' and contains(@style,'position: absolute; left: -100px; top: -100px;')]");
+      selenium().focus(
+         "//body/input[@class='gwt-TextBox' and contains(@style,'position: absolute; left: -100px; top: -100px;')]");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
@@ -720,7 +717,7 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-     /* try
+      try
       {
          if (System.getProperty("os.name").equals("Linux"))
          {
@@ -730,7 +727,7 @@ public abstract class BaseTest
       catch (IOException e)
       {
          e.printStackTrace();
-      }*/
+      }
    }
 
    //   public enum IdeAddress {
@@ -834,8 +831,8 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       // test if "Ok" button is enabled
-      if (selenium()
-         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
+      if (selenium().isElementPresent(
+         "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
       {
          secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
       }
@@ -847,8 +844,8 @@ public abstract class BaseTest
          Thread.sleep(TestConstants.REDRAW_PERIOD);
 
          // test if "Ok" button is enabled
-         if (selenium()
-            .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
+         if (selenium().isElementPresent(
+            "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
          {
             secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
          }
@@ -895,8 +892,8 @@ public abstract class BaseTest
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
 
       // test is "Ok" button enabled
-      assertTrue(selenium()
-         .isElementPresent("//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"));
+      assertTrue(selenium().isElementPresent(
+         "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"));
 
       // click the "Ok" button 
       selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");

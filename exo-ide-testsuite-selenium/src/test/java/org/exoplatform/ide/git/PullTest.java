@@ -25,8 +25,8 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.git.core.GIT;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -54,14 +54,13 @@ public class PullTest extends BaseTest
 
    private static final String ZIP_PATH = "src/test/resources/org/exoplatform/ide/git/pull-test.zip";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void beforeTest()
    {
       try
       {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL);
          VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER + "/" + NOT_GIT);
-         VirtualFileSystemUtils.upoadZipFolder(ZIP_PATH, WS_URL + TEST_FOLDER + "/");
       }
       catch (Exception e)
       {
@@ -69,12 +68,13 @@ public class PullTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public static void tearDown()
+   @After
+   public void afterTest()
    {
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -134,12 +134,14 @@ public class PullTest extends BaseTest
    {
       selenium().refresh();
 
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+         + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitForViewOpened();
@@ -174,7 +176,7 @@ public class PullTest extends BaseTest
    {
       selenium().refresh();
 
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.clickOpenIconOfFolder(WS_URL + TEST_FOLDER + "/");
@@ -184,6 +186,9 @@ public class PullTest extends BaseTest
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1);
 
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
+
+      IDE.GIT.REMOTES.addRemoteRepository("origin", GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + TEST_FOLDER
+         + "/" + REMOTE);
 
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.REMOTE, MenuCommands.Git.PULL);
       IDE.GIT.PULL.waitForViewOpened();
@@ -210,7 +215,7 @@ public class PullTest extends BaseTest
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/");
-      
+
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/" + FOLDER1 + "/" + FILE1);
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/" + REPOSITORY + "/");
