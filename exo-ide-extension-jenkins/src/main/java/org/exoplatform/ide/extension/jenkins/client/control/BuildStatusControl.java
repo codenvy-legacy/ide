@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
+import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 /**
@@ -46,7 +47,9 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
       setEnabled(true);
       setVisible(true);
       setSize(80);
+      setEvent(new GetJenkinsOutputEvent());
       setText("&nbsp;");
+      setPrompt("Get build result");
    }
 
    /**
@@ -75,6 +78,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
          case END :
             icon = getIconForBuildResult(status.getLastBuildResult());
             message = status.getLastBuildResult();
+            setEvent(new GetJenkinsOutputEvent(status.getName()));
             break;
       }
       setText(prepareText(message, icon));
@@ -117,6 +121,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
     */
    public void setStartBuildingMessage()
    {
+      setEvent(new GetJenkinsOutputEvent());
       setText(prepareText("Starting", JenkinsExtension.RESOURCES.grey()));
    }
 

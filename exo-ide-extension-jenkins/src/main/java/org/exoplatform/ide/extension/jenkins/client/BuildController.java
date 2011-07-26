@@ -37,6 +37,8 @@ import org.exoplatform.ide.extension.jenkins.client.control.BuildStatusControl;
 import org.exoplatform.ide.extension.jenkins.client.control.Delimeter;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildAppEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildAppHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedHandler;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
@@ -56,7 +58,7 @@ import java.util.List;
  *
  */
 public class BuildController extends GitPresenter implements BuildAppHandler, GitRemoteRepositorySelectedHandler,
-   UserInfoReceivedHandler
+   UserInfoReceivedHandler, GetJenkinsOutputHandler
 {
 
    private String jobName;
@@ -74,6 +76,7 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
       IDE.EVENT_BUS.addHandler(BuildAppEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(GitRemoteRepositorySelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(GetJenkinsOutputEvent.TYPE, this);
       control = new BuildStatusControl();
       IDE.getInstance().addControl(new Delimeter(), DockTarget.STATUSBAR, true);
       IDE.getInstance().addControl(control, DockTarget.STATUSBAR, true);
@@ -247,6 +250,26 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {
       userInfo = event.getUserInfo();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler#onGetJenkinsOutput(org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent)
+    */
+   @Override
+   public void onGetJenkinsOutput(GetJenkinsOutputEvent event)
+   {
+      if (event.getJobName() == null)
+         return;
+
+      JenkinsService.get().getJenkinsOutput(event.getJobName(), new AsyncRequestCallback<String>()
+      {
+
+         @Override
+         protected void onSuccess(String result)
+         {
+            IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
+         }
+      });
    }
 
 }

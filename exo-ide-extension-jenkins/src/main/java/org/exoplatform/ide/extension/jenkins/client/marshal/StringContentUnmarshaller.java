@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id: $
  *
  */
-public class FileContentUnmarshaller implements Unmarshallable
+public class StringContentUnmarshaller implements Unmarshallable
 {
 
    private AsyncRequestCallback<String> callback;
@@ -37,7 +37,7 @@ public class FileContentUnmarshaller implements Unmarshallable
    /**
     * @param callback
     */
-   public FileContentUnmarshaller(AsyncRequestCallback<String> callback)
+   public StringContentUnmarshaller(AsyncRequestCallback<String> callback)
    {
       super();
       this.callback = callback;
