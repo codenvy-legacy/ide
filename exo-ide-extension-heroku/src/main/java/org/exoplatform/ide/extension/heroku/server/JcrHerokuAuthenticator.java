@@ -46,25 +46,24 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
 {
    private RepositoryService repositoryService;
    private String workspace;
-   private String herokuAPIKeys = "/";
+   private String config = "/ide-home/users/";
 
    public JcrHerokuAuthenticator(RepositoryService repositoryService, InitParams initParams)
    {
-      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "heroku-api-keys"));
+      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
    }
 
-   protected JcrHerokuAuthenticator(RepositoryService repositoryService, String workspace, String herokuAPIKeys)
+   protected JcrHerokuAuthenticator(RepositoryService repositoryService, String workspace, String config)
    {
       this.repositoryService = repositoryService;
       this.workspace = workspace;
-      if (herokuAPIKeys != null)
+      if (config != null)
       {
-         if (!(herokuAPIKeys.startsWith("/")))
-            throw new IllegalArgumentException("Invalid path " + herokuAPIKeys
-               + ". Absolute path to heroku keys storage required. ");
-         this.herokuAPIKeys = herokuAPIKeys;
-         if (!this.herokuAPIKeys.endsWith("/"))
-            this.herokuAPIKeys += "/";
+         if (!(config.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to config node required. ");
+         this.config = config;
+         if (!this.config.endsWith("/"))
+            this.config += "/";
       }
    }
 
@@ -91,7 +90,7 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
          ManageableRepository repository = repositoryService.getCurrentRepository();
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
-         String keyPath = herokuAPIKeys + session.getUserID() + "/heroku-credentials";
+         String keyPath = config + session.getUserID() + "/heroku/heroku-credentials";
 
          Item item = null;
          try
@@ -139,40 +138,21 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
       try
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
+         checkConfigNode(repository);
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = herokuAPIKeys + user;
+         String herokuPath = config + user + "/heroku";
 
-         Node userKeys;
+         Node heroku;
          try
          {
-            userKeys = (Node)session.getItem(userKeysPath);
+            heroku = (Node)session.getItem(herokuPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            Node herokuAPINode;
-            try
-            {
-               herokuAPINode = (Node)session.getItem(herokuAPIKeys);
-            }
-            catch (PathNotFoundException e)
-            {
-               String[] pathSegments = herokuAPIKeys.substring(1).split("/");
-               herokuAPINode = session.getRootNode();
-               for (int i = 0; i < pathSegments.length; i++)
-               {
-                  try
-                  {
-                     herokuAPINode = herokuAPINode.getNode(pathSegments[i]);
-                  }
-                  catch (PathNotFoundException e1)
-                  {
-                     herokuAPINode = herokuAPINode.addNode(pathSegments[i], "nt:folder");
-                  }
-               }
-            }
-            userKeys = herokuAPINode.addNode(user, "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, herokuPath);
+            heroku = (Node)session.getItem(herokuPath);
          }
 
          ExtendedNode fileNode;
@@ -180,12 +160,12 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
          try
          {
 
-            fileNode = (ExtendedNode)userKeys.getNode("heroku-credentials");
+            fileNode = (ExtendedNode)heroku.getNode("heroku-credentials");
             contentNode = fileNode.getNode("jcr:content");
          }
          catch (PathNotFoundException pnfe)
          {
-            fileNode = (ExtendedNode)userKeys.addNode("heroku-credentials", "nt:file");
+            fileNode = (ExtendedNode)heroku.addNode("heroku-credentials", "nt:file");
             contentNode = fileNode.addNode("jcr:content", "nt:resource");
          }
 
@@ -212,6 +192,30 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
       }
    }
 
+   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   {
+      String _workspace = workspace;
+      if (_workspace == null)
+         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+
+      Session sys = null;
+      try
+      {
+         // Create node for users configuration under system session.
+         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+         if (!(sys.itemExists(config)))
+         {
+            org.exoplatform.ide.Utils.putFolders(sys, config);
+            sys.save();
+         }
+      }
+      finally
+      {
+         if (sys != null)
+            sys.logout();
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.extension.heroku.server.DefaultHerokuAuthenticator#removeCredentials()
     */
@@ -225,7 +229,7 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String keyPath = herokuAPIKeys + user + "/heroku-credentials";
+         String keyPath = config + user + "/heroku/heroku-credentials";
          Item item = session.getItem(keyPath);
          item.remove();
          session.save();
