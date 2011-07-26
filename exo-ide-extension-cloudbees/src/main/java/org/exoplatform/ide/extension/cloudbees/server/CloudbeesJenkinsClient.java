@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -79,14 +80,16 @@ public class CloudbeesJenkinsClient extends JenkinsClient
    }
 
    @Override
-   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException, JenkinsException
+   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException,
+      JenkinsException
    {
       doLogin();
       super.createJob(jobName, git, user, email, workDir);
    }
 
    @Override
-   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException, JenkinsException
+   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException,
+      JenkinsException
    {
       doLogin();
       super.updateJob(jobName, git, user, email, workDir);
@@ -113,6 +116,13 @@ public class CloudbeesJenkinsClient extends JenkinsClient
       return super.jobStatus(jobName, workDir);
    }
 
+   @Override
+   public InputStream consoleOutput(String jobName, File workDir) throws IOException, JenkinsException
+   {
+      doLogin();
+      return super.consoleOutput(jobName, workDir);
+   }
+
    private synchronized void doLogin() throws IOException, JenkinsException
    {
       // Since Jenkins does not provide 401 HTTP status when user need authenticated
@@ -121,7 +131,7 @@ public class CloudbeesJenkinsClient extends JenkinsClient
       HttpURLConnection http = null;
       int responseCode = 0;
       boolean loggedIn = false;
-      
+
       try
       {
          http = (HttpURLConnection)new URL(loginURL).openConnection();
