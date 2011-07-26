@@ -79,7 +79,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    //      line 10: 'List' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Map' cannot be resolved to a type;
    //      line 11: 'List' cannot be resolved to a type;
 
-   //@Test  Test should be updated to verify bug IDE-928
+   @Test
    public void testServiceFile() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
@@ -106,7 +106,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       selenium()
          .clickAt(
             getCodeErrorMarkLocator(
-               15,
+               16,
                "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; "),
             "");
       selenium().click(getErrorCorrectionListItemLocator("Base64"));
@@ -117,13 +117,13 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.EDITOR.clickOnEditor();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import Path\n" + "import javax.ws.rs.GET\n" + "import some.pack.String\n"
-            + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
+            + "import javax.inject.Inject \n" + "import java.util.prefs.Base64\n" + "\n" + "@Path("));
 
       // test code error marks
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(16,
+      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(17,
          "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(17)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(32)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
 
       // edit text
       IDE.EDITOR.deleteFileContent();
@@ -174,28 +174,33 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       Thread.sleep(3000);
       assertTrue(selenium()
          .isElementPresent(getCodeErrorMarkLocator(
-            9,
-            "'ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; 'org.chromattic.MappedBy' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(10, "'Property' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(13, "'POST' cannot be resolved to a type; ")));
+            10,
+            "'ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(11, "'Property' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(14, "'POST' cannot be resolved to a type; ")));
 
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(14)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(15)));
 
       assertTrue(selenium()
          .isElementPresent(getCodeErrorMarkLocator(
-            15,
+            16,
             "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ")));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(16, "'Base64' cannot be resolved to a type; ")));
+      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(17, "'Base64' cannot be resolved to a type; ")));
 
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(17)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(18)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(19)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(20)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(21)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(23)));
-      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(24)));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(31,
-         "'java.util.prefs.Base64' cannot be resolved to a type; ")));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(31)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(33)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(35)));
+      assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(37)));
+      assertTrue(selenium()
+         .isElementPresent(getCodeErrorMarkLocator(
+            39,
+            "'ChromatticSession' cannot be resolved to a type; ")));
+      assertTrue(selenium()
+         .isElementPresent(getCodeErrorMarkLocator(
+            41,
+            "'ChromatticSession' cannot be resolved to a type; ")));
    }
 
    private void secondVerificationOfErrorMarks()
@@ -207,7 +212,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    }
 
    // IDE-499: "Recognize error "cannot resolve to a type" within the Groovy Template file in the Code Editor."
-   //@Test  Test should be updated to verify bug IDE-928
+   @Test
    public void testTemplateFile() throws Exception
    {
       // Open template file with test content
@@ -237,8 +242,6 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(17)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(19)));
       assertFalse(selenium().isElementPresent(getCodeErrorMarkLocator(21)));
-      assertTrue(selenium().isElementPresent(getCodeErrorMarkLocator(23,
-         "'java.util.prefs.Base64' cannot be resolved to a type; ")));
 
       // fix error
       selenium()
@@ -265,11 +268,11 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    }
 
    @AfterClass
-   public void tearDown() throws Exception
+   public static void tearDown() throws Exception
    {
       //IDE.EDITOR.closeFileTabIgnoreChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      org.exoplatform.ide.IDE.getInstance().EDITOR.closeTabIgnoringChanges(1);
+      org.exoplatform.ide.IDE.getInstance().EDITOR.closeTabIgnoringChanges(0);
 
       try
       {
