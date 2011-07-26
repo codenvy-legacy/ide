@@ -64,21 +64,6 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       }
    }
 
-   //   IDE-436: "Recognize error "cannot resolve to a type" within the POGO file or REST service file in the Code Editor."
-   //   Revalidate code and update error marks after the next events (IDE-436)
-   //   file creation,
-   //   file reopening,
-   //   opening file by path,
-   //   opening file from file history,
-   //   opening local file,
-   //   opening file from template,
-   //   after the lineNubers field is turned on.
-   //   
-   //   There is list of java type errors:
-   //      line 8: 'POST' cannot be resolved to a type;
-   //      line 10: 'List' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Map' cannot be resolved to a type;
-   //      line 11: 'List' cannot be resolved to a type;
-
    @Test
    public void testServiceFile() throws Exception
    {
