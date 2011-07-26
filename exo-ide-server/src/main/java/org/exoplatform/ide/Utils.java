@@ -22,6 +22,7 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
@@ -47,6 +48,8 @@ public class Utils
 
    public static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
 
+   public static final String WEBDAV_CONTEXT = "/jcr/";
+   
    /**
     * Get session.
     * 
@@ -167,5 +170,53 @@ public class Utils
             }
          }
       }
+   }
+   
+   /**
+    * Parse JCR path to retrieve repository name, 
+    * workspace name and absolute path in repository.
+    * 
+    * @param baseUri base URI
+    * @param location file's location
+    * @return array of {@link String}, where elements contain repository name, workspace name and 
+    * the path to JCR node that contains file
+    */
+   public static String[] parseJcrLocation(String baseUri, String location)
+   {
+      baseUri += WEBDAV_CONTEXT;
+      if (!location.startsWith(baseUri))
+      {
+         return null;
+      }
+      String[] elements = new String[3];
+      location = location.substring(baseUri.length());
+      elements[0] = location.substring(0, location.indexOf('/'));
+      location = location.substring(location.indexOf('/') + 1);
+      elements[1] = location.substring(0, location.indexOf('/'));
+      elements[2] = location.substring(location.indexOf('/') + 1);
+      return elements;
+   }
+   
+   /**
+    * @param repositoryService repository service
+    * @param sessionProviderService session provider service
+    * @param repoName repository's name
+    * @param repoPath path to file in repository
+    * @return {@link Session} created JCR session
+    * @throws RepositoryException
+    * @throws RepositoryConfigurationException
+    */
+   public static Session getSession(RepositoryService repositoryService, SessionProviderService sessionProviderService,
+      String repoName, String repoPath) throws RepositoryException, RepositoryConfigurationException
+   {
+      ManageableRepository repo = repositoryService.getRepository(repoName);
+      SessionProvider sp = sessionProviderService.getSessionProvider(null);
+      if (sp == null)
+         throw new RepositoryException("SessionProvider is not properly set. Make the application calls"
+            + "SessionProviderService.setSessionProvider(..) somewhere before ("
+            + "for instance in Servlet Filter for WEB application)");
+
+      String workspace = repoPath.split("/")[0];
+      return sp.getSession(workspace, repo);
    }
 }

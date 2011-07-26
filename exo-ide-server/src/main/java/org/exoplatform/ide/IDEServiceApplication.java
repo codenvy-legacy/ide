@@ -67,7 +67,7 @@ public class IDEServiceApplication extends Application
          }
       }
 
-      objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
+      objects.add(new RepositoryDiscoveryService(repositoryService,sessionProviderService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
 
       objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,

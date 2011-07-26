@@ -24,6 +24,8 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.extension.jenkins.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobStatusUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
@@ -102,7 +104,7 @@ public class JenkinsService
       callback.setEventBus(IDE.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
-   
+
    /**
     * Get Job status
     * @param jobName Name of Job
@@ -116,6 +118,14 @@ public class JenkinsService
       callback.setResult(jobStatus);
       callback.setPayload(new JenkinsJobStatusUnmarshaller(jobStatus));
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
+   }
+
+   public void getFileContent(String dirUrl, String fileName, AsyncRequestCallback<String> callback)
+   {
+      String url = restContext + "/ide/discovery/find/content?location=" + dirUrl + "&name=" + fileName;
+      callback.setEventBus(IDE.EVENT_BUS);
+      callback.setPayload(new FileContentUnmarshaller(callback));
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

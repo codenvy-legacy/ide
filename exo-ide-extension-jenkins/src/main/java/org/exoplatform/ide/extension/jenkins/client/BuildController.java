@@ -31,10 +31,10 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.jenkins.client.control.BuildStatusControl;
+import org.exoplatform.ide.extension.jenkins.client.control.Delimeter;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildAppEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildAppHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedEvent;
@@ -55,8 +55,8 @@ import java.util.List;
  * @version $Id: $
  *
  */
-public class BuildController extends GitPresenter implements BuildAppHandler,
-   GitRemoteRepositorySelectedHandler, UserInfoReceivedHandler
+public class BuildController extends GitPresenter implements BuildAppHandler, GitRemoteRepositorySelectedHandler,
+   UserInfoReceivedHandler
 {
 
    private String jobName;
@@ -64,7 +64,7 @@ public class BuildController extends GitPresenter implements BuildAppHandler,
    private UserInfo userInfo;
 
    private BuildStatusControl control;
-   
+
    /**
     * @param eventBus
     */
@@ -75,6 +75,7 @@ public class BuildController extends GitPresenter implements BuildAppHandler,
       IDE.EVENT_BUS.addHandler(GitRemoteRepositorySelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       control = new BuildStatusControl();
+      IDE.getInstance().addControl(new Delimeter(), DockTarget.STATUSBAR, true);
       IDE.getInstance().addControl(control, DockTarget.STATUSBAR, true);
    }
 
@@ -90,20 +91,24 @@ public class BuildController extends GitPresenter implements BuildAppHandler,
          return;
       }
 
-      File file = new File(selectedItems.get(0).getHref() + ".jenkins-job");
-
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
+      Item item = selectedItems.get(0);
+      String url = "";
+      if (item instanceof Folder)
+         url = item.getHref();
+      else
+         url = item.getHref().substring(0, item.getHref().lastIndexOf("/"));
+      JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
       {
 
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(String result)
          {
-            jobName = result.getContent();
-            build(result.getContent());
+            jobName = result;
+            build(result);
          }
 
          /**
-          * @see org.exoplatform.ide.client.framework.vfs.FileCallback#onFailure(java.lang.Throwable)
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
           */
          @Override
          protected void onFailure(Throwable exception)
@@ -120,7 +125,6 @@ public class BuildController extends GitPresenter implements BuildAppHandler,
             super.onFailure(exception);
          }
       });
-
    }
 
    /**
@@ -180,34 +184,36 @@ public class BuildController extends GitPresenter implements BuildAppHandler,
          protected void onSuccess(String result)
          {
             IDE.EVENT_BUS.fireEvent(new OutputEvent("Build started", Type.INFO));
-            control.setVisible(true);
+            control.setStartBuildingMessage();
             statusTimer.scheduleRepeating(10000);
          }
       });
    }
-   
+
    private Timer statusTimer = new Timer()
    {
-      
+
       @Override
       public void run()
       {
          JenkinsService.get().jobStatus(jobName, new AsyncRequestCallback<JobStatus>()
          {
-            
+
             @Override
             protected void onSuccess(JobStatus result)
             {
                control.updateStatus(result);
-               if(result.getStatus() == Status.END)
+               if (result.getStatus() == Status.END)
                {
                   cancel();
-                  IDE.EVENT_BUS.fireEvent(new OutputEvent("Build finished<br/>Result:&nbsp;" + result.getLastBuildResult(), Type.INFO));
+                  IDE.EVENT_BUS.fireEvent(new OutputEvent("Build finished<br/>Result:&nbsp;"
+                     + result.getLastBuildResult(), Type.INFO));
                }
             }
          });
       }
    };
+
    /**
     * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
     */
