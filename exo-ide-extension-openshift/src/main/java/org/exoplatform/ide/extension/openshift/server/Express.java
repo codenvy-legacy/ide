@@ -166,30 +166,28 @@ public class Express
 
    private String workspace;
 
-   private String expressConfig = "/";
+   private String config = "/ide-home/users/";
 
    private final boolean debug = false;
 
    public Express(RepositoryService repositoryService, SshKeyProvider keyProvider, InitParams initParams)
    {
       this(repositoryService, keyProvider, readValueParam(initParams, "workspace"), readValueParam(initParams,
-         "express-config"));
+         "user-config"));
    }
 
-   protected Express(RepositoryService repositoryService, SshKeyProvider keyProvider, String workspace,
-      String expressConfig)
+   protected Express(RepositoryService repositoryService, SshKeyProvider keyProvider, String workspace, String config)
    {
       this.repositoryService = repositoryService;
       this.keyProvider = keyProvider;
       this.workspace = workspace;
-      if (expressConfig != null)
+      if (config != null)
       {
-         if (!(expressConfig.startsWith("/")))
-            throw new IllegalArgumentException("Invalid path " + expressConfig
-               + ". Absolute path to express configuration storage required. ");
-         this.expressConfig = expressConfig;
-         if (!this.expressConfig.endsWith("/"))
-            this.expressConfig += "/";
+         if (!(config.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to config node required. ");
+         this.config = config;
+         if (!this.config.endsWith("/"))
+            this.config += "/";
       }
    }
 
@@ -557,7 +555,7 @@ public class Express
    private RHUserInfo userInfo(RHCloudCredentials rhCloudCredentials, boolean appsInfo) throws ExpressException,
       IOException, ParsingResponseException
    {
-      final boolean userInfo = true;
+      //final boolean userInfo = true;
 
       FastStrWriter strWr = new FastStrWriter();
       JsonWriterImpl jsonWriter = new JsonWriterImpl(strWr);
@@ -669,7 +667,7 @@ public class Express
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
          session = repository.login(workspace);
-         String keyPath = expressConfig + session.getUserID() + "/rhcloud-credentials";
+         String keyPath = config + session.getUserID() + "/express/rhcloud-credentials";
 
          Item item = null;
          try
@@ -724,51 +722,32 @@ public class Express
       try
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
+         checkConfigNode(repository);
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = expressConfig + user;
+         String expressPath = config + user + "/express";
 
-         Node userKeys;
+         Node express;
          try
          {
-            userKeys = (Node)session.getItem(userKeysPath);
+            express = (Node)session.getItem(expressPath);
          }
          catch (PathNotFoundException pnfe)
          {
-            Node expressConfigNode;
-            try
-            {
-               expressConfigNode = (Node)session.getItem(expressConfig);
-            }
-            catch (PathNotFoundException e)
-            {
-               String[] pathSegments = expressConfig.substring(1).split("/");
-               expressConfigNode = session.getRootNode();
-               for (int i = 0; i < pathSegments.length; i++)
-               {
-                  try
-                  {
-                     expressConfigNode = expressConfigNode.getNode(pathSegments[i]);
-                  }
-                  catch (PathNotFoundException e1)
-                  {
-                     expressConfigNode = expressConfigNode.addNode(pathSegments[i], "nt:folder");
-                  }
-               }
-            }
-            userKeys = expressConfigNode.addNode(user, "nt:folder");
+            org.exoplatform.ide.Utils.putFolders(session, expressPath);
+            express = (Node)session.getItem(expressPath);
          }
 
          ExtendedNode fileNode;
          Node contentNode;
          try
          {
-            fileNode = (ExtendedNode)userKeys.getNode("rhcloud-credentials");
+            fileNode = (ExtendedNode)express.getNode("rhcloud-credentials");
             contentNode = fileNode.getNode("jcr:content");
          }
          catch (PathNotFoundException pnfe)
          {
-            fileNode = (ExtendedNode)userKeys.addNode("rhcloud-credentials", "nt:file");
+            fileNode = (ExtendedNode)express.addNode("rhcloud-credentials", "nt:file");
             contentNode = fileNode.addNode("jcr:content", "nt:resource");
          }
 
@@ -796,6 +775,30 @@ public class Express
       }
    }
 
+   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   {
+      String _workspace = workspace;
+      if (_workspace == null)
+         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+
+      Session sys = null;
+      try
+      {
+         // Create node for users configuration under system session.
+         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+         if (!(sys.itemExists(config)))
+         {
+            org.exoplatform.ide.Utils.putFolders(sys, config);
+            sys.save();
+         }
+      }
+      finally
+      {
+         if (sys != null)
+            sys.logout();
+      }
+   }
+
    private void removeCredentials()
    {
       Session session = null;
@@ -804,7 +807,7 @@ public class Express
          ManageableRepository repository = repositoryService.getCurrentRepository();
          session = repository.login(workspace);
          String user = session.getUserID();
-         String keyPath = expressConfig + user + "/rhcloud-credentials";
+         String keyPath = config + user + "/express/rhcloud-credentials";
          Item item = session.getItem(keyPath);
          item.remove();
          session.save();
