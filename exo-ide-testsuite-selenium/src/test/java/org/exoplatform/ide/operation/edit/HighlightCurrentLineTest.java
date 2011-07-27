@@ -20,16 +20,13 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -60,8 +57,8 @@ public class HighlightCurrentLineTest extends BaseTest
    private static final String scrollTopLocator =
       "document.getElementsByClassName('CodeMirror-wrapping')[0].childNodes[1].CodeMirror.editor.container.scrollTop";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       String filePath =
          "src/test/resources/org/exoplatform/ide/operation/edit/highlightCurrentLineTest/HtmlTemplate.html";
@@ -260,11 +257,9 @@ public class HighlightCurrentLineTest extends BaseTest
       return scrollTop;
    }
 
-   @AfterClass
+   @After
    public void tearDown() throws Exception
    {
-      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(1);
-      //      IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.EDITOR.closeTabIgnoringChanges(0);
       VirtualFileSystemUtils.delete(WS_URL + FILE_NAME);

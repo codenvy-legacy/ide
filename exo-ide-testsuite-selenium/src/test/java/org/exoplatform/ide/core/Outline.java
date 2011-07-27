@@ -361,6 +361,15 @@ public class Outline extends AbstractTestModule
    }
 
    /**
+    * Wait for outline tree visibility.
+    * @throws Exception 
+    */
+   public void waitOutlineTreeVisible() throws Exception
+   {
+      waitForElementVisible(Locators.TREE);
+   }
+   
+   /**
     * Check is outline tree present in DOM 
     */
    public void assertOutlineTreePresent()
