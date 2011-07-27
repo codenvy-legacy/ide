@@ -110,6 +110,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
       
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
    
    public void bindDisplay()
@@ -208,7 +209,6 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    
    private void showDeleteDialog(String appName)
    {
-      System.out.println(">>>is display null? " + String.valueOf(display == null));
       if (display == null)
       {
          display = GWT.create(Display.class);
