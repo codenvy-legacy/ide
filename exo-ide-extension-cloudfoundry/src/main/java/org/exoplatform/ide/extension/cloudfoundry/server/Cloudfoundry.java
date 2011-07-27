@@ -209,17 +209,15 @@ public class Cloudfoundry
       File warFile = null;
       try
       {
+         if (war != null)
+            warFile = downloadWarFile(app, war);
+
          if (frameworkName == null)
          {
-            if (war != null)
-            {
-               warFile = downloadWarFile(app, war);
+            if (warFile != null)
                frameworkName = FilesHelper.detectFramework(warFile);
-            }
             else
-            {
                frameworkName = FilesHelper.detectFramework(workDir);
-            }
             // If framework cannot be detected.
             if (frameworkName == null)
                throw new IllegalStateException("Cannot detect application type. ");
