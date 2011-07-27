@@ -31,6 +31,8 @@ import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarsh
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 /**
+ * Async request callback for maven responses, contains processing errors.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Jul 26, 2011 5:17:01 PM anya $
  *
@@ -62,6 +64,7 @@ public abstract class MavenResponseCallback extends AsyncRequestCallback<MavenRe
       }
       else
       {
+         //Try to get error output from maven response:
          JSONObject jsonObject = null;
          try
          {
