@@ -49,6 +49,8 @@ public abstract class BaseTest extends TestCase
       if (System.getProperty("java.security.auth.login.config") == null)
          System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
             .getResource("login.conf").toString());
+      if (System.getProperty("org.exoplatform.ide.server.settings-path") == null)
+         System.setProperty("org.exoplatform.ide.server.settings-path", "settings/users");
 
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);

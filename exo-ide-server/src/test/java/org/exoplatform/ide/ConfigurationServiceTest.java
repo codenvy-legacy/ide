@@ -109,8 +109,6 @@ public class ConfigurationServiceTest extends BaseTest
       assertTrue(entity.containsKey("configuration"));
    }
 
-
-
    @SuppressWarnings("unchecked")
    public void testWhoami() throws Exception
    {
@@ -164,7 +162,7 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
    }
 
    public void testGetConfiguration() throws Exception
@@ -195,15 +193,37 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
       
       cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
       assertEquals(HTTPStatus.OK, cres.getStatus());
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-     assertNotNull(entity.get("userSettings"));
-     
+      assertNotNull(entity.get("userSettings"));
+   }
+   
+   @SuppressWarnings("unchecked")
+   public void testGetExistingUserSettings() throws Exception
+   {
+      
+      Set<String> userRoles = new HashSet<String>();
+      userRoles.add("users");
+      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      EnvironmentContext ctx = new EnvironmentContext();
+      ctx.put(SecurityContext.class, securityContext);
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
+      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertNotNull(cres.getEntity());
+      Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
+      assertNotNull(entity.get("userSettings"));
+      Map<String, Object> userSettingsMap = (Map<String, Object>)entity.get("userSettings");
+      assertNotNull(userSettingsMap.get("hotkeys"));
+      assertNotNull(userSettingsMap.get("toolbar-items"));
+      assertNotNull(userSettingsMap.get("default-editors"));
    }
 
 }
