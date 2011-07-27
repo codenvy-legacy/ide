@@ -32,7 +32,7 @@ public interface JavaLocalizationConstant extends Messages
     */
    @Key("java.button.create")
    String createButton();
-   
+
    @Key("java.button.cancel")
    String cancelButton();
 
@@ -41,23 +41,31 @@ public interface JavaLocalizationConstant extends Messages
     */
    @Key("control.create.javaProject.id")
    String createJavaProjectControlId();
-   
+
    @Key("control.create.javaProject.title")
    String createJavaProjectControlTitle();
-   
+
    @Key("control.create.javaProject.prompt")
    String createJavaProjectControlPrompt();
-   
+
    /*
     * CreateApplicationView
     */
    @Key("javaProject.view.title")
    String createJavaProjectViewTitle();
-   
+
    @Key("javaProject.view.nameField.title")
    String createJavaProjectNameFieldTitle();
-   
+
    @Key("javaProject.view.nameField.defaultName")
    String createJavaProjectDefaultName();
+
+   /*
+    * Messages
+    */
+   @Key("javaProject.create.success")
+   String createJavaProjectSuccess(String projectName);
    
+   @Key("javaProject.clean.success")
+   String cleanJavaProjectSuccess(String project);
 }

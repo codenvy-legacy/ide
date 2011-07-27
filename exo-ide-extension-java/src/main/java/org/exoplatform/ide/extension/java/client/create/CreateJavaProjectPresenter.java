@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -41,6 +40,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.java.client.JavaClientService;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
+import org.exoplatform.ide.extension.java.client.MavenResponseCallback;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 import java.util.List;
@@ -53,10 +53,10 @@ import java.util.List;
  * @version $Id: CreateJavaProjectPresenter.java Jun 22, 2011 9:52:37 AM vereshchaka $
  *
  */
-public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJavaProjectHandler, ItemsSelectedHandler, 
-CleanProjectHandler
+public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJavaProjectHandler, ItemsSelectedHandler,
+   CleanProjectHandler
 {
-   
+
    interface Display extends IsView
    {
       /**
@@ -79,47 +79,48 @@ CleanProjectHandler
        * @return {@link HasValue}
        */
       HasValue<String> getProjectNameField();
-      
+
       /**
        * Set focus in project name field.
        */
       void focusInProjectNameField();
-      
+
       /**
        * Disable create button.
        */
       void disableCreateButton();
-      
+
       /**
        * Enable create button.
        */
       void enableCreateButton();
    }
-   
-   private static final String DEFAULT_PROJECT_NAME = JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectDefaultName();
+
+   private static final String DEFAULT_PROJECT_NAME = JavaExtension.LOCALIZATION_CONSTANT
+      .createJavaProjectDefaultName();
 
    private Display display;
-   
+
    /**
     * Events handler.
     */
    private HandlerManager eventBus;
-   
+
    /**
     * Selected items in navigation tree.
     */
    private List<Item> selectedItems;
-   
+
    public CreateJavaProjectPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
-      
+
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateJavaProjectEvent.TYPE, this);
       eventBus.addHandler(CleanProjectEvent.TYPE, this);
    }
-   
+
    private void bindDisplay()
    {
       display.getCreateButton().addClickHandler(new ClickHandler()
@@ -141,7 +142,7 @@ CleanProjectHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       display.getProjectNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -157,9 +158,9 @@ CleanProjectHandler
             }
          }
       });
-      
+
    }
-   
+
    private void doCreateProject()
    {
       final String name = display.getProjectNameField().getValue();
@@ -169,20 +170,20 @@ CleanProjectHandler
       {
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
-      JavaClientService.getInstance().createJavaProject(name, workDir, new AsyncRequestCallback<MavenResponse>()
+      JavaClientService.getInstance().createJavaProject(name, workDir, new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)
          {
             eventBus.fireEvent(new RefreshBrowserEvent());
             IDE.getInstance().closeView(display.asView().getId());
-            String output = result.getOutput();
-            output = output.replace("\n", "<br>");
-            eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectSuccess(name),
+               Type.INFO));
          }
       });
+
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -229,19 +230,17 @@ CleanProjectHandler
     * @see org.exoplatform.ide.extension.java.client.create.CleanProjectHandler#onCleanProject(org.exoplatform.ide.extension.java.client.create.CleanProjectEvent)
     */
    @Override
-   public void onCleanProject(CleanProjectEvent event)
+   public void onCleanProject(final CleanProjectEvent event)
    {
-      JavaClientService.getInstance().cleanProject(event.getProjectDir(), new AsyncRequestCallback<MavenResponse>()
+      JavaClientService.getInstance().cleanProject(event.getProjectDir(), new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)
          {
             eventBus.fireEvent(new RefreshBrowserEvent());
-            String output = result.getOutput();
-            output = output.replace("\n", "<br>");
-            eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+            eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT.cleanJavaProjectSuccess(event
+               .getProjectDir()), Type.INFO));
          }
       });
    }
-
 }

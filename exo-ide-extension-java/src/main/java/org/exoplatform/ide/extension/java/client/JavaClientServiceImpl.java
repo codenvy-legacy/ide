@@ -23,7 +23,6 @@ import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
@@ -73,7 +72,7 @@ public class JavaClientServiceImpl extends JavaClientService
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#createWebApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createJavaProject(String name, String workDir, AsyncRequestCallback<MavenResponse> callback)
+   public void createJavaProject(String name, String workDir, MavenResponseCallback callback)
    {
       final String url = restServiceContext + CREATE_PROJECT;
       String params = "name=" + name + "&";
@@ -95,7 +94,7 @@ public class JavaClientServiceImpl extends JavaClientService
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void packageProject(String baseDir, AsyncRequestCallback<MavenResponse> callback)
+   public void packageProject(String baseDir, MavenResponseCallback callback)
    {
       final String url = restServiceContext + PACKAGE_PROJECT;
       String params = "workdir=" + baseDir;
@@ -116,7 +115,7 @@ public class JavaClientServiceImpl extends JavaClientService
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void cleanProject(String baseDir, AsyncRequestCallback<MavenResponse> callback)
+   public void cleanProject(String baseDir, MavenResponseCallback callback)
    {
       final String url = restServiceContext + CLEAN_PROJECT;
       String params = "workdir=" + baseDir;

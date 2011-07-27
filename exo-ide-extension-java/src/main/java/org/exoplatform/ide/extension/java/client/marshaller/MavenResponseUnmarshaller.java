@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class MavenResponseUnmarshaller implements Unmarshallable
 {
-   interface Constants
+   public interface Constants
    {
       public static final String RESULT = "result";
       

@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -45,7 +44,8 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.java.client.JavaClientService;
-//import org.exoplatform.ide.extension.java.client.create.CleanProjectEvent;
+import org.exoplatform.ide.extension.java.client.JavaExtension;
+import org.exoplatform.ide.extension.java.client.MavenResponseCallback;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 import java.util.Iterator;
@@ -58,7 +58,8 @@ import java.util.Map.Entry;
  * @version $Id: InitializeApplicationPresenter.java Jun 23, 2011 12:49:09 PM vereshchaka $
  *
  */
-public class InitializeApplicationPresenter implements ViewClosedHandler, InitializeApplicationHandler, ItemsSelectedHandler
+public class InitializeApplicationPresenter implements ViewClosedHandler, InitializeApplicationHandler,
+   ItemsSelectedHandler
 {
 
    interface Display extends IsView
@@ -160,7 +161,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
       display.enableCreateButton(false);
       setApplicationId();
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationHandler#onInitializeApplication(org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationEvent)
     */
@@ -169,7 +170,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    {
       getDomains();
    }
-   
+
    private void getDomains()
    {
       CloudBeesClientService.getInstance().getDomains(
@@ -193,8 +194,8 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    private void packageApplication()
    {
       workDir = getWorkDir();
-      
-      JavaClientService.getInstance().packageProject(workDir, new AsyncRequestCallback<MavenResponse>()
+
+      JavaClientService.getInstance().packageProject(workDir, new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)
@@ -206,7 +207,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
          }
       });
    }
-   
+
    private LoggedInHandler deployWarLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -215,23 +216,23 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
          doDeployApplication();
       }
    };
-   
+
    private LoginCanceledHandler deployWarLoginCanceledHandler = new LoginCanceledHandler()
    {
       @Override
       public void onLoginCanceled()
       {
          //if user clicks Cancel, than clean project
-         JavaClientService.getInstance().cleanProject(workDir, new AsyncRequestCallback<MavenResponse>()
+         JavaClientService.getInstance().cleanProject(workDir, new MavenResponseCallback(eventBus)
+         {
+            @Override
+            protected void onSuccess(MavenResponse result)
             {
-               @Override
-               protected void onSuccess(MavenResponse result)
-               {
-                  eventBus.fireEvent(new RefreshBrowserEvent());
-                  String output = result.getOutput().replace("\n", "<br>");
-                  eventBus.fireEvent(new OutputEvent(output, Type.INFO));
-               }
-            });
+               eventBus.fireEvent(new RefreshBrowserEvent());
+               eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT.cleanJavaProjectSuccess(workDir),
+                  Type.INFO));
+            }
+         });
       }
    };
 
@@ -239,23 +240,26 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    {
       final String applicationId = display.getApplicationIdField().getValue();
 
-      CloudBeesClientService.getInstance().deployWar(applicationId, warUrl, null,
+      CloudBeesClientService.getInstance().deployWar(
+         applicationId,
+         warUrl,
+         null,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler,
             deployWarLoginCanceledHandler)
          {
             @Override
             protected void onSuccess(final Map<String, String> deployResult)
             {
-               JavaClientService.getInstance().cleanProject(workDir, new AsyncRequestCallback<MavenResponse>()
+               JavaClientService.getInstance().cleanProject(workDir, new MavenResponseCallback(eventBus)
                {
                   @Override
                   protected void onSuccess(MavenResponse result)
                   {
                      eventBus.fireEvent(new RefreshBrowserEvent());
-                     String output = result.getOutput().replace("\n", "<br>");
-                     eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+                     eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT
+                        .cleanJavaProjectSuccess(workDir), Type.INFO));
 
-                     output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
+                     String output = CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess() + "<br>";
                      output += CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo() + "<br>";
 
                      Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
@@ -274,14 +278,14 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
             @Override
             protected void onFailure(final Throwable exception)
             {
-               JavaClientService.getInstance().cleanProject(workDir, new AsyncRequestCallback<MavenResponse>()
+               JavaClientService.getInstance().cleanProject(workDir, new MavenResponseCallback(eventBus)
                {
                   @Override
                   protected void onSuccess(MavenResponse result)
                   {
                      eventBus.fireEvent(new RefreshBrowserEvent());
-                     String output = result.getOutput().replace("\n", "<br>");
-                     eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+                     eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT
+                        .cleanJavaProjectSuccess(workDir), Type.INFO));
                      eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                         .deployApplicationFailureMessage(), Type.INFO));
                      super.onFailure(exception);
