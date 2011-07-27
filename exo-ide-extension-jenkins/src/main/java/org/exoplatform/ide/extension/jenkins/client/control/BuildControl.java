@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildAppEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -42,7 +42,7 @@ public class BuildControl extends SimpleControl implements IDEControl
       setTitle(JenkinsExtension.MESSAGES.buildJavaAppTitle());
       setPrompt(JenkinsExtension.MESSAGES.buildJavaAppPrompt());
       setImages(JenkinsExtension.RESOURCES.build(), JenkinsExtension.RESOURCES.build_Disabled());
-      setEvent(new BuildAppEvent());
+      setEvent(new BuildApplicationEvent());
    }
 
    /**

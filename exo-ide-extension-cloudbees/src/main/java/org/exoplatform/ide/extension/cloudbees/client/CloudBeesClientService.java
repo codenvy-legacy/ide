@@ -53,7 +53,7 @@ public abstract class CloudBeesClientService
     * @param message
     * @param callback
     */
-   public abstract void deployWar(String appId, String warFile, String message,
+   public abstract void initializeApplication(String appId, String warFile, String message, String workDir,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback);
    
    /**
@@ -85,5 +85,14 @@ public abstract class CloudBeesClientService
     */
    public abstract void deleteApplication(String workDir, String appId,
       CloudBeesAsyncRequestCallback<String> callback);
+
+   /**
+    * @param appId
+    * @param warFile
+    * @param message
+    * @param callback
+    */
+   public abstract void deployWar(String appId, String warFile, String message,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
 
 }

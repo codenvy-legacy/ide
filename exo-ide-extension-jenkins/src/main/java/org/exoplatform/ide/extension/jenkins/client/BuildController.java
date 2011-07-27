@@ -35,8 +35,9 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.jenkins.client.control.BuildStatusControl;
 import org.exoplatform.ide.extension.jenkins.client.control.Delimeter;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildAppEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildAppHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedEvent;
@@ -57,7 +58,7 @@ import java.util.List;
  * @version $Id: $
  *
  */
-public class BuildController extends GitPresenter implements BuildAppHandler, GitRemoteRepositorySelectedHandler,
+public class BuildController extends GitPresenter implements BuildApplicationHandler, GitRemoteRepositorySelectedHandler,
    UserInfoReceivedHandler, GetJenkinsOutputHandler
 {
 
@@ -73,7 +74,7 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
    public BuildController()
    {
       super(IDE.EVENT_BUS);
-      IDE.EVENT_BUS.addHandler(BuildAppEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(GitRemoteRepositorySelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(GetJenkinsOutputEvent.TYPE, this);
@@ -83,10 +84,10 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.BuildAppHandler#onBuildApp(org.exoplatform.ide.extension.jenkins.client.event.BuildAppEvent)
+    * @see org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler#onBuildApplication(org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent)
     */
    @Override
-   public void onBuildApp(BuildAppEvent event)
+   public void onBuildApplication(BuildApplicationEvent event)
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
@@ -136,6 +137,11 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
     */
    private void remoteRepositoriesReceived(List<Remote> remotes)
    {
+      if (remotes.size() == 0)
+      {
+         Dialogs.getInstance().showError(JenkinsExtension.MESSAGES.noRemoteRepository());
+         return;
+      }
       if (remotes.size() > 1)
       {
          String[] values = new String[remotes.size()];
@@ -211,8 +217,16 @@ public class BuildController extends GitPresenter implements BuildAppHandler, Gi
                   cancel();
                   IDE.EVENT_BUS.fireEvent(new OutputEvent("Build finished<br/>Result:&nbsp;"
                      + result.getLastBuildResult(), Type.INFO));
+                  IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(result));
                }
             }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               cancel();
+               super.onFailure(exception);
+            };
          });
       }
    };

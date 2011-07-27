@@ -18,34 +18,16 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class BuildAppEvent extends GwtEvent<BuildAppHandler>
+public interface BuildApplicationHandler extends EventHandler
 {
+
+   void onBuildApplication(BuildApplicationEvent event);
    
-   public static final GwtEvent.Type<BuildAppHandler> TYPE = new Type<BuildAppHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BuildAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(BuildAppHandler handler)
-   {
-      handler.onBuildApp(this);
-   }
-
 }

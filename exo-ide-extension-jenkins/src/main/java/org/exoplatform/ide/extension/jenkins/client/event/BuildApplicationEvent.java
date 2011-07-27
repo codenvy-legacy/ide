@@ -16,40 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.jenkins.client;
+package org.exoplatform.ide.extension.jenkins.client.event;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Jenkins extension messages constants.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public interface JenkinsMessages extends Messages
+public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
 {
+   
+   public static final GwtEvent.Type<BuildApplicationHandler> TYPE = new Type<BuildApplicationHandler>();
 
-   @Key("control.build.javaApp.id")
-   String buildJavaAppId();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<BuildApplicationHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
-   @Key("control.build.javaApp.title")
-   String buildJavaAppTitle();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(BuildApplicationHandler handler)
+   {
+      handler.onBuildApplication(this);
+   }
 
-   @Key("control.build.javaApp.prompt")
-   String buildJavaAppPrompt();
-   
-   @Key("view.build.javaApp.title")
-   String buildJavaAppViewTitle();
-   
-   @Key("view.build.javaApp.button.cancel")
-   String buildJavaAppButtonCancel();
-   
-   @Key("view.build.javaApp.button.build")
-   String buildJavaAppButtonBuild();
-   
-   @Key("view.build.javaApp.git.url")
-   String buildJavaAppGitRepositoryUrl();
-   
-   @Key("controller.no.remote.repository")
-   String noRemoteRepository();
 }

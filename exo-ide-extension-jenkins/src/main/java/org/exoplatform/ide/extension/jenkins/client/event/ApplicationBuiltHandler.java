@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: $
  *
  */
-public interface BuildAppHandler extends EventHandler
+public interface ApplicationBuiltHandler extends EventHandler
 {
 
-   void onBuildApp(BuildAppEvent event);
-   
+   void onApplicationBuilt(ApplicationBuiltEvent event);
+
 }
