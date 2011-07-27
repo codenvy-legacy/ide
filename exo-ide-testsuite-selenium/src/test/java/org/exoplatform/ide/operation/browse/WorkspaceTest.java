@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.SelectWorkspace;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -36,7 +36,7 @@ import org.junit.Test;
  */
 public class WorkspaceTest extends BaseTest
 {
-   @AfterClass
+   @After
    public void tearDown()
    {
       deleteCookies();

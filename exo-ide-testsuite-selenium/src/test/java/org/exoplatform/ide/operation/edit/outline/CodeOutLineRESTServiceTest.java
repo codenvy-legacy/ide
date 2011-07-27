@@ -18,18 +18,17 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -53,8 +52,8 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       this.outlineTreeHelper = new OulineTreeHelper();
    }
    
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
@@ -72,7 +71,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       }
    }
    
-   @AfterClass
+   @After
    public void tearDown() throws Exception
    {
      IDE.EDITOR.closeFile(0);
@@ -96,23 +95,20 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    public void testCodeOutLineRestService() throws Exception
    {
       // Open REST service file with content
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-
+      IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL);
       
       IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL+FILE_NAME);   
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
       
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.OUTLINE.waitOutlineTreeVisible();
+      
       // check for presence and visibility of outline tab
       IDE.OUTLINE.assertOutlineTreePresent();
       IDE.OUTLINE.checkOutlinePanelVisibility(true);
