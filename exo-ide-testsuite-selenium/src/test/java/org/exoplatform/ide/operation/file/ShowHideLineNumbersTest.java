@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -42,7 +42,7 @@ public class ShowHideLineNumbersTest extends BaseTest
 
    private static final String GROOVY = "groovy_file.groovy";
 
-   @BeforeClass
+   @Before
    public void setUp()
    {
       if (selenium().isCookiePresent("line-numbers_bool"))
@@ -63,7 +63,7 @@ public class ShowHideLineNumbersTest extends BaseTest
       }
    }
 
-   @AfterClass
+   @After
    public void tearDown()
    {
       if (selenium().isCookiePresent("line-numbers_bool"))

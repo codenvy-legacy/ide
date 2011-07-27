@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -40,8 +40,8 @@ public class HighlightEditorsTabTest extends BaseTest
 
    private static String FILE_NAME = HighlightEditorsTabTest.class.getSimpleName() + "File";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -56,8 +56,8 @@ public class HighlightEditorsTabTest extends BaseTest
       }
    }
 
-   @AfterClass
-   public void tierDown()
+   @After
+   public void tearDown()
    {
       deleteCookies();
       try

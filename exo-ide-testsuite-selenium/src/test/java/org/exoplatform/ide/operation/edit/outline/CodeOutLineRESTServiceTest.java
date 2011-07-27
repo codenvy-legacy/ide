@@ -74,7 +74,6 @@ public class CodeOutLineRESTServiceTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-     IDE.EDITOR.closeFile(0);
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER);
@@ -87,6 +86,7 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       {
          e.printStackTrace();
       }
+      IDE.EDITOR.closeFile(0);
    }
 
    //TODO Issue IDE - 486    

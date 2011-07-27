@@ -21,8 +21,8 @@ package org.exoplatform.ide.operation.browse.highlight;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -40,8 +40,8 @@ public class ChangeHighlightTest extends BaseTest
 
    private static String FOLDER_NAME = ChangeHighlightTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -66,6 +66,7 @@ public class ChangeHighlightTest extends BaseTest
 
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.waitTabNotPresent(0);
       IDE.PERSPECTIVE.checkViewIsNotPresent("editor-0");
       IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
       IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
@@ -82,7 +83,7 @@ public class ChangeHighlightTest extends BaseTest
 
    }
 
-   @AfterClass
+   @After
    public void tearDown()
    {
       deleteCookies();

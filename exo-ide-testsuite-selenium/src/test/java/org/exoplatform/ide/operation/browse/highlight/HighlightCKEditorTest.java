@@ -23,8 +23,8 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -45,8 +45,8 @@ public class HighlightCKEditorTest extends BaseTest {
 			.getSimpleName()
 			+ "File";
 
-	@BeforeClass
-	public static void setUp() {
+	@Before
+	public void setUp() {
 		try {
 			VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
 			VirtualFileSystemUtils
@@ -91,8 +91,8 @@ public class HighlightCKEditorTest extends BaseTest {
 		//IDE.EDITOR.closeFile(0);
 	}
 
-	@AfterClass
-	public void tierDown() {
+	@After
+	public void tearDown() {
 		deleteCookies();
 		try {
 			VirtualFileSystemUtils.delete(URL + FOLDER_NAME);

@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import java.io.IOException;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Navigation;
 import org.junit.After;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
 
    private final static String PATH = "src/test/resources/org/exoplatform/ide/operation/file/";
 
-   @BeforeClass
+   @Before
    public void setUp()
    {
       deleteCookies();
@@ -70,7 +70,7 @@ public class OpenFileWithNonDefaultEditorTest extends BaseTest
     * @throws IOException
     */
    @After
-   public void testTearDown() throws IOException
+   public void tearDown() throws IOException
    {
       try
       {

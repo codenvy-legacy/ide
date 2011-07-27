@@ -26,8 +26,8 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Navigation;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 //http://jira.exoplatform.org/browse/IDE-417
@@ -52,8 +52,8 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
 
    private final static String FOLDER_NAME = OutlineWithOtherTabsInPanelTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       final String textFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-text.txt";
       final String htmlFilePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/sample-html.html";
@@ -74,7 +74,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       }
    }
 
-   @AfterClass
+   @After
    public void tearDown()
    {
       deleteCookies();

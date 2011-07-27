@@ -666,6 +666,16 @@ public class Editor extends AbstractTestModule
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
+   
+   /**
+    * Wait while tab disappears in editor 
+    * @param tabIndex - index of tab, starts at 0
+    * @throws Exception
+    */
+   public void waitTabNotPresent(int tabIndex) throws Exception
+   {
+      waitForElementNotPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
+   }
 
    public void waitEditorFileOpened() throws Exception
    {
