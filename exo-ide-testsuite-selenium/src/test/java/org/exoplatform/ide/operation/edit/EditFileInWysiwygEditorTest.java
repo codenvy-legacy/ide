@@ -22,17 +22,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -53,8 +53,9 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
    
    private final static String IDE_URL = BASE_URL +"IDE/"+ REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FOLDER + "/";
-   @BeforeClass
-   public static void setUp()
+   
+   @Before
+   public void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/" + FILE_NAME;
       try
@@ -75,21 +76,18 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    @Test
    public void editFileInWysiwygEditor() throws Exception
    {
-      Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-
+      IDE.WORKSPACE.waitForRootItem();
+      
       IDE.WORKSPACE.selectItem(WS_URL);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL);
       
       //------ 2 ---------------
       IDE.WORKSPACE.clickOpenIconOfFolder(URL);
-      
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForItem(URL + FILE_NAME);   
       
       openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
-      
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.EDITOR.waitTabPresent(0);
 
       assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
       
@@ -386,7 +384,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
          .isElementPresent("//table[@cellspacing='1' and @cellpadding='1' and @border='1'  and @style='width: 200px;']/tbody/tr[3]/td[2]"));
    }
 
-   @AfterClass
+   @After
    public void tearDown() throws Exception
    {
      IDE.EDITOR.closeTabIgnoringChanges(0);

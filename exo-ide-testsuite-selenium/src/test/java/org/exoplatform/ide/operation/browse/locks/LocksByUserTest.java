@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -41,8 +41,8 @@ public class LocksByUserTest extends LockFileAbstract
 
    private final static String FILE_NAME = "file-" + LocksByUserTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -57,8 +57,8 @@ public class LocksByUserTest extends LockFileAbstract
       }
    }
 
-   @AfterClass
-   public static void tierDown()
+   @After
+   public void tearDown()
    {
       try
       {

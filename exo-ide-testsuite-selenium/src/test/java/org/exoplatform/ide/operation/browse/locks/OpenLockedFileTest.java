@@ -18,18 +18,16 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import java.io.IOException;
-
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Check, that can open locked file only in read-only mode.
@@ -50,8 +48,8 @@ public class OpenLockedFileTest extends LockFileAbstract
    static final String LOCK_BUTTON =
       "//div[@class=\"exoIconButtonPanel\"and @enabled='false' and @title=\"Lock File\"]";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
       try
@@ -69,8 +67,8 @@ public class OpenLockedFileTest extends LockFileAbstract
       }
    }
 
-   @AfterClass
-   public static void tierDown()
+   @After
+   public void tearDown()
    {
       try
       {

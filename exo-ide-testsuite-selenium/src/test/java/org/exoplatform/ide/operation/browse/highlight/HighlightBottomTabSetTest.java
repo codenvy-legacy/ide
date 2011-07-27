@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -43,8 +43,8 @@ public class HighlightBottomTabSetTest extends BaseTest
    private static String SHOW_PROPERTIES_ICON_LOCATOR =
       "//div[@panel-id='operation']//table/tbody/tr/td/table/tbody/tr/td[2]//div[@class='tabMiddleCenterInner']/div/div/table/tbody/tr/td[1]/img";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -93,7 +93,7 @@ public class HighlightBottomTabSetTest extends BaseTest
 
    }
 
-   @AfterClass
+   @After
    public void tearDown()
    {
       deleteCookies();

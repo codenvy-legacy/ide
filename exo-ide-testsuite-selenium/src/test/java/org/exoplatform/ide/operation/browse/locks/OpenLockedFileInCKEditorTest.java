@@ -20,16 +20,12 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
-
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -47,8 +43,8 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 
    private static final String FILE_NAME = "file-" + OpenLockedFileInCKEditorTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
       try
@@ -62,8 +58,8 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       }
    }
 
-   @AfterClass
-   public static void tierDown()
+   @After
+   public void tearDown()
    {
       try
       {
@@ -78,9 +74,10 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      
       //----- 1 ----------
       //open file
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, false);
@@ -99,13 +96,14 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       //----- 4 ----------
       //check is file locked
       IDE.WORKSPACE.waitForRootItem();
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
 
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE, false);

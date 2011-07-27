@@ -21,8 +21,8 @@ package org.exoplatform.ide.operation.browse.highlight;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -39,8 +39,8 @@ public class HighlightNavigatorTabTest extends BaseTest
 
    private static String FILE_NAME = HighlightNavigatorTabTest.class.getSimpleName() + "File";
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       try
       {
@@ -78,8 +78,8 @@ public class HighlightNavigatorTabTest extends BaseTest
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-   @AfterClass
-   public void tierDown()
+   @After
+   public void tearDown()
    {
       deleteCookies();
       try

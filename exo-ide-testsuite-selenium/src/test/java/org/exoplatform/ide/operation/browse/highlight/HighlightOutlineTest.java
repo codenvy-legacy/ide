@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -44,8 +44,8 @@ public class HighlightOutlineTest extends BaseTest
 //   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
 //      + "/" + FOLDER_NAME;
 
-   @BeforeClass
-   public static void setUp()
+   @Before
+   public void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/outline/" + FILE_NAME;
       try
@@ -59,7 +59,7 @@ public class HighlightOutlineTest extends BaseTest
       }
    }
 
-   @AfterClass
+   @After
    public void tearDown() throws Exception
    {
       deleteCookies();

@@ -63,7 +63,7 @@ public class LockFileTest extends LockFileAbstract
    }
 
    @After
-   public void tierDown()
+   public void tearDown()
    {
       deleteCookies();
       try

@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.junit.BeforeClass;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,7 +36,7 @@ import static org.junit.Assert.*;
 public abstract class LockFileAbstract extends BaseTest
 {
 
-   @BeforeClass
+   @Before
    public void clearCookies()
    {
       deleteCookies();
