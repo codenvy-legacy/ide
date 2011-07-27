@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.model.settings;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -29,7 +30,10 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent;
 import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
+import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsUnmarshaller;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,6 +96,50 @@ public class SettingsServiceImpl extends SettingsService
       String url = restContext + "/ide/configuration";
 
       return url;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsHandler#onGetApplicationSettings(org.exoplatform.ide.client.framework.settings.event.GetApplicationSettingsEvent)
+    */
+   public void onGetApplicationSettings(GetApplicationSettingsEvent event)
+   {
+      getApplicationSettings(applicationSettings, new AsyncRequestCallback<ApplicationSettings>()
+      {
+
+         @Override
+         protected void onSuccess(ApplicationSettings result)
+         {
+            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+            eventBus.fireEvent(event);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            ApplicationSettingsReceivedEvent event = new ApplicationSettingsReceivedEvent(applicationSettings);
+            event.setException(exception);
+            eventBus.fireEvent(event);
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.model.settings.SettingsService#getApplicationSettings(org.exoplatform.ide.client.framework.settings.ApplicationSettings, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationSettings(ApplicationSettings applicationSettings,
+      AsyncRequestCallback<ApplicationSettings> callback)
+   {
+      restoreFromCookies(applicationSettings);
+
+      String url = getURL() + "/?nocache=" + Random.nextInt();
+
+      ApplicationSettingsUnmarshaller unmarshaller = new ApplicationSettingsUnmarshaller(applicationSettings);
+
+      callback.setResult(applicationSettings);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaller);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**

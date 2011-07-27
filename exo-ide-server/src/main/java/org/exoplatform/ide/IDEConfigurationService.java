@@ -32,9 +32,11 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.impl.BeanBuilder;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.exoplatform.ws.frameworks.json.value.impl.ArrayValue;
 import org.exoplatform.ws.frameworks.json.value.impl.ObjectValue;
@@ -42,18 +44,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,6 +54,7 @@ import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -71,6 +64,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -82,9 +76,16 @@ import javax.ws.rs.core.UriInfo;
 public class IDEConfigurationService
 {
 
+   /**
+    * 
+    */
+   private static final String SETTINGS = "settings";
+
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
    private static final String EXO_APPLICATIONS = "exo:applications";
+
+   private static final String EXO_USERS = "exo:users";
 
    private static final String APP_NAME = "IDE";
 
@@ -157,8 +158,16 @@ public class IDEConfigurationService
             if (LOG.isDebugEnabled())
                LOG.info("Getting user identity: " + identity.getUserId());
             result.put("user", user);
-            final Map<String, Object> userSettings = getUserSettings();
-            result.put("userSettings", userSettings);
+            try
+            {
+               final Map<String, Object> userSettings = getUserSettings();
+               result.put("userSettings", userSettings);
+            }
+            catch (PathNotFoundException e)
+            {
+               // user configuration not found, skip exception
+            }
+
          }
          ManageableRepository repository = repositoryService.getCurrentRepository();
          if (repository == null)
@@ -182,73 +191,13 @@ public class IDEConfigurationService
 
    }
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
-   public String getConfiguration()
-   {
-      try
-      {
-         String conf = getUserConfiguration();
-         return conf;
-      }
-      catch (Exception e)
-      {
-         throw new WebApplicationException(e, HTTPStatus.NOT_FOUND);
-      }
-   }
-
-   @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
-   public void setConfiguration(String body)
-   {
-      FileWriter w = null;
-      try
-      {
-         File settingsFile = getUserSettingsFile();
-         w = new FileWriter(settingsFile);
-         w.write(body);
-         w.write('\n');
-         w.flush();
-      }
-      catch (URISyntaxException e)
-      {
-         LOG.error("Save user settings failed", e);
-         throw new WebApplicationException(e);
-      }
-      catch (IOException e)
-      {
-         LOG.error("Save user settings failed", e);
-         throw new WebApplicationException(e);
-      }
-      finally
-      {
-         if (w != null)
-         {
-            try
-            {
-               w.close();
-            }
-            catch (IOException e)
-            {
-               LOG.error("Save user settings failed", e);
-               throw new WebApplicationException(e);
-            }
-         }
-      }
-      
-   }
-   
-   //------Implementation---------
-   
    /**
-    * Get user setting as Map.
-    * @return map of user settings
+    * @return
+    * @throws PathNotFoundException
+    * @throws RepositoryException
     * @throws JsonException
-    * @throws IOException
     */
-   public Map<String, Object> getUserSettings() throws JsonException, IOException 
+   public Map<String, Object> getUserSettings() throws PathNotFoundException, RepositoryException, JsonException
    {
       String userConfiguration = getUserConfiguration();
       final Map<String, Object> userSettings = new HashMap<String, Object>();
@@ -291,71 +240,63 @@ public class IDEConfigurationService
       }
       return userSettings;
    }
-   
-   /**
-    * Get the user configuration, which was saved in file. If no file is found, return <code>{}</code>
-    * @return
-    * @throws IOException
-    */
-   private String getUserConfiguration() throws IOException 
+
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   @RolesAllowed("users")
+   public String getConfiguration()
    {
-      String path = System.getProperty("org.exoplatform.ide.server.settings-path");
-      ConversationState curentState = ConversationState.getCurrent();
-      String userPath = curentState.getIdentity().getUserId();
-      InputStream input =
-         Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream(path + "/" + userPath + "/" + APP_NAME + "/applicationSettings.js");
-      if (input == null)
-         return "{}"; //TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
-      
-      Writer writer = new StringWriter();
-      char[] buffer = new char[1024];
+
       try
       {
-         Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-         int n;
-         while ((n = reader.read(buffer)) != -1)
-         {
-            writer.write(buffer, 0, n);
-         }
+         return getUserConfiguration();
       }
-      finally
+      catch (Exception e)
       {
-         input.close();
+         throw new WebApplicationException(e, HTTPStatus.NOT_FOUND);
       }
-      String userConf = writer.toString();
-      return userConf;
-      
    }
-   
-   /**
-    * Get the file, where user settings are stored. If file doesn't exist, that create it.
-    * @return File with user settings
-    * @throws URISyntaxException
-    */
-   private File getUserSettingsFile() throws URISyntaxException
-   {
-      final String settingsFolderPath = System.getProperty("org.exoplatform.ide.server.settings-path");
-      URL url = Thread.currentThread().getContextClassLoader().getResource(settingsFolderPath);
-      File ideSettingsFolder = new File(url.toURI());
 
-      String user = ConversationState.getCurrent().getIdentity().getUserId();
-      File usersFolder = new File(ideSettingsFolder.getAbsolutePath() + "/" + user);
-      File settingsFile = null;
-      if (!usersFolder.exists())
-      {
-         usersFolder.mkdir();
-         File usersAppFolder = new File(usersFolder.getAbsolutePath() + "/" + APP_NAME);
-         usersAppFolder.mkdir();
-         settingsFile = new File(usersAppFolder.getAbsoluteFile(), "applicationSettings.js");
-      }
-      else
-      {
-         settingsFile = new File(usersFolder.getAbsoluteFile() + "/" + APP_NAME, "applicationSettings.js");
-      }
-      return settingsFile;
+   /**
+    * @return
+    * @throws PathNotFoundException
+    * @throws RepositoryException
+    */
+   private String getUserConfiguration() throws PathNotFoundException, RepositoryException
+   {
+      SessionProvider sessionProvider = sessionProviderService.getSessionProvider(null);
+      ConversationState curentState = ConversationState.getCurrent();
+      String entryPath = EXO_USERS + "/" + curentState.getIdentity().getUserId() + "/" + APP_NAME;
+
+      RegistryEntry entry = registryService.getEntry(sessionProvider, normalizePath(entryPath));
+      Node item = entry.getDocument().getElementsByTagName("configuration").item(0);
+      if (item != null)
+         return item.getFirstChild().getNodeValue();
+      return "{}"; //TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings  
    }
-   
+
+   @PUT
+   @Consumes(MediaType.APPLICATION_JSON)
+   @RolesAllowed("users")
+   public Response setConfiguration(String body)
+   {
+      String entryXml = "<configuration><![CDATA[" + body + "]]></configuration>";
+      SessionProvider sessionProvider = sessionProviderService.getSessionProvider(null);
+      try
+      {
+         RegistryEntry entry = RegistryEntry.parse(entryXml.getBytes());
+         ConversationState curentState = ConversationState.getCurrent();
+         String groupName = EXO_USERS + "/" + curentState.getIdentity().getUserId() + "/" + APP_NAME;
+         registryService.updateEntry(sessionProvider, normalizePath(groupName), entry);
+         return Response.ok().build();
+      }
+      catch (Exception e)
+      {
+         LOG.error("Re-create registry entry failed", e);
+         throw new WebApplicationException(e);
+      }
+   }
+
    private Document getRegistryEntryDocument(String path)
    {
       SessionProvider sessionProvider = sessionProviderService.getSessionProvider(null);
