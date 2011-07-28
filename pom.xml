@@ -8,13 +8,13 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M2</version>
+   <version>1.2.0-M3-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
-      <connection>scm:svn:http://svn.exoplatform.org/projects/ide/tags/1.2.0-M2</connection>
-      <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ide/tags/1.2.0-M2</developerConnection>
-      <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/tags/1.2.0-M2</url>
+      <connection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</connection>
+      <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ide/trunk</developerConnection>
+      <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>
       <!-- Repositories URLs -->

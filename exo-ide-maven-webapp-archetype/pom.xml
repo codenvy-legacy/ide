@@ -4,7 +4,7 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M2</version>
+      <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-maven-webapp-archetype</artifactId>
    <name>Archetype - exo-ide-maven-webapp-archetype</name>
