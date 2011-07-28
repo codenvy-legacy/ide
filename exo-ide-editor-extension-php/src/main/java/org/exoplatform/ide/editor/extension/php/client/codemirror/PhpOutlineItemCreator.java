@@ -25,6 +25,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.extension.php.client.PhpClientBundle;
 
+import com.google.gwt.resources.client.ImageResource;
+
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -34,72 +36,72 @@ import org.exoplatform.ide.editor.extension.php.client.PhpClientBundle;
 public class PhpOutlineItemCreator extends OutlineItemCreatorImpl
 {  
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case PHP_TAG:
-            return PhpClientBundle.INSTANCE.phpTag().getURL();
+            return PhpClientBundle.INSTANCE.phpTag();
          
          case FUNCTION :
-            return PhpClientBundle.INSTANCE.phpTag().getURL();
+            return PhpClientBundle.INSTANCE.phpTag();
             
          case VARIABLE :
-            return PhpClientBundle.INSTANCE.variable().getURL();
+            return PhpClientBundle.INSTANCE.variable();
 
          case CONSTANT :
-            return PhpClientBundle.INSTANCE.constantItem().getURL();
+            return PhpClientBundle.INSTANCE.constantItem();
             
          case METHOD :
             if (isPrivate(token))
             {
-               return PhpClientBundle.INSTANCE.privateMethod().getURL();
+               return PhpClientBundle.INSTANCE.privateMethod();
             }
             
             else if (isProtected(token))
             {
-               return PhpClientBundle.INSTANCE.protectedMethod().getURL();
+               return PhpClientBundle.INSTANCE.protectedMethod();
             }
 
             else if (isPublic(token))
             {
-               return PhpClientBundle.INSTANCE.publicMethod().getURL();
+               return PhpClientBundle.INSTANCE.publicMethod();
             }
 
-            return PhpClientBundle.INSTANCE.publicMethod().getURL();
+            return PhpClientBundle.INSTANCE.publicMethod();
 
          case PROPERTY :            
             if (isPrivate(token))
             {
-               return PhpClientBundle.INSTANCE.privateField().getURL();
+               return PhpClientBundle.INSTANCE.privateField();
             }
             
             else if (isProtected(token))
             {
-               return PhpClientBundle.INSTANCE.protectedField().getURL();
+               return PhpClientBundle.INSTANCE.protectedField();
             }
             
             else if (isPublic(token))
             {
-               return PhpClientBundle.INSTANCE.publicField().getURL();
+               return PhpClientBundle.INSTANCE.publicField();
             }
            
-            return PhpClientBundle.INSTANCE.publicField().getURL();
+            return PhpClientBundle.INSTANCE.publicField();
             
          case CLASS :
-            return PhpClientBundle.INSTANCE.classItem().getURL();
+            return PhpClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return PhpClientBundle.INSTANCE.interfaceItem().getURL();              
+            return PhpClientBundle.INSTANCE.interfaceItem();              
             
          case CLASS_CONSTANT:
-            return PhpClientBundle.INSTANCE.classConstant().getURL();
+            return PhpClientBundle.INSTANCE.classConstant();
 
          case NAMESPACE:
-            return PhpClientBundle.INSTANCE.namespace().getURL();
+            return PhpClientBundle.INSTANCE.namespace();
             
          default :
-            return "";
+            return null;
       }
    }
    
