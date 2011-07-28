@@ -42,8 +42,11 @@ public class ExpressExceptionMapper implements ExceptionMapper<ExpressException>
          return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
             .entity(e.getMessage()).type(e.getContentType()).build();
       
+      //replace HTTP status 401 to other it because this status means Required Authorization on IDE app    
+      int responseStatus = e.getResponseStatus() == 401 ? 400 : e.getResponseStatus(); 
+
       ResponseBuilder rb =
-         Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
+         Response.status(responseStatus).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
             .type(e.getContentType());
       int exitCode = e.getExitCode();
       if (exitCode != -1)

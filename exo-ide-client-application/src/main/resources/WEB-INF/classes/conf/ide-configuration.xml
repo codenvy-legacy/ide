@@ -81,6 +81,16 @@
    
     <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+      </init-params>
    </component>
    
    <component>
@@ -137,8 +147,8 @@
             <value>production</value>
          </value-param>
          <value-param>
-            <name>key-store</name>
-            <value>/ssh-keys</value>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
          </value-param>
       </init-params>
    </component>
@@ -159,8 +169,8 @@
             <value>production</value>
          </value-param>
          <value-param>
-            <name>heroku-api-keys</name>
-            <value>/heroku-api-keys</value>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
          </value-param>
       </init-params>
    </component>
@@ -177,8 +187,8 @@
             <value>production</value>
          </value-param>
          <value-param>
-            <name>express-config</name>
-            <value>/express-config</value>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
          </value-param>
       </init-params>
    </component>

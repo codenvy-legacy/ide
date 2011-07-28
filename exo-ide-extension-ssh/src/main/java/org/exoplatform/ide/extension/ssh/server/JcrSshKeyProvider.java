@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.KeyPair;
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -46,6 +42,10 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.KeyPair;
 
 /**
  * Loads SSH keys from JCR. Lookups keys in current repository, <code>workspace</code> and <code>keyStore</code>. If
@@ -439,30 +439,37 @@ public class JcrSshKeyProvider implements SshKeyProvider
          String user = session.getUserID();
          final String sshPath = config + user + "/ssh";
          Set<String> hosts = null;
+         Set<String> oldHosts = null;
+         Node oldKeys = null;
          try
          {
             Node sshKeys = (Node)session.getItem(sshPath);
             hosts = getAll(sshKeys);
+            oldKeys = (Node)session.getItem("/ssh-keys/" + user);
+            oldHosts = getAll(oldKeys);
          }
          catch (PathNotFoundException pnfe)
          {
          }
-
-         if (hosts != null && hosts.size() > 0)
-            return hosts;
+         
+         if (oldHosts != null)
+         {
+            oldHosts.removeAll(hosts);
+            if(oldHosts.isEmpty()) return hosts;
+         }
 
          // TODO : remove in future versions. Need it to back compatibility with existed data.
          try
          {
-            Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
-            hosts = getAll(oldKeys);
+//            Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
+//            oldHosts = getAll(oldKeys);
 
-            if (hosts != null && hosts.size() > 0)
+            if (oldHosts != null && oldHosts.size() > 0)
             {
                checkConfigNode((ManageableRepository)session.getRepository());
                Node sshKeys = getUserSSHDir(session, user);
 
-               for (String h : hosts)
+               for (String h : oldHosts)
                {
                   try
                   {
@@ -484,7 +491,7 @@ public class JcrSshKeyProvider implements SshKeyProvider
                }
                session.save();
 
-               return hosts;
+               return getAll(sshKeys);
             }
          }
          catch (PathNotFoundException e)

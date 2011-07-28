@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-docs</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M2-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-user-guide</artifactId>
    <packaging>jar</packaging>
