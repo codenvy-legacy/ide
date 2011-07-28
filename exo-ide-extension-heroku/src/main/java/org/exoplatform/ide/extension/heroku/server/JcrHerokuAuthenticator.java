@@ -45,7 +45,9 @@ import javax.jcr.Session;
 public class JcrHerokuAuthenticator extends HerokuAuthenticator
 {
    private RepositoryService repositoryService;
+
    private String workspace;
+
    private String config = "/ide-home/users/";
 
    public JcrHerokuAuthenticator(RepositoryService repositoryService, InitParams initParams)
@@ -90,32 +92,31 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
          ManageableRepository repository = repositoryService.getCurrentRepository();
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
-         String keyPath = config + session.getUserID() + "/heroku/heroku-credentials";
+         String user = session.getUserID();
+         String keyPath = config + user + "/heroku/heroku-credentials";
 
          Item item = null;
          try
          {
             item = session.getItem(keyPath);
+            return readCredentials((Node)item);
          }
          catch (PathNotFoundException pnfe)
          {
+            // TODO : remove in future versions. Need it to back compatibility with existed data.
+            try
+            {
+               item = session.getItem("/PaaS/heroku-api-keys/" + user + "/heroku-credentials");
+               HerokuCredentials credentials = readCredentials((Node)item);
+               writeCredentials(credentials); // write in new place.
+               return credentials;
+            }
+            catch (PathNotFoundException pnfe2)
+            {
+            }
          }
-
-         if (item == null)
-            return null;
-
-         Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-         BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
-         try
-         {
-            String email = credentialsReader.readLine();
-            String apiKey = credentialsReader.readLine();
-            return new HerokuCredentials(email, apiKey);
-         }
-         finally
-         {
-            credentialsReader.close();
-         }
+         
+         return null;
       }
       catch (RepositoryException re)
       {
@@ -125,6 +126,22 @@ public class JcrHerokuAuthenticator extends HerokuAuthenticator
       {
          if (session != null)
             session.logout();
+      }
+   }
+
+   private HerokuCredentials readCredentials(Node node) throws IOException, RepositoryException
+   {
+      Property property = node.getNode("jcr:content").getProperty("jcr:data");
+      BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
+      try
+      {
+         String email = credentialsReader.readLine();
+         String apiKey = credentialsReader.readLine();
+         return new HerokuCredentials(email, apiKey);
+      }
+      finally
+      {
+         credentialsReader.close();
       }
    }
 

@@ -76,7 +76,9 @@ public class CloudBees
    private static UploadProgress UPLOAD_PROGRESS = new DummyUploadProgress();
 
    private RepositoryService repositoryService;
+
    private String workspace;
+
    private String config = "/ide-home/users/";
 
    public CloudBees(RepositoryService repositoryService, InitParams initParams)
@@ -356,43 +358,31 @@ public class CloudBees
       {
          ManageableRepository repository = repositoryService.getCurrentRepository();
          session = repository.login(workspace);
-         String keyPath = config + session.getUserID() + "/cloud_bees/cloudbees-credentials";
+         String user = session.getUserID();
+         String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
 
          Item item = null;
          try
          {
             item = session.getItem(keyPath);
+            return readCredentials((Node)item);
          }
          catch (PathNotFoundException pnfe)
          {
-         }
-
-         if (item == null)
-            return null;
-
-         Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-         BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
-         try
-         {
-            String apiKey = credentialsReader.readLine();
-            String secret = credentialsReader.readLine();
-
-            return new CloudBeesCredentials(apiKey, secret);
-         }
-         catch (IOException ioe)
-         {
-            throw new RuntimeException(ioe.getMessage(), ioe);
-         }
-         finally
-         {
+            // TODO : remove in future versions. Need it to back compatibility with existed data.
             try
             {
-               credentialsReader.close();
+               item = session.getItem("/PaaS/cloudbees-config/" + user + "/cloudbees-credentials");
+               CloudBeesCredentials credentials = readCredentials((Node)item);
+               writeCredentials(credentials); // write in new place.
+               return credentials;
             }
-            catch (IOException ignored)
+            catch (PathNotFoundException pnfe2)
             {
             }
          }
+
+         return null;
       }
       catch (RepositoryException re)
       {
@@ -402,6 +392,32 @@ public class CloudBees
       {
          if (session != null)
             session.logout();
+      }
+   }
+
+   private CloudBeesCredentials readCredentials(Node node) throws RepositoryException
+   {
+      Property property = node.getNode("jcr:content").getProperty("jcr:data");
+      BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
+      try
+      {
+         String apiKey = credentialsReader.readLine();
+         String secret = credentialsReader.readLine();
+         return new CloudBeesCredentials(apiKey, secret);
+      }
+      catch (IOException ioe)
+      {
+         throw new RuntimeException(ioe.getMessage(), ioe);
+      }
+      finally
+      {
+         try
+         {
+            credentialsReader.close();
+         }
+         catch (IOException ignored)
+         {
+         }
       }
    }
 

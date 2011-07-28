@@ -99,7 +99,7 @@ public class ExpressService
    @Produces(MediaType.APPLICATION_JSON)
    public Set<String> applicationTypes()
    {
-      return express.APP_TYPES;
+      return Express.APP_TYPES;
    }
 
    @GET

@@ -135,18 +135,8 @@ public class JcrSshKeyProvider implements SshKeyProvider
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String sshPath = config + user + "/ssh";
 
-         Node sshKeys;
-         try
-         {
-            sshKeys = (Node)session.getItem(sshPath);
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            org.exoplatform.ide.Utils.putFolders(session, sshPath);
-            sshKeys = (Node)session.getItem(sshPath);
-         }
+         Node sshKeys = getUserSSHDir(session, user);
 
          final String privateKey = host + ".key";
          if (sshKeys.hasNode(privateKey))
@@ -228,11 +218,51 @@ public class JcrSshKeyProvider implements SshKeyProvider
     */
    private SshKey readKey(Session session, String name, boolean findParent) throws IOException, RepositoryException
    {
-      String sshPath = config + session.getUserID() + "/ssh";
+      String user = session.getUserID();
+      final String sshPath = config + user + "/ssh";
+      SshKey key = null;
+      try
+      {
+         Node sshKeys = (Node)session.getItem(sshPath);
+         key = readKey(sshKeys, name, findParent);
+      }
+      catch (PathNotFoundException e)
+      {
+      }
+
+      if (key != null)
+         return key;
+
+      // TODO : remove in future versions. Need it to back compatibility with existed data.
+      try
+      {
+         Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
+         key = readKey(oldKeys, name, findParent);
+         if (key != null)
+         {
+            checkConfigNode((ManageableRepository)session.getRepository());
+            Node sshKeys = getUserSSHDir(session, user);
+            writeKey(sshKeys, key.getIdentifier().substring(key.getIdentifier().lastIndexOf('/') + 1), user,
+               key.getBytes());
+            session.save();
+
+            key = readKey(sshKeys, name, findParent);
+            return key;
+         }
+      }
+      catch (PathNotFoundException e)
+      {
+      }
+
+      return null;
+   }
+
+   private SshKey readKey(Node sshKeys, String name, boolean findParent) throws IOException, RepositoryException
+   {
       Node keyNode = null;
       try
       {
-         keyNode = (Node)session.getItem(sshPath + "/" + name);
+         keyNode = sshKeys.getNode(name);
       }
       catch (PathNotFoundException pnfe)
       {
@@ -243,7 +273,6 @@ public class JcrSshKeyProvider implements SshKeyProvider
       {
          try
          {
-            Node sshKeys = (Node)session.getItem(sshPath);
             for (NodeIterator iter = sshKeys.getNodes(); iter.hasNext();)
             {
                Node nextNode = iter.nextNode();
@@ -303,18 +332,8 @@ public class JcrSshKeyProvider implements SshKeyProvider
          // Login with current identity. ConversationState.getCurrent().
          session = repository.login(workspace);
          String user = session.getUserID();
-         String sshPath = config + user + "/ssh";
 
-         Node sshKeys;
-         try
-         {
-            sshKeys = (Node)session.getItem(sshPath);
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            org.exoplatform.ide.Utils.putFolders(session, sshPath);
-            sshKeys = (Node)session.getItem(sshPath);
-         }
+         Node sshKeys = getUserSSHDir(session, user);
 
          final String privateKey = host + ".key";
          final String publicKey = host + ".pub";
@@ -376,7 +395,11 @@ public class JcrSshKeyProvider implements SshKeyProvider
          String user = session.getUserID();
 
          String[] toRemove = new String[]{config + user + "/ssh/" + host + ".key", //
-            config + user + "/ssh/" + host + ".pub"};
+            config + user + "/ssh/" + host + ".pub", //
+            // TODO : remove in future versions. Need it to back compatibility with existed data.
+            "/ssh-keys/" + user + "/" + host + ".pub", //
+            "/ssh-keys/" + user + "/" + host + ".key", //
+         };
          for (int i = 0; i < toRemove.length; i++)
          {
             try
@@ -414,23 +437,60 @@ public class JcrSshKeyProvider implements SshKeyProvider
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userKeysPath = config + user + "/ssh";
+         final String sshPath = config + user + "/ssh";
+         Set<String> hosts = null;
          try
          {
-            Node userKeys = (Node)session.getItem(userKeysPath);
-            Set<String> hosts = new HashSet<String>();
-            for (NodeIterator iter = userKeys.getNodes(); iter.hasNext();)
-            {
-               String name = iter.nextNode().getName();
-               Matcher m = keyPattern.matcher(name);
-               if (m.matches())
-                  hosts.add(m.group(1));
-            }
-            return hosts;
+            Node sshKeys = (Node)session.getItem(sshPath);
+            hosts = getAll(sshKeys);
          }
          catch (PathNotFoundException pnfe)
          {
          }
+
+         if (hosts != null && hosts.size() > 0)
+            return hosts;
+
+         // TODO : remove in future versions. Need it to back compatibility with existed data.
+         try
+         {
+            Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
+            hosts = getAll(oldKeys);
+
+            if (hosts != null && hosts.size() > 0)
+            {
+               checkConfigNode((ManageableRepository)session.getRepository());
+               Node sshKeys = getUserSSHDir(session, user);
+
+               for (String h : hosts)
+               {
+                  try
+                  {
+                     final String privateKey = h + ".key";
+                     final String publicKey = h + ".pub";
+
+                     SshKey k = readKey(oldKeys, privateKey, true);
+                     if (k != null)
+                        writeKey(sshKeys, privateKey, user, k.getBytes());
+
+                     k = readKey(oldKeys, publicKey, true);
+                     if (k != null)
+                        writeKey(sshKeys, publicKey, user, k.getBytes());
+                  }
+                  catch (IOException e)
+                  {
+                     // Ignore here.
+                  }
+               }
+               session.save();
+
+               return hosts;
+            }
+         }
+         catch (PathNotFoundException e)
+         {
+         }
+
          return java.util.Collections.emptySet();
       }
       catch (RepositoryException re)
@@ -442,6 +502,19 @@ public class JcrSshKeyProvider implements SshKeyProvider
          if (session != null)
             session.logout();
       }
+   }
+
+   private Set<String> getAll(Node sshKeys) throws RepositoryException
+   {
+      Set<String> hosts = new HashSet<String>();
+      for (NodeIterator iter = sshKeys.getNodes(); iter.hasNext();)
+      {
+         String name = iter.nextNode().getName();
+         Matcher m = keyPattern.matcher(name);
+         if (m.matches())
+            hosts.add(m.group(1));
+      }
+      return hosts;
    }
 
    private void checkConfigNode(ManageableRepository repository) throws RepositoryException
@@ -466,5 +539,21 @@ public class JcrSshKeyProvider implements SshKeyProvider
          if (sys != null)
             sys.logout();
       }
+   }
+
+   private Node getUserSSHDir(Session session, String user) throws RepositoryException
+   {
+      String sshPath = config + user + "/ssh";
+      Node sshKeys;
+      try
+      {
+         sshKeys = (Node)session.getItem(sshPath);
+      }
+      catch (PathNotFoundException pnfe)
+      {
+         org.exoplatform.ide.Utils.putFolders(session, sshPath);
+         sshKeys = (Node)session.getItem(sshPath);
+      }
+      return sshKeys;
    }
 }
