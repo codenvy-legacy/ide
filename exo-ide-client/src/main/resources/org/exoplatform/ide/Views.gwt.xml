@@ -1,112 +1,110 @@
-<!--
-
-    Copyright (C) 2010 eXo Platform SAS.
-
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-
--->
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+   site: http://www.fsf.org. -->
 <module>
-	<inherits name='com.google.gwt.user.User' />
-	
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
-		<when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
-	</replace-with>   
-	
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchFilesView">
-		<when-type-is class="org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display" />
-	</replace-with>
+   <inherits name='com.google.gwt.user.User' />
 
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsViewExtended">
-		<when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
+      <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+   </replace-with>
+   <replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderIE">
+      <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
+      <any>
+         <when-property-is name="user.agent" value="ie6" />
+         <when-property-is name="user.agent" value="ie8" />
+      </any>
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.properties.PropertiesView">
-		<when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
+      <when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.DeleteItemView">
-		<when-type-is class="org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.SearchFilesView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.navigation.ui.GetItemURLView">
-		<when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsViewExtended">
+      <when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
-		<when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.properties.PropertiesView">
+      <when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.outline.ui.OutlineViewExtended">
-		<when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.DeleteItemView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.preview.PreviewHTMLView">
-		<when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.GetItemURLView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.about.AboutIDEView">
-		<when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
+      <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.restdiscovery.ui.RestServicesDiscoveryView">
-		<when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.outline.ui.OutlineViewExtended">
+      <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.edit.ui.FindTextView">
-		<when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.preview.PreviewHTMLView">
+      <when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.project.CreateProjectFromTemplateForm">
-		<when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.about.AboutIDEView">
+      <when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
-		<when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.restdiscovery.ui.RestServicesDiscoveryView">
+      <when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.output.OutputViewEx">
-		<when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.edit.ui.FindTextView">
+      <when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
-		<when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.project.CreateProjectFromTemplateForm">
+      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
-		<when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
+      <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysView">
-		<when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.output.OutputViewEx">
+      <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.documentation.DocumentationView">
-		<when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
+      <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
-		<when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
+      <when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.dialogs.AskForValueView">
-		<when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysView">
+      <when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display" />
+   </replace-with>
 
-	<replace-with class="org.exoplatform.ide.client.authentication.LoginView">
-		<when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
-	</replace-with>
+   <replace-with class="org.exoplatform.ide.client.documentation.DocumentationView">
+      <when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.dialogs.AskForValueView">
+      <when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.authentication.LoginView">
+      <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
+   </replace-with>
 
 </module>

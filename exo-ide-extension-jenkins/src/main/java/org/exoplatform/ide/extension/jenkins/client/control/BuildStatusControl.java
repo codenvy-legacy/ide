@@ -49,6 +49,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
       setSize(80);
       setEvent(new GetJenkinsOutputEvent());
       setText("&nbsp;");
+      setDelimiterBefore(true);
       setPrompt("Get build result");
    }
 

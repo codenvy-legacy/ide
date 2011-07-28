@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.jenkins.client.control.BuildStatusControl;
-import org.exoplatform.ide.extension.jenkins.client.control.Delimeter;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
@@ -79,7 +78,6 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(GetJenkinsOutputEvent.TYPE, this);
       control = new BuildStatusControl();
-      IDE.getInstance().addControl(new Delimeter(), DockTarget.STATUSBAR, true);
       IDE.getInstance().addControl(control, DockTarget.STATUSBAR, true);
    }
 

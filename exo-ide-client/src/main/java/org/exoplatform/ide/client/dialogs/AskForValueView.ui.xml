@@ -2,34 +2,37 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
    <ui:style>
-      
+      .panel-float{
+	     float: left;
+	  }
+	  
    </ui:style>
 
    <c:Border margin="10" borderColor="transparent">
 
       <c:HPanel>
 
-         <g:SimplePanel width="30px"></g:SimplePanel>
+         <g:SimplePanel width="30px" styleName="{style.panel-float}"></g:SimplePanel>
 
 <!-- width="370px" -->
-         <c:VPanel>
+         <c:VPanel styleName="{style.panel-float}">
 
-            <g:SimplePanel></g:SimplePanel>
+            <g:SimplePanel styleName="{style.panel-float}"></g:SimplePanel>
 
-            <c:Label ui:field="promptLabel" text="ask message" height="25px"></c:Label>
+            <c:Label ui:field="promptLabel" text="ask message" height="30"></c:Label>
 
             <c:TextField ui:field="textField" showTitle="false" height="22px" name="ideAskForValueViewValueField"></c:TextField>
 
-            <g:SimplePanel height="20px"></g:SimplePanel>
+            <g:SimplePanel height="20px" styleName="{style.panel-float}"></g:SimplePanel>
 
             <c:HPanel height="22px">
-               <g:SimplePanel></g:SimplePanel>
-               <c:ImageButton ui:field="yesButton" text="Yes" imageName="yes" width="90px" buttonId="ideAskForValueViewYesButton"></c:ImageButton>
-               <g:SimplePanel width="10px"></g:SimplePanel>
-               <c:ImageButton ui:field="noButton" text="No" imageName="no" width="90px" buttonId="ideAskForValueViewNoButton"></c:ImageButton>
-               <g:SimplePanel width="10px"></g:SimplePanel>
+               <g:SimplePanel styleName="{style.panel-float}"></g:SimplePanel>
+               <c:ImageButton ui:field="yesButton" text="Yes" imageName="yes" width="90px" buttonId="ideAskForValueViewYesButton" styleName="{style.panel-float}"></c:ImageButton>
+               <g:SimplePanel width="10px" styleName="{style.panel-float}"></g:SimplePanel>
+               <c:ImageButton ui:field="noButton" text="No" imageName="no" width="90px" buttonId="ideAskForValueViewNoButton" styleName="{style.panel-float}"></c:ImageButton>
+               <g:SimplePanel width="10px" styleName="{style.panel-float}"></g:SimplePanel>
                <c:ImageButton ui:field="cancelButton" text="Cancel" imageName="cancel" width="90px" buttonId="ideAskForValueViewCancelButton"></c:ImageButton>
-               <g:SimplePanel></g:SimplePanel>
+               <g:SimplePanel styleName="{style.panel-float}"></g:SimplePanel>
             </c:HPanel>
 
             <g:SimplePanel></g:SimplePanel>

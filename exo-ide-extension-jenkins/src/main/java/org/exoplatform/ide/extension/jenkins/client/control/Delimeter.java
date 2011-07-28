@@ -37,6 +37,8 @@ public class Delimeter extends SimpleControl implements IDEControl
    public Delimeter()
    {
       super("---");
+      setVisible(false);
+      setEnabled(false);
    }
 
    /**
