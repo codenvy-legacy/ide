@@ -22,6 +22,8 @@ import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.extension.html.client.HtmlEditorExtension;
 
+import com.google.gwt.resources.client.ImageResource;
+
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -31,18 +33,18 @@ import org.exoplatform.ide.editor.extension.html.client.HtmlEditorExtension;
 public class HtmlOutlineItemCreator extends OutlineItemCreatorImpl
 {  
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case TAG :
-            return HtmlEditorExtension.RESOURCES.tag().getURL();
+            return HtmlEditorExtension.RESOURCES.tag();
             
          case CDATA :
-            return HtmlEditorExtension.RESOURCES.cdata().getURL();
+            return HtmlEditorExtension.RESOURCES.cdata();
             
          default :
-            return "";
+            return null;
       }
    }
    

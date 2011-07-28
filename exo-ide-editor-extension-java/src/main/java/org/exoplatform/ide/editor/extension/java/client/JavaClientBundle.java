@@ -91,4 +91,7 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/extension/java/client/images/clock.png")
    ImageResource clockItem();
+
+   @Source("org/exoplatform/ide/editor/extension/java/client/images/groovy-tag.png")
+   ImageResource groovyTagItem();
 }

@@ -23,6 +23,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 
+import com.google.gwt.resources.client.ImageResource;
+
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -32,36 +34,36 @@ import org.exoplatform.ide.editor.extension.ruby.client.RubyClientBundle;
 public class RubyOutlineItemCreator extends OutlineItemCreatorImpl
 {  
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case LOCAL_VARIABLE :
-            return RubyClientBundle.INSTANCE.variable().getURL();
+            return RubyClientBundle.INSTANCE.variable();
 
          case GLOBAL_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyGlobalVariable().getURL();
+            return RubyClientBundle.INSTANCE.rubyGlobalVariable();
 
          case CLASS_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyClassVariable().getURL();
+            return RubyClientBundle.INSTANCE.rubyClassVariable();
 
          case INSTANCE_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyObjectVariable().getURL();
+            return RubyClientBundle.INSTANCE.rubyObjectVariable();
 
          case CONSTANT :
-            return RubyClientBundle.INSTANCE.rubyConstant().getURL();
+            return RubyClientBundle.INSTANCE.rubyConstant();
 
          case MODULE :
-            return RubyClientBundle.INSTANCE.module().getURL();
+            return RubyClientBundle.INSTANCE.module();
             
          case CLASS :
-            return RubyClientBundle.INSTANCE.classItem().getURL();
+            return RubyClientBundle.INSTANCE.classItem();
 
          case METHOD :
-            return RubyClientBundle.INSTANCE.publicMethod().getURL();       
+            return RubyClientBundle.INSTANCE.publicMethod();       
             
          default :
-            return "";
+            return null;
       }
    }
    

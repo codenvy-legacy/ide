@@ -24,6 +24,7 @@ import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -68,7 +69,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
     * @param token token
     * @return icon
     */
-  public abstract String getTokenIcon(TokenBeenImpl token);
+  public abstract ImageResource getTokenIcon(TokenBeenImpl token);
    
 
    /**

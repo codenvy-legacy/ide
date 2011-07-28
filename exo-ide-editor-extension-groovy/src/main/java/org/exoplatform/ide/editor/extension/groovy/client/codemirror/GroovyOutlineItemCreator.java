@@ -24,6 +24,8 @@ import org.exoplatform.ide.editor.extension.groovy.client.Images;
 import org.exoplatform.ide.editor.extension.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.extension.java.client.codemirror.JavaOutlineItemCreator;
 
+import com.google.gwt.resources.client.ImageResource;
+
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -34,61 +36,61 @@ public class GroovyOutlineItemCreator extends JavaOutlineItemCreator
 {  
 
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case VARIABLE :
-            return JavaClientBundle.INSTANCE.variable().getURL();
+            return JavaClientBundle.INSTANCE.variable();
             
          case PROPERTY :            
             if (isPrivate(token))
             {
-               return JavaClientBundle.INSTANCE.privateField().getURL();
+               return JavaClientBundle.INSTANCE.privateField();
             }
             
             else if (isProtected(token))
             {
-               return JavaClientBundle.INSTANCE.protectedField().getURL();
+               return JavaClientBundle.INSTANCE.protectedField();
             }
             
             else if (isPublic(token))
             {
-               return JavaClientBundle.INSTANCE.publicField().getURL();
+               return JavaClientBundle.INSTANCE.publicField();
             }
 
-            return JavaClientBundle.INSTANCE.publicField().getURL();
+            return JavaClientBundle.INSTANCE.publicField();
             
          case METHOD :
             if (isPrivate(token))
             {
-               return JavaClientBundle.INSTANCE.privateMethod().getURL();
+               return JavaClientBundle.INSTANCE.privateMethod();
             }
             
             else if (isProtected(token))
             {
-               return JavaClientBundle.INSTANCE.protectedMethod().getURL();
+               return JavaClientBundle.INSTANCE.protectedMethod();
             }
 
             else if (isPublic(token))
             {
-               return JavaClientBundle.INSTANCE.publicMethod().getURL();
+               return JavaClientBundle.INSTANCE.publicMethod();
             }
 
-            return JavaClientBundle.INSTANCE.publicMethod().getURL();
+            return JavaClientBundle.INSTANCE.publicMethod();
             
             
          case CLASS :
-            return JavaClientBundle.INSTANCE.classItem().getURL();
+            return JavaClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return JavaClientBundle.INSTANCE.interfaceItem().getURL();              
+            return JavaClientBundle.INSTANCE.interfaceItem();              
             
          case GROOVY_TAG :
-            return Images.GROOVY_TAG;
+            return JavaClientBundle.INSTANCE.groovyTagItem();
             
          default :
-            return "";
+            return null;
       }
    }
    

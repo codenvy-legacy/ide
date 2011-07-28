@@ -24,6 +24,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorExtension;
 
+import com.google.gwt.resources.client.ImageResource;
+
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
@@ -32,27 +34,27 @@ import org.exoplatform.ide.editor.extension.javascript.client.JavaScriptEditorEx
 public class JavaScriptOutlineItemCreator extends OutlineItemCreatorImpl
 {  
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case FUNCTION :
-            return JavaScriptEditorExtension.RESOURCES.functionItem().getURL();
+            return JavaScriptEditorExtension.RESOURCES.functionItem();
 
          case VARIABLE :
-            return JavaScriptEditorExtension.RESOURCES.varItem().getURL();
+            return JavaScriptEditorExtension.RESOURCES.varItem();
             
          case TAG :
-            return JavaScriptEditorExtension.RESOURCES.tag().getURL();
+            return JavaScriptEditorExtension.RESOURCES.tag();
             
          case PROPERTY :            
-            return JavaScriptEditorExtension.RESOURCES.propertyItem().getURL();
+            return JavaScriptEditorExtension.RESOURCES.propertyItem();
 
          case METHOD :
-            return JavaScriptEditorExtension.RESOURCES.methodItem().getURL();
+            return JavaScriptEditorExtension.RESOURCES.methodItem();
             
          default :
-            return "";
+            return null;
       }
    }
    

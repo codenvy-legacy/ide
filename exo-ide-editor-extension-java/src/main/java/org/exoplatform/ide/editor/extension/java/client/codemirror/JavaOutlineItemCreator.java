@@ -21,11 +21,15 @@ package org.exoplatform.ide.editor.extension.java.client.codemirror;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.extension.java.client.JavaClientBundle;
+
+import com.google.gwt.resources.client.ImageResource;
 
 
 /**
@@ -36,61 +40,61 @@ import org.exoplatform.ide.editor.extension.java.client.JavaClientBundle;
 public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
 {  
    @Override
-   public String getTokenIcon(TokenBeenImpl token)
+   public ImageResource getTokenIcon(TokenBeenImpl token)
    {
       switch (token.getType())
       {
          case VARIABLE :
-            return JavaClientBundle.INSTANCE.variable().getURL();
+            return JavaClientBundle.INSTANCE.variable();
             
          case PROPERTY :            
             if (isPrivate(token))
             {
-               return JavaClientBundle.INSTANCE.privateField().getURL();
+               return JavaClientBundle.INSTANCE.privateField();
             }
             
             else if (isProtected(token))
             {
-               return JavaClientBundle.INSTANCE.protectedField().getURL();
+               return JavaClientBundle.INSTANCE.protectedField();
             }
             
             else if (isPublic(token))
             {
-               return JavaClientBundle.INSTANCE.publicField().getURL();
+               return JavaClientBundle.INSTANCE.publicField();
             }
 
-            return JavaClientBundle.INSTANCE.defaultField().getURL();
+            return JavaClientBundle.INSTANCE.defaultField();
             
          case METHOD :
             if (isPrivate(token))
             {
-               return JavaClientBundle.INSTANCE.privateMethod().getURL();
+               return JavaClientBundle.INSTANCE.privateMethod();
             }
             
             else if (isProtected(token))
             {
-               return JavaClientBundle.INSTANCE.protectedMethod().getURL();
+               return JavaClientBundle.INSTANCE.protectedMethod();
             }
 
             else if (isPublic(token))
             {
-               return JavaClientBundle.INSTANCE.publicMethod().getURL();
+               return JavaClientBundle.INSTANCE.publicMethod();
             }
 
-            return JavaClientBundle.INSTANCE.defaultMethod().getURL();
+            return JavaClientBundle.INSTANCE.defaultMethod();
             
             
          case CLASS :
-            return JavaClientBundle.INSTANCE.classItem().getURL();
+            return JavaClientBundle.INSTANCE.classItem();
 
          case INTERFACE :
-            return JavaClientBundle.INSTANCE.interfaceItem().getURL();              
+            return JavaClientBundle.INSTANCE.interfaceItem();              
             
          case JSP_TAG :
-            return JavaClientBundle.INSTANCE.jspTagItem().getURL();
+            return JavaClientBundle.INSTANCE.jspTagItem();
             
          default :
-            return "";
+            return null;
       }
    }
    
@@ -103,39 +107,47 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
       //and shows access modifier
       String modfImg = "";
       
-      // add special images at the bottom right part of icon to mark access modificators
-      if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
-      {      
-         if (isPrivate(token))
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classPrivateItem().getURL() + "\" />";
-         }
-         else if (isProtected(token))
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classProtectedItem().getURL() + "\" />";
-         }
-         else if (isPublic(token))
-         {
-         }
-         else
-         {
-            modfImg =
-               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
-                  + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.classDefaultItem().getURL() + "\" />";
-         }
-      }
-
       String synchImg = "";
-      if (isSynchronized(token))
+
+      // should be refactored from using hard code to using ImageResource 
+      if (BrowserResolver.CURRENT_BROWSER != Browser.IE)
       {
-         final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
-         synchImg =
-            "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
-               + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + JavaClientBundle.INSTANCE.clockItem().getURL() + "\" />";
+         if (TokenType.CLASS.equals(token.getType()) || TokenType.INTERFACE.equals(token.getType()))
+         {      
+            if (isPrivate(token))
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-private.png"
+                     + "\" />";
+            }
+            else if (isProtected(token))
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-protected.png"
+                     + "\" />";
+            }
+            else if (isPublic(token))
+            {
+            }
+            else
+            {
+               modfImg =
+                  "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-10px; margin-top:8px;\"  border=\"0\""
+                     + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL() + "outline/class-default.png"
+                     + "\" />";
+            }
+         }
+
+         if (isSynchronized(token))
+         {
+            final String marginLeft = modfImg.length() > 0 ? "-3" : "-10";
+            synchImg =
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:" + marginLeft
+                  + "px; margin-top:8px;\"  border=\"0\"" + " suppress=\"TRUE\" src=\"" + UIHelper.getGadgetImagesURL()
+                  + "outline/clock.png" + "\" />";
+         }
       }
       
       String deprecateSign = isDeprecated(token) ? "style='text-decoration:line-through;'" : "";
