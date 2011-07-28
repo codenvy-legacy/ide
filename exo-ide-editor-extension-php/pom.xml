@@ -5,11 +5,11 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M2-SNAPSHOT</version>
+      <version>1.2.0-M2</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-extension-php</artifactId>
-   <version>1.2.0-M2-SNAPSHOT</version>
+   <version>1.2.0-M2</version>
    <name>eXo IDE :: Editor : Extension : PHP</name>
    
    <properties>                                                                                                                                                                                                 
