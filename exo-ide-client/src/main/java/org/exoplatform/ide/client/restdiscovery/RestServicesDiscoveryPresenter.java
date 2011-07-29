@@ -27,14 +27,24 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
+import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -44,7 +54,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -335,22 +344,52 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
          url += "/" + target.getFullPath();
       }
 
-      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
+      RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url));
+      builder.setHeader(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.OPTIONS);
+      try
       {
-         @Override
-         protected void onSuccess(WadlApplication result)
+         builder.sendRequest(null, new RequestCallback()
          {
-            display.getTreeGrid().setPaths(currentRestService,
-               result.getResources().getResource().get(0).getMethodOrResource());
-         }
+            public void onError(Request request, Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+                  .restServicesDiscoveryGetWadlFailure()));
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-               .restServicesDiscoveryGetWadlFailure()));
-         }
-      });
+            public void onResponseReceived(Request request, Response response)
+            {
+               //http status 200 IE interprets as 1223 :(
+               if (200 == response.getStatusCode() || 1223 == response.getStatusCode())
+               {
+                  try
+                  {
+                     WadlApplication application = new WadlApplication();
+                     WadlProcessor.unmarshal(application, response.getText());
+                     display.getTreeGrid().setPaths(currentRestService,
+                        application.getResources().getResource().get(0).getMethodOrResource());
+
+                  }
+                  catch (IllegalWADLException e)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
+                  }
+                  catch (Exception e)
+                  {
+
+                     eventBus.fireEvent(new ExceptionThrownEvent(new Exception(
+                        org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.restServicesDiscoveryGetWadlFailure())));
+                  }
+               }
+               else
+               {
+               }
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void loadRestServices()
