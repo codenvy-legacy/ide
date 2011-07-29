@@ -23,11 +23,13 @@ import com.cloudbees.api.BeesClientException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@Provider
 public class BeesClientExceptionMapper implements ExceptionMapper<BeesClientException>
 {
    /**

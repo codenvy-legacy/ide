@@ -22,11 +22,13 @@ import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
+@Provider
 public class JenkinsExceptionMapper implements ExceptionMapper<JenkinsException>
 {
    /**
