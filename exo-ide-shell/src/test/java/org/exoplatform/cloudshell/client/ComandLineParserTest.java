@@ -18,8 +18,15 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import org.exoplatform.cloudshell.client.cli.ant.Commandline;
+import org.exoplatform.cloudshell.client.cli.CommandLine;
+import org.exoplatform.cloudshell.client.cli.GnuParser;
+import org.exoplatform.cloudshell.client.cli.Option;
+import org.exoplatform.cloudshell.client.cli.Options;
+import org.exoplatform.cloudshell.client.cli.Parser;
+import org.exoplatform.cloudshell.client.cli.Util;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,16 +35,40 @@ import org.junit.Test;
 */
 public class ComandLineParserTest
 {
+   
+   String tabl = "/ide/git/commit;POST=git commit\n" +
+                   "git_commit.body.params=-m,-a\n" +
+                   "git_commit.body.b1=-m\n" +
+                   "git_commit.body.b2=-a\n";
 
    @Test
-   public void parserTest()
+   public void parserTest() throws Exception
    {
-      String cmd = "git commit -m=\"tetv   hdgshgd\" -a";
-      Commandline commandline = new Commandline(cmd);
-      System.out.println("ComandLineParserTest.parserTest()" + commandline.getExecutable());
-      System.out.println("ComandLineParserTest.parserTest()" + commandline.getArguments().length);
+      String cmd = "git commit -m=\"My first commit\" -a false";
+      String[] args = Util.translateCommandline(cmd);
+      Option msg = new Option("m", true, "Commit message");
+      Option a = new Option("a", true, "Add file");
+      Options options = new Options();
+      options.addOption(a);
+      options.addOption(msg);
+      Parser parser = new GnuParser();
+      CommandLine line = parser.parse(options, args);
+      Assert.assertEquals("My first commit", line.getOptionValue("m"));
+      Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
       
-
+      String[] commands = tabl.split("\n");
+      String command = commands[0].split("=")[1];
+      
+      String url = "";
+      if (command.equalsIgnoreCase(line.getArgs()[0] + " " + line.getArgs()[1]))
+      {
+        
+         url = commands[0].split("=")[0];
+      }
+      String body = "{\"b1\":\"" + line.getOptionValue("m") + "\",\"b2\":" + line.getOptionValue("a") + "\"}";
+      
+      System.out.println("Url : " + url.split(";")[0] + "\nMethod : " + url.split(";")[1] + "\nBody : " +  body);
+      
    }
 
 }
