@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='org.exoplatform.cloudshell.org.exoplatform.cloud-shell'/>
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/org.exoplatform.cloudshell.CloudShell/greet" class="org.exoplatform.cloudshell.server.GreetingServiceImpl" />
+
+</module>
