@@ -45,9 +45,6 @@ public abstract class SettingsService
       return instance;
    }
 
-   public abstract void getApplicationSettings(ApplicationSettings applicationSettings,
-      AsyncRequestCallback<ApplicationSettings> callback);
-   
    /**
     * Save application settings to registry.
     * @param applicationSettings

@@ -122,7 +122,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
                @Override
                public String asString()
                {
-                  if (item.getNodeName() == null)
+                  if (item.isDefault())
                   {
                      return "<span title=\"" + item.getName() + "\"><font color=\"#FF0000\">" + item.getName()
                         + "</font></span>";

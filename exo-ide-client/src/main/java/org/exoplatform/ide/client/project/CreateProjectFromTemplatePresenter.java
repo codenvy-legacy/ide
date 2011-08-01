@@ -18,10 +18,20 @@
  */
 package org.exoplatform.ide.client.project;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -44,33 +54,26 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
-import org.exoplatform.ide.client.model.template.TemplateList;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
+import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
+import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -80,7 +83,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ViewClosedHandler
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ViewClosedHandler, TemplatesMigratedHandler
 {
 
    /**
@@ -184,6 +187,8 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     * The list of templates, that selected in list of templates.
     */
    protected List<ProjectTemplate> selectedTemplates;
+   
+   private boolean isTemplatesMigrated = false;
 
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus)
    {
@@ -193,8 +198,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-
-      //refreshTemplateList();
+      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    /**
@@ -423,17 +427,18 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     * If success, call method, that will delete next template from selected list.
     * @param template
     */
-   protected void deleteTemplate(ProjectTemplate template)
+   protected void deleteTemplate(final ProjectTemplate template)
    {
-      TemplateService.getInstance().deleteTemplate(template, new TemplateDeletedCallback()
-      {
-         @Override
-         protected void onSuccess(Template result)
+      TemplateService.getInstance().deleteProjectTemplate(template.getName(),
+         new AsyncRequestCallback<String>(eventBus)
          {
-            selectedTemplates.remove(result);
-            deleteNextTemplate();
-         }
-      });
+            @Override
+            protected void onSuccess(String result)
+            {
+               selectedTemplates.remove(template);
+               deleteNextTemplate();
+            }
+         });
    }
 
    /**
@@ -516,6 +521,25 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    @Override
    public void onCreateProjectFromTemplate(CreateProjectFromTemplateEvent event)
    {
+      if (isTemplatesMigrated)
+      {
+         createProjectFromTemplate();
+      }
+      else
+      {
+         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         {
+            @Override
+            public void onTemplatesMigrated()
+            {
+               createProjectFromTemplate();
+            }
+         }));
+      }
+   }
+   
+   private void createProjectFromTemplate()
+   {
       if (display == null)
       {
          if (selectedItems.size() > 0)
@@ -550,7 +574,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          finishProjectCreation();
          return;
       }
-
+      
       saveFileContent(fileList.get(0));
    }
 
@@ -577,25 +601,29 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getTemplates(new AsyncRequestCallback<TemplateList>()
+      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
       {
          @Override
-         protected void onFailure(Throwable exception)
+         protected void onSuccess(ProjectTemplateList result)
          {
-            exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-         }
-
-         @Override
-         protected void onSuccess(TemplateList result)
-         {
-            splitFileAndProjectTemplates(result.getTemplates());
-
+            projectTemplates = result.getProjectTemplates();
             display.getTemplateListGrid().setValue(projectTemplates);
             if (projectTemplates != null && projectTemplates.size() > 0)
             {
                display.selectLastTemplate();
             }
+            //get all file templates to create from them files
+            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(eventBus)
+            {
+
+               @Override
+               protected void onSuccess(FileTemplateList result)
+               {
+                  fileTemplates = result.getFileTemplates();
+                  
+               }
+            });
+
          }
       });
    }
@@ -621,29 +649,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    }
 
    /**
-    * Split list of templates on list of project templates and file templates.
-    * 
-    * @param templates
-    */
-   private void splitFileAndProjectTemplates(List<Template> templateList)
-   {
-      this.projectTemplates.clear();
-      this.fileTemplates.clear();
-
-      for (Template template : templateList)
-      {
-         if (template instanceof ProjectTemplate)
-         {
-            this.projectTemplates.add((ProjectTemplate)template);
-         }
-         else if (template instanceof FileTemplate)
-         {
-            this.fileTemplates.add((FileTemplate)template);
-         }
-      }
-   }
-
-   /**
     * Calls, when template selected in list grid.
     */
    protected void templatesSelected()
@@ -664,7 +669,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          //check is one of selected templates is default
          for (Template template : selectedTemplates)
          {
-            if (template.getNodeName() == null)
+            if (template.isDefault())
             {
                display.setDeleteButtonEnabled(false);
                return;
@@ -677,7 +682,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       display.setNameFieldEnabled(true);
       display.setCreateButtonEnabled(true);
-      if (selectedTemplates.get(0).getNodeName() == null)
+      if (selectedTemplates.get(0).isDefault())
       {
          display.setDeleteButtonEnabled(false);
       }
@@ -687,6 +692,15 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       }
 
       display.getNameField().setValue(selectedTemplates.get(0).getName());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    */
+   @Override
+   public void onTemplatesMigrated(TemplatesMigratedEvent event)
+   {
+      isTemplatesMigrated = true;
    }
 
 }

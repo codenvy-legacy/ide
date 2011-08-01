@@ -18,26 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
-import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
-import org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter;
-import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
-import org.exoplatform.ide.client.template.CreateFromTemplateDisplay;
-import org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -51,6 +31,23 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
+import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
+import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -119,6 +116,8 @@ public class CreateProjectTemplatePresenter
 
    private Template selectedTemplate;
    
+   private ProjectTemplate projectTemplate;
+   
    private static final String ENTER_FILE_NAME_FIRST = IDE.TEMPLATE_CONSTANT.createProjectTemplateEnterNameFirst();
 
    public CreateProjectTemplatePresenter(HandlerManager eventBus, List<Template> templateList)
@@ -145,7 +144,7 @@ public class CreateProjectTemplatePresenter
 
       display.getTemplateTreeGrid().addSelectionHandler(templateSelectedHandler);
 
-      ProjectTemplate projectTemplate = new ProjectTemplate("/");
+      projectTemplate = new ProjectTemplate("/");
 
       display.getTemplateTreeGrid().setValue(projectTemplate);
       display.disableCreateButton();
@@ -256,7 +255,7 @@ public class CreateProjectTemplatePresenter
 
    private void addFileToTemplate()
    {
-      AbstractCreateFromTemplatePresenter<FileTemplate> addFilePresenter =
+      CreateFileFromTemplatePresenter addFilePresenter =
          new CreateFileFromTemplatePresenter(eventBus, null, templateList, null)
          {
             @Override
@@ -276,8 +275,8 @@ public class CreateProjectTemplatePresenter
             }
          };
 
-      CreateFromTemplateDisplay<FileTemplate> createFileDisplay =
-         new CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
+         org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm createFileDisplay =
+         new org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
          {
             @Override
             public String getCreateButtonTitle()
@@ -404,6 +403,9 @@ public class CreateProjectTemplatePresenter
       templateToCreate = display.getTemplateTreeGrid().getValue();
       templateToCreate.setName(templateName);
       templateToCreate.setDescription(description);
+      projectTemplate.setName(templateName);
+      projectTemplate.setDescription(description);
+      projectTemplate.setDefault(false);
 
       for (Template template : templateList)
       {
@@ -413,10 +415,11 @@ public class CreateProjectTemplatePresenter
             return;
          }
       }
-      TemplateServiceImpl.getInstance().createTemplate(templateToCreate, new TemplateCreatedCallback()
+      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(eventBus)
       {
+
          @Override
-         protected void onSuccess(Template result)
+         protected void onSuccess(String result)
          {
             display.closeForm();
             Dialogs.getInstance().showInfo(IDE.TEMPLATE_CONSTANT.createProjectTemplateCreated());

@@ -35,6 +35,11 @@ public class ProjectTemplate extends FolderTemplate
     * The location of class path file.
     */
    private String classPathLocation;
+   
+   /**
+    * Project type (need to detect is generate classpath for project). 
+    */
+   private String type;
 
    /**
     * 
@@ -77,5 +82,21 @@ public class ProjectTemplate extends FolderTemplate
    public void setClassPathLocation(String classPathLocation)
    {
       this.classPathLocation = classPathLocation;
+   }
+   
+   /**
+    * @return the type
+    */
+   public String getType()
+   {
+      return type;
+   }
+   
+   /**
+    * @param type the type to set
+    */
+   public void setType(String type)
+   {
+      this.type = type;
    }
 }

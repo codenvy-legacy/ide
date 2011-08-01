@@ -18,11 +18,17 @@
  */
 package org.exoplatform.ide.client.template;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -31,24 +37,33 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateDeletedCallback;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.project.CreateProjectTemplateForm;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Presenter for form "Create file from template"
+ * Presenter for form "Create file from template".
+ * Used to add file template to project template in {@link CreateProjectTemplateForm}
+ * 
+ * TODO: Remove this presenter and refactore {@link org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter}
+ * to reuse code.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplatePresenter<FileTemplate>
+public class CreateFileFromTemplatePresenter
 {
    private static final String UNTITLED_FILE = IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
    
@@ -64,10 +79,26 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
    
    private Map<String, File> openedFiles = new HashMap<String, File>();
    
+   protected HandlerManager eventBus;
+
+   protected CreateFromTemplateDisplay<FileTemplate> display;
+
+   /**
+    * The list of templates, that selected.
+    */
+   protected List<FileTemplate> selectedTemplates;
+
+   /**
+    * The list of templates to display.
+    * This list must be initialized by subclasses,
+    * because it depends on type of template (file of project).
+    */
+   protected List<FileTemplate> templateList;
+   
    public CreateFileFromTemplatePresenter(HandlerManager eventBus, List<Item> selectedItems, List<Template> templateList,
       Map<String, File> openedFiles)
    {
-      super(eventBus, selectedItems);
+      this.eventBus = eventBus;
       
       this.templateList = new ArrayList<FileTemplate>();
       this.openedFiles = openedFiles;
@@ -88,10 +119,235 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       updateTemplateList(templateList);
    }
    
+   public void destroy()
+   {
+   }
+   
+   public void bindDisplay(CreateFromTemplateDisplay<FileTemplate> d)
+   {
+      display = d;
+      
+      /*
+       * If name field is empty - disable create button
+       */
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            String value = event.getValue();
+            
+            if (value == null || value.length() == 0)
+            {
+               display.disableCreateButton();
+            }
+            else
+            {
+               display.enableCreateButton();
+            }
+         }
+      });
+
+      /*
+       * Add click handler for create button
+       */
+      display.getCreateButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            submitTemplate();
+         }
+      });
+
+      /*
+       * If double click on template - than new template will be created.
+       */
+      display.getTemplateListGrid().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            submitTemplate();
+         }
+      });
+
+      /*
+       * Close action on cancel button
+       */
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            display.closeForm();
+         }
+      });
+
+      /*
+       * If template selected - than copy template name to name field and enable create button
+       */
+      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<FileTemplate>()
+      {
+         public void onSelection(SelectionEvent<FileTemplate> event)
+         {
+            selectedTemplates = display.getTemplatesSelected();
+            templatesSelected();
+         }
+      });
+
+      /*
+       * Delete action on delete button
+       */
+      display.getDeleteButton().addClickHandler(new ClickHandler()
+      {
+
+         public void onClick(ClickEvent event)
+         {
+            deleteTemplate();
+         }
+      });
+
+      /*
+       * Initialize template list grid with template list
+       */
+      display.getTemplateListGrid().setValue(templateList);
+      /*
+       * Disable buttons and name field, because no template is selected
+       */
+      display.disableCreateButton();
+      display.disableDeleteButton();
+      display.disableNameField();
+   }
+   
    /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#updateTemplateList(java.util.List)
+    * Calls, when template selected in list grid.
     */
-   @Override
+   protected void templatesSelected()
+   {
+      if (selectedTemplates.size() == 0)
+      {
+         display.disableCreateButton();
+         display.disableDeleteButton();
+         display.disableNameField();
+         return;
+      }
+      
+      if (selectedTemplates.size() > 1)
+      {
+         display.disableNameField();
+         display.disableCreateButton();
+         //check is one of selected templates is default
+         for (Template template : selectedTemplates)
+         {
+            if (template.isDefault())
+            {
+               display.disableDeleteButton();
+               return;
+            }
+         }
+         
+         display.enableDeleteButton();
+         return;
+      }
+      
+      display.enableNameField();
+      display.enableCreateButton();
+      if (selectedTemplates.get(0).isDefault())
+      {
+         display.disableDeleteButton();
+      }
+      else
+      {
+         display.enableDeleteButton();
+      }
+      
+      setNewInstanceName();
+   }
+   
+   /**
+    * Executes, when delete button pressed.
+    * Show ask dialog.
+    */
+   protected void deleteTemplate()
+   {
+      if (selectedTemplates.size() == 0)
+      {
+         return;
+      }
+      
+      String message = "";
+      if (selectedTemplates.size() == 1)
+      {
+         final String templateName = selectedTemplates.get(0).getName();
+         message =
+            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+               .createFromTemplateAskDeleteOneTemplate(templateName);
+      }
+      else if (selectedTemplates.size() > 1)
+      {
+         message =
+            org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.createFromTemplateAskDeleteSeveralTemplates();
+      }
+      
+      Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
+         message, new BooleanValueReceivedHandler()
+         {
+            public void booleanValueReceived(Boolean value)
+            {
+               if (value == null)
+               {
+                  return;
+               }
+               if (value)
+               {
+                  deleteNextTemplate();
+               }
+            }
+         });
+   }
+   
+   /**
+    * Refresh List of the templates, after deleting
+    */
+   private void refreshTemplateList()
+   {
+      final List<Template> templates = new ArrayList<Template>();
+      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
+      {
+         @Override
+         protected void onSuccess(ProjectTemplateList result)
+         {
+            templates.addAll(result.getProjectTemplates());
+            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>()
+            {
+
+               @Override
+               protected void onSuccess(FileTemplateList result)
+               {
+                  templates.addAll(result.getFileTemplates());
+                  updateTemplateList(templates);
+                  
+                  display.getTemplateListGrid().setValue(templateList);
+                  if (templateList.size() > 0)
+                  {
+                     display.selectLastTemplate();
+                  }
+               }
+            });
+         }
+      });
+   }
+   
+   /**
+    * Delete next template from selected list.
+    */
+   protected void deleteNextTemplate()
+   {
+      if (selectedTemplates.size() == 0)
+      {
+         refreshTemplateList();
+         return;
+      }
+      deleteOneTemplate(selectedTemplates.get(0));
+   }
+   
    protected void updateTemplateList(List<Template> templates)
    {
       templateList.clear();
@@ -110,10 +366,6 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#setNewInstanceName()
-    */
-   @Override
    protected void setNewInstanceName()
    {
       FileTemplate selectedTemplate = (FileTemplate)selectedTemplates.get(0);
@@ -144,10 +396,6 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       previousExtension = extension;
    }
 
-   /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#submitTemplate()
-    */
-   @Override
    public void submitTemplate()
    {
       String fileName = display.getNameField().getValue();
@@ -211,10 +459,6 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       return proposedName;
    }
    
-   /**
-    * @see org.exoplatform.ide.client.template.AbstractCreateFromTemplatePresenter#deleteOneTemplate(org.exoplatform.ide.client.model.template.Template)
-    */
-   @Override
    protected void deleteOneTemplate(final FileTemplate fileTemplate)
    {
       usedProjectTemplates = new ArrayList<ProjectTemplate>();
@@ -229,15 +473,17 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
       
       if (usedProjectTemplates.size() == 0)
       {
-         TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
-         {
-            @Override
-            protected void onSuccess(Template result)
+         TemplateService.getInstance().deleteFileTemplate(fileTemplate.getName(),
+            new AsyncRequestCallback<String>(eventBus)
             {
-               selectedTemplates.remove(result);
-               deleteNextTemplate();
-            }
-         });
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  selectedTemplates.remove(fileTemplate);
+                  deleteNextTemplate();
+               }
+            });
          return;
       }
       
@@ -266,15 +512,17 @@ public class CreateFileFromTemplatePresenter extends AbstractCreateFromTemplateP
                }
                if (value)
                {
-                  TemplateService.getInstance().deleteTemplate(fileTemplate, new TemplateDeletedCallback()
-                  {
-                     @Override
-                     protected void onSuccess(Template result)
+                  TemplateService.getInstance().deleteFileTemplate(fileTemplate.getName(),
+                     new AsyncRequestCallback<String>(eventBus)
                      {
-                        selectedTemplates.remove(result);
-                        deleteNextTemplate();
-                     }
-                  });
+
+                        @Override
+                        protected void onSuccess(String result)
+                        {
+                           selectedTemplates.remove(fileTemplate);
+                           deleteNextTemplate();
+                        }
+                     });
                }
                else
                {

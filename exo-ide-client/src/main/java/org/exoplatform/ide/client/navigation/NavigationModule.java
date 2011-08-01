@@ -110,6 +110,10 @@ import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePres
 import org.exoplatform.ide.client.navigation.ui.CreateFolderForm;
 import org.exoplatform.ide.client.navigation.ui.RenameItemForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
+import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
+import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 import org.exoplatform.ide.client.template.ui.SaveAsTemplateForm;
 import org.exoplatform.ide.client.upload.OpenFileByPathForm;
 import org.exoplatform.ide.client.upload.OpenLocalFileForm;
@@ -141,7 +145,7 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
    CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, ApplicationSettingsReceivedHandler,
    ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
    ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
-   OpenFileByPathHandler
+   OpenFileByPathHandler, TemplatesMigratedHandler
 {
    private HandlerManager eventBus;
 
@@ -160,6 +164,11 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
    private File activeFile;
 
    private Map<String, String> lockTokens;
+   
+   /**
+    * Flag, to indicate, were templates moved from registry to plain text file on server.
+    */
+   private boolean isTemplatesMigrated = false;
 
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
@@ -239,6 +248,8 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
 
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      
+      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
 
       new CreateFileCommandHandler(eventBus);
       new CreateFileFromTemplatePresenter(eventBus);
@@ -321,7 +332,23 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
 
    public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
    {
-      new SaveAsTemplateForm(eventBus, activeFile);
+      
+      if (isTemplatesMigrated)
+      {
+         new SaveAsTemplateForm(eventBus, activeFile);
+      }
+      else
+      {
+         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         {
+            @Override
+            public void onTemplatesMigrated()
+            {
+               new SaveAsTemplateForm(eventBus, activeFile);
+            }
+         }));
+      }
+      
    }
 
    public void onCreateFolder(CreateFolderEvent event)
@@ -441,6 +468,15 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
    public void onOpenFileByPath(OpenFileByPathEvent event)
    {
       new OpenFileByPathForm(eventBus);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    */
+   @Override
+   public void onTemplatesMigrated(TemplatesMigratedEvent event)
+   {
+      isTemplatesMigrated = true;      
    }
 
 }

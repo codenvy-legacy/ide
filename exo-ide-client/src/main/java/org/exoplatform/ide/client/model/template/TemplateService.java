@@ -20,6 +20,8 @@ package org.exoplatform.ide.client.model.template;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -47,5 +49,26 @@ public abstract class TemplateService
    public abstract void createTemplate(Template template, TemplateCreatedCallback callback);
 
    public abstract void deleteTemplate(Template template, TemplateDeletedCallback callback);
+   
+   public abstract void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback);
+   
+   public abstract void getFileTemplateList(AsyncRequestCallback<FileTemplateList> callback);
+   
+   public abstract void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback);
+   
+   public abstract void getProjectTemplateList(AsyncRequestCallback<ProjectTemplateList> callback);
+   
+   public abstract void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback);
+   
+   public abstract void addProjectTemplate(ProjectTemplate projectTemplate, AsyncRequestCallback<String> callback);
+   
+   /*
+    * Methods, used for templates transfer from registry to settings file.
+    */
+   public abstract void addFileTemplateList(List<FileTemplate> fileTemplates, AsyncRequestCallback<String> callback);
+   
+   public abstract void addProjectTemplateList(List<ProjectTemplate> projectTemplates, AsyncRequestCallback<String> callback);
+   
+   public abstract void deleteTemplatesFromRegistry(AsyncRequestCallback<String> callback);
 
 }

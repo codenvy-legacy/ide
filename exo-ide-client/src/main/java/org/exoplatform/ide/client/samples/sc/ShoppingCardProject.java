@@ -63,6 +63,7 @@ public class ShoppingCardProject
       createCss();
       createReadme();
       shoppingCartPrj.setDescription("Shopping Cart Demo Project");
+      shoppingCartPrj.setDefault(true);
       templateList.getTemplates().add(shoppingCartPrj);
 
    }
@@ -72,7 +73,7 @@ public class ShoppingCardProject
       String content = ShoppingCartSample.INSTANCE.getReadme().getText();
       FileTemplate template =
          new FileTemplate(MimeType.TEXT_PLAIN, "readme_shopping_cart.txt", "shopping cart readme file",
-            content, null);
+            content, true);
       template.setFileName("readme_shopping_cart.txt");
       templateList.getTemplates().add(template);
       shoppingCartPrj.getChildren().add(template);
@@ -83,7 +84,7 @@ public class ShoppingCardProject
    {
       String content = ShoppingCartSample.INSTANCE.getCssSource().getText();
       FileTemplate cssTemplate =
-         new FileTemplate(MimeType.TEXT_CSS, "StyleSheet.css", "Shopping Cart CSS", content, null);
+         new FileTemplate(MimeType.TEXT_CSS, "StyleSheet.css", "Shopping Cart CSS", content, true);
       cssTemplate.setFileName("StyleSheet.css");
       templateList.getTemplates().add(cssTemplate);
       uiFolder.getChildren().add(cssTemplate);
@@ -93,7 +94,7 @@ public class ShoppingCardProject
    {
       String content = ShoppingCartSample.INSTANCE.getShoppingCartGadgetSource().getText();
       FileTemplate gadgetFileTemplate =
-         new FileTemplate(MimeType.GOOGLE_GADGET, "ShoppingCartGadget.xml", "Shopping Cart Gadget", content, null);
+         new FileTemplate(MimeType.GOOGLE_GADGET, "ShoppingCartGadget.xml", "Shopping Cart Gadget", content, true);
       gadgetFileTemplate.setFileName("ShoppingCartGadget.xml");
       templateList.getTemplates().add(gadgetFileTemplate);
       uiFolder.getChildren().add(gadgetFileTemplate);
@@ -104,7 +105,7 @@ public class ShoppingCardProject
       String content = ShoppingCartSample.INSTANCE.getShoppingCartRestServiceSource().getText();
       FileTemplate restServiceTemplate =
          new FileTemplate(MimeType.GROOVY_SERVICE, "ShoppingCartRestService.grs", "Shopping Cart REST service",
-            content, null);
+            content, true);
       restServiceTemplate.setFileName("ShoppingCartRestService.grs");
       templateList.getTemplates().add(restServiceTemplate);
       businessLogicFolder.getChildren().add(restServiceTemplate);
@@ -115,7 +116,7 @@ public class ShoppingCardProject
       String content = ShoppingCartSample.INSTANCE.getShoppingCartSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "ShoppingCart.groovy", "ShoppingCart Data Object", content,
-            null);
+            true);
       template.setFileName("ShoppingCart.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -126,7 +127,7 @@ public class ShoppingCardProject
       String content = ShoppingCartSample.INSTANCE.getShopSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "Shop.groovy", "Shop Data Object", content,
-            null);
+            true);
       template.setFileName("Shop.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -137,7 +138,7 @@ public class ShoppingCardProject
       String content = ShoppingCartSample.INSTANCE.getItemToPurchaseSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "ItemToPurchase.groovy", "ItemToPurchase Data Object",
-            content, null);
+            content, true);
       template.setFileName("ItemToPurchase.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -147,7 +148,7 @@ public class ShoppingCardProject
    {
       String content = ShoppingCartSample.INSTANCE.getProductSource().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "Product.groovy", "Product Data Object", content, null);
+         new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "Product.groovy", "Product Data Object", content, true);
       template.setFileName("Product.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -156,6 +157,11 @@ public class ShoppingCardProject
    public List<Template> getTemplateList()
    {
       return templateList.getTemplates();
+   }
+   
+   public ProjectTemplate getProjectTemplate()
+   {
+      return shoppingCartPrj;
    }
 
 }

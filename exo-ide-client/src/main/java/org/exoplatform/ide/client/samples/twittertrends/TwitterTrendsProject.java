@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateList;
-import org.exoplatform.ide.client.samples.linkedin.LinkedinContactsSample;
 
 import java.util.List;
 
@@ -46,6 +45,7 @@ public class TwitterTrendsProject
       createRestService();
       createReadme();
       twitterTrendsPrj.setDescription("Twitter trend as images sample project");
+      twitterTrendsPrj.setDefault(true);
       templateList.getTemplates().add(twitterTrendsPrj);
       
    }
@@ -59,7 +59,7 @@ public class TwitterTrendsProject
    {
       String content = TwitterTrendsSample.INSTANCE.getTwitterTrendsGadget().getText();
       FileTemplate gadgetFileTemplate =
-         new FileTemplate(MimeType.GOOGLE_GADGET, "TwitterTrendsGadget.xml", "Twitter Trends Gadget", content, null);
+         new FileTemplate(MimeType.GOOGLE_GADGET, "TwitterTrendsGadget.xml", "Twitter Trends Gadget", content, true);
       gadgetFileTemplate.setFileName("TwitterTrendsGadget.xml");
       templateList.getTemplates().add(gadgetFileTemplate);
       twitterTrendsPrj.getChildren().add(gadgetFileTemplate);
@@ -70,7 +70,7 @@ public class TwitterTrendsProject
       String content = TwitterTrendsSample.INSTANCE.getTwitterTrendsService().getText();
       FileTemplate restServiceTemplate =
          new FileTemplate(MimeType.GROOVY_SERVICE, "TwitterTrendsService.grs", "Twitter Trends Gadget REST service",
-            content, null);
+            content, true);
       restServiceTemplate.setFileName("TwitterTrendsService.grs");
       templateList.getTemplates().add(restServiceTemplate);
       twitterTrendsPrj.getChildren().add(restServiceTemplate);
@@ -81,10 +81,15 @@ public class TwitterTrendsProject
       String content = TwitterTrendsSample.INSTANCE.getReadme().getText();
       FileTemplate template =
          new FileTemplate(MimeType.TEXT_PLAIN, "readme_twitter_flicker.txt", "twiter trends readme file",
-            content, null);
+            content, true);
       template.setFileName("readme_twitter_flicker.txt");
       templateList.getTemplates().add(template);
       twitterTrendsPrj.getChildren().add(template);
+   }
+   
+   public ProjectTemplate getProjectTemplate()
+   {
+      return twitterTrendsPrj;
    }
 
 }

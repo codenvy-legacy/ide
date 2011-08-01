@@ -61,6 +61,7 @@ public class DefaultIdeProject
       createProjectGadget();
       createProjectRestService();
       defaultSamplePrj.setDescription("Sample Demo Project");
+      defaultSamplePrj.setDefault(true);
       templateList.getTemplates().add(defaultSamplePrj);
 
    }
@@ -69,7 +70,8 @@ public class DefaultIdeProject
    {
       String content = DefaultIdeSample.INSTANCE.getGreetingGoogleGadgetSource().getText();
       FileTemplate gadgetFileTemplate =
-         new FileTemplate(MimeType.GOOGLE_GADGET, "GreetingGoogleGadget.xml", "Google Gadget with request to service", content, null);
+         new FileTemplate(MimeType.GOOGLE_GADGET, "GreetingGoogleGadget.xml", "Google Gadget with request to service",
+            content, true);
       gadgetFileTemplate.setFileName("GreetingGoogleGadget.xml");
       templateList.getTemplates().add(gadgetFileTemplate);
       uiFolder.getChildren().add(gadgetFileTemplate);
@@ -80,7 +82,7 @@ public class DefaultIdeProject
       String content = DefaultIdeSample.INSTANCE.getGreetingRESTServiceSource().getText();
       FileTemplate restServiceTemplate =
          new FileTemplate(MimeType.GROOVY_SERVICE, "GreetingRESTService.grs", "Template for greeting REST service",
-            content, null);
+            content, true);
       restServiceTemplate.setFileName("GreetingRESTService.grs");
       templateList.getTemplates().add(restServiceTemplate);
       businessLogicFolder.getChildren().add(restServiceTemplate);
@@ -91,7 +93,7 @@ public class DefaultIdeProject
       String content = DefaultIdeSample.INSTANCE.getDataObjectSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.CHROMATTIC_DATA_OBJECT, "DataObject.groovy", "Data Object", content,
-            null);
+            true);
       template.setFileName("DataObject.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -102,7 +104,7 @@ public class DefaultIdeProject
       String content = DefaultIdeSample.INSTANCE.getPojoSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.APPLICATION_GROOVY, "Pogo.groovy", "POGO file template", content,
-            null);
+            true);
       template.setFileName("Pogo.groovy");
       templateList.getTemplates().add(template);
       dataFolder.getChildren().add(template);
@@ -111,6 +113,11 @@ public class DefaultIdeProject
    public List<Template> getTemplateList()
    {
       return templateList.getTemplates();
+   }
+   
+   public ProjectTemplate getProjectTemplate()
+   {
+      return defaultSamplePrj;
    }
 
 }

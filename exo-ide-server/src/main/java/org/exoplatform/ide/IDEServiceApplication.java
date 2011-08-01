@@ -54,11 +54,16 @@ public class IDEServiceApplication extends Application
    {
       String entryPoint = null;
       boolean discoverable = true;
+      String workspace = null;
       if (initParams != null)
       {
          if (initParams.getValueParam("defaultEntryPoint") != null)
          {
             entryPoint = initParams.getValueParam("defaultEntryPoint").getValue();
+         }
+         if (initParams.getValueParam("workspace") != null)
+         {
+            entryPoint = initParams.getValueParam("workspace").getValue();
          }
 
          if (initParams.getValueParam("discoverable") != null)
@@ -67,17 +72,17 @@ public class IDEServiceApplication extends Application
          }
       }
 
-      objects.add(new RepositoryDiscoveryService(repositoryService,sessionProviderService, entryPoint, discoverable));
+      objects.add(new RepositoryDiscoveryService(repositoryService, sessionProviderService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
 
       objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,
-         discoverable));
+         discoverable, workspace));
+      objects.add(new TemplatesRestService(repositoryService, sessionProviderService, workspace));
 
       classes.add(LoopbackContentService.class);
       classes.add(DownloadContentService.class);
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
-      classes.add(TemplatesRestService.class);
    }
 
    /**

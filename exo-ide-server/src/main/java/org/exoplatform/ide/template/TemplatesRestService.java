@@ -18,57 +18,55 @@
  */
 package org.exoplatform.ide.template;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.Utils;
+import org.exoplatform.ide.FileTemplate;
+import org.exoplatform.ide.FolderTemplate;
+import org.exoplatform.ide.ProjectTemplate;
+import org.exoplatform.ide.Template;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.exoplatform.ws.frameworks.json.value.impl.ArrayValue;
+import org.exoplatform.ws.frameworks.json.value.impl.ObjectValue;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.URLDecoder;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
+import javax.jcr.Item;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This REST service is used for getting and storing templates
- * for projects. 
- * <p/>
- * When got template name, go to folder in resources, 
- * read the xml file with project structure, and create project structure.
+ * for file and projects. 
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
@@ -77,823 +75,665 @@ import javax.xml.parsers.ParserConfigurationException;
 @Path("/ide/templates")
 public class TemplatesRestService
 {
-   private static final String TEMPLATES_PATH = "template/samples";
-
-   private static final String TEMPLATES_FILE = "Templates.xml";
-
+   public static final String FILE_TEMPLATE_FILE = "fileTemplates.js";
+   
+   public static final String PROJECT_TEMPLATE_FILE = "projectTemplates.js";
+   
    public static final String WEBDAV_SCHEME = "jcr-webdav";
 
    public static final String DEF_WS = "dev-monit";
-
-   private static final String WEBDAV_CONTEXT = "jcr";
+   
+   /**
+    * System property, which containg path to folder, where user config will be saved:
+    * templates, hotkeys, toolat etc.
+    */
+   private static final String USER_CONFIG_PATH = "org.exoplatform.ide.server.user-config-path";
 
    private static Log log = ExoLogger.getLogger(TemplatesRestService.class);
 
    private final RepositoryService repositoryService;
 
    private final ThreadLocalSessionProviderService sessionProviderService;
+   
+   private String workspace;
+
+   private static final String FILE_TEMPLATE = "fileTemplates";
+   
+   private static final String PROJECT_TEMPLATE = "folderTemplates";
 
    public TemplatesRestService(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService)
+      ThreadLocalSessionProviderService sessionProviderService, String workspace)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
+      this.workspace = workspace;
    }
-
-   /**
-    * Get the list of default templates from <code>Templates.xml</code> file
-    * @param uriInfo - the uri info
-    * @param type - the type of template (<code>project</code> or <code>file</code>)
-    * @return the list of templates
-    * @throws TemplateServiceException
-    */
+   
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   @Path("/list")
-   public List<TemplateDescription> getTemplatesList(@Context UriInfo uriInfo, @HeaderParam("type") String type)
-      throws TemplateServiceException
+   @Path("/project/list")
+   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException, JsonException
    {
-      List<TemplateDescription> templateDescList = new ArrayList<TemplateDescription>();
-
-      try
-      {
-         Document dom = getTemplatesDescriptionDocument();
-
-         Node templatesNode = dom.getElementsByTagName("templates").item(0);
-
-         NodeList templateNodes = templatesNode.getChildNodes();
-         for (int i = 0; i < templateNodes.getLength(); i++)
-         {
-            Node templateNode = templateNodes.item(i);
-            if (templateNode.getNodeName().equals("template"))
-            {
-               TemplateDescription template = getTemplateDescription(templateNode, type);
-               if (template != null)
-               {
-                  templateDescList.add(template);
-               }
-            }
-         }
-      }
-      catch (ParserConfigurationException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (SAXException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-
-      return templateDescList;
+      return getProjectTemplates();
    }
-
-   /**
-    * Create the project or file from one of sample templates.
-    * 
-    * @param uriInfo - the uri info
-    * @param templateName - the name of template
-    * @param itemLocation - the location of new item, where the word after the last slash - is new name 
-    *    (e.g. <code>http://localhost/jcr/db1/dev-monit/newProjectName</code>)
-    * @throws ParserConfigurationException
-    * @throws SAXException
-    * @throws IOException
-    * @throws RepositoryException
-    * @throws RepositoryConfigurationException
-    * @throws TemplateServiceException 
-    */
-   @GET
-   @Path("/create")
-   public void createFromTemplate(@Context UriInfo uriInfo, @HeaderParam("template-name") String templateName,
-      @HeaderParam("location") String itemLocation, @HeaderParam("type") String type) throws TemplateServiceException
+   
+   @PUT
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/file/add")
+   public void addFileTemplate(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
    {
-      try
+      //parse string body to get template name from json string
+      final JsonParserImpl newTemplateJsonParser = new JsonParserImpl();
+      final JsonHandler newTemplateJsonHandler = new JsonDefaultHandler();
+      newTemplateJsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())),
+         newTemplateJsonHandler);
+      JsonValue newTemplateJsonValue = newTemplateJsonHandler.getJsonObject();
+      String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
+      //check if such template already exists
+      for (FileTemplate fileTemplate : getFileTemplates())
       {
-         String location = cropLocation(itemLocation, uriInfo);
-
-         /*
-          * the name of new project or file
-          */
-         final String itemName = location.substring(location.lastIndexOf("/") + 1);
-
-         /*
-          * crop the new item (project or file) name
-          */
-         location = location.substring(0, location.lastIndexOf("/"));
-
-         /*
-          * The name of repository, e.g. db1
-          */
-         final String repositoryName = location.substring(0, location.indexOf("/"));
-
-         /*
-          * The path to project parent folder, e.g. dev-monit/folder1
-          */
-         final String repoPath = location.substring(location.indexOf("/") + 1);
-
-         Session session = null;
-         session = Utils.getSession(repositoryService, sessionProviderService, repositoryName, repoPath);
-
-         if ("project".equals(type))
+         if (newTemplateName.equals(fileTemplate.getName()))
          {
-            /*
-             * Path to project folder with sources
-             */
-            String templateSource = getPathToProjectManifest(templateName);
-
-            if (templateSource == null)
-            {
-               throw new TemplateServiceException("Can't find project template" + templateName);
-            }
-            Document templateDoc = getTemplateManifestDocument(templateSource);
-            String parentFolderPath = getParentFolderPath(repoPath);
-            createProjectFromTemplate(templateDoc, session, itemName, templateSource, parentFolderPath);
+            throw new TemplateServiceException("File template " + newTemplateName + " already exists");
          }
-         else if ("file".equals(type))
+      }
+      
+      //add new file template to existing templates in file
+      String templateContent = readTemplates(FILE_TEMPLATE);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      if (jsonValue.getElement("templates") != null)
+      {
+         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+         jsonTemplateArray.addElement(newTemplateJsonValue);
+      }
+      else
+      {
+         ArrayValue jsonTemplateArray = new ArrayValue();
+         jsonValue.addElement("templates", jsonTemplateArray);
+         jsonTemplateArray.addElement(newTemplateJsonValue);
+      }
+      
+      writeTemplates(FILE_TEMPLATE, jsonValue.toString());
+
+   }
+   
+   /**
+    * Add file template list to settings file template file.
+    * This method is used only for templates transfer from registry to plain text file.
+    * In order to avoid data loss, this method doesn't check, is file templates are
+    * existed already. It only adds all file templates to file.
+    * @param body
+    * @throws JsonException
+    * @throws IOException
+    * @throws URISyntaxException
+    * @throws TemplateServiceException
+    */
+   @PUT
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/file/add/list")
+   public void addFileTemplateList(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   {
+      //parse string body to get template name from json string
+      final JsonParserImpl newTemplateJsonParser = new JsonParserImpl();
+      final JsonHandler newTemplateJsonHandler = new JsonDefaultHandler();
+      newTemplateJsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())),
+         newTemplateJsonHandler);
+      JsonValue newTemplateJsonValue = newTemplateJsonHandler.getJsonObject();
+      
+      ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
+      
+      //get array value of existing templates
+      String templateContent = readTemplates(FILE_TEMPLATE);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      ArrayValue jsonTemplateArray = null;
+      if (jsonValue.getElement("templates") != null)
+      {
+         jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      }
+      else
+      {
+         jsonTemplateArray = new ArrayValue();
+         jsonValue.addElement("templates", jsonTemplateArray);
+      }
+      
+      Iterator<JsonValue> arrIterator = templatesToAdd.getElements();
+      while (arrIterator.hasNext())
+      {
+         ObjectValue obj = (ObjectValue)arrIterator.next();
+         jsonTemplateArray.addElement(obj);
+      }
+      
+      writeTemplates(FILE_TEMPLATE, jsonValue.toString());
+
+   }
+   
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/file/list")
+   public List<FileTemplate> getFileTemplateList() throws URISyntaxException, IOException, JsonException
+   {
+      return getFileTemplates();
+   }
+   
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/file/get")
+   public FileTemplate getFileTemplateByName(@QueryParam("name") String name) throws URISyntaxException, IOException, JsonException
+   {
+      return findFileTemplate(name);
+   }
+   
+   @Path("/file/delete")
+   @POST
+   public void deleteFileTemplate( 
+      @QueryParam("name") String template 
+   ) throws IOException, URISyntaxException, JsonException
+   {
+      deleteTemplate(template, FILE_TEMPLATE);
+   }
+   
+   @Path("/project/delete")
+   @POST
+   public void deleteProjectTemplate( 
+      @QueryParam("name") String template 
+   ) throws IOException, URISyntaxException, JsonException
+   {
+      deleteTemplate(template, PROJECT_TEMPLATE);
+   }
+   
+   @PUT
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/project/add")
+   public void addProjectTemplate(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   {
+      //parse string body to get template name from json string
+      final JsonParserImpl newTemplateJsonParser = new JsonParserImpl();
+      final JsonHandler newTemplateJsonHandler = new JsonDefaultHandler();
+      newTemplateJsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())),
+         newTemplateJsonHandler);
+      JsonValue newTemplateJsonValue = newTemplateJsonHandler.getJsonObject();
+      String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
+      //check if such template already exists
+      for (ProjectTemplate projectTemplate : getProjectTemplateList())
+      {
+         if (newTemplateName.equals(projectTemplate.getName()))
          {
-            /*
-             * Node from Templates.xml file
-             */
-            Node fileNode = getFileTemplateNode(templateName);
-            if (fileNode == null)
+            throw new TemplateServiceException("Project template " + newTemplateName + " already exists");
+         }
+      }
+      
+      //add new file template to existing templates in file
+      String templateContent = readTemplates(PROJECT_TEMPLATE);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      if (jsonValue.getElement("templates") != null)
+      {
+         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+         jsonTemplateArray.addElement(newTemplateJsonValue);
+      }
+      else
+      {
+         ArrayValue jsonTemplateArray = new ArrayValue();
+         jsonValue.addElement("templates", jsonTemplateArray);
+         jsonTemplateArray.addElement(newTemplateJsonValue);
+      }
+      
+      writeTemplates(PROJECT_TEMPLATE, jsonValue.toString());
+   }
+   
+   /**
+    * Add project template list to settings project template file.
+    * This method is used only for templates transfer from registry to plain text file.
+    * In order to avoid data loss, this method doesn't check, is file templates are
+    * existed already. It only adds all file templates to file.
+    * @param body
+    * @throws JsonException
+    * @throws IOException
+    * @throws URISyntaxException
+    * @throws TemplateServiceException
+    */
+   @PUT
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/project/add/list")
+   public void addProjectTemplateList(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   {
+      //parse string body to get template name from json string
+      final JsonParserImpl newTemplateJsonParser = new JsonParserImpl();
+      final JsonHandler newTemplateJsonHandler = new JsonDefaultHandler();
+      newTemplateJsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())),
+         newTemplateJsonHandler);
+      JsonValue newTemplateJsonValue = newTemplateJsonHandler.getJsonObject();
+      
+      ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
+      
+      //get array value of existing templates
+      String templateContent = readTemplates(PROJECT_TEMPLATE);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      ArrayValue jsonTemplateArray = null;
+      if (jsonValue.getElement("templates") != null)
+      {
+         jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      }
+      else
+      {
+         jsonTemplateArray = new ArrayValue();
+         jsonValue.addElement("templates", jsonTemplateArray);
+      }
+      
+      Iterator<JsonValue> arrIterator = templatesToAdd.getElements();
+      while (arrIterator.hasNext())
+      {
+         ObjectValue obj = (ObjectValue)arrIterator.next();
+         jsonTemplateArray.addElement(obj);
+      }
+      
+      writeTemplates(PROJECT_TEMPLATE, jsonValue.toString());
+
+   }
+   
+   //--------- Implementation -----------------------
+   
+   /**
+    * Delete user template, that stored in file.
+    * 
+    * @param templateName - the name of template
+    * @param fileTemplateName - the name of file (file templates and project templates are stored in different files)
+    * @throws IOException
+    * @throws JsonException
+    * @throws IllegalStateException
+    */
+   private void deleteTemplate(String templateName, String fileTemplateName) throws IOException, JsonException,
+      IllegalStateException
+   {
+      if (templateName == null)
+      {
+         throw new IllegalStateException("Template name required. ");
+      }
+
+      //get the existing templates
+      String templateContent = readTemplates(fileTemplateName);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())), jsonHandler);
+
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      ArrayValue jsonTemplates = new ArrayValue();
+      //iterate existed templates and copy to new array those, which will not be deleted.
+      if (jsonValue.getElement("templates") != null)
+      {
+         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+         Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+
+         boolean exists = false;
+
+         //iterate throw existing templates, and copy all templates, except those,
+         //which must be deleted to new json array
+         while (arrIterator.hasNext())
+         {
+            ObjectValue obj = (ObjectValue)arrIterator.next();
+            if (!obj.getElement("name").getStringValue().equals(templateName))
             {
-               throw new TemplateServiceException("Can't find file template" + templateName);
+               jsonTemplates.addElement(obj);
             }
-            String parentFolderPath = getParentFolderPath(repoPath);
-            createFileFromTemplate(session, fileNode, parentFolderPath, TEMPLATES_PATH, itemName);
+            else
+            {
+               exists = true;
+            }
+         }
+         if (!exists)
+            throw new IllegalStateException("No such template. ");
+      }
+
+      //save new templates json array
+      ObjectValue templatesObjValue = new ObjectValue();
+      templatesObjValue.addElement("templates", jsonTemplates);
+
+      writeTemplates(fileTemplateName, templatesObjValue.toString());
+   }
+   
+   private FileTemplate findFileTemplate(String name) throws IOException, JsonException
+   {
+      //get the existing templates
+      String templateContent = getTemplateFileContent(FILE_TEMPLATE_FILE);
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+      
+      //iterate throw existing templates
+      while (arrIterator.hasNext())
+      {
+         ObjectValue obj = (ObjectValue)arrIterator.next();
+         if (obj.getElement("name").getStringValue().equals(name))
+         {
+            return parseFileTemplateObject(obj);
+         }
+      }
+      return null;
+   }
+   
+   private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, JsonException
+   {
+      String templateContent = readTemplates(PROJECT_TEMPLATE);
+      List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
+
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      if (jsonValue.getElement("templates") == null)
+         return projectTemplateList;
+      
+      ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+
+      while (arrIterator.hasNext())
+      {
+         ObjectValue obj = (ObjectValue)arrIterator.next();
+         projectTemplateList.add(parseProjectTemplateObject(obj));
+      }
+      
+      return projectTemplateList;
+   }
+   
+   private List<FileTemplate> getFileTemplates() throws URISyntaxException, IOException, JsonException
+   {
+      String templateContent = readTemplates(FILE_TEMPLATE);
+      List<FileTemplate> fileTemplateList = new ArrayList<FileTemplate>();
+
+      final JsonParserImpl jsonParser = new JsonParserImpl();
+      final JsonHandler jsonHandler = new JsonDefaultHandler();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())),
+         jsonHandler);
+      JsonValue jsonValue = jsonHandler.getJsonObject();
+      if (jsonValue.getElement("templates") == null)
+         return fileTemplateList;
+      
+      ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+
+      while (arrIterator.hasNext())
+      {
+         ObjectValue obj = (ObjectValue)arrIterator.next();
+         fileTemplateList.add(parseFileTemplateObject(obj));
+      }
+      
+      return fileTemplateList;
+   }
+   
+   private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
+   {
+      ProjectTemplate projectTemplate = new ProjectTemplate();
+      projectTemplate.setName(obj.getElement("name").getStringValue());
+      projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
+      if (obj.getElement("description") != null)
+      {
+         projectTemplate.setDescription(obj.getElement("description").getStringValue());
+      }
+      if (obj.getElement("type") != null)
+      {
+         projectTemplate.setType(obj.getElement("type").getStringValue());
+      }
+      if (obj.getElement("children") != null)
+      {
+         ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
+         projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
+      }
+      return projectTemplate;
+   }
+   
+   private List<Template> parseChildrenArrayJsonObject(ArrayValue childrenArray)
+   {
+      List<Template> childrenTemplates = new ArrayList<Template>();
+      
+      Iterator<JsonValue> arrIterator = childrenArray.getElements();
+      while (arrIterator.hasNext())
+      {
+         ObjectValue child = (ObjectValue)arrIterator.next();
+         if ("file".equals(child.getElement("childType").getStringValue()))
+         {
+            FileTemplate fileTemplate = new FileTemplate();
+            fileTemplate.setName(child.getElement("name").getStringValue());
+            fileTemplate.setFileName(child.getElement("fileName").getStringValue());
+            childrenTemplates.add(fileTemplate);
          }
          else
          {
-            throw new TemplateServiceException("Undefined type of template " + type);
+            childrenTemplates.add(parseFolderTemplateObject(child));
          }
       }
-      catch (UnsupportedEncodingException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (AccessDeniedException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (ParserConfigurationException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (SAXException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (ItemExistsException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (ConstraintViolationException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (InvalidItemStateException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (VersionException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (LockException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (NoSuchNodeTypeException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (RepositoryException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-
+      return childrenTemplates;
    }
 
-   @GET
-   @Path("/file-content")
-   public String getFileTemplateContent(@Context UriInfo uriInfo, @HeaderParam("template-name") String templateName) throws TemplateServiceException
+   /**
+    * Parse folder template json object, when get the list of project templates.
+    * @param obj
+    * @return
+    */
+   private FolderTemplate parseFolderTemplateObject(ObjectValue obj)
    {
+      FolderTemplate folderTemplate = new FolderTemplate();
+      folderTemplate.setName(obj.getElement("name").getStringValue());
+      if (obj.getElement("children") != null)
+      {
+         ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
+         folderTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
+      }
+      return folderTemplate;
+   }
+   
+   /**
+    * Parse file template json object, when get the list of file templates.
+    * @param obj
+    * @return
+    */
+   private FileTemplate parseFileTemplateObject(ObjectValue obj)
+   {
+      FileTemplate fileTemplate = new FileTemplate();
+      fileTemplate.setName(obj.getElement("name").getStringValue());
+      fileTemplate.setDescription(obj.getElement("description").getStringValue());
+      fileTemplate.setMimeType(obj.getElement("mimeType").getStringValue());
+      fileTemplate.setContent(obj.getElement("content").getStringValue());
+      fileTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
+      return fileTemplate;
+   }
+
+   private String getTemplateFileContent(String fileName) throws IOException
+   {
+      final String settingsFolderPath = System.getProperty("org.exoplatform.ide.server.settings-path");
+      InputStream input =
+         Thread.currentThread().getContextClassLoader().getResourceAsStream(settingsFolderPath + "/" + fileName);
+      Writer writer = new StringWriter();
+      char[] buffer = new char[1024];
       try
       {
-         Node node = getFileTemplateNode(templateName);
-
-         if (node == null)
+         Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+         int n;
+         while ((n = reader.read(buffer)) != -1)
          {
-            throw new TemplateServiceException("Can't find file template" + templateName);
+            writer.write(buffer, 0, n);
+         }
+      }
+      finally
+      {
+         input.close();
+      }
+      String userConf = writer.toString();
+      return userConf;
+   }
+   
+   //----------read and write templates----------------
+   
+   protected void writeTemplates(String templateType, String data) throws IOException
+   {
+      Session session = null;
+      try
+      {
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         checkConfigNode(repository);
+         session = repository.login(workspace);
+//         String user = session.getUserID();
+         String templatesSettingsPath = System.getProperty(USER_CONFIG_PATH) + "templates";
+
+         javax.jcr.Node userSettings;
+         try
+         {
+            userSettings = (javax.jcr.Node)session.getItem(templatesSettingsPath);
+         }
+         catch (PathNotFoundException pnfe)
+         {
+            org.exoplatform.ide.Utils.putFolders(session, templatesSettingsPath);
+            userSettings = (javax.jcr.Node)session.getItem(templatesSettingsPath);
          }
 
-         String src = null;
-
-         NodeList nodeList = node.getChildNodes();
-
-         for (int i = 0; i < nodeList.getLength(); i++)
+         ExtendedNode fileNode;
+         javax.jcr.Node contentNode;
+         try
          {
-            Node childNode = nodeList.item(i);
-            if (childNode.getNodeName().equals("src"))
-            {
-               src = childNode.getChildNodes().item(0).getNodeValue();
-            }
+            fileNode = (ExtendedNode)userSettings.getNode(templateType);
+            contentNode = fileNode.getNode("jcr:content");
+         }
+         catch (PathNotFoundException pnfe)
+         {
+            fileNode = (ExtendedNode)userSettings.addNode(templateType, "nt:file");
+            contentNode = fileNode.addNode("jcr:content", "nt:resource");
          }
 
-         InputStream fileData =
-            Thread.currentThread().getContextClassLoader().getResourceAsStream(TEMPLATES_PATH + "/" + src);
-         if (fileData != null) {
-            Writer writer = new StringWriter();
- 
-            char[] buffer = new char[1024];
-            try {
-                Reader reader = new BufferedReader(
-                        new InputStreamReader(fileData, "UTF-8"));
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
-            } finally {
-               fileData.close();
-            }
-            return writer.toString();
-        } else {       
-            return "";
-        }
+         contentNode.setProperty("jcr:mimeType", "text/plain");
+         contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+         contentNode.setProperty("jcr:data", data);
+//         // Make file accessible for current user only.
+//         if (!fileNode.isNodeType("exo:privilegeable"))
+//            fileNode.addMixin("exo:privilegeable");
+//         fileNode.clearACL();
+//         fileNode.setPermission(user, PermissionType.ALL);
+//         fileNode.removePermission(IdentityConstants.ANY);
+
+         session.save();
       }
-      catch (ParserConfigurationException e)
+      catch (RepositoryException re)
       {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new RuntimeException(re.getMessage(), re);
       }
-      catch (SAXException e)
+      finally
       {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new TemplateServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         if (session != null)
+            session.logout();
       }
    }
+   
+   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   {
+      String _workspace = workspace;
+      if (_workspace == null)
+         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
 
-   //--------- Implementation -----------------------
-
+      Session sys = null;
+      try
+      {
+         // Create node for users configuration under system session.
+         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+         if (!(sys.itemExists(System.getProperty(USER_CONFIG_PATH))))
+         {
+            org.exoplatform.ide.Utils.putFolders(sys, System.getProperty(USER_CONFIG_PATH));
+            sys.save();
+         }
+      }
+      finally
+      {
+         if (sys != null)
+            sys.logout();
+      }
+   }
+   
    /**
-    * Find file template node by name in <code>Templates.xml</code> file
-    * @param templateName
+    * @param templateType - the name of file to read templates (file or folder templates).
     * @return
-    * @throws ParserConfigurationException
-    * @throws SAXException
     * @throws IOException
     */
-   private Node getFileTemplateNode(String templateName) throws ParserConfigurationException, SAXException, IOException
+   protected String readTemplates(String templateType) throws IOException
    {
-      Document dom = getTemplatesDescriptionDocument();
-      Node templatesNode = dom.getElementsByTagName("templates").item(0);
-
-      NodeList templateNodes = templatesNode.getChildNodes();
-      for (int i = 0; i < templateNodes.getLength(); i++)
+      Session session = null;
+      try
       {
-         Node templateNode = templateNodes.item(i);
-         if (templateNode.getNodeName().equals("template"))
+         ManageableRepository repository = repositoryService.getCurrentRepository();
+         // Login with current identity. ConversationState.getCurrent(). 
+         session = repository.login(workspace);
+//         String user = session.getUserID();
+         String tokenPath = System.getProperty(USER_CONFIG_PATH) + "templates/" + templateType;
+
+         Item item = null;
+         try
          {
-            String fileName = getTemplateName(templateNode, "file");
-            if (fileName != null && fileName.equals(templateName))
+            item = session.getItem(tokenPath);
+         }
+         catch (PathNotFoundException pnfe)
+         {
+         }
+
+         if (item == null)
+         {
+            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+         }
+
+         Property property = ((javax.jcr.Node)item).getNode("jcr:content").getProperty("jcr:data");
+         
+         InputStream input = property.getStream();
+         if (input == null)
+         {
+            return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
+         }
+         Writer writer = new StringWriter();
+         char[] buffer = new char[1024];
+         try
+         {
+            Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1)
             {
-               return templateNode;
+               writer.write(buffer, 0, n);
             }
          }
+         finally
+         {
+            input.close();
+         }
+         String data = writer.toString();
+         return data;
       }
-
-      return null;
-   }
-
-   private void createFileFromTemplate(Session session, Node node, String location, String templateSource,
-      String fileName) throws PathNotFoundException, RepositoryException
-   {
-      String src = null;
-      String mimeType = null;
-      String fileNodeType = null;
-      String jcrContentNodeType = null;
-
-      NodeList nodeList = node.getChildNodes();
-
-      for (int i = 0; i < nodeList.getLength(); i++)
+      catch (RepositoryException re)
       {
-         Node childNode = nodeList.item(i);
-         if (childNode.getNodeName().equals("src"))
-         {
-            src = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("mime-type"))
-         {
-            mimeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("node-type"))
-         {
-            fileNodeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("jcr-content-node-type"))
-         {
-            jcrContentNodeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
+         throw new RuntimeException(re.getMessage(), re);
       }
-
-      InputStream fileData =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream(templateSource + "/" + src);
-
-      Utils.putFile(session, location, fileName, fileData, mimeType, fileNodeType, jcrContentNodeType);
-      session.save();
-   }
-
-   /**
-    * Get the Document element of xml file, which describes default templates.
-    * 
-    * @return {@link Document}
-    * @throws ParserConfigurationException
-    * @throws SAXException
-    * @throws IOException
-    */
-   private Document getTemplatesDescriptionDocument() throws ParserConfigurationException, SAXException, IOException
-   {
-      /*
-       * Source of file which containts information about all default templates
-       */
-      InputStream templatesStream =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream(TEMPLATES_PATH + "/" + TEMPLATES_FILE);
-
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = factory.newDocumentBuilder();
-
-      Document dom = builder.parse(templatesStream);
-
-      return dom;
-   }
-
-   /**
-    * Get the Document element of xml file, which describes the project structure.
-    * 
-    * @param templateSource - path to folder, where template stored in resources.
-    * @return {@link Document}
-    * @throws ParserConfigurationException
-    * @throws SAXException
-    * @throws IOException
-    */
-   private Document getTemplateManifestDocument(String templateSource) throws ParserConfigurationException,
-      SAXException, IOException
-   {
-      InputStream templateStream =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream(templateSource + "/manifest.xml");
-
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder;
-      Document dom = null;
-
-      builder = factory.newDocumentBuilder();
-      dom = builder.parse(templateStream);
-
-      return dom;
-   }
-
-   /**
-    * Crop from the full location prefix (such as http://localhost:8080/jcr)
-    * and leave only repository name and path to project
-    * @param fullLocation - the full location of new project
-    * @param uriInfo - the uri info
-    * @return {@link String}
-    * @throws UnsupportedEncodingException
-    */
-   private String cropLocation(String fullLocation, UriInfo uriInfo) throws UnsupportedEncodingException
-   {
-      String location = fullLocation;
-
-      if (location.endsWith("/"))
+      finally
       {
-         location = location.substring(0, location.length() - 1);
+         if (session != null)
+            session.logout();
       }
-
-      location = URLDecoder.decode(location, "UTF-8");
-
-      String prefix = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
-
-      if (!location.startsWith(prefix))
-      {
-         return null;
-      }
-
-      location = location.substring(prefix.length());
-
-      return location;
-   }
-
-   /**
-    * Parse template node from templates description file Templates.xml.
-    * If node's child element <code>type</code> equals to <code>type</code> parameter,
-    * than return value of node's child element <code>name</code>.
-    * Otherwise return null
-    * 
-    * @param node - node to parse
-    * @param type - type of template we need
-    * @return {@link String}
-    */
-   private String getTemplateName(Node node, String type)
-   {
-      NodeList nodeList = node.getChildNodes();
-
-      String typeNode = null;
-
-      String name = null;
-
-      for (int i = 0; i < nodeList.getLength(); i++)
-      {
-         Node childNode = nodeList.item(i);
-         if (childNode.getNodeName().equals("name"))
-         {
-            name = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("type"))
-         {
-            typeNode = childNode.getChildNodes().item(0).getNodeValue();
-         }
-      }
-
-      if (!typeNode.equals(type))
-         return null;
-
-      return name;
-   }
-
-   private TemplateDescription getTemplateDescription(Node node, String type)
-   {
-      NodeList nodeList = node.getChildNodes();
-
-      String typeNode = null;
-
-      String name = null;
-
-      String description = null;
-
-      String mimeType = null;
-
-      for (int i = 0; i < nodeList.getLength(); i++)
-      {
-         Node childNode = nodeList.item(i);
-         if (childNode.getNodeName().equals("name"))
-         {
-            name = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("type"))
-         {
-            typeNode = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("description"))
-         {
-            description = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("mime-type"))
-         {
-            mimeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-      }
-
-      if (!typeNode.equals(type))
-         return null;
-
-      return new TemplateDescription(name, description, mimeType);
-   }
-
-   /**
-    * Parse template node from templates description file Templates.xml
-    * and get the path to template in resources.
-    * 
-    * @param node - the node to parse
-    * @param type - the type of template (project of file)
-    * @param name - the name of template
-    * @return {@link String}
-    */
-   private String getTemplateSource(Node node, String type, String name)
-   {
-      NodeList nodeList = node.getChildNodes();
-
-      String typeNode = null;
-
-      String src = null;
-
-      String nameNode = null;
-
-      for (int i = 0; i < nodeList.getLength(); i++)
-      {
-         Node childNode = nodeList.item(i);
-         if (childNode.getNodeName().equals("name"))
-         {
-            nameNode = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("type"))
-         {
-            typeNode = childNode.getChildNodes().item(0).getNodeValue();
-         }
-
-         if (childNode.getNodeName().equals("src"))
-         {
-            src = childNode.getChildNodes().item(0).getNodeValue();
-         }
-      }
-
-      if (type.equals(typeNode) && name.equals(nameNode))
-         return src;
-
-      return null;
-   }
-
-   /**
-    * Create folder from project.
-    * <p/>
-    * If node has item <code>items</code>, then
-    * create subfolder and file from this folder.
-    * 
-    * @param session - session
-    * @param node - folder's node (to get folder's name and children)
-    * @param location - the location of parent's folder
-    * @param templateSource - the source path to project template, e.g.
-    *    <code>org/exoplatform/ide/template/samples/linkedin</code>
-    * @throws TemplateServiceException 
-    * @throws RepositoryException 
-    * @throws ConstraintViolationException 
-    * @throws VersionException 
-    * @throws LockException 
-    * @throws NoSuchNodeTypeException 
-    * @throws PathNotFoundException 
-    * @throws ItemExistsException 
-    */
-   private void createFolder(Session session, Node node, String location, String templateSource)
-      throws TemplateServiceException, ItemExistsException, PathNotFoundException, NoSuchNodeTypeException,
-      LockException, VersionException, ConstraintViolationException, RepositoryException
-   {
-      NodeList nodeList = node.getChildNodes();
-      String name = null;
-      NodeList childNodeList = null;
-      for (int i = 0; i < nodeList.getLength(); i++)
-      {
-         Node child = nodeList.item(i);
-         if ("name".equals(child.getNodeName()))
-         {
-            name = child.getChildNodes().item(0).getNodeValue();
-         }
-         else if ("items".equals(child.getNodeName()))
-         {
-            childNodeList = child.getChildNodes();
-         }
-      }
-      if (name == null)
-      {
-         throw new TemplateServiceException("Folder must have name to create");
-      }
-      Utils.putFolder(session, location, name);
-
-      if (childNodeList == null)
-      {
-         return;
-      }
-
-      for (int i = 0; i < childNodeList.getLength(); i++)
-      {
-         Node child = childNodeList.item(i);
-         if ("folder".equals(child.getNodeName()))
-         {
-            createFolder(session, child, location + "/" + name, templateSource);
-         }
-         if ("file".equals(child.getNodeName()))
-         {
-            createFile(session, child, location + "/" + name, templateSource);
-         }
-      }
-   }
-
-   /**
-    * Create file.
-    * <p/>
-    * Parses node, which can contain such subnodes: name, src, mime-type, node-type, jcr-content-node-type
-    * 
-    * @param session - session
-    * @param node - file's node from <code>manifest.xml</code> file
-    * @param location - the location of new file
-    * @param templateSource - path to template folder in resources (to find content of file) 
-    * @throws PathNotFoundException
-    * @throws RepositoryException
-    */
-   private void createFile(Session session, Node node, String location, String templateSource)
-      throws PathNotFoundException, RepositoryException
-   {
-
-      String name = null;
-      String src = null;
-      String mimeType = null;
-      String fileNodeType = null;
-      String jcrContentNodeType = null;
-
-      NodeList nodeList = node.getChildNodes();
-
-      for (int i = 0; i < nodeList.getLength(); i++)
-      {
-         Node childNode = nodeList.item(i);
-         if (childNode.getNodeName().equals("name"))
-         {
-            name = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("src"))
-         {
-            src = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("mime-type"))
-         {
-            mimeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("node-type"))
-         {
-            fileNodeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-         if (childNode.getNodeName().equals("jcr-content-node-type"))
-         {
-            jcrContentNodeType = childNode.getChildNodes().item(0).getNodeValue();
-         }
-      }
-
-      InputStream fileData =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream(templateSource + "/" + src);
-
-      Utils.putFile(session, location, name, fileData, mimeType, fileNodeType, jcrContentNodeType);
-   }
-
-   /**
-    * Crate project from template.
-    * <p>
-    * Create project folder. Than get the node list of <code>items</code> element in
-    * <code>manifest.xml</code> file and create folder and files of project.
-    * 
-    * @param templateDoc - the {@link Document} element of <code>manifest</code> file
-    * @param session - the session
-    * @param projectName - the name of project
-    * @param templateSource - path to templates folder in resources
-    * @param location - the location of new project (path to parent folder)
-    * @throws AccessDeniedException
-    * @throws ItemExistsException
-    * @throws ConstraintViolationException
-    * @throws InvalidItemStateException
-    * @throws VersionException
-    * @throws LockException
-    * @throws NoSuchNodeTypeException
-    * @throws RepositoryException
-    * @throws TemplateServiceException
-    */
-   private void createProjectFromTemplate(Document templateDoc, Session session, String projectName,
-      String templateSource, String location) throws AccessDeniedException, ItemExistsException,
-      ConstraintViolationException, InvalidItemStateException, VersionException, LockException,
-      NoSuchNodeTypeException, RepositoryException, TemplateServiceException
-   {
-      //create project folder
-      Utils.putFolder(session, location, projectName);
-
-      if (location == null)
-      {
-         location = projectName;
-      }
-      else
-      {
-         location += "/" + projectName;
-      }
-
-      if (templateDoc.getElementsByTagName("items").item(0) != null)
-      {
-         NodeList childNodeList = templateDoc.getElementsByTagName("items").item(0).getChildNodes();
-         for (int i = 0; i < childNodeList.getLength(); i++)
-         {
-            Node child = childNodeList.item(i);
-            if ("folder".equals(child.getNodeName()))
-            {
-               createFolder(session, child, location, templateSource);
-            }
-            if ("file".equals(child.getNodeName()))
-            {
-               createFile(session, child, location, templateSource);
-            }
-         }
-      }
-      session.save();
-   }
-
-   /**
-    * Get the parent folder path for project from repo path.
-    * E.g. if repo path is <code>db1/dev-monit/folder1</code>,
-    * then parent folder path will be <code>folder1</code>.
-    * If repo path is <code>db1/dev-monit</code>, then parent
-    * folder path will be <code>null</code>.
-    * @param repoPath - the repo path (e.g. <code>db1/dev-monit/folder</code>)
-    * @return {@link String}
-    */
-   private String getParentFolderPath(String repoPath)
-   {
-      String path = repoPath;
-      if (path.startsWith("/"))
-      {
-         path = path.substring(1);
-      }
-      if (path.contains("/"))
-      {
-         path.substring(path.indexOf("/"));
-      }
-      else
-      {
-         path = null;
-      }
-      return path;
-   }
-
-   /**
-    * Get the path to project <code>manifest.xml</code> file by template name.
-    * 
-    * @param templateName - the name of template
-    * @return {@link String}
-    * @throws ParserConfigurationException
-    * @throws SAXException
-    * @throws IOException
-    */
-   private String getPathToProjectManifest(String templateName) throws ParserConfigurationException, SAXException,
-      IOException
-   {
-      Document dom = getTemplatesDescriptionDocument();
-      Node templatesNode = dom.getElementsByTagName("templates").item(0);
-
-      NodeList templateNodes = templatesNode.getChildNodes();
-      /*
-       * Work throught all templates, and try to find necessary project template
-       */
-      for (int i = 0; i < templateNodes.getLength(); i++)
-      {
-         Node templateNode = templateNodes.item(i);
-         if (templateNode.getNodeName().equals("template"))
-         {
-            String templateSource = getTemplateSource(templateNode, "project", templateName);
-            if (templateSource != null)
-            {
-               return templateSource;
-            }
-         }
-      }
-
-      return null;
    }
 
 }

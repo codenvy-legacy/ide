@@ -105,16 +105,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
                   SettingsService.getInstance().restoreFromCookies(applicationSettings);
 
-                  if (TemplateService.getInstance() == null)
-                  {
-                     new TemplateServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration
-                        .getRegistryURL()
-                        + "/"
-                        + RegistryConstants.EXO_APPLICATIONS
-                        + "/"
-                        + IDEConfigurationLoader.APPLICATION_NAME);
-                  }
-
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());

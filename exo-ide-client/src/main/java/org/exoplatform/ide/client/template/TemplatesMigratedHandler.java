@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,20 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.settings.event;
+package org.exoplatform.ide.client.template;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * Handler for {@link TemplatesMigratedEvent}.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: TemplatesMigratedHandler.java Aug 1, 2011 12:22:56 PM vereshchaka $
+ *
  */
-
-public interface GetApplicationSettingsHandler extends EventHandler
+public interface TemplatesMigratedHandler extends EventHandler
 {
    
-   void onGetApplicationSettings(GetApplicationSettingsEvent event);
-
+   void onTemplatesMigrated(TemplatesMigratedEvent event);
+   
 }

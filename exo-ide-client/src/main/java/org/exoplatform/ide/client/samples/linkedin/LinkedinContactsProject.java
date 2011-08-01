@@ -61,6 +61,7 @@ public class LinkedinContactsProject
       createContactLogic();
       createCss();
       linkedinContactsProject.setDescription("Linkedin Contacts Demo Project");
+      linkedinContactsProject.setDefault(true);
       templateList.getTemplates().add(linkedinContactsProject);
 
    }
@@ -70,7 +71,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getExomobileCss().getText();
       FileTemplate cssTemplate =
-         new FileTemplate(MimeType.TEXT_CSS, "exomobile.css", "Exomobile CSS", content, null);
+         new FileTemplate(MimeType.TEXT_CSS, "exomobile.css", "Exomobile CSS", content, true);
       cssTemplate.setFileName("exomobile.css");
       templateList.getTemplates().add(cssTemplate);
       skinFolder.getChildren().add(cssTemplate);
@@ -90,7 +91,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLibTemplateJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "template.js", "template js", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "template.js", "template js", content, true);
       template.setFileName("template.js");
       templateList.getTemplates().add(template);
       libFolder.getChildren().add(template);
@@ -101,7 +102,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLibJqueryMinJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "jquery.1.4.2.min.js", "jquery 1.4.2 min ", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "jquery.1.4.2.min.js", "jquery 1.4.2 min ", content, true);
       template.setFileName("jquery.1.4.2.min.js");
       templateList.getTemplates().add(template);
       libFolder.getChildren().add(template);
@@ -111,7 +112,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLibLinkedinJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "linkedin.js", "linkedin ", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "linkedin.js", "linkedin ", content, true);
       template.setFileName("linkedin.js");
       templateList.getTemplates().add(template);
       libFolder.getChildren().add(template);
@@ -122,7 +123,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLibJqtouchMinJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "jqtouch.min.js", "jqtouch min js", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "jqtouch.min.js", "jqtouch min js", content, true);
       template.setFileName("jqtouch.min.js");
       templateList.getTemplates().add(template);
       libFolder.getChildren().add(template);
@@ -133,7 +134,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLibJqtouchMinCss().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.TEXT_CSS, "jqtouch.min.css", "jqtouch css", content, null);
+         new FileTemplate(MimeType.TEXT_CSS, "jqtouch.min.css", "jqtouch css", content, true);
       template.setFileName("jqtouch.min.css");
       templateList.getTemplates().add(template);
       libFolder.getChildren().add(template);
@@ -144,7 +145,7 @@ public class LinkedinContactsProject
       String content = LinkedinContactsSample.INSTANCE.getMobileSource().getText();
       FileTemplate template =
          new FileTemplate(MimeType.TEXT_HTML, "mobile.html", "linkedin mobile html",
-            content, null);
+            content, true);
       template.setFileName("mobile.html");
       templateList.getTemplates().add(template);
       linkedinContactsProject.getChildren().add(template);
@@ -155,7 +156,7 @@ public class LinkedinContactsProject
       String content = LinkedinContactsSample.INSTANCE.getReadme().getText();
       FileTemplate template =
          new FileTemplate(MimeType.TEXT_PLAIN, "readme-linkedin-contacts.txt", "linkedin readme file",
-            content, null);
+            content, true);
       template.setFileName("readme-linkedin-contacts.txt");
       templateList.getTemplates().add(template);
       linkedinContactsProject.getChildren().add(template);
@@ -166,7 +167,7 @@ public class LinkedinContactsProject
       String content = LinkedinContactsSample.INSTANCE.getCachManifest().getText();
       FileTemplate template =
          new FileTemplate(MimeType.TEXT_PLAIN, "cache.manifest", "linkedin cache manifest file",
-            content, null);
+            content, true);
       template.setFileName("cache.manifest");
       templateList.getTemplates().add(template);
       linkedinContactsProject.getChildren().add(template);
@@ -177,7 +178,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLogicContactsJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "contacts.js", "linkedin contacts", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "contacts.js", "linkedin contacts", content, true);
       template.setFileName("contacts.js");
       templateList.getTemplates().add(template);
       logicFolder.getChildren().add(template);
@@ -188,7 +189,7 @@ public class LinkedinContactsProject
    {
       String content = LinkedinContactsSample.INSTANCE.getLogicOfflineJs().getText();
       FileTemplate template =
-         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "offline.js", "offline js", content, null);
+         new FileTemplate(MimeType.APPLICATION_JAVASCRIPT, "offline.js", "offline js", content, true);
       template.setFileName("offline.js");
       templateList.getTemplates().add(template);
       logicFolder.getChildren().add(template);
@@ -197,6 +198,11 @@ public class LinkedinContactsProject
    public List<Template> getTemplateList()
    {
       return templateList.getTemplates();
+   }
+   
+   public ProjectTemplate getProjectTemplate()
+   {
+      return linkedinContactsProject;
    }
 
 }

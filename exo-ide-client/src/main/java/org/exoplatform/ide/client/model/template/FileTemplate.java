@@ -40,6 +40,13 @@ public class FileTemplate extends Template
       this.content = content;
    }
    
+   public FileTemplate(String mimeType, String name, String description, String content, boolean isDefault)
+   {
+      super(name, description, isDefault);
+      this.mimeType = mimeType;
+      this.content = content;
+   }
+   
    public FileTemplate(String name, String fileName, String mimeType)
    {
       super(name);
