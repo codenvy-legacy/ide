@@ -55,7 +55,7 @@ public class SelectGitRemoteRepositoryPresenter implements ViewClosedHandler
    private Display display;
 
    private HandlerRegistration addHandler;
-   
+
    private String[] remotes;
 
    /**
@@ -94,7 +94,7 @@ public class SelectGitRemoteRepositoryPresenter implements ViewClosedHandler
             remoteRepositorySelected();
          }
       });
-      
+
       display.setGitRepositoryValues(remotes);
    }
 
@@ -103,7 +103,12 @@ public class SelectGitRemoteRepositoryPresenter implements ViewClosedHandler
     */
    private void remoteRepositorySelected()
    {
-      IDE.EVENT_BUS.fireEvent(new GitRemoteRepositorySelectedEvent(display.getGitRepository().getValue()));
+      String url = display.getGitRepository().getValue();
+      if (url != null && !url.isEmpty())
+      {
+         IDE.EVENT_BUS.fireEvent(new GitRemoteRepositorySelectedEvent(url));
+         IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    /**
