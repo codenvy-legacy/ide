@@ -55,12 +55,15 @@ public class SelectGitRemoteRepositoryPresenter implements ViewClosedHandler
    private Display display;
 
    private HandlerRegistration addHandler;
+   
+   private String[] remotes;
 
    /**
     * 
     */
    public SelectGitRemoteRepositoryPresenter(String[] remotes)
    {
+      this.remotes = remotes;
       addHandler = IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
       display = GWT.create(Display.class);
       bind();
@@ -91,6 +94,8 @@ public class SelectGitRemoteRepositoryPresenter implements ViewClosedHandler
             remoteRepositorySelected();
          }
       });
+      
+      display.setGitRepositoryValues(remotes);
    }
 
    /**
