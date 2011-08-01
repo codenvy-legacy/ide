@@ -283,7 +283,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       {
          toolbarItems = new ArrayList<String>();
          toolbarItems.add("");
-         applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
+         applicationSettings.setValue("toolbar-items", toolbarItems, Store.SERVER);
       }
 
       fillToolbarListGrid(toolbarItems);
@@ -581,7 +581,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
          }
       }
 
-      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
+      SettingsService.getInstance().saveSettingsToServer(applicationSettings,
          new AsyncRequestCallback<ApplicationSettings>()
          {
             @Override

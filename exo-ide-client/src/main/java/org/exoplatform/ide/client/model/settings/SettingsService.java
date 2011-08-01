@@ -50,7 +50,7 @@ public abstract class SettingsService
     * @param applicationSettings
     * @param callback
     */
-   public abstract void saveSettingsToRegistry(ApplicationSettings applicationSettings,  
+   public abstract void saveSettingsToServer(ApplicationSettings applicationSettings,  
       AsyncRequestCallback<ApplicationSettings> callback);
    
    /**

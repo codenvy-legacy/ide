@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -46,13 +45,11 @@ import org.exoplatform.ide.client.model.configuration.IDEInitializationConfigura
 import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
-import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -200,7 +197,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          List<String> toolbarItems = new ArrayList<String>();
          toolbarItems.addAll(controls.getToolbarDefaultControls());
-         applicationSettings.setValue("toolbar-items", toolbarItems, Store.REGISTRY);
+         applicationSettings.setValue("toolbar-items", toolbarItems, Store.SERVER);
       }
 
       initServices();

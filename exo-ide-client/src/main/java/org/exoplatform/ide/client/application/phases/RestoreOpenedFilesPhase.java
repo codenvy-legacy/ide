@@ -93,7 +93,7 @@ public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHan
       if (filesToLoad == null)
       {
          filesToLoad = new ArrayList<String>();
-         applicationSettings.setValue("opened-files", filesToLoad, Store.REGISTRY);
+         applicationSettings.setValue("opened-files", filesToLoad, Store.SERVER);
       }
 
       defaultEditors = applicationSettings.getValueAsMap("default-editors");

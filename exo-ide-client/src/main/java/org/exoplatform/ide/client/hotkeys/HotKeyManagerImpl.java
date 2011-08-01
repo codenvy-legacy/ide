@@ -88,7 +88,7 @@ public class HotKeyManagerImpl extends HotKeyManager implements EditorHotKeyCall
       if (hotKeys == null)
       {
          hotKeys = new LinkedHashMap<String, String>();
-         applicationSettings.setValue("hotkeys", hotKeys, Store.REGISTRY);
+         applicationSettings.setValue("hotkeys", hotKeys, Store.SERVER);
          initDefaultHotKeys();
       }
 

@@ -104,7 +104,7 @@ public class SettingsServiceImpl extends SettingsService
    }
 
    @Override
-   public void saveSettingsToRegistry(ApplicationSettings applicationSettings,
+   public void saveSettingsToServer(ApplicationSettings applicationSettings,
       AsyncRequestCallback<ApplicationSettings> callback)
    {
       String url = getURL();
@@ -128,7 +128,7 @@ public class SettingsServiceImpl extends SettingsService
          String key = keyIter.next();
          Store storing = applicationSettings.getStore(key);
 
-         if (storing == null || storing == Store.REGISTRY || storing == Store.NONE)
+         if (storing == null || storing == Store.SERVER || storing == Store.NONE)
          {
             // Setting stores to registry. Skip it
             continue;

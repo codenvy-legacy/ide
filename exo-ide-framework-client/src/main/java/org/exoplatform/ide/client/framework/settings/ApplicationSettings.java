@@ -33,7 +33,7 @@ public class ApplicationSettings
 
    public enum Store {
 
-      COOKIES, REGISTRY, NONE
+      COOKIES, SERVER, NONE
 
    }
 

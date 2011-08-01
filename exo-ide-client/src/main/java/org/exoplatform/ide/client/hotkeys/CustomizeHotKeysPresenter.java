@@ -519,7 +519,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-      SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
+      SettingsService.getInstance().saveSettingsToServer(applicationSettings,
          new AsyncRequestCallback<ApplicationSettings>()
          {
             @Override

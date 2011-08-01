@@ -58,7 +58,7 @@ public class ApplicationSettingsMarshaller implements Marshallable
       {
          String key = keyIter.next();
 
-         if (applicationSettings.getStore(key) != Store.REGISTRY)
+         if (applicationSettings.getStore(key) != Store.SERVER)
          {
             continue;
          }

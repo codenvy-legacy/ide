@@ -197,7 +197,7 @@ public class EditorController implements EditorContentChangedHandler,
 
       if (applicationSettings.getValueAsMap("default-editors") == null)
       {
-         applicationSettings.setValue("default-editors", new LinkedHashMap<String, String>(), Store.REGISTRY);
+         applicationSettings.setValue("default-editors", new LinkedHashMap<String, String>(), Store.SERVER);
       }
    }
 

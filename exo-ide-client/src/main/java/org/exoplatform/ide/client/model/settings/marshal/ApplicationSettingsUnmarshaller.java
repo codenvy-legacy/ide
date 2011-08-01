@@ -132,7 +132,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
     */
    private void parseStringValue(String key, JSONString string)
    {
-      applicationSettings.setValue(key, string.stringValue(), Store.REGISTRY);
+      applicationSettings.setValue(key, string.stringValue(), Store.SERVER);
    }
 
    /**
@@ -146,7 +146,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
       {
          map.put(k, object.get(k).isString().stringValue());
       }
-      applicationSettings.setValue(key, map, Store.REGISTRY);
+      applicationSettings.setValue(key, map, Store.SERVER);
    }
 
    /**
@@ -155,7 +155,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
     */
    private void parseNumberValue(String key, JSONNumber number)
    {
-      applicationSettings.setValue(key, (int)number.doubleValue(), Store.REGISTRY);
+      applicationSettings.setValue(key, (int)number.doubleValue(), Store.SERVER);
    }
 
    /**
@@ -164,7 +164,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
     */
    private void parseBooleanValue(String key, JSONBoolean bool)
    {
-      applicationSettings.setValue(key, bool.booleanValue(), Store.REGISTRY);
+      applicationSettings.setValue(key, bool.booleanValue(), Store.SERVER);
    }
 
    /**
@@ -178,7 +178,7 @@ public class ApplicationSettingsUnmarshaller implements Unmarshallable
       {
          list.add(array.get(i).isString().stringValue());
       }
-      applicationSettings.setValue(key, list, Store.REGISTRY);
+      applicationSettings.setValue(key, list, Store.SERVER);
    }
 
 }

@@ -272,12 +272,12 @@ public class OpenFileWithPresenter implements EditorFileOpenedHandler, EditorFil
          if (defaultEditors == null)
          {
             defaultEditors = new HashMap<String, String>();
-            applicationSettings.setValue("default-editors", defaultEditors, Store.REGISTRY);
+            applicationSettings.setValue("default-editors", defaultEditors, Store.SERVER);
          }
 
          defaultEditors.put(mimeType, selectedEditor.getDescription());
 
-         SettingsService.getInstance().saveSettingsToRegistry(applicationSettings,
+         SettingsService.getInstance().saveSettingsToServer(applicationSettings,
             new AsyncRequestCallback<ApplicationSettings>()
             {
                @Override
