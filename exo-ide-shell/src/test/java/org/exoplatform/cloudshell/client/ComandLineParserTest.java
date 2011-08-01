@@ -37,16 +37,17 @@ public class ComandLineParserTest
 {
    
    String tabl = "/ide/git/commit;POST=git commit\n" +
-                   "git_commit.body.params=-m,-a\n" +
-                   "git_commit.body.b1=-m\n" +
-                   "git_commit.body.b2=-a\n";
+                 "git commit.body.params=message,all\n" +
+                 "git commit.body.message=-m\n"+
+                 "git commit.body.all=-a\n";
 
    @Test
    public void parserTest() throws Exception
    {
-      String cmd = "git commit -m=\"My first commit\" -a false";
+      String cmd = "git commit -m='My first commit'      -a false";
       String[] args = Util.translateCommandline(cmd);
       Option msg = new Option("m", true, "Commit message");
+      msg.setLongOpt("message");
       Option a = new Option("a", true, "Add file");
       Options options = new Options();
       options.addOption(a);
@@ -62,13 +63,30 @@ public class ComandLineParserTest
       String url = "";
       if (command.equalsIgnoreCase(line.getArgs()[0] + " " + line.getArgs()[1]))
       {
-        
          url = commands[0].split("=")[0];
       }
-      String body = "{\"b1\":\"" + line.getOptionValue("m") + "\",\"b2\":" + line.getOptionValue("a") + "\"}";
+      String body = "{\"message\":\"" + line.getOptionValue("m") + "\",\"all\":" + line.getOptionValue("a") + "\"}";
       
       System.out.println("Url : " + url.split(";")[0] + "\nMethod : " + url.split(";")[1] + "\nBody : " +  body);
+   }
+   
+   @Test
+   public void parserLongOptTest() throws Exception
+   {
+      String cmd = "git commit --message='My first commit'      -a false";
+      String[] args = Util.translateCommandline(cmd);
+      Option msg = new Option("m", true, "Commit message");
+      msg.setLongOpt("message");
+      Option a = new Option("a", true, "Add file");
+      Options options = new Options();
+      options.addOption(a);
+      options.addOption(msg);
+      Parser parser = new GnuParser();
+      CommandLine line = parser.parse(options, args);
+      Assert.assertEquals("My first commit", line.getOptionValue("m"));
+      Assert.assertFalse(Boolean.valueOf(line.getOptionValue("a")));
       
    }
+   
 
 }

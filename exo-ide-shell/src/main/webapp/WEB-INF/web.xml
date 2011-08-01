@@ -4,7 +4,7 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-   <display-name>book-service</display-name>
+   <!-- <display-name>book-service</display-name>
    <context-param>
       <param-name>javax.ws.rs.Application</param-name>
       <param-value>org.everrest.sample.book.BookApplication</param-value>
@@ -23,9 +23,5 @@
    <servlet-mapping>
       <servlet-name>EverrestServlet</servlet-name>
       <url-pattern>/rest/*</url-pattern>
-   </servlet-mapping>
-   <!-- <display-name>book-service</display-name> <context-param> <param-name>javax.ws.rs.Application</param-name> <param-value>org.exoplatform.cloudshell.server.BookApplication</param-value> 
-      </context-param> <listener> <listener-class>org.exoplatform.cloudshell.server.BookServiceBootstrap</listener-class> </listener> <listener> <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class> 
-      </listener> <servlet> <servlet-name>EverrestServlet</servlet-name> <servlet-class>org.everrest.core.servlet.EverrestServlet</servlet-class> </servlet> 
-      <servlet-mapping> <servlet-name>EverrestServlet</servlet-name> <url-pattern>/rest/*</url-pattern> </servlet-mapping> -->
+   </servlet-mapping> -->
 </web-app>
