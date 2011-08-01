@@ -16,42 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.testframework.server;
+package org.exoplatform.ide.testframework.server.heroku;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * If heroku server return unexpected or error status for request.
- * 
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@SuppressWarnings("serial")
-public class HerokuException extends Exception
+@Provider
+public class HerokuExceptionMapper implements ExceptionMapper<HerokuException>
 {
-   /** HTTP status of response from heroku server. */
-   private final int responseStatus;
-
-   /** Content type of response from heroku server. */
-   private final String contentType;
-
    /**
-    * @param responseStatus HTTP status of response from heroku server
-    * @param message text message
-    * @param contentType content type of response from heroku server
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
-   public HerokuException(int responseStatus, String message, String contentType)
+   @Override
+   public Response toResponse(HerokuException he)
    {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
-
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
-
-   public String getContentType()
-   {
-      return contentType;
+      if (he.getResponseStatus() == 200 && "Authentication required.\n".equals(he.getMessage()))
+         return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+            .entity(he.getMessage()).type(he.getContentType()).build();
+      
+      return Response.status(he.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+         .entity(he.getMessage()).type(he.getContentType()).build();
    }
 }

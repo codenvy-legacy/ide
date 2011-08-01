@@ -302,6 +302,22 @@ public interface MenuCommands
 
          String RAKE = "Rake...";
       }
+      
+      public interface OpenShift
+      {
+         String OPENSHIFT = "OpenShift";
+         
+         String CREATE_DOMAIN = "Create domain...";
+         
+         String CREATE_APPLICATION = "Create application...";
+         
+         String DELETE_APPLICATION = "Delete application...";
+         
+         String APPLICATION_INFO = "Application info...";
+         
+         String USER_INFO = "User info...";
+      }
+      
    }
 
 }

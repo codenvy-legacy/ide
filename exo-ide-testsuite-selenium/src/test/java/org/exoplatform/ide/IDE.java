@@ -53,6 +53,7 @@ import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
+import org.exoplatform.ide.paas.openshift.core.OpenShift;
 
 /**
  * 
@@ -153,6 +154,8 @@ public class IDE
    public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
    
    public Heroku HEROKU = new Heroku();
+   
+   public OpenShift OPENSHIFT = new OpenShift();
 
    /**
     * Select main frame of IDE.

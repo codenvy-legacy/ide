@@ -21,6 +21,7 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.Locators;
+import org.exoplatform.ide.TestConstants;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -53,7 +54,17 @@ public class Output extends AbstractTestModule
     */
    public void checkOutputOpened()
    {
-      assertTrue(selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR));
+      assertTrue(isOutputOpened());
+   }
+
+   /**
+    * Determines whether the Output view opened.
+    * 
+    * @return
+    */
+   public boolean isOutputOpened()
+   {
+      return selenium().isElementPresent(Locators.OperationForm.OUTPUT_FORM_LOCATOR);
    }
 
    public void waitForOutputOpened() throws Exception
@@ -87,8 +98,18 @@ public class Output extends AbstractTestModule
    /**
     * Click clear output button.
     */
-   public void clickClearButton()
+   public void clickClearButton() throws Exception
    {
       selenium().click(CLEAR_OUTPUT_BUTTON);
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
+
+   public void clearOutputIfIsOpened() throws Exception
+   {
+      if (isOutputOpened())
+      {
+         clickClearButton();
+      }
+   }
+
 }

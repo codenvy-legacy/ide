@@ -23,6 +23,11 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import org.exoplatform.ide.testframework.server.git.MockGitRepoService;
+import org.exoplatform.ide.testframework.server.heroku.HerokuExceptionMapper;
+import org.exoplatform.ide.testframework.server.heroku.MockHerokuService;
+import org.exoplatform.ide.testframework.server.openshift.MockExpressService;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Jul 6, 2011 11:45:58 AM anya $
@@ -37,6 +42,8 @@ public class MockApplication extends Application
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(MockHerokuService.class);
+      classes.add(MockExpressService.class);
+      classes.add(MockGitRepoService.class);
       singletons = new HashSet<Object>(1);
       singletons.add(new HerokuExceptionMapper());
    }

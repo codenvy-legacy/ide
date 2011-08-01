@@ -256,4 +256,5 @@ public class Upload extends AbstractTestModule
       selenium().click("//div[@id='"+UPLOAD_FORM_ID+"']//td/img");
       waitForElementPresent("exoSuggestPanel");
    }
+   
 }

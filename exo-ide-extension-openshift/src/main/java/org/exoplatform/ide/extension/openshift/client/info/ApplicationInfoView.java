@@ -39,7 +39,7 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  */
 public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display
 {
-   public static final String ID = "ideApplicationInfoView";
+   public static final String ID = "ide.OpenShift.ApplicationInfo.View";
 
    private static final int HEIGHT = 250;
 
@@ -57,7 +57,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
     * Application's information grid.
     */
    @UiField
-   ApplicationInfoGrid applicationInfoGrid;
+   ApplicationInfoListGrid applicationInfoGrid;
 
    interface ApplicationInfoViewUiBinder extends UiBinder<Widget, ApplicationInfoView>
    {

@@ -16,7 +16,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
-import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoGrid;
+import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoListGrid;
 import org.exoplatform.ide.extension.openshift.client.info.Property;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 
@@ -69,7 +69,7 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
     * Application's properties.
     */
    @UiField
-   ApplicationInfoGrid applicationInfoGrid;
+   ApplicationInfoListGrid applicationInfoGrid;
 
    /**
     * Ok button.
@@ -81,9 +81,9 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
    {
       super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      domainField.setId(DOMAIN_FIELD_ID);
+      domainField.setName(DOMAIN_FIELD_ID);
       domainField.setHeight(22);
-      loginField.setId(LOGIN_FIELD_ID);
+      loginField.setName(LOGIN_FIELD_ID);
       loginField.setHeight(22);
    }
 

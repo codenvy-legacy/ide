@@ -3,6 +3,7 @@
    xmlns:e="urn:import:org.exoplatform.ide.extension.openshift.client.info" xmlns:u="urn:import:org.exoplatform.ide.extension.openshift.client.user">
    <ui:with field='resource' type='org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant"></ui:with>
+
    <g:VerticalPanel spacing="10" horizontalAlignment="center" width="100%">
       <g:VerticalPanel spacing="5" width="100%">
          <g:HorizontalPanel width="100%">
@@ -31,12 +32,14 @@
 
          <g:cell width="75%">
             <f:Border width="100%">
-               <e:ApplicationInfoGrid ui:field="applicationInfoGrid" width="100%" height="135px"></e:ApplicationInfoGrid>
+               <e:ApplicationInfoListGrid ui:field="applicationInfoGrid" width="100%" height="135px"></e:ApplicationInfoListGrid>
             </f:Border>
          </g:cell>
       </g:HorizontalPanel>
+      
       <g:HorizontalPanel height="30px" horizontalAlignment="center">
-         <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+         <f:ImageButton ui:field="okButton" buttonId="ideUserInfoViewOkButton" width="90" height="22" text="{locale.okButton}" imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
       </g:HorizontalPanel>
    </g:VerticalPanel>
-</ui:UiBinder> 
+
+</ui:UiBinder>

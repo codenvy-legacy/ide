@@ -33,15 +33,15 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
  * @version $Id:  Jun 1, 2011 3:02:57 PM anya $
  *
  */
-public class ApplicationInfoGrid extends ListGrid<Property>
+public class ApplicationInfoListGrid extends ListGrid<Property>
 {
-   private final String ID = "ideApplicationInfoGrid";
+   private final String ID = "ide.OpenShift.ApplicationInfo.ListGrid";
    
    private final String NAME = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
    
    private final String VALUE = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
    
-   public ApplicationInfoGrid()
+   public ApplicationInfoListGrid()
    {
       super();
 
