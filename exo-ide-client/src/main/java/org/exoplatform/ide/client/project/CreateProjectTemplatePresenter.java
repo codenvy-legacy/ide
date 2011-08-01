@@ -104,6 +104,7 @@ public class CreateProjectTemplatePresenter
       void setRootNodeName(String name);
 
       String getTemplateLocationInProject(Template template);
+      
    }
 
    private HandlerManager eventBus;

@@ -392,7 +392,7 @@ public class CreateProjectTemplateForm extends IDEDialogWindow implements Create
     */
    public void disableDeleteButton()
    {
-      deleteButton.setEnabled(true);
+      deleteButton.setEnabled(false);
    }
 
    /**
