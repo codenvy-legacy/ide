@@ -18,17 +18,13 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Test for deleting non-default project templates.
@@ -55,28 +51,38 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
    @BeforeClass
    public static void setUp()
    {
-      templateUrl1 = TEMPLATE_URL + "template-" + System.currentTimeMillis();
-      try
-      {
-         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML_1.getBytes(), templateUrl1 + "/?createIfNotExist=true");
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+//      templateUrl1 = TEMPLATE_URL + "template-" + System.currentTimeMillis();
+//      try
+//      {
+//         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML_1.getBytes(), templateUrl1 + "/?createIfNotExist=true");
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      catch (ModuleException e)
+//      {
+//         e.printStackTrace();
+//      }
    }
    
    @AfterClass
    public static void tearDown()
    {
-      cleanRegistry();
+//      cleanRegistry();
    }
    
    
+   /**
+    * Test added to Igore, because we don't use registry service.
+    * We must put file with template to 
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
+    * or
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
+    * file.
+    * @throws Exception
+    */
+   @Ignore
    @Test
    public void testDeleteProjectTemplate() throws Exception
    {

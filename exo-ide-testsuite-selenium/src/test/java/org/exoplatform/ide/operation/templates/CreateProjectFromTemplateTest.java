@@ -26,6 +26,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -85,25 +86,25 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @Before
    public void setUp()
    {
-      templateUrl = URL + "template-" + System.currentTimeMillis();
-      try
-      {
-         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML.getBytes(), templateUrl + "/?createIfNotExist=true");
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+//      templateUrl = URL + "template-" + System.currentTimeMillis();
+//      try
+//      {
+//         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML.getBytes(), templateUrl + "/?createIfNotExist=true");
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      catch (ModuleException e)
+//      {
+//         e.printStackTrace();
+//      }
    }
 
    @After
    public void tearDown()
    {
-      cleanRegistry();
+//      cleanRegistry();
       try
       {
          VirtualFileSystemUtils.delete(PROJECT_FOLDER_URL + PROJECT_NAME);
@@ -132,6 +133,16 @@ public class CreateProjectFromTemplateTest extends BaseTest
 
    }
 
+   /**
+    * Test added to Igore, because we don't use registry service.
+    * We must put file with template to 
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
+    * or
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
+    * file.
+    * @throws Exception
+    */
+   @Ignore
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {
@@ -393,19 +404,19 @@ public class CreateProjectFromTemplateTest extends BaseTest
 
    private void putProjectTemplateToRegistry()
    {
-      templateUrl = URL + "template-" + System.currentTimeMillis();
-      try
-      {
-         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML_2.getBytes(), templateUrl + "/?createIfNotExist=true");
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+//      templateUrl = URL + "template-" + System.currentTimeMillis();
+//      try
+//      {
+//         VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML_2.getBytes(), templateUrl + "/?createIfNotExist=true");
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
+//      catch (ModuleException e)
+//      {
+//         e.printStackTrace();
+//      }
    }
 
 }

@@ -23,7 +23,6 @@ import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.common.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -138,6 +137,16 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       }
    }
 
+   /**
+    * Test added to Igore, because we don't use registry service.
+    * We must put file with template to 
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
+    * or
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
+    * file.
+    * @throws Exception
+    */
+   @Ignore
    @Test
    public void testCreateProjectFromTemplate() throws Exception
    {

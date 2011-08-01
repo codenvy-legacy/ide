@@ -25,6 +25,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -73,6 +74,16 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
    
    
    //IDE-163:Remove non-default file templates
+   /**
+    * Test added to Igore, because we don't use registry service.
+    * We must put file with template to 
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
+    * or
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
+    * file.
+    * @throws Exception
+    */
+   @Ignore
    @Test
    public void testRemoveNonDefaultFileTemplates() throws Exception
    {
@@ -112,6 +123,15 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       IDE.TEMPLATES.clickCancelButton();
    }
    
+   /**
+    * Test added to Igore, because we don't use registry service.
+    * We must put file with template to 
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
+    * or
+    * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/projectTemplates
+    * file.
+    * @throws Exception
+    */
    @Test
    public void testDeleteFileTemplateWhichUsedInProjectTemplate() throws Exception
    {

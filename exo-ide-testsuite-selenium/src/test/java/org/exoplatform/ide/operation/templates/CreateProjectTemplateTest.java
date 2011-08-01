@@ -20,11 +20,9 @@ package org.exoplatform.ide.operation.templates;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.core.CreateProjectTemplate;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
