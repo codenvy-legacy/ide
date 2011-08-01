@@ -53,6 +53,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       setVisible(true);
       setEnabled(true);
       setText("&nbsp;");
+      setSize(0);
    }
 
    /**
@@ -69,6 +70,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       if (entryPoint == null)
       {
          setText("&nbsp;");
+         //setVisible(false);
          return;
       }
       
@@ -121,6 +123,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       }
 
       setText(statusMessage);
+      //setVisible(true);
    }
 
    private String tuneMessage(String originalStatusMessage, String icon)
