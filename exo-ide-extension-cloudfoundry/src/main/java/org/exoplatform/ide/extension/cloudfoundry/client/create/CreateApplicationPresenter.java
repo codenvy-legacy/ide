@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -228,11 +227,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       memory =
          (display.getChangeUrlCheckItem().getValue()) ? 0 : Integer.parseInt(display.getMemoryField().getValue());
       nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      workDir = selectedItems.get(0).getHref();
-      if (selectedItems.get(0) instanceof File)
-      {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
-      }
+      workDir = selectedItems.get(0).getWorkDir();
       
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildApplicationEvent());

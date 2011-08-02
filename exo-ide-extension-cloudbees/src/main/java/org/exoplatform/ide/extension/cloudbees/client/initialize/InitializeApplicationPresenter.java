@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
@@ -208,11 +207,8 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
 
    private void doDeployApplication()
    {
-      CloudBeesClientService.getInstance().initializeApplication(
-         applicationId,
-         warUrl,
-         null,
-         getWorkDir(),
+      final String workDir = selectedItems.get(0).getWorkDir();
+      CloudBeesClientService.getInstance().initializeApplication(applicationId, warUrl, null, workDir,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler, null)
          {
             @Override
@@ -285,17 +281,6 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   private String getWorkDir()
-   {
-      Item item = selectedItems.get(0);
-      String workDir = item.getHref();
-      if (item instanceof File)
-      {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
-      }
-      return workDir;
    }
 
    /**
