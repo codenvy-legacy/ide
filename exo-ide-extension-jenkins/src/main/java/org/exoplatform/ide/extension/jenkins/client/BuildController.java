@@ -58,8 +58,8 @@ import java.util.List;
  * @version $Id: $
  *
  */
-public class BuildController extends GitPresenter implements BuildApplicationHandler, GitRemoteRepositorySelectedHandler,
-   UserInfoReceivedHandler, GetJenkinsOutputHandler
+public class BuildController extends GitPresenter implements BuildApplicationHandler,
+   GitRemoteRepositorySelectedHandler, UserInfoReceivedHandler, GetJenkinsOutputHandler
 {
 
    private String jobName;
@@ -67,6 +67,11 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
    private UserInfo userInfo;
 
    private BuildStatusControl control;
+
+   /**
+    * Delay in millisecond between job status request  
+    */
+   private static final int delay = 10000;
 
    /**
     * @param eventBus
@@ -193,9 +198,25 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
          {
             IDE.EVENT_BUS.fireEvent(new OutputEvent("Build started", Type.INFO));
             control.setStartBuildingMessage();
-            statusTimer.scheduleRepeating(10000);
+            Dialogs.getInstance().showInfo(JenkinsExtension.MESSAGES.buildStarted(getProjectName()));
+            statusTimer.schedule(delay);
          }
       });
+   }
+
+   /**
+    * Get project name (last URL segment of workDir value)
+    * @return project name
+    */
+   private String getProjectName()
+   {
+      String projectName = workDir;
+      if (projectName.endsWith("/"))
+      {
+         projectName = projectName.substring(0, projectName.length() - 1);
+      }
+      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
+      return projectName;
    }
 
    private Timer statusTimer = new Timer()
@@ -218,12 +239,17 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
                      + result.getLastBuildResult(), Type.INFO));
                   IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(result));
                }
+               else
+               {
+                  schedule(delay);
+               }
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
                cancel();
+               control.setText("&nbsp;");
                super.onFailure(exception);
             };
          });
@@ -284,7 +310,7 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
          }
       });
    }
-   
+
    /**
     * @see org.exoplatform.ide.git.client.GitPresenter#getWorkDir()
     */
