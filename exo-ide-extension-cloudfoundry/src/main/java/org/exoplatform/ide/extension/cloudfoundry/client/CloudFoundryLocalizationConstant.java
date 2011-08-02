@@ -215,14 +215,14 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("createApp.field.startAfterCreation")
    String createAppStartAfterCreationField();
    
-   @Key("createApp.field.war")
-   String createAppWarField();
-   
    /*
     * CreateApplicationPresenter
     */
    @Key("createApp.appCreated")
    String applicationCreatedSuccessfully(String name);
+   
+   @Key("createApp.warUrlIsNull")
+   String createApplicationWarIsNull();
    
    /*
     * StartApplicationPresenter
@@ -245,12 +245,6 @@ public interface CloudFoundryLocalizationConstant extends Messages
    /*
     * UpdateApplicationPresenter
     */
-   @Key("update.askWar.title")
-   String updateAskWarTitle();
-   
-   @Key("update.askWar.message")
-   String updateAskWarMessage();
-   
    @Key("update.applicationUpdated")
    String updateApplicationSuccess(String name);
    

@@ -36,6 +36,10 @@
          <version>1</version> <!-- TODO add in parent pom.xml -->
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-jenkins</artifactId>
+      </dependency>
+      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>

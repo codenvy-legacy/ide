@@ -69,9 +69,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @UiField
    TextField nameField;
    
-   @UiField
-   TextField warField;
-
    /**
     * Application URL field.
     */
@@ -297,12 +294,4 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       memoryField.setShowDisabled(!enable);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getWarField()
-    */
-   @Override
-   public HasValue<String> getWarField()
-   {
-      return warField;
-   }
 }

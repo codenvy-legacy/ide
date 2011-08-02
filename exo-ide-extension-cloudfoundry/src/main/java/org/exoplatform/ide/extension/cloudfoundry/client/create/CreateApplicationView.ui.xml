@@ -22,18 +22,6 @@
          
          <g:HorizontalPanel width="100%" spacing="0">
             <g:cell verticalAlignment="middle" width="150px">
-               <g:Label text="{locale.createAppWarField}" height="18px"></g:Label>
-            </g:cell>
-            <g:cell>
-               <f:TextField ui:field="warField" width="100%" height="22px" showTitle="false"></f:TextField>
-            </g:cell>
-            <g:cell width="100px">
-               <g:Label text="" ></g:Label>
-            </g:cell>
-         </g:HorizontalPanel>
-
-         <g:HorizontalPanel width="100%" spacing="0">
-            <g:cell verticalAlignment="middle" width="150px">
                <g:Label text="{locale.createAppTypeField}" height="18px"></g:Label>
             </g:cell>
             <g:cell verticalAlignment="middle">

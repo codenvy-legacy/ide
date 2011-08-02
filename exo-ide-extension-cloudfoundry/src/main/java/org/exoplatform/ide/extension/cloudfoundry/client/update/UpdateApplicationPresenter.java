@@ -20,8 +20,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -31,6 +30,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OperationsApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler
+public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler, ApplicationBuiltHandler
 {
    /**
     * Events handler.
@@ -55,7 +57,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    /**
     * Location of war file (Java only).
     */
-   private String war;
+   private String warUrl;
    
    /**
     * Location of working copy of application.
@@ -76,7 +78,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
       @Override
       public void onLoggedIn()
       {
-         updateApplication(war);
+         updateApplication();
       }
    };
    
@@ -101,36 +103,13 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      askForWarLocation();
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildApplicationEvent());
    }
    
-   private void askForWarLocation()
+   private void updateApplication()
    {
-      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAskWarTitle(), 
-         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAskWarMessage(), null, new StringValueReceivedHandler()
-      {
-         @Override
-         public void stringValueReceived(String value)
-         {
-            if (value == null)
-               return;
-            
-            if (value.isEmpty())
-            {
-               war = null;
-            }
-            else
-            {
-               war = value;
-            }
-            updateApplication(war);
-         }
-      });
-   }
-   
-   private void updateApplication(String war)
-   {
-      CloudFoundryClientService.getInstance().updateApplication(workDir, null, war,
+      CloudFoundryClientService.getInstance().updateApplication(workDir, null, warUrl,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, loggedInHandler, null)
          {
             @Override
@@ -140,5 +119,23 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
                   .updateApplicationSuccess(result), Type.INFO));
             }
          });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    */
+   @Override
+   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   {
+      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getJobStatus().getArtifactUrl() != null)
+      {
+         warUrl = event.getJobStatus().getArtifactUrl();
+         updateApplication();
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
+      }
    }
 }

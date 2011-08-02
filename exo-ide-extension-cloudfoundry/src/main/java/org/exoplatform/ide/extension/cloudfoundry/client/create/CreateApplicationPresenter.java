@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -43,6 +44,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +57,8 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationPresenter.java Jul 8, 2011 11:57:36 AM vereshchaka $
  */
-public class CreateApplicationPresenter implements CreateApplicationHandler, ItemsSelectedHandler, ViewClosedHandler
+public class CreateApplicationPresenter implements CreateApplicationHandler, ItemsSelectedHandler, ViewClosedHandler,
+   ApplicationBuiltHandler
 {
    interface Display extends IsView
    {
@@ -66,8 +71,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       HasValue<Boolean> getChangeTypeCheckItem();
       
       HasValue<String> getNameField();
-      
-      HasValue<String> getWarField();
       
       HasValue<String> getUrlField();
       
@@ -111,6 +114,15 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    
    private List<Framework> frameworks;
    
+   private String warUrl;
+   private String name;
+   private String type;
+   private String url;
+   private int instances;
+   private int memory;
+   private boolean nostart;
+   private String workDir;
+   
    public CreateApplicationPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
@@ -136,7 +148,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          @Override
          public void onClick(ClickEvent event)
          {
-            createApplication();
+            buildApplication();
          }
       });
       
@@ -202,37 +214,39 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
    };
    
-   private void createApplication()
+   private void buildApplication()
    {
-      String war = display.getWarField().getValue();
-      if (war == null || war.isEmpty())
-      {
-         war = null;
-      }
-      final String name = display.getNameField().getValue();
-      String type = null;
+
+      name = display.getNameField().getValue();
+      type = null;
       if (!display.getChangeTypeCheckItem().getValue())
       {
          type = findFrameworkByName(display.getTypeField().getValue()).getType();
       }
-      final String url = (display.getChangeUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
-      final int instances = Integer.parseInt(display.getInstancesField().getValue());
-      final int memory =
+      url = (display.getChangeUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
+      instances = Integer.parseInt(display.getInstancesField().getValue());
+      memory =
          (display.getChangeUrlCheckItem().getValue()) ? 0 : Integer.parseInt(display.getMemoryField().getValue());
-      final boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      String workDir = selectedItems.get(0).getHref();
+      nostart = !display.getIsStartAfterCreationCheckItem().getValue();
+      workDir = selectedItems.get(0).getHref();
       if (selectedItems.get(0) instanceof File)
       {
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
       
-      CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, war,
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildApplicationEvent());
+      closeView();
+   }
+   
+   private void createApplication()
+   {
+      CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, loggedInHandler, null)
       {
          @Override
          protected void onSuccess(CloudfoundryApplication result)
          {
-            closeView();
             String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationCreatedSuccessfully(result.getName());
             eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
          }
@@ -320,6 +334,24 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    */
+   @Override
+   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   {
+      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getJobStatus().getArtifactUrl() != null)
+      {
+         warUrl = event.getJobStatus().getArtifactUrl();
+         createApplication();
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
+      }
    }
 
 }
