@@ -101,10 +101,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
    </component>
 
@@ -131,23 +127,6 @@
       <type>org.exoplatform.ide.testframework.server.MockApplication</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.Express</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>express-config</name>
-            <value>/express-config</value>
-         </value-param>
-      </init-params>
-   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
