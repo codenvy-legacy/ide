@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.D
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
+import org.exoplatform.ide.extension.heroku.client.control.ChangeApplicationStackConrol;
 import org.exoplatform.ide.extension.heroku.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
@@ -41,6 +42,7 @@ import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
+import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -83,6 +85,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ChangeApplicationStackConrol(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RakeControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
@@ -97,6 +100,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new LoginPresenter(eventBus);
       new KeysPresenter(eventBus);
       new RakeCommandPresenter(eventBus);
+      new ChangeStackPresenter(eventBus);
    }
 
 }

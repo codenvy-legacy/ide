@@ -26,24 +26,23 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
-import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
+
+import java.util.List;
 
 /**
- * Asynchronous Heroku request for executing rake commands.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
- * The returned result is {@link RakeCommandResult}.
+ * Asynchronous callback for stack list response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 20, 2011 9:42:51 AM anya $
+ * @version $Id:  Jul 29, 2011 10:16:33 AM anya $
  *
  */
-public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallback<RakeCommandResult>
+public abstract class StackListAsyncRequestCallback extends AsyncRequestCallback<List<Stack>>
 {
    /**
     * Events handler.
     */
-   private HandlerManager eventbus;
+   private HandlerManager eventBus;
 
    /**
     * Handler of the {@link LoggedInEvent}.
@@ -54,13 +53,12 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
     * @param eventBus event handlers manager
     * @param handler handler of the {@link LoggedInEvent}
     */
-   public RakeCommandAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public StackListAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedInHandler)
    {
-      this.eventbus = eventBus;
-      this.loggedInHandler = handler;
-      setEventBus(eventBus);
+      this.eventBus = eventBus;
+      this.loggedInHandler = loggedInHandler;
    }
-
+   
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
     */
@@ -73,11 +71,12 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required"))
          {
-            eventbus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            eventbus.fireEvent(new LoginEvent());
+            eventBus.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+            eventBus.fireEvent(new LoginEvent());
             return;
          }
       }
       super.onFailure(exception);
    }
+
 }

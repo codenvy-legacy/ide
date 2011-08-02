@@ -35,6 +35,9 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Create")
    @Key("createButton")
    String createButton();
+   
+   @Key("changeButton")
+   String changeButton();
 
    @DefaultMessage("Login")
    @Key("loginButton")
@@ -170,7 +173,16 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("control.rake.prompt")
    String rakeControlPrompt();
+   
+   @Key("control.changeStack.id")
+   String changeStackControlId();
 
+   @Key("control.changeStack.title")
+   String changeStackControlTitle();
+
+   @Key("control.changeStack.prompt")
+   String changeStackControlPrompt();
+   
    //Create Application view
    @DefaultMessage("Create application on Heroku")
    @Key("createApplicationView.title")
@@ -207,6 +219,10 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("renameApplicationSuccess")
    String renameApplicationSuccess(String oldName, String newName);
+   
+   @Key("stack.list.unmarshal.failed")
+   String stackListUnmarshalFailed();
+   
 
    /*Delete application*/
    @Key("deleteApplication.title")
@@ -248,4 +264,14 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("rakeView.command.example")
    String rakeViewCommandExample();
+   
+   /*Change application's stack*/
+   @Key("changeStackView.title")
+   String changeStackViewTitle();
+   
+   @Key("changeStackView.stack.field")
+   String changeStackViewStackField();
+   
+   @Key("changeStackView.beta.field")
+   String changeStackViewBetaField();
 }

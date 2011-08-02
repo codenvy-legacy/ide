@@ -26,19 +26,16 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
-import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationResponse;
 
 /**
- * Asynchronous Heroku request for executing rake commands.
- * The {{@link #onFailure(Throwable)}} method contains the check for 
- * user not authorized exception, in this case - the {@link LoginEvent} is fired.
- * The returned result is {@link RakeCommandResult}.
+ * Asynchronous callback on migrate stack response.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jun 20, 2011 9:42:51 AM anya $
+ * @version $Id:  Aug 1, 2011 4:10:31 PM anya $
  *
  */
-public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallback<RakeCommandResult>
+public abstract class StackMigrationAsyncRequestCallback extends AsyncRequestCallback<StackMigrationResponse>
 {
    /**
     * Events handler.
@@ -54,7 +51,7 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
     * @param eventBus event handlers manager
     * @param handler handler of the {@link LoggedInEvent}
     */
-   public RakeCommandAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
+   public StackMigrationAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler handler)
    {
       this.eventbus = eventBus;
       this.loggedInHandler = handler;
@@ -80,4 +77,5 @@ public abstract class RakeCommandAsyncRequestCallback extends AsyncRequestCallba
       }
       super.onFailure(exception);
    }
+
 }

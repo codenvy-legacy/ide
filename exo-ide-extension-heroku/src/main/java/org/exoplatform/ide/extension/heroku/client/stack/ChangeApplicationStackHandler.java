@@ -16,35 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.client.marshaller;
+package org.exoplatform.ide.extension.heroku.client.stack;
 
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link ChangeApplicationStackEvent} event.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 3:00:16 PM anya $
+ * @version $Id:  Jul 28, 2011 6:00:27 PM anya $
  *
  */
-public interface Constants
+public interface ChangeApplicationStackHandler extends EventHandler
 {
-   public static final String COMMAND = "command";
-
-   public static final String OPTIONS = "options";
-
-   public static final String ARGS = "args";
-
-   public static final String WORK_DIR = "workDir";
-   
-   public static final String EMAIL = "email";
-   
-   public static final String PASSWORD = "password";
-   
-   public static final String REMOTE = "--remote";
-   
-   public static final String NAME = "name";
-   
-   public static final String BETA = "beta";
-   
-   public static final String CURRENT = "current";
-   
-   public static final String REQUESTED = "requested";
+   /**
+    * Perform actions, when user tries to change application's stack.
+    * 
+    * @param event
+    */
+   void onChangeApplicationStack(ChangeApplicationStackEvent event);
 }

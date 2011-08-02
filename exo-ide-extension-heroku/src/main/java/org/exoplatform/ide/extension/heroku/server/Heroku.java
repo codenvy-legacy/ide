@@ -24,6 +24,7 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.exoplatform.ide.git.server.GitConnection;
@@ -33,15 +34,23 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ws.frameworks.json.JsonHandler;
+import org.exoplatform.ws.frameworks.json.JsonParser;
+import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
+import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
+import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -710,6 +719,152 @@ public class Heroku
    }
 
    /**
+    * Get the list of Heroku application's available stacks.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    *           If name not specified and cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>.
+    * @return {@link List} list of available application's stacks
+    * @throws IOException if any i/o errors occurs
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    */
+   public List<Stack> getStacks(String name, File workDir) throws IOException, HerokuException,
+      ParsingResponseException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
+      return getStacks(herokuCredentials, name, workDir);
+   }
+
+   private List<Stack> getStacks(HerokuCredentials herokuCredentials, String name, File workDir) throws HerokuException, ParsingResponseException, IOException
+   {
+      List<Stack> stacks = new ArrayList<Stack>();
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Not heroku application. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name + "/stack");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         JsonParser jsonParser = new JsonParserImpl();
+         JsonHandler handler = new JsonDefaultHandler();
+         jsonParser.parse(http.getInputStream(), handler);
+         java.util.Iterator<JsonValue> iterator = handler.getJsonObject().getElements();
+
+         //Parse JSON response body. Example:
+         //[{"requested":true,"name":"aspen-mri-1.8.6","current":false,"beta":false}, ... ]
+         while (iterator.hasNext())
+         {
+            JsonValue jsonStack = iterator.next();
+            String stackName = jsonStack.getElement("name").getStringValue();
+            boolean current = jsonStack.getElement("current").getBooleanValue();
+            boolean requested = jsonStack.getElement("requested").getBooleanValue();
+            boolean beta = jsonStack.getElement("beta").getBooleanValue();
+            stacks.add(new Stack(stackName, current, beta, requested));
+         }
+      }
+      catch (JsonException jsone)
+      {
+         throw new ParsingResponseException(jsone.getMessage(), jsone);
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+      return stacks;
+   }
+
+   /**
+    * Migrate from current application's stack (deployment environment) to pointed one.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    *           If name not specified and cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>.
+    * @param stack stack name to migrate to. If <code>null</code> IllegalStateException thrown
+    * @return {@link String} output of the migration operation
+    * @throws IOException if any i/o errors occurs
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    */
+   public String stackMigrate(String name, File workDir, String stack) throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
+      return stackMigrate(herokuCredentials, name, workDir, stack);
+   }
+
+   private String stackMigrate(HerokuCredentials herokuCredentials, String name, File workDir, String stack)
+      throws IOException, HerokuException
+   {
+      if (stack == null || stack.isEmpty())
+         throw new IllegalStateException("Stack can not be null or empty string. ");
+
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Not heroku application. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(HEROKU_API + "/apps/" + name + "/stack");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("PUT");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         http.setDoOutput(true);
+         authenticate(herokuCredentials, http);
+
+         OutputStream output = http.getOutputStream();
+         try
+         {
+            output.write(stack.getBytes());
+            output.flush();
+         }
+         finally
+         {
+            output.close();
+         }
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
+         StringBuilder sb = new StringBuilder();
+         String line = null;
+         while ((line = reader.readLine()) != null)
+         {
+            sb.append(line + "\n");
+         }
+         return sb.toString();
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
     * List of heroku applications for current user.
     * 
     * @return List of names of applications for current user
@@ -975,9 +1130,10 @@ public class Heroku
                //On invalid credentials the login form is sent (HTML).
                //Check body contains action with login path and element with id "login".
                error =
-                  (HTTPStatus.NOT_FOUND == http.getResponseCode() && (message.contains("action=\"/login\"") || message.contains("id=\"login\""))) ? 
-                     new HerokuException(HTTPStatus.BAD_REQUEST, "Authentication failed.", MediaType.TEXT_PLAIN) : 
-                     new HerokuException(http.getResponseCode(), message, http.getContentType());
+                  (HTTPStatus.NOT_FOUND == http.getResponseCode() && (message.contains("action=\"/login\"") || message
+                     .contains("id=\"login\""))) ? new HerokuException(HTTPStatus.BAD_REQUEST,
+                     "Authentication failed.", MediaType.TEXT_PLAIN) : new HerokuException(http.getResponseCode(),
+                     message, http.getContentType());
             }
             else if (length == 0)
             {

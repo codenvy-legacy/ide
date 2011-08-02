@@ -18,33 +18,33 @@
  */
 package org.exoplatform.ide.extension.heroku.client.marshaller;
 
-
 /**
+ * Response of the stack migration operation.
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  May 25, 2011 3:00:16 PM anya $
+ * @version $Id:  Aug 1, 2011 4:06:44 PM anya $
  *
  */
-public interface Constants
+public class StackMigrationResponse
 {
-   public static final String COMMAND = "command";
+   /**
+    * Result of the stack migration.
+    */
+   private String result;
 
-   public static final String OPTIONS = "options";
+   /**
+    * @return the result of the stack migration
+    */
+   public String getResult()
+   {
+      return result;
+   }
 
-   public static final String ARGS = "args";
-
-   public static final String WORK_DIR = "workDir";
-   
-   public static final String EMAIL = "email";
-   
-   public static final String PASSWORD = "password";
-   
-   public static final String REMOTE = "--remote";
-   
-   public static final String NAME = "name";
-   
-   public static final String BETA = "beta";
-   
-   public static final String CURRENT = "current";
-   
-   public static final String REQUESTED = "requested";
+   /**
+    * @param result the result of the stack migration
+    */
+   public void setResult(String result)
+   {
+      this.result = result;
+   }
 }

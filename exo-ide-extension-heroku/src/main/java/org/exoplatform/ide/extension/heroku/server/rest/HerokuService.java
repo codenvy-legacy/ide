@@ -23,10 +23,12 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.FSLocation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -147,6 +149,31 @@ public class HerokuService
    ) throws HerokuException, IOException, ParsingResponseException
    {
       return heroku.renameApplication(name, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/stack")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<Stack> appsStack( //
+      @QueryParam("name") String name, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku.getStacks(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps/stack-migrate")
+   @POST
+   @Produces(MediaType.TEXT_PLAIN)
+   public String stackMigrate( //
+      @QueryParam("name") String name, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @QueryParam("stack") String stack, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku.stackMigrate(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, stack);
    }
 
    @Path("apps/run")

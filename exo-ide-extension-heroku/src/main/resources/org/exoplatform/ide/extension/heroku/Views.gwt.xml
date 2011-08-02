@@ -39,4 +39,8 @@
    <replace-with class="org.exoplatform.ide.extension.heroku.client.rake.RakeCommandView">
       <when-type-is class="org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display" />
    </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.extension.heroku.client.stack.ChangeStackView">
+      <when-type-is class="org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display" />
+   </replace-with>
 </module>

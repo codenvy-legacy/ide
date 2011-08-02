@@ -55,7 +55,7 @@ public abstract class HerokuClientService
     * @param callback callback
     */
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Logout from Heroku.
     * 
@@ -120,8 +120,45 @@ public abstract class HerokuClientService
    public abstract void renameApplication(String gitWorkDir, String applicationName, String newName,
       HerokuAsyncRequestCallback callback);
 
+   /**
+    * Run Heroku rake command.
+    * 
+    * @param gitWorkDir working directory location
+    * @param applicationName name of the Heroku application (may be null)
+    * @param command command to run (example: rake db:migrate)
+    * @param callback callback
+    */
    public abstract void run(String gitWorkDir, String applicationName, String command,
       RakeCommandAsyncRequestCallback callback);
 
+   /**
+    * Get help for rake.
+    * 
+    * @param gitWorkDir working directory location
+    * @param applicationName name of the Heroku application (may be null)
+    * @param callback callback
+    */
    public abstract void help(String gitWorkDir, String applicationName, RakeCommandAsyncRequestCallback callback);
+
+   /**
+    * Get the list of Heroku application's available stacks (deployment environment).
+    * The list contains info about current stack.
+    * 
+    * @param gitWorkDir working directory location
+    * @param applicationName name of the Heroku application (may be null)
+    * @param callback callback
+    */
+   public abstract void getStackList(String gitWorkDir, String applicationName,
+      StackListAsyncRequestCallback callback);
+
+   /**
+    * Migrate from one stack to another (change deployment environment)
+    * 
+    * @param gitWorkDir working directory location
+    * @param applicationName name of the Heroku application (may be null)
+    * @param stack name of the stack
+    * @param callback callback
+    */
+   public abstract void migrateStack(String gitWorkDir, String applicationName, String stack,
+      StackMigrationAsyncRequestCallback callback);
 }

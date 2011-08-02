@@ -31,7 +31,11 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
 import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.extension.heroku.client.marshaller.RakeResultUnmarshaller;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackListUnmarshaller;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationResponse;
+import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandResult;
+import org.exoplatform.ide.extension.heroku.shared.Stack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +51,7 @@ import java.util.List;
 public class HerokuClientServiceImpl extends HerokuClientService
 {
    private static final String LOGIN_PATH = "/ide/heroku/login";
-   
+
    private static final String LOGOUT_PATH = "/ide/heroku/logout";
 
    private static final String CREATE_APPLICATION = "/ide/heroku/apps/create";
@@ -63,6 +67,10 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private static final String CLEAR_KEYS = "/ide/heroku/keys/clear";
 
    private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
+
+   private static final String GET_STACKS = "/ide/heroku/apps/stack";
+   
+   private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
 
    /**
     * Events handler.
@@ -110,13 +118,13 @@ public class HerokuClientServiceImpl extends HerokuClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
-   
+
    @Override
    public void logout(AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + LOGOUT_PATH;
       callback.setEventBus(eventBus);
-      
+
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
 
@@ -263,6 +271,50 @@ public class HerokuClientServiceImpl extends HerokuClientService
          .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENT_TYPE, MimeType.TEXT_PLAIN)
          .data("rake -H").send(callback);
    }
-   
-   
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getStackList(String gitWorkDir, String applicationName, StackListAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + GET_STACKS;
+
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
+
+      List<Stack> stackList = new ArrayList<Stack>();
+      StackListUnmarshaller unmarshaller = new StackListUnmarshaller(stackList);
+      
+      callback.setEventBus(eventBus);
+      callback.setResult(stackList);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
+    */
+   @Override
+   public void migrateStack(String gitWorkDir, String applicationName, String stack,
+      StackMigrationAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + STACK_MIGRATE;
+
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params = (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
+      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
+
+      StackMigrationResponse stackMigrationResponse = new StackMigrationResponse();
+      StackMigrationUnmarshaller unmarshaller = new StackMigrationUnmarshaller(stackMigrationResponse);
+      
+      callback.setEventBus(eventBus);
+      callback.setResult(stackMigrationResponse);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
+   }
+
 }
