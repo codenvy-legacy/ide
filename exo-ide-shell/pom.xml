@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<!-- POM file generated with GWT webAppCreator -->
+   <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -15,21 +14,7 @@
 
    <properties>
       <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-      <javax.ws.rs.version>1.0</javax.ws.rs.version>
-      <javax.servlet.version>2.5</javax.servlet.version>
-
-		<!-- Default tests settings -->
-      <maven.test.skip>false</maven.test.skip>
-      <forkMode>once</forkMode>
-      <maven.test.failure.ignore>false</maven.test.failure.ignore>
-      <surefire.useFile>true</surefire.useFile>
-      <exo.test.classesdirectory>target/classes</exo.test.classesdirectory>
-		<!-- Defaut compiler settings -->
-      <maven.compiler.optimize>true</maven.compiler.optimize>
-      <maven.compiler.source>1.6</maven.compiler.source>
-      <maven.compiler.target>1.6</maven.compiler.target>
       <crash.version>1.0.0-beta21</crash.version>
-
    </properties>
 
    <dependencies>
@@ -53,7 +38,7 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-		<!-- ***** -->
+      <!-- ***** -->
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
@@ -61,27 +46,22 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.commons</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.servlet</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.ext</artifactId>
-         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.crsh</groupId>
@@ -136,18 +116,14 @@
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
-
-
-
    </dependencies>
 
    <build>
-		<!-- Generate compiled stuff in the folder used for developing mode -->
+      <!-- Generate compiled stuff in the folder used for developing mode -->
       <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
       <plugins>
-
-			<!-- GWT Maven Plugin -->
+         <!-- GWT Maven Plugin -->
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
@@ -155,14 +131,13 @@
                <execution>
                   <goals>
                      <goal>compile</goal>
-							<!--goal>test</goal -->
+                     <!--goal>test</goal -->
                      <goal>i18n</goal>
-							<!--goal>generateAsync</goal -->
+                     <!--goal>generateAsync</goal -->
                   </goals>
                </execution>
             </executions>
-				<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
-					documentation at codehaus.org -->
+            <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
             <configuration>
                <runTarget>org.exoplatform.cloudshell.CloudShell.html</runTarget>
                <hostedWebapp>${webappDirectory}</hostedWebapp>
@@ -171,7 +146,7 @@
             </configuration>
          </plugin>
 
-			<!-- Copy static web files before executing gwt:run -->
+         <!-- Copy static web files before executing gwt:run -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -187,7 +162,6 @@
                <webappDirectory>${webappDirectory}</webappDirectory>
             </configuration>
          </plugin>
-
       </plugins>
    </build>
 
