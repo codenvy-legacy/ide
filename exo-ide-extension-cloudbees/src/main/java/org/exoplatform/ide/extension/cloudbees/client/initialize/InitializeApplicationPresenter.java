@@ -41,7 +41,6 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallb
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -207,25 +206,6 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
       }
    };
 
-   private LoginCanceledHandler deployWarLoginCanceledHandler = new LoginCanceledHandler()
-   {
-      @Override
-      public void onLoginCanceled()
-      {
-         //if user clicks Cancel, than clean project
-         //         JavaClientService.getInstance().cleanProject(workDir, new AsyncRequestCallback<MavenResponse>()
-         //         {
-         //            @Override
-         //            protected void onSuccess(MavenResponse result)
-         //            {
-         //               eventBus.fireEvent(new RefreshBrowserEvent());
-         //               String output = result.getOutput().replace("\n", "<br>");
-         //               eventBus.fireEvent(new OutputEvent(output, Type.INFO));
-         //            }
-         //         });
-      }
-   };
-
    private void doDeployApplication()
    {
       CloudBeesClientService.getInstance().initializeApplication(
@@ -233,8 +213,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
          warUrl,
          null,
          getWorkDir(),
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler,
-            deployWarLoginCanceledHandler)
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(final Map<String, String> deployResult)
@@ -250,7 +229,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
                }
                eventBus.fireEvent(new OutputEvent(output, Type.INFO));
             }
-            
+
             /**
              * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
              */
