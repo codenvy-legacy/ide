@@ -38,6 +38,9 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
 
    public static final String ID = "__jenkins_build_status";
 
+   private String projectName;
+
+   private String fullProjectName;
    /**
     * @param id
     */
@@ -46,11 +49,11 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
       super(ID);
       setEnabled(true);
       setVisible(true);
-      setSize(80);
+      setSize(175);
       setEvent(new GetJenkinsOutputEvent());
       setText("&nbsp;");
       setDelimiterBefore(true);
-      setPrompt("Get build result");
+      //      setPrompt(JenkinsExtension.MESSAGES.statusControlPrompt());
    }
 
    /**
@@ -82,7 +85,8 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
             setEvent(new GetJenkinsOutputEvent(status.getName()));
             break;
       }
-      setText(prepareText(message, icon));
+      setText(prepareText("<b>" + projectName + "</b>&nbsp;:&nbsp;" + message, icon));
+      setPrompt(fullProjectName + " : " + message);
    }
 
    /**
@@ -107,12 +111,10 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
       String table =
          "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;\">"
             + "<tr>"
-            +
-            "<td style=\"width:16px; height:16px;\">"
+            + "<td style=\"width:16px; height:16px;\">"
             + ImageHelper.getImageHTML(icon)
             + "</td>"
-            +
-            "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>"
+            + "<td style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>"
             + message + "</nobr></td>" + "</tr>" + "</table>";
       return table;
    }
@@ -120,10 +122,20 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
    /**
     * 
     */
-   public void setStartBuildingMessage()
+   public void setStartBuildingMessage(String projectName)
    {
+      fullProjectName = projectName;
+      if (projectName.length() > 10)
+      {
+         this.projectName = projectName.substring(0, 10) + "...";
+      }
+      else
+         this.projectName = projectName;
+      setPrompt(fullProjectName + " : " + JenkinsExtension.MESSAGES.statusControlStart());
       setEvent(new GetJenkinsOutputEvent());
-      setText(prepareText("Starting", JenkinsExtension.RESOURCES.grey()));
+      setText(prepareText(
+         "<b>" + this.projectName + "</b>&nbsp;" + ":&nbsp;" + JenkinsExtension.MESSAGES.statusControlStart(),
+         JenkinsExtension.RESOURCES.grey()));
    }
 
 }

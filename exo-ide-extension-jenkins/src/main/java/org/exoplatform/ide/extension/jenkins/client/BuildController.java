@@ -197,7 +197,7 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
          protected void onSuccess(String result)
          {
             IDE.EVENT_BUS.fireEvent(new OutputEvent("Build started", Type.INFO));
-            control.setStartBuildingMessage();
+            control.setStartBuildingMessage(getProjectName());
             Dialogs.getInstance().showInfo(JenkinsExtension.MESSAGES.buildStarted(getProjectName()));
             statusTimer.schedule(delay);
          }

@@ -58,4 +58,7 @@ public interface JenkinsMessages extends Messages
    
    @Key("controller.start.build")
    String buildStarted(String projectName);
+   
+   @Key("control.status.start")
+   String statusControlStart();
 }
