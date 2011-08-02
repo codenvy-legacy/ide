@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
@@ -125,11 +126,17 @@ public class CLIResourceFactory
       String httpMethod = resourceMethod.getHttpMethod();
       List<MediaType> consumes = resourceMethod.consumes();
       List<MediaType> produces = resourceMethod.produces();
+      Set<String> s_consumes = new HashSet<String>(consumes.size());
+      for (MediaType m : consumes)
+         s_consumes.add(m.toString());
+      Set<String> s_produces = new HashSet<String>(produces.size());
+      for (MediaType m : produces)
+         s_produces.add(m.toString());
       Map<String, CLIResourceParameter> cliParams = transformRules.getParameters(command, resourceMethod);
       CLIResource cli = new CLIResource(path, //
          httpMethod, //
-         new HashSet<MediaType>(consumes), //
-         new HashSet<MediaType>(produces), //
+         s_consumes, //
+         s_produces, //
          cliParams);
       return cli;
    }

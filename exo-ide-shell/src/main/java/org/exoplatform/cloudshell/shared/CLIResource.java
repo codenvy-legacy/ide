@@ -21,17 +21,15 @@ package org.exoplatform.cloudshell.shared;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.core.MediaType;
-
 public class CLIResource
 {
    private String path;
    private String method;
-   private Set<MediaType> consumes;
-   private Set<MediaType> produces;
+   private Set<String> consumes;
+   private Set<String> produces;
    private Map<String, CLIResourceParameter> parameters;
 
-   public CLIResource(String path, String method, Set<MediaType> consumes, Set<MediaType> produces,
+   public CLIResource(String path, String method, Set<String> consumes, Set<String> produces,
       Map<String, CLIResourceParameter> parameters)
    {
       this.path = path;
@@ -65,22 +63,22 @@ public class CLIResource
       this.method = method;
    }
 
-   public Set<MediaType> getConsumes()
+   public Set<String> getConsumes()
    {
       return consumes;
    }
 
-   public void setConsumes(Set<MediaType> consumes)
+   public void setConsumes(Set<String> consumes)
    {
       this.consumes = consumes;
    }
 
-   public Set<MediaType> getProduces()
+   public Set<String> getProduces()
    {
       return produces;
    }
 
-   public void setProduces(Set<MediaType> produces)
+   public void setProduces(Set<String> produces)
    {
       this.produces = produces;
    }

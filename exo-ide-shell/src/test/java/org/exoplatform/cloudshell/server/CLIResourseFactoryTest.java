@@ -40,7 +40,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.RuntimeDelegate;
 
@@ -103,8 +102,8 @@ public class CLIResourseFactoryTest extends TestCase
       Map<String, CLIResourceParameter> expectedParams = new HashMap<String, CLIResourceParameter>();
 
       // method0 in Resource1
-      assertEquals(new CLIResource("a/{b}", "GET", new HashSet<MediaType>(Arrays.asList(new MediaType())),
-         new HashSet<MediaType>(Arrays.asList(new MediaType())), expectedParams), //
+      assertEquals(new CLIResource("a/{b}", "GET", new HashSet<String>(Arrays.asList("*/*")), new HashSet<String>(
+         Arrays.asList("*/*")), expectedParams), //
          cliResources.get("command1"));
 
       // method1 in Resource1
@@ -113,10 +112,8 @@ public class CLIResourseFactoryTest extends TestCase
             CLIResourceParameter.Type.HEADER, true));
       expectedParams.put("-my-cmd", new CLIResourceParameter("cmd", new HashSet<String>(Arrays.asList("-my-cmd")),
          CLIResourceParameter.Type.BODY, true));
-      assertEquals(
-         new CLIResource("a/{b}/c", "POST",
-            new HashSet<MediaType>(Arrays.asList(new MediaType("application", "json"))), new HashSet<MediaType>(
-               Arrays.asList(new MediaType())), expectedParams), //
+      assertEquals(new CLIResource("a/{b}/c", "POST", new HashSet<String>(Arrays.asList("application/json")),
+         new HashSet<String>(Arrays.asList("*/*")), expectedParams), //
          cliResources.get("command2"));
 
       // method2 in Resource1
@@ -127,16 +124,16 @@ public class CLIResourseFactoryTest extends TestCase
          CLIResourceParameter.Type.PATH, false));
       expectedParams.put("-C", new CLIResourceParameter("c", new HashSet<String>(Arrays.asList("-C")),
          CLIResourceParameter.Type.PATH, false));
-      assertEquals(new CLIResource("a/{b}/{c}/{d}", "PUT", new HashSet<MediaType>(Arrays.asList(new MediaType())),
-         new HashSet<MediaType>(Arrays.asList(new MediaType())), expectedParams), //
+      assertEquals(new CLIResource("a/{b}/{c}/{d}", "PUT", new HashSet<String>(Arrays.asList("*/*")),
+         new HashSet<String>(Arrays.asList("*/*")), expectedParams), //
          cliResources.get("command3"));
 
       // method3 in Resource1
       expectedParams.clear();
       expectedParams.put("-x", new CLIResourceParameter("x", new HashSet<String>(Arrays.asList("-x")),
          CLIResourceParameter.Type.PATH, true));
-      assertEquals(new CLIResource("a/{b}/sub/{x}", "GET", new HashSet<MediaType>(Arrays.asList(new MediaType())),
-         new HashSet<MediaType>(Arrays.asList(new MediaType("text", "plain"))), expectedParams), //
+      assertEquals(new CLIResource("a/{b}/sub/{x}", "GET", new HashSet<String>(Arrays.asList("*/*")),
+         new HashSet<String>(Arrays.asList("text/plain")), expectedParams), //
          cliResources.get("command4"));
    }
 }
