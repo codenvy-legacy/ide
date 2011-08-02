@@ -147,19 +147,19 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
                {
                   display = GWT.create(Display.class);
                   bindDisplay();
+                  display.setName(result.getName());
+                  display.setState(result.getState());
+                  display.setInstances(String.valueOf(result.getInstances()));
+                  display.setVersion(result.getVersion());
+                  display.setDisk(String.valueOf(result.getResources().getDisk()));
+                  display.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
+                  display.setModel(String.valueOf(result.getStaging().getModel()));
+                  display.setStack(String.valueOf(result.getStaging().getStack()));
+                  display.getApplicationUrisGrid().setValue(result.getUris());
+                  display.getApplicationServicesGrid().setValue(result.getServices());
+                  display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
                   IDE.getInstance().openView(display.asView());
                }
-               display.setName(result.getName());
-               display.setState(result.getState());
-               display.setInstances(String.valueOf(result.getInstances()));
-               display.setVersion(result.getVersion());
-               display.setDisk(String.valueOf(result.getResources().getDisk()));
-               display.setMemory(String.valueOf(result.getResources().getMemory()));
-               display.setModel(String.valueOf(result.getStaging().getModel()));
-               display.setStack(String.valueOf(result.getStaging().getStack()));
-               display.getApplicationUrisGrid().setValue(result.getUris());
-               display.getApplicationServicesGrid().setValue(result.getServices());
-               display.getApplicationEnvironmentsGrid().setValue(result.getEnv());
             }
          });
    }

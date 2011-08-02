@@ -5,98 +5,88 @@
    <ui:with field='resource' type='org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
 
+   <ui:style>
+      .event {
+      background: #f1f2f5;
+      }
+   </ui:style>
+   
    <f:VPanel>
       <f:Border margin="10">
          <g:ScrollPanel>
          <!--e:ApplicationInfoGrid width="100%" ui:field="applicationInfoGrid"></e:ApplicationInfoGrid-->
             <g:VerticalPanel spacing="3" horizontalAlignment="center" width="100%">
                <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                  <g:cell verticalAlignment="middle" width="100px">
+                  <g:cell verticalAlignment="middle" width="140px">
                      <g:Label text="{locale.appInfoName}" height="18px"></g:Label>
                   </g:cell>
-                  <g:cell>
+                  <g:cell verticalAlignment="middle">
                      <g:Label ui:field="nameLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
 
-               <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                  <g:cell verticalAlignment="middle" width="100px">
+               <g:HorizontalPanel height="22px" width="100%" spacing="0" styleName="{style.event}">
+                  <g:cell verticalAlignment="middle" width="140px">
                      <g:Label text="{locale.appInfoState}" height="18px"></g:Label>
                   </g:cell>
-                  <g:cell>
+                  <g:cell verticalAlignment="middle">
                      <g:Label ui:field="stateLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
 
                <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                  <g:cell verticalAlignment="middle" width="100px">
+                  <g:cell verticalAlignment="middle" width="140px">
                      <g:Label text="{locale.appInfoInstances}" height="18px"></g:Label>
                   </g:cell>
-                  <g:cell>
+                  <g:cell verticalAlignment="middle">
                      <g:Label ui:field="instancesLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
 
-               <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                  <g:cell verticalAlignment="middle" width="100px">
+               <g:HorizontalPanel height="22px" width="100%" spacing="0" styleName="{style.event}">
+                  <g:cell verticalAlignment="middle" width="140px">
                      <g:Label text="{locale.appInfoVersion}" height="18px"></g:Label>
                   </g:cell>
-                  <g:cell>
+                  <g:cell verticalAlignment="middle">
                      <g:Label ui:field="versionLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
 
-               <g:HorizontalPanel height="22px" width="100%" spacing="0" horizontalAlignment="center">
-                  <g:cell verticalAlignment="middle" width="100px">
-                     <g:Label text="{locale.appInfoResources}" height="18px"></g:Label>
+               <g:HorizontalPanel height="22px" width="100%" spacing="0">
+                  <g:cell verticalAlignment="middle" width="140px">
+                     <g:Label text="{locale.appInfoResourcesDisk}" height="18px"></g:Label>
+                  </g:cell>
+                  <g:cell verticalAlignment="middle">
+                     <g:Label ui:field="diskLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
-               <f:Border width="100%">
-                  <g:VerticalPanel>
-                     <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                        <g:cell verticalAlignment="middle" width="100px">
-                           <g:Label text="{locale.appInfoResourcesDisk}" height="18px"></g:Label>
-                        </g:cell>
-                        <g:cell>
-                           <g:Label ui:field="diskLabel"></g:Label>
-                        </g:cell>
-                     </g:HorizontalPanel>
-                     <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                        <g:cell verticalAlignment="middle" width="100px">
-                           <g:Label text="{locale.appInfoResourcesMemory}" height="18px"></g:Label>
-                        </g:cell>
-                        <g:cell>
-                           <g:Label ui:field="memoryLabel"></g:Label>
-                        </g:cell>
-                     </g:HorizontalPanel>
-                  </g:VerticalPanel>
-               </f:Border>
 
-               <g:HorizontalPanel height="22px" width="100%" spacing="0" horizontalAlignment="center">
-                  <g:cell verticalAlignment="middle" width="100px">
-                     <g:Label text="{locale.appInfoStaging}" height="18px"></g:Label>
+               <g:HorizontalPanel height="22px" width="100%" spacing="0" styleName="{style.event}">
+                  <g:cell verticalAlignment="middle" width="140px">
+                     <g:Label text="{locale.appInfoResourcesMemory}" height="18px"></g:Label>
+                  </g:cell>
+                  <g:cell verticalAlignment="middle">
+                     <g:Label ui:field="memoryLabel"></g:Label>
                   </g:cell>
                </g:HorizontalPanel>
-               <f:Border width="100%">
-                  <g:VerticalPanel>
-                     <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                        <g:cell verticalAlignment="middle" width="100px">
-                           <g:Label text="{locale.appInfoStagingModel}" height="18px"></g:Label>
-                        </g:cell>
-                        <g:cell>
-                           <g:Label ui:field="modelLabel"></g:Label>
-                        </g:cell>
-                     </g:HorizontalPanel>
-                     <g:HorizontalPanel height="22px" width="100%" spacing="0">
-                        <g:cell verticalAlignment="middle" width="100px">
-                           <g:Label text="{locale.appInfoStagingStack}" height="18px"></g:Label>
-                        </g:cell>
-                        <g:cell>
-                           <g:Label ui:field="stackLabel"></g:Label>
-                        </g:cell>
-                     </g:HorizontalPanel>
-                  </g:VerticalPanel>
-               </f:Border>
+
+               <g:HorizontalPanel height="22px" width="100%" spacing="0">
+                  <g:cell verticalAlignment="middle" width="140px">
+                     <g:Label text="{locale.appInfoStagingModel}" height="18px"></g:Label>
+                  </g:cell>
+                  <g:cell verticalAlignment="middle">
+                     <g:Label ui:field="modelLabel"></g:Label>
+                  </g:cell>
+               </g:HorizontalPanel>
+
+               <g:HorizontalPanel height="22px" width="100%" spacing="0" styleName="{style.event}">
+                  <g:cell verticalAlignment="middle" width="140px">
+                     <g:Label text="{locale.appInfoStagingStack}" height="18px"></g:Label>
+                  </g:cell>
+                  <g:cell verticalAlignment="middle">
+                     <g:Label ui:field="stackLabel"></g:Label>
+                  </g:cell>
+               </g:HorizontalPanel>
 
                <f:Border width="100%">
                   <g:HorizontalPanel width="100%" spacing="0" horizontalAlignment="center">
