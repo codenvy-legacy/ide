@@ -18,13 +18,17 @@
  */
 package org.exoplatform.ide.extension.java.client.control;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.java.client.JavaClientBundle;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
+import org.exoplatform.ide.extension.java.client.ProjectType;
 import org.exoplatform.ide.extension.java.client.create.CreateJavaProjectEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Control for creating new java project.
@@ -35,32 +39,40 @@ import org.exoplatform.ide.extension.java.client.create.CreateJavaProjectEvent;
  */
 public class CreateJavaProjectControl extends SimpleControl implements IDEControl
 {
-   /**
-    * Control's ID.
-    */
-   public static final String ID = JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlId();
-   
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlTitle();
-   
-   /**
-    * Control's prompt, when user hovers the mouse on it.
-    */
-   public static final String PROMPT = JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlPrompt();
 
-   /**
-    * @param id
-    */
-   public CreateJavaProjectControl()
+   private static Map<ProjectType, String> ids = new HashMap<ProjectType, String>();
+
+   private static Map<ProjectType, String> titles = new HashMap<ProjectType, String>();
+
+   private static Map<ProjectType, String> prompts = new HashMap<ProjectType, String>();
+
+   static
    {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new CreateJavaProjectEvent());
-      setImages(JavaClientBundle.INSTANCE.javaProject(), JavaClientBundle.INSTANCE.javaProjectDisabled());
-      setGroup(0);
+      ids.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlId());
+      titles.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlTitle());
+      prompts.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlPrompt());
+
+      ids.put(ProjectType.SPRING, JavaExtension.LOCALIZATION_CONSTANT.createJavaSpringProjectControlId());
+      titles.put(ProjectType.SPRING, JavaExtension.LOCALIZATION_CONSTANT.createJavaSpringProjectControlTitle());
+      prompts.put(ProjectType.SPRING, JavaExtension.LOCALIZATION_CONSTANT.createJavaSpringProjectControlPrompt());
+   }
+
+   public CreateJavaProjectControl(ProjectType projectType)
+   {
+      super(ids.get(projectType));
+      setTitle(titles.get(projectType));
+      setPrompt(prompts.get(projectType));
+
+      setEvent(new CreateJavaProjectEvent(projectType));
+
+      if (projectType == ProjectType.SPRING)
+      {
+         setImages(JavaClientBundle.INSTANCE.springProject(), JavaClientBundle.INSTANCE.springProjectDisabled());
+      }
+      else
+      {
+         setImages(JavaClientBundle.INSTANCE.javaProject(), JavaClientBundle.INSTANCE.javaProjectDisabled());
+      }
    }
 
    /**

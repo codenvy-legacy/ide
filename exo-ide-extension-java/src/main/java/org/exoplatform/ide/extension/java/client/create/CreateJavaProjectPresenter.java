@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.java.client.JavaClientService;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
 import org.exoplatform.ide.extension.java.client.MavenResponseCallback;
+import org.exoplatform.ide.extension.java.client.ProjectType;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
 import java.util.List;
@@ -170,7 +171,22 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       {
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
-      JavaClientService.getInstance().createJavaProject(name, workDir, new MavenResponseCallback(eventBus)
+      
+      String groupId = name;
+      String artifactId = name;
+      
+      String archetypeGroupId;
+      String archetypeArtifactId;
+
+      if (projectType == ProjectType.SPRING) {
+         archetypeGroupId = "org.springframework.osgi";
+         archetypeArtifactId = "spring-osgi-bundle-archetype";
+      } else {
+         archetypeGroupId = "org.apache.maven.archetypes";
+         archetypeArtifactId = "maven-archetype-webapp";
+      }
+      
+      JavaClientService.getInstance().createJavaProject(groupId, artifactId, archetypeGroupId, archetypeArtifactId, workDir, new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)
@@ -195,6 +211,8 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
          display.getProjectNameField().setValue(DEFAULT_PROJECT_NAME);
       }
    }
+   
+   private ProjectType projectType;
 
    /**
     * @see org.exoplatform.ide.extension.java.client.create.CreateJavaProjectHandler#onCreateJavaProject(org.exoplatform.ide.extension.java.client.create.CreateJavaProjectEvent)
@@ -202,6 +220,7 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
    @Override
    public void onCreateJavaProject(CreateJavaProjectEvent event)
    {
+      projectType = event.getProjectType();
       openView();
    }
 

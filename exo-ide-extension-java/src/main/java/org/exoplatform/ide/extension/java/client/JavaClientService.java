@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
+import javax.ws.rs.QueryParam;
+
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -49,8 +51,8 @@ public abstract class JavaClientService
     * @param workDir - the location of new project
     * @param callback - callback, client has to implement
     */
-   public abstract void createJavaProject(String name, String workDir, MavenResponseCallback callback);
-   
+   public abstract void createJavaProject(String groupId, String artifactId, String archetypeGroupId, String archetypeArtifactId, String workDir, MavenResponseCallback callback);
+
    /**
     * Clean project.
     * 

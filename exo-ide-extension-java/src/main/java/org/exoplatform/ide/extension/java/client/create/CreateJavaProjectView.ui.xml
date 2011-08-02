@@ -5,6 +5,7 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.java.client.JavaLocalizationConstant"></ui:with>
    
    <f:Border margin="7" borderColor="transparent">
+   
       <g:VerticalPanel spacing="3" horizontalAlignment="center">
          <f:TextField ui:field="nameField" title="{locale.createJavaProjectNameFieldTitle}" width="100%" height="22px"></f:TextField>
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">

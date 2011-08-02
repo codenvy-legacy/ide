@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.client.create;
 
+import org.exoplatform.ide.extension.java.client.ProjectType;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -34,6 +36,21 @@ public class CreateJavaProjectEvent extends GwtEvent<CreateJavaProjectHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<CreateJavaProjectHandler> TYPE = new GwtEvent.Type<CreateJavaProjectHandler>();
+
+   /**
+    * Project's type.
+    */
+   private ProjectType projectType;
+
+   public CreateJavaProjectEvent(ProjectType projectType)
+   {
+      this.projectType = projectType;
+   }
+
+   public ProjectType getProjectType()
+   {
+      return projectType;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()

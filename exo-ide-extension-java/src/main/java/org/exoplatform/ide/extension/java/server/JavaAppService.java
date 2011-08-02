@@ -69,7 +69,7 @@ public class JavaAppService
    }
 
    @POST
-   @Path("create")
+   //@Path("create")
    @Produces(MediaType.APPLICATION_JSON)
    public Response createApp(@QueryParam("workdir") FSLocation baseDir, @QueryParam("name") String name,
       @Context UriInfo uriInfo) throws Exception
@@ -92,6 +92,45 @@ public class JavaAppService
             GitHelper.addToGitIgnore(app, "target/");
       }
       return createResponse(mvn);
+   }
+   
+   @POST
+   @Path("create")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response createApplication(
+      @QueryParam("workdir") FSLocation baseDir,
+      @QueryParam("groupId") String groupId,
+      @QueryParam("artifactId") String artifactId,
+      @QueryParam("archetypeGroupId") String archetypeGroupId,
+      @QueryParam("archetypeArtifactId") String archetypeArtifactId,
+      @Context UriInfo uriInfo) throws Exception {
+      
+      System.out.println("Create Application > ----------------------------------------------------------------");
+      System.out.println("WorkDir > " + baseDir.getURL());
+      System.out.println("GroupId > " + groupId);
+      System.out.println("ArtifactId > " + artifactId);
+      System.out.println("Archetype GroupId > " + archetypeGroupId);
+      System.out.println("Archetype Artifact Id > " + archetypeArtifactId);
+
+      // web applications (.war) only
+      InvocationRequest request = ARCHETYPE_REQUEST_FACTORY.createRequest();
+      File dir = new File(baseDir.getLocalPath(uriInfo));
+      request.setBaseDirectory(dir);
+      Properties properties = new Properties();
+      properties.put("archetypeArtifactId", archetypeArtifactId);
+      properties.put("archetypeGroupId", archetypeGroupId);
+      properties.put("groupId", groupId);
+      properties.put("artifactId", artifactId);
+      request.setProperties(properties);
+      MavenResponse mvn = execute(request);
+      if (0 == mvn.getExitCode()) // If other than zero then build fails. 
+      {
+         File app = new File(dir, artifactId);
+         GitHelper.addToGitIgnore(app, "");
+         if (app.exists()) // Be sure application directory created after maven execution.
+            GitHelper.addToGitIgnore(app, "target/");
+      }
+      return createResponse(mvn);      
    }
 
    @POST

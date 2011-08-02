@@ -39,6 +39,12 @@ public interface JavaClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/java/images/java-project_Disabled.png")
    ImageResource javaProjectDisabled();
    
+   @Source("org/exoplatform/ide/extension/java/images/spring.png")
+   ImageResource springProject();
+   
+   @Source("org/exoplatform/ide/extension/java/images/spring_Disabled.png")
+   ImageResource springProjectDisabled();
+
    @Source("org/exoplatform/ide/extension/java/images/ok.png")
    ImageResource okButton();
    

@@ -72,11 +72,14 @@ public class JavaClientServiceImpl extends JavaClientService
     * @see org.exoplatform.ide.extension.java.client.JavaClientService#createWebApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createJavaProject(String name, String workDir, MavenResponseCallback callback)
+   public void createJavaProject(String groupId, String artifactId, String archetypeGroupId, String archetypeArtifactId, String workDir, MavenResponseCallback callback)
    {
       final String url = restServiceContext + CREATE_PROJECT;
-      String params = "name=" + name + "&";
-      params += "workdir=" + workDir;
+      String params = "groupId=" + groupId;
+      params += "&artifactId=" + artifactId;
+      params += "&archetypeGroupId=" + archetypeGroupId;
+      params += "&archetypeArtifactId=" + archetypeArtifactId;
+      params += "&workdir=" + workDir;
 
       MavenResponse mavenResponse = new MavenResponse();
       callback.setResult(mavenResponse);

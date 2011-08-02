@@ -47,6 +47,15 @@ public interface JavaLocalizationConstant extends Messages
 
    @Key("control.create.javaProject.prompt")
    String createJavaProjectControlPrompt();
+   
+   @Key("control.create.javaSpringProject.id")
+   String createJavaSpringProjectControlId();
+   
+   @Key("control.create.javaSpringProject.title")
+   String createJavaSpringProjectControlTitle();
+
+   @Key("control.create.javaSpringProject.prompt")
+   String createJavaSpringProjectControlPrompt();
 
    /*
     * CreateApplicationView
