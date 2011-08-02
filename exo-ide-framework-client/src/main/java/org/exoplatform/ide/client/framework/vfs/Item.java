@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.vfs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by The eXo Platform SAS .
@@ -163,4 +161,11 @@ public abstract class Item
    {
       this.name = name;
    }
+   
+   /**
+    * Get the url to working directory of selected item,
+    * that is the current directory you are working on.
+    * @return href of selected item or href of parent folder (if item isn't folder)
+    */
+   public abstract String getWorkDir();
 }

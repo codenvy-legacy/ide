@@ -53,4 +53,13 @@ public class Folder extends Item
       this.children = children;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.Item#getWorkDir()
+    */
+   @Override
+   public String getWorkDir()
+   {
+      return getHref();
+   }
+
 }

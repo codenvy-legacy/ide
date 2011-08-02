@@ -123,4 +123,15 @@ public class File extends Item
       this.jcrContentNodeType = jcrContentNodeType;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.Item#getWorkDir()
+    */
+   @Override
+   public String getWorkDir()
+   {
+      String workDir = getHref();
+      workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
+      return workDir;
+   }
+
 }
