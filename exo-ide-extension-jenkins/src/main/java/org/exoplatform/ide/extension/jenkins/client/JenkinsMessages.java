@@ -52,4 +52,7 @@ public interface JenkinsMessages extends Messages
    
    @Key("controller.no.remote.repository")
    String noRemoteRepository();
+   
+   @Key("controller.no.git.repository")
+   String noGitReposytory();
 }

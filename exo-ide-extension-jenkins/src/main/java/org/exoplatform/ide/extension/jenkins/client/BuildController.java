@@ -47,6 +47,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Remote;
 
 import java.util.List;
@@ -282,6 +283,38 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
             IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
          }
       });
+   }
+   
+   /**
+    * @see org.exoplatform.ide.git.client.GitPresenter#getWorkDir()
+    */
+   @Override
+   public void getWorkDir()
+   {
+      if (selectedItems == null || selectedItems.size() <= 0)
+      {
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
+         return;
+      }
+
+      //First get the working directory of the repository if exists:
+      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
+         new AsyncRequestCallback<WorkDirResponse>()
+         {
+            @Override
+            protected void onSuccess(WorkDirResponse result)
+            {
+               workDir = result.getWorkDir();
+               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
+               onWorkDirReceived();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               Dialogs.getInstance().showError(JenkinsExtension.MESSAGES.noGitReposytory());
+            }
+         });
    }
 
 }
