@@ -7,9 +7,9 @@
       <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-editor-extension-javascript</artifactId>
+   <artifactId>exo-ide-editor-javascript</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Extension : JavaScript</name>
+   <name>eXo IDE :: Editor : JavaScript</name>
    <dependencies>
 
       <dependency>

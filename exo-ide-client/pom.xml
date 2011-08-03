@@ -74,7 +74,7 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-gadget</artifactId>
+         <artifactId>exo-ide-editor-gadget</artifactId>
          <exclusions>
             <exclusion>
                <groupId>xstream</groupId>
@@ -85,67 +85,67 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-groovy</artifactId>
+         <artifactId>exo-ide-editor-groovy</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-javascript</artifactId>
+         <artifactId>exo-ide-editor-javascript</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-java</artifactId>
+         <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-jsp</artifactId>
+         <artifactId>exo-ide-editor-jsp</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-css</artifactId>
+         <artifactId>exo-ide-editor-css</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-gtmpl</artifactId>
+         <artifactId>exo-ide-editor-gtmpl</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-html</artifactId>
+         <artifactId>exo-ide-editor-html</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-chromattic</artifactId>
+         <artifactId>exo-ide-editor-chromattic</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-netvibes</artifactId>
+         <artifactId>exo-ide-editor-netvibes</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-ruby</artifactId>
+         <artifactId>exo-ide-editor-ruby</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-php</artifactId>
+         <artifactId>exo-ide-editor-php</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-xml</artifactId>
+         <artifactId>exo-ide-editor-xml</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-gadget</artifactId>
+         <artifactId>exo-ide-editor-gadget</artifactId>
       </dependency>
       
       

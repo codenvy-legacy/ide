@@ -7,9 +7,9 @@
       <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-editor-extension-xml</artifactId>
+   <artifactId>exo-ide-editor-xml</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Extension : XML</name>
+   <name>eXo IDE :: Editor : XML</name>
    <dependencies>
 
       <dependency>

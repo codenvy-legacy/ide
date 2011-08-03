@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * This implementation of interface OutlineItemCreatorImpl which is used to create code outline item widget from OutlineTreeGrid class of exo.ide.client library. 
  * Also consists of some utility functions to select outline item icon and define its display label.
- * Function getOutlineItemWidget(Token token) is extended in the specific {FileType}OutlineItemCreator classes of exo-ide-editor-extension-{FileType} libraries.
+ * Function getOutlineItemWidget(Token token) is extended in the specific {FileType}OutlineItemCreator classes of exo-ide-editor-{FileType} libraries.
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $
  */

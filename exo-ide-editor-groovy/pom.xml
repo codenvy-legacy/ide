@@ -7,9 +7,9 @@
       <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-editor-extension-groovy</artifactId>
+   <artifactId>exo-ide-editor-groovy</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor : Extension : Groovy</name>
+   <name>eXo IDE :: Editor : Groovy</name>
    <dependencies>
 
       <dependency>
@@ -33,7 +33,7 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-extension-java</artifactId>
+         <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
 
    </dependencies>
