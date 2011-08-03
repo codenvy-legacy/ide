@@ -438,31 +438,39 @@ public class JcrSshKeyProvider implements SshKeyProvider
          session = repository.login(workspace);
          String user = session.getUserID();
          final String sshPath = config + user + "/ssh";
-         Set<String> hosts = null;
-         Set<String> oldHosts = null;
+         Set<String> hosts = new HashSet<String>();
+         Set<String> oldHosts = new HashSet<String>();
          Node oldKeys = null;
          try
          {
             Node sshKeys = (Node)session.getItem(sshPath);
             hosts = getAll(sshKeys);
+         }
+         catch (PathNotFoundException pnfe)
+         {
+         }
+         
+         try
+         {
             oldKeys = (Node)session.getItem("/ssh-keys/" + user);
             oldHosts = getAll(oldKeys);
          }
          catch (PathNotFoundException pnfe)
          {
          }
-         
+
          if (oldHosts != null)
          {
             oldHosts.removeAll(hosts);
-            if(oldHosts.isEmpty()) return hosts;
+            if (oldHosts.isEmpty())
+               return hosts;
          }
 
          // TODO : remove in future versions. Need it to back compatibility with existed data.
          try
          {
-//            Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
-//            oldHosts = getAll(oldKeys);
+            //            Node oldKeys = (Node)session.getItem("/ssh-keys/" + user);
+            //            oldHosts = getAll(oldKeys);
 
             if (oldHosts != null && oldHosts.size() > 0)
             {
