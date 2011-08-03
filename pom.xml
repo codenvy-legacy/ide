@@ -609,19 +609,19 @@
       <module>exo-ide-maven-webapp-archetype</module>
 
       <module>exo-ide-editor</module>
-      <module>exo-ide-editor-extension-javascript</module>
-      <module>exo-ide-editor-extension-css</module>
-      <module>exo-ide-editor-extension-html</module>
-      <module>exo-ide-editor-extension-gadget</module>
-      <module>exo-ide-editor-extension-groovy</module>
-      <module>exo-ide-editor-extension-gtmpl</module>
-      <module>exo-ide-editor-extension-chromattic</module>
-      <module>exo-ide-editor-extension-netvibes</module>
-      <module>exo-ide-editor-extension-java</module>
-      <module>exo-ide-editor-extension-jsp</module>
-      <module>exo-ide-editor-extension-ruby</module>
-      <module>exo-ide-editor-extension-php</module>
-      <module>exo-ide-editor-extension-xml</module>
+      <module>exo-ide-editor-javascript</module>
+      <module>exo-ide-editor-css</module>
+      <module>exo-ide-editor-html</module>
+      <module>exo-ide-editor-gadget</module>
+      <module>exo-ide-editor-groovy</module>
+      <module>exo-ide-editor-gtmpl</module>
+      <module>exo-ide-editor-chromattic</module>
+      <module>exo-ide-editor-netvibes</module>
+      <module>exo-ide-editor-java</module>
+      <module>exo-ide-editor-jsp</module>
+      <module>exo-ide-editor-ruby</module>
+      <module>exo-ide-editor-php</module>
+      <module>exo-ide-editor-xml</module>
 
       <module>exo-ide-extension-gadget-gatein</module>
       <module>exo-ide-extension-gadget</module>
