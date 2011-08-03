@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Timer;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -237,6 +238,11 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
                   cancel();
                   IDE.EVENT_BUS.fireEvent(new OutputEvent("Build finished<br/>Result:&nbsp;"
                      + result.getLastBuildResult(), Type.INFO));
+                  JobResult jobResult = JobResult.valueOf(result.getLastBuildResult());
+                  if (jobResult != JobResult.SUCCESS)
+                  {
+                     showBuildResultInfoDialog(jobResult);
+                  }
                   IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(result));
                }
                else
@@ -255,6 +261,36 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
          });
       }
    };
+
+   /**
+    * Show Info dialog for project build result
+    * @param result
+    */
+   private void showBuildResultInfoDialog(JobResult result)
+   {
+      Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.buildResultTitle(),
+         JenkinsExtension.MESSAGES.buildResultMessage(getProjectName(), result.toString()),
+         new BooleanValueReceivedHandler()
+         {
+
+            @Override
+            public void booleanValueReceived(Boolean value)
+            {
+               if (value != null && value)
+               {
+                  JenkinsService.get().getJenkinsOutput(jobName, new AsyncRequestCallback<String>()
+                  {
+
+                     @Override
+                     protected void onSuccess(String result)
+                     {
+                        IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
+                     }
+                  });
+               }
+            }
+         });
+   }
 
    /**
     * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()

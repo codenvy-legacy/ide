@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
+import org.exoplatform.ide.extension.jenkins.client.JobResult;
 import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
@@ -41,6 +42,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
    private String projectName;
 
    private String fullProjectName;
+
    /**
     * @param id
     */
@@ -48,7 +50,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
    {
       super(ID);
       setEnabled(true);
-      setVisible(true);
+      setVisible(false);
       setSize(175);
       setEvent(new GetJenkinsOutputEvent());
       setText("&nbsp;");
@@ -95,15 +97,20 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
     */
    private ImageResource getIconForBuildResult(String result)
    {
-      if ("SUCCESS".equals(result))
-         return JenkinsExtension.RESOURCES.blue();
-      if ("UNSTABLE".equals(result))
-         return JenkinsExtension.RESOURCES.yellow();
-      if ("FAILURE".equals(result))
-         return JenkinsExtension.RESOURCES.red();
-      //if("NOT_BUILT".equals(result))
-      //if ABORTED
-      return JenkinsExtension.RESOURCES.grey();
+      switch (JobResult.valueOf(result))
+      {
+         case SUCCESS :
+            return JenkinsExtension.RESOURCES.blue();
+         case UNSTABLE :
+            return JenkinsExtension.RESOURCES.yellow();
+         case FAILURE :
+            return JenkinsExtension.RESOURCES.red();
+
+            //NOT_BUILT
+            //ABORTED
+         default :
+            return JenkinsExtension.RESOURCES.grey();
+      }
    }
 
    private String prepareText(String message, ImageResource icon)
@@ -124,6 +131,7 @@ public class BuildStatusControl extends StatusTextControl implements IDEControl
     */
    public void setStartBuildingMessage(String projectName)
    {
+      setVisible(true);
       fullProjectName = projectName;
       if (projectName.length() > 10)
       {
