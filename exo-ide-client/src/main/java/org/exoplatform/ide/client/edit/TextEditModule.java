@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.edit.event.GoToLineHandler;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.edit.ui.GoToLineForm;
-import org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -87,7 +86,6 @@ public class TextEditModule implements GoToLineHandler, ShowLineNumbersHandler,
 
       new LockUnlockFileHandler(eventBus);
       new FindTextPresenter(eventBus);
-      new OpenFileWithPresenter(eventBus);
    }
 
    /**

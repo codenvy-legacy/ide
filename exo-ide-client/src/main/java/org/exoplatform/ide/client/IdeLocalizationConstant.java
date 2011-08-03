@@ -238,12 +238,6 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.openFileByPath")
    String openFileByPathControl();
 
-   @Key("control.openWith.title")
-   String openWithTitleControl();
-
-   @Key("control.openWith.prompt")
-   String openWithPromptControl();
-
    @Key("control.openLocalFile")
    String openLocalFileControl();
 

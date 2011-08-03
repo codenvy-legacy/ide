@@ -33,21 +33,6 @@ import com.google.gwt.i18n.client.Constants;
 public interface IdeEditorLocalizationConstant extends Constants
 {
    /*
-    * OpenFileWithView
-    */
-   @Key("openFileWith.title")
-   String openFileWithTitle();
-   
-   @Key("openFileWith.useAsDefaultEditor")
-   String openFileWithUseAsDefaultEditor();
-   
-   /*
-    * OpenFileWithPresenter
-    */
-   @Key("openFileWith.askDialog.title")
-   String openFileWithAskDialogTitle();
-   
-   /*
     * EditorsListGrid
     */
    @Key("editorsListGrid.column.editors")

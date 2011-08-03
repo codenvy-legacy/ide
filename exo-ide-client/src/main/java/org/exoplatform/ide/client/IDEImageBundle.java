@@ -200,12 +200,6 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/file/download_folder_Disabled.png")
    ImageResource downloadFolderDisabled();
 
-   @Source("../public/images/bundled/file/open_with.png")
-   ImageResource openWith();
-
-   @Source("../public/images/bundled/file/open_with_Disabled.png")
-   ImageResource openWithDisabled();
-
    @Source("../public/images/bundled/file/new_file.png")
    ImageResource newFile();
 

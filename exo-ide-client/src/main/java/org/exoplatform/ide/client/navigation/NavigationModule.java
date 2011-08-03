@@ -67,7 +67,6 @@ import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand
 import org.exoplatform.ide.client.navigation.control.GetFileURLControl;
 import org.exoplatform.ide.client.navigation.control.GoToFolderControl;
 import org.exoplatform.ide.client.navigation.control.OpenFileByPathCommand;
-import org.exoplatform.ide.client.navigation.control.OpenFileWithControl;
 import org.exoplatform.ide.client.navigation.control.OpenLocalFileCommand;
 import org.exoplatform.ide.client.navigation.control.PasteItemsCommand;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
@@ -199,7 +198,6 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
          MimeType.TEXT_CSS).setGroup(1)));
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
-      eventBus.fireEvent(new RegisterControlEvent(new OpenFileWithControl()));
 
       //      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
 
