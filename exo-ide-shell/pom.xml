@@ -116,6 +116,17 @@
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
+      
+      <!-- eXo GWT Framework dependencies -->
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+      </dependency>
    </dependencies>
 
    <build>
