@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-packaging-gadget-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: Client : Gadget</name>
+   <name>eXo IDE :: Packaging : Gadget</name>
    
    <dependencies>
    

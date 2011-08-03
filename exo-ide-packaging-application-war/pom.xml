@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-packaging-application-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: Client : Application</name>
+   <name>eXo IDE :: Packaging : Application</name>
 
    <dependencies>
 
