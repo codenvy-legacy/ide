@@ -7,7 +7,7 @@
       <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-client-application</artifactId>
+   <artifactId>exo-ide-packaging-application-war</artifactId>
    <packaging>war</packaging>
    <name>eXo IDE :: Client : Application</name>
 

@@ -7,7 +7,7 @@
       <version>1.2.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-client-gadget</artifactId>
+   <artifactId>exo-ide-packaging-gadget-war</artifactId>
    <packaging>war</packaging>
    <name>eXo IDE :: Client : Gadget</name>
    
