@@ -10,24 +10,24 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
-   
+
    <component>
-    <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
-    <init-params>
-      <value-param>
-        <name>rootNodePath</name>
-        <value>/data/</value>
-      </value-param>
-      <value-param>
-        <name>workspaceName</name>
-        <value>production</value>
-      </value-param>
-      <value-param>
-        <name>rootNodeType</name>
-        <value>nt:unstructured</value>
-      </value-param>
-    </init-params>
-  </component>
+      <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
+      <init-params>
+         <value-param>
+            <name>rootNodePath</name>
+            <value>/data/</value>
+         </value-param>
+         <value-param>
+            <name>workspaceName</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>rootNodeType</name>
+            <value>nt:unstructured</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
@@ -40,9 +40,21 @@
             <name>discoverable</name>
             <value>true</value>
          </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>template-config</name>
+            <value>/ide-home/templates</value>
+         </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
@@ -61,25 +73,25 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
-     <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
+      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
-   
+
    <component>
-     <key>org.exoplatform.logreader.LogPathProvider</key>
-     <type>org.exoplatform.logreader.SystemLogPathProvider</type>
+      <key>org.exoplatform.logreader.LogPathProvider</key>
+      <type>org.exoplatform.logreader.SystemLogPathProvider</type>
    </component>
 
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
-   
+
    <component>
-     <type>org.exoplatform.ide.maven.TaskService</type>
+      <type>org.exoplatform.ide.maven.TaskService</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
       <init-params>
          <value-param>
@@ -92,23 +104,23 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.JcrCloudfoundryAuthenticator</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
    </component>
@@ -199,15 +211,15 @@
 
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
-  </component>
-  
-  <external-component-plugins>
+   </component>
+
+   <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
       <component-plugin>
          <name>ide.add.membership</name>
          <set-method>addListenerPlugin</set-method>
          <type>org.exoplatform.ide.user.AddUserListener</type>
-       </component-plugin>
-    </external-component-plugins>
+      </component-plugin>
+   </external-component-plugins>
 
 </configuration>

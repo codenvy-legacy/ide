@@ -83,12 +83,6 @@ public class TemplatesRestService
 
    public static final String DEF_WS = "dev-monit";
    
-   /**
-    * System property, which containg path to folder, where user config will be saved:
-    * templates, hotkeys, toolat etc.
-    */
-   private static final String USER_CONFIG_PATH = "org.exoplatform.ide.server.user-config-path";
-
    private static Log log = ExoLogger.getLogger(TemplatesRestService.class);
 
    private final RepositoryService repositoryService;
@@ -96,17 +90,25 @@ public class TemplatesRestService
    private final ThreadLocalSessionProviderService sessionProviderService;
    
    private String workspace;
+   
+   private String config = "/ide-home/templates";
 
    private static final String FILE_TEMPLATE = "fileTemplates";
    
    private static final String PROJECT_TEMPLATE = "folderTemplates";
 
    public TemplatesRestService(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, String workspace)
+      ThreadLocalSessionProviderService sessionProviderService, String workspace, String templateConfig)
    {
       this.repositoryService = repositoryService;
       this.sessionProviderService = sessionProviderService;
       this.workspace = workspace;
+      if (templateConfig != null)
+      {
+         this.config = templateConfig;
+         if (config.endsWith("/"))
+            config = config.substring(0, config.length() - 1);
+      }
    }
    
    @GET
@@ -597,7 +599,7 @@ public class TemplatesRestService
          checkConfigNode(repository);
          session = repository.login(workspace);
 //         String user = session.getUserID();
-         String templatesSettingsPath = System.getProperty(USER_CONFIG_PATH) + "templates";
+         String templatesSettingsPath = config;
 
          javax.jcr.Node userSettings;
          try
@@ -646,20 +648,29 @@ public class TemplatesRestService
       }
    }
    
+   /**
+    * Check is user configuration folder exists.
+    * If doesn't exist, than create it.
+    * @param repository
+    * @throws RepositoryException
+    */
    private void checkConfigNode(ManageableRepository repository) throws RepositoryException
    {
       String _workspace = workspace;
       if (_workspace == null)
+      {
          _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+         System.out.println(">>>>>>>..workspace: " + _workspace);
+      }
 
       Session sys = null;
       try
       {
          // Create node for users configuration under system session.
          sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-         if (!(sys.itemExists(System.getProperty(USER_CONFIG_PATH))))
+         if (!(sys.itemExists(config)))
          {
-            org.exoplatform.ide.Utils.putFolders(sys, System.getProperty(USER_CONFIG_PATH));
+            org.exoplatform.ide.Utils.putFolders(sys, config);
             sys.save();
          }
       }
@@ -684,7 +695,7 @@ public class TemplatesRestService
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
 //         String user = session.getUserID();
-         String tokenPath = System.getProperty(USER_CONFIG_PATH) + "templates/" + templateType;
+         String tokenPath = config + "/" + templateType;
 
          Item item = null;
          try

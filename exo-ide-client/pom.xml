@@ -556,7 +556,7 @@
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
                      <bindAddress>0.0.0.0</bindAddress>
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties -Dorg.exoplatform.ide.server.user-config-path=/ide-home/users/</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
 

@@ -43,6 +43,18 @@
             <name>discoverable</name>
             <value>true</value>
          </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>template-config</name>
+            <value>/ide-home/templates</value>
+         </value-param>
       </init-params>
    </component>
 

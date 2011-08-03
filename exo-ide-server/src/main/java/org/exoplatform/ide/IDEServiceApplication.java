@@ -52,32 +52,18 @@ public class IDEServiceApplication extends Application
    public IDEServiceApplication(RepositoryService repositoryService, RegistryService registryService,
       ThreadLocalSessionProviderService sessionProviderService, InitParams initParams)
    {
-      String entryPoint = null;
-      boolean discoverable = true;
-      String workspace = null;
-      if (initParams != null)
-      {
-         if (initParams.getValueParam("defaultEntryPoint") != null)
-         {
-            entryPoint = initParams.getValueParam("defaultEntryPoint").getValue();
-         }
-         if (initParams.getValueParam("workspace") != null)
-         {
-            entryPoint = initParams.getValueParam("workspace").getValue();
-         }
-
-         if (initParams.getValueParam("discoverable") != null)
-         {
-            discoverable = Boolean.parseBoolean(initParams.getValueParam("discoverable").getValue());
-         }
-      }
+      String entryPoint = Utils.readValueParam(initParams, "defaultEntryPoint");
+      boolean discoverable = Boolean.parseBoolean(Utils.readValueParam(initParams, "discoverable"));
+      String workspace = Utils.readValueParam(initParams, "workspace");
+      String config = Utils.readValueParam(initParams, "config");
+      String templateConfig = Utils.readValueParam(initParams, "template-config");
 
       objects.add(new RepositoryDiscoveryService(repositoryService, sessionProviderService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
 
       objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,
-         discoverable, workspace));
-      objects.add(new TemplatesRestService(repositoryService, sessionProviderService, workspace));
+         discoverable, workspace, config));
+      objects.add(new TemplatesRestService(repositoryService, sessionProviderService, workspace, templateConfig));
 
       classes.add(LoopbackContentService.class);
       classes.add(DownloadContentService.class);

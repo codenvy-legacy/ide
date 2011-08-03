@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide;
 
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -49,6 +51,23 @@ public class Utils
    public static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
 
    public static final String WEBDAV_CONTEXT = "/jcr/";
+   
+   /**
+    * Read value param from init params.
+    * @param initParams
+    * @param paramName
+    * @return value param or null if value not found.
+    */
+   public static String readValueParam(InitParams initParams, String paramName)
+   {
+      if (initParams != null)
+      {
+         ValueParam vp = initParams.getValueParam(paramName);
+         if (vp != null)
+            return vp.getValue();
+      }
+      return null;
+   }
    
    /**
     * Get session.

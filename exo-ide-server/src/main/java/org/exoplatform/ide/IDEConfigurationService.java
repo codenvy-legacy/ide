@@ -88,8 +88,6 @@ public class IDEConfigurationService
 
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
    
-   private static final String USER_CONFIG_PATH = "org.exoplatform.ide.server.user-config-path";
-
    private static final String EXO_APPLICATIONS = "exo:applications";
 
    private static final String APP_NAME = "IDE";
@@ -104,6 +102,7 @@ public class IDEConfigurationService
    
    private String workspace;
    
+   private String config = "/ide-home/users/";
 
    // To disable cache control.
    private static final CacheControl noCache;
@@ -131,7 +130,8 @@ public class IDEConfigurationService
     * @param discoverable
     */
    public IDEConfigurationService(RepositoryService repositoryService, RegistryService registryService,
-      ThreadLocalSessionProviderService sessionProviderService, String entryPoint, boolean discoverable, String workspace)
+      ThreadLocalSessionProviderService sessionProviderService, String entryPoint, boolean discoverable,
+      String workspace, String config)
    {
       super();
       this.repositoryService = repositoryService;
@@ -140,6 +140,14 @@ public class IDEConfigurationService
       this.entryPoint = entryPoint;
       this.discoverable = discoverable;
       this.workspace = workspace;
+      if (config != null)
+      {
+         if (!(config.startsWith("/")))
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
+         this.config = config;
+         if (!this.config.endsWith("/"))
+            this.config += "/";
+      }
    }
 
    @GET
@@ -308,7 +316,7 @@ public class IDEConfigurationService
          checkConfigNode(repository);
          session = repository.login(workspace);
          String user = session.getUserID();
-         String userSettingsPath = System.getProperty(USER_CONFIG_PATH) + user + "/settings";
+         String userSettingsPath = config + user + "/settings";
 
          javax.jcr.Node userSettings;
          try
@@ -368,9 +376,9 @@ public class IDEConfigurationService
       {
          // Create node for users configuration under system session.
          sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-         if (!(sys.itemExists(System.getProperty(USER_CONFIG_PATH))))
+         if (!(sys.itemExists(config)))
          {
-            org.exoplatform.ide.Utils.putFolders(sys, System.getProperty(USER_CONFIG_PATH));
+            org.exoplatform.ide.Utils.putFolders(sys, config);
             sys.save();
          }
       }
@@ -390,7 +398,7 @@ public class IDEConfigurationService
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String tokenPath = System.getProperty(USER_CONFIG_PATH) + user + "/settings/userSettings";
+         String tokenPath = config + user + "/settings/userSettings";
 
          Item item = null;
          try
