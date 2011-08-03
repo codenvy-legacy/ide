@@ -149,8 +149,7 @@ public class GoToFolderTest extends BaseTest
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL + FOLDER_1 + "/" + FILE_1);
       IDE.NAVIGATION.selectItemInSearchTree(WS_URL + FOLDER_2 + "/" + FILE_2);
       //Open second file
-      //      selectItemInSearchResultsTree(FILE_2);
-      openFileFromSearchResultsWithCodeEditor(WS_URL + FOLDER_2 + "/" + FILE_2);
+      IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + FOLDER_2 + "/" + FILE_2);
       //Go to folder with second file
       IDE.WORKSPACE.waitForRootItem();
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);

@@ -137,8 +137,6 @@ public interface MenuCommands
    {
       public static final String FILE = "File";
 
-      public static final String OPEN_WITH = "Open With...";
-
       public static final String UPLOAD_FILE = "Upload File...";
 
       public static final String UPLOAD_FOLDER = "Upload Zipped Folder...";

@@ -205,52 +205,19 @@ public class Navigation extends AbstractTestModule
    }
 
    /**
-    * Open selected file with code mirror.
+    * Select and double click on file.
     * 
-    * Method doesn't check is selected item in navigation tree is file.
-    * It will fail, while calling "Open with" command.
-    * 
-    * @param checkDefault - is click on checkbox "Use by default"
-    * @throws Exception
-    */
-   public void openSelectedFileWithCodeEditor(boolean checkDefault) throws Exception
-   {
-      openSelectedFileWithEditor(Editor.CODEMIRROR, checkDefault);
-   }
-
-   /**
-    * Opens "Open With..." dialog, selects editor with specified index and opens selected file in this editor. 
-    * 
-    * @param editor
-    * @param checkDefault is needs to check "Use as default editor"
-    * @throws Exception
-    */
-   public void openSelectedFileWithEditor(Editor editor, boolean checkDefault) throws Exception
-   {
-      IDE().OPENWITH.callFromMenu();
-      IDE().OPENWITH.selectEditor(editor.getName());
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      if (checkDefault)
-      {
-         IDE().OPENWITH.clickUseAsDefaultCheckBox();
-      }
-
-      IDE().OPENWITH.clickOpenButton();
-      IDE().EDITOR.waitEditorFileOpened();
-   }
-
-   /**
-    * Open file from navigation tree with code mirror.
+    * Use instead IDE.WORKSPACE.doubleClickOnFile(fileURL);
     * 
     * @param fileURL URL of file in navigation tree
     * @param checkDefault - is click on checkbox "Use by default"
     * @throws Exception
     */
+   @Deprecated
    public void openFileFromNavigationTreeWithCodeEditor(String fileURL, boolean checkDefault) throws Exception
    {
       IDE().WORKSPACE.selectItem(fileURL);
-      openSelectedFileWithCodeEditor(checkDefault);
+      IDE().WORKSPACE.doubleClickOnFile(fileURL);
    }
 
    /**

@@ -33,7 +33,6 @@ import org.exoplatform.ide.core.GoToLine;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.Navigation;
-import org.exoplatform.ide.core.OpenWithDialog;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
@@ -120,8 +119,6 @@ public class IDE
    public SelectWorkspace SELECT_WORKSPACE = new SelectWorkspace();
    
    public Workspace WORKSPACE = new Workspace();
-   
-   public OpenWithDialog OPENWITH = new OpenWithDialog();
    
    public GoToLine GOTOLINE = new GoToLine();
    

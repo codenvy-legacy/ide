@@ -51,7 +51,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
    public void setUp() throws Exception
    {
       FOLDER_NAME = HotkeysInFCKEditorTest.class.getSimpleName();
-      String filePath ="src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
+      String filePath = "src/test/resources/org/exoplatform/ide/miscellaneous/GoogleGadget.xml";
       try
       {
          VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
@@ -65,9 +65,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       {
          e.printStackTrace();
       }
-      
+
    }
-   
+
    @After
    public void tearDown()
    {
@@ -86,7 +86,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
          e.printStackTrace();
       }
    }
-   
+
    /**
     * IDE-156:HotKeys customization
     * ----- 3-5 ------------
@@ -101,9 +101,10 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //and check Ctrl+B, Ctrl+I, Ctrl+U
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE,"Google Gadget",false);
-      
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.WORKSPACE.doubleClickOnFile(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+      IDE.EDITOR.clickDesignButton();
+
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().click("//body");
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+A to select all text
@@ -119,7 +120,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became bold
       assertTrue(selenium().isElementPresent("//body/strong[text()='Hello, world! ']"));
-      
+
       //Press Ctrl+I
       selenium().controlKeyDown();
       selenium().keyDown("//", "I");
@@ -128,7 +129,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check text became italic
       assertTrue(selenium().isElementPresent("//body/em/strong[text()='Hello, world! ']"));
-      
+
       //Press Ctrl+U
       selenium().controlKeyDown();
       selenium().keyDown("//", "U");
@@ -138,17 +139,17 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //check text became underline
       assertTrue(selenium().isElementPresent("//body/u/em/strong[text()='Hello, world! ']"));
       IDE.selectMainFrame();
-      
+
       //----- 4 ------------
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
-      assertEquals(GOOGLE_GADGET_FILE + " *",IDE.EDITOR.getTabTitle(0));
+      assertEquals(GOOGLE_GADGET_FILE + " *", IDE.EDITOR.getTabTitle(0));
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, KeyEvent.VK_S);
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
-      assertEquals(GOOGLE_GADGET_FILE,IDE.EDITOR.getTabTitle(0));
+      assertEquals(GOOGLE_GADGET_FILE, IDE.EDITOR.getTabTitle(0));
    }
-   
+
    /**
     * IDE-156:HotKeys customization
     * ----- 13 ------------
@@ -163,9 +164,10 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+      IDE.EDITOR.clickDesignButton();
       //check Ctrl+F
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().click("//body");
       Thread.sleep(TestConstants.SLEEP);
       selenium().controlKeyDown();
@@ -174,15 +176,15 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check find-replace form doesn't appear
-//      assertFalse(selenium().isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
+      //      assertFalse(selenium().isElementPresent("scLocator=//Window[ID=\"ideFindReplaceForm\"]"));
       IDE.FINDREPLACE.checkFindReplaceFormNotAppeared();
-      
+
       //check Ctrl+D
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
-      
-     IDE.EDITOR.selectIFrameWithEditor(0);
+
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().controlKeyDown();
       selenium().keyDown("//body", "D");
       selenium().keyUp("//body", "D");
@@ -191,9 +193,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       assertEquals(DEFAULT_TEXT_IN_GADGET, getTextFromCkEditor(0));
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //check Ctrl+L
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().controlKeyDown();
       selenium().keyDown("//body", "L");
       selenium().keyUp("//body", "L");
@@ -202,9 +204,9 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
       assertFalse(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
-      
+
       assertTrue(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
-      
+
       try
       {
          selenium().clickAt("//div[@class='cke_dialog_body']/div[@class='cke_dialog_close_button']/span", "2,2");
@@ -215,7 +217,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       assertFalse(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
    }
-   
+
    @Test
    public void testCopyPasteUndoRedo() throws Exception
    {
@@ -225,39 +227,39 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
 
       //----- 1 ------------
       //open file in WYDIWYG editor
-      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+      IDE.EDITOR.clickDesignButton();
       //select all
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().click("//body");
       selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
       selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
-      
+
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       //press Ctrl+X
       selenium().controlKeyDown();
       selenium().keyPress("//body", "x");
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       assertEquals("", selenium().getText("//body"));
-      
+
       //press Ctrl+Z
       selenium().controlKeyDown();
       selenium().keyPress("//body", "z");
       selenium().controlKeyUp();
-      
+
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       assertEquals(DEFAULT_TEXT_IN_GADGET, selenium().getText("//body"));
       selenium().keyDown("//body", "Y");
       IDE.selectMainFrame();
-      
-      
+
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+Y
-     IDE.EDITOR.selectIFrameWithEditor(0);
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().click("//body");
       selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_Y);
@@ -265,54 +267,53 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
       assertEquals("", selenium().getText("//body"));
       Thread.sleep(TestConstants.SLEEP);
-      
+
       IDE.selectMainFrame();
-      
+
       //check Ctrl+C, Ctrl+V
       final String textForCopyPaste = "copy-paste text";
-      
-     IDE.EDITOR.selectIFrameWithEditor(0);
+
+      IDE.EDITOR.selectIFrameWithEditor(0);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.CK_EDITOR_LOCATOR, textForCopyPaste);
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
-      
-      
-     IDE.EDITOR.selectIFrameWithEditor(0);
+
+      IDE.EDITOR.selectIFrameWithEditor(0);
       selenium().click("//body");
       //select All text
       selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_A);
       selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_CONTROL);
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //press Ctrl+C
       selenium().controlKeyDown();
       selenium().keyPress("//body", "c");
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //press Del to delete selected text
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DELETE);
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       //press Ctrl+V twice
       selenium().controlKeyDown();
       selenium().keyPress("//body", "v");
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      
+
       assertEquals(textForCopyPaste, selenium().getText("//body"));
       IDE.selectMainFrame();
-      
+
    }
-   
+
    @Test
    public void testHotkeysRunFromFCKEditor() throws Exception
    {
       refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      
+
       //----- 1 ------------
       //press Ctrl+N to check hotkey
       selenium().controlKeyDown();
@@ -320,23 +321,24 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       selenium().keyUp("//", "N");
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
+
       checkCreateFileFromTemplateFormAndClose();
-      
+
       //open FCK editor
-      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget" ,false);
-      
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
-      
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+      IDE.EDITOR.clickDesignButton();
+
+      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
+
       checkCreateFileFromTemplateFormAndClose();
    }
-   
+
    private String getTextFromCkEditor(int tabIndex) throws Exception
    {
-     IDE.EDITOR.selectIFrameWithEditor(tabIndex);
+      IDE.EDITOR.selectIFrameWithEditor(tabIndex);
       String text = selenium().getText("//body");
       IDE.selectMainFrame();
       return text;
    }
-   
+
 }

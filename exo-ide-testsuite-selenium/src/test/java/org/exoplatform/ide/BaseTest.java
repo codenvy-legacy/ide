@@ -327,56 +327,7 @@ public abstract class BaseTest
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
-
-   protected void openFileFromSearchResultsWithCodeEditor(String fileName) throws Exception
-   {
-      IDE.NAVIGATION.selectItemInSearchTree(fileName);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-
-      selenium().click("//table[@id=\"ideOpenFileWithListGrid\"]/tbody/tr");
-      selenium().click("ideOpenFileWithOkButton");
-
-      Thread.sleep(TestConstants.SLEEP_SHORT * 2);
-
-      //TODO After fix bug the error relates to the reappearance "OpenWithForm", shold be remove  
-      if (selenium().isElementPresent("exoAskDialog"))
-      {
-         selenium().click("exoAskDialogYesButton");
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-         selenium().click("ideOpenFileWithCancelButton");
-         Thread.sleep(TestConstants.SLEEP_SHORT);
-      }
-   }
-
-   /**
-    * Open file from navigation tree with CK (WYSIWYG) editor
-    * @param fileURL name of file to open
-    * @param checkDefault do mark checkbox Use by default
-    * @throws Exception
-    */
-   protected void openFileFromNavigationTreeWithCkEditor(String fileURL, String typeFile, boolean checkDefault)
-      throws Exception
-   {
-      //TODO add check form
-      IDE.WORKSPACE.selectItem(fileURL);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_WITH);
-      selenium().click(
-         "//table[@id='ideOpenFileWithListGrid']//tbody//tr//div[text()=" + "'" + "CKEditor" + " " + typeFile + " "
-            + "editor" + "'" + "]");
-      if (checkDefault)
-      {
-         //click on checkbox Use as default editor
-         selenium()
-            .click(
-               "scLocator=//Window[ID=\"ideallOpenFileWithForm\"]/item[1][Class=\"DynamicForm\"]/item[name=Default]/textbox");
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-      }
-      selenium().click("ideOpenFileWithOkButton");
-      Thread.sleep(TestConstants.SLEEP);
-      //time remaining to open CK editor
-   }
-
+   
    protected void saveCurrentFile() throws Exception
    {
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);

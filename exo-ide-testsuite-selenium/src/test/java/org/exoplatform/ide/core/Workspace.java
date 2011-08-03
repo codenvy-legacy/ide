@@ -94,6 +94,20 @@ public class Workspace extends AbstractTestModule
       IDE().EDITOR.waitEditorFileOpened();
    }
    
+   public void doubleClickOnFileFromSearchTab(String fileURL) throws Exception
+   {
+      IDE().NAVIGATION.selectItemInSearchTree(fileURL);
+      String itemId = IDE().NAVIGATION.getItemIdSearch(fileURL);
+      String locator = "//div[@id='" + itemId + "']/div/table/tbody/tr/td[2]";
+
+      selenium().mouseDown(locator);
+      selenium().mouseUp(locator);
+      Thread.sleep(TestConstants.ANIMATION_PERIOD);
+
+      selenium().doubleClick(locator);
+      IDE().EDITOR.waitEditorFileOpened();
+   }
+   
    /**
     * Click open icon of folder in navigation tree.
     * If folder is closed, it will be opened,

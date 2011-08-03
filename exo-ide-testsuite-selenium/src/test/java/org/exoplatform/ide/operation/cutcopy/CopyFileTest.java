@@ -36,15 +36,15 @@ import org.junit.Test;
  */
 public class CopyFileTest extends BaseTest
 {
-   
+
    private static final String FOLDER_1 = CopyFileTest.class.getSimpleName() + "-1";
-   
+
    private static final String FILE_GROOVY = "testgroovy";
-   
+
    private static final String FILE_CONTENT_1 = "world";
-   
+
    private static final String FILE_CONTENT_2 = "hello ";
-   
+
    /**
     * BeforeClass create such structure:
     * FOLDER_1
@@ -56,7 +56,8 @@ public class CopyFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_1);
-         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+         VirtualFileSystemUtils.put(FILE_CONTENT_1.getBytes(), MimeType.APPLICATION_GROOVY, WS_URL + FOLDER_1 + "/"
+            + FILE_GROOVY);
       }
       catch (Exception e)
       {
@@ -119,9 +120,9 @@ public class CopyFileTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_1 + "/");
-      
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");      
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
+
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_1 + "/");
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
 
       /*
        * Check Cut and Copy commands must be enabled
@@ -181,7 +182,7 @@ public class CopyFileTest extends BaseTest
       /*
        * Type "file content"
        */
-     IDE.EDITOR.typeTextIntoEditor(0, FILE_CONTENT_2);
+      IDE.EDITOR.typeTextIntoEditor(0, FILE_CONTENT_2);
 
       /*
        * Save file
@@ -191,41 +192,41 @@ public class CopyFileTest extends BaseTest
       /*
        * Close file
        */
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
 
       /*
        * Open "/test.groovy"
        */
-     IDE.WORKSPACE.selectRootItem();
+      IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/");
       IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
-      
+
       /*
        * Select FILE_GROOVY file in FOLDER_1
        */
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY); 
-      
+      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+
       /*
        * Open FILE_GROOVY file from FOLDER_1
        */
-      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
-      
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+
       /*
        * Select FILE_GROOVY file in root folder
        */
       IDE.WORKSPACE.selectItem(WS_URL + FILE_GROOVY);
-      
+
       /*
        * Open FILE_GROOVY file from root folder
        */
-      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FILE_GROOVY);
 
       /*
        * Check files content
        */
-      assertEquals(FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(0));
-      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1,IDE.EDITOR.getTextFromCodeEditor(1));
+      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
 
    }
 

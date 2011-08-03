@@ -19,6 +19,7 @@
 package org.exoplatform.ide.paas.openshift.core;
 
 import org.exoplatform.ide.core.AbstractTestModule;
+import org.exoplatform.ide.paas.heroku.core.DeleteApplication;
 
 /**
  * Created by The eXo Platform SAS .

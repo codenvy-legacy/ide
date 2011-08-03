@@ -138,7 +138,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //Open several tabs (open existed documents and create some new)
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
 
-      openFileFromNavigationTreeWithCkEditor(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE, "Google Gadget", false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
+      IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.SLEEP);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
 

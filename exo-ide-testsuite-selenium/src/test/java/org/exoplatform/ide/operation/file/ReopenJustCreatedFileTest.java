@@ -20,18 +20,14 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Navigation;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * http://jira.exoplatform.com/browse/IDE-412
@@ -100,7 +96,7 @@ public class ReopenJustCreatedFileTest extends BaseTest
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + NETVIBES_FILE_NAME);
 
-      IDE.NAVIGATION.openSelectedFileWithCodeEditor(false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + NETVIBES_FILE_NAME);
 
       fileName = IDE.EDITOR.getTabTitle(0);
 

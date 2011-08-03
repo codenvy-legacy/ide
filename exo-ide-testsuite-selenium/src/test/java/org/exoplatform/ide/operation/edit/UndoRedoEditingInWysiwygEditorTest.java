@@ -21,7 +21,6 @@ package org.exoplatform.ide.operation.edit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -69,7 +68,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
       //open with WYSIWYG editor and make default
-      openFileFromNavigationTreeWithCkEditor(URL + htmlFile, "HTML", false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + htmlFile);
+      IDE.EDITOR.clickDesignButton();
       IDE.EDITOR.checkCkEditorOpened(0);
 
       IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
@@ -265,7 +265,8 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       Thread.sleep(TestConstants.SLEEP / 3);
 
       //open with WYSIWYG editor
-      openFileFromNavigationTreeWithCkEditor(URL + googleGadgetFile, "Google Gadget", false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + googleGadgetFile);
+      IDE.EDITOR.clickDesignButton();
 
       //step 22
       //changed content

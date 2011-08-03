@@ -106,12 +106,12 @@ public class SearchInRootFolderTest extends BaseTest
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + restFileName);
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + folder2Name + "/" + copyofRestFileName);
       //Open first file from search results
-      openFileFromSearchResultsWithCodeEditor(WS_URL + folder1Name + "/" + restFileName);
+      IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + folder1Name + "/" + restFileName);
       IDE.EDITOR.waitTabPresent(0);
       assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
 
       //Open second file from search results
-      openFileFromSearchResultsWithCodeEditor(WS_URL + folder2Name + "/" + copyofRestFileName);
+      IDE.WORKSPACE.doubleClickOnFileFromSearchTab(WS_URL + folder2Name + "/" + copyofRestFileName);
       IDE.EDITOR.waitTabPresent(1);
       assertEquals(copyofRestFileName, IDE.EDITOR.getTabTitle(1));
    }

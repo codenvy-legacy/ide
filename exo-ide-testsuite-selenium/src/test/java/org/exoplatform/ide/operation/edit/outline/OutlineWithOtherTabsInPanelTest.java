@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Navigation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,7 +96,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       //----- 1 -------------
       //open xml file
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + XML_FILE_NAME);
       //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(XML_FILE_NAME, false);
       //Thread.sleep(TestConstants.SLEEP_SHORT);
 
@@ -111,8 +110,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       //----- 3 -------------
       //open html file
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
-      //IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(HTML_FILE_NAME, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + HTML_FILE_NAME);
 
       //check outline visible
       IDE.OUTLINE.assertOutlineTreePresent();
@@ -120,7 +118,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
       //----- 4 -------------
       //open text file
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + TEXT_FILE_NAME);
       Thread.sleep(TestConstants.SLEEP_SHORT);
       //check outline is not visible
       IDE.OUTLINE.checkOtlineTreeIsNotPresent();

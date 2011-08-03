@@ -33,7 +33,6 @@ import org.junit.runners.Suite.SuiteClasses;
    PreviewHtmlFileTest.class,
    DeleteSeveralFilesSimultaniouslyTest.class,
    CreatingAndSavingAsNewFileTest.class,
-   OpenFileWithNonDefaultEditorTest.class,
    ShowHideLineNumbersTest.class,
    DeletingFilesTest.class,
    ClosingAndSaveAsFileTest.class,

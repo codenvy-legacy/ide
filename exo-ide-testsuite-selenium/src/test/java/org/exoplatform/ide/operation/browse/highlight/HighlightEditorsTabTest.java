@@ -95,7 +95,8 @@ public class HighlightEditorsTabTest extends BaseTest
 
       IDE.EDITOR.closeFile(0);
 
-      openFileFromNavigationTreeWithCkEditor(WS_URL + FOLDER_NAME + "/" + FILE_NAME, "HTML", false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.clickDesignButton();
       waitForElementPresent("//div[@panel-id='editor']");
       IDE.PERSPECTIVE.checkViewIsActive("editor-1");
 

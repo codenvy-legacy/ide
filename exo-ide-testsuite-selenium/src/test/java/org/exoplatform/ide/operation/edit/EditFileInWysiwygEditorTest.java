@@ -86,8 +86,9 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.WORKSPACE.clickOpenIconOfFolder(URL);
       IDE.WORKSPACE.waitForItem(URL + FILE_NAME);   
       
-      openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + FILE_NAME);
       IDE.EDITOR.waitTabPresent(0);
+      IDE.EDITOR.clickDesignButton();
 
       assertEquals("File should be unchanged!", FILE_NAME, IDE.EDITOR.getTabTitle(0));
       
@@ -260,6 +261,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       
       //------ 14 ---------------
       //reopen file with CodeMirror
+      
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
 
       //reopen confirmation dialog
@@ -276,7 +278,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertEquals("File should be marked as changed!", FILE_NAME + " *", IDE.EDITOR.getTabTitle(0));
       
       //reopen file with CKEditor
-      openFileFromNavigationTreeWithCkEditor(URL + FILE_NAME, "HTML", false);
+      IDE.WORKSPACE.doubleClickOnFile(URL + FILE_NAME);
+      IDE.EDITOR.clickDesignButton();
 
       //reopen confirmation dialog
       assertTrue(selenium().isElementPresent("exoAskDialog"));
@@ -286,8 +289,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //click No button
       selenium().click("exoAskDialogNoButton");
-      
-      IDE.OPENWITH.clickCancelButton();
+      //TODO:::: check this test
+//      IDE.OPENWITH.clickCancelButton();
       Thread.sleep(TestConstants.SLEEP);
 
       IDE.EDITOR.checkCodeEditorOpened(0);

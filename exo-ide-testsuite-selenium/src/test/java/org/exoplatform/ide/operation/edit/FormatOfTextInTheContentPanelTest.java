@@ -151,7 +151,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.WORKSPACE.waitForItem(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
 
       IDE.WORKSPACE.selectItem(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
-      IDE.NAVIGATION.openSelectedFileWithEditor(Navigation.Editor.CODEMIRROR, false);
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + NON_FORMAT_GADGET_FILE_NAME);
     
       waitForElementPresent("//div[@panel-id='editor']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);

@@ -142,17 +142,18 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER_TO_DELETE + "/" + TEXT_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      IDE.OPENWITH.openSelectedFileWithCodeEditor(false);
+      IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + GADGET_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.WORKSPACE.selectItem(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      IDE.OPENWITH.openSelectedFileWithCkEditor(true);
+      IDE.WORKSPACE.doubleClickOnFile(SECOND_WORKSPACE_URL + TEST_FOLDER + "/" + HTML_FILE);
+      IDE.EDITOR.clickDesignButton();
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       
       IDE.EDITOR.checkCkEditorOpened(2);
