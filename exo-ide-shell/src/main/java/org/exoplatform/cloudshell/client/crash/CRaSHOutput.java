@@ -16,19 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.cloudshell.client;
+package org.exoplatform.cloudshell.client.crash;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public class PrintWriter
+ * Output of the CRaSH operation.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Aug 2, 2011 2:18:12 PM anya $
+ *
+ */
+public class CRaSHOutput
 {
-   
-   public void println(String s)
+   /**
+    * Content of the output.
+    */
+   private String output;
+
+   /**
+    * @return the output output's content
+    */
+   public String getOutput()
    {
-     // TODO CloudShell.term.print(s);
+      return output;
    }
 
+   /**
+    * @param output output's content
+    */
+   public void setOutput(String output)
+   {
+      this.output = output;
+   }
 }

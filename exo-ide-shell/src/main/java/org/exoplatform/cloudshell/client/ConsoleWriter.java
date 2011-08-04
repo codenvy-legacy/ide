@@ -19,16 +19,13 @@
 package org.exoplatform.cloudshell.client;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public class PrintWriter
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Aug 2, 2011 12:57:09 PM anya $
+ *
+ */
+public interface ConsoleWriter
 {
+   public void print(String str);
    
-   public void println(String s)
-   {
-     // TODO CloudShell.term.print(s);
-   }
-
+   public void clearConsole();
 }

@@ -85,7 +85,7 @@ public class ShellService {
             
             public void onResponseReceived(Request request, Response response)
             {
-               CloudShell.term.print(response.getText());
+               //TODO CloudShell.term.print(response.getText());
             }
             
             public void onError(Request request, Throwable exception)

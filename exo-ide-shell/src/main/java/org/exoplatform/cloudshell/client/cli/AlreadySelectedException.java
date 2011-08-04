@@ -26,7 +26,12 @@ package org.exoplatform.cloudshell.client.cli;
  */
 public class AlreadySelectedException extends ParseException
 {
-    /** The option group selected. */
+    /**
+    * 
+    */
+   private static final long serialVersionUID = 1L;
+
+   /** The option group selected. */
     private OptionGroup group;
 
     /** The option that triggered the exception. */
