@@ -46,6 +46,9 @@ public class CLIResourcesService
    @javax.inject.Inject
    private ResourceBinder binder;
 
+   @javax.inject.Inject
+   private CLIResourceFactory cliResourceFactory;
+
    @GET
    @Path("resources")
    @Produces(MediaType.APPLICATION_JSON)
@@ -53,7 +56,6 @@ public class CLIResourcesService
    public Set<CLIResource> getCLIResources() throws IOException
    {
       Set<CLIResource> result = new HashSet<CLIResource>();
-      CLIResourceFactory cliResourceFactory = new CLIResourceFactory();
       List<ObjectFactory<AbstractResourceDescriptor>> resources = binder.getResources();
       ObjectFactory[] array = resources.toArray(new ObjectFactory[resources.size()]);
       for (int i = 0; i < array.length; i++)
