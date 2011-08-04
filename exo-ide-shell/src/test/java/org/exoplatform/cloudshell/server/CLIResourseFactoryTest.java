@@ -26,9 +26,8 @@ import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.impl.resource.AbstractResourceDescriptorImpl;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -65,7 +64,7 @@ public class CLIResourseFactoryTest extends TestCase
       }
 
       @PUT
-      @Path("{c}/{d}")
+      @Path("/{c}/{d}/")
       public void method2(@MatrixParam("id") int id, @PathParam("b") String b, @PathParam("c") String c)
       {
       }
@@ -97,43 +96,38 @@ public class CLIResourseFactoryTest extends TestCase
       RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
       AbstractResourceDescriptorImpl resource = new AbstractResourceDescriptorImpl(Resource1.class);
       CLIResourceFactory cliResourceFactory = new CLIResourceFactory();
-      Map<String, CLIResource> cliResources = cliResourceFactory.getCLIResources(resource);
+      Set<CLIResource> cliResources = cliResourceFactory.getCLIResources(resource);
 
-      Map<String, CLIResourceParameter> expectedParams = new HashMap<String, CLIResourceParameter>();
+      Set<CLIResourceParameter> expectedParams = new HashSet<CLIResourceParameter>();
 
       // method0 in Resource1
-      assertEquals(new CLIResource("a/{b}", "GET", new HashSet<String>(Arrays.asList("*/*")), new HashSet<String>(
-         Arrays.asList("*/*")), expectedParams), //
-         cliResources.get("command1"));
+      assertTrue(cliResources.contains(new CLIResource("command1", "/a/{b}", "GET", new HashSet<String>(Arrays
+         .asList("*/*")), new HashSet<String>(Arrays.asList("*/*")), expectedParams)));
 
       // method1 in Resource1
-      expectedParams.put("-content",
-         new CLIResourceParameter("content-type", new HashSet<String>(Arrays.asList("-content")),
-            CLIResourceParameter.Type.HEADER, true));
-      expectedParams.put("-my-cmd", new CLIResourceParameter("cmd", new HashSet<String>(Arrays.asList("-my-cmd")),
+      expectedParams.add(new CLIResourceParameter("content-type", new HashSet<String>(Arrays.asList("-content")),
+         CLIResourceParameter.Type.HEADER, true));
+      expectedParams.add(new CLIResourceParameter("cmd", new HashSet<String>(Arrays.asList("-my-cmd")),
          CLIResourceParameter.Type.BODY, true));
-      assertEquals(new CLIResource("a/{b}/c", "POST", new HashSet<String>(Arrays.asList("application/json")),
-         new HashSet<String>(Arrays.asList("*/*")), expectedParams), //
-         cliResources.get("command2"));
+      assertTrue(cliResources.contains(new CLIResource("command2", "/a/{b}/c", "POST", new HashSet<String>(Arrays
+         .asList("application/json")), new HashSet<String>(Arrays.asList("*/*")), expectedParams)));
 
       // method2 in Resource1
       expectedParams.clear();
-      expectedParams.put("-id", new CLIResourceParameter("id", new HashSet<String>(Arrays.asList("-id")),
-         CLIResourceParameter.Type.MATRIX, true));
-      expectedParams.put("-B", new CLIResourceParameter("b", new HashSet<String>(Arrays.asList("-B")),
+      expectedParams.add(new CLIResourceParameter("id", new HashSet<String>(Arrays.asList("-id")),
+         CLIResourceParameter.Type.MATRIX, false));
+      expectedParams.add(new CLIResourceParameter("b", new HashSet<String>(Arrays.asList("-B")),
          CLIResourceParameter.Type.PATH, false));
-      expectedParams.put("-C", new CLIResourceParameter("c", new HashSet<String>(Arrays.asList("-C")),
+      expectedParams.add(new CLIResourceParameter("c", new HashSet<String>(Arrays.asList("-C")),
          CLIResourceParameter.Type.PATH, false));
-      assertEquals(new CLIResource("a/{b}/{c}/{d}", "PUT", new HashSet<String>(Arrays.asList("*/*")),
-         new HashSet<String>(Arrays.asList("*/*")), expectedParams), //
-         cliResources.get("command3"));
+      assertTrue(cliResources.contains(new CLIResource("command3", "/a/{b}/{c}/{d}", "PUT", new HashSet<String>(Arrays
+         .asList("*/*")), new HashSet<String>(Arrays.asList("*/*")), expectedParams)));
 
       // method3 in Resource1
       expectedParams.clear();
-      expectedParams.put("-x", new CLIResourceParameter("x", new HashSet<String>(Arrays.asList("-x")),
-         CLIResourceParameter.Type.PATH, true));
-      assertEquals(new CLIResource("a/{b}/sub/{x}", "GET", new HashSet<String>(Arrays.asList("*/*")),
-         new HashSet<String>(Arrays.asList("text/plain")), expectedParams), //
-         cliResources.get("command4"));
+      expectedParams.add(new CLIResourceParameter("x", new HashSet<String>(Arrays.asList("-x")),
+         CLIResourceParameter.Type.PATH, false));
+      assertTrue(cliResources.contains(new CLIResource("command4", "/a/{b}/sub/{x}", "GET", new HashSet<String>(Arrays
+         .asList("*/*")), new HashSet<String>(Arrays.asList("text/plain")), expectedParams)));
    }
 }

@@ -44,15 +44,15 @@ public class CLIResourceParameter
       }
    }
 
-   private String restName;
-   private Set<String> cliNames;
+   private String name;
+   private Set<String> options;
    private Type type;
    private boolean mandatory;
 
-   public CLIResourceParameter(String restName, Set<String> cliNames, Type type, boolean mandatory)
+   public CLIResourceParameter(String name, Set<String> options, Type type, boolean mandatory)
    {
-      this.restName = restName;
-      this.cliNames = cliNames;
+      this.name = name;
+      this.options = options;
       this.type = type;
       this.mandatory = mandatory;
    }
@@ -61,24 +61,24 @@ public class CLIResourceParameter
    {
    }
 
-   public String getRestName()
+   public String getName()
    {
-      return restName;
+      return name;
    }
 
-   public void setRestName(String restName)
+   public void setName(String name)
    {
-      this.restName = restName;
+      this.name = name;
    }
 
-   public Set<String> getCliNames()
+   public Set<String> getOptions()
    {
-      return cliNames;
+      return options;
    }
 
-   public void setCliNames(Set<String> cliNames)
+   public void setOptions(Set<String> options)
    {
-      this.cliNames = cliNames;
+      this.options = options;
    }
 
    public Type getType()
@@ -105,9 +105,10 @@ public class CLIResourceParameter
    public int hashCode()
    {
       int hash = 7;
-      hash = hash * 31 + ((restName == null) ? 0 : restName.hashCode());
+      hash = hash * 31 + ((name == null) ? 0 : name.hashCode());
       hash = hash * 31 + ((type == null) ? 0 : type.hashCode());
-      hash = hash * 31 + ((cliNames == null) ? 0 : cliNames.hashCode());
+      hash = hash * 31 + ((options == null) ? 0 : options.hashCode());
+      hash = hash * 31 + (mandatory ? 123 : 321);
       return hash;
    }
 
@@ -120,14 +121,14 @@ public class CLIResourceParameter
          return false;
       if (getClass() != obj.getClass())
          return false;
-      
+
       CLIResourceParameter other = (CLIResourceParameter)obj;
-      if (restName == null)
+      if (name == null)
       {
-         if (other.restName != null)
+         if (other.name != null)
             return false;
       }
-      else if (!restName.equals(other.restName))
+      else if (!name.equals(other.name))
       {
          return false;
       }
@@ -135,12 +136,16 @@ public class CLIResourceParameter
       {
          return false;
       }
-      if (cliNames == null)
+      if (options == null)
       {
-         if (other.cliNames != null)
+         if (other.options != null)
             return false;
       }
-      else if (!cliNames.equals(other.cliNames))
+      else if (!options.equals(other.options))
+      {
+         return false;
+      }
+      if (mandatory != other.mandatory)
       {
          return false;
       }
@@ -150,7 +155,7 @@ public class CLIResourceParameter
    @Override
    public String toString()
    {
-      return "CLIResourceParameter [restName=" + restName + ", cliNames=" + cliNames + ", type=" + type
-         + ", mandatory=" + mandatory + "]";
+      return "CLIResourceParameter [name=" + name + ", options=" + options + ", type=" + type + ", mandatory="
+         + mandatory + "]";
    }
 }

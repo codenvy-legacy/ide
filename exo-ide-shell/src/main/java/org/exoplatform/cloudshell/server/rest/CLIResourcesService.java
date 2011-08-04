@@ -24,9 +24,10 @@ import org.exoplatform.services.rest.ObjectFactory;
 import org.exoplatform.services.rest.impl.ResourceBinder;
 import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -49,16 +50,16 @@ public class CLIResourcesService
    @Path("resources")
    @Produces(MediaType.APPLICATION_JSON)
    @SuppressWarnings("rawtypes")
-   public Map<String, CLIResource> getCLIResources()
+   public Set<CLIResource> getCLIResources() throws IOException
    {
-      Map<String, CLIResource> result = new HashMap<String, CLIResource>();
+      Set<CLIResource> result = new HashSet<CLIResource>();
       CLIResourceFactory cliResourceFactory = new CLIResourceFactory();
       List<ObjectFactory<AbstractResourceDescriptor>> resources = binder.getResources();
       ObjectFactory[] array = resources.toArray(new ObjectFactory[resources.size()]);
       for (int i = 0; i < array.length; i++)
       {
          AbstractResourceDescriptor descriptor = (AbstractResourceDescriptor)array[i].getObjectModel();
-         result.putAll(cliResourceFactory.getCLIResources(descriptor));
+         result.addAll(cliResourceFactory.getCLIResources(descriptor));
       }
       return result;
    }

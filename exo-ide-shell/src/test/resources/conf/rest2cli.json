@@ -1,0 +1,50 @@
+[
+{
+  "command":"command1",
+  "path":"a/{b}",
+  "method":"GET"
+},
+{
+  "command":"command2",
+  "path":"a/{b}/c/",
+  "method":"POST",
+  "params":
+  [
+	  {
+	  "name":"content-type",
+	  "options":["-content"],
+	  "type":"HEADER",
+	  "mandatory":true
+	  },
+	  {
+	  "name":"cmd",
+	  "options":["-my-cmd"],
+	  "type":"BODY",
+	  "mandatory":true
+	  }
+  ]
+},
+{
+  "command":"command3",
+  "path":"a/{b}/{c}/{d}",
+  "method":"PUT",
+  "params":
+  [
+	  {
+	  "name":"b",
+	  "options":["-B"],
+	  "type":"PATH",
+	  },
+	  {
+	  "name":"c",
+	  "options":["-C"],
+	  "type":"PATH",
+	  }
+  ]
+},
+{
+  "command":"command4",
+  "path":"a/{b}/sub/{x}",
+  "method":"GET",
+}
+]

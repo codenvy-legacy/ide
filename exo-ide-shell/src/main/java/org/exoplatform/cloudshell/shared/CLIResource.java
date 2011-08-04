@@ -18,29 +18,40 @@
  */
 package org.exoplatform.cloudshell.shared;
 
-import java.util.Map;
 import java.util.Set;
 
 public class CLIResource
 {
+   private String command;
    private String path;
    private String method;
    private Set<String> consumes;
    private Set<String> produces;
-   private Map<String, CLIResourceParameter> parameters;
+   private Set<CLIResourceParameter> params;
 
-   public CLIResource(String path, String method, Set<String> consumes, Set<String> produces,
-      Map<String, CLIResourceParameter> parameters)
+   public CLIResource(String command, String path, String method, Set<String> consumes, Set<String> produces,
+      Set<CLIResourceParameter> params)
    {
+      this.command = command;
       this.path = path;
       this.method = method;
       this.consumes = consumes;
       this.produces = produces;
-      this.parameters = parameters;
+      this.params = params;
    }
 
    public CLIResource()
    {
+   }
+
+   public String getCommand()
+   {
+      return command;
+   }
+
+   public void setCommand(String command)
+   {
+      this.command = command;
    }
 
    public String getPath()
@@ -83,25 +94,26 @@ public class CLIResource
       this.produces = produces;
    }
 
-   public Map<String, CLIResourceParameter> getParameters()
+   public Set<CLIResourceParameter> getParams()
    {
-      return parameters;
+      return params;
    }
 
-   public void setParameters(Map<String, CLIResourceParameter> parameters)
+   public void setParams(Set<CLIResourceParameter> params)
    {
-      this.parameters = parameters;
+      this.params = params;
    }
 
    @Override
    public int hashCode()
    {
       int hash = 7;
+      hash = hash * 31 + ((command == null) ? 0 : command.hashCode());
       hash = hash * 31 + ((path == null) ? 0 : path.hashCode());
       hash = hash * 31 + ((method == null) ? 0 : method.hashCode());
       hash = hash * 31 + ((consumes == null) ? 0 : consumes.hashCode());
       hash = hash * 31 + ((produces == null) ? 0 : produces.hashCode());
-      hash = hash * 31 + ((parameters == null) ? 0 : parameters.hashCode());
+      hash = hash * 31 + ((params == null) ? 0 : params.hashCode());
       return hash;
    }
 
@@ -116,6 +128,15 @@ public class CLIResource
          return false;
 
       CLIResource other = (CLIResource)obj;
+      if (command == null)
+      {
+         if (other.command != null)
+            return false;
+      }
+      else if (!command.equals(other.command))
+      {
+         return false;
+      }
       if (path == null)
       {
          if (other.path != null)
@@ -152,12 +173,12 @@ public class CLIResource
       {
          return false;
       }
-      if (parameters == null)
+      if (params == null || params.isEmpty())
       {
-         if (other.parameters != null)
+         if (other.params != null && !params.isEmpty())
             return false;
       }
-      else if (!parameters.equals(other.parameters))
+      else if (!params.equals(other.params))
       {
          return false;
       }
@@ -167,7 +188,7 @@ public class CLIResource
    @Override
    public String toString()
    {
-      return "CLIResource [path=" + path + ", method=" + method + ", consumes=" + consumes + ", produces=" + produces
-         + ", parameters=" + parameters + "]";
+      return "CLIResource [command=" + command + ", path=" + path + ", method=" + method + ", consumes=" + consumes
+         + ", produces=" + produces + ", params=" + params + "]";
    }
 }
