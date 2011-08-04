@@ -178,7 +178,7 @@ public class CloudBees
       }
       File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
-      beesClient.applicationDeployWar(appId, message, null, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
+      beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(ainfo);
       if (warFile.exists())
