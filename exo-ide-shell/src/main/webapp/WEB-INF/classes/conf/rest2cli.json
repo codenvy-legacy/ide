@@ -1,0 +1,7 @@
+[
+{
+  "command":"cli",
+  "path":"ide/cli/resources",
+  "method":"GET"
+}
+]

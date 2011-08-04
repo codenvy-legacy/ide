@@ -25,4 +25,9 @@
  <component>
   <type>org.exoplatform.cloudshell.server.ShellApplication</type>
  </component>
+ 
+ <component>
+  <type>org.exoplatform.cloudshell.server.rest.CLIResourcesApplication</type>
+ </component>
+ 
 </configuration>
