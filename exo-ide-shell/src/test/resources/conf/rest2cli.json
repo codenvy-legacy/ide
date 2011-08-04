@@ -1,11 +1,11 @@
 [
 {
-  "command":"command1",
+  "command":["command1"],
   "path":"a/{b}",
   "method":"GET"
 },
 {
-  "command":"command2",
+  "command":["command2"],
   "path":"a/{b}/c/",
   "method":"POST",
   "params":
@@ -25,7 +25,7 @@
   ]
 },
 {
-  "command":"command3",
+  "command":["command3"],
   "path":"a/{b}/{c}/{d}",
   "method":"PUT",
   "params":
@@ -43,7 +43,7 @@
   ]
 },
 {
-  "command":"command4",
+  "command":["command4"],
   "path":"a/{b}/sub/{x}",
   "method":"GET",
 }

@@ -22,17 +22,17 @@ import java.util.Set;
 
 public class CLIResource
 {
-   private String command;
+   private Set<String> commands;
    private String path;
    private String method;
    private Set<String> consumes;
    private Set<String> produces;
    private Set<CLIResourceParameter> params;
 
-   public CLIResource(String command, String path, String method, Set<String> consumes, Set<String> produces,
+   public CLIResource(Set<String> commands, String path, String method, Set<String> consumes, Set<String> produces,
       Set<CLIResourceParameter> params)
    {
-      this.command = command;
+      this.commands = commands;
       this.path = path;
       this.method = method;
       this.consumes = consumes;
@@ -44,14 +44,14 @@ public class CLIResource
    {
    }
 
-   public String getCommand()
+   public Set<String> getCommand()
    {
-      return command;
+      return commands;
    }
 
-   public void setCommand(String command)
+   public void setCommand(Set<String> command)
    {
-      this.command = command;
+      this.commands = command;
    }
 
    public String getPath()
@@ -108,7 +108,7 @@ public class CLIResource
    public int hashCode()
    {
       int hash = 7;
-      hash = hash * 31 + ((command == null) ? 0 : command.hashCode());
+      hash = hash * 31 + ((commands == null) ? 0 : commands.hashCode());
       hash = hash * 31 + ((path == null) ? 0 : path.hashCode());
       hash = hash * 31 + ((method == null) ? 0 : method.hashCode());
       hash = hash * 31 + ((consumes == null) ? 0 : consumes.hashCode());
@@ -128,12 +128,12 @@ public class CLIResource
          return false;
 
       CLIResource other = (CLIResource)obj;
-      if (command == null)
+      if (commands == null)
       {
-         if (other.command != null)
+         if (other.commands != null)
             return false;
       }
-      else if (!command.equals(other.command))
+      else if (!commands.equals(other.commands))
       {
          return false;
       }
@@ -188,7 +188,7 @@ public class CLIResource
    @Override
    public String toString()
    {
-      return "CLIResource [command=" + command + ", path=" + path + ", method=" + method + ", consumes=" + consumes
+      return "CLIResource [command=" + commands + ", path=" + path + ", method=" + method + ", consumes=" + consumes
          + ", produces=" + produces + ", params=" + params + "]";
    }
 }
