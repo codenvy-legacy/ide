@@ -41,19 +41,19 @@
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    
    <!-- EDITOR EXTENSIONS -->
-   <inherits name="org.exoplatform.ide.editor.extension.gadget.GadgetEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.groovy.GroovyEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.gtmpl.GtmplEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.chromattic.ChromatticEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.netvibes.NetvibesEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.java.JavaEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.jsp.JspEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.ruby.RubyEditorExtension" />   
-   <inherits name="org.exoplatform.ide.editor.extension.php.PhpEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.xml.XmlEditorExtension" />  
-   <inherits name="org.exoplatform.ide.editor.extension.javascript.JavaScriptEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.html.HtmlEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.extension.css.CssEditorExtension" />   
+   <inherits name="org.exoplatform.ide.editor.gadget.GadgetEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.groovy.GroovyEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.gtmpl.GtmplEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.chromattic.ChromatticEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.netvibes.NetvibesEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.jsp.JspEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.ruby.RubyEditorExtension" />   
+   <inherits name="org.exoplatform.ide.editor.php.PhpEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.xml.XmlEditorExtension" />  
+   <inherits name="org.exoplatform.ide.editor.javascript.JavaScriptEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.html.HtmlEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.css.CssEditorExtension" />   
    
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
