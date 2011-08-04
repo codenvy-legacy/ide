@@ -174,7 +174,7 @@ public class CLIResourceFactory
          URL fileURL = Thread.currentThread().getContextClassLoader().getResource(fileName);
          if (fileURL == null)
          {
-            throw new RuntimeException("Configuration file '" + file + "' not found. ");
+            throw new RuntimeException("Configuration file '" + fileName + "' not found. ");
          }
          file = new File(fileURL.getPath());
       }
