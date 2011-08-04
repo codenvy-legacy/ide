@@ -366,7 +366,7 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-client-application-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                               <exclude name="**/conf/*-mysql.xml" />
