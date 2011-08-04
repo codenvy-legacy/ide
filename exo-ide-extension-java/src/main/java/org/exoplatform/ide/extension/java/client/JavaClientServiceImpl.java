@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
+import javax.ws.rs.QueryParam;
+
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
@@ -25,6 +27,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
@@ -67,20 +70,18 @@ public class JavaClientServiceImpl extends JavaClientService
       this.eventBus = eventBus;
       this.restServiceContext = restContext;
    }
-
-   /**
-    * @see org.exoplatform.ide.extension.java.client.JavaClientService#createWebApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
+   
    @Override
-   public void createJavaProject(String groupId, String artifactId, String archetypeGroupId, String archetypeArtifactId, String workDir, MavenResponseCallback callback)
+   public void createProject(String projectName, String projectType, String groupId, String artifactId, String version, String workDir, MavenResponseCallback callback)
    {
       final String url = restServiceContext + CREATE_PROJECT;
-      String params = "groupId=" + groupId;
+      String params = "projectName=" + projectName;
+      params += "&projectType=" + projectType;
+      params += "&groupId=" + groupId;
       params += "&artifactId=" + artifactId;
-      params += "&archetypeGroupId=" + archetypeGroupId;
-      params += "&archetypeArtifactId=" + archetypeArtifactId;
+      params += "&version=" + version;
       params += "&workdir=" + workDir;
-
+      
       MavenResponse mavenResponse = new MavenResponse();
       callback.setResult(mavenResponse);
       callback.setEventBus(eventBus);

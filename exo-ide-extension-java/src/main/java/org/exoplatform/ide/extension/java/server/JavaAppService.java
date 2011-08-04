@@ -18,23 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.exoplatform.ide.FSLocation;
-import org.exoplatform.ide.extension.java.shared.MavenResponse;
-import org.exoplatform.ide.git.server.GitHelper;
-import org.exoplatform.ide.maven.InvocationRequestFactory;
-import org.exoplatform.ide.maven.MavenTask;
-import org.exoplatform.ide.maven.TaskService;
-import org.exoplatform.ide.maven.TaskWatcher;
-
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -46,6 +36,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.InvocationResult;
+import org.codehaus.plexus.util.cli.CommandLineException;
+import org.exoplatform.ide.FSLocation;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
+import org.exoplatform.ide.maven.InvocationRequestFactory;
+import org.exoplatform.ide.maven.MavenTask;
+import org.exoplatform.ide.maven.TaskService;
+import org.exoplatform.ide.maven.TaskWatcher;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -53,9 +56,10 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/application/java")
 public class JavaAppService
 {
-   private static InvocationRequestFactory ARCHETYPE_REQUEST_FACTORY = new InvocationRequestFactory(
-      Arrays.asList("archetype:generate"));
 
+   /** Logger. */
+   private static final Log LOG = ExoLogger.getLogger(JavaAppService.class);   
+   
    private static InvocationRequestFactory CLEAN_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList("clean"));
 
    private static InvocationRequestFactory PACKAGE_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList(
@@ -68,36 +72,54 @@ public class JavaAppService
       this.taskService = taskService;
    }
 
+   /**
+    * Creates Java project.
+    * 
+    * @param baseDir
+    * @param projectName
+    * @param projectType
+    * @param groupId
+    * @param artifactId
+    * @param version
+    * @param uriInfo
+    * @return
+    * @throws Exception
+    */
    @POST
    @Path("create")
    @Produces(MediaType.APPLICATION_JSON)
    public Response createApplication(
       @QueryParam("workdir") FSLocation baseDir,
+      @QueryParam("projectName") String projectName,
+      @QueryParam("projectType") String projectType,
       @QueryParam("groupId") String groupId,
       @QueryParam("artifactId") String artifactId,
-      @QueryParam("archetypeGroupId") String archetypeGroupId,
-      @QueryParam("archetypeArtifactId") String archetypeArtifactId,
+      @QueryParam("version") String version,
       @Context UriInfo uriInfo) throws Exception {
-      
-      // web applications (.war) only
-      InvocationRequest request = ARCHETYPE_REQUEST_FACTORY.createRequest();
+
+      String resource = projectType;      
       File dir = new File(baseDir.getLocalPath(uriInfo));
-      request.setBaseDirectory(dir);
-      Properties properties = new Properties();
-      properties.put("archetypeArtifactId", archetypeArtifactId);
-      properties.put("archetypeGroupId", archetypeGroupId);
-      properties.put("groupId", groupId);
-      properties.put("artifactId", artifactId);
-      request.setProperties(properties);
-      MavenResponse mvn = execute(request);
-      if (0 == mvn.getExitCode()) // If other than zero then build fails. 
+      try
       {
-         File app = new File(dir, artifactId);
-         GitHelper.addToGitIgnore(app, "");
-         if (app.exists()) // Be sure application directory created after maven execution.
-            GitHelper.addToGitIgnore(app, "target/");
+         if (dir.exists())
+         {
+            File projectDirectory = new File(dir, projectName);
+            URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+            
+            JavaProjectArchetype archetype = new JavaProjectArchetype(projectDirectory, projectName, groupId, artifactId, version);
+            archetype.exportResourcesFromURL(url);
+         }
+         else
+            throw new IllegalStateException("Can't find work dir. ");
       }
-      return createResponse(mvn);      
+      catch (IOException e)
+      {
+         if (LOG.isDebugEnabled())
+            LOG.error(e);
+
+         return Response.serverError().entity(e).build();
+      }
+      return Response.ok().build();      
    }
 
    @POST

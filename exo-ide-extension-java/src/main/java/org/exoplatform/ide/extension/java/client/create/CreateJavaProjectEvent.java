@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.client.create;
 
-import org.exoplatform.ide.extension.java.client.ProjectType;
+import org.exoplatform.ide.extension.java.shared.ProjectType;
 
 import com.google.gwt.event.shared.GwtEvent;
 

@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.java.client.control.CreateJavaProjectControl;
 import org.exoplatform.ide.extension.java.client.create.CreateJavaProjectPresenter;
+import org.exoplatform.ide.extension.java.shared.ProjectType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -63,10 +64,9 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEBAPP), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING), DockTarget.NONE, false);
       new CreateJavaProjectPresenter(eventBus);
-      
    }
 
 }

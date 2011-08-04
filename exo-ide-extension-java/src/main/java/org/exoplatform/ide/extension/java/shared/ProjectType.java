@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.client;
+package org.exoplatform.ide.extension.java.shared;
 
 /**
  * Created by The eXo Platform SAS .
@@ -25,11 +25,22 @@ package org.exoplatform.ide.extension.java.client;
  * @version $
  */
 
-public enum ProjectType
-{
-   
-   WEBAPP,
-   
-   SPRING
+public enum ProjectType {
+
+   WEB("java-web-project"),
+
+   SPRING("java-spring-project");
+
+   private final String projectType;
+
+   ProjectType(String projectType)
+   {
+      this.projectType = projectType;
+   }
+
+   public String value()
+   {
+      return projectType;
+   }
 
 }

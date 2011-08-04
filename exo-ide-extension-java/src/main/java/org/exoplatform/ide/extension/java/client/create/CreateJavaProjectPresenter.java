@@ -18,15 +18,10 @@
  */
 package org.exoplatform.ide.extension.java.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -41,10 +36,17 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.java.client.JavaClientService;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
 import org.exoplatform.ide.extension.java.client.MavenResponseCallback;
-import org.exoplatform.ide.extension.java.client.ProjectType;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
+import org.exoplatform.ide.extension.java.shared.ProjectType;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for create java project view.<p/>
@@ -82,6 +84,27 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       HasValue<String> getProjectNameField();
 
       /**
+       * Get Group ID field.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getGroupIdField();
+
+      /**
+       * Get Artifact ID field.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getArtifactIdField();
+      
+      /**
+       * Get Version field.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getVersionField();
+
+      /**
        * Set focus in project name field.
        */
       void focusInProjectNameField();
@@ -95,6 +118,7 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
        * Enable create button.
        */
       void enableCreateButton();
+      
    }
 
    private static final String DEFAULT_PROJECT_NAME = JavaExtension.LOCALIZATION_CONSTANT
@@ -122,6 +146,9 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       eventBus.addHandler(CleanProjectEvent.TYPE, this);
    }
 
+   /**
+    * 
+    */
    private void bindDisplay()
    {
       display.getCreateButton().addClickHandler(new ClickHandler()
@@ -162,9 +189,40 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
 
    }
 
+   /**
+    * Do create project.
+    */
    private void doCreateProject()
    {
-      final String name = display.getProjectNameField().getValue();
+      if (display.getProjectNameField().getValue() == null ||
+               display.getProjectNameField().getValue().trim().isEmpty()){
+         Dialogs.getInstance().showError("Project Name can not be empty");
+         return;
+      }
+      
+      if (display.getGroupIdField().getValue() == null ||
+               display.getGroupIdField().getValue().trim().isEmpty()) {
+         Dialogs.getInstance().showError("Group ID can not be empty.");
+         return;
+      }
+      
+      if (display.getArtifactIdField().getValue() == null ||
+               display.getArtifactIdField().getValue().trim().isEmpty()) {
+         Dialogs.getInstance().showError("Artifact ID can not be empty.");
+         return;
+      }
+      
+      if (display.getVersionField().getValue() == null ||
+               display.getVersionField().getValue().trim().isEmpty()) {
+         Dialogs.getInstance().showError("Version can not be empty.");
+         return;
+      }
+      
+      final String projectName = display.getProjectNameField().getValue().trim();
+      String groupId = display.getGroupIdField().getValue().trim();
+      String artifactId = display.getArtifactIdField().getValue().trim();
+      String version = display.getVersionField().getValue().trim();
+      
       Item item = selectedItems.get(0);
       String workDir = item.getHref();
       if (item instanceof File)
@@ -172,28 +230,15 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }
       
-      String groupId = name;
-      String artifactId = name;
-      
-      String archetypeGroupId;
-      String archetypeArtifactId;
-
-      if (projectType == ProjectType.SPRING) {
-         archetypeGroupId = "org.springframework.osgi";
-         archetypeArtifactId = "spring-osgi-bundle-archetype";
-      } else {
-         archetypeGroupId = "org.apache.maven.archetypes";
-         archetypeArtifactId = "maven-archetype-webapp";
-      }
-      
-      JavaClientService.getInstance().createJavaProject(groupId, artifactId, archetypeGroupId, archetypeArtifactId, workDir, new MavenResponseCallback(eventBus)
+      JavaClientService.getInstance().createProject(projectName, projectType.value(), 
+         groupId, artifactId, version, workDir, new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)
          {
             eventBus.fireEvent(new RefreshBrowserEvent());
             IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectSuccess(name),
+            eventBus.fireEvent(new OutputEvent(JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectSuccess(projectName),
                Type.INFO));
          }
       });

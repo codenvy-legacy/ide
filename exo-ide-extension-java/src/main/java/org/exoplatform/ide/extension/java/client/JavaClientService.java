@@ -45,13 +45,14 @@ public abstract class JavaClientService
    }
    
    /**
-    * Create java web project.
+    * Creates java project.
     * 
-    * @param name - the name of new project
+    * @param projectName - the name of new project
+    * @param projectType - type ot new project
     * @param workDir - the location of new project
     * @param callback - callback, client has to implement
     */
-   public abstract void createJavaProject(String groupId, String artifactId, String archetypeGroupId, String archetypeArtifactId, String workDir, MavenResponseCallback callback);
+   public abstract void createProject(String projectName, String projectType, String groupId, String artifactId, String version, String workDir, MavenResponseCallback callback);
 
    /**
     * Clean project.

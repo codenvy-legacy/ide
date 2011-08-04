@@ -18,16 +18,8 @@
  */
 package org.exoplatform.ide.extension.ruby.server;
 
-import sun.net.www.protocol.jar.JarURLConnection;
-
-import org.apache.commons.io.FileUtils;
-import org.exoplatform.ide.FSLocation;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.POST;
@@ -36,6 +28,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.FileUtils;
+import org.exoplatform.ide.FSLocation;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
+import sun.net.www.protocol.jar.JarURLConnection;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.java.client.JavaClientBundle;
 import org.exoplatform.ide.extension.java.client.JavaExtension;
-import org.exoplatform.ide.extension.java.client.ProjectType;
 import org.exoplatform.ide.extension.java.client.create.CreateJavaProjectEvent;
+import org.exoplatform.ide.extension.java.shared.ProjectType;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -48,9 +48,9 @@ public class CreateJavaProjectControl extends SimpleControl implements IDEContro
 
    static
    {
-      ids.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlId());
-      titles.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlTitle());
-      prompts.put(ProjectType.WEBAPP, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlPrompt());
+      ids.put(ProjectType.WEB, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlId());
+      titles.put(ProjectType.WEB, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlTitle());
+      prompts.put(ProjectType.WEB, JavaExtension.LOCALIZATION_CONSTANT.createJavaProjectControlPrompt());
 
       ids.put(ProjectType.SPRING, JavaExtension.LOCALIZATION_CONSTANT.createJavaSpringProjectControlId());
       titles.put(ProjectType.SPRING, JavaExtension.LOCALIZATION_CONSTANT.createJavaSpringProjectControlTitle());

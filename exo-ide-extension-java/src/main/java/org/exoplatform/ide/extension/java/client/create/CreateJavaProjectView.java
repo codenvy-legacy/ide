@@ -43,9 +43,9 @@ public class CreateJavaProjectView extends ViewImpl implements CreateJavaProject
 {
    private static final String ID = "ideCreateJavaProjectView";
 
-   private static final int WIDTH = 400;
+   private static final int WIDTH = 550;
 
-   private static final int HEIGHT = 160;
+   private static final int HEIGHT = 275;
 
    private static final String CREATE_BUTTON_ID = "ideCreateJavaProjectViewCreateButton";
 
@@ -63,7 +63,7 @@ public class CreateJavaProjectView extends ViewImpl implements CreateJavaProject
     * Project name field.
     */
    @UiField
-   TextField nameField;
+   TextField nameField, groupIdField, artifactIdField, versionField;
    
    /**
     * Create project button.
@@ -83,7 +83,6 @@ public class CreateJavaProjectView extends ViewImpl implements CreateJavaProject
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -140,6 +139,24 @@ public class CreateJavaProjectView extends ViewImpl implements CreateJavaProject
    public void enableCreateButton()
    {
       createButton.setEnabled(true);
+   }
+
+   @Override
+   public HasValue<String> getGroupIdField()
+   {
+      return groupIdField;
+   }
+
+   @Override
+   public HasValue<String> getArtifactIdField()
+   {
+      return artifactIdField;
+   }
+
+   @Override
+   public HasValue<String> getVersionField()
+   {
+      return versionField;
    }
 
 }

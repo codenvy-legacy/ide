@@ -56,7 +56,7 @@ public interface JavaLocalizationConstant extends Messages
 
    @Key("control.create.javaSpringProject.prompt")
    String createJavaSpringProjectControlPrompt();
-
+   
    /*
     * CreateApplicationView
     */
@@ -68,6 +68,18 @@ public interface JavaLocalizationConstant extends Messages
 
    @Key("javaProject.view.nameField.defaultName")
    String createJavaProjectDefaultName();
+   
+   @Key("javaProject.view.name")
+   String newProjectName();
+   
+   @Key("javaProject.view.groupid")
+   String newProjectGroupId();
+   
+   @Key("javaProject.view.artifactid")
+   String newProjectArtifactId();
+   
+   @Key("javaProject.view.version")
+   String newProjectVersion();
 
    /*
     * Messages
