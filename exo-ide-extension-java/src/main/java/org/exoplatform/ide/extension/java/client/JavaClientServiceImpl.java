@@ -18,18 +18,15 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import javax.ws.rs.QueryParam;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
  * Implementation of {@link JavaClientService} service.
