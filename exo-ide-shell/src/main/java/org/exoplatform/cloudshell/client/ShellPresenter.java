@@ -66,7 +66,7 @@ public class ShellPresenter implements ConsoleWriter
       String getBuffer();
 
       void focusInConsole();
-      
+
       void printPrompt();
    }
 
@@ -110,13 +110,13 @@ public class ShellPresenter implements ConsoleWriter
             else if (code == KeyCodes.KEY_ENTER)
             {
                String s = display.submitBuffer();
-               if(!s.isEmpty())
+               if (!s.isEmpty())
                {
                   processCommand(s);
                }
                else
                   display.printPrompt();
-               
+
                handled = true;
             }
             else if (code == KeyCodes.KEY_TAB)
@@ -134,7 +134,7 @@ public class ShellPresenter implements ConsoleWriter
                goUp();
                handled = true;
             }
-            if (code == KeyCodes.KEY_DOWN)
+            else if (code == KeyCodes.KEY_DOWN)
             {
                goDown();
                handled = true;
@@ -142,11 +142,12 @@ public class ShellPresenter implements ConsoleWriter
             else
             {
                char c = event.getCharCode();
-               if (Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == '=' || c == '"')
-               {
+//               if (Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == '=' || c == '"' || c == ':' || c == '|'
+//                  || c == '.' || c == '*')
+//               {
                   display.appendBuffer(c);
                   handled = true;
-               }
+//               }
             }
             //
             if (handled)
@@ -176,7 +177,7 @@ public class ShellPresenter implements ConsoleWriter
             }
          }
       });
-      
+
       display.print("Welcome to eXo IDE Shell\n");
    }
 
@@ -208,14 +209,14 @@ public class ShellPresenter implements ConsoleWriter
       buffer.add(command);
       ShellService.getService().login(command, new AsyncRequestCallback<String>()
       {
-         
+
          @Override
          protected void onSuccess(String result)
          {
             CloudShell.console().print(result);
          }
       });
-//      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());
+      //      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());
    }
 
    /**
