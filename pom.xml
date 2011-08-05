@@ -642,13 +642,15 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-
+      <module>exo-ide-shell</module>   
 
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
+      <module>exo-ide-packaging-shell-war</module>
       <!-- Not build on GWT 2.2.0 -->
       <!-- module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-packaging-standalone-tomcat</module>
+      
    </modules>
 </project>
