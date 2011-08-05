@@ -45,7 +45,7 @@ public class CreateJavaProjectView extends ViewImpl implements CreateJavaProject
 
    private static final int WIDTH = 550;
 
-   private static final int HEIGHT = 275;
+   private static final int HEIGHT = 290;
 
    private static final String CREATE_BUTTON_ID = "ideCreateJavaProjectViewCreateButton";
 
