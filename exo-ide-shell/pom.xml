@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
@@ -9,7 +10,7 @@
       <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-shell</artifactId>
-   <packaging>war</packaging>
+   <packaging>jar</packaging>
    <name>eXo IDE Shell</name>
 
    <properties>
@@ -31,7 +32,7 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
-         <scope>provided</scope>
+         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -44,24 +45,70 @@
          <artifactId>exo.kernel.commons</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.kernel</groupId>
-         <artifactId>exo.kernel.container</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.commons</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.frameworks.servlet</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>stax-api</artifactId>
+               <groupId>javax.xml.stream</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jaxb-api</artifactId>
+               <groupId>javax.xml.bind</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>xpp3</artifactId>
+               <groupId>xpp3</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>portlet-api</artifactId>
+               <groupId>javax.portlet</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>picocontainer</artifactId>
+               <groupId>picocontainer</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jibx-extras</artifactId>
+               <groupId>org.jibx</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jibx-bind</artifactId>
+               <groupId>org.jibx</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jibx-run</artifactId>
+               <groupId>org.jibx</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jmock</artifactId>
+               <groupId>jmock</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>jsf-api</artifactId>
+               <groupId>javax.faces</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>exo.kernel.container</artifactId>
+               <groupId>org.exoplatform.kernel</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>exo.kernel.commons</artifactId>
+               <groupId>org.exoplatform.kernel</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>slf4j-api</artifactId>
+               <groupId>org.slf4j</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.crsh</groupId>
@@ -72,6 +119,12 @@
          <groupId>org.crsh</groupId>
          <artifactId>crsh.jcr</artifactId>
          <version>${crash.version}</version>
+         <exclusions>
+            <exclusion>
+               <artifactId>slf4j-api</artifactId>
+               <groupId>org.slf4j</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -84,17 +137,6 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>javax.mail</groupId>
-         <artifactId>mail</artifactId>
-         <version>1.4</version>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.activation</groupId>
-               <artifactId>activation</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>javax.annotation</groupId>
          <artifactId>jsr250-api</artifactId>
       </dependency>
@@ -104,17 +146,8 @@
          <version>1</version>
       </dependency>
       <dependency>
-         <groupId>commons-fileupload</groupId>
-         <artifactId>commons-fileupload</artifactId>
-         <version>1.0</version>
-      </dependency>
-      <dependency>
          <groupId>javax.jcr</groupId>
          <artifactId>jcr</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
       
       <!-- eXo GWT Framework dependencies -->
@@ -130,11 +163,19 @@
    </dependencies>
 
    <build>
-      <!-- Generate compiled stuff in the folder used for developing mode -->
+      <resources>
+         <resource>
+            <directory>src/main/java</directory>
+         </resource>
+         <resource>
+            <directory>src/main/resources</directory>
+         </resource>
+      </resources>
+<!--       Generate compiled stuff in the folder used for developing mode
       <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
       <plugins>
-         <!-- GWT Maven Plugin -->
+         GWT Maven Plugin
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
@@ -142,13 +183,13 @@
                <execution>
                   <goals>
                      <goal>compile</goal>
-                     <!--goal>test</goal -->
+                     goal>test</goal
                      <goal>i18n</goal>
-                     <!--goal>generateAsync</goal -->
+                     goal>generateAsync</goal
                   </goals>
                </execution>
             </executions>
-            <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+            Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org
             <configuration>
                <runTarget>org.exoplatform.cloudshell.CloudShell.html</runTarget>
                <hostedWebapp>${webappDirectory}</hostedWebapp>
@@ -157,7 +198,7 @@
             </configuration>
          </plugin>
 
-         <!-- Copy static web files before executing gwt:run -->
+         Copy static web files before executing gwt:run
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -173,7 +214,30 @@
                <webappDirectory>${webappDirectory}</webappDirectory>
             </configuration>
          </plugin>
-      </plugins>
+      </plugins> -->
    </build>
-
+   <profiles>
+      <profile>
+         <id>shell</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <configuration>
+                     <runTarget>Shell/Shell.html</runTarget>
+                     <hostedWebapp>${webappDirectory}</hostedWebapp>
+                     <logLevel>INFO</logLevel>
+                     <skipTests>${gwt.test.skip}</skipTests>
+                     <port>${gwt.port}</port>
+                     <bindAddress>0.0.0.0</bindAddress>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 </project>

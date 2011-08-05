@@ -24,15 +24,15 @@ import org.crsh.shell.Shell;
 import org.crsh.shell.concurrent.SyncShellResponseContext;
 import org.crsh.shell.impl.CRaSH;
 import org.crsh.util.Strings;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.security.DenyAll;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -49,8 +49,6 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/crash")
 public class CRaSHService
 {
-   private static final Log log = ExoLogger.getLogger(CRaSHService.class);
-
    private PluginContext pluginContext;
 
    private HttpSession httpSession;
@@ -69,7 +67,6 @@ public class CRaSHService
       CRaSH shell = (CRaSH)httpSession.getAttribute(CRaSHService.class.getName());
       if (shell == null)
       {
-         log.debug("Created shell");
          shell = new CRaSH(pluginContext);
          httpSession.setAttribute(CRaSHService.class.getName(), shell);
       }
@@ -78,6 +75,7 @@ public class CRaSHService
 
    @GET
    @Path("welcome")
+   @DenyAll
    public String getWelcome()
    {
       Shell shell = getShell();
@@ -86,14 +84,17 @@ public class CRaSHService
 
    @POST
    @Path("command")
-   public String processCommand(String command)
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.TEXT_PLAIN)
+   public String processCommand(HashMap<String, String> command)
    {
       Shell shell = getShell();
       StringBuilder sb = new StringBuilder();
       try
       {
+         String cmd = command.get("cmd");
          SyncShellResponseContext resp = new SyncShellResponseContext();
-         shell.createProcess(command).execute(resp);
+         shell.createProcess(cmd).execute(resp);
          String text = resp.getResponse().getText();
          sb.append(text);
       }
@@ -109,6 +110,7 @@ public class CRaSHService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("complete")
+   @DenyAll
    public Map<String, String> complete(String s)
    {
       Shell shell = getShell();

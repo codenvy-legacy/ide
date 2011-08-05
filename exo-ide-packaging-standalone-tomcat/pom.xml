@@ -19,6 +19,7 @@
    <name>eXo IDE :: Assemblies Tomcat</name>
    <properties>
       <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
+      <crash.version>1.0.0-beta21</crash.version>
    </properties>
    <dependencies>
       <dependency>
@@ -32,6 +33,24 @@
          <artifactId>exo-ide-rest-war</artifactId>
          <version>${project.version}</version>
          <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-packaging-shell-war</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-shell</artifactId>
+         <version>${project.version}</version>
+         <exclusions>
+           <exclusion>
+              <groupId>com.google.gwt</groupId>
+              <artifactId>gwt-dev</artifactId>
+           </exclusion>
+         </exclusions>
+         <type>jar</type>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -64,6 +83,16 @@
          <artifactId>logback-core</artifactId>
          <version>${ch.qos.logback.version}</version>
       </dependency>
+      <dependency>
+         <groupId>org.crsh</groupId>
+         <artifactId>crsh.shell.core</artifactId>
+         <version>${crash.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.crsh</groupId>
+         <artifactId>crsh.jcr</artifactId>
+         <version>${crash.version}</version>
+      </dependency>
    </dependencies>
 
    <build>
@@ -92,7 +121,7 @@
                   </goals>
                   <configuration>
                      <includeTypes>jar</includeTypes>
-                     <stripVersion>true</stripVersion>
+                     <stripVersion>false</stripVersion>
                      <outputDirectory>${project.build.directory}/tomcat-ide/lib</outputDirectory>
                   </configuration>
                </execution>
@@ -386,7 +415,7 @@
                            </fileset>
                         </move>
 
-   <!--                      <move file="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar" />
 
                         <move file="${project.build.directory}/tomcat-ide/lib/logback-core-${ch.qos.logback.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar" />
 
@@ -394,7 +423,7 @@
 
                         <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
 
-                        <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" /> -->
+                        <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -411,6 +440,7 @@
                         </war>
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
