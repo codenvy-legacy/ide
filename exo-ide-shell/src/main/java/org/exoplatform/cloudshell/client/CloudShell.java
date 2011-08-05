@@ -30,6 +30,7 @@ public class CloudShell implements EntryPoint
          protected void onSuccess(Set<CLIResource> result)
          {
             commands = result;
+            login();
          }
       });
 
@@ -50,5 +51,10 @@ public class CloudShell implements EntryPoint
    public static Set<CLIResource> getCommands()
    {
       return commands;
+   }
+   
+   public void login()
+   {
+     //TODO 
    }
 }

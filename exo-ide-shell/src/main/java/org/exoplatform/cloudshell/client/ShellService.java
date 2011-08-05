@@ -65,5 +65,17 @@ public class ShellService
       AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
-
+   
+   public void processCommand(String cmd)
+   {
+      //CloudShell.getCommands();
+      
+   }
+   
+   
+   protected CLIResource findCommand()
+   {
+     //TODO
+      return null;
+   }
 }
