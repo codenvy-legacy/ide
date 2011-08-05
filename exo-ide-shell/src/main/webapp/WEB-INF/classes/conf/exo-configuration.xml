@@ -30,4 +30,8 @@
   <type>org.exoplatform.cloudshell.server.rest.CLIResourcesApplication</type>
  </component>
  
+ <component>
+  <type>org.exoplatform.cloudshell.server.CLIResourceFactory</type>
+ </component>
+ 
 </configuration>

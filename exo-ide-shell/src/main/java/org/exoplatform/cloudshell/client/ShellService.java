@@ -1,184 +1,69 @@
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.exoplatform.cloudshell.client;
 
+import com.google.gwt.http.client.RequestBuilder;
 
-import org.exoplatform.cloudshell.client.cli.CommandLine;
-import org.exoplatform.cloudshell.client.cli.CommandLineParser;
-import org.exoplatform.cloudshell.client.cli.GnuParser;
-import org.exoplatform.cloudshell.client.cli.Option;
-import org.exoplatform.cloudshell.client.cli.OptionBuilder;
-import org.exoplatform.cloudshell.client.cli.Options;
-import org.exoplatform.cloudshell.client.cli.ParseException;
-import org.exoplatform.cloudshell.client.cli.Parser;
-import org.exoplatform.cloudshell.client.cli.PosixParser;
-import org.exoplatform.cloudshell.client.cli.Properties;
-import org.exoplatform.cloudshell.client.cli.Util;
+import org.exoplatform.cloudshell.shared.CLIResource;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
+/**
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Aug 4, 2011 4:31:13 PM anya $
+ *
+ */
+public class ShellService
+{
+   private static ShellService service;
 
+   private final String REST_CONTEXT = "rest/private/";
 
-public class ShellService {
-   
-   CommandLineParser parser = new PosixParser();
-   
+   private final String RESOURCES_PATH = "ide/cli/resources";
 
-  public String getWelcome()
-  {
-     return "Welcome to Cloud Shell\n > ";
-  }
-
-  public String process(String s) 
-  {
-     String[] args = null;
-     try {
-      args = Util.translateCommandline(s);
-      for (String string : args)
-      {
-         System.out.println("ShellService.process()" + string);
-         
-      }
-     
-     
-     } catch (Exception e) {
-      e.printStackTrace();
-   }
-     
-//        new String[] { "-Dparam1=value1", "-Dparam2=value2", "-Dparam3", "-Dparam4=value4", "-D", "--property", "foo=bar" };
-     Options options = new Options();
-     Option help = new Option("h","help",false, "print this message");
-     options.addOption(help);
-     options.addOption(new Option("ls", "getallbook", false, "print project help information"));
-     options.addOption("put", "add-new-book", false, "Add new book");
-     options.addOption(OptionBuilder.withValueSeparator().hasOptionalArgs(2).create('D'));
-     
-     
-     
-     
-     
-     //'{"author":"My Author","title":"My Title","price":1.00,"pages":100}'
-
-     Parser parser = new GnuParser();
-     CommandLine cl;
-     String s1 = new String();
-   try
+   public static ShellService getService()
    {
-      cl = parser.parse(options, args);
-      Option[] opts = cl.getOptions();
-      if (cl.hasOption("help"))
+      if (service == null)
       {
-         s1 = help.getDescription();
+         service = new ShellService();
       }
-      if (cl.hasOption("ls"))
-      {
-         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/rest/books");
-         builder.setCallback(new RequestCallback()
-         {
-            
-            public void onResponseReceived(Request request, Response response)
-            {
-               //TODO CloudShell.term.print(response.getText());
-            }
-            
-            public void onError(Request request, Throwable exception)
-            {
-               exception.printStackTrace();
-            }
-         });
-         try
-         {
-            builder.send();
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-         }
-      } 
-         
-         if (cl.hasOption("put"))
-         {
-            System.out.println("ShellService.process()rrrrrrrrr" + cl.getArgs().length);
-            Properties props = cl.getOptionProperties("D");
-            String author = (String)props.get("author");
-            String title = (String)props.get("title");
-            String price = (String)props.get("price");
-            String  pages = (String)props.get("pages");
-            
-            
-            String data = "{\"author\":\"" + author + "\",\"title\":\"" + title + "\",\"price\":" + price + ",\"pages\":" + pages + "}";
-            
-            RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/rest/books");
-            builder.setHeader("Content-type","application/json");
-            
-            builder.setRequestData(data);
-            
-            builder.setCallback(new RequestCallback()
-            {
-               
-               public void onResponseReceived(Request request, Response response)
-               {
-                  //CloudShell.term.print(response.getText());
-               }
-               
-               public void onError(Request request, Throwable exception)
-               {
-                  exception.printStackTrace();
-               }
-            });
-            try
-            {
-               builder.send();
-            }
-            catch (RequestException e)
-            {
-               e.printStackTrace();
-            }
-            
-            System.out.println("ShellService.process()" + data);
-            
-         }
-      return s1 + "\n >";
+      return service;
    }
-   catch (ParseException e)
+
+   public void getCommands(AsyncRequestCallback<Set<CLIResource>> callback)
    {
-      e.printStackTrace();
+      String url = REST_CONTEXT + RESOURCES_PATH;
+
+      Set<CLIResource> resources = new HashSet<CLIResource>();
+
+      CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
+      callback.setResult(resources);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader())
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-     
-    
-
-     
-     System.out.println("ShellService.process()" + "Process ... " + s);
-     if ("eXo".equals(s))
-        return s + " it's Great Company!!!\n>";
-     else if ("MS".equals(s)) 
-        return s + " Sucks!!!\n>";
-     else 
-        return "Who are you?\n>";
-  }
-
-  public Map<String, String> complete(String s, Scheduler.ScheduledCommand completer)
-  {
-     return new HashMap<String, String>();
-  }
-  
-  public String arrayToString(String[] array, String delimiter) {
-     StringBuilder arTostr = new StringBuilder();
-     if (array.length > 0) {
-         arTostr.append(array[0]);
-         for (int i=1; i<array.length; i++) {
-             arTostr.append(delimiter);
-             arTostr.append(array[i]);
-         }
-     }
-     return arTostr.toString();
- }
 }

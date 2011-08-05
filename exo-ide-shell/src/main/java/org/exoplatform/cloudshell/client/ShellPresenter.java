@@ -77,6 +77,7 @@ public class ShellPresenter implements ConsoleWriter
       display = GWT.create(Display.class);
       bindDisplay();
       buffer = new ShellComandBuffer();
+      display.print("");
    }
 
    public void bindDisplay()

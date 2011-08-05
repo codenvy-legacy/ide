@@ -60,12 +60,12 @@ public final class Term extends Composite {
   private final ScrollPanel scroll;
 
   /** . */
-  private final ShellService remote;
+  private final ShellService_ remote;
 
   /** . */
   private final DecoratedPopupPanel popup;
 
-  public Term(ShellService remote, int height) {
+  public Term(ShellService_ remote, int height) {
 
     //
     TermText text = new TermText(height);
