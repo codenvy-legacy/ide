@@ -103,7 +103,7 @@ public class CRaSHService
          e.printStackTrace();
          sb.append("failure ").append(e.getMessage());
       }
-      sb.append('\n').append(shell.getPrompt());
+      sb.append('\n');
       return sb.toString();
    }
 

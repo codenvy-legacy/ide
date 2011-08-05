@@ -32,7 +32,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 
 import org.exoplatform.cloudshell.client.crash.CRaSHClientService;
 import org.exoplatform.cloudshell.client.crash.CRaSHCompleteListAsyncRequestCallback;
-import org.exoplatform.cloudshell.client.crash.CRaSHOutputAsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 
 import java.util.HashMap;
 
@@ -66,6 +66,8 @@ public class ShellPresenter implements ConsoleWriter
       String getBuffer();
 
       void focusInConsole();
+      
+      void printPrompt();
    }
 
    private Display display;
@@ -77,7 +79,6 @@ public class ShellPresenter implements ConsoleWriter
       display = GWT.create(Display.class);
       bindDisplay();
       buffer = new ShellComandBuffer();
-      display.print("");
    }
 
    public void bindDisplay()
@@ -109,7 +110,13 @@ public class ShellPresenter implements ConsoleWriter
             else if (code == KeyCodes.KEY_ENTER)
             {
                String s = display.submitBuffer();
-               processCommand(s);
+               if(!s.isEmpty())
+               {
+                  processCommand(s);
+               }
+               else
+                  display.printPrompt();
+               
                handled = true;
             }
             else if (code == KeyCodes.KEY_TAB)
@@ -169,6 +176,8 @@ public class ShellPresenter implements ConsoleWriter
             }
          }
       });
+      
+      display.print("Welcome to eXo IDE Shell\n");
    }
 
    /**
@@ -197,7 +206,16 @@ public class ShellPresenter implements ConsoleWriter
    public void processCommand(String command)
    {
       buffer.add(command);
-      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());
+      ShellService.getService().login(command, new AsyncRequestCallback<String>()
+      {
+         
+         @Override
+         protected void onSuccess(String result)
+         {
+            CloudShell.console().print(result);
+         }
+      });
+//      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());
    }
 
    /**

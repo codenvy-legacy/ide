@@ -49,13 +49,15 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
       setHeight("100%");
 
       clearButton = createButton("clearButton", "Clear");
-      add(clearButton);
+      //      add(clearButton);
 
       termText = new TermText(32);
-      termText.setWidth("100%");
- //     termText.setHeight("100%");
+      termText.setWidth("800px");
+      termText.setHeight("450px");
       add(termText);
-
+      setStyleName("shell-container");
+      //      setWidth("600px");
+      //      setHeight("400px");
       RootPanel.get().add(this);
       focusInConsole();
    }
@@ -85,6 +87,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void print(String str)
    {
       termText.print(str);
+      termText.getElement().setScrollTop(termText.getElement().getScrollHeight());
       termText.repaint();
    }
 
@@ -186,5 +189,16 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void clearBuffer()
    {
       termText.bufferClear();
+   }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ShellPresenter.Display#printPrompt()
+    */
+   @Override
+   public void printPrompt()
+   {
+      termText.printPrompt();
+      termText.getElement().setScrollTop(termText.getElement().getScrollHeight());
+      termText.repaint();
    }
 }

@@ -193,11 +193,18 @@ final class TermText extends FocusWidget
    void print(char c)
    {
       state.append(c);
+      printPrompt();
    }
 
    void print(CharSequence text)
    {
       state.append(text);
+      printPrompt();
+   }
+   
+   void printPrompt()
+   {
+      state.append("$ ");
    }
 
    void repaint()
