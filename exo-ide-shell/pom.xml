@@ -124,6 +124,10 @@
                <artifactId>slf4j-api</artifactId>
                <groupId>org.slf4j</groupId>
             </exclusion>
+            <exclusion>
+               <artifactId>crsh.shell.packaging</artifactId>
+               <groupId>org.crsh</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -171,50 +175,6 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
-<!--       Generate compiled stuff in the folder used for developing mode
-      <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-
-      <plugins>
-         GWT Maven Plugin
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                     goal>test</goal
-                     <goal>i18n</goal>
-                     goal>generateAsync</goal
-                  </goals>
-               </execution>
-            </executions>
-            Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org
-            <configuration>
-               <runTarget>org.exoplatform.cloudshell.CloudShell.html</runTarget>
-               <hostedWebapp>${webappDirectory}</hostedWebapp>
-               <i18nMessagesBundle>org.exoplatform.cloudshell.client.Messages</i18nMessagesBundle>
-               <bindAddress>0.0.0.0</bindAddress>
-            </configuration>
-         </plugin>
-
-         Copy static web files before executing gwt:run
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-               <execution>
-                  <phase>compile</phase>
-                  <goals>
-                     <goal>exploded</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <webappDirectory>${webappDirectory}</webappDirectory>
-            </configuration>
-         </plugin>
-      </plugins> -->
    </build>
    <profiles>
       <profile>
@@ -222,14 +182,117 @@
          <activation>
             <activeByDefault>false</activeByDefault>
          </activation>
+         <dependencies>
+            <dependency>
+               <groupId>org.crsh</groupId>
+               <artifactId>crsh.jcr</artifactId>
+               <version>${crash.version}</version>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>slf4j-api</artifactId>
+                     <groupId>org.slf4j</groupId>
+                  </exclusion>
+                  <exclusion>
+                     <artifactId>crsh.shell.packaging</artifactId>
+                     <groupId>org.crsh</groupId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.kernel</groupId>
+               <artifactId>exo.kernel.commons</artifactId>
+               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.kernel</groupId>
+               <artifactId>exo.kernel.container</artifactId>
+               <scope>runtime</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.servlet</artifactId>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </dependency>
+            <dependency>
+               <groupId>org.exoplatform.jcr</groupId>
+               <artifactId>exo.jcr.component.ext</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>pull-parser</groupId>
+                     <artifactId>pull-parser</artifactId>
+                  </exclusion>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+               <scope>runtime</scope>
+            </dependency>
+<!--             <dependency>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-dev</artifactId>
+               <version>${gwt.version}</version>
+               <scope>compile</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency> -->
+            <dependency>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-servlet</artifactId>
+               <scope>runtime</scope>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+         </dependencies>
          <build>
             <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>copy-prod-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                           <outputDirectory>target/war/WEB-INF/</outputDirectory>
+                           <resources>
+                              <resource>
+                                 <directory>src/main/webapp/shell/WEB-INF/</directory>
+                                 <filtering>true</filtering>
+                              </resource>
+                           </resources>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
                   <configuration>
                      <runTarget>Shell/Shell.html</runTarget>
-                     <hostedWebapp>${webappDirectory}</hostedWebapp>
+                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <logLevel>INFO</logLevel>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+   <display-name>eXo IDE Shell</display-name>
+
+   <context-param>
+      <param-name>crash.vfs.refresh_period</param-name>
+      <param-value>1</param-value>
+      <description>The vfs refresh rate</description>
+   </context-param>
+   <listener>
+      <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
+   </listener>
+   <listener>
+      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener</listener-class>
+   </listener>
+   <servlet>
+      <servlet-name>RestServer</servlet-name>
+      <description>eXo - Platform REST Server</description>
+      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
+      <load-on-startup>4</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>RestServer</servlet-name>
+      <url-pattern>Shell/rest/private/*</url-pattern>
+   </servlet-mapping>
+</web-app>

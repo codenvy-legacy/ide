@@ -1,0 +1,26 @@
+[
+{
+  "command":"cli",
+  "path":"ide/cli/resources",
+  "method":"GET"
+},
+{
+    "command": ["help", "man","cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
+    "path": "/ide/crash/command",
+    "produces": [
+      "text/plain"
+    ],
+    "method": "POST",
+    "params": [
+      {
+        "mandatory": true,
+        "name": "cmd",
+        "type": "BODY"
+      }
+    ],
+    "consumes": [
+      "application/json"
+    ]
+  }
+  
+]
