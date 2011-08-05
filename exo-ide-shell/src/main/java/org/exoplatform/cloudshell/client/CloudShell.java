@@ -53,8 +53,17 @@ public class CloudShell implements EntryPoint
       return commands;
    }
    
-   public void login()
+   private void login()
    {
-     //TODO 
+      String command = "ws login dev-monit";
+      ShellService.getService().login(command, new AsyncRequestCallback<String>()
+      {
+         
+         @Override
+         protected void onSuccess(String result)
+         {
+            console().print(result);
+         }
+      });
    }
 }

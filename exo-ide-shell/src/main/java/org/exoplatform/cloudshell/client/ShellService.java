@@ -20,6 +20,8 @@ package org.exoplatform.cloudshell.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 
+import org.exoplatform.cloudshell.client.marshal.LoginMarshaller;
+import org.exoplatform.cloudshell.client.marshal.StringUnmarshaller;
 import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -65,17 +67,27 @@ public class ShellService
       AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
-   
+
+   public void login(String command, AsyncRequestCallback<String> callback)
+   {
+      String url = REST_CONTEXT + "ide/crash/command";
+      LoginMarshaller marshaller = new LoginMarshaller(command);
+      callback.setPayload(new StringUnmarshaller(callback));
+
+      AsyncRequest.build(RequestBuilder.POST, url, new EmptyLoader()).data(marshaller)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+
+   }
+
    public void processCommand(String cmd)
    {
       //CloudShell.getCommands();
-      
+
    }
-   
-   
+
    protected CLIResource findCommand()
    {
-     //TODO
+      //TODO
       return null;
    }
 }
