@@ -243,7 +243,7 @@ public class ShellPresenter implements ConsoleWriter
    public void processCommand(String command)
    {
       buffer.add(command);
-      ShellService.getService().login(command, new AsyncRequestCallback<String>()
+      ShellService.getService().processCommand(command, new AsyncRequestCallback<String>()
       {
 
          @Override
@@ -251,8 +251,18 @@ public class ShellPresenter implements ConsoleWriter
          {
             display.print(result);
          }
+
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            //TODO
+            display.print((exception.getMessage() != null) ? exception.getMessage() + "\n"
+               : "Unknown error in processing the command.\n");
+         }
       });
-      //      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());
    }
 
    /**
