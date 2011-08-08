@@ -34,10 +34,11 @@ h1 {
 
 .crash-term {
 	background: black;
-	color: #adff2f;
-	font-family: monospace !important;
+	color: #1FBE1F;
+	font-family: "DejaVu Sans Mono", courier, monospace;
 	margin: auto;
 	overflow: auto;
+	font-size: 11px;
 }
 
 .shell-container {
@@ -45,7 +46,7 @@ h1 {
 }
 
 .crash-blink .crash-cursor {
-	background: #adff2f;
+	background: #1FBE1F;
 }
 
 .crash-autocomplete {
