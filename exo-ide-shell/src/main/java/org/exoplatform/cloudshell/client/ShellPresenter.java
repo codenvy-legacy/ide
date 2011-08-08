@@ -33,6 +33,8 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import org.exoplatform.cloudshell.client.crash.CRaSHClientService;
 import org.exoplatform.cloudshell.client.crash.CRaSHCompleteListAsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 
 import java.util.HashMap;
 
@@ -140,14 +142,23 @@ public class ShellPresenter implements ConsoleWriter
                handled = true;
             }
             else
+            if (code == KeyCodes.KEY_LEFT)
+            {
+               handled = true;
+            }
+            else if (code == KeyCodes.KEY_RIGHT)
+            {
+               handled = true;
+            }
+            else
             {
                char c = event.getCharCode();
-//               if (Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == '=' || c == '"' || c == ':' || c == '|'
-//                  || c == '.' || c == '*')
-//               {
-                  display.appendBuffer(c);
-                  handled = true;
-//               }
+               //               if (Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == '=' || c == '"' || c == ':' || c == '|'
+               //                  || c == '.' || c == '*')
+               //               {
+               display.appendBuffer(c);
+               handled = true;
+               //               }
             }
             //
             if (handled)
@@ -174,6 +185,31 @@ public class ShellPresenter implements ConsoleWriter
             {
                event.preventDefault();
                event.stopPropagation();
+            }
+            else if (BrowserResolver.CURRENT_BROWSER != Browser.FIREFOX)
+            {
+               boolean handled = false;
+               if (code == KeyCodes.KEY_BACKSPACE)
+               {
+                  display.removeFromBuffer();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_UP)
+               {
+                  goUp();
+                  handled = true;
+               }
+               else if (code == KeyCodes.KEY_DOWN)
+               {
+                  goDown();
+                  handled = true;
+               }
+               if (handled)
+               {
+                  display.refreshConsole();
+                  event.preventDefault();
+                  event.stopPropagation();
+               }
             }
          }
       });
@@ -213,7 +249,7 @@ public class ShellPresenter implements ConsoleWriter
          @Override
          protected void onSuccess(String result)
          {
-            CloudShell.console().print(result);
+            display.print(result);
          }
       });
       //      CRaSHClientService.getService().processCommand(command, new CRaSHOutputAsyncRequestCallback());

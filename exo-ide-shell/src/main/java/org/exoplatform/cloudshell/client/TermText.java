@@ -207,6 +207,7 @@ final class TermText extends FocusWidget
       state.append("$ ");
    }
 
+   
    void repaint()
    {
 
@@ -243,5 +244,6 @@ final class TermText extends FocusWidget
 
       // Update markup state
       getElement().setInnerHTML(markup.toString());
+      getElement().setScrollTop(getElement().getScrollHeight());
    }
 }

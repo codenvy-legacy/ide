@@ -87,7 +87,6 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void print(String str)
    {
       termText.print(str);
-      termText.getElement().setScrollTop(termText.getElement().getScrollHeight());
       termText.repaint();
    }
 
@@ -198,7 +197,6 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void printPrompt()
    {
       termText.printPrompt();
-      termText.getElement().setScrollTop(termText.getElement().getScrollHeight());
       termText.repaint();
    }
 }
