@@ -90,7 +90,7 @@ public class FileTemplates
       "class HelloWorldApp {\n" +
       "    public static void main(String[] args) {\n" +
       "      System.out.println(\"Hello World!\");\n" +
-      "}";
+      "    }\n}";
       templates.put(MimeType.APPLICATION_JAVA, content);
   }
 
