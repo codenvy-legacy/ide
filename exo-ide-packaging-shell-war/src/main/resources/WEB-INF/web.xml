@@ -4,21 +4,14 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-	<!-- <display-name>book-service</display-name> <context-param> <param-name>javax.ws.rs.Application</param-name> 
-		<param-value>org.everrest.sample.book.BookApplication</param-value> </context-param> 
-		<listener> <listener-class>org.everrest.sample.book.BookServiceBootstrap</listener-class> 
-		</listener> <listener> <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class> 
-		</listener> <servlet> <servlet-name>EverrestServlet</servlet-name> <servlet-class>org.everrest.core.servlet.EverrestServlet</servlet-class> 
-		</servlet> <servlet-mapping> <servlet-name>EverrestServlet</servlet-name> 
-		<url-pattern>/rest/*</url-pattern> </servlet-mapping> -->
-   <display-name>CRaSH</display-name>
+   <display-name>eXo IDE Shell</display-name>
 
    <context-param>
       <param-name>crash.vfs.refresh_period</param-name>
       <param-value>1</param-value>
       <description>The vfs refresh rate</description>
    </context-param>
-      <filter>
+   <filter>
     <filter-name>SetCurrentIdentityFilter</filter-name>
     <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
   </filter>
