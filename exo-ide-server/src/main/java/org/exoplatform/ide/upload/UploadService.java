@@ -140,37 +140,7 @@ public class UploadService
 
          ZipUtils.unzip(session, fileItem.getInputStream(), getResourcePath(repoPath));
       }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (IllegalArgumentException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (SAXException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (TikaException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (RepositoryException e)
-      {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
-      }
-      catch (RepositoryConfigurationException e)
+      catch (Exception e)
       {
          if (log.isDebugEnabled())
             e.printStackTrace();
@@ -274,24 +244,35 @@ public class UploadService
     * @throws SAXException
     * @throws TikaException
     */
-   private void checkForZipBomb(InputStream inputStream) throws IOException, SAXException, TikaException
+   private void checkForZipBomb(InputStream inputStream) throws Exception
    {
       InputStream is = inputStream;
       CountingInputStream count = new CountingInputStream(is);
       ContentHandler handler = new BodyContentHandler();
       SecureContentHandler secure = new SecureContentHandler(handler, count);
       Metadata metadata = new Metadata();
+      
       AutoDetectParser parser = new AutoDetectParser();
-      parser.parse(count, secure, metadata);
-
-      if (count != null)
+      try
       {
-         count.close();
+         parser.parse(count, secure, metadata);
       }
-      if (is != null)
+      catch (NoClassDefFoundError e)
       {
-         is.close();
+         log.info("Tika reader not found. " + e.getMessage());
+         return;
       }
+      finally
+      {
+         if (count != null)
+         {
+            count.close();
+         }
+         if (is != null)
+         {
+            is.close();
+         }
+      }      
    }
 
    /**

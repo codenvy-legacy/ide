@@ -126,12 +126,16 @@ public class AddUserListener extends UserEventListener
     * @param userId user's ID
     * @throws RepositoryException 
     */
-   private void createUserFolder(String userId) throws RepositoryException
+   private void ensureUserFolderCreated(String userId) throws RepositoryException
    {
       ManageableRepository repository = repositoryService.getCurrentRepository();
 
       Session session = repository.getSystemSession(WORKSPACE_NAME);
       Node rootNode = session.getRootNode();
+
+      if (rootNode.hasNode(userId)) {
+         return;
+      }
 
       Node userNode = rootNode.addNode(userId, "nt:folder");
 
@@ -197,7 +201,7 @@ public class AddUserListener extends UserEventListener
 
       try
       {
-         createUserFolder(user.getUserName());
+         ensureUserFolderCreated(user.getUserName());
       }
       catch (Exception e)
       {
