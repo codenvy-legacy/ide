@@ -49,6 +49,10 @@
               <groupId>com.google.gwt</groupId>
               <artifactId>gwt-dev</artifactId>
            </exclusion>
+           <exclusion>
+              <artifactId>log4j</artifactId>
+              <groupId>log4j</groupId>
+           </exclusion>
          </exclusions>
          <type>jar</type>
       </dependency>
