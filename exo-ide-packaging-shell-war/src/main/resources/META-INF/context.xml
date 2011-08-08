@@ -18,7 +18,7 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<Context path="/crash" docBase="crash" reloadable="true" crossContext="false">
+<Context path="/shell" docBase="shell" reloadable="true" crossContext="false">
 
   <Logger className='org.apache.catalina.logger.SystemOutLogger'
             prefix='localhost_portal_log.' suffix='.txt' timestamp='true'/>

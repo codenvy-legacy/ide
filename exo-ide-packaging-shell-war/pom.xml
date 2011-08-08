@@ -124,12 +124,8 @@
                 <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                <webResources>
                   <resource>
-                     <directory>src/main/resources/META-INF</directory>
-                     <targetPath>META-INF</targetPath>
-                  </resource>
-                  <resource>
-                     <directory>src/main/resources/WEB-INF</directory>
-                     <targetPath>WEB-INF</targetPath>
+                     <directory>src/main/resources</directory>
+                     <targetPath>.</targetPath>
                   </resource>
                </webResources>
             </configuration>

@@ -1,11 +1,11 @@
 [
 {
-  "command":"cli",
+  "command":["cli"],
   "path":"ide/cli/resources",
   "method":"GET"
 },
 {
-    "command": ["help", "man","cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
+    "command": ["help", "man","cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "xpath"],
     "path": "/ide/crash/command",
     "produces": [
       "text/plain"
