@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.jenkins.server;
 
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.git.server.GitHelper;
+import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -322,6 +323,30 @@ public abstract class JenkinsClient
 
    public void build(String jobName, File workDir) throws IOException, JenkinsException
    {
+      ConversationState userState = ConversationState.getCurrent();
+      if (userState != null)
+      {
+         String lastJob = (String)userState.getAttribute("org.exoplatform.ide.jenkins.job");
+         if (lastJob != null)
+         {
+            try
+            {
+               JobStatus lastJobStatus = jobStatus(lastJob, null);
+               if (JobStatus.Status.END == lastJobStatus.getStatus())
+                  userState.removeAttribute("org.exoplatform.ide.jenkins.job");
+               else
+                  throw new JenkinsException(400, "Build job '" + lastJob
+                     + "' in progress. Not allowed have more then one build at the same time. ", "text/plain");
+            }
+            catch (JenkinsException e)
+            {
+               // Do nothing if job does not exist.
+               if (e.getResponseStatus() != 404)
+                  throw e;
+            }
+         }
+      }
+
       if ((jobName == null || jobName.isEmpty()) && workDir != null)
       {
          jobName = readJenkinsJobName(workDir);
@@ -345,6 +370,8 @@ public abstract class JenkinsClient
          if (http != null)
             http.disconnect();
       }
+      if (userState != null)
+         userState.setAttribute("org.exoplatform.ide.jenkins.job", jobName);
    }
 
    public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
