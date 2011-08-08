@@ -22,22 +22,30 @@ import java.util.Set;
 
 public class CLIResource
 {
-   private Set<String> commands;
+   private Set<String> command;
    private String path;
    private String method;
    private Set<String> consumes;
    private Set<String> produces;
    private Set<CLIResourceParameter> params;
+   private String description;
 
-   public CLIResource(Set<String> commands, String path, String method, Set<String> consumes, Set<String> produces,
-      Set<CLIResourceParameter> params)
+   public CLIResource(Set<String> command, String path, String method, Set<String> consumes, Set<String> produces,
+      Set<CLIResourceParameter> params, String description)
    {
-      this.commands = commands;
+      this.command = command;
       this.path = path;
       this.method = method;
       this.consumes = consumes;
       this.produces = produces;
       this.params = params;
+      this.description = description;
+   }
+
+   public CLIResource(Set<String> command, String path, String method, Set<String> consumes, Set<String> produces,
+      Set<CLIResourceParameter> params)
+   {
+      this(command, path, method, consumes, produces, params, null);
    }
 
    public CLIResource()
@@ -46,12 +54,12 @@ public class CLIResource
 
    public Set<String> getCommand()
    {
-      return commands;
+      return command;
    }
 
    public void setCommand(Set<String> command)
    {
-      this.commands = command;
+      this.command = command;
    }
 
    public String getPath()
@@ -104,11 +112,22 @@ public class CLIResource
       this.params = params;
    }
 
+   
+   public String getDescription()
+   {
+      return description;
+   }
+
+   public void setDescription(String description)
+   {
+      this.description = description;
+   }
+
    @Override
    public int hashCode()
    {
       int hash = 7;
-      hash = hash * 31 + ((commands == null) ? 0 : commands.hashCode());
+      hash = hash * 31 + ((command == null) ? 0 : command.hashCode());
       hash = hash * 31 + ((path == null) ? 0 : path.hashCode());
       hash = hash * 31 + ((method == null) ? 0 : method.hashCode());
       hash = hash * 31 + ((consumes == null) ? 0 : consumes.hashCode());
@@ -128,12 +147,12 @@ public class CLIResource
          return false;
 
       CLIResource other = (CLIResource)obj;
-      if (commands == null)
+      if (command == null)
       {
-         if (other.commands != null)
+         if (other.command != null)
             return false;
       }
-      else if (!commands.equals(other.commands))
+      else if (!command.equals(other.command))
       {
          return false;
       }
@@ -188,7 +207,7 @@ public class CLIResource
    @Override
    public String toString()
    {
-      return "CLIResource [command=" + commands + ", path=" + path + ", method=" + method + ", consumes=" + consumes
+      return "CLIResource [command=" + command + ", path=" + path + ", method=" + method + ", consumes=" + consumes
          + ", produces=" + produces + ", params=" + params + "]";
    }
 }
