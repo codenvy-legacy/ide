@@ -84,27 +84,6 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       HasValue<String> getProjectNameField();
 
       /**
-       * Get Group ID field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getGroupIdField();
-
-      /**
-       * Get Artifact ID field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getArtifactIdField();
-      
-      /**
-       * Get Version field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getVersionField();
-
-      /**
        * Set focus in project name field.
        */
       void focusInProjectNameField();
@@ -200,28 +179,10 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
          return;
       }
       
-      if (display.getGroupIdField().getValue() == null ||
-               display.getGroupIdField().getValue().trim().isEmpty()) {
-         Dialogs.getInstance().showError("Group ID can not be empty.");
-         return;
-      }
-      
-      if (display.getArtifactIdField().getValue() == null ||
-               display.getArtifactIdField().getValue().trim().isEmpty()) {
-         Dialogs.getInstance().showError("Artifact ID can not be empty.");
-         return;
-      }
-      
-      if (display.getVersionField().getValue() == null ||
-               display.getVersionField().getValue().trim().isEmpty()) {
-         Dialogs.getInstance().showError("Version can not be empty.");
-         return;
-      }
-      
       final String projectName = display.getProjectNameField().getValue().trim();
-      String groupId = display.getGroupIdField().getValue().trim();
-      String artifactId = display.getArtifactIdField().getValue().trim();
-      String version = display.getVersionField().getValue().trim();
+      String groupId = projectName;
+      String artifactId = projectName;
+      String version = "1.0-SNAPSHOT";
       
       Item item = selectedItems.get(0);
       String workDir = item.getHref();

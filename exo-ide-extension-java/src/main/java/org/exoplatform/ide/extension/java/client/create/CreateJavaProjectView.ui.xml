@@ -7,11 +7,8 @@
    <f:Border margin="15" borderColor="transparent">
       <g:VerticalPanel spacing="3" horizontalAlignment="center">
          
-         <f:TextField ui:field="nameField" title="{locale.createJavaProjectNameFieldTitle}" width="100%" height="22px"></f:TextField>         
-         <f:TextField ui:field="groupIdField" title="Group ID:" width="100%" height="22px"></f:TextField>
-         <f:TextField ui:field="artifactIdField" title="Artifact ID:" width="100%" height="22px"></f:TextField>
-         <f:TextField ui:field="versionField" title="Version:" width="100%" height="22px"></f:TextField>
-         
+         <f:TextField ui:field="nameField" title="{locale.createJavaProjectNameFieldTitle}" width="100%" height="22px"></f:TextField>
+
          <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
             <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageResource="{resource.okButton}" 
             			   disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>

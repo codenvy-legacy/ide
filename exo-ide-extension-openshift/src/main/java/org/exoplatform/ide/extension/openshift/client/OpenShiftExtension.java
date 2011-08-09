@@ -30,6 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.controls.CreateApplication
 import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainControl;
 import org.exoplatform.ide.extension.openshift.client.controls.DeleteApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControl;
+import org.exoplatform.ide.extension.openshift.client.controls.PreviewApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowApplicationInfoControl;
 import org.exoplatform.ide.extension.openshift.client.controls.ShowUserInfoControl;
 import org.exoplatform.ide.extension.openshift.client.controls.UpdatePublicKeyControl;
@@ -39,6 +40,7 @@ import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresent
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 /**
@@ -76,6 +78,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new PreviewApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ShowUserInfoControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UpdatePublicKeyControl(), DockTarget.NONE, false);
       
@@ -87,6 +90,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new CreateApplicationPresenter(eventBus);
       new DeleteApplicationCommandHandler(eventBus);
       new ApplicationInfoPresenter(eventBus);
+      new PreviewApplicationPresenter(eventBus);
       new UserInfoPresenter(eventBus);
       new UpdatePublicKeyCommandHandler(eventBus);
    }

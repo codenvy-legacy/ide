@@ -57,6 +57,9 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.createDomain.prompt")
    String createDomainControlPrompt();
 
+   /*
+    * Create Application
+    */
    @DefaultMessage("PaaS/OpenShift/Create application...")
    @Key("control.createApplication.id")
    String createApplicationControlId();
@@ -68,7 +71,10 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Create application on OpenShift...")
    @Key("control.createApplication.prompt")
    String createApplicationControlPrompt();
-
+   
+   /*
+    * Delete Application
+    */
    @DefaultMessage("PaaS/OpenShift/Delete application...")
    @Key("control.deleteApplication.id")
    String deleteApplicationControlId();
@@ -81,6 +87,9 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.deleteApplication.prompt")
    String deleteApplicationControlPrompt();
 
+   /*
+    * Application Info...
+    */
    @DefaultMessage("PaaS/OpenShift/Application info...")
    @Key(" control.showApplicationInfo.id")
    String showApplicationInfoControlId();
@@ -92,7 +101,25 @@ public interface OpenShiftLocalizationConstant extends Messages
    @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
+   
+   /*
+    * Preview Application
+    */
+   @DefaultMessage("PaaS/OpenShift/Preview Application")
+   @Key("control.previewApplication.id")
+   String previewApplicationControlId();
 
+   @DefaultMessage("Preview Application")
+   @Key("control.previewApplication.title")
+   String previewApplicationControlTitle();
+
+   @DefaultMessage("Preview Application")
+   @Key("control.previewApplication.prompt")
+   String previewApplicationControlPrompt();
+
+   /*
+    * PaaS -> OpenShift
+    */
    @DefaultMessage("PaaS/OpenShift")
    @Key("control.openshift.id")
    String openShiftControlId();
@@ -105,6 +132,9 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.openshift.prompt")
    String openShiftControlPrompt();
    
+   /*
+    * User Info...
+    */
    @DefaultMessage("PaaS/OpenShift/User info...")
    @Key("control.showUserInfo.id")
    String showUserInfoControlId();
@@ -117,6 +147,9 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.showUserInfo.prompt")
    String showUserInfoControlPrompt();
 
+   /*
+    * Update Public Key
+    */
    @Key("control.updatePublicKey.id")
    String updatePublicKeyControlId();
 
@@ -126,7 +159,9 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("control.updatePublicKey.prompt")
    String updatePublicKeyControlPrompt();
    
-   /*Login view*/
+   /*
+    * Login view
+    */
    @DefaultMessage("Log in OpenShift")
    @Key("loginView.title")
    String loginViewTitle();

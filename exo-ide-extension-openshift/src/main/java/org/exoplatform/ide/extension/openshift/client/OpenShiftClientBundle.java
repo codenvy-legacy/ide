@@ -63,6 +63,12 @@ public interface OpenShiftClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/openshift/images/controls/appInfo_Disabled.png")
    ImageResource applicationInfoControlDisabled();
    
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/preview.png")
+   ImageResource previewControl();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/preview_Disabled.png")
+   ImageResource previewControlDisabled();
+
    @Source("org/exoplatform/ide/extension/openshift/images/controls/userInfo.png")
    ImageResource userInfoControl();
 
