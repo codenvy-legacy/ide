@@ -36,6 +36,48 @@ var securityCheckURL = "/site/j_security_check";
 
 <script type="text/javascript" language="javascript"
 	src="IDE.nocache.js"></script>
+	
+<style type="text/css">
+	.ideMenuAdditions
+	{
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		height:20px;
+		z-index: 999999;
+		padding: 0px;
+		-moz-box-sizing: border-box;
+		overflow: hidden;
+	}
+	
+	.ideMenuAdditionsTable
+	{
+		height:20px;
+	}
+	
+	.ideMenuAdditionsTable td
+	{
+		height:20px;
+		color: #333333;
+		font-family: Verdana,Bitstream Vera Sans,sans-serif;
+	    font-size: 11px;
+	    font-style: normal;
+	    font-weight: normal;
+	    padding-left: 8px;
+	    padding-right: 8px;
+	    cursor: default;	
+	}
+	
+	.ideMenuAdditionsTable td:HOVER
+	{
+		background: url('ui/menu/menu-item-over.png');
+	}
+	
+	.ideMenuAdditionsTable td:ACTIVE {
+		background: url('ui/menu/menu-item-selected.png');
+	}	
+</style>	
+	
 </head>
 
 <!--                                           -->
@@ -45,12 +87,45 @@ var securityCheckURL = "/site/j_security_check";
 <!--                                           -->
 <body>
 
+<!-- 
 <div width="100%" align="right" style="position: absolute; top: 2px; right: 2px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">                                               
 	<a href="/site/logout.jsp"><b>Logout</b></a>
 </div>
+
 <div width="100%" align="right" style="position: absolute; top: 2px; right: 63px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">                                               
 	<a href="/shell/Shell.html" target="_blank"><b>Shell</b></a>
 </div>
+
+-->
+
+<div id="ide-menu-additions" alidn="right" class="ideMenuAdditions">
+	<table cellspacing="0" cellpadding="0" border="0" class="ideMenuAdditionsTable">
+		<tr id="ide-menu-additions-rows">
+		</tr>
+	</table>
+</div>
+
+<script type="text/javascript">
+
+function addMenuAddition(html) {
+	var tr = document.getElementById("ide-menu-additions-rows");
+	var td = document.createElement("td");
+	td.innerHTML = html;
+	tr.appendChild(td);	
+}
+
+</script>
+
+<!--
+		LOGOUT, SHELL links
+-->
+<script type="text/javascript">
+	var htmlLogout = "<span onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
+	addMenuAddition(htmlLogout);
+	
+	var htmlShell = "<a href=\"/shell/Shell.html\" target=\"_blank\"><b>Shell</b></a>";
+	addMenuAddition(htmlShell);
+</script>
 
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
 	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
