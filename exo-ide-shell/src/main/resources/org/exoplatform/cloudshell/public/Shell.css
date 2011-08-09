@@ -47,6 +47,7 @@ h1 {
 
 .crash-blink .crash-cursor {
 	background: #1FBE1F;
+	color: black;
 }
 
 .crash-autocomplete {

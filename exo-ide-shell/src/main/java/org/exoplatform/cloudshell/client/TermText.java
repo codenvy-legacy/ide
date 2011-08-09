@@ -19,6 +19,14 @@
 
 package org.exoplatform.cloudshell.client;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -33,7 +41,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-final class TermText extends FocusWidget
+final class TermText extends FocusWidget implements KeyDownHandler
 {
 
    /** . */
@@ -41,6 +49,8 @@ final class TermText extends FocusWidget
 
    /** The state. */
    private final StringBuilder state;
+
+   private String afterCursor = "";
 
    /** The blinking. */
    private boolean on;
@@ -88,6 +98,8 @@ final class TermText extends FocusWidget
             isFocused = true;
          }
       });
+
+      addKeyDownHandler(this);
 
       //
       setStyleName("crash-term");
@@ -184,8 +196,9 @@ final class TermText extends FocusWidget
 
    String bufferSubmit()
    {
-      String s = buffer.toString();
+      String s = buffer.toString() + afterCursor;
       buffer.setLength(0);
+      afterCursor = "";
       state.append('\n');
       return s;
    }
@@ -201,13 +214,12 @@ final class TermText extends FocusWidget
       state.append(text);
       printPrompt();
    }
-   
+
    void printPrompt()
    {
       state.append("$ ");
    }
 
-   
    void repaint()
    {
 
@@ -215,11 +227,11 @@ final class TermText extends FocusWidget
       StringBuilder markup = new StringBuilder();
 
       //
-      int lines = 0;
+      //      int lines = 0;
       int from = 0;
       while (true)
       {
-         lines++;
+         //         lines++;
          int to = state.indexOf("\n", from);
          markup.append(state, from, to == -1 ? state.length() : to);
          if (to == -1)
@@ -234,16 +246,59 @@ final class TermText extends FocusWidget
       }
 
       // The cursor
-      markup.append("<span id=\"crash-cursor\" class=\"crash-cursor\">&nbsp;</span>");
-
-      // Add missing lines
-      while (lines++ < height)
+      String c = "&nbsp;";
+      String after = afterCursor;
+      if (!afterCursor.isEmpty())
       {
-         markup.append("&nbsp;\n");
+         c = afterCursor.substring(0, 1);
+         after = afterCursor.substring(1);
       }
+
+      markup.append("<span id=\"crash-cursor\" class=\"crash-cursor\">" + c + "</span>");
+      markup.append(after);
+      // Add missing lines
+      //      while (lines++ < height)
+      //      {
+      //         markup.append("&nbsp;\n");
+      //      }
 
       // Update markup state
       getElement().setInnerHTML(markup.toString());
       getElement().setScrollTop(getElement().getScrollHeight());
+   }
+
+   /**
+    * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
+    */
+   @Override
+   public void onKeyDown(KeyDownEvent event)
+   {
+      int code = event.getNativeKeyCode();
+      if (code == KeyCodes.KEY_LEFT)
+      {
+         if (buffer.length() > 0)
+         {
+            buffer.deleteCharAt(buffer.length() - 1);
+            afterCursor = state.charAt(state.length() - 1) + afterCursor;
+            state.deleteCharAt(state.length() - 1);
+            repaint();
+         }
+         event.stopPropagation();
+         event.preventDefault();
+      }
+      else if (code == KeyCodes.KEY_RIGHT)
+      {
+         if (!afterCursor.isEmpty())
+         {
+            String c = afterCursor.substring(0, 1);
+            buffer.append(c);
+            state.append(c);
+            afterCursor = afterCursor.substring(1);
+            repaint();
+         }
+         event.stopPropagation();
+         event.preventDefault();
+      }
+
    }
 }

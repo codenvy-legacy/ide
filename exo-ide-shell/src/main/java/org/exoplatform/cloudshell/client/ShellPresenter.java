@@ -181,18 +181,9 @@ public class ShellPresenter implements ConsoleWriter
          public void onKeyDown(KeyDownEvent event)
          {
             int code = event.getNativeKeyCode();
-            if (code == KeyCodes.KEY_LEFT)
-            {
-               event.preventDefault();
-               event.stopPropagation();
-            }
-            else if (code == KeyCodes.KEY_RIGHT)
-            {
-               event.preventDefault();
-               event.stopPropagation();
-            }
+
             // key code 86 is 'v'
-            else if(event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
+            if(event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
             {
                display.preparePaste();
                new Timer()
@@ -342,8 +333,9 @@ public class ShellPresenter implements ConsoleWriter
       String command = buffer.goDown();
 
       if (command == null)
-         return;
-
+      {
+         command = "";
+      }
       display.clearBuffer();
       display.appendBuffer(command);
       display.refreshConsole();

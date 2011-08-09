@@ -85,8 +85,10 @@ public class ShellComandBuffer extends ArrayList<String>
    public String goDown()
    {
       if (iterator < 0 || iterator == size()-1)
+      {
+         resetIterator();
          return null;
-
+      }
       if (iterator < size() - 1)
       {
          iterator++;
