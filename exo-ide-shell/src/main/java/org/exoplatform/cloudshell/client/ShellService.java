@@ -246,8 +246,10 @@ public class ShellService
             throw new MandatoryParameterNotFoundException("Required parameter " + parameter.getName()
                + " is not found.");
          }
-
-         jsonObject.put(parameter.getName(), new JSONString(value));
+         else if (value != null)
+         {
+            jsonObject.put(parameter.getName(), new JSONString(value));
+         }
       }
       if (jsonObject.keySet().size() > 0)
       {

@@ -37,6 +37,8 @@ public interface Constants
    String PRODUCES = "produces";
 
    String PARAMS = "params";
+   
+   String DESCRIPTION = "description";
 
    //Parameter:
    String NAME = "name";

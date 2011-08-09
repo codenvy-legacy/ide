@@ -68,6 +68,11 @@ public class CLIResourceUnmarshaller implements Unmarshallable, Constants
             cliResource.setPath(jsonRes.get(PATH).isString().stringValue());
             cliResource.setMethod(jsonRes.get(METHOD).isString().stringValue());
 
+            if (jsonRes.get(DESCRIPTION) != null && jsonRes.get(DESCRIPTION).isString() != null)
+            {
+               cliResource.setDescription(jsonRes.get(DESCRIPTION).isString().stringValue());
+            }
+
             if (jsonRes.containsKey(CONSUMES))
             {
                cliResource.setConsumes(getStringSet(jsonRes.get(CONSUMES).isArray()));
