@@ -48,4 +48,6 @@ public interface Constants
    String TYPE = "type";
 
    String MANDATORY = "mandatory";
+   
+   String HAS_ARG = "hasArg";
 }

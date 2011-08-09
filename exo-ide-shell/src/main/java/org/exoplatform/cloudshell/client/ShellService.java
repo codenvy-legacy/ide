@@ -18,6 +18,8 @@
  */
 package org.exoplatform.cloudshell.client;
 
+import com.google.gwt.json.client.JSONBoolean;
+
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -229,26 +231,26 @@ public class ShellService
          {
             continue;
          }
-         //Get value of the option:
-         String value = getOptionValue(parameter.getOptions(), commandLine);
 
-         //If no option was pointed and there are no other parameters of the command,
-         //then pass whole command line to the body:
-         if (value == null && params.size() == 1)
+         if (!parameter.isHasArg())
          {
-            jsonObject.put("cmd", new JSONString(cmd));
-            asyncRequest.data(jsonObject.toString());
-            return;
+            jsonObject.put(parameter.getName(),
+               JSONBoolean.getInstance(isOptionPresent(parameter.getOptions(), commandLine)));
          }
+         else
+         {
+            //Get value of the option:
+            String value = getOptionValue(parameter.getOptions(), commandLine);
 
-         if (parameter.isMandatory() && value == null)
-         {
-            throw new MandatoryParameterNotFoundException("Required parameter " + parameter.getName()
-               + " is not found.");
-         }
-         else if (value != null)
-         {
-            jsonObject.put(parameter.getName(), new JSONString(value));
+            if (parameter.isMandatory() && value == null)
+            {
+               throw new MandatoryParameterNotFoundException("Required parameter " + parameter.getName()
+                  + " is not found.");
+            }
+            else if (value != null)
+            {
+               jsonObject.put(parameter.getName(), new JSONString(value));
+            }
          }
       }
       if (jsonObject.keySet().size() > 0)
@@ -304,12 +306,20 @@ public class ShellService
             continue;
          }
 
-         String value = getOptionValue(param.getOptions(), commandLine);
-         if (param.isMandatory() && value == null)
+         if (!param.isHasArg())
          {
-            throw new MandatoryParameterNotFoundException("Required parameter " + param.getName() + " is not found.");
+            query += param.getName() + isOptionPresent(param.getOptions(), commandLine);
          }
-         query += param.getName() + "=" + value;
+         else
+         {
+            String value = getOptionValue(param.getOptions(), commandLine);
+            if (param.isMandatory() && value == null)
+            {
+               throw new MandatoryParameterNotFoundException("Required parameter " + param.getName() + " is not found.");
+            }
+            query += param.getName() + "=" + value;
+         }
+
       }
       return query;
    }
@@ -334,6 +344,19 @@ public class ShellService
       return null;
    }
 
+   protected boolean isOptionPresent(Set<String> options, CommandLine commandLine)
+   {
+      for (String option : options)
+      {
+         option = (option.startsWith("--")) ? option.replaceFirst("--", "") : option;
+         option = (option.startsWith("-")) ? option.replaceFirst("-", "") : option;
+         boolean value = commandLine.hasOption(option);
+         if (value)
+            return value;
+      }
+      return false;
+   }
+
    /**
     * Set all specified header parameters.
     * 
@@ -354,13 +377,21 @@ public class ShellService
             continue;
          }
 
-         String value = getOptionValue(parameter.getOptions(), commandLine);
-         if (parameter.isMandatory() && value == null)
+         if (!parameter.isHasArg())
          {
-            throw new MandatoryParameterNotFoundException("Required parameter " + parameter.getName()
-               + " is not found.");
+            boolean present = isOptionPresent(parameter.getOptions(), commandLine);
+            asyncRequest.header(parameter.getName(), String.valueOf(present));
          }
-         asyncRequest.header(parameter.getName(), value);
+         else
+         {
+            String value = getOptionValue(parameter.getOptions(), commandLine);
+            if (parameter.isMandatory() && value == null)
+            {
+               throw new MandatoryParameterNotFoundException("Required parameter " + parameter.getName()
+                  + " is not found.");
+            }
+            asyncRequest.header(parameter.getName(), value);
+         }
       }
    }
 

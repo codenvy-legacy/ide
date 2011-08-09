@@ -129,6 +129,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable, Constants
          {
             parameter.setOptions(getStringSet(jsonParam.get(OPTIONS).isArray()));
          }
+         parameter.setHasArg(jsonParam.get(HAS_ARG).isBoolean().booleanValue());
          parameter.setType(Type.valueOf(jsonParam.get(TYPE).isString().stringValue()));
          set.add(parameter);
       }

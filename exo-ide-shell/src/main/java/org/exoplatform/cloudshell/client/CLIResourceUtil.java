@@ -90,7 +90,7 @@ public class CLIResourceUtil
                continue;
             }
             //TODO No description at the moment:
-            options.addOption(new Option(optionName, longOpt, true, ""));
+            options.addOption(new Option(optionName, longOpt, parameter.isHasArg(), ""));
          }
       }
       return options;

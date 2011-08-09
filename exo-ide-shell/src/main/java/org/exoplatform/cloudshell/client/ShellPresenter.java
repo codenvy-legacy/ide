@@ -71,9 +71,9 @@ public class ShellPresenter implements ConsoleWriter
       void focusInConsole();
 
       void printPrompt();
-      
+
       void preparePaste();
-      
+
       void finishPaste();
    }
 
@@ -131,12 +131,7 @@ public class ShellPresenter implements ConsoleWriter
                performComplete();
                handled = true;
             }
-            else if ((event.getCharCode() == 'X') && event.isShiftKeyDown() && event.isControlKeyDown())
-            {
-               clearConsole();
-               handled = true;
-            }
-            else if (code == KeyCodes.KEY_UP)
+           else if (code == KeyCodes.KEY_UP)
             {
                goUp();
                handled = true;
@@ -146,8 +141,7 @@ public class ShellPresenter implements ConsoleWriter
                goDown();
                handled = true;
             }
-            else
-            if (code == KeyCodes.KEY_LEFT)
+            else if (code == KeyCodes.KEY_LEFT)
             {
                handled = true;
             }
@@ -183,18 +177,23 @@ public class ShellPresenter implements ConsoleWriter
             int code = event.getNativeKeyCode();
 
             // key code 86 is 'v'
-            if(event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
+            if (event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
             {
                display.preparePaste();
                new Timer()
                {
-                  
+
                   @Override
                   public void run()
                   {
                      display.finishPaste();
                   }
                }.schedule(10);
+            }
+            //key code '88' is x   
+            else if (event.getNativeEvent().getKeyCode() == 88 && event.isControlKeyDown() && event.isShiftKeyDown())
+            {
+               clearConsole();
             }
             else if (BrowserResolver.CURRENT_BROWSER != Browser.FIREFOX)
             {
