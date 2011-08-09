@@ -48,13 +48,15 @@ public class CLIResourceParameter
    private Set<String> options;
    private Type type;
    private boolean mandatory;
+   private boolean hasArg = true;
 
-   public CLIResourceParameter(String name, Set<String> options, Type type, boolean mandatory)
+   public CLIResourceParameter(String name, Set<String> options, Type type, boolean mandatory, boolean hasArg)
    {
       this.name = name;
       this.options = options;
       this.type = type;
       this.mandatory = mandatory;
+      this.hasArg = hasArg;
    }
 
    public CLIResourceParameter()
@@ -101,6 +103,16 @@ public class CLIResourceParameter
       this.mandatory = mandatory;
    }
 
+   public boolean isHasArg()
+   {
+      return hasArg;
+   }
+
+   public void setHasArg(boolean hasArg)
+   {
+      this.hasArg = hasArg;
+   }
+
    @Override
    public int hashCode()
    {
@@ -109,6 +121,7 @@ public class CLIResourceParameter
       hash = hash * 31 + ((type == null) ? 0 : type.hashCode());
       hash = hash * 31 + ((options == null) ? 0 : options.hashCode());
       hash = hash * 31 + (mandatory ? 123 : 321);
+      hash = hash * 31 + (hasArg ? 456 : 654);
       return hash;
    }
 
@@ -149,6 +162,10 @@ public class CLIResourceParameter
       {
          return false;
       }
+      if (hasArg != other.hasArg)
+      {
+         return false;
+      }
       return true;
    }
 
@@ -156,6 +173,6 @@ public class CLIResourceParameter
    public String toString()
    {
       return "CLIResourceParameter [name=" + name + ", options=" + options + ", type=" + type + ", mandatory="
-         + mandatory + "]";
+         + mandatory + ", hasArg=" + hasArg + "]";
    }
 }

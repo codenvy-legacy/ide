@@ -344,7 +344,7 @@ public class CLIResourceFactory
             if (!isParameterOverridden(restName, restType, cliParams))
             {
                cliParams.add(new CLIResourceParameter(restName, Collections.singleton(("-" + restName)), restType,
-                  false));
+                  false, true));
             }
          }
       }
