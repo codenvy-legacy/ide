@@ -22,10 +22,8 @@ import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.jenkins.client.control.BuildControl;
 
 /**
  * IDE Jenkins extension entry point
@@ -46,7 +44,7 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
+      //IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
 
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
       new BuildController();
