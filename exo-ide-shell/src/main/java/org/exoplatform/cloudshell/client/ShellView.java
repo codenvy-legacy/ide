@@ -18,6 +18,8 @@
  */
 package org.exoplatform.cloudshell.client;
 
+import com.google.gwt.user.client.ui.TextBox;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -42,6 +44,8 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public ImageButton clearButton;
 
    public TermText termText;
+   
+   private TextBox textBox;
 
    public ShellView()
    {
@@ -198,5 +202,28 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    {
       termText.printPrompt();
       termText.repaint();
+   }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ShellPresenter.Display#preparePaste()
+    */
+   @Override
+   public void preparePaste()
+   {
+      textBox = new TextBox();
+      RootPanel.get().add(textBox, -1000, -1000);
+      textBox.setFocus(true);
+   }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ShellPresenter.Display#finishPaste()
+    */
+   @Override
+   public void finishPaste()
+   {
+      termText.bufferAppend(textBox.getText());
+      textBox.removeFromParent();
+      refreshConsole();
+      focusInConsole();
    }
 }

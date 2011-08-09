@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.cloudshell.client.crash.CRaSHClientService;
 import org.exoplatform.cloudshell.client.crash.CRaSHCompleteListAsyncRequestCallback;
@@ -70,6 +71,10 @@ public class ShellPresenter implements ConsoleWriter
       void focusInConsole();
 
       void printPrompt();
+      
+      void preparePaste();
+      
+      void finishPaste();
    }
 
    private Display display;
@@ -185,6 +190,20 @@ public class ShellPresenter implements ConsoleWriter
             {
                event.preventDefault();
                event.stopPropagation();
+            }
+            // key code 86 is 'v'
+            else if(event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
+            {
+               display.preparePaste();
+               new Timer()
+               {
+                  
+                  @Override
+                  public void run()
+                  {
+                     display.finishPaste();
+                  }
+               }.schedule(10);
             }
             else if (BrowserResolver.CURRENT_BROWSER != Browser.FIREFOX)
             {
