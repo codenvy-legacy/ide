@@ -33,7 +33,7 @@
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
-      <chromattic.version>1.1.0-beta3</chromattic.version>
+      <chromattic.version>1.1.0-beta6</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <javax.jcr.version>1.0</javax.jcr.version>
