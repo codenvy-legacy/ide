@@ -5,7 +5,7 @@
   "method":"GET"
 },
 {
-    "command": ["help", "man","cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
+    "command": ["man", "cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
     "path": "/ide/crash/command",
     "method": "POST",
     "description": "To view command help try : [command] -h",

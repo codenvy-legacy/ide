@@ -19,29 +19,30 @@
 
 package org.exoplatform.cloudshell.client;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FocusWidget;
 
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-final class TermText extends FocusWidget implements KeyDownHandler
+final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHandler
 {
 
    /** . */
@@ -99,7 +100,10 @@ final class TermText extends FocusWidget implements KeyDownHandler
          }
       });
 
-      addKeyDownHandler(this);
+      if (BrowserResolver.CURRENT_BROWSER == Browser.FIREFOX)
+         addKeyPressHandler(this);
+      else
+         addKeyDownHandler(this);
 
       //
       setStyleName("crash-term");
@@ -267,14 +271,9 @@ final class TermText extends FocusWidget implements KeyDownHandler
       getElement().setScrollTop(getElement().getScrollHeight());
    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
-    */
-   @Override
-   public void onKeyDown(KeyDownEvent event)
+   private void handleKeyEvent(int keyCode, DomEvent<?> event)
    {
-      int code = event.getNativeKeyCode();
-      if (code == KeyCodes.KEY_LEFT)
+      if (keyCode == KeyCodes.KEY_LEFT)
       {
          if (buffer.length() > 0)
          {
@@ -286,7 +285,7 @@ final class TermText extends FocusWidget implements KeyDownHandler
          event.stopPropagation();
          event.preventDefault();
       }
-      else if (code == KeyCodes.KEY_RIGHT)
+      else if (keyCode == KeyCodes.KEY_RIGHT)
       {
          if (!afterCursor.isEmpty())
          {
@@ -299,6 +298,25 @@ final class TermText extends FocusWidget implements KeyDownHandler
          event.stopPropagation();
          event.preventDefault();
       }
+   }
 
+   /**
+    * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt.event.dom.client.KeyDownEvent)
+    */
+   @Override
+   public void onKeyDown(KeyDownEvent event)
+   {
+      int code = event.getNativeKeyCode();
+      handleKeyEvent(code, event);
+   }
+
+   /**
+    * @see com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google.gwt.event.dom.client.KeyPressEvent)
+    */
+   @Override
+   public void onKeyPress(KeyPressEvent event)
+   {
+      int code = event.getNativeEvent().getKeyCode();
+      handleKeyEvent(code, event);
    }
 }

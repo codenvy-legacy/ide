@@ -33,11 +33,15 @@ import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.cloudshell.client.crash.CRaSHClientService;
 import org.exoplatform.cloudshell.client.crash.CRaSHCompleteListAsyncRequestCallback;
+import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -131,7 +135,7 @@ public class ShellPresenter implements ConsoleWriter
                performComplete();
                handled = true;
             }
-           else if (code == KeyCodes.KEY_UP)
+            else if (code == KeyCodes.KEY_UP)
             {
                goUp();
                handled = true;
@@ -252,6 +256,35 @@ public class ShellPresenter implements ConsoleWriter
    public void processCommand(String command)
    {
       buffer.add(command);
+      if (command.equals("help"))
+      {
+         Map<String, String> commands = new TreeMap<String, String>();
+         int max = 0;
+         String tab = "  ";
+         for (CLIResource res : CloudShell.getCommands())
+         {
+            for (String s : res.getCommand())
+            {
+               commands.put(s, res.getDescription() == null ? "" : res.getDescription());
+               if (s.length() > max)
+                  max = s.length();
+            }
+         }
+         StringBuilder help = new StringBuilder();
+         for (String name : commands.keySet())
+         {
+            char chars[] = new char[tab.length() + max - name.length()];
+            Arrays.fill(chars, (char)' ');
+            String s = new String(chars);
+            help.append(tab);
+            help.append(name);
+            help.append(s);
+            help.append(commands.get(name));
+            help.append("\n");
+         }
+         display.print(help.toString());
+         return;
+      }
       ShellService.getService().processCommand(command, new AsyncRequestCallback<String>()
       {
 

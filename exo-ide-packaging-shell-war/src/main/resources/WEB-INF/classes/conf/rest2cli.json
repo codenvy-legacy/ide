@@ -1,26 +1,83 @@
 [
 {
-  "command":["cli"],
+  "command": ["cli"],
   "path":"ide/cli/resources",
   "method":"GET"
 },
 {
-    "command": ["help", "man","cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "xpath"],
+    "command": ["man", "cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
     "path": "/ide/crash/command",
-    "produces": [
-      "text/plain"
-    ],
     "method": "POST",
+    "description": "To view command help try : [command] -h",
     "params": [
       {
         "mandatory": true,
         "name": "cmd",
         "type": "BODY"
       }
-    ],
-    "consumes": [
-      "application/json"
     ]
-  }
-  
+},
+{
+    "command": ["git init"],
+    "path": "/ide/git/init",
+    "method": "POST",
+    "description" : "Initialize new GIT repository.",
+    "params": [
+      {
+	  "name": "workdir",
+	  "type": "QUERY",
+	  "options":["-w", "--workdir"],
+	  "mandatory": true
+      },
+      {
+	  "name": "bare",
+	  "type": "BODY",
+	  "options":["-b", "--bare"],
+	  "hasArg": false,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["git status"],
+    "path": "/ide/git/status",
+    "method": "POST",
+    "description" : "Get status of working directory.",
+    "params": [
+      {
+	  "name": "workdir",
+	  "type": "QUERY",
+	  "options":["-w", "--workdir"],
+	  "mandatory": true
+      },
+      {
+	  "name": "shortFormat",
+	  "type": "BODY",
+	  "options":["-s", "--short"],
+	  "hasArg": false,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["git add"],
+    "path": "/ide/git/add",
+    "method": "POST",
+    "description" : "Add file contents to the index.",
+    "params": [
+      {
+	  "name": "workdir",
+	  "type": "QUERY",
+	  "options":["-w", "--workdir"],
+	  "mandatory": true
+      },
+      {
+	  "name": "update",
+	  "type": "BODY",
+	  "options":["-u", "--update"],
+	  "hasArg": false,
+	  "mandatory": false
+      }
+    ]
+}
 ]
