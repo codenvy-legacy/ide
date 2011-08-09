@@ -33,6 +33,7 @@
 	  "name": "bare",
 	  "type": "BODY",
 	  "options":["-b", "--bare"],
+	  "hasArg": false,
 	  "mandatory": true
       }
     ]
@@ -53,6 +54,7 @@
 	  "name": "shortFormat",
 	  "type": "BODY",
 	  "options":["-s", "--short"],
+	  "hasArg": false,
 	  "mandatory": true
       }
     ]
@@ -73,12 +75,7 @@
 	  "name": "update",
 	  "type": "BODY",
 	  "options":["-u", "--update"],
-	  "mandatory": false
-      }
-      {
-	  "name": "filepattern",
-	  "type": "BODY",
-	  "options":["-u", "--update"],
+	  "hasArg": false,
 	  "mandatory": false
       }
     ]
