@@ -18,6 +18,6 @@
    </servlet>
    <servlet-mapping>
       <servlet-name>GitServlet</servlet-name>
-      <url-pattern>/jcr/*</url-pattern>
+      <url-pattern>/*</url-pattern>
    </servlet-mapping>
 </web-app>
