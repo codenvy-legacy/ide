@@ -36,7 +36,6 @@ import org.junit.runners.Suite.SuiteClasses;
    ShowHideLineNumbersTest.class,
    DeletingFilesTest.class,
    ClosingAndSaveAsFileTest.class,
-   DisplayingWarningMessageTest.class,
    CheckHilightTextTest.class,
    StoreOpenedFilesHistoryTest.class,
    SavingPreviouslyEditedFileTest.class,
