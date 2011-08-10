@@ -43,13 +43,13 @@ public class OpenGroovyLocalFileTest extends BaseTest
 
    private static String FOLDER_NAME = OpenGroovyLocalFileTest.class.getSimpleName();
 
-   private static String GROOVY_NAME = "Приклад.groovy";
+   private static String GROOVY_NAME = "Example.groovy";
 
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/";
 
    private static final String FILE_PATH =
-      "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
 
    @BeforeClass
    public static void setUp()
