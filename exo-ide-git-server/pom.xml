@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-parent</artifactId>
+      <version>1.2.0-M3-SNAPSHOT</version>
+   </parent>
+   <artifactId>exo-ide-git-server</artifactId>
+   <packaging>war</packaging>
+   <name>eXo IDE :: GIT : server</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit.http.server</artifactId>
+         <version>0.10.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit</artifactId>
+         <version>0.10.1</version>
+         <exclusions>
+            <exclusion>
+               <groupId>com.jcraft</groupId>
+               <artifactId>jsch</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>com.jcraft</groupId>
+         <artifactId>jsch</artifactId>
+         <version>0.1.44-1</version>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <finalName>git-server</finalName>
+      <plugins>
+         <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+               <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+</project>
+
