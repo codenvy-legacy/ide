@@ -41,6 +41,7 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
+import org.exoplatform.ide.git.server.GitHelper;
 import org.exoplatform.ide.maven.InvocationRequestFactory;
 import org.exoplatform.ide.maven.MavenTask;
 import org.exoplatform.ide.maven.TaskService;
@@ -108,6 +109,8 @@ public class JavaAppService
             
             JavaProjectArchetype archetype = new JavaProjectArchetype(projectDirectory, projectName, groupId, artifactId, version);
             archetype.exportResourcesFromURL(url);
+            
+            GitHelper.addToGitIgnore(projectDirectory, "target/");
          }
          else
             throw new IllegalStateException("Can't find work dir. ");
