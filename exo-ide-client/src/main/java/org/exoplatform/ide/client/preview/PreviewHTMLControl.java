@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.preview;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -28,6 +26,11 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
+import org.exoplatform.ide.client.framework.vfs.File;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -36,12 +39,15 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
+   FileSavedHandler
 {
 
    public static final String ID = "Run/Show Preview";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.htmlPreview();
+
+   private File currentlyActiveFile;
 
    public PreviewHTMLControl()
    {
@@ -58,21 +64,28 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(FileSavedEvent.TYPE, this);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      currentlyActiveFile = event.getFile();
+      updateVisibility(currentlyActiveFile, currentlyActiveFile == null ? false : currentlyActiveFile.isNewFile());
+   }
+
+   private void updateVisibility(File file, boolean isNew)
+   {
+      if (file == null)
       {
          setVisible(false);
          setEnabled(false);
          return;
       }
 
-      if (MimeType.TEXT_HTML.equals(event.getFile().getContentType()))
+      if (MimeType.TEXT_HTML.equals(file.getContentType()))
       {
          setVisible(true);
-         if (event.getFile().isNewFile())
+         if (isNew)
          {
             setEnabled(false);
          }
@@ -87,5 +100,14 @@ public class PreviewHTMLControl extends SimpleControl implements IDEControl, Edi
          setEnabled(false);
       }
    }
-   
+
+   @Override
+   public void onFileSaved(FileSavedEvent event)
+   {
+      if (currentlyActiveFile != null && event.getFile().getHref().equals(currentlyActiveFile.getHref()))
+      {
+         updateVisibility(currentlyActiveFile, false);
+      }
+   }
+
 }

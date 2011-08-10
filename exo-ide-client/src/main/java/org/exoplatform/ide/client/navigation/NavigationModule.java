@@ -81,6 +81,7 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 import org.exoplatform.ide.client.upload.OpenFileByPathPresenter;
@@ -155,11 +156,13 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
-
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new UploadFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
+      
+      new OpenFileByURLPresenter(eventBus);
+      
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), DockTarget.TOOLBAR));

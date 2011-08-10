@@ -220,6 +220,9 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.deleteItems.prompt")
    String deleteItemsPromptControl();
 
+   /*
+    * DOWNLOAD CONTROL
+    */
    @Key("control.download.title")
    String downloadTitleControl();
 
@@ -229,6 +232,33 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.downloadZippedFolder")
    String downloadZippedFolderControl();
 
+   /*
+    * Open File By URL
+    */
+   @Key("control.getFilebyURL.id")
+   String openFileByURLControlId();
+
+   @Key("control.getFilebyURL.title")
+   String openFileByURLControlTitle();
+
+   @Key("control.getFilebyURL.prompt")
+   String openFileByURLControlPrompt();
+   
+   @Key("view.openFileByURL.title")
+   String openFileByURLViewTitle();
+   
+   @Key("view.openFileByURL.urlFieldTitle")
+   String openFileByURL_URLFieldTitle();
+   
+   @Key("view.openFileByURL.openButton")
+   String openFileByURL_OpenButtonTitle();
+   
+   @Key("view.openFileByURL.cancelButton")
+   String openFileByURL_CancelButtonTitle();
+
+   /*
+    * GET FILE URL
+    */
    @Key("control.getFileUrl")
    String getFileUrlControl();
 
@@ -307,6 +337,9 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.htmlPreview")
    String htmlPreview();
 
+   /*
+    * 
+    */
    @Key("control.createProjectFromTemplate.title")
    String createProjectFromTemplateTitleControl();
 

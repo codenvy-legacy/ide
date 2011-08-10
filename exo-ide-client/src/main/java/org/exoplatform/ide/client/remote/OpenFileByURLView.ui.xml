@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	>
+	<ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>	
+	<ui:style>
+		
+	</ui:style>
+
+	<c:Border margin="15" borderColor="transparent">
+		<c:VPanel>
+			<g:FlowPanel></g:FlowPanel>
+			<c:Label value="{locale.openFileByURL_URLFieldTitle}" height="20px"></c:Label>
+			<g:FlowPanel height="10px"></g:FlowPanel>
+			<c:TextField ui:field="urlField" height="20px" textFieldId="ide.openFileByURL.urlField"></c:TextField>
+			<g:FlowPanel height="10px"></g:FlowPanel>
+			
+			<c:Panel height="40px">
+			
+				<g:HorizontalPanel spacing="5" width="100%" height="100%">
+				
+					<g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
+						<c:ImageButton text="{locale.openFileByURL_OpenButtonTitle}" ui:field="openButton" imageName="ok" buttonId="ide.openFileByURL.openButton"></c:ImageButton>
+					</g:cell>
+					
+					<g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
+						<c:ImageButton text="{locale.openFileByURL_CancelButtonTitle}" ui:field="cancelButton" imageName="cancel" buttonId="ide.openFileByURL.cancelButton"></c:ImageButton>
+					</g:cell>
+					
+				</g:HorizontalPanel>
+				
+			</c:Panel>			
+			
+			<g:FlowPanel></g:FlowPanel>
+
+		</c:VPanel>
+	</c:Border>
+	
+</ui:UiBinder>

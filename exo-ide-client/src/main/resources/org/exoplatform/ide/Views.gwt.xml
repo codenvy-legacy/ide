@@ -123,6 +123,10 @@
       <when-type-is class="org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.client.remote.OpenFileByURLView">
+      <when-type-is class="org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display" />
+   </replace-with>   
+   
    <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
       <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />
    </replace-with>

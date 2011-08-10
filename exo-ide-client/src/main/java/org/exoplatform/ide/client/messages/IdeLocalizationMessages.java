@@ -144,5 +144,10 @@ public interface IdeLocalizationMessages extends Messages
    @Key("selectWorkspace.askSaveFileBeforeClosing")
    String selectWorkspaceAskSaveFileBeforeClosing(String fileName);
 
+   /*
+    * Open File by URL
+    */
+   @Key("openFileByURL.errorMessage")
+   String openFileByURLErrorMessage(String message);
    
 }

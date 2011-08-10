@@ -242,7 +242,10 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
          @Override
          protected void onSuccess(Item result)
          {
-            eventBus.fireEvent(new FileSavedEvent((File)result, sourceHref));
+            File savedFile = (File)result;
+            savedFile.setNewFile(false);
+            savedFile.setContentChanged(false);
+            eventBus.fireEvent(new FileSavedEvent(savedFile, sourceHref));
             refreshBrowser(result.getHref());
          }
       });

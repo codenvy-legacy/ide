@@ -111,7 +111,6 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
 
       if (MimeType.TEXT_HTML.equals(activeFile.getContentType()))
       {
-
          if (activeFile.isNewFile())
          {
             display.setPreviewAvailable(false);
