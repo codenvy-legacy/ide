@@ -94,7 +94,7 @@ public class RESTService extends AbstractTestModule
    {
       waitForElementPresent(REST_SERVICE_FORM);
    }
-   
+
    /**
     * Wait for Launch REST Service view to be closed.
     * 
@@ -104,7 +104,7 @@ public class RESTService extends AbstractTestModule
    {
       waitForElementNotPresent(REST_SERVICE_FORM);
    }
-   
+
    /**
     * Validate REST Service, and check, that all ok.
     * 
@@ -183,6 +183,15 @@ public class RESTService extends AbstractTestModule
    private void clickOnTab(int tabIndex)
    {
       selenium().click(String.format(TABS_LOCATORS, tabIndex));
+      try
+      {
+         waitForElementPresent(String.format(TABS_LOCATORS, tabIndex));
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -476,10 +485,33 @@ public class RESTService extends AbstractTestModule
 
    private void typeToTableValue(String tableId, int row, int col, String value)
    {
+      
+     // added waiting methods, for redrawing and appearance all elements table "LaunchRESTService"
       String locator = String.format("//table[@id='%1s']/tbody/tr[%2s]/td[%3s]/div", tableId, row, col);
-
+      try
+      {
+         waitForElementPresent(locator);
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      
       selenium().click(locator);
-      locator += "/input[@type='text']";
+      
+      //add click, This method fixes the problem call of input field for write a value in HeaderParameter table
+      selenium().click(locator);
+            
+      try
+      {
+         waitForElementPresent(locator);
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
 
       assertTrue(selenium().isElementPresent(locator));
       selenium().focus(locator);
@@ -527,7 +559,7 @@ public class RESTService extends AbstractTestModule
       IDE().TOOLBAR.runCommand(ToolbarCommands.Run.RUN_GROOVY_SERVICE);
       waitForElementPresent(REST_SERVICE_FORM);
    }
-   
+
    public void checkIsFormNotOpened()
    {
       assertFalse(selenium().isElementPresent(REST_SERVICE_FORM));
