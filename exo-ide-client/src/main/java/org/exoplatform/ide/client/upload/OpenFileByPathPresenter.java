@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -29,24 +30,25 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.FileContentReceivedEvent;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
+import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathPresenter
+public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPathHandler
 {
 
-   interface Display
+   interface Display extends IsView
    {
       HasClickHandlers getOpenButton();
 
@@ -56,11 +58,11 @@ public class OpenFileByPathPresenter
       
       void disableOpenButton();
 
-      void closeDisplay();
-
       HasKeyPressHandlers getFilePathField();
       
       void selectPathField();
+      
+      void focusInPathField();
       
       TextFieldItem getFilePathFieldOrigin(); 
    }
@@ -72,6 +74,9 @@ public class OpenFileByPathPresenter
    public OpenFileByPathPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      
+      eventBus.addHandler(OpenFileByPathEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
@@ -93,7 +98,7 @@ public class OpenFileByPathPresenter
       {
          public void onClick(ClickEvent event)
          {
-            display.closeDisplay();
+            closeView();
          }
       });
       
@@ -120,6 +125,8 @@ public class OpenFileByPathPresenter
          }
       });
       
+      display.disableOpenButton();
+      
    } 
 
    private void updateOpenButtonState(Object filePath)
@@ -144,38 +151,44 @@ public class OpenFileByPathPresenter
          return;
       }
       
-      File file = new File(filePath);
-      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
-      {
-         
-         @Override
-         protected void onSuccess(Item result)
-         {
-            eventBus.fireEvent(new OpenFileEvent((File)result));
-            getFileContent((File)result);
-
-            display.closeDisplay();
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-            display.selectPathField();
-         }
-      });
+      eventBus.fireEvent(new OpenFileEvent(filePath));
+      closeView();
    }
    
-   private void getFileContent(File file)
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
    {
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
+      if (event.getView() instanceof Display)
       {
-         @Override
-         protected void onSuccess(File result)
-         {
-            eventBus.fireEvent(new FileContentReceivedEvent(result));
-         }
-      });
+         display = null;
+      }
+   }
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler#onOpenFileByPath(org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent)
+    */
+   @Override
+   public void onOpenFileByPath(OpenFileByPathEvent event)
+   {
+      if (display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+         display.focusInPathField();
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
+      }
    }
    
 }

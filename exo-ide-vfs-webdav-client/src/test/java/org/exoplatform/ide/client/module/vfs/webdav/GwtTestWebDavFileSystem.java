@@ -184,63 +184,6 @@ public class GwtTestWebDavFileSystem extends GWTTestCase
       delayTestFinish(DELAY_TEST);
    }
 
-//   /**
-//   * Get folder content
-//   *
-//   * Set test to Ignore need rewrite it 
-//   */
-//   public void testGetChildren()
-//   {
-//      String newFolderHref = testUrl + "main";
-//      Folder newFolder = new Folder(newFolderHref);
-//      eventbus.addHandler(ChildrenReceivedEvent.TYPE, new ChildrenReceivedHandler()
-//      {
-//         public void onChildrenReceived(ChildrenReceivedEvent event)
-//         {
-//            finishTest();
-//         }
-//      });
-//      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-//      {
-//         public void onError(ExceptionThrownEvent event)
-//         {
-//            fail(event.getErrorMessage());
-//            finishTest();
-//         }
-//      });
-//      vfsWebDav.getChildren(newFolder);
-//      delayTestFinish(DELAY_TEST);
-//
-//   }
-
-//   /**
-//    * Get content of the file
-//    *  Set test to Ignore need rewrite it 
-//    */
-//   public void testGetContent()
-//   {
-//
-//      File file = new File(testUrl + "fileContent");
-//      eventbus.addHandler(FileContentReceivedEvent.TYPE, new FileContentReceivedHandler()
-//      {
-//         public void onFileContentReceived(FileContentReceivedEvent event)
-//         {
-//            finishTest();
-//         }
-//      });
-//
-//      eventbus.addHandler(ExceptionThrownEvent.TYPE, new ExceptionThrownHandler()
-//      {
-//         public void onError(ExceptionThrownEvent event)
-//         {
-//            fail(event.getErrorMessage());
-//            finishTest();
-//         }
-//      });
-//      vfsWebDav.getContent(file);
-//      delayTestFinish(DELAY_TEST);
-//   }
-
    /**
     * Save file content
     */

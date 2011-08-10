@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.RootPanel;
+
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
@@ -29,13 +34,6 @@ import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.MenuImpl;
 import org.exoplatform.ide.client.ui.impl.Layer;
 import org.exoplatform.ide.client.ui.impl.PerspectiveImpl;
-
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * Created by The eXo Platform SAS .

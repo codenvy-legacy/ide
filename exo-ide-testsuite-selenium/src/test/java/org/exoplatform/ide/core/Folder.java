@@ -36,7 +36,7 @@ public class Folder extends AbstractTestModule
    
    public void waitForDialog() throws Exception
    {
-      waitForElementPresent(FOLDER_CREATE_FORM_ID);
+      waitForElementPresent("//div[@view-id='" + FOLDER_CREATE_FORM_ID + "']");
    }
    
    public void typeFolderName(String name) throws InterruptedException

@@ -28,22 +28,16 @@ import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
 import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
-import org.exoplatform.ide.client.edit.event.GoToLineEvent;
-import org.exoplatform.ide.client.edit.event.GoToLineHandler;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.edit.ui.GoToLineForm;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
 
@@ -52,14 +46,11 @@ import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
  * @version $Id: $
  *
  */
-public class TextEditModule implements GoToLineHandler, ShowLineNumbersHandler,
-   ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler
+public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationSettings applicationSettings;
-
-   private File activeFile;
 
    public TextEditModule(HandlerManager eventBus)
    {
@@ -81,11 +72,10 @@ public class TextEditModule implements GoToLineHandler, ShowLineNumbersHandler,
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       eventBus.addHandler(ShowLineNumbersEvent.TYPE, this);
-      eventBus.addHandler(GoToLineEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
+      
       new LockUnlockFileHandler(eventBus);
       new FindTextPresenter(eventBus);
+      new GoToLinePresenter(eventBus);
    }
 
    /**
@@ -101,24 +91,9 @@ public class TextEditModule implements GoToLineHandler, ShowLineNumbersHandler,
       eventBus.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
    }
 
-   public void onGoToLine(GoToLineEvent event)
-   {
-      if (activeFile == null)
-      {
-         return;
-      }
-
-      new GoToLineForm(eventBus, activeFile);
-   }
-
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
    }
 
 }

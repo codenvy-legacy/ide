@@ -189,6 +189,12 @@ public interface IdeErrorsLocalizationConstant extends Constants
    String createFileFromTemplateEnterName();
    
    /*
+    * CreateFolderPresenter
+    */
+   @Key("createFolder.selectParentFolder")
+   String createFolderSelectParentFolder();
+   
+   /*
     * RestServicesDiscoveryPresenter
     */
    @Key("restServicesDiscovery.getWadlFailure")

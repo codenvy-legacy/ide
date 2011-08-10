@@ -78,8 +78,8 @@ public class RenameFolderTest extends BaseTest
       assertEquals(FOLDER_NAME, selenium().getValue("ideRenameItemFormRenameField"));
       //type new name and press "enter"
       selenium().type("ideRenameItemFormRenameField", NEW_FOLDER_NAME);
-      selenium().keyDown("ideRenameItemFormRenameField", "\\13");
-      selenium().keyUp("ideRenameItemFormRenameField", "\\13");
+      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
+      IDE.RENAME_DIALOG.waitForRenameDialogNotPresent();
       // check appear folder with new name
       waitForElementPresent(IDE.NAVIGATION.getItemId(RENAME_URL + "/"));
       IDE.NAVIGATION.assertItemNotVisible(ORIG_URL + "/");
@@ -93,7 +93,7 @@ public class RenameFolderTest extends BaseTest
     */
    public void chekAppearRenameForm()
    {
-      assertTrue(selenium().isElementPresent("ideRenameItemForm"));
+      assertTrue(selenium().isElementPresent("//div[@view-id='ideRenameItemForm']"));
       assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
       assertTrue(selenium().isElementPresent("ideRenameItemFormRenameField"));
    }

@@ -265,7 +265,7 @@ public class Navigation extends AbstractTestModule
    public void createFolder(String folderName) throws Exception
    {
       IDE().TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
-      waitForElementPresent("ideCreateFolderForm");
+      waitForElementPresent("//div[@view-id='ideCreateFolderForm']");
 
       //Check creation form elements
       waitForElementPresent("ideCreateFolderFormNameField");

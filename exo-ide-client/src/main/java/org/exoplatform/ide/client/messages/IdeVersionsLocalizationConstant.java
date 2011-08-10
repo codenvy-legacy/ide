@@ -74,5 +74,11 @@ public interface IdeVersionsLocalizationConstant extends Constants
    
    @Key("versions.version.title")
    String versionTitle();
+   
+   /*
+    * ViewVersionsPresenter
+    */
+   @Key("versions.error.openFile")
+   String versionErrorOpenFile();
 
 }

@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.messages;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+
+import com.google.gwt.i18n.client.Messages;
 
 /**
  * Interface to represent the constants contained in resource bundle:
@@ -30,7 +32,7 @@ import com.google.gwt.i18n.client.Constants;
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
  *
  */
-public interface IdeEditorLocalizationConstant extends Constants
+public interface IdeEditorLocalizationConstant extends Messages
 {
    /*
     * EditorsListGrid
@@ -55,6 +57,12 @@ public interface IdeEditorLocalizationConstant extends Constants
    
    @Key("goToLine.goButton")
    String goToLineGoButton();
+   
+   /*
+    * GoToLinePresenter
+    */
+   @Key("goToLine.label.enterLineNumber")
+   String goToLineLabelEnterLineNumber(int lineNumber);
    
    /*
     * FindTextView

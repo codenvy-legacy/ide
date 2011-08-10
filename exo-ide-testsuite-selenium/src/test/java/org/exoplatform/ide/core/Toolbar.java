@@ -68,7 +68,7 @@ public class Toolbar extends AbstractTestModule
       }
       else if (menuItemName.equals(MenuCommands.New.FOLDER))
       {
-         waitForElementPresent("ideCreateFolderForm");
+         waitForElementPresent("//div[@view-id='ideCreateFolderForm']");
       }
       else if (menuItemName.equals(MenuCommands.New.PROJECT_FROM_TEMPLATE))
       {

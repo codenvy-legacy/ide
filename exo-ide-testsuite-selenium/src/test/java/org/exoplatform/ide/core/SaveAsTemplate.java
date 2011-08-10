@@ -32,7 +32,7 @@ import org.exoplatform.ide.TestConstants;
 public class SaveAsTemplate extends AbstractTestModule
 {
    //------Save as template form elements----------------------
-   public static final String SAVE_AS_TEMPLATE_FORM_ID = "ideSaveAsTemplateForm";
+   public static final String SAVE_AS_TEMPLATE_FORM_LOCATOR = "//div[@view-id='ideSaveAsTemplateForm']";
    
    public static final String CANCEL_BUTTON_ID = "ideSaveAsTemplateFormCancelButton";
    
@@ -46,7 +46,7 @@ public class SaveAsTemplate extends AbstractTestModule
    
    public void checkSaveAsTemplateWindow()
    {
-      assertTrue(selenium().isElementPresent(SAVE_AS_TEMPLATE_FORM_ID));
+      assertTrue(selenium().isElementPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR));
       assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
       assertTrue(selenium().isElementPresent(SAVE_BUTTON_ID));
       assertTrue(selenium().isElementPresent(TYPE_FIELD_ID));
@@ -59,7 +59,7 @@ public class SaveAsTemplate extends AbstractTestModule
    
    public void waitForDialog() throws Exception
    {
-      waitForElementPresent(SAVE_AS_TEMPLATE_FORM_ID);
+      waitForElementPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR);
    }
    
    /**
@@ -112,7 +112,7 @@ public class SaveAsTemplate extends AbstractTestModule
    {
       selenium().click(SAVE_BUTTON_ID);
 
-      waitForElementNotPresent(SAVE_AS_TEMPLATE_FORM_ID);
+      waitForElementNotPresent(SAVE_AS_TEMPLATE_FORM_LOCATOR);
    }
 
 }

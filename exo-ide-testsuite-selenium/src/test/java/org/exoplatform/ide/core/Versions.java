@@ -47,7 +47,7 @@ public class Versions extends AbstractTestModule
 
    private static final String VERSIONS_LIST_VIEW_ID = "ideViewVersionsForm";
 
-   private static final String VERSIONS_LIST_VIEW_LOCATOR = "//div[@id=\"" + VERSIONS_LIST_VIEW_ID + "\"]";
+   private static final String VERSIONS_LIST_VIEW_LOCATOR = "//div[@view-id='" + VERSIONS_LIST_VIEW_ID + "']";
 
    private final String OPEN_VERSION_BUTTON_ID = "ideViewVersionsFormOpenVersionButton";
 

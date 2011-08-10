@@ -35,7 +35,7 @@ public class RenameDialog extends AbstractTestModule
 
    private static String CANCEL_BUTTON_ID = "ideRenameItemFormCancelButton";
 
-   private static String FORM_LOCATOR = "//div[@id='ideRenameItemForm']";
+   private static String FORM_LOCATOR = "//div[@view-id='ideRenameItemForm']";
 
    private static String RENAME_TO_LOCATOR = FORM_LOCATOR + "//input[@name='ideRenameItemFormRenameField']";
 
@@ -44,7 +44,12 @@ public class RenameDialog extends AbstractTestModule
    private static String MIME_TYPE_DISABLED_LOCATOR = FORM_LOCATOR
       + "//input[@name='ideRenameItemFormMimeTypeField' and @disabled='']";
 
-   private static String WARNING_MESSAGE_LOCATOR = FORM_LOCATOR + "//div[@class='gwt-Label exo-rename-warning-msg']";
+   private static String WARNING_MESSAGE_LOCATOR = FORM_LOCATOR + "//div[contains(@class, 'exo-rename-warning-msg')]";
+   
+   public void waitForRenameDialogNotPresent() throws Exception
+   {
+      waitForElementNotPresent(FORM_LOCATOR);
+   }
 
    /**
     * Runs menu command "File > Rename" and waits for Rename dialog is appear.

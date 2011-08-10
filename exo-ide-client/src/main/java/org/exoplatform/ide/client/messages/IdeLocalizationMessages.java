@@ -32,12 +32,6 @@ public interface IdeLocalizationMessages extends Messages
 {
    
    /*
-    * GoToLinePresenter
-    */
-   @Key("goToLine.label.enterLineNumber")
-   String goToLineLabelEnterLineNumber(int lineNumber);
-   
-   /*
     * LockUnlockFileHandler
     */
    @Key("lockUnlockFile.cantLockFile")

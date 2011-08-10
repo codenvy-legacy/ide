@@ -165,7 +165,8 @@ public abstract class Item
    /**
     * Get the url to working directory of selected item,
     * that is the current directory you are working on.
-    * @return href of selected item or href of parent folder (if item isn't folder)
+    * @return href of selected item or href of parent folder (if item isn't folder).
+    * Must always ends with <code>/</code> symbol.
     */
    public abstract String getWorkDir();
 }

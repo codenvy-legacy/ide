@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.template;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -26,16 +27,24 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
+import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
+import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
 
 /**
- * Presenter for Save as Template form.
+ * Presenter for Save as Template view.
  * 
  * Save file as template.
  * 
@@ -43,12 +52,11 @@ import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
  * @version $Id:   $
  *
  */
-public class SaveAsTemplatePresenter
+public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler, TemplatesMigratedHandler,
+   EditorActiveFileChangedHandler
 {
-   public interface Display
+   public interface Display extends IsView
    {
-
-      void closeForm();
 
       HasValue<String> getTypeField();
 
@@ -63,31 +71,38 @@ public class SaveAsTemplatePresenter
       void disableSaveButton();
       
       void enableSaveButton();
+      
+      void focusInNameField();
 
    }
 
+   private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
+   
+   private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
+   
+   private static final String OPEN_FILE_FOR_TEMPLATE = IDE.TEMPLATE_CONSTANT.saveAsTemplateOpenFileForTemplate();
+   
    private Display display;
 
-   private File file;
-   
    private Template templateToCreate;
    
    private HandlerManager eventBus;
    
-   private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
+   private File activeFile;
    
-   private static final String TEMPLATE_ALREADY_EXISTS = IDE.TEMPLATE_CONSTANT.saveAsTemplateTemplateAlreadyExists();
+   /**
+    * Flag, to indicate, were templates moved from registry to plain text file on server.
+    */
+   private boolean isTemplatesMigrated = false;
    
-   private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
-
-   public SaveAsTemplatePresenter(HandlerManager eventBus, File file)
+   public SaveAsTemplatePresenter(HandlerManager eventBus)
    {
-      this.file = file;
       this.eventBus = eventBus;
-   }
-
-   public void destroy()
-   {
+      
+      eventBus.addHandler(SaveFileAsTemplateEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -124,11 +139,11 @@ public class SaveAsTemplatePresenter
       {
          public void onClick(ClickEvent event)
          {
-            display.closeForm();
+            closeView();
          }
       });
 
-      display.getTypeField().setValue(file.getContentType());
+      display.getTypeField().setValue(activeFile.getContentType());
       display.disableSaveButton();
 
    }
@@ -148,7 +163,7 @@ public class SaveAsTemplatePresenter
          description = display.getDescriptionField().getValue();
       }
       
-      templateToCreate = new FileTemplate(file.getContentType(), name, description, file.getContent(), null);
+      templateToCreate = new FileTemplate(activeFile.getContentType(), name, description, activeFile.getContent(), null);
       
       TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
          new AsyncRequestCallback<FileTemplate>(eventBus)
@@ -156,10 +171,88 @@ public class SaveAsTemplatePresenter
             @Override
             protected void onSuccess(FileTemplate result)
             {
-               display.closeForm();
+               closeView();
                Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
             }
          });
+   }
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler#onSaveFileAsTemplate(org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent)
+    */
+   @Override
+   public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
+   {
+      if (isTemplatesMigrated)
+      {
+         openView();
+      }
+      else
+      {
+         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         {
+            @Override
+            public void onTemplatesMigrated()
+            {
+               openView();
+            }
+         }));
+      }
+   }
+   
+   private void openView()
+   {
+      if (activeFile == null)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(OPEN_FILE_FOR_TEMPLATE));
+         return;
+      }
+      if (display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+         display.focusInNameField();
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("Display SaveAsTemplate must be null"));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    */
+   @Override
+   public void onTemplatesMigrated(TemplatesMigratedEvent event)
+   {
+      isTemplatesMigrated = true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      this.activeFile = event.getFile();
    }
 
 }

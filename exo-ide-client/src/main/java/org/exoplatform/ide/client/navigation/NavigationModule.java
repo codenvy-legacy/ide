@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -38,24 +34,11 @@ import org.exoplatform.ide.client.framework.configuration.event.ConfigurationRec
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
@@ -84,17 +67,9 @@ import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuG
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CopyItemsHandler;
-import org.exoplatform.ide.client.navigation.event.CreateFolderEvent;
-import org.exoplatform.ide.client.navigation.event.CreateFolderHandler;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsHandler;
 import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent;
-import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
-import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
-import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
-import org.exoplatform.ide.client.navigation.event.RenameItemHander;
-import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
-import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
 import org.exoplatform.ide.client.navigation.event.UploadFileEvent;
 import org.exoplatform.ide.client.navigation.event.UploadFileHandler;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
@@ -106,69 +81,43 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
-import org.exoplatform.ide.client.navigation.ui.CreateFolderForm;
-import org.exoplatform.ide.client.navigation.ui.RenameItemForm;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
-import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
-import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
-import org.exoplatform.ide.client.template.ui.SaveAsTemplateForm;
-import org.exoplatform.ide.client.upload.OpenFileByPathForm;
+import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
+import org.exoplatform.ide.client.upload.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.upload.OpenLocalFileForm;
 import org.exoplatform.ide.client.upload.UploadFileForm;
 import org.exoplatform.ide.client.upload.UploadForm;
+import org.exoplatform.ide.client.versioning.VersionsListPresenter;
 import org.exoplatform.ide.client.versioning.control.RestoreToVersionControl;
 import org.exoplatform.ide.client.versioning.control.ViewNextVersionControl;
 import org.exoplatform.ide.client.versioning.control.ViewPreviousVersionControl;
 import org.exoplatform.ide.client.versioning.control.ViewVersionHistoryControl;
 import org.exoplatform.ide.client.versioning.control.ViewVersionListControl;
 import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHandler;
-import org.exoplatform.ide.client.versioning.handler.ShowVersionListCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHandler,
-   CreateFolderHandler, CopyItemsHandler, CutItemsHandler, RenameItemHander, ApplicationSettingsReceivedHandler,
-   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, EntryPointChangedHandler,
-   ConfigurationReceivedSuccessfullyHandler, EditorActiveFileChangedHandler, InitializeServicesHandler,
-   OpenFileByPathHandler, TemplatesMigratedHandler
+public class NavigationModule implements UploadFileHandler, CopyItemsHandler, CutItemsHandler, 
+   ItemsSelectedHandler, 
+   EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, InitializeServicesHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
-   private ApplicationSettings applicationSettings;
-
    private IDEConfiguration applicationConfiguration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
-
    private String entryPoint;
-
-   private File activeFile;
-
-   private Map<String, String> lockTokens;
    
-   /**
-    * Flag, to indicate, were templates moved from registry to plain text file on server.
-    */
-   private boolean isTemplatesMigrated = false;
-
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
@@ -230,24 +179,14 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      eventBus.addHandler(OpenFileByPathEvent.TYPE, this);
       eventBus.addHandler(UploadFileEvent.TYPE, this);
-      eventBus.addHandler(SaveFileAsTemplateEvent.TYPE, this);
-      eventBus.addHandler(CreateFolderEvent.TYPE, this);
       eventBus.addHandler(CopyItemsEvent.TYPE, this);
       eventBus.addHandler(CutItemsEvent.TYPE, this);
 
-      eventBus.addHandler(RenameItemEvent.TYPE, this);
-
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
 
       new CreateFileCommandHandler(eventBus);
       new CreateFileFromTemplatePresenter(eventBus);
@@ -259,7 +198,6 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       new PasteItemsCommandHandler(eventBus, context);
       new FileClosedHandler(eventBus);
 
-      new ShowVersionListCommandHandler(eventBus);
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
 
@@ -268,18 +206,13 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       new SearchResultsPresenter(eventBus);
       new DeleteItemsPresenter(eventBus);
       new GetItemURLPresenter(eventBus);
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
-
-      if (applicationSettings.getValueAsMap("lock-tokens") == null)
-      {
-         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-
-      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
+      
+      new CreateFolderPresenter(eventBus);
+      new OpenFileByPathPresenter(eventBus);
+      new SaveAsTemplatePresenter(eventBus);
+      new VersionsListPresenter(eventBus);
+      new RenameFilePresenter(eventBus);
+      new RenameFolderPresenter(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -328,89 +261,6 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
 
    }
 
-   public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
-   {
-      
-      if (isTemplatesMigrated)
-      {
-         new SaveAsTemplateForm(eventBus, activeFile);
-      }
-      else
-      {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-         {
-            @Override
-            public void onTemplatesMigrated()
-            {
-               new SaveAsTemplateForm(eventBus, activeFile);
-            }
-         }));
-      }
-      
-   }
-
-   public void onCreateFolder(CreateFolderEvent event)
-   {
-      Item item = selectedItems.get(0);
-      String itemHref = item.getHref();
-      if (item instanceof File)
-      {
-         itemHref = itemHref.substring(0, itemHref.lastIndexOf("/") + 1);
-      }
-
-      final String href = itemHref;
-
-      final CreateFolderForm form = new CreateFolderForm(eventBus, selectedItems.get(0), href);
-      form.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            form.closeForm();
-         }
-      });
-
-      form.getCreateButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            createFolder(href, form);
-         }
-        
-      });
-
-      form.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
-      {
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
-            {
-               createFolder(href, form);
-            }
-         }
-      });
-   }
-   
-   /**
-    * @param href - href of parent folder
-    * @param form - {@link CreateFolderForm}
-    */
-   private void createFolder(final String href, final CreateFolderForm form)
-   {
-      final String newFolderHref = href + URL.encodePathSegment(form.getFolderNameField().getValue()) + "/";
-      Folder newFolder = new Folder(newFolderHref);
-      VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
-      {
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), result));
-            form.closeForm();
-         }
-      });
-   }
-
    public void onCopyItems(CopyItemsEvent event)
    {
       context.getItemsToCopy().clear();
@@ -428,24 +278,9 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
       eventBus.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
-   public void onRenameItem(RenameItemEvent event)
-   {
-      new RenameItemForm(eventBus, selectedItems, openedFiles, lockTokens);
-   }
-
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-   }
-
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
@@ -456,25 +291,6 @@ public class NavigationModule implements UploadFileHandler, SaveFileAsTemplateHa
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       applicationConfiguration = event.getConfiguration();
-   }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-   }
-
-   public void onOpenFileByPath(OpenFileByPathEvent event)
-   {
-      new OpenFileByPathForm(eventBus);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
-    */
-   @Override
-   public void onTemplatesMigrated(TemplatesMigratedEvent event)
-   {
-      isTemplatesMigrated = true;      
    }
 
 }

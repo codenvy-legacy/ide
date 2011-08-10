@@ -101,6 +101,12 @@ public interface IdeTemplateLocalizationConstant extends Constants
    @Key("createProjectTemplate.addFolder.title")
    String createProjectTemplateAddFolderTitle();
    
+   @Key("createProjectTemplate.addFolder.text")
+   String createProjectTemplateAddFolderText();
+   
+   @Key("createProjectTemplate.addFolder.default")
+   String createProjectTemplateAddFolderDefault();
+   
    @Key("createProjectTemplate.textField.name")
    String createProjectTemplateTextFieldName();
    
@@ -218,11 +224,11 @@ public interface IdeTemplateLocalizationConstant extends Constants
    @Key("saveAsTemplate.enterNameFirst")
    String saveAsTemplateEnterNameFirst();
    
-   @Key("saveAsTemplate.templateAlreadyExists")
-   String saveAsTemplateTemplateAlreadyExists();
-   
    @Key("saveAsTemplate.templateCreated")
    String saveAsTemplateCreated();
+   
+   @Key("saveAsTemplate.openFileForTemplate")
+   String saveAsTemplateOpenFileForTemplate();
    
    /*
     * CreateFileFromTemplatePresenter

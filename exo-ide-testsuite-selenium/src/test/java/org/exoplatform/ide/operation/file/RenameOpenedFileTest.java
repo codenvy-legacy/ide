@@ -73,7 +73,7 @@ public class RenameOpenedFileTest extends BaseTest
 
    //IDE-81 Rename Opened File 
    @Test
-   public void testRenameClosedFile() throws Exception
+   public void testRenameOpenedFile() throws Exception
    {
       //TODO fix problem see issue 805
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");

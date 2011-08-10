@@ -22,9 +22,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -36,14 +33,13 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.navigation.CreateFolderDisplay;
-import org.exoplatform.ide.client.navigation.ui.AbstractCreateFolderForm;
 import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
 
 import java.util.ArrayList;
@@ -296,44 +292,18 @@ public class CreateProjectTemplatePresenter
 
    private void callAddFolderForm()
    {
-      final CreateFolderDisplay createFolderDisplay = new AbstractCreateFolderForm(eventBus, IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderTitle(), 
-         IDE.IDE_LOCALIZATION_CONSTANT.addButton())
-      {
-      };
-
-      createFolderDisplay.getCreateButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
+      Dialogs.getInstance().askForValue(IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderTitle(),
+         IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderText(),
+         IDE.TEMPLATE_CONSTANT.createProjectTemplateAddFolderDefault(), new StringValueReceivedHandler()
          {
-            createFolderDisplay.closeForm();
-
-            final String folderName = createFolderDisplay.getFolderNameField().getValue();
-            validateAndAddFolder(folderName);
-
-         }
-      });
-
-      createFolderDisplay.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
-      {
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER)
+            @Override
+            public void stringValueReceived(String value)
             {
-               createFolderDisplay.closeForm();
-
-               final String folderName = createFolderDisplay.getFolderNameField().getValue();
-               validateAndAddFolder(folderName);
+               if (value == null)
+                  return;
+               validateAndAddFolder(value);
             }
-         }
-      });
-
-      createFolderDisplay.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            createFolderDisplay.closeForm();
-         }
-      });
+         });
    }
 
    private void validateAndAddFolder(String folderName)

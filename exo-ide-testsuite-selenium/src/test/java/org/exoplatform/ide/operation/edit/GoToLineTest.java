@@ -58,7 +58,7 @@ public class GoToLineTest extends BaseTest
       waitForElementPresent("//td[@class='exo-menuBarItem'and text()='Edit']");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
+      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
       assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_BUTTON_ID));
       assertTrue(selenium().isElementPresent(GoToLine.CANCEL_BUTTON_ID));
       IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..13):");
@@ -67,7 +67,7 @@ public class GoToLineTest extends BaseTest
       IDE.GOTOLINE.typeIntoGoToLineFormField("");
       IDE.GOTOLINE.pressGoButton();
       IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
+      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
 
       // Print "abc" in input field.
       IDE.GOTOLINE.typeIntoGoToLineFormField("abc");
@@ -100,16 +100,16 @@ public class GoToLineTest extends BaseTest
 
       // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      waitForElementPresent(GoToLine.GO_TO_LINE_FORM_ID);
+      waitForElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR);
       IDE.GOTOLINE.typeIntoGoToLineFormField("1");
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
-      waitForElementNotPresent(GoToLine.GO_TO_LINE_FORM_ID);
+      waitForElementNotPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR);
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
       // Go to status bar - right down corner , where row and column numbers are displayed, hover on them with the mouse and click on it.
       IDE.STATUSBAR.clickOnStatusBar();
       IDE.GOTOLINE.waitForGoToLineForm();
-      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
+      assertTrue(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
       IDE.GOTOLINE.checkLineNumberLabel("Enter line number (1..8):");
       
       // Print "2" and click "Go".

@@ -18,23 +18,6 @@
  */
 package org.exoplatform.ide.client.permissions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.webdav.Property;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
-import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
-import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -44,20 +27,48 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
+import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlEntry;
+import org.exoplatform.ide.client.framework.vfs.acl.AccessControlList;
+import org.exoplatform.ide.client.framework.vfs.acl.Permissions;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- *This class is presenter for {@link PermissionsManagerForm}<br>
+ *This class is presenter for {@link PermissionsManagerView}<br>
  * Created by The eXo Platform SAS .
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
  *
  */
-public class PermissionsManagerPresenter
+public class PermissionsManagerPresenter implements ShowPermissionsHandler, ItemsSelectedHandler,
+ApplicationSettingsReceivedHandler, ViewClosedHandler
 {
 
-   public interface Dispaly
+   public interface Display extends IsView
    {
-
-      void closeForm();
 
       PermissionsListGrid getPermissionsListGrid();
 
@@ -81,7 +92,7 @@ public class PermissionsManagerPresenter
 
    private Item item;
 
-   private Dispaly dispaly;
+   private Display display;
 
    private AccessControlList acl;
 
@@ -93,25 +104,28 @@ public class PermissionsManagerPresenter
     * @param eventBus
     * @param item
     */
-   public PermissionsManagerPresenter(HandlerManager eventBus, Item item, Map<String, String> lockTokens)
+   public PermissionsManagerPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.item = item;
-      this.lockTokens = lockTokens;
+      
+      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      eventBus.addHandler(ShowPermissionsEvent.TYPE, this);
+      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void bindDisplay(Dispaly d)
+   public void bindDisplay(Display d)
    {
-      dispaly = d;
+      display = d;
 
       try
       {
          acl = parseItemACL();
 
-         dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+         display.getPermissionsListGrid().setValue(acl.getPermissionsList());
 
-         dispaly.getFileNameLabel().setValue(item.getName());
-         dispaly.getFileOwnerLabel().setValue(getFileOwner());
+         display.getFileNameLabel().setValue(item.getName());
+         display.getFileOwnerLabel().setValue(getFileOwner());
 
       }
       catch (Exception e)
@@ -121,27 +135,27 @@ public class PermissionsManagerPresenter
          return;
       }
 
-      dispaly.getCancelButton().addClickHandler(new ClickHandler()
+      display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
          public void onClick(ClickEvent event)
          {
-            dispaly.closeForm();
+            closeView();
          }
       });
 
-      dispaly.getAddEntityButton().addClickHandler(new ClickHandler()
+      display.getAddEntityButton().addClickHandler(new ClickHandler()
       {
 
          public void onClick(ClickEvent event)
          {
             acl.addPermission(new AccessControlEntry(""));
-            dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+            display.getPermissionsListGrid().setValue(acl.getPermissionsList());
 
          }
       });
 
-      dispaly.getSaveACLButton().addClickHandler(new ClickHandler()
+      display.getSaveACLButton().addClickHandler(new ClickHandler()
       {
 
          public void onClick(ClickEvent event)
@@ -150,7 +164,7 @@ public class PermissionsManagerPresenter
          }
       });
 
-      dispaly.getPermissionsListGrid().addSelectionHandler(new SelectionHandler<AccessControlEntry>()
+      display.getPermissionsListGrid().addSelectionHandler(new SelectionHandler<AccessControlEntry>()
       {
 
          public void onSelection(SelectionEvent<AccessControlEntry> event)
@@ -160,7 +174,7 @@ public class PermissionsManagerPresenter
          }
       });
 
-      dispaly.getRemoveEntityButton().addClickHandler(new ClickHandler()
+      display.getRemoveEntityButton().addClickHandler(new ClickHandler()
       {
 
          public void onClick(ClickEvent event)
@@ -189,14 +203,14 @@ public class PermissionsManagerPresenter
          @Override
          protected void onSuccess(Item result)
          {
-            dispaly.closeForm();
+            closeView();
          }
          
          @Override
          protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception, IDE.PERMISSIONS_CONSTANT.permissionsSetAclFailure()));
-            dispaly.closeForm();            
+            closeView();            
          }
       });
    }
@@ -215,7 +229,7 @@ public class PermissionsManagerPresenter
 
       int i = acl.getPermissionsList().indexOf(selectedEntry);
       acl.removePermission(selectedEntry.getIdentity());
-      dispaly.getPermissionsListGrid().setValue(acl.getPermissionsList());
+      display.getPermissionsListGrid().setValue(acl.getPermissionsList());
       if (i > acl.getPermissionsList().size() - 1)
       {
          i = acl.getPermissionsList().size() - 1;
@@ -225,7 +239,7 @@ public class PermissionsManagerPresenter
       {
          AccessControlEntry itemToSelect = acl.getPermissionsList().get(i);
 
-         dispaly.selectItem(itemToSelect);
+         display.selectItem(itemToSelect);
       }
    }
 
@@ -310,6 +324,84 @@ public class PermissionsManagerPresenter
             return p.getName().getLocalName();
       }
       return "";
+   }
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    */
+   @Override
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+      {
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+      
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() == 1)
+      {
+         item = event.getSelectedItems().get(0);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.permissions.ShowPermissionsHandler#onShowPermissions(org.exoplatform.ide.client.permissions.ShowPermissionsEvent)
+    */
+   @Override
+   public void onShowPermissions(ShowPermissionsEvent event)
+   {
+      if (item == null)
+         return;
+
+      VirtualFileSystem.getInstance().getProperties(item,
+         Arrays.asList(new QName[]{ItemProperty.ACL.ACL, ItemProperty.OWNER}), new ItemPropertiesCallback()
+         {
+            @Override
+            protected void onSuccess(Item result)
+            {
+               openView();
+            }
+         });
+   }
+   
+   private void openView()
+   {
+      if (display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("Display PermissionsManager must be null"));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
 }

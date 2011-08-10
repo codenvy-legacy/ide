@@ -24,6 +24,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,9 +38,10 @@ import java.io.IOException;
  */
 public class ViewVersionListTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
+      + "/";
 
-   private final static String TEST_FOLDER =  ViewVersionListTest.class.getSimpleName();
+   private final static String TEST_FOLDER = ViewVersionListTest.class.getSimpleName();
 
    private final static String FILE_1 = "Test file1";
 
@@ -69,6 +71,23 @@ public class ViewVersionListTest extends BaseTest
          e.printStackTrace();
       }
    }
+   
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ModuleException e)
+      {
+         e.printStackTrace();
+      }
+   }
 
    /**
     * Tests the list of versions.
@@ -79,19 +98,21 @@ public class ViewVersionListTest extends BaseTest
    public void testViewVersionList() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
 
-     IDE.EDITOR.deleteFileContent();
-      saveAsUsingToolbarButton(FILE_1);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" +FILE_1);
+      IDE.EDITOR.deleteFileContent();
+      IDE.NAVIGATION.saveFileAs(FILE_1);
+//      saveAsUsingToolbarButton(FILE_1);
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_1);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
-     IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
@@ -105,27 +126,27 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text);
 
       IDE.VERSIONS.checkViewVersionListButtonState(true);
-      
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
-     IDE.VERSIONS.waitForViewVersionsListViewOpen();    
 
-     IDE.VERSIONS.checkViewVersionsListPanel(true);
-     IDE.VERSIONS.checkOpenVersionButtonState(false);
-     IDE.VERSIONS.checkVersionListSize(2);
+      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
+      IDE.VERSIONS.waitForViewVersionsListViewOpen();
+
+      IDE.VERSIONS.checkViewVersionsListPanel(true);
+      IDE.VERSIONS.checkOpenVersionButtonState(false);
+      IDE.VERSIONS.checkVersionListSize(2);
 
       //Close version list panel:
-     IDE.VERSIONS.clickCloseVersionListPanelButton();
-     IDE.VERSIONS.waitForViewVersionsListViewClose();
-     IDE.VERSIONS.checkViewVersionsListPanel(false);
+      IDE.VERSIONS.clickCloseVersionListPanelButton();
+      IDE.VERSIONS.waitForViewVersionsListViewClose();
+      IDE.VERSIONS.checkViewVersionsListPanel(false);
       IDE.VERSIONS.checkVersionPanelState(true);
 
       //Edit file and save
-     IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      selenium().keyPressNative(""+KeyEvent.VK_END);
+
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-     IDE.EDITOR.typeTextIntoEditor(0, version2Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
       IDE.VERSIONS.checkOlderVersionButtonState(true);
       IDE.VERSIONS.checkNewerVersionButtonState(true);
@@ -142,7 +163,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.waitOpenVersionButtonEnabled();
       IDE.VERSIONS.clickOpenVersionButton();
       IDE.VERSIONS.waitForViewVersionsListViewClose();
-      
+
       IDE.VERSIONS.checkViewVersionsListPanel(false);
       IDE.VERSIONS.checkOlderVersionButtonState(true);
       IDE.VERSIONS.checkNewerVersionButtonState(false);
@@ -150,12 +171,12 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
       //Edit file and save
-     IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.clickOnEditor();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      
-      selenium().keyPressNative(""+KeyEvent.VK_END);
+
+      selenium().keyPressNative("" + KeyEvent.VK_END);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-     IDE.EDITOR.typeTextIntoEditor(0, version3Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_NEWER_VERSION, true);
       IDE.VERSIONS.checkOlderVersionButtonState(true);
@@ -173,14 +194,14 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.waitOpenVersionButtonEnabled();
       IDE.VERSIONS.clickOpenVersionButton();
       IDE.VERSIONS.waitForViewVersionsListViewClose();
-      
+
       IDE.VERSIONS.checkViewVersionsListPanel(false);
       IDE.VERSIONS.checkOlderVersionButtonState(false);
       IDE.VERSIONS.checkNewerVersionButtonState(true);
       IDE.VERSIONS.checkViewVersionListButtonState(true);
       IDE.VERSIONS.checkTextOnVersionPanel("");
 
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
    /**
@@ -193,28 +214,30 @@ public class ViewVersionListTest extends BaseTest
    {
       refresh();
       IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(false);
-      
-     IDE.EDITOR.deleteFileContent();
-      saveAsUsingToolbarButton(FILE_2);
+
+      IDE.EDITOR.deleteFileContent();
+      IDE.NAVIGATION.saveFileAs(FILE_2);
+//      saveAsUsingToolbarButton(FILE_2);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_2);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
-     IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version1Text);
       saveCurrentFile();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
       IDE.VERSIONS.checkViewVersionHistoryButtonState(true);
-     IDE.EDITOR.typeTextIntoEditor(0, version2Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version2Text);
       saveCurrentFile();
-     IDE.EDITOR.typeTextIntoEditor(0, version3Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version3Text);
       saveCurrentFile();
-     IDE.EDITOR.typeTextIntoEditor(0, version4Text);
+      IDE.EDITOR.typeTextIntoEditor(0, version4Text);
       saveCurrentFile();
 
       //Open version panel
@@ -226,10 +249,10 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(IDE.EDITOR.getTextFromCodeEditor(0));
 
       IDE.VERSIONS.checkViewVersionListButtonState(true);
-      
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.VERSION_LIST);
       IDE.VERSIONS.waitForViewVersionsListViewOpen();
-      
+
       IDE.VERSIONS.checkViewVersionsListPanel(true);
       IDE.VERSIONS.checkOpenVersionButtonState(false);
       IDE.VERSIONS.checkVersionListSize(5);
@@ -321,7 +344,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkNewerVersionButtonState(true);
       IDE.VERSIONS.checkTextOnVersionPanel("");
 
-     IDE.EDITOR.closeFile(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }

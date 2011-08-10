@@ -18,6 +18,10 @@
          <when-property-is name="user.agent" value="ie8" />
       </any>
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.CreateFolderView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.CreateFolderPresenter.Display" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
       <when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
@@ -66,6 +70,10 @@
    <replace-with class="org.exoplatform.ide.client.edit.ui.FindTextView">
       <when-type-is class="org.exoplatform.ide.client.edit.FindTextPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.edit.ui.GoToLineView">
+      <when-type-is class="org.exoplatform.ide.client.edit.GoToLinePresenter.Display" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.CreateProjectFromTemplateForm">
       <when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
@@ -98,6 +106,10 @@
    <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
       <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.template.ui.SaveAsTemplateView">
+      <when-type-is class="org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.dialogs.AskForValueView">
       <when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display" />
@@ -105,6 +117,26 @@
 
    <replace-with class="org.exoplatform.ide.client.authentication.LoginView">
       <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.upload.OpenFileByPathView">
+      <when-type-is class="org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
+      <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.RenameFileView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.RenameFilePresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.navigation.ui.RenameFolderView">
+      <when-type-is class="org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
+      <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display" />
    </replace-with>
 
 </module>

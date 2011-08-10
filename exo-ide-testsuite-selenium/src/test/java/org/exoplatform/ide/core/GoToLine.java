@@ -32,7 +32,7 @@ import org.exoplatform.ide.TestConstants;
 
 public class GoToLine extends AbstractTestModule
 {
-   public static final String GO_TO_LINE_FORM_ID = "ideGoToLineForm";
+   public static final String GO_TO_LINE_FORM_LOCATOR = "//div[@view-id='ideGoToLineForm']";
    
    public static final String GO_TO_LINE_BUTTON_ID = "ideGoToLineFormGoButton";
    
@@ -43,14 +43,14 @@ public class GoToLine extends AbstractTestModule
     */
    public void checkAppearGoToLineForm()
    {
-      assertTrue(selenium().isElementPresent(GO_TO_LINE_FORM_ID));
+      assertTrue(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       assertTrue(selenium().isElementPresent(GO_TO_LINE_BUTTON_ID));
       assertTrue(selenium().isElementPresent(CANCEL_BUTTON_ID));
    }
    
    public void waitForGoToLineForm() throws Exception
    {
-      waitForElementPresent(GO_TO_LINE_FORM_ID);
+      waitForElementPresent(GO_TO_LINE_FORM_LOCATOR);
    }
 
    /**
@@ -76,9 +76,9 @@ public class GoToLine extends AbstractTestModule
    {
       selenium().click("ideGoToLineFormGoButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_ID));
+      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       assertFalse(selenium().isElementPresent("exoWarningDialogOkButton"));
-      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_ID + "']//div/img[@title='Close']"));
+      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_LOCATOR + "']//div/img[@title='Close']"));
       assertFalse(selenium().isElementPresent("ideGoToLineFormGoButton"));
       assertFalse(selenium().isElementPresent("ideGoToLineFormCancelButton"));
    }
@@ -91,9 +91,9 @@ public class GoToLine extends AbstractTestModule
    {
       selenium().click("ideGoToLineFormCancelButton");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_ID));
+      assertFalse(selenium().isElementPresent(GO_TO_LINE_FORM_LOCATOR));
       assertFalse(selenium().isElementPresent("exoWarningDialogOkButton"));
-      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_ID + "']//div/img[@title='Close']"));
+      assertFalse(selenium().isElementPresent("//div[@id='" + GO_TO_LINE_FORM_LOCATOR + "']//div/img[@title='Close']"));
       assertFalse(selenium().isElementPresent("ideGoToLineFormGoButton"));
       assertFalse(selenium().isElementPresent("ideGoToLineFormCancelButton"));
    }

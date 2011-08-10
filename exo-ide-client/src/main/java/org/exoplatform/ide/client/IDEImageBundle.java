@@ -53,6 +53,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("bundled-images/cancel-disabled.png")
    ImageResource cancelDisabled();
    
+   @Source("bundled-images/yes.png")
+   ImageResource yes();
+
+   @Source("bundled-images/yes-disabled.png")
+   ImageResource yesDisabled();
+   
    /*
     * Actions
     */

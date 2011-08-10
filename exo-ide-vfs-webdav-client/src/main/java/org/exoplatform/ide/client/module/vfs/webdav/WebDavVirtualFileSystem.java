@@ -563,7 +563,7 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.acl.AccessControlList, java.lang.String, org.exoplatform.gwtframework.commons.rest.ClientRequestCallback)
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setACL(org.exoplatform.ide.client.framework.vfs.Item, org.exoplatform.ide.client.framework.vfs.acl.AccessControlList, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void setACL(Item item, AccessControlList acl, String lockToken, AsyncRequestCallback<Item> callback)

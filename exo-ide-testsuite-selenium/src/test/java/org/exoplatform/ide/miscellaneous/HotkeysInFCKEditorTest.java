@@ -203,7 +203,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.selectMainFrame();
       Thread.sleep(TestConstants.SLEEP);
       //check go to line window dialog appeared
-      assertFalse(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_ID));
+      assertFalse(selenium().isElementPresent(GoToLine.GO_TO_LINE_FORM_LOCATOR));
 
       assertTrue(selenium().isElementPresent("//div[@class='cke_dialog_body']"));
 
