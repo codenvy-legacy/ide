@@ -86,7 +86,7 @@ public class RESTServiceOutputTest extends BaseTest
 
       IDE.REST_SERVICE.deploy(TEST_FOLDER + "/" + FILE_NAME, 1);
       IDE.REST_SERVICE.launchRestService();
-      
+
       //Expect 1
       checkFields("/overralTest/Inner/node/{paramList: .+}", "POST", "text/plain", "application/xml;charset=utf-8");
 
@@ -114,36 +114,36 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
 
       typeToPathField();
-      
+
       IDE.REST_SERVICE.selectHeaderParametersTab();
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "test");
-      
+
       checkFields("/overralTest/Inner/node/param1", "POST", "text/plain", "application/xml;charset=utf-8");
 
       IDE.REST_SERVICE.selectQueryParametersTab();
       checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
-      
+
       IDE.REST_SERVICE.selectHeaderParametersTab();
 
       checkHeaderParameter(1, "Test-Header1", "string", "", "test");
       //Step 6
       IDE.REST_SERVICE.sendRequst();
       mess = IDE.OUTPUT.getOutputMessageText(3);
-     
+
       assertTrue(mess.contains("Param List 1:param1; Test Query Parameter 1: ; Test-Header 1: test; Body:"));
-      
+
       IDE.REST_SERVICE.launchRestService();
 
       //Step 7
       typeToPathField();
-      
+
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
-      
+
       IDE.REST_SERVICE.selectHeaderParametersTab();
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
-      
+
       IDE.REST_SERVICE.selectBodyTab();
-      
+
       IDE.REST_SERVICE.typeToBodyField("Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´ Ð¿Ð¾Ð²Ñ–Ð´Ð¾Ð¼Ð»ÐµÐ½Ð½Ñ�");
       IDE.REST_SERVICE.sendRequst();
 
@@ -162,15 +162,15 @@ public class RESTServiceOutputTest extends BaseTest
       assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeFieldValue());
 
       checkQueryParameter(1, "Test Query Parameter 2", "string", "", "");
-      
+
       IDE.REST_SERVICE.selectHeaderParametersTab();
 
       checkHeaderParameter(1, "Test-Header2", "string", "", "");
-      
+
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
-      
+
       IDE.REST_SERVICE.selectQueryParametersTab();
-      
+
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");
 
       IDE.REST_SERVICE.sendRequst();
@@ -178,7 +178,8 @@ public class RESTServiceOutputTest extends BaseTest
       //Expected 11
       mess = IDE.OUTPUT.getOutputMessageText(5);
 
-      assertTrue(mess.contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
+      assertTrue(mess
+         .contains("Param List 2:param1/param2/param3; Test Query Parameter 2: value 1; Test-Header 2: value 2"));
 
    }
 
@@ -226,7 +227,7 @@ public class RESTServiceOutputTest extends BaseTest
    {
       try
       {
-         Utils.undeployService(BASE_URL, REST_CONTEXT, URL+ FILE_NAME);
+         Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
