@@ -132,7 +132,7 @@ public class ShellPresenter implements ConsoleWriter
             }
             else if (code == KeyCodes.KEY_TAB)
             {
-               performComplete();
+//               performComplete();
                handled = true;
             }
             else if (code == KeyCodes.KEY_UP)
@@ -156,14 +156,12 @@ public class ShellPresenter implements ConsoleWriter
             else
             {
                char c = event.getCharCode();
-               //               if (Character.isLetterOrDigit(c) || c == ' ' || c == '-' || c == '=' || c == '"' || c == ':' || c == '|'
-               //                  || c == '.' || c == '*')
-               //               {
-               display.appendBuffer(c);
+               // if 
+               if ((int)c != 0)
+                  display.appendBuffer(c);
                handled = true;
-               //               }
             }
-            //
+
             if (handled)
             {
                display.refreshConsole();

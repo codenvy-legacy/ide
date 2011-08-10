@@ -298,6 +298,34 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
          event.stopPropagation();
          event.preventDefault();
       }
+      else if (keyCode == KeyCodes.KEY_DELETE)
+      {
+         if (!afterCursor.isEmpty())
+         {
+            afterCursor = afterCursor.substring(1);
+            repaint();
+         }
+         event.stopPropagation();
+         event.preventDefault();
+      }
+      else if(keyCode == KeyCodes.KEY_HOME)
+      {
+         afterCursor = buffer.toString() + afterCursor;
+         state.delete(state.length() - buffer.length(), state.length());         
+         buffer.setLength(0);
+         repaint();
+         event.stopPropagation();
+         event.preventDefault();
+      }
+      else if(keyCode == KeyCodes.KEY_END)
+      {
+         buffer.append(afterCursor);
+         state.append(afterCursor);
+         afterCursor = "";
+         repaint();
+         event.stopPropagation();
+         event.preventDefault();
+      }
    }
 
    /**
