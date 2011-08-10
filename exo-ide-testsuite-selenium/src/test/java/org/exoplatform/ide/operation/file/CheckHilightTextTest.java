@@ -186,9 +186,8 @@ public class CheckHilightTextTest extends BaseTest
    public void checkHiligtTXT()
    {
       assertTrue(selenium()
-         .isElementPresent("//body[@class='editbox']/span[1][@class='css-selector' and text()=\"text \"]"));
-      assertTrue(selenium()
-         .isElementPresent("//body[@class='editbox']/span[2][@class='css-selector' and text()=\"content\"]"));
+         .isElementPresent("//body[@class='editbox']/span[@class='xml-text' and text()=\"text content\"]"));
+    
    }
 
    public void checkHilightJavaScript()
