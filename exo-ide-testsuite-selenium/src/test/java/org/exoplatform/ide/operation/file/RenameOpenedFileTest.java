@@ -108,13 +108,13 @@ public class RenameOpenedFileTest extends BaseTest
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE1).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + FILE2).getStatusCode());
 
-      assertEquals(FILE2 + " *", IDE.EDITOR.getTabTitle(0));
+      assertEquals(FILE2, IDE.EDITOR.getTabTitle(0));
 
       /*
        * 5. Close editor
        */
 
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeFile(0);
    }
 
 }
