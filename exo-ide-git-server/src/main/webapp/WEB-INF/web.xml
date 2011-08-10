@@ -3,13 +3,13 @@
 "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-   <display-name>git-server</display-name>
+   <display-name>git</display-name>
    <servlet>
       <servlet-name>GitServlet</servlet-name>
       <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
       <init-param>
          <param-name>base-path</param-name>
-         <param-value>${org.exoplatform.ide.git.repo-dir}/git</param-value>
+         <param-value>${org.exoplatform.ide.git.repo-dir}/</param-value>
       </init-param>
       <init-param>
          <param-name>export-all</param-name>
@@ -18,6 +18,6 @@
    </servlet>
    <servlet-mapping>
       <servlet-name>GitServlet</servlet-name>
-      <url-pattern>/private/jcr/*</url-pattern>
+      <url-pattern>/jcr/*</url-pattern>
    </servlet-mapping>
 </web-app>
