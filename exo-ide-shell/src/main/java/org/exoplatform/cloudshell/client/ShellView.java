@@ -51,17 +51,13 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    {
       setWidth("100%");
       setHeight("100%");
+      setStyleName("shell-container");
 
       clearButton = createButton("clearButton", "Clear");
-      //      add(clearButton);
 
       termText = new TermText(32);
-      termText.setWidth("800px");
-      termText.setHeight("450px");
+      termText.setHeight("100%");
       add(termText);
-      setStyleName("shell-container");
-      //      setWidth("600px");
-      //      setHeight("400px");
       RootPanel.get().add(this);
       focusInConsole();
    }

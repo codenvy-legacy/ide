@@ -99,7 +99,7 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
             isFocused = true;
          }
       });
-
+      
       if (BrowserResolver.CURRENT_BROWSER == Browser.FIREFOX)
          addKeyPressHandler(this);
       else
@@ -268,7 +268,7 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
       // Update markup state
       getElement().setInnerHTML(markup.toString());
-      getElement().setScrollTop(getElement().getScrollHeight());
+      Document.get().setScrollTop(getElement().getScrollHeight());
    }
 
    private void handleKeyEvent(int keyCode, DomEvent<?> event)
