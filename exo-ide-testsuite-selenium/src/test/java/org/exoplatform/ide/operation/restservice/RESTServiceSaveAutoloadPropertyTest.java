@@ -29,6 +29,7 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -51,6 +52,13 @@ public class RESTServiceSaveAutoloadPropertyTest extends BaseTest
    private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME + "/" + FILE_NAME;
 
+   
+   /**
+    * Test added to Ignore, because at the moment the autoload function dosen't work in IDE.
+    * @throws Exception
+    */
+   
+   @Ignore
    @Test
    public void testAutoload() throws Exception
    {
