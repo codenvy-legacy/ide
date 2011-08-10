@@ -74,7 +74,7 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
    
    
    /**
-    * Test added to Igore, because we don't use registry service.
+    * Test added to Ignore, because we don't use registry service.
     * We must put file with template to 
     * http://localhost:8080/IDE/rest/private/jcr/repository/production/ide-home/users/templates/fileTemplates
     * or

@@ -42,13 +42,13 @@ public class UploadingGroovyFileTest extends BaseTest
 {
    private static final String FOLDER_NAME = UploadingGroovyFileTest.class.getSimpleName();
 
-   private static String GROOVY_NAME = "Приклад.groovy";
+   private static String GROOVY_NAME = "Example.groovy";
 
    private static final String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
       + "/" + FOLDER_NAME;
 
    private static final String FILE_PATH =
-      "src/test/resources/org/exoplatform/ide/operation/file/upload/Приклад.groovy";
+      "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
 
    @BeforeClass
    public static void setUp()
