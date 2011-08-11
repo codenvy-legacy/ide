@@ -147,9 +147,22 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
        */
       void setFileNameFieldEnabled(boolean enabled);
 
+      /**
+       * Set the title of submit button.
+       * @param title
+       */
+      void setSubmitButtonTitle(String title);
+
    }
-   
-   private static final String ENTER_NAME_FIRST_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.createFileFromTemplateEnterName();
+
+   private static final String ENTER_NAME_FIRST_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .createFileFromTemplateEnterName();
+
+   /**
+    * Used to return, when submit button was pressed. Can be null,
+    * then normal behavior will be provided.
+    */
+   private CreateFileFromTemplateCallback submitCallback;
 
    private Map<String, File> openedFiles = new HashMap<String, File>();
 
@@ -157,7 +170,8 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private Display display;
 
-   private static final String UNTITLED_FILE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
+   private static final String UNTITLED_FILE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
+      .createFileUntitledFileName();
 
    private String previousExtension;
 
@@ -171,7 +185,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     * The list of templates, that selected.
     */
    protected FileTemplate selectedTemplate;
-   
+
    private boolean isTemplatesMigrated = false;
 
    public CreateFileFromTemplatePresenter(HandlerManager eventBus)
@@ -214,11 +228,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    }
 
    @Override
-   public void onCreateFileFromTemplate(CreateFileFromTemplateEvent event)
+   public void onCreateFileFromTemplate(final CreateFileFromTemplateEvent event)
    {
+      submitCallback = event.getCallback();
+
       if (isTemplatesMigrated)
       {
-         createFileFromTemplate();
+         createFileFromTemplate(event.getFormTitle(), event.getSubmitButtonTitle());
       }
       else
       {
@@ -227,19 +243,23 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             @Override
             public void onTemplatesMigrated()
             {
-               createFileFromTemplate();
+               createFileFromTemplate(event.getFormTitle(), event.getSubmitButtonTitle());
             }
          }));
       }
    }
-   
-   private void createFileFromTemplate()
+
+   /**
+    * @param formTitle the title of form. If <code>null</code> than default will be used.
+    * @param submitButtonTitle the title of submit button. If <code>null</code> than default will be used.
+    */
+   private void createFileFromTemplate(final String formTitle, final String submitButtonTitle)
    {
       if (display != null)
       {
          eventBus.fireEvent(new ExceptionThrownEvent("Display " + display.asView().getId() + " is not null"));
       }
-      
+
       TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(eventBus)
       {
          @Override
@@ -248,7 +268,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             fileTemplates = result.getFileTemplates();
             display = GWT.create(Display.class);
             IDE.getInstance().openView(display.asView());
-            bindDisplay();
+            bindDisplay(formTitle, submitButtonTitle);
          }
       });
 
@@ -343,6 +363,11 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       newFile.setContent(selectedTemplate.getContent());
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
+      closeView();
+   }
+
+   private void closeView()
+   {
       IDE.getInstance().closeView(display.asView().getId());
    }
 
@@ -419,7 +444,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       }
    };
 
-   public void bindDisplay()
+   public void bindDisplay(String title, String submitButtonTitle)
    {
       display.getFileNameField().addValueChangeHandler(fileNameFieldChangeHandler);
 
@@ -430,7 +455,18 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       {
          public void onClick(ClickEvent event)
          {
-            doCreateFileFromTemplate();
+            if (submitCallback != null)
+            {
+               FileTemplate fileTemplate =
+                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
+               closeView();
+               submitCallback.onSubmit(fileTemplate);
+               submitCallback = null;
+            }
+            else
+            {
+               doCreateFileFromTemplate();
+            }
          }
       });
 
@@ -441,7 +477,19 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            doCreateFileFromTemplate();
+            if (submitCallback != null)
+            {
+               FileTemplate fileTemplate =
+                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
+                     display.getSelectedTemplate().getMimeType());
+               closeView();
+               submitCallback.onSubmit(fileTemplate);
+               submitCallback = null;
+            }
+            else
+            {
+               doCreateFileFromTemplate();
+            }
          }
       });
 
@@ -494,6 +542,15 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       {
          display.selectTemplate(fileTemplates.get(0));
       }
+
+      if (title != null)
+      {
+         display.asView().setTitle(title);
+      }
+      if (submitButtonTitle != null)
+      {
+         display.setSubmitButtonTitle(submitButtonTitle);
+      }
    }
 
    /**
@@ -534,7 +591,8 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          return;
       }
 
-      String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.templateAskDeleteTemplate(selectedTemplate.getName());
+      String message =
+         org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.templateAskDeleteTemplate(selectedTemplate.getName());
 
       Dialogs.getInstance().ask(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.askDeleteTemplateDialogTitle(),
          message, new BooleanValueReceivedHandler()

@@ -142,5 +142,9 @@
    <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
       <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.project.CreateProjectTemplateView">
+      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectTemplatePresenter.Display" />
+   </replace-with>
 
 </module>

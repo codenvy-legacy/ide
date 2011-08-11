@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,6 +26,14 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class CreateFileFromTemplateView extends ViewImpl implements org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display
+public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFromTemplatePresenter.Display
 {
    
    private static final String ID = "ideCreateFileFromTemplateForm";
@@ -135,6 +135,15 @@ public class CreateFileFromTemplateView extends ViewImpl implements org.exoplatf
    public void setFileNameFieldEnabled(boolean enabled)
    {
       fileNameField.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display#setSubmitButtonTitle(java.lang.String)
+    */
+   @Override
+   public void setSubmitButtonTitle(String title)
+   {
+      createButton.setTitle(title);
    }
 
 }

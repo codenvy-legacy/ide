@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.event;
 
+import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateCallback;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -29,6 +31,28 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplateHandler>
 {
+   private CreateFileFromTemplateCallback callback;
+   
+   /**
+    * Used to rewrite CreateFileFromTemplate title.
+    */
+   private String formTitle;
+   
+   /**
+    * Used to rewrite CreateFileFromTemplate submit button title.
+    */
+   private String submitButtonTitle;
+   
+   public CreateFileFromTemplateEvent()
+   {
+   }
+   
+   public CreateFileFromTemplateEvent(CreateFileFromTemplateCallback callback, String formTitle, String submitButtonTitle)
+   {
+      this.callback = callback;
+      this.formTitle = formTitle;
+      this.submitButtonTitle = submitButtonTitle;
+   }
 
    public static final GwtEvent.Type<CreateFileFromTemplateHandler> TYPE =
       new GwtEvent.Type<CreateFileFromTemplateHandler>();
@@ -43,6 +67,30 @@ public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplate
    public com.google.gwt.event.shared.GwtEvent.Type<CreateFileFromTemplateHandler> getAssociatedType()
    {
       return TYPE;
+   }
+   
+   /**
+    * @return the callback
+    */
+   public CreateFileFromTemplateCallback getCallback()
+   {
+      return callback;
+   }
+   
+   /**
+    * @return the formTitle
+    */
+   public String getFormTitle()
+   {
+      return formTitle;
+   }
+   
+   /**
+    * @return the submitButtonTitle
+    */
+   public String getSubmitButtonTitle()
+   {
+      return submitButtonTitle;
    }
 
 }

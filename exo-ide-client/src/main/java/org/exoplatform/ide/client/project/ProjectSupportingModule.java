@@ -27,15 +27,10 @@ import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateCreatedCallback;
 import org.exoplatform.ide.client.model.template.TemplateList;
@@ -43,13 +38,10 @@ import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
-import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,20 +53,14 @@ import java.util.List;
  * @version $
  */
 
-public class ProjectSupportingModule implements ItemsSelectedHandler, ConfigurationReceivedSuccessfullyHandler,
-   CreateProjectTemplateHandler, MigrateTemplatesHandler, TemplatesMigratedHandler
+public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler,
+   MigrateTemplatesHandler
 {
    
    private HandlerManager eventBus;
    
-   private String restServiceContext;
-   
-   private List<Item> selectedItems = new ArrayList<Item>();
-   
    private TemplatesMigratedCallback callback;
    
-   private boolean isTemplatesMigrated = false;
-
    public ProjectSupportingModule(HandlerManager eventBus) {
       this.eventBus = eventBus;
       
@@ -82,13 +68,11 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
       eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));      
       
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       
-      eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
       eventBus.addHandler(MigrateTemplatesEvent.TYPE, this);
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
       
       new CreateProjectFromTemplatePresenter(eventBus);
+      new CreateProjectTemplatePresenter(eventBus);
    }
    
    /**
@@ -96,7 +80,6 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
     */
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      restServiceContext = event.getConfiguration().getContext();
       if (TemplateService.getInstance() == null)
       {
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
@@ -170,55 +153,6 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
          }
       });
    }
-   
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }   
-
-   @Override
-   public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
-   {
-      if (isTemplatesMigrated)
-      {
-         createProjectTemplate();
-      }
-      else
-      {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-         {
-            @Override
-            public void onTemplatesMigrated()
-            {
-               createProjectTemplate();
-            }
-         }));
-      }
-   }
-   
-   private void createProjectTemplate()
-   {
-      final List<Template> templates = new ArrayList<Template>();
-      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
-      {
-         @Override
-         protected void onSuccess(ProjectTemplateList result)
-         {
-            templates.addAll(result.getProjectTemplates());
-            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>()
-            {
-
-               @Override
-               protected void onSuccess(FileTemplateList result)
-               {
-                  templates.addAll(result.getFileTemplates());
-                  new CreateProjectTemplateForm(eventBus, templates);
-               }
-            });
-         }
-      });
-   }
 
    /**
     * @see org.exoplatform.ide.client.template.MigrateTemplatesHandler#onMigrateTemplates(org.exoplatform.ide.client.template.MigrateTemplatesEvent)
@@ -234,6 +168,7 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
    /**
     * Method, for testing migrating templates from registry to plain text file.
     */
+   @SuppressWarnings("unused")
    private void saveSomeTemplatesToRegistry()
    {
       FileTemplate ft1 = new FileTemplate(MimeType.APPLICATION_XML, "abc", "hello", "some content", null);
@@ -266,13 +201,4 @@ public class ProjectSupportingModule implements ItemsSelectedHandler, Configurat
       });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
-    */
-   @Override
-   public void onTemplatesMigrated(TemplatesMigratedEvent event)
-   {
-      isTemplatesMigrated = true;
-   }
-   
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -29,18 +30,31 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
+import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateCallback;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler;
+import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
+import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +64,10 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class CreateProjectTemplatePresenter
+public class CreateProjectTemplatePresenter implements CreateProjectTemplateHandler, TemplatesMigratedHandler, ViewClosedHandler
 {
 
-   public interface Display
+   public interface Display extends IsView
    {
       TreeGridItem<Template> getTemplateTreeGrid();
 
@@ -74,8 +88,6 @@ public class CreateProjectTemplatePresenter
       HasClickHandlers getDeleteButton();
 
       List<Template> getTreeGridSelection();
-
-      void closeForm();
 
       void enableCreateButton();
 
@@ -116,11 +128,16 @@ public class CreateProjectTemplatePresenter
    private ProjectTemplate projectTemplate;
    
    private static final String ENTER_FILE_NAME_FIRST = IDE.TEMPLATE_CONSTANT.createProjectTemplateEnterNameFirst();
+   
+   private boolean isTemplatesMigrated = false;
 
-   public CreateProjectTemplatePresenter(HandlerManager eventBus, List<Template> templateList)
+   public CreateProjectTemplatePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      this.templateList = templateList;
+      
+      eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
+      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -167,7 +184,7 @@ public class CreateProjectTemplatePresenter
    {
       public void onClick(ClickEvent event)
       {
-         display.closeForm();
+         closeView();
       }
    };
 
@@ -252,42 +269,23 @@ public class CreateProjectTemplatePresenter
 
    private void addFileToTemplate()
    {
-      CreateFileFromTemplatePresenter addFilePresenter =
-         new CreateFileFromTemplatePresenter(eventBus, null, templateList, null)
+      CreateFileFromTemplateCallback callback = new CreateFileFromTemplateCallback()
+      {
+
+         @Override
+         public void onSubmit(FileTemplate fileTemplate)
          {
-            @Override
-            public void submitTemplate()
+            System.out.println(">>>>>>mimetype: " + fileTemplate.getMimeType());
+            if ("".equals(fileTemplate.getFileName().trim()))
             {
-               final String fileName = display.getNameField().getValue().trim();
-               if ("".equals(fileName))
-               {
-                  Dialogs.getInstance().showError(ENTER_FILE_NAME_FIRST);
-                  return;
-               }
-
-               FileTemplate fileTemplate =
-                  new FileTemplate(selectedTemplates.get(0).getName(), fileName, selectedTemplates.get(0).getMimeType());
-               addFileToProjectTemplate(fileTemplate);
-               display.closeForm();
+               Dialogs.getInstance().showError(ENTER_FILE_NAME_FIRST);
+               return;
             }
-         };
-
-         org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm createFileDisplay =
-         new org.exoplatform.ide.client.template.ui.CreateFileFromTemplateForm(eventBus, templateList, addFilePresenter)
-         {
-            @Override
-            public String getCreateButtonTitle()
-            {
-               return IDE.IDE_LOCALIZATION_CONSTANT.addButton();
-            }
-
-            @Override
-            public String getFormTitle()
-            {
-               return IDE.TEMPLATE_CONSTANT.addFileButton();
-            }
-         };
-      addFilePresenter.bindDisplay(createFileDisplay);
+            addFileToProjectTemplate(fileTemplate);
+         }
+      };
+      eventBus.fireEvent(new CreateFileFromTemplateEvent(callback, IDE.TEMPLATE_CONSTANT.addFileButton(),
+         IDE.IDE_LOCALIZATION_CONSTANT.addButton()));
    }
 
    private void callAddFolderForm()
@@ -392,7 +390,7 @@ public class CreateProjectTemplatePresenter
          @Override
          protected void onSuccess(String result)
          {
-            display.closeForm();
+            closeView();
             Dialogs.getInstance().showInfo(IDE.TEMPLATE_CONSTANT.createProjectTemplateCreated());
          }
       });
@@ -418,9 +416,97 @@ public class CreateProjectTemplatePresenter
             }
          }
       }
+      System.out.println(">>>>>>>>icon: " + fileTemplate.getMimeType() + " " + fileTemplate.getIcon());
       selectedFolder.getChildren().add(fileTemplate);
       display.updateTree();
       display.selectTemplate(fileTemplate);
+   }
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+   
+   private void openView()
+   {
+      if (display == null)
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("Display CreateProjectTemplate must be null"));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.event.CreateProjectTemplateHandler#onCreateProjectTemplate(org.exoplatform.ide.client.project.event.CreateProjectTemplateEvent)
+    */
+   @Override
+   public void onCreateProjectTemplate(CreateProjectTemplateEvent event)
+   {
+      if (isTemplatesMigrated)
+      {
+         createProjectTemplate();
+      }
+      else
+      {
+         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         {
+            @Override
+            public void onTemplatesMigrated()
+            {
+               createProjectTemplate();
+            }
+         }));
+      }
+   }
+   
+   private void createProjectTemplate()
+   {
+      templateList = new ArrayList<Template>();
+      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
+      {
+         @Override
+         protected void onSuccess(ProjectTemplateList result)
+         {
+            templateList.addAll(result.getProjectTemplates());
+            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>()
+            {
+
+               @Override
+               protected void onSuccess(FileTemplateList result)
+               {
+                  templateList.addAll(result.getFileTemplates());
+//                  new CreateProjectTemplateView(eventBus, templates);
+                  openView();
+               }
+            });
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    */
+   @Override
+   public void onTemplatesMigrated(TemplatesMigratedEvent event)
+   {
+      isTemplatesMigrated = true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
    
 }
