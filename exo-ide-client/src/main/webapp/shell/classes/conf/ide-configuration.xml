@@ -68,11 +68,11 @@
       <init-params>
          <value-param>
             <name>jenkins-user</name>
-            <value>evidolob@exoplatform.com</value>
+            <value>support@cloud-ide.com</value>
          </value-param>
          <value-param>
             <name>jenkins-password</name>
-            <value>1234qwer</value>
+            <value>9zpkuZ3X</value>
          </value-param>
       </init-params>
    </component>
