@@ -25,8 +25,12 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.cloudshell.client.cli.CommandLine;
+import org.exoplatform.cloudshell.client.cli.GnuParser;
+import org.exoplatform.cloudshell.client.cli.Parser;
+import org.exoplatform.cloudshell.client.cli.Util;
 import org.exoplatform.cloudshell.client.marshal.LoginMarshaller;
 import org.exoplatform.cloudshell.client.marshal.StringUnmarshaller;
+import org.exoplatform.cloudshell.client.model.ClientCommand;
 import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter.Type;
@@ -90,25 +94,36 @@ public class ShellService
          try
          {
             CLIResource resource = appropriateCommands.get(0);
-            String url =
-               (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
-                  + resource.getPath();
-
-            AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url);
-            if (canParseOptions(resource, cmd, asyncRequest))
+            if (resource instanceof ClientCommand)
             {
-               CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
-               String query = formQueryString(resource.getParams(), commandLine);
-               url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
-               asyncRequest = createAsyncRequest(resource.getMethod(), url);
-
-               setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
-               setBody(resource.getParams(), commandLine, cmd, asyncRequest);
+               ClientCommand command = (ClientCommand)resource;
+               Parser parser = new GnuParser();
+               String[] arguments = Util.translateCommandline(cmd);
+               CommandLine commandLine = parser.parse(command.getOptions(), arguments);
+               command.execute(commandLine);
             }
-            setAcceptTypes(resource, asyncRequest);
-            setContentType(resource, asyncRequest);
-            callback.setPayload(new StringUnmarshaller(callback));
-            asyncRequest.send(callback);
+            else
+            {
+               String url =
+                  (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
+                     + resource.getPath();
+
+               AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url);
+               if (canParseOptions(resource, cmd, asyncRequest))
+               {
+                  CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
+                  String query = formQueryString(resource.getParams(), commandLine);
+                  url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
+                  asyncRequest = createAsyncRequest(resource.getMethod(), url);
+
+                  setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
+                  setBody(resource.getParams(), commandLine, cmd, asyncRequest);
+               }
+               setAcceptTypes(resource, asyncRequest);
+               setContentType(resource, asyncRequest);
+               callback.setPayload(new StringUnmarshaller(callback));
+               asyncRequest.send(callback);
+            }
          }
          catch (MandatoryParameterNotFoundException me)
          {

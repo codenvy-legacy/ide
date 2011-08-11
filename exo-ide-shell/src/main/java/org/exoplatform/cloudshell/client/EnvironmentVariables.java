@@ -19,15 +19,11 @@
 package org.exoplatform.cloudshell.client;
 
 /**
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Aug 2, 2011 12:57:09 PM anya $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:  Aug 11, 2011 evgen $
  *
  */
-public interface ConsoleWriter
+public interface EnvironmentVariables
 {
-   void print(String str);
-   
-   void printPrompt();
-   
-   void clearConsole();
+   String WORKDIR = "workdir";
 }

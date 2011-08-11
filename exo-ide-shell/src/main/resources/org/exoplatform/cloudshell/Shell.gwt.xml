@@ -14,6 +14,9 @@
   <!-- Other module inherits                                      -->
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.cloudshell.Views' />
+   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+      <!-- Initialise Virtual File System -->
+   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.exoplatform.cloudshell.client.CloudShell'/>

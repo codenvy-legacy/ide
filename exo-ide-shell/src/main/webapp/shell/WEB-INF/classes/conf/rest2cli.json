@@ -1,11 +1,6 @@
 [
 {
-  "command": ["cli"],
-  "path":"ide/cli/resources",
-  "method":"GET"
-},
-{
-    "command": ["man", "cd", "commit", "cp", "ls", "mixin", "mv", "node", "pwd", "rm", "rollback", "select", "setperm", "version", "ws", "xpath"],
+    "command": ["jcr man", "jcr cd", "commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr ws", "jcr xpath"],
     "path": "/ide/crash/command",
     "method": "POST",
     "description": "To view command help try : [command] -h",

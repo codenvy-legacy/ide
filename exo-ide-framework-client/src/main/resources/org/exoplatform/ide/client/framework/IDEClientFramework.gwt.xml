@@ -52,5 +52,6 @@
    <source path="ui" />
    <source path="userinfo" />
    <source path="vfs" />
+   <source path="outline" />
    
 </module>

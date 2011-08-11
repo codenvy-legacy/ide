@@ -49,6 +49,11 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/crash")
 public class CRaSHService
 {
+   /**
+    * 
+    */
+   private static final String JCOMMAND_PREFIX = "jcr ";
+
    private PluginContext pluginContext;
 
    private HttpSession httpSession;
@@ -93,6 +98,10 @@ public class CRaSHService
       try
       {
          String cmd = command.get("cmd");
+         if(cmd.startsWith(JCOMMAND_PREFIX))
+         {
+            cmd = cmd.substring(JCOMMAND_PREFIX.length());
+         }
          SyncShellResponseContext resp = new SyncShellResponseContext();
          shell.createProcess(cmd).execute(resp);
          String text = resp.getResponse().getText();

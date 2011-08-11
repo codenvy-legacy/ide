@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -99,7 +100,7 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
             isFocused = true;
          }
       });
-      
+
       if (BrowserResolver.CURRENT_BROWSER == Browser.FIREFOX)
          addKeyPressHandler(this);
       else
@@ -221,7 +222,17 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
    void printPrompt()
    {
-      state.append("$ ");
+      String path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
+      
+      path = path.substring(0, path.lastIndexOf("/"));
+      path = path.substring(path.lastIndexOf("/"), path.length());
+      if(CloudShell.ENTRY_POINT.endsWith(path + "/"))
+         path = "/";
+//      if (path.endsWith("/"))
+//         path = path.substring(0, path.length() - 1);
+//      if (!path.startsWith("/"))
+//         path = "/" + path;
+      state.append(path + "$ ");
    }
 
    void repaint()
@@ -308,16 +319,16 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
          event.stopPropagation();
          event.preventDefault();
       }
-      else if(keyCode == KeyCodes.KEY_HOME)
+      else if (keyCode == KeyCodes.KEY_HOME)
       {
          afterCursor = buffer.toString() + afterCursor;
-         state.delete(state.length() - buffer.length(), state.length());         
+         state.delete(state.length() - buffer.length(), state.length());
          buffer.setLength(0);
          repaint();
          event.stopPropagation();
          event.preventDefault();
       }
-      else if(keyCode == KeyCodes.KEY_END)
+      else if (keyCode == KeyCodes.KEY_END)
       {
          buffer.append(afterCursor);
          state.append(afterCursor);

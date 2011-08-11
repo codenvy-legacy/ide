@@ -66,6 +66,7 @@ import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemMarshaller
 import org.exoplatform.ide.client.module.vfs.webdav.marshal.UnlockItemUnmarshaller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,8 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
    public static final String CONTEXT = "/jcr";
 
    public static final String DEFAULT_CHARSET = "charset=UTF-8";
+   
+   private static final Map<String, String> envVar = new HashMap<String, String>();
 
    private HandlerManager eventBus;
 
@@ -596,6 +599,24 @@ public class WebDavVirtualFileSystem extends VirtualFileSystem
             .data(marshaller)
             .send(callback);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#setEnvironmentVariable(java.lang.String, java.lang.String)
+    */
+   @Override
+   public void setEnvironmentVariable(String name, String value)
+   {
+      envVar.put(name, value);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.vfs.VirtualFileSystem#getEnvironmentVariable(java.lang.String)
+    */
+   @Override
+   public String getEnvironmentVariable(String name)
+   {
+      return envVar.get(name);
    }
 
 }

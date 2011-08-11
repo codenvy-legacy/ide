@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 
 import java.util.List;
 
-
 public abstract class VirtualFileSystem
 {
 
@@ -59,7 +58,7 @@ public abstract class VirtualFileSystem
     * @param folder - the folder to create
     * @param callback - the callback which the client has to implement
     */
-   public abstract void createFolder(Folder folder,  AsyncRequestCallback<Folder> callback);
+   public abstract void createFolder(Folder folder, AsyncRequestCallback<Folder> callback);
 
    /**
     * Get content of the file.
@@ -68,7 +67,7 @@ public abstract class VirtualFileSystem
     * @param callback - the callback which the client has to implement
     */
    public abstract void getContent(File file, FileCallback callback);
-   
+
    /**
     * Save locked file content
     * 
@@ -85,7 +84,7 @@ public abstract class VirtualFileSystem
     * @param callback - the callback which the client has to implement
     */
    public abstract void deleteItem(Item item, AsyncRequestCallback<Item> callback);
-   
+
    /**
     * Move existed item to another location as path
     * <p/>
@@ -110,7 +109,7 @@ public abstract class VirtualFileSystem
     * @param callback
     */
    public abstract void copy(Item item, String destination, CopyCallback callback);
-   
+
    /**
     * Get all live properties and such properties:
     * 
@@ -121,7 +120,7 @@ public abstract class VirtualFileSystem
     * @param callback - the callback which the client has to implement
     */
    public abstract void getProperties(Item item, ItemPropertiesCallback callback);
-   
+
    /**
     * Get properties of file or folder
     * 
@@ -149,8 +148,8 @@ public abstract class VirtualFileSystem
     * @param path - path
     * @param callback - the callback which the client has to implement
     */
-   public abstract void search(Folder folder, String text, String mimeType, String path, AsyncRequestCallback<Folder> callback);
-   
+   public abstract void search(Folder folder, String text, String mimeType, String path,
+      AsyncRequestCallback<Folder> callback);
 
    /**
     * Lock item.
@@ -161,7 +160,7 @@ public abstract class VirtualFileSystem
     * @param callback - the callback which the client has to implement
     */
    public abstract void lock(Item item, int timeout, String userName, ItemLockCallback callback);
-   
+
    /**
     * Unlock item
     * 
@@ -170,7 +169,7 @@ public abstract class VirtualFileSystem
     * @param callback
     */
    public abstract void unlock(Item item, String lockToken, AsyncRequestCallback<Item> callback);
-   
+
    /**
     * Get item's versions history
     * 
@@ -179,7 +178,6 @@ public abstract class VirtualFileSystem
     */
    public abstract void getVersions(Item item, VersionsCallback versionsCallback);
 
-   
    /**
     * Save ACL of item
     * 
@@ -189,5 +187,19 @@ public abstract class VirtualFileSystem
     * @param callback
     */
    public abstract void setACL(Item item, AccessControlList acl, String lockToken, AsyncRequestCallback<Item> callback);
-   
+
+   /**
+    * Set environment variable. 
+    * @param name of variable
+    * @param value of variable
+    */
+   public abstract void setEnvironmentVariable(String name, String value);
+
+   /**
+    * Get environment variable value
+    * @param name of the environment variable
+    * @return value of environment variable
+    */
+   public abstract String getEnvironmentVariable(String name);
+
 }
