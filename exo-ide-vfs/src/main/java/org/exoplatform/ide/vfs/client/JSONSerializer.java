@@ -44,7 +44,8 @@ import java.util.Map;
 public abstract class JSONSerializer<O>
 {
    // --------- Common serializers. -------------
-   public static final JSONSerializer<String> STRING_SERIALIZER = new JSONSerializer<String>() {
+   public static final JSONSerializer<String> STRING_SERIALIZER = new JSONSerializer<String>()
+   {
       @Override
       public JSONValue fromObject(String object)
       {
@@ -54,7 +55,8 @@ public abstract class JSONSerializer<O>
       }
    };
 
-   public static final JSONSerializer<Double> NUMBER_SERIALIZER = new JSONSerializer<Double>() {
+   public static final JSONSerializer<Double> NUMBER_SERIALIZER = new JSONSerializer<Double>()
+   {
       @Override
       public JSONValue fromObject(Double object)
       {
@@ -64,7 +66,8 @@ public abstract class JSONSerializer<O>
       }
    };
 
-   public static final JSONSerializer<Boolean> BOLEAN_SERIALIZER = new JSONSerializer<Boolean>() {
+   public static final JSONSerializer<Boolean> BOLEAN_SERIALIZER = new JSONSerializer<Boolean>()
+   {
       @Override
       public JSONValue fromObject(Boolean object)
       {
@@ -75,11 +78,13 @@ public abstract class JSONSerializer<O>
    };
 
    // --------- Customized serializers. -------------
-   public static final JSONSerializer<Property> PROPERTY_SERIALIZER = new JSONSerializer<Property>() {
+   @SuppressWarnings({"unchecked", "rawtypes"})
+   public static final JSONSerializer<Property> PROPERTY_SERIALIZER = new JSONSerializer<Property>()
+   {
       @Override
       public JSONValue fromObject(Property source)
       {
-         if (source == null) 
+         if (source == null)
             return JSONNull.getInstance();
          String typename = source.getClass().getName();
          if (typename.equals(BooleanProperty.class.getName()))
@@ -105,8 +110,8 @@ public abstract class JSONSerializer<O>
       }
    };
 
-   public static final JSONSerializer<AccessControlEntry> ACL_SERIALIZER = new JSONSerializer<AccessControlEntry>() {
-
+   public static final JSONSerializer<AccessControlEntry> ACL_SERIALIZER = new JSONSerializer<AccessControlEntry>()
+   {
       @Override
       public JSONValue fromObject(AccessControlEntry source)
       {

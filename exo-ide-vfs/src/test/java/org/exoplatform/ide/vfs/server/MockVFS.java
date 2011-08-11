@@ -31,9 +31,9 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
@@ -51,7 +51,6 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -65,9 +64,10 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Path("vfs/mock")
 public class MockVFS implements VirtualFileSystem
 {
@@ -90,7 +90,6 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
-   @POST
    @Path("file/{parentId:.*}")
    @Produces({MediaType.APPLICATION_JSON})
    public Response createFile(@PathParam("parentId") String parentId, @QueryParam("name") String name,
@@ -125,7 +124,6 @@ public class MockVFS implements VirtualFileSystem
       File newFile = new File();
       newFile.setId(System.currentTimeMillis() + "");
       newFile.setCreationDate(System.currentTimeMillis());
-      newFile.setItemType(ItemType.FILE);
       newFile.setLastModificationDate(System.currentTimeMillis());
       newFile.setLength(len);
       newFile.setLocked(false);
@@ -137,7 +135,6 @@ public class MockVFS implements VirtualFileSystem
       return newFile;
    }
 
-   @POST
    @Path("folder/{parentId:.*}")
    @Produces({MediaType.APPLICATION_JSON})
    public Response createFolder(@PathParam("parentId") String parentId, @QueryParam("name") String name)
@@ -152,7 +149,7 @@ public class MockVFS implements VirtualFileSystem
                .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>())).build();
    }
 
-   @Override
+   @SuppressWarnings("unchecked")
    @Path("project/{parentId:.*}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON})
@@ -163,8 +160,9 @@ public class MockVFS implements VirtualFileSystem
       String id = UUID.randomUUID().toString();
       UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
       URI uri = uriBuilder.build(id);
-      return Response.created(uri).build();
-
+      return Response.created(uri).entity(
+         new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId, System
+            .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type)).build();
    }
 
    @Override
@@ -217,8 +215,8 @@ public class MockVFS implements VirtualFileSystem
       try
       {
          VirtualFileSystemInfo info =
-            new VirtualFileSystemInfo(true, true, "ANONIM", "ANY", Collections.EMPTY_LIST, ACLCapability.MANAGE,
-               QueryCapability.BOTHCOMBINED, "", "/", createUrlTemplates(), new Folder());
+            new VirtualFileSystemInfo(true, true, "ANONIM", "ANY", Collections.<String> emptyList(),
+               ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, createUrlTemplates(), new Folder());
          return info;
       }
       catch (Exception e)

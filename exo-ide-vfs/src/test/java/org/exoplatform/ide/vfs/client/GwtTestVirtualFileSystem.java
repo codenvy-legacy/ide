@@ -29,10 +29,10 @@ import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.File;
-import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.LockToken;
-import org.exoplatform.ide.vfs.client.model.Project;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -52,12 +52,10 @@ import java.util.Map;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
-public class GwtTstVirtualFileSystem extends GWTTestCase
+public class GwtTestVirtualFileSystem extends GWTTestCase
 {
-
    private static final int DELAY_TEST = 5000;
-   
+
    private VirtualFileSystemInfo info;
 
    //private HandlerManager eventBus = new HandlerManager(null);
@@ -68,15 +66,15 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    {
       super.gwtSetUp();
       Map<String, Link> links = new HashMap<String, Link>();
-      Link link = new Link("/rest/vfs/mock/file", Folder.REL_CREATE_FILE, "*/*");
-      links.put(Folder.REL_CREATE_FILE, link);
-      
+      Link link = new Link("/rest/vfs/mock/file", FolderModel.REL_CREATE_FILE, "*/*");
+      links.put(FolderModel.REL_CREATE_FILE, link);
+
       info =
          new VirtualFileSystemInfo(true, true, "ANONIM", "ANY", Collections.EMPTY_LIST, ACLCapability.MANAGE,
-            QueryCapability.BOTHCOMBINED, "", "/", links, new Folder());
-      
+            QueryCapability.BOTHCOMBINED, links, new FolderModel());
+
       new VirtualFileSystem("/", info);
-      
+
       //VirtualFileSystem.init(info, "/");
    }
 
@@ -86,31 +84,32 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
       String content = String.valueOf(Random.nextDouble() * Random.nextDouble());
       final long contentLength = content.length();
       Map<String, Link> links = new HashMap<String, Link>();
-      Link link = new Link("/rest/vfs/mock/file/" + parentId, Folder.REL_CREATE_FILE, "*/*");
-      links.put(Folder.REL_CREATE_FILE, link);
-      Folder parent = new Folder("foder", info.getRoot(), links);
-      File newFile = new File("newFile", MimeType.TEXT_PLAIN, content, parent);
-      
-      VirtualFileSystem.getInstance().createFile(parent, new AsyncRequestCallback<File>(new FileUnmarshaller (newFile))
-      {
-         @Override
-         protected void onSuccess(File result)
-         {
-            assertNotNull(result.getId());
-            assertTrue(result.getItemType().equals(ItemType.FILE));
-            assertEquals(MimeType.TEXT_PLAIN, result.getMimeType());
-            assertEquals(parentId, result.getParentId());
-            assertEquals(contentLength, result.getLength());
-            finishTest();
-         }
+      Link link = new Link("/rest/vfs/mock/file/" + parentId, FolderModel.REL_CREATE_FILE, "*/*");
+      links.put(FolderModel.REL_CREATE_FILE, link);
+      FolderModel parent = new FolderModel("folder", new FolderModel(info.getRoot()), links);
+      FileModel newFile = new FileModel("newFile", MimeType.TEXT_PLAIN, content, parent);
 
-         @Override
-         protected void onFailure(Throwable exception)
+      VirtualFileSystem.getInstance().createFile(parent,
+         new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
          {
-            fail(exception.getMessage());
-         }
-      });
-      
+            @Override
+            protected void onSuccess(FileModel result)
+            {
+               assertNotNull(result.getId());
+               assertTrue(result.getItemType().equals(ItemType.FILE));
+               assertEquals(MimeType.TEXT_PLAIN, result.getMimeType());
+               assertEquals(parentId, result.getParentId());
+               assertEquals(contentLength, result.getLength());
+               finishTest();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               fail(exception.getMessage());
+            }
+         });
+
       delayTestFinish(DELAY_TEST);
    }
 
@@ -119,26 +118,26 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
       final String parentId = String.valueOf(Random.nextDouble());
       //String content = String.valueOf(Random.nextDouble() * Random.nextDouble());
       Map<String, Link> links = new HashMap<String, Link>();
-      Link link = new Link("/rest/vfs/mock/children/" + parentId, Folder.REL_CREATE_FILE, "*/*");
-      links.put(Folder.REL_CHILDREN, link);
-      Folder parent = new Folder("foder", info.getRoot(), links);
-      VirtualFileSystem.getInstance().getChildren(parent, new AsyncRequestCallback<List<Item>>(
-            new ChildrenUnmarshaller(parent.getChildren().getItems()))
-      {
-         @Override
-         protected void onSuccess(List<Item> result)
+      Link link = new Link("/rest/vfs/mock/children/" + parentId, FolderModel.REL_CREATE_FILE, "*/*");
+      links.put(FolderModel.REL_CHILDREN, link);
+      FolderModel parent = new FolderModel("folder", new FolderModel(info.getRoot()), links);
+      VirtualFileSystem.getInstance().getChildren(parent,
+         new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(parent.getChildren().getItems()))
          {
-            assertNotNull(result);
-            assertEquals(1, result.size());
-            finishTest();
-         }
+            @Override
+            protected void onSuccess(List<Item> result)
+            {
+               assertNotNull(result);
+               assertEquals(1, result.size());
+               finishTest();
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            fail();
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               fail();
+            }
+         });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -146,27 +145,27 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    {
       final String parentId = String.valueOf(Random.nextDouble());
       Map<String, Link> links = new HashMap<String, Link>();
-      Link link = new Link("/rest/vfs/mock/folder/" + parentId, Folder.REL_CREATE_FOLDER, "*/*");
-      links.put(Folder.REL_CREATE_FOLDER, link);
-      Folder parent = new Folder("folder", info.getRoot(), links);
-      VirtualFileSystem.getInstance().createFolder(parent, new AsyncRequestCallback<Folder>(
-            new FolderUnmarshaller(parent))
-      {
-         @Override
-         protected void onSuccess(Folder result)
+      Link link = new Link("/rest/vfs/mock/folder/" + parentId, FolderModel.REL_CREATE_FOLDER, "*/*");
+      links.put(FolderModel.REL_CREATE_FOLDER, link);
+      FolderModel parent = new FolderModel("folder", new FolderModel(info.getRoot()), links);
+      VirtualFileSystem.getInstance().createFolder(parent,
+         new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(parent))
          {
-            assertNotNull(result);
-            assertEquals("folder", result.getName());
-            finishTest();
-         }
+            @Override
+            protected void onSuccess(FolderModel result)
+            {
+               assertNotNull(result);
+               assertEquals("folder", result.getName());
+               finishTest();
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            exception.printStackTrace();
-            fail();
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               fail();
+            }
+         });
       delayTestFinish(DELAY_TEST);
    }
 
@@ -175,16 +174,15 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    {
       final String parentId = String.valueOf(Random.nextDouble());
       Map<String, Link> links = new HashMap<String, Link>();
-      Link link = new Link("/rest/vfs/mock/folder/" + parentId, Folder.REL_CREATE_PROJECT, "*/*");
-      links.put(Folder.REL_CREATE_PROJECT, link);
-      Folder parent = new Folder("foder", info.getRoot(), links);
-      Project newProject = new Project("proj", parent, "test-proj", Collections.EMPTY_LIST);
-      VirtualFileSystem.getInstance().createProject(parent, 
-         new AsyncRequestCallback<Project>(new ProjectUnmarshaller(
-               newProject))
+      Link link = new Link("/rest/vfs/mock/project/" + parentId, FolderModel.REL_CREATE_PROJECT, "*/*");
+      links.put(FolderModel.REL_CREATE_PROJECT, link);
+      FolderModel parent = new FolderModel("folder", new FolderModel(info.getRoot()), links);
+      ProjectModel newProject = new ProjectModel("proj", parent, "test-proj", Collections.EMPTY_LIST);
+      VirtualFileSystem.getInstance().createProject(parent,
+         new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
          {
             @Override
-            protected void onSuccess(Project result)
+            protected void onSuccess(ProjectModel result)
             {
                assertNotNull(result);
                assertEquals("proj", result.getName());
@@ -203,14 +201,14 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
 
    public void testGetContent() throws RequestException
    {
-      File file = new File();
-      file.getLinks().put(File.REL_CONTENT,
-         new Link("/rest/vfs/mock/content/" + Random.nextInt(), File.REL_CONTENT, "*/*"));
-      
-      VirtualFileSystem.getInstance().getContent(new AsyncRequestCallback<File>(new FileContentUnmarshaller(file))
+      FileModel file = new FileModel();
+      file.getLinks().put(FileModel.REL_CONTENT,
+         new Link("/rest/vfs/mock/content/" + Random.nextInt(), FileModel.REL_CONTENT, "*/*"));
+
+      VirtualFileSystem.getInstance().getContent(new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
       {
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             assertNotNull(result);
             assertEquals("Hello, world!", result.getContent());
@@ -229,15 +227,15 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    public void testUpdateContent() throws RequestException
    {
       final String content = Long.toString(new Date().getTime());
-      File file = new File();
+      FileModel file = new FileModel();
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
-      file.getLinks().put(File.REL_CONTENT,
-         new Link("/rest/vfs/mock/content/" + Random.nextInt(), File.REL_CONTENT, "*/*"));
-      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<File>()
+      file.getLinks().put(FileModel.REL_CONTENT,
+         new Link("/rest/vfs/mock/content/" + Random.nextInt(), FileModel.REL_CONTENT, "*/*"));
+      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             assertNull(result);
             finishTest();
@@ -255,16 +253,17 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    public void testUpdateContentLocked() throws RequestException
    {
       final String content = Long.toString(new Date().getTime());
-      File file = new File();
+      FileModel file = new FileModel();
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
       file.setLockToken(new LockToken("root", "100", 1000));
-      file.getLinks().put(File.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", File.REL_CONTENT, "*/*"));
-      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<File>()
+      file.getLinks().put(FileModel.REL_CONTENT,
+         new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
+      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             assertNull(result);
             finishTest();
@@ -282,16 +281,17 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
    public void testUpdateContentLockedFail() throws RequestException
    {
       final String content = Long.toString(new Date().getTime());
-      File file = new File();
+      FileModel file = new FileModel();
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
       file.setLockToken(new LockToken("root", "100111", 1000));
-      file.getLinks().put(File.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", File.REL_CONTENT, "*/*"));
-      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<File>()
+      file.getLinks().put(FileModel.REL_CONTENT,
+         new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
+      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             fail();
          }
@@ -307,10 +307,10 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
 
    public void testDeleteContent() throws RequestException
    {
-      File file = new File();
+      FileModel file = new FileModel();
       file.setMimeType(MimeType.TEXT_PLAIN);
-      file.getLinks().put(File.REL_DELETE,
-         new Link("/rest/vfs/mock/delete/" + Random.nextInt(), File.REL_DELETE, "*/*"));
+      file.getLinks().put(FileModel.REL_DELETE,
+         new Link("/rest/vfs/mock/delete/" + Random.nextInt(), FileModel.REL_DELETE, "*/*"));
       VirtualFileSystem.getInstance().delete(file, new AsyncRequestCallback<String>()
       {
          @Override
@@ -328,20 +328,21 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
       });
       delayTestFinish(DELAY_TEST);
    }
-   
+
    public void testDeleteLockedFail() throws RequestException
    {
       final String content = Long.toString(new Date().getTime());
-      File file = new File();
+      FileModel file = new FileModel();
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
       file.setLockToken(new LockToken("root", "100111", 1000));
-      file.getLinks().put(File.REL_CONTENT, new Link("/rest/vfs/mock/content/locked-file", File.REL_CONTENT, "*/*"));
-      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<File>()
+      file.getLinks().put(FileModel.REL_CONTENT,
+         new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
+      VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
       {
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             fail();
          }
@@ -355,12 +356,12 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
       });
       delayTestFinish(DELAY_TEST);
    }
-   
-   
+
    public void testCopy() throws RequestException
    {
-      File file = new File();
-      file.getLinks().put(File.REL_COPY, new Link("/rest/vfs/mock/copy/" +  Random.nextInt(), File.REL_COPY, "*/*"));
+      FileModel file = new FileModel();
+      file.getLinks().put(FileModel.REL_COPY,
+         new Link("/rest/vfs/mock/copy/" + Random.nextInt(), FileModel.REL_COPY, "*/*"));
       VirtualFileSystem.getInstance().copy(file, "destination", new AsyncRequestCallback<String>()
       {
          @Override
@@ -376,12 +377,13 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
          }
       });
    }
-   
+
    public void testMove() throws RequestException
    {
-      File file = new File();
-      file.getLinks().put(File.REL_MOVE, new Link("/rest/vfs/mock/move/" +  Random.nextInt(), File.REL_MOVE, "*/*"));
-      VirtualFileSystem.getInstance().move(file, "destination", "lockToken",new AsyncRequestCallback<String>()
+      FileModel file = new FileModel();
+      file.getLinks().put(FileModel.REL_MOVE,
+         new Link("/rest/vfs/mock/move/" + Random.nextInt(), FileModel.REL_MOVE, "*/*"));
+      VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
@@ -396,14 +398,11 @@ public class GwtTstVirtualFileSystem extends GWTTestCase
          }
       });
    }
-   
 
    @Override
    public String getModuleName()
    {
       return "org.exoplatform.ide.vfs.IDEVFS";
    }
-
-   
 
 }

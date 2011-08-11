@@ -25,7 +25,7 @@ import com.google.gwt.json.client.JSONParser;
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
-import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
@@ -70,16 +70,12 @@ public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo
             toObject(jsonObject.get("aclCapability")).toLowerCase())); //
       virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.
             toObject(jsonObject.get("queryCapability")).toLowerCase()));
-      virtualFileSystemInfo.setRootFolderId(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("rootFolderId"))); //
-      virtualFileSystemInfo.setRootFolderPath(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("rootFolderPath"))); //
       virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.
             toMap(jsonObject.get("urlTemplates")));
             
       JSONObject root = jsonObject.get("root").isObject();
     
-      virtualFileSystemInfo.setRoot(new Folder(root)); 
+      virtualFileSystemInfo.setRoot(new FolderModel(root)); 
    }
 
    @Override

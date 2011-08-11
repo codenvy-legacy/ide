@@ -22,19 +22,19 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.client.model.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /** 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
  *
  */
-public class FileContentUnmarshaller implements Unmarshallable<File>
+public class FileContentUnmarshaller implements Unmarshallable<FileModel>
 {
 
-   private final File file;
+   private final FileModel file;
  
-   public FileContentUnmarshaller(File file)
+   public FileContentUnmarshaller(FileModel file)
    {
      this.file = file;
    }
@@ -42,7 +42,7 @@ public class FileContentUnmarshaller implements Unmarshallable<File>
 
 
    @Override
-   public File getPayload()
+   public FileModel getPayload()
    {
       return file;
    }

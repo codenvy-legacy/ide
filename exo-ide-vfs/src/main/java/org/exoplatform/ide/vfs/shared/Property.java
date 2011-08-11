@@ -76,8 +76,8 @@ public abstract class Property<V>
    }
 
    // NOTE getter and setter for value must be overridden.
-   // Need this for correct fork of JSON tool on server side. Implementation of such
-   // methods here make impossible to determine type of array via reflection. 
+   // Need this for correct work of JSON tool on server side. Implementation of such
+   // methods here make impossible to determine type via reflection. 
    public abstract List<V> getValue();
 
    public abstract void setValue(List<V> value);

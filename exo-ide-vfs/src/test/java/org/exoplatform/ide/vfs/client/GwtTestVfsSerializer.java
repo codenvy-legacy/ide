@@ -40,7 +40,7 @@ import java.util.Map;
  * @version $Id: GwtTestVfsSerializer.java 65773 2011-02-02 13:46:50Z andrew00x
  *          $
  */
-public class GwtTstVfsSerializer extends GWTTestCase
+public class GwtTestVfsSerializer extends GWTTestCase
 {
    @Override
    protected void gwtSetUp() throws Exception
@@ -93,6 +93,7 @@ public class GwtTstVfsSerializer extends GWTTestCase
       System.out.println(JSONSerializer.ACL_SERIALIZER.fromCollection(new ArrayList(Arrays.asList(acl1, acl2))));
    }
 
+   @SuppressWarnings({"deprecation", "rawtypes"})
    public void test2()
    {
       String json = "{\"a\":\"A\", \"b\":\"B\", \"c\":\"C\", \"d\":\"D\", \"e\":\"E\"}";

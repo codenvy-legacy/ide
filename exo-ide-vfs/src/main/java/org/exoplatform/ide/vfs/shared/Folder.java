@@ -30,12 +30,12 @@ import java.util.Map;
 public class Folder extends Item
 {
    public static String FOLDER_MIME_TYPE = "text/directory";
-   
+
    public static String REL_CREATE_FILE = "create-file";
    public static String REL_CREATE_FOLDER = "create-folder";
    public static String REL_CREATE_PROJECT = "create-project";
    public static String REL_CHILDREN = "children";
-   
+
    /**
     * Instance of Folder with specified attributes.
     * 
@@ -49,8 +49,9 @@ public class Folder extends Item
     * @param properties other properties of folder
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public Folder(String id, String name, String mimeType, String path, String parentId, long creationDate, List properties,
-      Map<String, Link> links)
+   @SuppressWarnings({"unchecked", "rawtypes"})
+   public Folder(String id, String name, String mimeType, String path, String parentId, long creationDate,
+      List properties, Map<String, Link> links)
    {
       super(id, name, ItemType.FOLDER, mimeType, path, parentId, creationDate, properties, links);
    }
@@ -60,8 +61,12 @@ public class Folder extends Item
     */
    public Folder()
    {
-      super();
+      super(ItemType.FOLDER);
+      mimeType = FOLDER_MIME_TYPE;
    }
 
-   
+   public String createPath(String childName)
+   {
+      return this.path + "/" + childName;
+   }
 }

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,62 +26,31 @@ import java.util.Map;
  */
 public class Project extends Folder
 {
-   
-   public static String PROJECT_MIME_TYPE = "text/directory";
-   private String projectType;
+   public static String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
+   /*public static String PROJECT_MIME_TYPE = "text/directory";*/
+   protected String projectType;
 
-   public Project(String id, String name, String mimeType, String path, String parentId, long creationDate, List<Property> properties,
-      Map<String, Link> links, String type)
+   @SuppressWarnings("rawtypes")
+   public Project(String id, String name, String mimeType, String path, String parentId, long creationDate,
+      List<Property> properties, Map<String, Link> links, String projectType)
    {
       super(id, name, mimeType, path, parentId, creationDate, properties, links);
-      this.projectType = type;
+      this.projectType = projectType;
    }
 
    public Project()
    {
       super();
+      mimeType = PROJECT_MIME_TYPE;
    }
 
    public final String getProjectType()
    {
       return projectType;
    }
-   
-   public final Property getProperty(String name)
-   {
-      for(Property p : getProperties())
-         if(p.getName().equals(name))
-            return p;
-      
-      return null;
-   }
-   
-   public final boolean hasProperty(String name)
-   {
-      return getProperty(name) != null; 
-   }
-   
-   public final Object getPropertyValue(String name)
-   {
-      Property p = getProperty(name);
-      if(p != null) 
-         return p.getValue().get(0);
-      return null;
-   }
-   
-   public final List getPropertyValues(String name)
-   {
-      Property p = getProperty(name);
-      if(p != null) 
-      {
-         List values = new ArrayList(p.getValue().size());
-         for(Object v : p.getValue())
-         {
-            values.add(v);
-         }
-         return values;
-      }
-      return null;
-   }
 
+   public void setProjectType(String projectType)
+   {
+      this.projectType = projectType;
+   }
 }

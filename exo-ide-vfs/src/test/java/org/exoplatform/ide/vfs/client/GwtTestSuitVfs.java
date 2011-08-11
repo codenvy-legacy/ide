@@ -30,13 +30,10 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 */
 public class GwtTestSuitVfs extends GWTTestSuite
 {
-   
    public static Test suite() {
       TestSuite suite = new TestSuite("vfs test suite");
-//      suite.addTestSuite(GwtTstVfsSerializer.class);
-      suite.addTestSuite(GwtTstVirtualFileSystem.class);
+      /*suite.addTestSuite(GwtTestVfsSerializer.class);
+      suite.addTestSuite(GwtTestVirtualFileSystem.class);*/
       return suite;
     }
-   
-
 }

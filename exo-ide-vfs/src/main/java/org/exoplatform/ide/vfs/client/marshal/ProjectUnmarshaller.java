@@ -23,19 +23,19 @@ import com.google.gwt.json.client.JSONParser;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.client.model.Project;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @version $Id:$
  *
  */
-public class ProjectUnmarshaller implements Unmarshallable<Project>
+public class ProjectUnmarshaller implements Unmarshallable<ProjectModel>
 {
    
    
-   private final Project item;
+   private final ProjectModel item;
    
-   public ProjectUnmarshaller(Project item)
+   public ProjectUnmarshaller(ProjectModel item)
    {
       
       this.item = item;
@@ -63,7 +63,7 @@ public class ProjectUnmarshaller implements Unmarshallable<Project>
    }
 
    @Override
-   public Project getPayload()
+   public ProjectModel getPayload()
    {
       return this.item;
    }

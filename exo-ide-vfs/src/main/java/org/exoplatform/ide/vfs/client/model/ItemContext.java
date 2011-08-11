@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.vfs.client.model;
 
-
 /**
  * @version $Id:$
- *
  */
 public interface ItemContext
 {
-   
-   Project getProject();
-   
-   void setProject(Project proj);
-   
-   org.exoplatform.ide.vfs.shared.Folder getParent();
-   
-   void setParent(org.exoplatform.ide.vfs.shared.Folder parent);
-   
+   ProjectModel getProject();
+
+   void setProject(ProjectModel project);
+
+   FolderModel getParent();
+
+   void setParent(FolderModel parent);
+
    boolean isPersisted();
 }

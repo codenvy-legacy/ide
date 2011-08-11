@@ -23,19 +23,19 @@ import com.google.gwt.json.client.JSONParser;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * @version $Id:$
  *
  */
-public class FolderUnmarshaller implements Unmarshallable<Folder>
+public class FolderUnmarshaller implements Unmarshallable<FolderModel>
 {
    
    
-   private final Folder item;
+   private final FolderModel item;
    
-   public FolderUnmarshaller(Folder item)
+   public FolderUnmarshaller(FolderModel item)
    {
       
       this.item = item;
@@ -63,7 +63,7 @@ public class FolderUnmarshaller implements Unmarshallable<Folder>
    }
 
    @Override
-   public Folder getPayload()
+   public FolderModel getPayload()
    {
       return this.item;
    }

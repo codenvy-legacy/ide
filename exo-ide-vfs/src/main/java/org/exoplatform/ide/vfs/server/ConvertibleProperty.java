@@ -31,8 +31,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.List;
 
 /**
- * Input property with possibility to transform it to required types. Values may
- * be transformed to required type via method {@link #valueToArray(Class)}.
+ * Input property with possibility to transform it to required types. Values may be transformed to required type via
+ * method {@link #valueToArray(Class)}.
  * <p>
  * Here is example of JSON source for property:
  * 
@@ -63,8 +63,7 @@ public class ConvertibleProperty extends StringProperty
    }
 
    /**
-    * Get value as array of specified type. Components of new array must be as
-    * one of followed:
+    * Get value as array of specified type. Components of new array must be as one of followed:
     * <ul>
     * <li>has String type</li>
     * <li>has constructor that accepts String as argument</li>
@@ -78,7 +77,7 @@ public class ConvertibleProperty extends StringProperty
     * ConvertibleInputProperty in = new ConvertibleInputProperty();
     * List&lt;String&gt; vl = new ArrayList&lt;String&gt;();
     * vl.add(&quot;123&quot;);
-    * vl.add(&quot;456&quot;); 
+    * vl.add(&quot;456&quot;);
     * in.setValue(vl);
     * Integer[] res = in.valueToArray(Integer[].class);
     * System.out.println(java.util.Arrays.toString(res));
@@ -88,15 +87,14 @@ public class ConvertibleProperty extends StringProperty
     * 
     * @param toType new array type
     * @return new array of specified type
-    * @throws IllegalArgumentException if specified new array type is not as
-    *            described above
+    * @throws IllegalArgumentException if specified new array type is not as described above
     */
    @SuppressWarnings("unchecked")
    public <O> O[] valueToArray(Class<? extends O[]> toType)
    {
       if (value == null)
          return null;
-      String [] aValue = this.value.toArray(new String[this.value.size()]);
+      String[] aValue = this.value.toArray(new String[this.value.size()]);
       final Class<?> componentType = toType.getComponentType();
       // If String then just copy array.
       if (componentType == String.class)
@@ -110,7 +108,8 @@ public class ConvertibleProperty extends StringProperty
       Constructor<?> stringConstr = null;
       try
       {
-         stringConstr = AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>() {
+         stringConstr = AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>()
+         {
             public Constructor<?> run() throws Exception
             {
                return componentType.getConstructor(String.class);
@@ -120,11 +119,7 @@ public class ConvertibleProperty extends StringProperty
       catch (PrivilegedActionException e)
       {
          Throwable cause = e.getCause();
-         if (cause instanceof NoSuchMethodException)
-            ; // ignored
-         else if (cause instanceof RuntimeException)
-            throw (RuntimeException)cause;
-         else
+         if (!(cause instanceof NoSuchMethodException))
             throw new RuntimeException(cause);
       }
       if (stringConstr != null)
@@ -135,14 +130,6 @@ public class ConvertibleProperty extends StringProperty
             try
             {
                Array.set(a, i, stringConstr.newInstance(aValue[i]));
-            }
-            catch (ArrayIndexOutOfBoundsException e)
-            {
-               throw new RuntimeException(e);
-            }
-            catch (IllegalArgumentException e)
-            {
-               throw new RuntimeException(e);
             }
             catch (InstantiationException e)
             {
@@ -164,7 +151,8 @@ public class ConvertibleProperty extends StringProperty
       Method valueOf = null;
       try
       {
-         Method temp = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
+         Method temp = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>()
+         {
             public Method run() throws Exception
             {
                return componentType.getDeclaredMethod("valueOf", String.class);
@@ -176,11 +164,7 @@ public class ConvertibleProperty extends StringProperty
       catch (PrivilegedActionException e)
       {
          Throwable cause = e.getCause();
-         if (cause instanceof NoSuchMethodException)
-            ; // ignored
-         else if (cause instanceof RuntimeException)
-            throw (RuntimeException)cause;
-         else
+         if (!(cause instanceof NoSuchMethodException))
             throw new RuntimeException(cause);
       }
       if (valueOf != null)

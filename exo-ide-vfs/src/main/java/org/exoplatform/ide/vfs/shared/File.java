@@ -33,21 +33,18 @@ public class File extends Item
    public static String REL_UNLOCK = "unlock";
    public static String REL_CONTENT = "content";
    public static String REL_VERSION_HISTORY = "version-history";
-   
-   /** Id of version of file. */
-   private String versionId;
 
-   /** Content type. */
-   //private String contentType;
+   /** Id of version of file. */
+   protected String versionId;
 
    /** Content length. */
-   private long length = -1;
+   protected long length = -1;
 
    /** Date of last modification in long format. */
-   private long lastModificationDate;
+   protected long lastModificationDate;
 
    /** Locking flag. */
-   private boolean locked;
+   protected boolean locked;
 
    /**
     * Instance of file with specified attributes.
@@ -65,14 +62,14 @@ public class File extends Item
     * @param properties other properties of file
     * @param links hyperlinks for retrieved or(and) manage item
     */
-   public File(String id, String name, String path, String parentId, long creationDate, long lastModificationDate, String versionId,
-      String mimeType, long length, boolean locked, List properties, Map<String, Link> links)
+   @SuppressWarnings({"rawtypes", "unchecked"})
+   public File(String id, String name, String path, String parentId, long creationDate, long lastModificationDate,
+      String versionId, String mimeType, long length, boolean locked, List properties, Map<String, Link> links)
    {
       super(id, name, ItemType.FILE, mimeType, path, parentId, creationDate, properties, links);
       this.lastModificationDate = lastModificationDate;
       this.locked = locked;
       this.versionId = versionId;
-      //this.contentType = contentType;
       this.length = length;
    }
 
@@ -81,7 +78,7 @@ public class File extends Item
     */
    public File()
    {
-      super();
+      super(ItemType.FILE);
    }
 
    /**
@@ -99,7 +96,6 @@ public class File extends Item
    {
       this.versionId = versionId;
    }
-
 
    /**
     * @return content length
@@ -134,8 +130,7 @@ public class File extends Item
    }
 
    /**
-    * @return <code>true</code> if object locked and <code>false</code>
-    *         otherwise
+    * @return <code>true</code> if object locked and <code>false</code> otherwise
     */
    public boolean isLocked()
    {
@@ -143,12 +138,10 @@ public class File extends Item
    }
 
    /**
-    * @param locked locking flag. Must be <code>true</code> if object locked and
-    *           <code>false</code> otherwise
+    * @param locked locking flag. Must be <code>true</code> if object locked and <code>false</code> otherwise
     */
    public void setLocked(boolean locked)
    {
       this.locked = locked;
    }
-
 }

@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import com.google.gwt.json.client.JSONObject;
-
-import org.exoplatform.ide.vfs.client.JSONDeserializer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +30,7 @@ import java.util.Set;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class Item
+public abstract class Item
 {
    public static String REL_ACL = "acl";
    public static String REL_SELF = "self";
@@ -43,7 +39,7 @@ public class Item
    public static String REL_COPY = "copy";
    public static String REL_MOVE = "move";
    public static String REL_DELETE = "delete";
-   
+
    /** Id of object. */
    protected String id;
 
@@ -51,20 +47,21 @@ public class Item
    protected String name;
 
    /** Type of object. */
-   protected ItemType itemType;
+   protected final ItemType itemType;
 
-   /**  */
+   /** Media type. */
    protected String mimeType;
 
    /** Path. */
    protected String path;
-   
+
    /** Parent ID. */
    protected String parentId;
 
    /** Creation date in long format. */
    protected long creationDate;
 
+   @SuppressWarnings("rawtypes")
    protected List<Property> properties;
 
    protected Map<String, Link> links;
@@ -79,8 +76,9 @@ public class Item
     * @param properties other properties of object
     * @param links hyper-links for retrieved or(and) manage item
     */
-   public Item(String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
-      List<Property> properties, Map<String, Link> links)
+   @SuppressWarnings("rawtypes")
+   public Item(String id, String name, ItemType itemType, String mimeType, String path, String parentId,
+      long creationDate, List<Property> properties, Map<String, Link> links)
    {
       this.id = id;
       this.name = name;
@@ -91,30 +89,11 @@ public class Item
       this.creationDate = creationDate;
       this.properties = properties;
       this.links = links;
-      
-      // TODO
-//      links = new HashMap<String, Link>();
-//      links.put(REL_SELF, //
-//         new Link(createURI("item", id).toString(), REL_SELF, MediaType.APPLICATION_JSON));
-//      links.put(REL_ACL, //
-//         new Link(createURI("acl", id).toString(), REL_ACL, MediaType.APPLICATION_JSON));
    }
 
-   public Item()
+   public Item(ItemType itemType)
    {
-   }
-   
-   public void init(JSONObject itemObject)
-   {
-      id = itemObject.get("id").isString().stringValue();
-      name = itemObject.get("name").isString().stringValue();
-      itemType = ItemType.fromValue(itemObject.get("itemType").isString().stringValue());
-      mimeType = itemObject.get("mimeType").isString().stringValue();
-      path = itemObject.get("path").isString().stringValue();
-      parentId = itemObject.get("parentId").isString().stringValue();
-      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+      this.itemType = itemType;
    }
 
    /**
@@ -158,15 +137,6 @@ public class Item
    }
 
    /**
-    * @param type the type of item
-    */
-   public void setItemType(ItemType type)
-   {
-      this.itemType = type;
-   }
-
-
-   /**
     * @return path
     */
    public String getPath()
@@ -181,7 +151,6 @@ public class Item
    {
       this.path = path;
    }
-   
 
    public final String getParentId()
    {
@@ -209,7 +178,6 @@ public class Item
       this.creationDate = creationDate;
    }
 
-   
    public final String getMimeType()
    {
       return mimeType;
@@ -223,14 +191,52 @@ public class Item
    /**
     * Other properties.
     * 
-    * @return properties. If there is no properties then empty list returned,
-    *         never <code>null</code>
+    * @return properties. If there is no properties then empty list returned, never <code>null</code>
     */
+   @SuppressWarnings("rawtypes")
    public List<Property> getProperties()
    {
       if (properties == null)
          properties = new ArrayList<Property>();
       return properties;
+   }
+
+   @SuppressWarnings("rawtypes")
+   public final Property getProperty(String name)
+   {
+      for (Property p : getProperties())
+         if (p.getName().equals(name))
+            return p;
+
+      return null;
+   }
+
+   public final boolean hasProperty(String name)
+   {
+      return getProperty(name) != null;
+   }
+
+   @SuppressWarnings("rawtypes")
+   public final Object getPropertyValue(String name)
+   {
+      Property p = getProperty(name);
+      if (p != null)
+         return p.getValue().get(0);
+      return null;
+   }
+
+   @SuppressWarnings({"rawtypes", "unchecked"})
+   public final List getPropertyValues(String name)
+   {
+      Property p = getProperty(name);
+      if (p != null)
+      {
+         List values = new ArrayList(p.getValue().size());
+         for (Object v : p.getValue())
+            values.add(v);
+         return values;
+      }
+      return null;
    }
 
    /**
@@ -244,7 +250,7 @@ public class Item
          links = new HashMap<String, Link>();
       return links;
    }
-   
+
    /**
     * @return set of relations
     */
@@ -252,7 +258,7 @@ public class Item
    {
       return getLinks().keySet();
    }
-   
+
    /**
     * @param rel relation string
     * @return corresponding hyperlink or null if no such relation found
@@ -269,10 +275,5 @@ public class Item
    public String toString()
    {
       return "Item [id=" + id + ", name=" + name + ", type=" + itemType + "]";
-   }
-   
-   public String createPath(String childName)
-   {
-      return this.path+"/"+childName;
    }
 }

@@ -26,8 +26,7 @@ import java.util.Map;
  * Describe virtual file system and its capabilities.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: VirtualFileSystemInfo.java 63654 2010-12-06 09:49:34Z andrew00x
- *          $
+ * @version $Id$
  */
 public class VirtualFileSystemInfo
 {
@@ -38,8 +37,7 @@ public class VirtualFileSystemInfo
       /** ACL is not supported. */
       NONE("none"),
       /**
-       * ACL may be only discovered but can't be changed over virtual file
-       * system API.
+       * ACL may be only discovered but can't be changed over virtual file system API.
        */
       READ("read"),
       /** ACL may be discovered and managed. */
@@ -65,8 +63,7 @@ public class VirtualFileSystemInfo
        * 
        * @param value string value
        * @return ACLCapabilities
-       * @throws IllegalArgumentException if there is no corresponded
-       *            ACLCapabilities for specified <code>value</code>
+       * @throws IllegalArgumentException if there is no corresponded ACLCapabilities for specified <code>value</code>
        */
       public static ACLCapability fromValue(String value)
       {
@@ -120,8 +117,7 @@ public class VirtualFileSystemInfo
        * 
        * @param value string value
        * @return QueryCapability
-       * @throws IllegalArgumentException if there is no corresponded
-       *            QueryCapability for specified <code>value</code>
+       * @throws IllegalArgumentException if there is no corresponded QueryCapability for specified <code>value</code>
        */
       public static QueryCapability fromValue(String value)
       {
@@ -172,8 +168,7 @@ public class VirtualFileSystemInfo
        * 
        * @param value string value
        * @return BasicPermissions
-       * @throws IllegalArgumentException if there is no corresponded
-       *            BasicPermissions for specified <code>value</code>
+       * @throws IllegalArgumentException if there is no corresponded BasicPermissions for specified <code>value</code>
        */
       public static BasicPermissions fromValue(String value)
       {
@@ -211,17 +206,12 @@ public class VirtualFileSystemInfo
 
    private QueryCapability queryCapability;
 
-   private String rootFolderId;
-
-   private String rootFolderPath;
-   
    private Folder root;
 
    /**
-    * Templates of URL than can be used by client to manage virtual file system.
-    * Templates may contains parameters. It is path or query segments like next:
-    * [parameter]. Client should replace parameters by corresponded value or
-    * remove it from template if there is now value for it. Example:
+    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
+    * is path or query segments like next: [parameter]. Client should replace parameters by corresponded value or remove
+    * it from template if there is now value for it. Example:
     * 
     * <pre>
     * http://localhost/service/vfs/jcr/file/[parentId]?name=[name]&mediaType=[mediaType]
@@ -233,8 +223,7 @@ public class VirtualFileSystemInfo
 
    public VirtualFileSystemInfo(boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
       String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
-      QueryCapability queryCapability, String rootFolderId, String rootFolderPath, Map<String, 
-      Link> urlTemplates, Folder root)
+      QueryCapability queryCapability, Map<String, Link> urlTemplates, Folder root)
    {
       this.versioningSupported = versioningSupported;
       this.lockSupported = lockSupported;
@@ -243,8 +232,6 @@ public class VirtualFileSystemInfo
       this.permissions = permissions;
       this.aclCapability = aclCapability;
       this.queryCapability = queryCapability;
-      this.rootFolderId = rootFolderId;
-      this.rootFolderPath = rootFolderPath;
       this.urlTemplates = urlTemplates;
       this.root = root;
    }
@@ -252,7 +239,7 @@ public class VirtualFileSystemInfo
    public VirtualFileSystemInfo()
    {
       this(false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
-         QueryCapability.NONE, null, null, null, null);
+         QueryCapability.NONE, null, null);
    }
 
    public boolean isVersioningSupported()
@@ -325,26 +312,6 @@ public class VirtualFileSystemInfo
       this.queryCapability = queryCapability;
    }
 
-   public String getRootFolderId()
-   {
-      return rootFolderId;
-   }
-
-   public void setRootFolderId(String rootFolderId)
-   {
-      this.rootFolderId = rootFolderId;
-   }
-
-   public String getRootFolderPath()
-   {
-      return rootFolderPath;
-   }
-
-   public void setRootFolderPath(String rootFolderPath)
-   {
-      this.rootFolderPath = rootFolderPath;
-   }
-
    public void setUrlTemplates(Map<String, Link> uriTemplates)
    {
       this.urlTemplates = uriTemplates;
@@ -354,12 +321,12 @@ public class VirtualFileSystemInfo
    {
       return urlTemplates;
    }
-   
+
    public Folder getRoot()
    {
       return root;
    }
-   
+
    public void setRoot(Folder root)
    {
       this.root = root;

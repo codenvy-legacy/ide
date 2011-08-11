@@ -21,7 +21,6 @@ package org.exoplatform.ide.vfs.client.model;
 /**
  * @author eXo
  * @version $Id: Sep 10, 2010 $
- *
  */
 public class LockToken
 {
@@ -30,7 +29,6 @@ public class LockToken
    private String lockToken;
 
    private int timeout;
-
 
    /**
     * @param owner
@@ -52,7 +50,6 @@ public class LockToken
       return owner;
    }
 
-
    /**
     * @return the lockToken
     */
@@ -60,7 +57,6 @@ public class LockToken
    {
       return lockToken;
    }
-
 
    /**
     * @return the timeout
@@ -77,5 +73,4 @@ public class LockToken
    {
       this.timeout = timeout;
    }
-
 }

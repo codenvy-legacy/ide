@@ -26,8 +26,8 @@ import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.client.model.File;
-import org.exoplatform.ide.vfs.client.model.Folder;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
@@ -102,9 +102,9 @@ public class ChildrenUnmarshaller implements Unmarshallable <List<Item>>
          ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());         
          
          if (type == ItemType.FOLDER)
-            items.add(new Folder(object));
+            items.add(new FolderModel(object));
          else
-            items.add(new File(object));
+            items.add(new FileModel(object));
       }
       
       //this.folder.getChildren().setItems(items);

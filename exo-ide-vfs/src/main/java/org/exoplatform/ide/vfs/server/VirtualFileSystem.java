@@ -69,7 +69,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("copy")
@@ -95,7 +95,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("file")
@@ -119,7 +119,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("folder")
@@ -148,7 +148,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("project")
@@ -170,7 +170,7 @@ public interface VirtualFileSystem
     *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("delete")
@@ -197,7 +197,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getAclCapability()
     */
    @GET
@@ -248,7 +248,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @GET
    @Path("children")
@@ -265,7 +265,7 @@ public interface VirtualFileSystem
     * @throws InvalidArgumentException if <code>id</code> is not File
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @GET
    @Path("content")
@@ -276,10 +276,11 @@ public interface VirtualFileSystem
     * Get information about virtual file system and its capabilities.
     * 
     * @return info about this virtual file system
+    * @throws VirtualFileSystemException if any errors occur in VFS
     */
    @GET
    @Produces({MediaType.APPLICATION_JSON})
-   VirtualFileSystemInfo getVfsInfo();
+   VirtualFileSystemInfo getVfsInfo() throws VirtualFileSystemException;
 
    /**
     * Get item by id. Example of JSON response:
@@ -307,7 +308,7 @@ public interface VirtualFileSystem
     * @throws ItemNotFoundException if <code>id</code> does not exist
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @GET
    @Path("item")
@@ -330,7 +331,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @GET
    @Path("version")
@@ -404,7 +405,7 @@ public interface VirtualFileSystem
     *            </ul>
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @GET
    @Path("version-history")
@@ -428,7 +429,7 @@ public interface VirtualFileSystem
     * @throws LockException if item already locked
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getLockCapability()
     */
    @POST
@@ -464,7 +465,7 @@ public interface VirtualFileSystem
     *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("move")
@@ -524,7 +525,7 @@ public interface VirtualFileSystem
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @POST
@@ -550,7 +551,7 @@ public interface VirtualFileSystem
     *            <li><code>skipCount</code> is negative or greater then total
     *            number of items</li>
     *            </ul>
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getQueryCapability()
     */
    @GET
@@ -570,7 +571,7 @@ public interface VirtualFileSystem
     *            <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("unlock")
@@ -606,7 +607,7 @@ public interface VirtualFileSystem
     *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     * @see VirtualFileSystemInfo#getAclCapability()
     */
    @POST
@@ -631,7 +632,7 @@ public interface VirtualFileSystem
     *            <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("content")
@@ -654,7 +655,7 @@ public interface VirtualFileSystem
     *            constraint, e.g. property is read only
     * @throws PermissionDeniedException if user which perform operation has not
     *            permissions to do it
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("item")

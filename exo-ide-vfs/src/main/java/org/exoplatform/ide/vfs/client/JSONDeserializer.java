@@ -52,7 +52,8 @@ import java.util.Set;
 public abstract class JSONDeserializer<O>
 {
    // ----------- Common deserializers. -------------
-   public static final JSONDeserializer<String> STRING_DESERIALIZER = new JSONDeserializer<String>() {
+   public static final JSONDeserializer<String> STRING_DESERIALIZER = new JSONDeserializer<String>()
+   {
       @Override
       public String toObject(JSONValue json)
       {
@@ -71,7 +72,8 @@ public abstract class JSONDeserializer<O>
       }
    };
 
-   public static final JSONDeserializer<Boolean> BOOLEAN_DESERIALIZER = new JSONDeserializer<Boolean>() {
+   public static final JSONDeserializer<Boolean> BOOLEAN_DESERIALIZER = new JSONDeserializer<Boolean>()
+   {
       @Override
       public Boolean toObject(JSONValue json)
       {
@@ -90,7 +92,8 @@ public abstract class JSONDeserializer<O>
       }
    };
 
-   public static final JSONDeserializer<Double> NUMBER_DESERIALIZER = new JSONDeserializer<Double>() {
+   public static final JSONDeserializer<Double> NUMBER_DESERIALIZER = new JSONDeserializer<Double>()
+   {
       @Override
       public Double toObject(JSONValue json)
       {
@@ -111,7 +114,8 @@ public abstract class JSONDeserializer<O>
 
    // --------- Customized deserializers. -------------
    public static final JSONDeserializer<AccessControlEntry> ACL_DESERIALIZER =
-      new JSONDeserializer<AccessControlEntry>() {
+      new JSONDeserializer<AccessControlEntry>()
+      {
          @Override
          public AccessControlEntry toObject(JSONValue json)
          {
@@ -134,7 +138,8 @@ public abstract class JSONDeserializer<O>
       };
 
    public static final JSONDeserializer<StringProperty> STRING_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<StringProperty>() {
+      new JSONDeserializer<StringProperty>()
+      {
          @Override
          public StringProperty toObject(JSONValue json)
          {
@@ -160,7 +165,8 @@ public abstract class JSONDeserializer<O>
       };
 
    public static final JSONDeserializer<BooleanProperty> BOOLEAN_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<BooleanProperty>() {
+      new JSONDeserializer<BooleanProperty>()
+      {
          @Override
          public BooleanProperty toObject(JSONValue json)
          {
@@ -186,7 +192,8 @@ public abstract class JSONDeserializer<O>
       };
 
    public static final JSONDeserializer<NumberProperty> NUMBER_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<NumberProperty>() {
+      new JSONDeserializer<NumberProperty>()
+      {
          @Override
          public NumberProperty toObject(JSONValue json)
          {
@@ -211,7 +218,8 @@ public abstract class JSONDeserializer<O>
          }
       };
 
-   public static final JSONDeserializer<Link> LINK_DESERIALIZER = new JSONDeserializer<Link>() {
+   public static final JSONDeserializer<Link> LINK_DESERIALIZER = new JSONDeserializer<Link>()
+   {
       @Override
       public Link toObject(JSONValue json)
       {
@@ -234,7 +242,8 @@ public abstract class JSONDeserializer<O>
       }
    };
 
-   public static final JSONDeserializer<LockToken> LOCK_TOKEN_DESERIALIZER = new JSONDeserializer<LockToken>() {
+   public static final JSONDeserializer<LockToken> LOCK_TOKEN_DESERIALIZER = new JSONDeserializer<LockToken>()
+   {
       @Override
       public LockToken toObject(JSONValue json)
       {
@@ -255,28 +264,31 @@ public abstract class JSONDeserializer<O>
    };
 
    public static final JSONDeserializer<VirtualFileSystemInfo> VFSINFO_DESERIALIZER =
-      new JSONDeserializer<VirtualFileSystemInfo>() {
+      new JSONDeserializer<VirtualFileSystemInfo>()
+      {
+         @SuppressWarnings({"unchecked", "rawtypes"})
          @Override
          public VirtualFileSystemInfo toObject(JSONValue json)
          {
             if (json == null)
                return null;
             JSONObject jsonObject = json.isObject();
-            
+
             JSONObject root = jsonObject.get("root").isObject();
             String rootId = root.get("id").isString().stringValue();
             String rootName = root.get("name").isString().stringValue();
             String rootMimeType = root.get("mimeType").isString().stringValue();
             String rootPath = root.get("path").isString().stringValue();
-            long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();     
-            List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));      
+            long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();
+            List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));
             Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
-            
-            Folder rootFolder = new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, 
-                  (List<Property>)properties, (Map <String, Link>)links);
-            
+
+            Folder rootFolder =
+               new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
+                  (Map<String, Link>)links);
+
             //System.out.println("ROOT folder "+rootFolder);
-            
+
             return new VirtualFileSystemInfo(
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")), //
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")), //
@@ -285,8 +297,6 @@ public abstract class JSONDeserializer<O>
                STRING_DESERIALIZER.toSet(jsonObject.get("permissions")), //
                ACLCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("aclCapability")).toLowerCase()), //
                QueryCapability.fromValue(STRING_DESERIALIZER.toObject(jsonObject.get("queryCapability")).toLowerCase()),
-               STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderId")), //
-               STRING_DESERIALIZER.toObject(jsonObject.get("rootFolderPath")), //
                LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")), //
                rootFolder // 
             );

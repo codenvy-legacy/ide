@@ -15,12 +15,13 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */   
+ */
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -29,9 +30,8 @@ import org.exoplatform.ide.vfs.shared.Property;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,65 +40,63 @@ import java.util.Map;
  * @version $Id: $
  */
 
-public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements ItemContext
+public class FolderModel extends org.exoplatform.ide.vfs.shared.Folder implements ItemContext
 {
-
    private ItemList<Item> children = new ItemList<Item>();
-   
-   private Project project;
-   
-   private org.exoplatform.ide.vfs.shared.Folder parent;
-   
+   private ProjectModel project;
+   private FolderModel parent;
    private boolean persisted;
- 
-   @SuppressWarnings("unchecked")
-   public Folder(String name, org.exoplatform.ide.vfs.shared.Folder parent)
+
+   @SuppressWarnings("rawtypes")
+   public FolderModel(String name, FolderModel parent)
    {
-      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), 
-    		new ArrayList<Property>(), new HashMap<String, Link>());
+      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+         new ArrayList<Property>(), new HashMap<String, Link>());
       this.parent = parent;
       this.persisted = false;
    }
-   
-   @SuppressWarnings("unchecked")
-   public Folder(String name, org.exoplatform.ide.vfs.shared.Folder parent, Map<String, Link> links)
+
+   @SuppressWarnings("rawtypes")
+   public FolderModel(String name, FolderModel parent, Map<String, Link> links)
    {
-      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), 
+      super(null, name, FOLDER_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
          new ArrayList<Property>(), links);
       this.parent = parent;
       this.persisted = false;
    }
 
-
-   public Folder(JSONObject itemObject)
+   public FolderModel(JSONObject itemObject)
    {
-      super(itemObject.get("id").isString().stringValue(),
-            itemObject.get("name").isString().stringValue(),
-            itemObject.get("mimeType").isString().stringValue(),
-            itemObject.get("path").isString().stringValue(),            
-            itemObject.get("parentId").isString().stringValue(),
-            (long)itemObject.get("creationDate").isNumber().doubleValue(),     
-            JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties")),     
-            JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links")));
-      
-      this.persisted = true;
-
+      super();
+      init(itemObject);
    }
-   
+
+   public FolderModel(Folder folder)
+   {
+      super(folder.getId(), folder.getName(), FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
+         .getCreationDate(), folder.getProperties(), folder.getLinks());
+      this.persisted = true;
+   }
+
+   @SuppressWarnings({"unchecked", "rawtypes"})
    public void init(JSONObject itemObject)
    {
-      super.init(itemObject);
+      id = itemObject.get("id").isString().stringValue();
+      name = itemObject.get("name").isString().stringValue();
+      mimeType = itemObject.get("mimeType").isString().stringValue();
+      path = itemObject.get("path").isString().stringValue();
+      parentId = itemObject.get("parentId").isString().stringValue();
+      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
       this.persisted = true;
    }
-   
 
-   public Folder()
+   public FolderModel()
    {
       super();
    }
-   
 
- 
    /**
     * @return the children
     */
@@ -116,26 +114,26 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
    }
 
    @Override
-   public Project getProject()
+   public ProjectModel getProject()
    {
       return project;
    }
 
    @Override
-   public void setProject(Project proj)
+   public void setProject(ProjectModel proj)
    {
       this.project = proj;
-      
+
    }
 
    @Override
-   public org.exoplatform.ide.vfs.shared.Folder getParent()
+   public FolderModel getParent()
    {
       return parent;
    }
 
    @Override
-   public void setParent(org.exoplatform.ide.vfs.shared.Folder parent)
+   public void setParent(FolderModel parent)
    {
       this.parent = parent;
    }
@@ -145,11 +143,4 @@ public class Folder extends org.exoplatform.ide.vfs.shared.Folder implements Ite
    {
       return persisted;
    }
-   
-   
-
-
-   
-   
-
 }
