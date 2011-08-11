@@ -20,7 +20,4 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.jenkins.client.ui.SelectGitRemoteRepositoryView">
-      <when-type-is class="org.exoplatform.ide.extension.jenkins.client.SelectGitRemoteRepositoryPresenter.Display" />
-   </replace-with>
 </module>

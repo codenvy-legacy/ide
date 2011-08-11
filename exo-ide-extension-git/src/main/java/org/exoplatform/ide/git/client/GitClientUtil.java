@@ -87,4 +87,33 @@ public class GitClientUtil
       pattern = (pattern.length() > 0 && pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
       return pattern;
    }
+
+   /**
+    * Get the public Git repository location.
+    * If href looks like:<br>
+    * <pre>http://[host]:[port]/[rest context]/[WEBDav context]/[repository]/[workspace]/[work dir]</pre>
+    * public URL will be as follows:
+    * <pre>http://[host]:[port]/[Git context]/[repository]/[workspace]/[work dir]</pre>
+    * 
+    * @param href Git working directory href
+    * @param restContext rest context
+    * @return {@link String} public Git repository location
+    */
+   public static String getPublicGitRepoUrl(String href, String restContext)
+   {
+      String context = (restContext.endsWith("/")) ? restContext + WEBDAV_CONTEXT : restContext + "/" + WEBDAV_CONTEXT;
+      String gitServerContext = getGitServerContext();
+      gitServerContext = gitServerContext.endsWith("/") ? gitServerContext : gitServerContext + "/";
+      String path = href.replaceFirst(context, gitServerContext);
+      return path;
+   }
+
+   /**
+    * Get context of the Git server.
+    * 
+    * @return {@link String} context of the Git server
+    */
+   private static native String getGitServerContext()/*-{
+		return $wnd.gitServerContext;
+   }-*/;
 }

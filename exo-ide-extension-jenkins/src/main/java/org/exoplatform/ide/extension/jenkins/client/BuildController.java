@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -40,18 +41,14 @@ import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedHandler;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.git.shared.Remote;
-
-import java.util.List;
 
 /**
  * 
@@ -59,8 +56,8 @@ import java.util.List;
  * @version $Id: $
  *
  */
-public class BuildController extends GitPresenter implements BuildApplicationHandler,
-   GitRemoteRepositorySelectedHandler, UserInfoReceivedHandler, GetJenkinsOutputHandler
+public class BuildController extends GitPresenter implements BuildApplicationHandler, UserInfoReceivedHandler,
+   GetJenkinsOutputHandler
 {
 
    private String jobName;
@@ -74,14 +71,16 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
     */
    private static final int delay = 10000;
 
+   private String restContext;
+
    /**
     * @param eventBus
     */
-   public BuildController()
+   public BuildController(String restContext)
    {
       super(IDE.EVENT_BUS);
+      this.restContext = restContext;
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(GitRemoteRepositorySelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(GetJenkinsOutputEvent.TYPE, this);
       control = new BuildStatusControl();
@@ -137,43 +136,16 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
    }
 
    /**
-    * Process git repository
-    * @param remotes
+    * Create new Jenkins job.
+    * @param repository repository URL (public location of local repository)
     */
-   private void remoteRepositoriesReceived(List<Remote> remotes)
-   {
-      if (remotes.size() == 0)
-      {
-         Dialogs.getInstance().showError(JenkinsExtension.MESSAGES.noRemoteRepository());
-         return;
-      }
-      if (remotes.size() > 1)
-      {
-         String[] values = new String[remotes.size()];
-         for (int i = 0; i < remotes.size(); i++)
-         {
-            values[i] = remotes.get(i).getUrl();
-         }
-         new SelectGitRemoteRepositoryPresenter(values);
-      }
-      else
-      {
-         createJob(remotes.get(0).getUrl());
-      }
-
-   }
-
-   /**
-    * Create new Jenkins job with remote git repository
-    * @param remoteRepo Remote Git repository URL
-    */
-   private void createJob(String remoteRepo)
+   private void createJob(String repository)
    {
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
 
-      JenkinsService.get().createJenkinsJob("" + System.currentTimeMillis(), remoteRepo, userInfo.getName(), mail,
+      JenkinsService.get().createJenkinsJob("" + System.currentTimeMillis(), repository, userInfo.getName(), mail,
          workDir, new AsyncRequestCallback<Job>()
          {
             @Override
@@ -298,24 +270,7 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
    @Override
    public void onWorkDirReceived()
    {
-      GitClientService.getInstance().remoteList(workDir, null, true, new AsyncRequestCallback<List<Remote>>()
-      {
-
-         @Override
-         protected void onSuccess(List<Remote> result)
-         {
-            remoteRepositoriesReceived(result);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedHandler#onGitRemoteRepositorySelected(org.exoplatform.ide.extension.jenkins.client.event.GitRemoteRepositorySelectedEvent)
-    */
-   @Override
-   public void onGitRemoteRepositorySelected(GitRemoteRepositorySelectedEvent event)
-   {
-      createJob(event.getRemoteRepository());
+      createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
    }
 
    /**
@@ -374,9 +329,50 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
             @Override
             protected void onFailure(Throwable exception)
             {
-               Dialogs.getInstance().showError(JenkinsExtension.MESSAGES.noGitReposytory());
+               Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.noGitRepositoryTitle(),
+                  JenkinsExtension.MESSAGES.noGitRepository(), new BooleanValueReceivedHandler()
+                  {
+
+                     @Override
+                     public void booleanValueReceived(Boolean value)
+                     {
+                        if (value != null && value)
+                        {
+                           initRepository(selectedItems.get(0).getHref());
+                        }
+                     }
+                  });
             }
          });
    }
 
+   /**
+    * Initialize Git repository.
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepository(final String path)
+   {
+      GitClientService.getInstance().init(path, false, new AsyncRequestCallback<String>()
+      {
+
+         @Override
+         protected void onSuccess(String result)
+         {
+            workDir = path;
+            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+            eventBus.fireEvent(new RefreshBrowserEvent());
+            createJob(GitClientUtil.getPublicGitRepoUrl(path, restContext));
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            String errorMessage =
+               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                  : GitExtension.MESSAGES.initFailed();
+            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         }
+      });
+   }
 }

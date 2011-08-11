@@ -54,7 +54,10 @@ public interface JenkinsMessages extends Messages
    String noRemoteRepository();
    
    @Key("controller.no.git.repository")
-   String noGitReposytory();
+   String noGitRepository();
+   
+   @Key("controller.no.git.repository.title")
+   String noGitRepositoryTitle();
    
    @Key("controller.start.build")
    String buildStarted(String projectName);
