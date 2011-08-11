@@ -225,7 +225,7 @@ public class VirtualFileSystem
    {
       String url =
          file.getLinkByRelation(FileModel.REL_CONTENT).getHref()
-            + ((file.isLocked()) ? "?lockToken=" + file.getLockToken().getLockToken() : "");
+            + ((file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "");
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
          .data(file.getContent()).send(callback);
    }
@@ -241,7 +241,7 @@ public class VirtualFileSystem
    {
       String lockStr = "";
       if (item.getItemType() == ItemType.FILE && ((FileModel)item).isLocked())
-         lockStr = "?lockToken=" + ((FileModel)item).getLockToken();
+         lockStr = "?lockToken=" + ((FileModel)item).getLock();
 
       String url = item.getLinkByRelation(Item.REL_DELETE).getHref() + lockStr;
 
@@ -277,7 +277,7 @@ public class VirtualFileSystem
    {
       String lockStr = "";
       if (source.getItemType() == ItemType.FILE && ((FileModel)source).isLocked())
-         lockStr = "?lockToken=" + ((FileModel)source).getLockToken();
+         lockStr = "?lockToken=" + ((FileModel)source).getLock();
       String url = source.getLinkByRelation(Item.REL_MOVE).getHref() + "?parentId=" + destination + lockStr;
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }

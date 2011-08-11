@@ -23,6 +23,7 @@ import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
    private String content = null;
    //private boolean contentChanged = false;
    private HashSet<FileModel> versionHistory = new HashSet<FileModel>();
-   private Lock lockToken = null;
+   private Lock lock = null;
    private ProjectModel project;
    private FolderModel parent;
 
@@ -141,19 +142,19 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       this.versionHistory = new HashSet<FileModel>();
    }
 
-   public Lock getLockToken()
+   public Lock getLock()
    {
-      return lockToken;
+      return lock;
    }
 
-   public void setLockToken(Lock lockToken)
+   public void setLock(Lock lock)
    {
-      this.lockToken = lockToken;
+      this.lock = lock;
    }
 
    public boolean isLocked()
    {
-      return lockToken != null;
+      return lock != null;
    }
 
    //   public boolean isNewFile()
