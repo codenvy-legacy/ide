@@ -18,6 +18,8 @@
  */
 package org.exoplatform.cloudshell.client;
 
+import com.google.gwt.user.client.Event;
+
 import com.google.gwt.user.client.ui.TextBox;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -44,7 +46,7 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public ImageButton clearButton;
 
    public TermText termText;
-   
+
    private TextBox textBox;
 
    public ShellView()
@@ -52,7 +54,6 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
       setWidth("100%");
       setHeight("100%");
       setStyleName("shell-container");
-
       clearButton = createButton("clearButton", "Clear");
 
       termText = new TermText(32);
@@ -60,6 +61,18 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
       add(termText);
       RootPanel.get().add(this);
       focusInConsole();
+
+      sinkEvents(Event.ONFOCUS);
+   }
+
+   /**
+    * @see com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt.user.client.Event)
+    */
+   @Override
+   public void onBrowserEvent(Event event)
+   {
+      focusInConsole();
+      super.onBrowserEvent(event);
    }
 
    private ImageButton createButton(String id, String title)

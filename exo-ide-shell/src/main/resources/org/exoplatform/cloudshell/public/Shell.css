@@ -12,6 +12,7 @@ h1 {
 html, body
 {
 	background: #000000 none repeat scroll 0 0;
+	height: 100%;
 }
 
 .sendButton {

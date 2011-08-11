@@ -225,7 +225,7 @@ public class ShellPresenter implements ConsoleWriter
          }
       });
 
-      display.print("Welcome to eXo IDE Shell\n");
+      display.print("Welcome to eXo Cloud Shell\n");
    }
 
    /**
