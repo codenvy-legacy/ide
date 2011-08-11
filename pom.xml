@@ -270,6 +270,13 @@
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-git-server</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-ssh</artifactId>
@@ -649,7 +656,8 @@
 
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>   
-
+      
+      <module>exo-ide-git-server</module>
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
