@@ -41,7 +41,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
 {
    private static final String FIND_REPLACE_FORM_LOCATOR = "//div[@view-id=\"ideFindReplaceTextView\"]";
 
-   private static final String GO_TO_LINE_FORM_LOCATOR = "ideGoToLineForm";
+   private static final String GO_TO_LINE_FORM_LOCATOR = "//div[@view-id=\"ideGoToLineForm\"]";
 
    @After
    public void tearDown()

@@ -864,7 +864,7 @@ public abstract class BaseTest
    {
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
 
-      waitForElementPresent("ideGoToLineForm");
+      waitForElementPresent("//div[@view-id=\"ideGoToLineForm\"]");
       // Type line number
       selenium().type(Locators.GoToLineWindow.GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
