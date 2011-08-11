@@ -22,7 +22,7 @@ package org.exoplatform.ide.vfs.client.model;
  * @author eXo
  * @version $Id: Sep 10, 2010 $
  */
-public class LockToken
+public class Lock
 {
    private String owner;
 
@@ -35,7 +35,7 @@ public class LockToken
     * @param lockToken
     * @param timeout
     */
-   public LockToken(String owner, String lockToken, int timeout)
+   public Lock(String owner, String lockToken, int timeout)
    {
       this.owner = owner;
       this.lockToken = lockToken;

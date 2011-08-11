@@ -31,7 +31,7 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.LockToken;
+import org.exoplatform.ide.vfs.client.model.Lock;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -257,7 +257,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
-      file.setLockToken(new LockToken("root", "100", 1000));
+      file.setLockToken(new Lock("root", "100", 1000));
       file.getLinks().put(FileModel.REL_CONTENT,
          new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
@@ -285,7 +285,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
-      file.setLockToken(new LockToken("root", "100111", 1000));
+      file.setLockToken(new Lock("root", "100111", 1000));
       file.getLinks().put(FileModel.REL_CONTENT,
          new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
@@ -336,7 +336,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       file.setMimeType(MimeType.TEXT_PLAIN);
       file.setContent(content);
       file.setLocked(true);
-      file.setLockToken(new LockToken("root", "100111", 1000));
+      file.setLockToken(new Lock("root", "100111", 1000));
       file.getLinks().put(FileModel.REL_CONTENT,
          new Link("/rest/vfs/mock/content/locked-file", FileModel.REL_CONTENT, "*/*"));
       VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()

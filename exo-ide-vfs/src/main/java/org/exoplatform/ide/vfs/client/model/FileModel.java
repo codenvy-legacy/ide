@@ -43,7 +43,7 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
    private String content = null;
    //private boolean contentChanged = false;
    private HashSet<FileModel> versionHistory = new HashSet<FileModel>();
-   private LockToken lockToken = null;
+   private Lock lockToken = null;
    private ProjectModel project;
    private FolderModel parent;
 
@@ -141,12 +141,12 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       this.versionHistory = new HashSet<FileModel>();
    }
 
-   public LockToken getLockToken()
+   public Lock getLockToken()
    {
       return lockToken;
    }
 
-   public void setLockToken(LockToken lockToken)
+   public void setLockToken(Lock lockToken)
    {
       this.lockToken = lockToken;
    }
