@@ -63,6 +63,12 @@
          <type>war</type>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-git-server</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+      <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>log4j-over-slf4j</artifactId>
          <version>${org.slf4j.version}</version>
@@ -97,6 +103,30 @@
          <artifactId>crsh.jcr</artifactId>
          <version>${crash.version}</version>
       </dependency>
+      
+      <!--GIT Server -->
+       <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit.http.server</artifactId>
+         <version>0.10.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit</artifactId>
+         <version>0.10.1</version>
+         <exclusions>
+            <exclusion>
+               <groupId>com.jcraft</groupId>
+               <artifactId>jsch</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>com.jcraft</groupId>
+         <artifactId>jsch</artifactId>
+         <version>0.1.44-1</version>
+      </dependency>
+      
    </dependencies>
 
    <build>
@@ -443,6 +473,7 @@
                            <fileset dir="${project.build.directory}/packager-conf/unwar" />
                         </war>
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/git.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
                      </tasks>
