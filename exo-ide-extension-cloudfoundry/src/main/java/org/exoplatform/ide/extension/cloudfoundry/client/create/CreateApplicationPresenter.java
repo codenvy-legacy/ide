@@ -73,13 +73,11 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
       HasValue<String> getUrlField();
       
-      HasValue<Boolean> getChangeUrlCheckItem();
+      HasValue<Boolean> getCustomUrlCheckItem();
       
       HasValue<String> getInstancesField();
       
       HasValue<String> getMemoryField();
-      
-      HasValue<Boolean> getChangeMemoryCheckItem();
       
       HasValue<Boolean> getIsStartAfterCreationCheckItem();
       
@@ -94,6 +92,10 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       void enableUrlField(boolean enable);
       
       void enableMemoryField(boolean enable);
+      
+      void setSelectedIndexForTypeSelectItem(int index);
+      
+      void focusInUrlField();
       
    }
    
@@ -131,7 +133,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
    
-   public void bindDisplay(List<Framework> frameworks)
+   public void bindDisplay(final List<Framework> frameworks)
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -157,27 +159,43 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             display.enableTypeField(!event.getValue());
+            if (event.getValue())
+            {
+               String[] values = {""};
+               display.setTypeValues(values);
+               display.enableMemoryField(false);
+               display.getMemoryField().setValue("");
+            }
+            else
+            {
+               String[] frameworkArray = getApplicationTypes(frameworks);
+               display.setTypeValues(frameworkArray);
+               display.enableMemoryField(true);
+               display.getMemoryField().setValue("");
+               display.setSelectedIndexForTypeSelectItem(0);
+               Framework framework = findFrameworkByName(frameworkArray[0]);
+               display.getMemoryField().setValue(String.valueOf(framework.getMemory()));
+            }
          }
       });
       
-      display.getChangeUrlCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      display.getCustomUrlCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          @Override
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
-            display.enableUrlField(!event.getValue());
+            display.enableUrlField(event.getValue());
+            if (event.getValue())
+            {
+               display.focusInUrlField();
+            }
+            else
+            {
+               display.getUrlField().setValue(display.getNameField().getValue() + ".cloudfoundry.com");
+            }
          }
       });
 
-      display.getChangeMemoryCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            display.enableMemoryField(!event.getValue());
-         }
-      });
-      
       display.getTypeField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -191,16 +209,29 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          }
       });
       
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            //if url set automatically, than concatenate name field value and ".cloudfoundry.com"
+            if (!display.getCustomUrlCheckItem().getValue())
+            {
+               display.getUrlField().setValue(display.getNameField().getValue() + ".cloudfoundry.com");
+            }
+         }
+      });
+      
       this.frameworks = frameworks;
-      display.setTypeValues(getApplicationTypes(frameworks));
+      String[] values = {""};
+      display.setTypeValues(values);
       display.getUrlField().setValue(DEFAULT_APPLICATION_URL);
       display.getInstancesField().setValue("1");
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
       display.getChangeTypeCheckItem().setValue(true);
-      display.getChangeUrlCheckItem().setValue(true);
-      display.getChangeMemoryCheckItem().setValue(true);
+      display.focusInNameField();
    }
    
    LoggedInHandler loggedInHandler = new LoggedInHandler()
@@ -221,11 +252,22 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       if (!display.getChangeTypeCheckItem().getValue())
       {
          type = findFrameworkByName(display.getTypeField().getValue()).getType();
+         try
+         {
+            memory = Integer.parseInt(display.getMemoryField().getValue());
+         }
+         catch (NumberFormatException e)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorNumberFormat()));
+            return;
+         }
       }
-      url = (display.getChangeUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
+      else
+      {
+         memory = 0;
+      }
+      url = (display.getCustomUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
       instances = Integer.parseInt(display.getInstancesField().getValue());
-      memory =
-         (display.getChangeUrlCheckItem().getValue()) ? 0 : Integer.parseInt(display.getMemoryField().getValue());
       nostart = !display.getIsStartAfterCreationCheckItem().getValue();
       workDir = selectedItems.get(0).getWorkDir();
       

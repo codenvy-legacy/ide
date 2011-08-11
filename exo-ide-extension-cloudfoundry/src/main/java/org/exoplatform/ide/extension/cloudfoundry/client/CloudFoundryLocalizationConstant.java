@@ -403,5 +403,8 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("rename.application.success")
    String renameApplicationSuccess(String oldName, String newName);
+   
+   @Key("create.error.numberFormat")
+   String errorNumberFormat();
 
 }

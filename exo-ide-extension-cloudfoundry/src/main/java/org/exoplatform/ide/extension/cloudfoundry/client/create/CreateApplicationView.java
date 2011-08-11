@@ -80,7 +80,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     * or set by user.
     */
    @UiField
-   CheckboxItem changeUrlField;
+   CheckboxItem customUrlField;
    
    /**
     * Number of instanses of application field.
@@ -93,13 +93,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     */
    @UiField
    TextField memoryField;
-   
-   /**
-    * Checkbox, that indicate, is memory for application will be set automatically
-    * or set by user.
-    */
-   @UiField
-   CheckboxItem changeMemoryField;
    
    /**
     * Is start application after creation.
@@ -239,21 +232,12 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getChangeUrlCheckItem()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getCustomUrlCheckItem()
     */
    @Override
-   public HasValue<Boolean> getChangeUrlCheckItem()
+   public HasValue<Boolean> getCustomUrlCheckItem()
    {
-      return changeUrlField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getChangeMemoryCheckItem()
-    */
-   @Override
-   public HasValue<Boolean> getChangeMemoryCheckItem()
-   {
-      return changeMemoryField;
+      return customUrlField;
    }
 
    /**
@@ -292,6 +276,24 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    {
       memoryField.setEnabled(enable);
       memoryField.setShowDisabled(!enable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#setSelectedIndexForTypeSelectItem(int)
+    */
+   @Override
+   public void setSelectedIndexForTypeSelectItem(int index)
+   {
+      typeField.setSelectedIndex(index);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#focusInUrlField()
+    */
+   @Override
+   public void focusInUrlField()
+   {
+      urlField.focusInItem();
    }
 
 }
