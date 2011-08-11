@@ -137,8 +137,7 @@ class FileData extends ItemData
     * Get content of current file.
     * 
     * @return content
-    * @throws PermissionDeniedException if content can't be retrieved cause to
-    *            security restriction
+    * @throws PermissionDeniedException if content can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    InputStream getContent() throws PermissionDeniedException, VirtualFileSystemException
@@ -161,8 +160,7 @@ class FileData extends ItemData
     * Get media type of content.
     * 
     * @return type of content
-    * @throws PermissionDeniedException if content type can't be retrieved cause
-    *            to security restriction
+    * @throws PermissionDeniedException if content type can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    String getContenType() throws PermissionDeniedException, VirtualFileSystemException
@@ -196,8 +194,7 @@ class FileData extends ItemData
     * Get length of content.
     * 
     * @return length of content
-    * @throws PermissionDeniedException if content length can't be retrieved
-    *            cause to security restriction
+    * @throws PermissionDeniedException if content length can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    long getContenLength() throws PermissionDeniedException, VirtualFileSystemException
@@ -218,12 +215,10 @@ class FileData extends ItemData
    }
 
    /**
-    * Get all versions of current file. If file has not any other versions the
-    * iterator will contains only current file.
+    * Get all versions of current file. If file has not any other versions the iterator will contains only current file.
     * 
     * @return iterator over file's versions
-    * @throws PermissionDeniedException if versions can't be retrieved cause to
-    *            security restriction
+    * @throws PermissionDeniedException if versions can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    LazyIterator<FileData> getAllVersions() throws PermissionDeniedException, VirtualFileSystemException
@@ -281,12 +276,27 @@ class FileData extends ItemData
    }
 
    /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getLastModificationDate()
+    */
+   @Override
+   long getLastModificationDate() throws VirtualFileSystemException
+   {
+      try
+      {
+         return node.getProperty("jcr:content/jcr:lastModified").getLong();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
     * Place lock to current file.
     * 
     * @return lock token
     * @throws LockException if file already locked
-    * @throws PermissionDeniedException if file can't be locked cause to
-    *            security restriction
+    * @throws PermissionDeniedException if file can't be locked cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    String lock() throws LockException, PermissionDeniedException, VirtualFileSystemException
@@ -322,10 +332,8 @@ class FileData extends ItemData
     * Remove lock from file.
     * 
     * @param lockToken lock token
-    * @throws LockException if file is not locked or <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if lock can't be removed cause to
-    *            security restriction
+    * @throws LockException if file is not locked or <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if lock can't be removed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void unlock(String lockToken) throws LockException, PermissionDeniedException, VirtualFileSystemException
@@ -356,8 +364,7 @@ class FileData extends ItemData
    /**
     * Check is file locked or not.
     * 
-    * @return <code>true</code> if file is locked and <code>false</code>
-    *         otherwise
+    * @return <code>true</code> if file is locked and <code>false</code> otherwise
     * @throws VirtualFileSystemException if any errors occurs
     */
    boolean isLocked() throws VirtualFileSystemException
@@ -376,17 +383,13 @@ class FileData extends ItemData
     * Rename and(or) update content type of current file.
     * 
     * @param newname new name. May be <code>null</code> if name is unchangeable
-    * @param mediaType new media type. May be <code>null</code> if content type
-    *           is unchangeable
-    * @param lockToken lock token. This lock token will be used if file is
-    *           locked. Pass <code>null</code> if there is no lock token
-    * @throws ConstraintException if parent folder already contains file with
-    *            the same name as specified or if <code>newname</code> is
-    *            invalid
-    * @throws LockException if file is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if file can't be renamed cause to
-    *            security restriction
+    * @param mediaType new media type. May be <code>null</code> if content type is unchangeable
+    * @param lockToken lock token. This lock token will be used if file is locked. Pass <code>null</code> if there is no
+    *           lock token
+    * @throws ConstraintException if parent folder already contains file with the same name as specified or if
+    *            <code>newname</code> is invalid
+    * @throws LockException if file is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if file can't be renamed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void rename(String newname, MediaType mediaType, String lockToken) throws ConstraintException, LockException,
@@ -433,18 +436,14 @@ class FileData extends ItemData
    }
 
    /**
-    * Update content of file. Previous state of JCR node saved in version
-    * history.
+    * Update content of file. Previous state of JCR node saved in version history.
     * 
-    * @param content new content. If <code>content</code> then content of file
-    *           will be removed.
+    * @param content new content. If <code>content</code> then content of file will be removed.
     * @param mediaType new content type
-    * @param lockToken lock token. This lock token will be used if file is
-    *           locked. Pass <code>null</code> if there is no lock token
-    * @throws LockException if file is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if content can't be updated cause to
-    *            security restriction
+    * @param lockToken lock token. This lock token will be used if file is locked. Pass <code>null</code> if there is no
+    *           lock token
+    * @throws LockException if file is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if content can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void setContent(InputStream content, MediaType mediaType, String lockToken) throws LockException,

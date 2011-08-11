@@ -24,58 +24,40 @@ import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JcrFileSystemFactory.java 64090 2010-12-17 14:53:30Z andrew00x
- *          $
+ * @version $Id$
  */
 @Path("vfs/jcr")
 public class JcrFileSystemFactory
 {
    private final RepositoryService repositoryService;
 
-//   private final ThreadLocalSessionProviderService sessionFactory;
-
    private final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
 
-   public JcrFileSystemFactory(RepositoryService repositoryService 
-      /*ThreadLocalSessionProviderService sessionFactory,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver*/)
+   public JcrFileSystemFactory(RepositoryService repositoryService, ItemType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-            
       this.repositoryService = repositoryService;
-      
-//      try
-//      {
-//         
-//         // TODO it is just for initial testing!!!
-//         
-//         repositoryService.setCurrentRepositoryName("db1");
-//      }
-//      catch (RepositoryConfigurationException e)
-//      {
-//         e.printStackTrace();
-//         throw new RuntimeException("RepositoryConfigurationException :"+e);
-//      }
-      
-//      this.sessionFactory = sessionFactory;
-      this.itemType2NodeTypeResolver = new ItemType2NodeTypeResolver();
+      this.itemType2NodeTypeResolver = itemType2NodeTypeResolver;
    }
 
-   @Path("{repository}/{workspace}")
-   public VirtualFileSystem getVFS(@PathParam("repository") String repository,
-      @PathParam("workspace") String workspace, @Context UriInfo uriInfo)
+   @Path("{workspace}")
+   public VirtualFileSystem getVFS(@QueryParam("repository") final String repositoryName,
+      @PathParam("workspace") final String workspaceName, @Context final UriInfo uriInfo)
    {
       try
       {
-         return new JcrFileSystem(getSession(repository, workspace), itemType2NodeTypeResolver, uriInfo);
+         ManageableRepository repository =
+            (repositoryName == null || repositoryName.isEmpty()) ? repositoryService.getCurrentRepository()
+               : repositoryService.getRepository(repositoryName);
+         return new JcrFileSystem(repository, workspaceName, itemType2NodeTypeResolver, uriInfo);
       }
       catch (RepositoryException e)
       {
@@ -85,21 +67,5 @@ public class JcrFileSystemFactory
       {
          throw new WebApplicationException(e);
       }
-   }
-
-   protected Session getSession(String repository, String workspace) throws RepositoryException,
-      RepositoryConfigurationException
-   {
-      
-      // TODO close session every request
-      
-      ManageableRepository manageableRepository = repositoryService.getRepository(repository);
-      
-      return manageableRepository.login(workspace);
-      
-//      SessionProvider sessionProvider = sessionFactory.getSessionProvider(null);
-//      if (sessionProvider == null)
-//         throw new RepositoryException("Storage provider is not configured properly. ");
-//      return sessionProvider.getSession(workspace, manageableRepository);
    }
 }

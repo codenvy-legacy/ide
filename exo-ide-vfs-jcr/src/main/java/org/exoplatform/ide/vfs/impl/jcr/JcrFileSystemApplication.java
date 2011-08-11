@@ -42,9 +42,9 @@ public class JcrFileSystemApplication extends Application
    private final Set<Object> singletons = new HashSet<Object>();
 
    public JcrFileSystemApplication(RepositoryService repositoryService,
-      /*ThreadLocalSessionProviderService sessionFactory,*/ ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-      singletons.add(new JcrFileSystemFactory(repositoryService/*, itemType2NodeTypeResolver*/));
+      singletons.add(new JcrFileSystemFactory(repositoryService, itemType2NodeTypeResolver));
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
@@ -53,8 +53,7 @@ public class JcrFileSystemApplication extends Application
       singletons.add(new PermissionDeniedExceptionMapper());
    }
 
-   public JcrFileSystemApplication(RepositoryService repositoryService
-      /*, ThreadLocalSessionProviderService sessionFactory*/)
+   public JcrFileSystemApplication(RepositoryService repositoryService)
    {
       this(repositoryService, new ItemType2NodeTypeResolver());
    }
@@ -76,5 +75,4 @@ public class JcrFileSystemApplication extends Application
    {
       return singletons;
    }
-
 }

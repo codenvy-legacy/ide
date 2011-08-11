@@ -83,9 +83,10 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteFile() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(filePath).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", session.itemExists(filePath));
    }
@@ -94,13 +95,14 @@ public class DeleteTest extends JcrFileSystemTest
    {
       Lock lock = fileNode.lock(true, false);
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(filePath) //
          .append("?") //
          .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", session.itemExists(filePath));
    }
@@ -110,10 +112,11 @@ public class DeleteTest extends JcrFileSystemTest
       fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(filePath) //
          .toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
       assertTrue("File must not be removed since locked parent. ", session.itemExists(filePath));
@@ -129,9 +132,10 @@ public class DeleteTest extends JcrFileSystemTest
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(filePath).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
       assertTrue("File must not be removed since permissions restriction. ", session.itemExists(filePath));
@@ -141,9 +145,10 @@ public class DeleteTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(filePath + "_WRONG_PATH").toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, writer, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }
@@ -151,9 +156,10 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteFolder() throws Exception
    {
       String path = new StringBuilder() //
-         .append("/vfs/jcr/db1/ws/delete") //
+         .append(SERVICE_URI) //
+         .append("delete") //
          .append(folderPath).toString();
-      ContainerResponse response = launcher.service("POST", path, "", null, null, null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("Folder must be removed. ", session.itemExists(folderPath));
    }

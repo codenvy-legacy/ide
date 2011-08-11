@@ -93,6 +93,16 @@ class VersionData extends FileData
    }
 
    /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getLastModificationDate()
+    */
+   @Override
+   long getLastModificationDate() throws VirtualFileSystemException
+   {
+      // Version is read-only.
+      return getCreationDate();
+   }
+
+   /**
     * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getAllVersions()
     */
    @Override

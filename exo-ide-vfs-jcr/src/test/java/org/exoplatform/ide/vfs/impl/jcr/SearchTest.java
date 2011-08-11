@@ -80,6 +80,7 @@ public class SearchTest extends JcrFileSystemTest
       session.save();
    }
 
+   @SuppressWarnings("rawtypes")
    public void testSearchStatement() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -106,6 +107,7 @@ public class SearchTest extends JcrFileSystemTest
       assertEquals("Hello World", m.get("MyProperty").get(0));
    }
 
+   @SuppressWarnings("rawtypes")
    public void testSearchBuildStatement() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();

@@ -90,6 +90,39 @@
    </component>
 
    <component>
+      <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
+      <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+      <init-params>
+          <!--  Indicates that the data source needs to check if a tx is active
+            to decide if the provided connection needs to be managed or not.
+            If it is set to false, the data source will provide only
+            managed connections if the data source itself is managed.  -->
+         <!--value-param>
+            <name>check-tx-active</name>
+            <value>true</value>
+         </value-param-->
+         <!-- Indicates that all the data sources are managed 
+              If set to true the parameter never-managed and 
+              managed-data-sources will be ignored -->
+         <!--value-param>
+            <name>always-managed</name>
+            <value>true</value>
+         </value-param-->
+         <!-- Indicates the list of all the data sources that are 
+              managed, each value tag can contain a list of
+              data source names separated by a comma, in the
+              example below we will register ds-foo1, ds-foo2 
+              and ds-foo3 as managed data source. If always-managed
+              and/or never-managed is set true this parameter is ignored -->
+         <!--values-param>
+            <name>managed-data-sources</name>
+            <value>ds-foo1, ds-foo2</value>
+            <value>ds-foo3</value>
+         </values-param-->
+      </init-params>
+   </component>
+
+   <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
       <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
       <init-params>

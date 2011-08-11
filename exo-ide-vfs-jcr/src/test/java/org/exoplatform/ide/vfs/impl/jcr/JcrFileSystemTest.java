@@ -30,8 +30,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.RequestHandler;
@@ -60,7 +58,7 @@ import javax.ws.rs.core.UriBuilder;
 public abstract class JcrFileSystemTest extends TestCase
 {
    protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/vfs/jcr/db1/ws/";
+   protected final String SERVICE_URI = BASE_URI + "/vfs/jcr/ws/";
    protected final String DEFAULT_CONTENT = "__TEST__";
 
    protected Log log = ExoLogger.getExoLogger(getClass());
@@ -71,7 +69,6 @@ public abstract class JcrFileSystemTest extends TestCase
    protected Session session;
    protected Node testRoot;
    protected ResourceLauncher launcher;
-   private ThreadLocalSessionProviderService sessionFactory;
 
    /**
     * @see junit.framework.TestCase#setUp()
@@ -96,6 +93,7 @@ public abstract class JcrFileSystemTest extends TestCase
       session = (Session)repository.login(new CredentialsImpl("root", "exo".toCharArray()), WORKSPACE_NAME);
       testRoot = session.getRootNode().addNode(TEST_ROOT_NAME, "nt:unstructured");
       session.save();
+      repositoryService.setCurrentRepositoryName(REPOSITORY_NAME);
 
       // REST
       RequestHandler requestHandler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
@@ -105,10 +103,6 @@ public abstract class JcrFileSystemTest extends TestCase
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("john"));
       ConversationState.setCurrent(user);
-      sessionFactory =
-         (ThreadLocalSessionProviderService)container
-            .getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      sessionFactory.setSessionProvider(null, new SessionProvider(user));
    }
 
    /**
@@ -126,10 +120,6 @@ public abstract class JcrFileSystemTest extends TestCase
                session.save();
             }
             session.logout();
-         }
-         if (sessionFactory != null)
-         {
-            sessionFactory.getSessionProvider(null).close();
          }
       }
       catch (Exception e)

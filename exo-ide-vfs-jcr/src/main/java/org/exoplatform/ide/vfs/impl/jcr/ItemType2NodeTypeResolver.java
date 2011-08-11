@@ -59,14 +59,21 @@ public class ItemType2NodeTypeResolver
 
    /**
     * Get node type for folder of specified type. 
-    * By default return 'nt:folder' always.
+    * By default return:
+    * <ul>
+    * <li>'vfs:project' if type is 'project'</li>
+    * <li>'nt:folder' otherwise</li>
+    * </ul>
     * 
     * @param type type of folder
     * @return node type name
     */
    public String getFolderNodeType(String type)
    {
+      if ("project".equalsIgnoreCase(type))
+         return "vfs:project";
       return "nt:folder";
+      
    }
 
    /**

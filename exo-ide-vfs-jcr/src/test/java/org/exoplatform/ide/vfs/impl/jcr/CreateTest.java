@@ -65,9 +65,6 @@ public class CreateTest extends JcrFileSystemTest
          .append("?") //
          .append("name=") //
          .append(name).toString(); //
-//         .append("&") //
-//         .append("mediaType=") //
-//         .append("text/plain;charset%3Dutf8").toString();
       
       Map <String, List <String>> headers = new HashMap <String, List <String>> ();
       List <String> contentType = new ArrayList<String>();
@@ -204,14 +201,14 @@ public class CreateTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("folder") //
-         .append(CREATE_TEST_PATH) //
+         //.append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
       assertEquals(201, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = /*CREATE_TEST_PATH + */"/" + name;
       String expectedLocation = SERVICE_URI + "item" + expectedPath;
       String location = response.getHttpHeaders().getFirst("Location").toString();
       assertEquals(expectedLocation, location);

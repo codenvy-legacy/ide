@@ -232,6 +232,7 @@ public class ChildrenTest extends JcrFileSystemTest
       }
    }
 
+   @SuppressWarnings("rawtypes")
    private boolean hasProperty(Item i, String propertyName)
    {
       List<Property> properties = i.getProperties();

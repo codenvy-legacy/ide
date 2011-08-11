@@ -110,6 +110,7 @@ public class VersionsTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
+      log.info(">>>>>>>> "+response.getHttpHeaders());
    }
 
    public void testGetVersionByIdInvalidVersion() throws Exception

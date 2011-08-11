@@ -93,6 +93,7 @@ public class GetItemTest extends JcrFileSystemTest
       validateLinks(item);
    }
 
+   @SuppressWarnings("rawtypes")
    public void testGetFilePropertyFilter() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();

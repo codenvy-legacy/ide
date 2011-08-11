@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M3-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-vfs-jcr</artifactId>
@@ -14,7 +14,7 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
-         <version>1.2.0-SNAPSHOT</version>
+         <version>1.2.0-M3-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

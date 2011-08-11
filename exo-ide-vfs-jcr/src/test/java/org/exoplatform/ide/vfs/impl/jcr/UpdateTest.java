@@ -31,8 +31,7 @@ import javax.jcr.Node;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: UpdatePropertiesTest.java 64090 2010-12-17 14:53:30Z andrew00x
- *          $
+ * @version $Id$
  */
 public class UpdateTest extends JcrFileSystemTest
 {
@@ -63,6 +62,29 @@ public class UpdateTest extends JcrFileSystemTest
    public void testUpdatePropertiesFile() throws Exception
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
+      doUpdate(properties);
+      Node file = (Node)session.getItem(filePath);
+      assertEquals("MyValue", file.getProperty("MyProperty").getString());
+   }
+
+   public void testUpdatePropertiesFile2() throws Exception
+   {
+      String properties = "[{\"name\":\"MyProperty\", \"value\":[123]}]";
+      doUpdate(properties);
+      Node file = (Node)session.getItem(filePath);
+      assertEquals(123L, file.getProperty("MyProperty").getLong());
+   }
+
+   public void testUpdatePropertiesFile3() throws Exception
+   {
+      String properties = "[{\"name\":\"MyProperty\", \"value\":[true]}]";
+      doUpdate(properties);
+      Node file = (Node)session.getItem(filePath);
+      assertEquals(true, file.getProperty("MyProperty").getBoolean());
+   }
+
+   public void doUpdate(String rawData) throws Exception
+   {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("item") //
@@ -70,9 +92,7 @@ public class UpdateTest extends JcrFileSystemTest
          .toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, rawData.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node file = (Node)session.getItem(filePath);
-      assertEquals("MyValue", file.getProperty("MyProperty").getString());
    }
 }

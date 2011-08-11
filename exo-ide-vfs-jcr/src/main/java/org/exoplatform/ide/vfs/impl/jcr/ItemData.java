@@ -70,10 +70,10 @@ import javax.jcr.nodetype.PropertyDefinition;
 abstract class ItemData
 {
    /**
-    * Empty stream. Need it for value of property "jcr:data" of sub-node
-    * "jcr:content" of "nt:file" nodes.
+    * Empty stream. Need it for value of property "jcr:data" of sub-node "jcr:content" of "nt:file" nodes.
     */
-   static InputStream EMPTY = new InputStream() {
+   static InputStream EMPTY = new InputStream()
+   {
       public int read()
       {
          return -1;
@@ -157,13 +157,12 @@ abstract class ItemData
          throw new VirtualFileSystemException(e.getMessage(), e);
       }
    }
-   
-   
+
    String getParentId() throws VirtualFileSystemException
    {
       try
       {
-         if(node.getDepth() == 0) // root
+         if (node.getDepth() == 0) // root
             return "root";
          else
             return node.getParent().getPath();
@@ -208,16 +207,16 @@ abstract class ItemData
     * 
     * @param filter filter
     * @return properties
-    * @throws PermissionDeniedException if properties can't be retrieved cause
-    *            to security restriction
+    * @throws PermissionDeniedException if properties can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
+   @SuppressWarnings("rawtypes")
    List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException, VirtualFileSystemException
    {
-      
-      if(filter == null)
+
+      if (filter == null)
          throw new NullPointerException("PropertyFilter should not be null");
-      
+
       // TODO : property name mapping ?
       // jcr:blabla -> vfs:blabla
       try
@@ -242,6 +241,7 @@ abstract class ItemData
       }
    }
 
+   @SuppressWarnings("rawtypes")
    Property createProperty(javax.jcr.Property property) throws RepositoryException
    {
       PropertyDefinition definition = property.getDefinition();
@@ -340,64 +340,60 @@ abstract class ItemData
     * Update properties.
     * 
     * @param properties set of properties that should be updated.
-    * @param lockToken lock token. This lock token will be used if item is
-    *           locked. Pass <code>null</code> if there is no lock token
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
+    *           lock token
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li>at least one of updated properties is read-only</li>
     *            <li>value of any updated properties is not acceptable</li>
     *            </ul>
-    * @throws LockException if item is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if properties can't be updated cause to
-    *            security restriction
+    * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      
+
       updateProperties(this.node, properties, lockToken);
 
    }
 
-   
    void updateProperties(Node node, List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
-   LockException, PermissionDeniedException, VirtualFileSystemException
+      LockException, PermissionDeniedException, VirtualFileSystemException
    {
-   if (properties == null || properties.size() == 0)
-      return;
+      if (properties == null || properties.size() == 0)
+         return;
 
-   // TODO : property name mapping ?
-   // vfs:blabla -> jcr:blabla
-   try
-   {
-      Session session = node.getSession();
-      if (lockToken != null)
-         session.addLockToken(lockToken);
+      // TODO : property name mapping ?
+      // vfs:blabla -> jcr:blabla
+      try
+      {
+         Session session = node.getSession();
+         if (lockToken != null)
+            session.addLockToken(lockToken);
 
-      Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-      for (ConvertibleProperty property : properties)
-         updateProperty(node, propertyDefinitions.get(property.getName()), property);
+         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
+         for (ConvertibleProperty property : properties)
+            updateProperty(node, propertyDefinitions.get(property.getName()), property);
 
-      session.save();
+         session.save();
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable to update properties of item " + getId()
+            + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
+      }
    }
-   catch (javax.jcr.lock.LockException e)
-   {
-      throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
-   }
-   catch (AccessDeniedException e)
-   {
-      throw new PermissionDeniedException("Unable to update properties of item " + getId()
-         + ". Operation not permitted. ");
-   }
-   catch (RepositoryException e)
-   {
-      throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
-   }
-}
 
-   
    void updateProperty(PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -405,72 +401,68 @@ abstract class ItemData
       updateProperty(this.node, pd, property);
    }
 
-   
-   void updateProperty(Node node, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
-   PermissionDeniedException, VirtualFileSystemException
-{
-   String name = property.getName();
-   String[] value = property.getValue().toArray(new String[0]);
-   
-  
-   if (value == null)
-      value = new String[0];
-
-   if (pd != null)
+   void updateProperty(Node node, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException
    {
-      if (pd.isProtected())
-         throw new ConstraintException("Property " + name + " is read-only. ");
-      if (pd.isMandatory() && value.length == 0)
-         throw new ConstraintException("Property " + name + " can't have null value. ");
-   }
+      String name = property.getName();
+      String[] value = property.valueToArray(String[].class);
 
-   try
-   {
-      if (value.length == 0)
+      if (value == null)
+         value = new String[0];
+
+      if (pd != null)
       {
-         node.setProperty(name, (Value)null);
+         if (pd.isProtected())
+            throw new ConstraintException("Property " + name + " is read-only. ");
+         if (pd.isMandatory() && value.length == 0)
+            throw new ConstraintException("Property " + name + " can't have null value. ");
       }
-      else
+
+      try
       {
-         // If property definition exists then use it to determine is property
-         // multiple otherwise determine it from specified value. 
-         boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
-         if (multiple)
+         if (value.length == 0)
          {
-            Value[] jcrValue = new Value[value.length];
-            for (int i = 0; i < value.length; i++)
-               jcrValue[i] = new StringValue(value[i]);
-            node.setProperty(name, jcrValue);
+            node.setProperty(name, (Value)null);
          }
          else
          {
-            node.setProperty(name, new StringValue(value[0]));
+            // If property definition exists then use it to determine is property
+            // multiple otherwise determine it from specified value. 
+            boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
+            if (multiple)
+            {
+               Value[] jcrValue = new Value[value.length];
+               for (int i = 0; i < value.length; i++)
+                  jcrValue[i] = new StringValue(value[i]);
+               node.setProperty(name, jcrValue);
+            }
+            else
+            {
+               node.setProperty(name, new StringValue(value[0]));
+            }
          }
       }
+      catch (ValueFormatException e)
+      {
+         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+      }
+      catch (javax.jcr.lock.LockException e)
+      {
+         throw new LockException("Unable to update property " + name + ". Item is locked. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+      }
    }
-   catch (ValueFormatException e)
-   {
-      throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
-   }
-   catch (javax.jcr.lock.LockException e)
-   {
-      throw new LockException("Unable to update property " + name + ". Item is locked. ");
-   }
-   catch (RepositoryException e)
-   {
-      throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
-   }
-   catch (IOException e)
-   {
-      throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
-   }
-}
 
-   
-   
    Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
    {
-      
+
       return getPropertyDefinitions(this.node);
    }
 
@@ -480,11 +472,11 @@ abstract class ItemData
       PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
       Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
       for (int i = 0; i < propertyDefinitions.length; i++)
-       cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
+         cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
 
       return cache;
    }
-   
+
    /**
     * Check is item locked or not.
     * 
@@ -499,12 +491,10 @@ abstract class ItemData
    /**
     * Delete item.
     * 
-    * @param lockToken lock token. This lock token will be used if item is
-    *           locked. Pass <code>null</code> if there is no lock
-    * @throws LockException if item is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if item can't be removed cause to
-    *            security restriction
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
+    *           lock
+    * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if item can't be removed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void delete(String lockToken) throws LockException, PermissionDeniedException, VirtualFileSystemException
@@ -544,8 +534,7 @@ abstract class ItemData
     * Get ACL applied to item.
     * 
     * @return ACL applied to item
-    * @throws PermissionDeniedException if ACL can't be retrieved cause to
-    *            security restriction
+    * @throws PermissionDeniedException if ACL can't be retrieved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    List<AccessControlEntry> getACL() throws PermissionDeniedException, VirtualFileSystemException
@@ -599,15 +588,12 @@ abstract class ItemData
     * Update ACL applied to item.
     * 
     * @param acl ACL
-    * @param override if <code>true</code> then previous ACL replaced by
-    *           specified. If <code>false</code> then specified ACL will be
-    *           merged with existed
-    * @param lockToken lock token. This lock token will be used if item is
-    *           locked. Pass <code>null</code> if there is no lock token
-    * @throws LockException if item is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if ACL can't be updated cause to
-    *            security restriction
+    * @param override if <code>true</code> then previous ACL replaced by specified. If <code>false</code> then specified
+    *           ACL will be merged with existed
+    * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
+    *           lock token
+    * @throws LockException if item is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if ACL can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    void updateACL(List<AccessControlEntry> acl, boolean override, String lockToken) throws LockException,
@@ -687,10 +673,8 @@ abstract class ItemData
     * 
     * @param folder parent
     * @return newly create copy
-    * @throws ConstraintException if destination folder already contains item
-    *            with the same name as current
-    * @throws PermissionDeniedException if new copy can't be created cause to
-    *            security restriction
+    * @throws ConstraintException if destination folder already contains item with the same name as current
+    * @throws PermissionDeniedException if new copy can't be created cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException, VirtualFileSystemException
@@ -724,15 +708,12 @@ abstract class ItemData
     * Move current item in specified folder.
     * 
     * @param folder new parent
-    * @param lockToken lock token. This lock token will be used if this item is
-    *           locked. Pass <code>null</code> if there is no lock token
+    * @param lockToken lock token. This lock token will be used if this item is locked. Pass <code>null</code> if there
+    *           is no lock token
     * @return id moved object
-    * @throws ConstraintException if destination folder already contains item
-    *            with the same name as current
-    * @throws LockException if this item is locked and <code>lockToken</code> is
-    *            <code>null</code> or does not matched
-    * @throws PermissionDeniedException if item can't be moved cause to security
-    *            restriction
+    * @throws ConstraintException if destination folder already contains item with the same name as current
+    * @throws LockException if this item is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if item can't be moved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
