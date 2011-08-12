@@ -1188,10 +1188,11 @@ public class Cloudfoundry
    public void validateAction(String action, String app, String framework, String url, File workDir)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
-      if (app == null || app.isEmpty())
-         throw new IllegalStateException("Application name required. ");
       if ("create".equals(action))
       {
+         if (app == null || app.isEmpty())
+            throw new IllegalStateException("Application name required. ");
+
          String name = detectApplicationName(workDir);
          if (!(name == null || name.isEmpty()))
          {
@@ -1216,9 +1217,8 @@ public class Cloudfoundry
          String name = detectApplicationName(workDir);
          if (name == null || name.isEmpty())
             throw new IllegalStateException("Not cloud foundry application. ");
-         // TODO : need to check detected name equals to specified name ???
          // Throw exception if application not found.
-         applicationInfo(app, workDir);
+         applicationInfo(name, workDir);
       }
       else
       {
