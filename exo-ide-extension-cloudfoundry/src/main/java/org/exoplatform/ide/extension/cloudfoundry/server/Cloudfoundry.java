@@ -1213,7 +1213,7 @@ public class Cloudfoundry
          if (!(name == null || name.isEmpty()))
          {
             // Working directory may not be used for more then one application.
-            throw new CloudfoundryException(400, "Working directory already contains cloudfoundry application. ",
+            throw new CloudfoundryException(400, "Working directory already contains Cloud Foundry application. ",
                "text/plain");
          }
          CloudfoundryCredentials credentials = getCredentials();
