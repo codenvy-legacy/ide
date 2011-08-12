@@ -23,6 +23,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -61,7 +63,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, ViewClosedHandler
+   UserInfoReceivedHandler, ViewClosedHandler, EntryPointChangedHandler
 {
 
    public interface Display extends IsView
@@ -96,6 +98,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    private Status prevStatus = null;
 
+   private String entryPoint;
+   
+   private boolean buildInProgress = false;
+
    /**
     * @param eventBus
     */
@@ -106,6 +112,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
    /**
@@ -114,6 +121,14 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    @Override
    public void onBuildApplication(BuildApplicationEvent event)
    {
+      if (buildInProgress) {
+         String message = "You can not start the build of two projects at the same time.<br>";
+         message += "Building of project <b>" + getProjectDir() + "</b> is performed.";
+         
+         Dialogs.getInstance().showError(message);
+         return;
+      }
+      
       getWorkDir();
    }
 
@@ -193,6 +208,43 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
+   * Get project name (last URL segment of workDir value)
+   * @return project name
+   */
+   private String getProjectName()
+   {
+      String projectName = workDir;
+      if (projectName.endsWith("/"))
+      {
+         projectName = projectName.substring(0, projectName.length() - 1);
+      }
+      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
+      return projectName;
+   }
+   
+   /**
+    * Get project's directory ( from root of workspace ).
+    * 
+    * @return
+    */
+   private String getProjectDir() {
+      String wd = workDir;
+      if (wd.endsWith("/"))
+      {
+        wd = wd.substring(0, wd.length() - 1);
+      }
+      wd = wd.substring(0, wd.lastIndexOf("/"));
+
+      String ep = entryPoint;
+      if (ep.endsWith("/")) {
+        ep = ep.substring(0, ep.length() - 1);
+      }
+      ep = ep.substring(0, ep.lastIndexOf("/"));
+
+      return wd.substring(ep.length());
+   }
+
+   /**
     * Start building application
     * @param jobName name of Jenkins job
     */
@@ -203,7 +255,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          @Override
          protected void onSuccess(String result)
          {
-            showBuildMessage("Build started");
+            buildInProgress = true;
+            
+            String projectDir = getProjectDir();
+            showBuildMessage("Building project <b>" + projectDir + "</b>");
+
             display.startAnimation();
             display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
 
@@ -212,63 +268,106 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          }
       });
    }
+   
+   /**
+    * Sets Building status: Queue
+    * 
+    * @param status
+    */
+   private void setBuildStatusQueue(JobStatus status) {
+      prevStatus = Status.QUEUE;
+      showBuildMessage("Status: " + status.getStatus());
+      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);      
+   }
+   
+   /**
+    * Sets Building status: Building
+    * 
+    * @param status
+    */
+   private void setBuildStatusBuilding(JobStatus status) {
+      prevStatus = Status.BUILD;
+      showBuildMessage("Status: " + status.getStatus());
+      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), true);      
+   }
+   
+   /**
+    * Sets Building status: Finished
+    * 
+    * @param status
+    */
+   private void setBuildStatusFinished(JobStatus status) {
+      buildInProgress = false;
+      
+      if (display != null)
+      {
+         if (closed)
+         {
+            IDE.getInstance().openView(display.asView());
+            closed = false;
+         }
+         else
+         {
+            display.asView().activate();
+         }
+      }
 
+      prevStatus = Status.END;
+      
+      String projectDir = getProjectDir();
+
+      String message = "Building project <b>" + projectDir + "</b> has been finished.\r\nResult: " 
+         + status.getLastBuildResult() == null ? "Unknown" : status.getLastBuildResult();
+      
+      showBuildMessage(message);
+      display.stopAnimation();
+      
+      if (status.getLastBuildResult() == null)
+      {
+         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+         return;
+      }
+
+      switch (JobResult.valueOf(status.getLastBuildResult()))
+      {
+         case SUCCESS :
+            display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), false);
+            break;
+
+         case FAILURE :
+            display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+            break;
+
+         default :
+            display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.yellow()), false);
+            break;
+      }
+   }
+
+   /**
+    * Check for status and display necessary messages.
+    * 
+    * @param status
+    */
    private void updateJobStatus(JobStatus status)
    {
       if (status.getStatus() == Status.QUEUE && prevStatus != Status.QUEUE)
       {
-         prevStatus = Status.QUEUE;
-         showBuildMessage("Status: " + status.getStatus());
-         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
+         setBuildStatusQueue(status);
          return;
       }
 
       if (status.getStatus() == Status.BUILD && prevStatus != Status.BUILD)
       {
-         prevStatus = Status.BUILD;
-         showBuildMessage("Status: " + status.getStatus());
-         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), true);
+         setBuildStatusBuilding(status);
          return;
       }
 
       if (status.getStatus() == Status.END && prevStatus != Status.END)
       {
-         if (display != null)
-         {
-            if (closed)
-            {
-               IDE.getInstance().openView(display.asView());
-               closed = false;
-            }
-            else
-            {
-               display.asView().activate();
-            }
-         }
-
-         prevStatus = Status.END;
-         String message = "Build finished\r\nResult:&nbsp;" + status.getLastBuildResult();
-         showBuildMessage(message);
-         display.stopAnimation();
-
-         switch (JobResult.valueOf(status.getLastBuildResult()))
-         {
-            case SUCCESS :
-               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), false);
-               break;
-
-            case FAILURE :
-               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
-               break;
-
-            default :
-               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.yellow()), false);
-               break;
-         }
-
+         setBuildStatusFinished(status);
          return;
       }
-
    }
 
    private Timer refreshJobStatusTimer = new Timer()
@@ -301,6 +400,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   schedule(delay);
                }
             }
+            
+            protected void onFailure(Throwable exception) {
+               buildInProgress = false;
+               super.onFailure(exception);
+            };
+            
          });
       }
    };
@@ -414,6 +519,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          closed = true;
       }
+   }
+
+   @Override
+   public void onEntryPointChanged(EntryPointChangedEvent event)
+   {
+      entryPoint = event.getEntryPoint();
    }
 
 }
