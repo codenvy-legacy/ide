@@ -1218,7 +1218,7 @@ public class Cloudfoundry
          if (name == null || name.isEmpty())
             throw new IllegalStateException("Not cloud foundry application. ");
          // Throw exception if application not found.
-         applicationInfo(name, workDir);
+         applicationInfo(getCredentials(), name);
       }
       else
       {
