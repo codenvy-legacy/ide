@@ -1185,6 +1185,47 @@ public class Cloudfoundry
       }
    }
 
+   public void validateAction(String action, String app, String framework, String url, File workDir)
+      throws CloudfoundryException, ParsingResponseException, IOException
+   {
+      if (app == null || app.isEmpty())
+         throw new IllegalStateException("Application name required. ");
+      if ("create".equals(action))
+      {
+         String name = detectApplicationName(workDir);
+         if (!(name == null || name.isEmpty()))
+         {
+            // Working directory may not be used for more then one application.
+            throw new CloudfoundryException(400, "Working directory already contains cloudfoundry application. ",
+               "text/plain");
+         }
+         try
+         {
+            // Check is application with specified name exists.
+            applicationInfo(app, workDir);
+         }
+         catch (CloudfoundryException cfe)
+         {
+            CloudfoundryError err = toError(cfe);
+            if (301 != err.getCode())
+               throw cfe;
+         }
+      }
+      else if ("update".equals(action))
+      {
+         String name = detectApplicationName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Not cloud foundry application. ");
+         // TODO : need to check detected name equals to specified name ???
+         // Throw exception if application not found.
+         applicationInfo(app, workDir);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Unknown action '" + action + "'. ");
+      }
+   }
+
    /* ---------------------------------------------------------- */
 
    private ProvisionedService findService(CloudfoundryCredentials credentials, String name) throws IOException,

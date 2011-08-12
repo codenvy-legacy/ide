@@ -339,4 +339,18 @@ public class CloudfoundryService
    {
       cloudfoundry.unbindService(name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
+
+   @Path("apps/validate-action")
+   @POST
+   public void validateAction( //
+      @QueryParam("action") String action, //
+      @QueryParam("name") String app, //
+      @QueryParam("type") String framework, //
+      @QueryParam("url") String url, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      cloudfoundry.validateAction(action, app, framework, url, workDir != null
+         ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
 }
