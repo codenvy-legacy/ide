@@ -93,46 +93,7 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
    @Override
    public void onBuildApplication(BuildApplicationEvent event)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      Item item = selectedItems.get(0);
-      String url = "";
-      if (item instanceof Folder)
-         url = item.getHref();
-      else
-         url = item.getHref().substring(0, item.getHref().lastIndexOf("/"));
-      JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
-      {
-
-         @Override
-         protected void onSuccess(String result)
-         {
-            jobName = result;
-            build(result);
-         }
-
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException ex = (ServerException)exception;
-               if (ex.getHTTPStatus() == HTTPStatus.NOT_FOUND)
-               {
-                  getWorkDir();
-                  return;
-               }
-            }
-            super.onFailure(exception);
-         }
-      });
+      getWorkDir();
    }
 
    /**
@@ -270,7 +231,7 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
    @Override
    public void onWorkDirReceived()
    {
-      createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+      beforeBuild();
    }
 
    /**
@@ -362,9 +323,9 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
             workDir = path;
             eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
             eventBus.fireEvent(new RefreshBrowserEvent());
-            createJob(GitClientUtil.getPublicGitRepoUrl(path, restContext));
+            createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
          }
-         
+
          @Override
          protected void onFailure(Throwable exception)
          {
@@ -372,6 +333,48 @@ public class BuildController extends GitPresenter implements BuildApplicationHan
                (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                   : GitExtension.MESSAGES.initFailed();
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         }
+      });
+   }
+
+   /**
+    * Perform check, that job already exists.
+    * If it doesn't exist, then create job.
+    */
+   private void beforeBuild()
+   {
+      Item item = selectedItems.get(0);
+      String url = "";
+      if (item instanceof Folder)
+         url = item.getHref();
+      else
+         url = item.getHref().substring(0, item.getHref().lastIndexOf("/"));
+      JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
+      {
+
+         @Override
+         protected void onSuccess(String result)
+         {
+            jobName = result;
+            build(result);
+         }
+
+         /**
+           * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+           */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               ServerException ex = (ServerException)exception;
+               if (ex.getHTTPStatus() == HTTPStatus.NOT_FOUND)
+               {
+                  createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+                  return;
+               }
+            }
+            super.onFailure(exception);
          }
       });
    }
