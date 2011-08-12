@@ -254,7 +254,8 @@ public class ShellPresenter implements ConsoleWriter
          @Override
          protected void onSuccess(String result)
          {
-            display.print((result.endsWith("\n") ? result : result + "\n"));
+            result = (result.endsWith("\n") || result.isEmpty()) ? result : result + "\n";
+            display.print(result);
          }
 
          /**
