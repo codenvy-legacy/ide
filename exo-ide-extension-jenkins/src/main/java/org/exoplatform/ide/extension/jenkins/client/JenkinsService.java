@@ -138,6 +138,6 @@ public class JenkinsService
       String url = restContext + JENKINS + "/job/console-output?name=" + jobName;
       callback.setEventBus(IDE.EVENT_BUS);
       callback.setPayload(new StringContentUnmarshaller(callback));
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
    }
 }

@@ -57,4 +57,7 @@ public interface JenkinsResourceBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/jenkins/client/images/yellow.png")
    ImageResource yellow();
 
+   @Source("org/exoplatform/ide/extension/jenkins/client/images/transparent.png")
+   ImageResource transparent();
+
 }

@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -39,17 +40,18 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class BuildApplicationView extends ViewImpl implements org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter.Display
+public class BuildApplicationView extends ViewImpl implements
+   org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter.Display
 {
-   
+
    private static final String ID = "ide.jenkins.build.view";
-   
+
    public static final int WIDTH = 450;
 
    public static final int HEIGHT = 250;
-   
+
    private boolean animationEnabled = false;
-   
+
    @UiField
    HTMLPanel buildOutputPanel;
 
@@ -58,51 +60,72 @@ public class BuildApplicationView extends ViewImpl implements org.exoplatform.id
    interface BuildApplicationViewUiBinder extends UiBinder<Widget, BuildApplicationView>
    {
    }
-   
+
    public BuildApplicationView()
    {
-      super(ID, ViewType.OPERATION, "Building", new Image(JenkinsExtension.RESOURCES.blue_anime()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));      
+      super(ID, ViewType.OPERATION, "Building", new Image(JenkinsExtension.RESOURCES.grey()), WIDTH, HEIGHT);
+      add(uiBinder.createAndBindUi(this));
    }
 
    @Override
    public final native void output(String text) /*-{
       var pre = $doc.getElementById('ide.jenkins.buildOutput');
+      if (pre == null || pre == undefined) {
+        return;
+      }
+      
       var curText = pre.textContent;
       if (curText != null && curText != undefined && curText != "") {
          pre.textContent += "\r\n";      
       }
       pre.textContent += text;
-
+   
       this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
    }-*/;
-   
-   private void scrollToBottom() {
+
+   private void scrollToBottom()
+   {
       int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
       DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
    }
 
    @Override
    public final native void clearOutput() /*-{
-      $doc.getElementById('ide.jenkins.buildOutput').textContent = ""; 
+      var pre = $doc.getElementById('ide.jenkins.buildOutput');
+      if (pre == null || pre == undefined) {
+        return;
+      }
+      pre.textContent = ""; 
    }-*/;
 
    @Override
-   public void startAnimation() {
+   public void startAnimation()
+   {
       animationCharIndex = 1;
-      DOM.getElementById("ide.jenkins.buildingAnimation").getStyle().setDisplay(Display.BLOCK);
+      Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+      if (animationElement == null) {
+        return;
+      }
+      animationElement.getStyle().setDisplay(Display.BLOCK);
       animationTimer.scheduleRepeating(150);
    }
 
    @Override
-   public void stopAnimation() {
+   public void stopAnimation()
+   {
       animationTimer.cancel();
-      DOM.getElementById("ide.jenkins.buildingAnimation").getStyle().setDisplay(Display.NONE);
-      DOM.getElementById("ide.jenkins.buildingAnimation").setInnerHTML("");
+      
+      Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+      if (animationElement == null) {
+         return;
+      }
+      
+      animationElement.getStyle().setDisplay(Display.NONE);
+      animationElement.setInnerHTML("");
    }
-   
+
    private int animationCharIndex = 1;
-   
+
    private Timer animationTimer = new Timer()
    {
       @Override
@@ -111,30 +134,78 @@ public class BuildApplicationView extends ViewImpl implements org.exoplatform.id
          String c = "";
          switch (animationCharIndex)
          {
-               case 1:
-                  c = "/";
-                  break;
+            case 1 :
+               c = "/";
+               break;
 
-               case 2:
-                  c = "-";
-                  break;
+            case 2 :
+               c = "-";
+               break;
 
-               case 3:
-                  c = "\\";
-                  break;
+            case 3 :
+               c = "\\";
+               break;
 
-               case 4:
-                  c = "|";
-                  break;
+            case 4 :
+               c = "|";
+               break;
          }
-         
-         DOM.getElementById("ide.jenkins.buildingAnimation").setInnerHTML(c);
+
+         Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+         if (animationElement != null) {
+            animationElement.setInnerHTML(c);
+         }
 
          animationCharIndex++;
-         if (animationCharIndex > 4) {
+         if (animationCharIndex > 4)
+         {
             animationCharIndex = 1;
          }
-         
+      }
+   };
+
+   private Image blinkIcon;
+
+   private Image transparentIcon = new Image(JenkinsExtension.RESOURCES.transparent());
+
+   private boolean iconTransparent = false;
+
+   private boolean blinking;
+
+   @Override
+   public void setBlinkIcon(Image blinkIcon, boolean blinking)
+   {
+      this.blinkIcon = blinkIcon;
+      this.blinking = blinking;
+
+      setIcon(blinkIcon);
+      if (blinking)
+      {
+         iconTransparent = false;
+         iconBlinkingTimer.scheduleRepeating(700);
+      }
+      else
+      {
+         iconBlinkingTimer.cancel();
+         iconTransparent = false;
+      }
+   }
+
+   private Timer iconBlinkingTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (iconTransparent)
+         {
+            iconTransparent = false;
+            setIcon(blinkIcon);
+         }
+         else
+         {
+            iconTransparent = true;
+            setIcon(transparentIcon);
+         }
       }
    };
 

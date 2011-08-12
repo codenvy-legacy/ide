@@ -28,6 +28,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
@@ -35,11 +37,10 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
+import org.exoplatform.ide.extension.jenkins.client.JobResult;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationHandler;
-import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent;
-import org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
@@ -51,6 +52,7 @@ import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * 
@@ -59,7 +61,7 @@ import com.google.gwt.user.client.Timer;
  *
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, GetJenkinsOutputHandler
+   UserInfoReceivedHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -73,15 +75,17 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
       void stopAnimation();
 
+      void setBlinkIcon(Image icon, boolean blinking);
+
    }
 
    private Display display;
 
+   private boolean closed = true;
+
    private String jobName;
 
    private UserInfo userInfo;
-
-   //private BuildStatusControl control;
 
    /**
     * Delay in millisecond between job status request  
@@ -89,6 +93,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private static final int delay = 10000;
 
    private String restContext;
+
+   private Status prevStatus = null;
 
    /**
     * @param eventBus
@@ -99,10 +105,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       this.restContext = restContext;
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(GetJenkinsOutputEvent.TYPE, this);
-
-      //      control = new BuildStatusControl();
-      //      IDE.getInstance().addControl(control, DockTarget.STATUSBAR, true);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
@@ -172,7 +175,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       //for test
       //repository = "git://github.com/EvgenVidolob/TestJavaProject.git";
-      
+
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
@@ -200,66 +203,76 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          @Override
          protected void onSuccess(String result)
          {
-//            IDE.EVENT_BUS.fireEvent(new OutputEvent("Build started", Type.INFO));
-//            control.setStartBuildingMessage(getProjectName());
-            
             showBuildMessage("Build started");
             display.startAnimation();
-            
-//            Dialogs.getInstance().showInfo(JenkinsExtension.MESSAGES.buildStarted(getProjectName()));
+            display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
+
             prevStatus = null;
-            statusTimer.schedule(delay);
+            refreshJobStatusTimer.schedule(delay);
          }
       });
    }
 
-//   /**
-//    * Get project name (last URL segment of workDir value)
-//    * @return project name
-//    */
-//   private String getProjectName()
-//   {
-//      String projectName = workDir;
-//      if (projectName.endsWith("/"))
-//      {
-//         projectName = projectName.substring(0, projectName.length() - 1);
-//      }
-//      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
-//      return projectName;
-//   }
-//   
-   private Status prevStatus = null;
-
-   private void updateJobStatus(JobStatus status) {
-      if (status.getStatus() == Status.QUEUE && prevStatus != Status.QUEUE) {
+   private void updateJobStatus(JobStatus status)
+   {
+      if (status.getStatus() == Status.QUEUE && prevStatus != Status.QUEUE)
+      {
          prevStatus = Status.QUEUE;
          showBuildMessage("Status: " + status.getStatus());
+         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
          return;
       }
-      
-      if (status.getStatus() == Status.BUILD && prevStatus != Status.BUILD) {
+
+      if (status.getStatus() == Status.BUILD && prevStatus != Status.BUILD)
+      {
          prevStatus = Status.BUILD;
          showBuildMessage("Status: " + status.getStatus());
+         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), true);
          return;
       }
-      
-      if (status.getStatus() == Status.END && prevStatus != Status.END) {
+
+      if (status.getStatus() == Status.END && prevStatus != Status.END)
+      {
+         if (display != null)
+         {
+            if (closed)
+            {
+               IDE.getInstance().openView(display.asView());
+               closed = false;
+            }
+            else
+            {
+               display.asView().activate();
+            }
+         }
+
          prevStatus = Status.END;
-         //showBuildMessage("Status: " + status.getStatus());
-         
          String message = "Build finished\r\nResult:&nbsp;" + status.getLastBuildResult();
          showBuildMessage(message);
-         
          display.stopAnimation();
-         
+
+         switch (JobResult.valueOf(status.getLastBuildResult()))
+         {
+            case SUCCESS :
+               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), false);
+               break;
+
+            case FAILURE :
+               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+               break;
+
+            default :
+               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.yellow()), false);
+               break;
+         }
+
          return;
       }
-      
-   }   
-   
-   private Timer statusTimer = new Timer()
-   {
 
+   }
+
+   private Timer refreshJobStatusTimer = new Timer()
+   {
       @Override
       public void run()
       {
@@ -269,86 +282,28 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             protected void onSuccess(JobStatus status)
             {
                updateJobStatus(status);
-               
-               if (status.getStatus() == Status.END) {
+
+               if (status.getStatus() == Status.END)
+               {
                   IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(status));
 
                   JenkinsService.get().getJenkinsOutput(jobName, new AsyncRequestCallback<String>()
-                     {
-                        @Override
-                        protected void onSuccess(String result)
-                        {
-                           //IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
-                           showBuildMessage(result);
-                        }
-                     });                  
-                  
-               } else {
-                  schedule(delay);
-               }
-
-               //control.updateStatus(result);
-               /*
-               if (status.getStatus() == Status.END)
-               {
-                  cancel();
-                  IDE.EVENT_BUS.fireEvent(new OutputEvent("Build finished<br/>Result:&nbsp;"
-                     + result.getLastBuildResult(), Type.INFO));
-                  JobResult jobResult = JobResult.valueOf(result.getLastBuildResult());
-                  if (jobResult != JobResult.SUCCESS)
                   {
-                     showBuildResultInfoDialog(jobResult);
-                  }
-                  IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(result));
+                     @Override
+                     protected void onSuccess(String result)
+                     {
+                        showBuildMessage(result);
+                     }
+                  });
                }
                else
                {
                   schedule(delay);
                }
-               */
             }
-
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               cancel();
-//               //control.setText("&nbsp;");
-//               
-//               super.onFailure(exception);
-//            };
          });
       }
    };
-
-//   /**
-//    * Show Info dialog for project build result
-//    * @param result
-//    */
-//   private void showBuildResultInfoDialog(JobResult result)
-//   {
-//      Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.buildResultTitle(),
-//         JenkinsExtension.MESSAGES.buildResultMessage(getProjectName(), result.toString()),
-//         new BooleanValueReceivedHandler()
-//         {
-//
-//            @Override
-//            public void booleanValueReceived(Boolean value)
-//            {
-//               if (value != null && value)
-//               {
-//                  JenkinsService.get().getJenkinsOutput(jobName, new AsyncRequestCallback<String>()
-//                  {
-//
-//                     @Override
-//                     protected void onSuccess(String result)
-//                     {
-//                        IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
-//                     }
-//                  });
-//               }
-//            }
-//         });
-//   }
 
    /**
     * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
@@ -357,26 +312,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {
       userInfo = event.getUserInfo();
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputHandler#onGetJenkinsOutput(org.exoplatform.ide.extension.jenkins.client.event.GetJenkinsOutputEvent)
-    */
-   @Override
-   public void onGetJenkinsOutput(GetJenkinsOutputEvent event)
-   {
-      if (event.getJobName() == null)
-         return;
-
-      JenkinsService.get().getJenkinsOutput(event.getJobName(), new AsyncRequestCallback<String>()
-      {
-
-         @Override
-         protected void onSuccess(String result)
-         {
-            IDE.EVENT_BUS.fireEvent(new OutputEvent("<pre>" + result + "</pre>", Type.INFO));
-         }
-      });
    }
 
    /**
@@ -456,15 +391,29 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       if (display != null)
       {
-         display.asView().activate();
+         if (closed)
+         {
+            IDE.getInstance().openView(display.asView());
+            closed = false;
+         }
       }
       else
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
+         closed = false;
       }
 
       display.output(message);
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         closed = true;
+      }
    }
 
 }
