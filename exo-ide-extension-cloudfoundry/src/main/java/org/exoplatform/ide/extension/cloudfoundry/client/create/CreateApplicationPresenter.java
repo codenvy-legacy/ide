@@ -225,13 +225,19 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       this.frameworks = frameworks;
       String[] values = {""};
       display.setTypeValues(values);
-      display.getUrlField().setValue(DEFAULT_APPLICATION_URL);
       display.getInstancesField().setValue("1");
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
       display.getChangeTypeCheckItem().setValue(true);
       display.focusInNameField();
+      String projectName = "";
+      if (selectedItems != null && !selectedItems.isEmpty())
+      {
+         projectName = selectedItems.get(0).getName();
+         display.getNameField().setValue(projectName);
+      }
+      display.getUrlField().setValue(projectName + DEFAULT_APPLICATION_URL);
    }
    
    LoggedInHandler loggedInHandler = new LoggedInHandler()
