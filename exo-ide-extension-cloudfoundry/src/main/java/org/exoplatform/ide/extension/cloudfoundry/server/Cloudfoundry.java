@@ -1203,7 +1203,7 @@ public class Cloudfoundry
          try
          {
             // Check is application with specified name exists.
-            applicationInfo(app, workDir);
+            applicationInfo(getCredentials(), app);
          }
          catch (CloudfoundryException cfe)
          {
