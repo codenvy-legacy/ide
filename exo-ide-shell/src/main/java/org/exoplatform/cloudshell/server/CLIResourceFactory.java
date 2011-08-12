@@ -356,9 +356,11 @@ public class CLIResourceFactory
    {
       if (cliParams != null && cliParams.size() > 0)
       {
+         final String envVarName = "$" + restName;
          for (CLIResourceParameter cliParam : cliParams)
          {
-            if (restName.equals(cliParam.getName()) && restType == cliParam.getType())
+            if ((envVarName.equals(cliParam.getName()) || restName.equals(cliParam.getName()))
+               && restType == cliParam.getType())
                return true;
          }
       }
