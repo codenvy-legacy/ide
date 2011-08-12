@@ -1200,10 +1200,11 @@ public class Cloudfoundry
             throw new CloudfoundryException(400, "Working directory already contains cloudfoundry application. ",
                "text/plain");
          }
+         CloudfoundryCredentials credentials = getCredentials();
          try
          {
             // Check is application with specified name exists.
-            applicationInfo(getCredentials(), app);
+            applicationInfo(credentials, app);
          }
          catch (CloudfoundryException cfe)
          {
