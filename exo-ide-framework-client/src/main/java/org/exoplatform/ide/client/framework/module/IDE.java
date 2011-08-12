@@ -71,6 +71,13 @@ public abstract class IDE
    public abstract void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking);
 
    /**
+    * Add control to main menu
+    * 
+    * @param control control to be added
+    */
+   public abstract void addControl(Control<?> control);
+   
+   /**
     * Open {@link View}
     * @param view to open
     */   

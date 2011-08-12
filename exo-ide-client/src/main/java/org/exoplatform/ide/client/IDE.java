@@ -193,6 +193,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    }
 
    /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control)
+    */
+   @Override
+   public void addControl(Control<?> control)
+   {
+      controlsRegistration.addControl(control, DockTarget.NONE, false);
+   }   
+   
+   /**
     * @see org.exoplatform.ide.client.framework.module.IDE#closeView(java.lang.String)
     */
    @Override
@@ -242,5 +251,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       return OutlineItemCreatorFactory.getOutlineItemCreator(mimeType);
    }
+
 
 }

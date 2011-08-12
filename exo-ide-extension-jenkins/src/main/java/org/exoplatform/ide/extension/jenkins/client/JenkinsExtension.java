@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.jenkins.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * IDE Jenkins extension entry point
@@ -55,7 +56,7 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new BuildController(event.getApplicationConfiguration().getContext());
+      new BuildApplicationPresenter(event.getApplicationConfiguration().getContext());
       new JenkinsService(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 

@@ -71,7 +71,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       /*
        * Select Workspace ability.
        */
-      eventBus.fireEvent(new RegisterControlEvent(new SelectWorkspaceControl()));
       new SelectWorkspacePresenter(eventBus);
 
       /*

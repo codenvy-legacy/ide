@@ -26,7 +26,6 @@
       </listener-class>
    </listener>
 
-
    <context-param>
       <param-name>guice-modules</param-name>
       <param-value>
@@ -38,7 +37,6 @@
       org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeGuiceModule
     </param-value>
    </context-param>
-
 
    <listener>
       <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>

@@ -38,6 +38,7 @@ import java.security.SecureRandom;
  */
 public class KeyCreator
 {
+   
    public static Log log = ExoLogger.getLogger("org.exoplatform.ide.shindig.KeyCreator");
       
    public static void createKeyFile()
@@ -85,6 +86,13 @@ public class KeyCreator
    
    
    public static String getKeyFilePath(){
+//      /*
+//       * For now uses "gatein.gadgets.securityTokenKeyFile" variable according to IDE-951.
+//       */
+//      String keyFilePath = System.getProperty("gatein.gadgets.securityTokenKeyFile");
+//      log.info("Path to key file > " + keyFilePath);
+//      return keyFilePath;
+      
       J2EEServerInfo info = new J2EEServerInfo();
       String confPath = info.getExoConfigurationDirectory();
       File keyFile = null;
@@ -102,7 +110,6 @@ public class KeyCreator
       
       return keyFile.getAbsolutePath();
   }
-   
 
    /**
     * Generate a key of 32 bytes encoded in base64. The generation is based on

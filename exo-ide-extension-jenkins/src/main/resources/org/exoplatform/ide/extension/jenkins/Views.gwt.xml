@@ -20,4 +20,9 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
+   
+   <replace-with class="org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter.Display" />
+   </replace-with>   
+   
 </module>

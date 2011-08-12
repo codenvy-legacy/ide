@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
@@ -162,6 +163,8 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    public SelectWorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
+      
+      IDE.getInstance().addControl(new SelectWorkspaceControl(), DockTarget.NONE, false);
 
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);

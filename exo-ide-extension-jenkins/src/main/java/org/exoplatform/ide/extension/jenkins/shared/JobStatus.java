@@ -25,9 +25,9 @@ package org.exoplatform.ide.extension.jenkins.shared;
 public class JobStatus
 {
    public enum Status {
-      QUEUE("in queue"), //
-      BUILD("building"), //
-      END("end"); //
+      QUEUE("In queue..."), //
+      BUILD("Building..."), //
+      END("End."); //
 
       private final String value;
 
