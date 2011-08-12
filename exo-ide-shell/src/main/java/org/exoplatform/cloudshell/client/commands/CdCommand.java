@@ -61,11 +61,19 @@ public class CdCommand extends ClientCommand
    public void execute(CommandLine commandLine)
    {
       List<String> args = commandLine.getArgList();
-      args.remove(commads.iterator().next());
-      if (args.size() == 1)
+      args.remove(0);
+      if (args.isEmpty())
+      {
+         CloudShell.console().printPrompt();
+      }
+      else if (args.size() == 1)
       {
          String path = args.get(0);
-
+         if (".".equals(path))
+         {
+            CloudShell.console().printPrompt();
+            return;
+         }
          final Folder newFolder =
             new Folder(Utils.getPath(
                VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
@@ -99,7 +107,7 @@ public class CdCommand extends ClientCommand
          protected void onFailure(Throwable exception)
          {
             super.onFailure(exception);
-            CloudShell.console().print(newFolder.getName() + " not a folder.\n");
+            CloudShell.console().print(newFolder.getName() + " not a folder or folder not exist.\n");
          }
       });
    }

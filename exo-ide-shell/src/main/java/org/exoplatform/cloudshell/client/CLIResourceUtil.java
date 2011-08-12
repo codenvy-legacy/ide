@@ -24,8 +24,11 @@ import org.exoplatform.cloudshell.client.cli.Option;
 import org.exoplatform.cloudshell.client.cli.Options;
 import org.exoplatform.cloudshell.client.cli.Parser;
 import org.exoplatform.cloudshell.client.cli.Util;
+import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -94,5 +97,20 @@ public class CLIResourceUtil
          }
       }
       return options;
+   }
+
+   /**
+    * Get command names form {@link CLIResource} set
+    * @param commands 
+    * @return list of all command names
+    */
+   public static List<String> getAllCommandNames(Set<CLIResource> commands)
+   {
+      List<String> names = new ArrayList<String>();
+      for (CLIResource res : commands)
+      {
+         names.addAll(res.getCommand());
+      }
+      return names;
    }
 }

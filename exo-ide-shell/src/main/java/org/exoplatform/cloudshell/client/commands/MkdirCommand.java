@@ -61,7 +61,12 @@ public class MkdirCommand extends ClientCommand
    public void execute(CommandLine commandLine)
    {
       List<String> args = commandLine.getArgList();
-      args.remove(commads.iterator().next());
+      args.remove(0);
+      if (args.isEmpty())
+      {
+         CloudShell.console().print("mkdir: missing folder name \n");
+         return;
+      }
       for (String name : args)
       {
          Folder newFolder =

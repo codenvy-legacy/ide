@@ -22,8 +22,6 @@
       <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
 
-
-
    <listener>
       <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
    </listener>

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.cloudshell.client.commands;
 
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 11, 2011 evgen $
@@ -36,6 +35,10 @@ public class Utils
     */
    public static String getPath(String currentFolder, String path)
    {
+      if (path.startsWith("./"))
+      {
+         path = path.substring(2);
+      }
       if (!path.endsWith("/"))
       {
          path += "/";

@@ -225,7 +225,7 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       String path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
 
       path = path.substring(0, path.lastIndexOf("/"));
-      path = path.substring(path.lastIndexOf("/"), path.length());
+      path = path.substring(path.lastIndexOf("/") + 1, path.length());
       if (VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
          path = "/";
       path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.USER_NAME) + ":" + path;

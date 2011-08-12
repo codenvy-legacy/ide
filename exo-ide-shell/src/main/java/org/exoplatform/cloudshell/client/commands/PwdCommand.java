@@ -57,8 +57,10 @@ public class PwdCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
-      CloudShell.console().print(
-         VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR) + "\n");
+      String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
+      String entryPoint = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT);
+      workdir = workdir.substring(entryPoint.length() - 1);
+      CloudShell.console().print(workdir + "\n");
    }
 
 }

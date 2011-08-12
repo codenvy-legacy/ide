@@ -37,7 +37,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -128,7 +130,7 @@ public class ShellPresenter implements ConsoleWriter
             }
             else if (code == KeyCodes.KEY_TAB)
             {
-//               performComplete();
+               performComplete();
                handled = true;
             }
             else if (code == KeyCodes.KEY_UP)
@@ -276,35 +278,38 @@ public class ShellPresenter implements ConsoleWriter
     */
    public void performComplete()
    {
-      final String prefix = display.getBuffer();
-      CRaSHClientService.getService().complete(prefix, new CRaSHCompleteListAsyncRequestCallback()
+      String prefix = display.getBuffer();
+      List<String> commands = CLIResourceUtil.getAllCommandNames(CloudShell.getCommands());
+      List<String> suggestions = new ArrayList<String>();
+      for (String name : commands)
       {
-
-         @Override
-         protected void onSuccess(HashMap<String, String> result)
+         if (name.startsWith(prefix))
          {
-            if (result.size() <= 0)
-            {
-               return;
-            }
-            else if (result.size() == 1)
-            {
-               String key = result.keySet().iterator().next();
-               display.appendBuffer(key + result.get(key));
-               display.refreshConsole();
-            }
-            else
-            {
-               display.appendBuffer("\n");
-               for (String key : result.keySet())
-               {
-                  display.appendBuffer(prefix + key + " | ");
-               }
-               display.submitBuffer();
-               display.refreshConsole();
-            }
+            suggestions.add(name);
          }
-      });
+      }
+
+      if (suggestions.isEmpty())
+         return;
+
+      if (suggestions.size() == 1)
+      {
+         display.clearBuffer();
+         display.appendBuffer(suggestions.get(0) + " ");
+         display.refreshConsole();
+      }
+      else
+      {
+         display.appendBuffer("\n");
+         for (String key : suggestions)
+         {
+            display.appendBuffer(key + " ");
+         }
+         display.submitBuffer();
+         display.printPrompt();
+//         display.refreshConsole();
+      }
+
    }
 
    /**
