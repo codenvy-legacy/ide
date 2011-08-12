@@ -151,7 +151,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return applicationInfo(getCredentials(), app);
    }
@@ -330,7 +331,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return startApplication(getCredentials(), app);
    }
@@ -385,7 +387,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       stopApplication(getCredentials(), app);
    }
@@ -424,7 +427,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return restartApplication(getCredentials(), app);
    }
@@ -458,7 +462,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
 
       if (newname == null || newname.isEmpty())
@@ -498,7 +503,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       updateApplication(getCredentials(), app, workDir, war);
    }
@@ -556,7 +562,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       mapUrl(getCredentials(), app, url);
    }
@@ -611,7 +618,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       unmapUrl(getCredentials(), app, url);
    }
@@ -654,7 +662,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       mem(getCredentials(), app, memory, true);
    }
@@ -711,7 +720,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       instances(getCredentials(), app, expression, true);
    }
@@ -768,7 +778,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       deleteApplication(getCredentials(), app, deleteServices);
    }
@@ -810,7 +821,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return applicationStats(getCredentials(), app);
    }
@@ -995,7 +1007,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
 
       if (name == null || name.isEmpty())
@@ -1050,7 +1063,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
 
       if (name == null || name.isEmpty())
@@ -1094,7 +1108,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
 
       if (key == null || key.isEmpty())
@@ -1149,7 +1164,8 @@ public class Cloudfoundry
       {
          app = detectApplicationName(workDir);
          if (app == null || app.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
 
       if (key == null || key.isEmpty())
@@ -1217,7 +1233,8 @@ public class Cloudfoundry
       {
          String name = detectApplicationName(workDir);
          if (name == null || name.isEmpty())
-            throw new IllegalStateException("Not cloud foundry application. ");
+            throw new IllegalStateException(
+               "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
          // Throw exception if application not found.
          applicationInfo(getCredentials(), name);
       }
