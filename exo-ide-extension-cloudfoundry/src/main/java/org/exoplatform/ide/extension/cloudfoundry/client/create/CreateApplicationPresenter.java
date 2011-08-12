@@ -266,7 +266,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       {
          memory = 0;
       }
-      url = (display.getCustomUrlCheckItem().getValue()) ? null : display.getUrlField().getValue();
+      url = (display.getCustomUrlCheckItem().getValue()) ? display.getUrlField().getValue() : null;
       instances = Integer.parseInt(display.getInstancesField().getValue());
       nostart = !display.getIsStartAfterCreationCheckItem().getValue();
       workDir = selectedItems.get(0).getWorkDir();

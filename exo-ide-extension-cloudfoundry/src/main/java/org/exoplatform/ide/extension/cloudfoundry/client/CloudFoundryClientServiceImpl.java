@@ -119,7 +119,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       
       String params = "name=" + name;
       params += (type != null) ? "&type=" + type : "";
-      params += (url != null) ? "&url=" + type : "";
+      params += (url != null) ? "&url=" + url : "";
       params += "&instances=" + instances;
       params += "&mem=" + memory;
       params += "&nostart=" + nostart;
