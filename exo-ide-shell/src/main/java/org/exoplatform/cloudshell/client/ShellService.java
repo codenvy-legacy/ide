@@ -42,6 +42,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -261,7 +262,18 @@ public class ShellService
             continue;
          }
 
-         if (!parameter.isHasArg())
+         //Process system property
+         if (parameter.getName().startsWith("$"))
+         {
+            String value = processSystemProperty(parameter);
+            if (value != null)
+            {
+               jsonObject.put(parameter.getName().substring(1), new JSONString(value));
+            }
+            continue;
+         }
+
+         if (!parameter.isHasArg() && parameter.getOptions() != null && parameter.getOptions().size() > 0)
          {
             jsonObject.put(parameter.getName(),
                JSONBoolean.getInstance(isOptionPresent(parameter.getOptions(), commandLine)));
@@ -335,6 +347,13 @@ public class ShellService
             continue;
          }
 
+         //Process system property
+         if (param.getName().startsWith("$"))
+         {
+            String value = processSystemProperty(param);
+            query += (value != null) ? param.getName().substring(1) + "=" + value + "&" : "";
+            continue;
+         }
          if (!param.isHasArg())
          {
             query += param.getName() + isOptionPresent(param.getOptions(), commandLine);
@@ -346,11 +365,11 @@ public class ShellService
             {
                throw new MandatoryParameterNotFoundException("Required parameter " + param.getName() + " is not found.");
             }
-            query += param.getName() + "=" + value;
+            query += param.getName() + "=" + value + "&";
          }
 
       }
-      return query;
+      return query.endsWith("&") ? query.substring(0, query.length() - 1) : query ;
    }
 
    /**
@@ -405,6 +424,17 @@ public class ShellService
          {
             continue;
          }
+         
+       //Process system property
+         if (parameter.getName().startsWith("$"))
+         {
+            String value = processSystemProperty(parameter);
+            if (value != null)
+            {
+               asyncRequest.header(parameter.getName().substring(1), value);
+            }
+            continue;
+         }
 
          if (!parameter.isHasArg())
          {
@@ -424,13 +454,17 @@ public class ShellService
       }
    }
 
-   /*  PATH("path"), ?
-    + QUERY("query"), //
-     +HEADER("header"), //
-     MATRIX("matrix"), ?
-     COOKIE("cookie"), ?
-     FORM("form"), ?
-     BODY("body");*/
+   protected String processSystemProperty(CLIResourceParameter parameter) throws MandatoryParameterNotFoundException
+   {
+      String propertyName = parameter.getName().substring(1);
+      String value = VirtualFileSystem.getInstance().getEnvironmentVariable(propertyName);
+      if (value == null && parameter.isMandatory())
+      {
+         throw new MandatoryParameterNotFoundException("Required property " + propertyName + " is not set.");
+      }
+      System.out.println("ShellService.processSystemProperty()"+value);
+      return value;
+   }
 
    /**
     * Find the list of appropriate commands for the entered 

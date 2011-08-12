@@ -31,14 +31,11 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.cloudshell.client.crash.CRaSHClientService;
-import org.exoplatform.cloudshell.client.crash.CRaSHCompleteListAsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -257,7 +254,7 @@ public class ShellPresenter implements ConsoleWriter
          @Override
          protected void onSuccess(String result)
          {
-            display.print(result);
+            display.print((result.endsWith("\n") ? result : result + "\n"));
          }
 
          /**

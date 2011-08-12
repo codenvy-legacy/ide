@@ -19,9 +19,9 @@
     "description" : "Initialize new GIT repository.",
     "params": [
       {
-	  "name": "workdir",
+	  "name": "$workdir",
 	  "type": "QUERY",
-	  "options":["-w", "--workdir"],
+	  "options":[],
 	  "mandatory": true
       },
       {
@@ -29,7 +29,7 @@
 	  "type": "BODY",
 	  "options":["-b", "--bare"],
 	  "hasArg": false,
-	  "mandatory": true
+	  "mandatory": false
       }
     ]
 },
@@ -40,9 +40,9 @@
     "description" : "Get status of working directory.",
     "params": [
       {
-	  "name": "workdir",
+	  "name": "$workdir",
 	  "type": "QUERY",
-	  "options":["-w", "--workdir"],
+	  "options":[],
 	  "mandatory": true
       },
       {
@@ -61,15 +61,43 @@
     "description" : "Add file contents to the index.",
     "params": [
       {
-	  "name": "workdir",
+	  "name": "$workdir",
 	  "type": "QUERY",
-	  "options":["-w", "--workdir"],
+	  "options":[],
 	  "mandatory": true
       },
       {
 	  "name": "update",
 	  "type": "BODY",
 	  "options":["-u", "--update"],
+	  "hasArg": false,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["git commit"],
+    "path": "/ide/git/commit",
+    "method": "POST",
+    "description" : "Record changes to the repository.",
+    "params": [
+      {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "message",
+	  "type": "BODY",
+	  "options":["-m", "--message"],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "all",
+	  "type": "BODY",
+	  "options":["-a", "--all"],
 	  "hasArg": false,
 	  "mandatory": false
       }
