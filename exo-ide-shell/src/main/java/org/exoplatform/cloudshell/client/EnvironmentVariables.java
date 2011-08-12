@@ -26,4 +26,8 @@ package org.exoplatform.cloudshell.client;
 public interface EnvironmentVariables
 {
    String WORKDIR = "workdir";
+   
+   String ENTRY_POINT = "ENTRY_POINT";
+   
+   String USER_NAME = "USER_NAME";
 }

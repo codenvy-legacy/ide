@@ -19,8 +19,8 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd" xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
    <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
       <type>org.exoplatform.services.log.LogConfigurationInitializer</type>
@@ -53,19 +53,45 @@
          </properties-param>
       </init-params>
    </component>
- <component>
-  <type>org.exoplatform.cloudshell.server.ShellApplication</type>
- </component>
- 
- <component>
-  <type>org.exoplatform.cloudshell.server.rest.CLIResourcesApplication</type>
- </component>
- 
- <component>
-  <type>org.exoplatform.cloudshell.server.CLIResourceFactory</type>
- </component>
- 
- <component>
+
+   <component>
+      <type>org.exoplatform.ide.IDEServiceApplication</type>
+      <init-params>
+         <value-param>
+            <name>defaultEntryPoint</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>discoverable</name>
+            <value>true</value>
+         </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>template-config</name>
+            <value>/ide-home/templates</value>
+         </value-param>
+      </init-params>
+   </component>
+   <component>
+      <type>org.exoplatform.cloudshell.server.ShellApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.cloudshell.server.rest.CLIResourcesApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.cloudshell.server.CLIResourceFactory</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.services.rest.ext.proxy.ProxyService</type>
    </component>
 
@@ -115,7 +141,7 @@
          </properties-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
       <init-params>
@@ -300,8 +326,8 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-   
-    <external-component-plugins>
+
+   <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
       <component-plugin>
          <name>init.service.listener</name>
@@ -482,5 +508,5 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
- 
+
 </configuration>

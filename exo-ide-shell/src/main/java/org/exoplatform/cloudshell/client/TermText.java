@@ -223,15 +223,12 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
    void printPrompt()
    {
       String path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
-      
+
       path = path.substring(0, path.lastIndexOf("/"));
       path = path.substring(path.lastIndexOf("/"), path.length());
-      if(CloudShell.ENTRY_POINT.endsWith(path + "/"))
+      if (VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
          path = "/";
-//      if (path.endsWith("/"))
-//         path = path.substring(0, path.length() - 1);
-//      if (!path.startsWith("/"))
-//         path = "/" + path;
+      path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.USER_NAME) + ":" + path;
       state.append(path + "$ ");
    }
 
@@ -241,12 +238,9 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       //
       StringBuilder markup = new StringBuilder();
 
-      //
-      //      int lines = 0;
       int from = 0;
       while (true)
       {
-         //         lines++;
          int to = state.indexOf("\n", from);
          markup.append(state, from, to == -1 ? state.length() : to);
          if (to == -1)
@@ -271,15 +265,9 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
       markup.append("<span id=\"crash-cursor\" class=\"crash-cursor\">" + c + "</span>");
       markup.append(after);
-      // Add missing lines
-      //      while (lines++ < height)
-      //      {
-      //         markup.append("&nbsp;\n");
-      //      }
 
-      // Update markup state
       getElement().setInnerHTML(markup.toString());
-      Document.get().setScrollTop(getElement().getScrollHeight());
+      Document.get().setScrollTop(Document.get().getScrollHeight());
    }
 
    private void handleKeyEvent(int keyCode, DomEvent<?> event)

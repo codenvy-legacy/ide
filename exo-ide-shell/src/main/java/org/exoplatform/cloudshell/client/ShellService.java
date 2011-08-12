@@ -18,9 +18,8 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import com.google.gwt.json.client.JSONBoolean;
-
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -29,12 +28,15 @@ import org.exoplatform.cloudshell.client.cli.GnuParser;
 import org.exoplatform.cloudshell.client.cli.Parser;
 import org.exoplatform.cloudshell.client.cli.Util;
 import org.exoplatform.cloudshell.client.marshal.LoginMarshaller;
+import org.exoplatform.cloudshell.client.marshal.ShellConfigurationUnmarshaller;
 import org.exoplatform.cloudshell.client.marshal.StringUnmarshaller;
 import org.exoplatform.cloudshell.client.model.ClientCommand;
+import org.exoplatform.cloudshell.client.model.ShellConfiguration;
 import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter.Type;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -59,6 +61,8 @@ public class ShellService
 
    private final String RESOURCES_PATH = "ide/cli/resources";
 
+   private Loader loader = new EmptyLoader();
+
    public static ShellService getService()
    {
       if (service == null)
@@ -80,6 +84,16 @@ public class ShellService
 
       AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader())
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback)
+   {
+      ShellConfiguration conf = new ShellConfiguration();
+      ShellConfigurationUnmarshaller unmarshaller = new ShellConfigurationUnmarshaller(conf);
+      callback.setPayload(unmarshaller);
+      callback.setResult(conf);
+      callback.setEventBus(CloudShell.EVENT_BUS);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    public void processCommand(String cmd, AsyncRequestCallback<String> callback)
