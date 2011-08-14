@@ -26,6 +26,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -35,99 +36,97 @@ import org.junit.Test;
  * @version $
  */
 
-public class CreateApplicationTest extends BaseTest
-{
+public class CreateApplicationTest extends BaseTest {
 
-   private static final String TEST_FOLDER = CreateApplicationTest.class.getSimpleName();
+	private static final String TEST_FOLDER = CreateApplicationTest.class
+			.getSimpleName();
 
-   @Before
-   public void setUp() throws Exception
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@Before
+	public void setUp() throws Exception {
+		try {
+			VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-   @After
-   public void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+	@After
+	public void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-   /*
-    * - create project folder
-    * - OpenShift > create new domain
-    * - OpenShift > create application
-    * - creation result must be displayed in Output
-    *    ( check name, type, public url ) 
-    */
-   @Test
-   public void testCreateApplication() throws Exception
-   {
-      /*
-       * Wait while IDE has been successfully initialized.
-       */
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      Thread.sleep(1000);
+	/*
+	 * - create project folder - OpenShift > create new domain - OpenShift >
+	 * create application - creation result must be displayed in Output ( check
+	 * name, type, public url )
+	 */
+	/**
+	 * Test added to Ignore, because at the moment he is in progress of develop.
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	@Test
+	public void testCreateApplication() throws Exception {
+		/*
+		 * Wait while IDE has been successfully initialized.
+		 */
+		IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+		Thread.sleep(1000);
 
-      /*
-       * Select TEST FOLDER 
-       */
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+		/*
+		 * Select TEST FOLDER
+		 */
+		IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
 
-      /*
-       * Clear Output
-       */
-      IDE.OUTPUT.clearOutputIfIsOpened();
+		/*
+		 * Clear Output
+		 */
+		IDE.OUTPUT.clearOutputIfIsOpened();
 
-      /*
-       *  Create test domain "domain1"
-       */
-      IDE.OPENSHIFT.createDomain("domain1");
+		/*
+		 * Create test domain "domain1"
+		 */
+		IDE.OPENSHIFT.createDomain("domain1");
 
-      /*
-       * Open Create application form
-       */
-      IDE.OPENSHIFT.CREATE_APPLICATION.openCreateApplicationWindow();
+		/*
+		 * Open Create application form
+		 */
+		IDE.OPENSHIFT.CREATE_APPLICATION.openCreateApplicationWindow();
 
-      /*
-       * Create button must be disabled
-       */
-      assertFalse(IDE.OPENSHIFT.CREATE_APPLICATION.isCreateButtonEnabled());
+		/*
+		 * Create button must be disabled
+		 */
+		assertFalse(IDE.OPENSHIFT.CREATE_APPLICATION.isCreateButtonEnabled());
 
-      /*
-       *  Type "app1" to Application Name field
-       */
-      IDE.OPENSHIFT.CREATE_APPLICATION.typeApplicationName("app1");
+		/*
+		 * Type "app1" to Application Name field
+		 */
+		IDE.OPENSHIFT.CREATE_APPLICATION.typeApplicationName("app1");
 
-      /*
-       * Create button must be enabled
-       */
-      assertTrue(IDE.OPENSHIFT.CREATE_APPLICATION.isCreateButtonEnabled());
+		/*
+		 * Create button must be enabled
+		 */
+		assertTrue(IDE.OPENSHIFT.CREATE_APPLICATION.isCreateButtonEnabled());
 
-      /*
-       * Click Create button
-       */
-      IDE.OPENSHIFT.CREATE_APPLICATION.clickCreateButton();
-      IDE.OPENSHIFT.CREATE_APPLICATION.waitForCreateApplicationWindowNotPresent();      
+		/*
+		 * Click Create button
+		 */
+		IDE.OPENSHIFT.CREATE_APPLICATION.clickCreateButton();
+		IDE.OPENSHIFT.CREATE_APPLICATION
+				.waitForCreateApplicationWindowNotPresent();
 
-      /*
-       * New Application must be created and result must be displayed in Output.
-       */
-      String expectedAppCreatedOutputMessage = "[INFO] Domain domain1 is successfully created.";
-      assertEquals(expectedAppCreatedOutputMessage, IDE.OUTPUT.getOutputMessageText(1));
-   }
+		/*
+		 * New Application must be created and result must be displayed in
+		 * Output.
+		 */
+		String expectedAppCreatedOutputMessage = "[INFO] Domain domain1 is successfully created.";
+		assertEquals(expectedAppCreatedOutputMessage, IDE.OUTPUT
+				.getOutputMessageText(1));
+	}
 
 }
