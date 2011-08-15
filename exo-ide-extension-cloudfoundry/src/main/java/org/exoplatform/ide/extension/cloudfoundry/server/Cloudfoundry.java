@@ -741,14 +741,17 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      deleteApplication(getCredentials(), app, deleteServices);
+      deleteApplication(getCredentials(), app, deleteServices, workDir);
    }
 
-   private void deleteApplication(CloudfoundryCredentials credentials, String app, boolean deleteServices)
+   private void deleteApplication(CloudfoundryCredentials credentials, String app, boolean deleteServices, File workDir)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
       CloudfoundryApplication appInfo = applicationInfo(credentials, app);
       deleteJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), 200);
+      File appnameFile = new File(workDir, ".cloudfoundry-application");
+      if (appnameFile.exists())
+         appnameFile.delete();
       if (deleteServices)
       {
          List<String> services = appInfo.getServices();
