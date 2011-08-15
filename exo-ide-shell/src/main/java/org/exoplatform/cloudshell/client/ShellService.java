@@ -170,7 +170,8 @@ public class ShellService
    {
       if (resource.getParams() == null || resource.getParams().size() <= 0)
          return false;
-
+      //Check only one parameter is specified and its type is BODY.
+      //If there are no options - send whole command line, entered by user.
       if (resource.getParams().size() == 1)
       {
          CLIResourceParameter parameter = resource.getParams().iterator().next();
@@ -178,7 +179,7 @@ public class ShellService
             && (parameter.getOptions() == null || parameter.getOptions().size() == 0))
          {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("cmd", new JSONString(cmd));
+            jsonObject.put(parameter.getName(), new JSONString(cmd));
             asyncRequest.data(jsonObject.toString());
             return false;
          }

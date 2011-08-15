@@ -18,15 +18,13 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import com.google.gwt.user.client.Event;
-
-import com.google.gwt.user.client.ui.TextBox;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 
@@ -52,16 +50,14 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public ShellView()
    {
       setWidth("100%");
-      setHeight("100%");
       setStyleName("shell-container");
       clearButton = createButton("clearButton", "Clear");
 
       termText = new TermText(32);
-      termText.setHeight("100%");
       add(termText);
       RootPanel.get().add(this);
       focusInConsole();
-
+      getElement().setTabIndex(0);
       sinkEvents(Event.ONFOCUS);
    }
 
@@ -220,7 +216,8 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    public void preparePaste()
    {
       textBox = new TextBox();
-      RootPanel.get().add(textBox, -1000, -1000);
+      textBox.getElement().setId("paste-box");
+      RootPanel.get().add(textBox, -1000, getElement().getOffsetHeight() - 2);
       textBox.setFocus(true);
    }
 

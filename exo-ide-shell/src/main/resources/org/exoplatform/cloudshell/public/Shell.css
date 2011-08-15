@@ -46,10 +46,18 @@ html, body
 	outline: 0;
 	width: 99%;
 	margin: auto;
+	height: 100%;
+}
+
+#paste-box {
+	padding: 0px;
+	border: none;
+	height: 1px;
 }
 
 .shell-container {
 	background: #000000;
+	min-height : 100%;
 }
 
 .crash-blink .crash-cursor {
