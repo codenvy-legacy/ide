@@ -210,6 +210,11 @@ public class ShellPresenter implements ConsoleWriter
                   goDown();
                   handled = true;
                }
+               else if(code == KeyCodes.KEY_TAB)
+               {
+                  performComplete();
+                  handled = true;
+               }
                if (handled)
                {
                   display.refreshConsole();

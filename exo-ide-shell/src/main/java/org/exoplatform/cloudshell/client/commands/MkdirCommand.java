@@ -70,7 +70,8 @@ public class MkdirCommand extends ClientCommand
       for (String name : args)
       {
          Folder newFolder =
-            new Folder(VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR) + name);
+            new Folder(Utils.getPath(
+               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), name));
          VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
          {
 

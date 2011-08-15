@@ -18,6 +18,9 @@
  */
 package org.exoplatform.cloudshell.client.commands;
 
+import org.exoplatform.cloudshell.client.EnvironmentVariables;
+import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 11, 2011 evgen $
@@ -42,6 +45,11 @@ public class Utils
       if (!path.endsWith("/"))
       {
          path += "/";
+      }
+      if (path.startsWith("/"))
+      {
+         return VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT)
+            + path.substring(1);
       }
       if (!path.startsWith(".."))
       {
