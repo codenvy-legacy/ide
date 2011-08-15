@@ -347,10 +347,13 @@ public class CloudfoundryService
       @QueryParam("name") String app, //
       @QueryParam("type") String framework, //
       @QueryParam("url") String url, //
+      @DefaultValue("1") @QueryParam("instances") int instances, //
+      @QueryParam("mem") int memory, //
+      @QueryParam("nostart") boolean nostart, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.validateAction(action, app, framework, url, workDir != null
-         ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.validateAction(action, app, framework, url, instances, memory, nostart, workDir != null ? new File(
+         workDir.getLocalPath(uriInfo)) : null);
    }
 }

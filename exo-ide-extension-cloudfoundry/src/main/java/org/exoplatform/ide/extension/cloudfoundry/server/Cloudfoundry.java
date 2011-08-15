@@ -202,9 +202,10 @@ public class Cloudfoundry
       SystemInfo systemInfo = systemInfo(credentials);
       SystemResources limits = systemInfo.getLimits();
       SystemResources usage = systemInfo.getUsage();
-      if (limits != null && usage != null && limits.getApps() == usage.getApps())
-         throw new IllegalStateException("Not enough resources to create new application. "
-            + "Max number of applications (" + limits.getApps() + ") reached. ");
+
+      checkApplicationNumberLimit(limits, usage);
+
+      checkApplicationName(credentials, app);
 
       CloudfoundryApplication appInfo;
       File warFile = null;
@@ -221,42 +222,10 @@ public class Cloudfoundry
                frameworkName = FilesHelper.detectFramework(workDir);
             // If framework cannot be detected.
             if (frameworkName == null)
-               throw new IllegalStateException("Cannot detect application type. ");
+               throw new IllegalStateException("Can't detect application type. ");
          }
 
-         Framework cfg = FRAMEWORKS.get(frameworkName);
-
-         if (cfg == null)
-         {
-            // If framework specified (detected) but not supported.
-            StringBuilder msg = new StringBuilder();
-            msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
-            int i = 0;
-            for (String t : FRAMEWORKS.keySet())
-            {
-               if (i > 0)
-                  msg.append(" or ");
-               msg.append(t);
-               i++;
-            }
-            throw new IllegalArgumentException(msg.toString());
-         }
-
-         try
-         {
-            applicationInfo(credentials, app);
-            throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
-         }
-         catch (CloudfoundryException e)
-         {
-            // Need parse error message to check error code.
-            // If application does not exists then expected code is 301.
-            // NOTE this is not HTTP status but status of Cloudfoundry action.
-            CloudfoundryError err = toError(e);
-            if (301 != err.getCode())
-               throw e;
-            // 301 - Good, application name is not used yet.
-         }
+         Framework cfg = getFramework(frameworkName);
 
          if (appUrl == null)
             appUrl = app + ".cloudfoundry.com";
@@ -270,17 +239,8 @@ public class Cloudfoundry
          String framework = cfg.getType();
 
          // Check memory capacity.
-         if (!nostart //
-            && limits != null && usage != null //
-            && (instances * memory) > (limits.getMemory() - usage.getMemory()))
-         {
-            throw new IllegalStateException("Not enough resources to create new application. " //
-               + "Available memory " + //
-               (limits.getMemory() - usage.getMemory()) //
-               + "M but " //
-               + (instances * memory) //
-               + "M required. ");
-         }
+         if (!nostart)
+            checkAvailableMemory(instances, memory, limits, usage);
 
          String json =
             postJson(credentials.getTarget() + "/apps", credentials.getToken(),
@@ -1201,8 +1161,8 @@ public class Cloudfoundry
       }
    }
 
-   public void validateAction(String action, String app, String framework, String url, File workDir)
-      throws CloudfoundryException, ParsingResponseException, IOException
+   public void validateAction(String action, String app, String frameworkName, String url, int instances, int memory,
+      boolean nostart, File workDir) throws CloudfoundryException, ParsingResponseException, IOException
    {
       if ("create".equals(action))
       {
@@ -1217,17 +1177,28 @@ public class Cloudfoundry
                "text/plain");
          }
          CloudfoundryCredentials credentials = getCredentials();
-         try
-         {
-            // Check is application with specified name exists.
-            applicationInfo(credentials, app);
-         }
-         catch (CloudfoundryException cfe)
-         {
-            CloudfoundryError err = toError(cfe);
-            if (301 != err.getCode())
-               throw cfe;
-         }
+
+         SystemInfo systemInfo = systemInfo(credentials);
+         SystemResources limits = systemInfo.getLimits();
+         SystemResources usage = systemInfo.getUsage();
+
+         checkApplicationNumberLimit(limits, usage);
+
+         checkApplicationName(credentials, app);
+
+         Framework cfg = null;
+         if (frameworkName != null)
+            cfg = getFramework(frameworkName);
+
+         if (instances <= 0)
+            instances = 1;
+
+         if (memory <= 0 && cfg != null)
+            memory = cfg.getMemory();
+
+         // Check memory capacity.
+         if (!nostart)
+            checkAvailableMemory(instances, memory, limits, usage);
       }
       else if ("update".equals(action))
       {
@@ -1245,6 +1216,65 @@ public class Cloudfoundry
    }
 
    /* ---------------------------------------------------------- */
+
+   private void checkApplicationNumberLimit(SystemResources limits, SystemResources usage)
+   {
+      if (limits != null && usage != null && limits.getApps() == usage.getApps())
+         throw new IllegalStateException("Not enough resources to create new application. "
+            + "Max number of applications (" + limits.getApps() + ") reached. ");
+   }
+
+   private void checkAvailableMemory(int instances, int memory, SystemResources limits, SystemResources usage)
+   {
+      if (limits != null && usage != null //
+         && (instances * memory) > (limits.getMemory() - usage.getMemory()))
+         throw new IllegalStateException("Not enough resources to create new application. " //
+            + "Available memory " + //
+            (limits.getMemory() - usage.getMemory()) //
+            + "M but " //
+            + (instances * memory) //
+            + "M required. ");
+   }
+
+   private void checkApplicationName(CloudfoundryCredentials credentials, String app) throws IOException,
+      ParsingResponseException, CloudfoundryException
+   {
+      try
+      {
+         applicationInfo(credentials, app);
+         throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
+      }
+      catch (CloudfoundryException e)
+      {
+         // Need parse error message to check error code.
+         // If application does not exists then expected code is 301.
+         // NOTE this is not HTTP status but status of Cloudfoundry action.
+         CloudfoundryError err = toError(e);
+         if (err == null || 301 != err.getCode())
+            throw e;
+         // 301 - Good, application name is not used yet.
+      }
+   }
+
+   private Framework getFramework(String frameworkName)
+   {
+      Framework cfg = FRAMEWORKS.get(frameworkName);
+      if (cfg == null)
+      {
+         StringBuilder msg = new StringBuilder();
+         msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
+         int i = 0;
+         for (String t : FRAMEWORKS.keySet())
+         {
+            if (i > 0)
+               msg.append(" or ");
+            msg.append(t);
+            i++;
+         }
+         throw new IllegalArgumentException(msg.toString());
+      }
+      return cfg;
+   }
 
    private ProvisionedService findService(CloudfoundryCredentials credentials, String name) throws IOException,
       ParsingResponseException, CloudfoundryException
