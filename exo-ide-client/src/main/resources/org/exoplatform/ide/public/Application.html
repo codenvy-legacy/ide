@@ -20,65 +20,74 @@
 <!-- be added before this line.                -->
 <!--                                           -->
 <script type="text/javascript" language="javascript">
-var registryURL = "/IDE/rest/private/registry/repository";
-var configurationURL ="/IDE/rest/private/ide/configuration/init";
-var proxyServiceContext = "/IDE/rest/private/proxy";
-var appConfig = {
-  "context" : "/IDE/rest/private",
-  "publicContext" : "/IDE/rest",
-  "gadgetServer" : "/IDE/gadgets/",
-  "httpsPort": 8443
-}
-var gitServerContext = "/git";
+	var registryURL = "/IDE/rest/private/registry/repository";
+	var configurationURL = "/IDE/rest/private/ide/configuration/init";
+	var proxyServiceContext = "/IDE/rest/private/proxy";
+	var appConfig = {
+		"context" : "/IDE/rest/private",
+		"publicContext" : "/IDE/rest",
+		"gadgetServer" : "/IDE/gadgets/",
+		"httpsPort" : 8443
+	}
+	var gitServerContext = "/git";
 
-var authorizationPageURL = "/site/index.html";
-var securityCheckURL = "/site/j_security_check";
+	var authorizationPageURL = "/site/index.html";
+	var securityCheckURL = "/site/j_security_check";
 </script>
 
 <script type="text/javascript" language="javascript"
 	src="IDE.nocache.js"></script>
-	
+
 <style type="text/css">
-	.ideMenuAdditions
-	{
-		position: absolute;
-		top: 0px;
-		right: 0px;
-		height:20px;
-		z-index: 999999;
-		padding: 0px;
-		-moz-box-sizing: border-box;
-		overflow: hidden;
-	}
-	
-	.ideMenuAdditionsTable
-	{
-		height:20px;
-	}
-	
-	.ideMenuAdditionsTable td
-	{
-		height:20px;
-		color: #333333;
-		font-family: Verdana,Bitstream Vera Sans,sans-serif;
-	    font-size: 11px;
-	    font-style: normal;
-	    font-weight: normal;
-	    padding-left: 8px;
-	    padding-right: 8px;
-	    cursor: default;	
-	}
-	
-	.ideMenuAdditionsTable td:HOVER
-	{
-		background: url('ui/menu/menu-item-over.png');
-	}
-	
-	.ideMenuAdditionsTable td:ACTIVE {
-		background: url('ui/menu/menu-item-selected.png');
-	}	
-</style>	
-	
+.ideMenuAdditions {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	height: 20px;
+	z-index: 999999;
+	padding: 0px;
+	-moz-box-sizing: border-box;
+	overflow: hidden;
+}
+
+.ideMenuAdditionsTable {
+	height: 20px;
+}
+
+.ideMenuAdditionsTable td {
+	height: 20px;
+	color: #333333;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	font-weight: normal;
+	padding-left: 8px;
+	padding-right: 8px;
+	cursor: default;
+}
+
+.ideMenuAdditionsTable td:HOVER {
+	background: url('ui/menu/menu-item-over.png');
+}
+
+.ideMenuAdditionsTable td:ACTIVE {
+	background: url('ui/menu/menu-item-selected.png');
+}
+
+.ideMenuAdditionsTable td a {
+	height: 20px;
+	color: #333333;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-style: normal;
+	font-weight: normal;
+	padding-left: 8px;
+	padding-right: 8px;
+	cursor: default;
+	text-decoration:none;
+}
+</style>
+
 </head>
 
 <!--                                           -->
@@ -88,7 +97,7 @@ var securityCheckURL = "/site/j_security_check";
 <!--                                           -->
 <body>
 
-<!-- 
+	<!-- 
 <div width="100%" align="right" style="position: absolute; top: 2px; right: 2px; z-index: 999999; padding: 0px; -moz-box-sizing: border-box; overflow: hidden;">                                               
 	<a href="/site/logout.jsp"><b>Logout</b></a>
 </div>
@@ -99,37 +108,36 @@ var securityCheckURL = "/site/j_security_check";
 
 -->
 
-<div id="ide-menu-additions" alidn="right" class="ideMenuAdditions">
-	<table cellspacing="0" cellpadding="0" border="0" class="ideMenuAdditionsTable">
-		<tr id="ide-menu-additions-rows">
-		</tr>
-	</table>
-</div>
+	<div id="ide-menu-additions" alidn="right" class="ideMenuAdditions">
+		<table cellspacing="0" cellpadding="0" border="0"
+			class="ideMenuAdditionsTable">
+			<tr id="ide-menu-additions-rows">
+			</tr>
+		</table>
+	</div>
 
-<script type="text/javascript">
+	<script type="text/javascript">
+		function addMenuAddition(html) {
+			var tr = document.getElementById("ide-menu-additions-rows");
+			var td = document.createElement("td");
+			td.innerHTML = html;
+			tr.appendChild(td);
+		}
+	</script>
 
-function addMenuAddition(html) {
-	var tr = document.getElementById("ide-menu-additions-rows");
-	var td = document.createElement("td");
-	td.innerHTML = html;
-	tr.appendChild(td);	
-}
-
-</script>
-
-<!--
+	<!--
 		LOGOUT, SHELL links
 -->
-<script type="text/javascript">
-	var htmlLogout = "<span onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
-	addMenuAddition(htmlLogout);
-	
-	var htmlShell = "<a href=\"/shell/Shell.html\" target=\"_blank\"><b>Shell</b></a>";
-	addMenuAddition(htmlShell);
-</script>
+	<script type="text/javascript">
+		var htmlShell = "<a href=\"/shell/Shell.html\" target=\"_blank\">Shell</a>";
+		addMenuAddition(htmlShell);
 
-<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+		var htmlLogout = "<span onClick=\"window.location = '/site/logout.jsp';\">Logout</span>";
+		addMenuAddition(htmlLogout);
+	</script>
+
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 </body>
 
 </html>
