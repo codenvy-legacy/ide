@@ -31,7 +31,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryCon
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.MapUrlControl;
-import org.exoplatform.ide.extension.cloudfoundry.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
@@ -43,7 +42,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter;
-import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
@@ -88,7 +86,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UpdateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
+      //rename doesn't work
+//      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ApplicationInfoControl(), DockTarget.NONE, false);
       
       IDE.getInstance().addControl(new StartApplicationControl(), DockTarget.NONE, false);
@@ -106,7 +105,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new StartApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
       new UpdateApplicationPresenter(eventBus);
-      new RenameApplicationPresenter(eventBus);
+//      new RenameApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
       new MapUrlPresenter(eventBus);
       new UnmapUrlPresenter(eventBus);
