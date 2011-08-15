@@ -67,7 +67,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
       HasValue<String> getTypeField();
       
-      HasValue<Boolean> getChangeTypeCheckItem();
+      HasValue<Boolean> getAutodetectTypeCheckItem();
       
       HasValue<String> getNameField();
       
@@ -149,11 +149,11 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          @Override
          public void onClick(ClickEvent event)
          {
-            buildApplication();
+            validate();
          }
       });
       
-      display.getChangeTypeCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      display.getAutodetectTypeCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          @Override
          public void onValueChange(ValueChangeEvent<Boolean> event)
@@ -217,7 +217,8 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             //if url set automatically, than concatenate name field value and ".cloudfoundry.com"
             if (!display.getCustomUrlCheckItem().getValue())
             {
-               display.getUrlField().setValue(display.getNameField().getValue() + ".cloudfoundry.com");
+               String name = display.getNameField().getValue().toLowerCase();
+               display.getUrlField().setValue(name + ".cloudfoundry.com");
             }
          }
       });
@@ -229,7 +230,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
-      display.getChangeTypeCheckItem().setValue(true);
+      display.getAutodetectTypeCheckItem().setValue(true);
       display.focusInNameField();
       String projectName = "";
       if (selectedItems != null && !selectedItems.isEmpty())
@@ -237,10 +238,10 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          projectName = selectedItems.get(0).getName();
          display.getNameField().setValue(projectName);
       }
-      display.getUrlField().setValue(projectName + DEFAULT_APPLICATION_URL);
+      display.getUrlField().setValue(projectName.toLowerCase() + DEFAULT_APPLICATION_URL);
    }
    
-   LoggedInHandler loggedInHandler = new LoggedInHandler()
+   LoggedInHandler createAppHandler = new LoggedInHandler()
    {
       
       @Override
@@ -250,42 +251,78 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
    };
    
-   private void buildApplication()
+   private void validate()
    {
 
       name = display.getNameField().getValue();
-      type = null;
-      if (!display.getChangeTypeCheckItem().getValue())
+      if (display.getAutodetectTypeCheckItem().getValue())
       {
-         type = findFrameworkByName(display.getTypeField().getValue()).getType();
+         type = null;
+         memory = 0;
+      }
+      else
+      {
+         Framework framework = findFrameworkByName(display.getTypeField().getValue());
+         type = framework.getType();
          try
          {
             memory = Integer.parseInt(display.getMemoryField().getValue());
          }
          catch (NumberFormatException e)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorNumberFormat()));
+            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
             return;
          }
       }
-      else
+      url = display.getUrlField().getValue();
+      try
       {
-         memory = 0;
+         instances = Integer.parseInt(display.getInstancesField().getValue());
       }
-      url = (display.getCustomUrlCheckItem().getValue()) ? display.getUrlField().getValue() : null;
-      instances = Integer.parseInt(display.getInstancesField().getValue());
+      catch (NumberFormatException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         return;
+      }
       nostart = !display.getIsStartAfterCreationCheckItem().getValue();
       workDir = selectedItems.get(0).getWorkDir();
       
+      validateData();
+   }
+   
+   private LoggedInHandler validateHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         validateData();
+      }
+   };
+   
+   private void validateData()
+   {
+      CloudFoundryClientService.getInstance().validateAction("create", name, type, url, workDir,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               buildApplication();
+               closeView();
+            }
+         });
+   }
+   
+   private void buildApplication()
+   {
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildApplicationEvent());
-      closeView();
    }
    
    private void createApplication()
    {
       CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, loggedInHandler, null)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null)
       {
          @Override
          protected void onSuccess(CloudfoundryApplication result)

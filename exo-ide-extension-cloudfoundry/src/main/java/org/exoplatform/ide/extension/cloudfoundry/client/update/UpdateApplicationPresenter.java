@@ -94,7 +94,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
          return;
       }
       
-      workDir = selectedItems.get(0).getHref();
+      workDir = selectedItems.get(0).getWorkDir();
    }
 
    /**
@@ -103,8 +103,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent());
+      validateData();
    }
    
    private void updateApplication()
@@ -137,5 +136,33 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
       {
          eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
       }
+   }
+   
+   private LoggedInHandler validateHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         validateData();
+      }
+   };
+   
+   private void validateData()
+   {
+      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, workDir,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               buildApplication();
+            }
+         });
+   }
+   
+   private void buildApplication()
+   {
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildApplicationEvent());
    }
 }

@@ -78,6 +78,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    
    private static final String UPDATE_INSTANCES = BASE_URL + "/apps/instances";
    
+   private static final String VALIDATE_ACTION = BASE_URL + "/apps/validate-action";
+   
    /**
     * Events handler.
     */
@@ -159,8 +161,12 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    @Override
    public void logout(AsyncRequestCallback<String> callback)
    {
-      // TODO Auto-generated method stub
+      String url = restServiceContext + LOGOUT;
       
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, url, loader)
+      .send(callback);
    }
 
    /**
@@ -429,6 +435,27 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void validateAction(String action, String appName, String framework, String url, String workDir,
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String postUrl = restServiceContext + VALIDATE_ACTION;
+      
+      String params = "action=" + action;
+      params += (appName == null) ? "" : "&name=" + appName;
+      params += (framework == null) ? "" : "&type=" + framework;
+      params += (url == null) ? "" : "&url=" + url;
+      params += (workDir == null) ? "" : "&workdir=" + workDir;
+
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params, loader)
          .send(callback);
    }
 

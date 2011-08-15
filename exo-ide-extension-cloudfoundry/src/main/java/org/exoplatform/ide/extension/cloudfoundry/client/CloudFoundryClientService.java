@@ -129,7 +129,7 @@ public abstract class CloudFoundryClientService
     * @param workDir the location of application
     * @param name application name
     * @param war location of war file (Java applications only)
-    * @param callback callback, that client has to implement to receive response from server.
+    * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void updateApplication(String workDir, String name, String war,
       CloudFoundryAsyncRequestCallback<String> callback);
@@ -147,6 +147,18 @@ public abstract class CloudFoundryClientService
       CloudFoundryAsyncRequestCallback<String> callback);
    
    public abstract void updateInstances(String workDir, String name, String expression,
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   /**
+    * Validates action before building project.
+    * @param action the name of action (create, update)
+    * @param appName the name of application (if create - than required, if update - <code>null</code>)
+    * @param framework the name of application framework (can be <code>null</code>)
+    * @param url application URL
+    * @param workDir the work dir of application
+    * @param callback callback, that client has to implement to handle response from server.
+    */
+   public abstract void validateAction(String action, String appName, String framework, String url, String workDir,
       CloudFoundryAsyncRequestCallback<String> callback);
 
 }

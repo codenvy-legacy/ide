@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
-//import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-//import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
-//import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
@@ -71,6 +69,15 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
                   && serverException.getMessage().contains("Authentication required."))
          {
             eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));
+            return;
+         }
+         else
+         {
+
+            String msg =
+               serverException.isErrorMessageProvided() ? serverException.getLocalizedMessage() : "Status:&nbsp;"
+                  + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+            Dialogs.getInstance().showError(msg);
             return;
          }
       }

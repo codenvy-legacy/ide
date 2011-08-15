@@ -223,10 +223,10 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getChangeTypeCheckItem()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getAutodetectTypeCheckItem()
     */
    @Override
-   public HasValue<Boolean> getChangeTypeCheckItem()
+   public HasValue<Boolean> getAutodetectTypeCheckItem()
    {
       return changeTypeField;
    }
