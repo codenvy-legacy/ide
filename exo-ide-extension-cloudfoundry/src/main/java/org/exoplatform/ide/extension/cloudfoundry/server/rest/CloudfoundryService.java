@@ -165,7 +165,7 @@ public class CloudfoundryService
       return cloudfoundry.restartApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
-   @Path("apps/rename")
+   /*@Path("apps/rename")
    @POST
    public void renameApplication( //
       @QueryParam("name") String app, //
@@ -175,7 +175,7 @@ public class CloudfoundryService
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
       cloudfoundry.renameApplication(app, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
-   }
+   }*/
 
    @Path("apps/update")
    @POST
