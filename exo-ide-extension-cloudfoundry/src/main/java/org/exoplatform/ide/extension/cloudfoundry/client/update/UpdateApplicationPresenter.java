@@ -21,6 +21,9 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -115,7 +118,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
             protected void onSuccess(String result)
             {
                eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                  .updateApplicationSuccess(result), Type.INFO));
+                  .updateApplicationSuccess(), Type.INFO));
             }
          });
    }
@@ -149,15 +152,54 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    
    private void validateData()
    {
-      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, workDir,
+      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, workDir, 0, 0, false,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               buildApplication();
+               isBuildApplication(workDir);
             }
          });
+   }
+   
+   /**
+    * Check, is work dir contains <code>pom.xml</code> file,
+    * that starts build project.
+    * <p/>
+    * Otherwise, create Cloud Foundry application.
+    * 
+    * @param workDir
+    */
+   private void isBuildApplication(String workDir)
+   {
+      CloudFoundryClientService.getInstance().checkFileExists(workDir, "pom.xml", new AsyncRequestCallback<String>(eventBus)
+      {
+         @Override
+         protected void onSuccess(String result)
+         {
+            buildApplication();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               ServerException serverException = (ServerException)exception;
+               if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
+               {
+                  updateApplication();
+                  return;
+               }
+               else
+               {
+                  super.onFailure(exception);
+               }
+            }
+            super.onFailure(exception);
+         }
+      });
    }
    
    private void buildApplication()

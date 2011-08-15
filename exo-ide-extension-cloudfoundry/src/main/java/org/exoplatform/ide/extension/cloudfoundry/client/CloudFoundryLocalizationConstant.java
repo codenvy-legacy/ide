@@ -246,7 +246,7 @@ public interface CloudFoundryLocalizationConstant extends Messages
     * UpdateApplicationPresenter
     */
    @Key("update.applicationUpdated")
-   String updateApplicationSuccess(String name);
+   String updateApplicationSuccess();
    
    /*
     * Messages

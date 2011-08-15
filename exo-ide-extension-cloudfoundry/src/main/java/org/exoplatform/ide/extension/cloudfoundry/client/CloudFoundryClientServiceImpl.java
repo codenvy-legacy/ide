@@ -443,7 +443,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void validateAction(String action, String appName, String framework, String url, String workDir,
-      CloudFoundryAsyncRequestCallback<String> callback)
+      int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
       
@@ -457,6 +457,19 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       
       AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params, loader)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#checkFileExists(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void checkFileExists(String location, String fileName, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext + "/ide/discovery/find/content?location=" + location + "&name=" + fileName;
+      
+      callback.setEventBus(eventBus);
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

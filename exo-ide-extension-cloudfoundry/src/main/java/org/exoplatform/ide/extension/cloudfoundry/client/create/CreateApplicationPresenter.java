@@ -28,6 +28,9 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -301,16 +304,56 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    
    private void validateData()
    {
-      CloudFoundryClientService.getInstance().validateAction("create", name, type, url, workDir,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+      CloudFoundryClientService.getInstance().validateAction("create", name, type, url, workDir, instances, memory,
+         nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               buildApplication();
-               closeView();
+               isBuildApplication(workDir);
             }
          });
+   }
+   
+   /**
+    * Check, is work dir contains <code>pom.xml</code> file,
+    * that starts build project.
+    * <p/>
+    * Otherwise, create Cloud Foundry application.
+    * 
+    * @param workDir
+    */
+   private void isBuildApplication(String workDir)
+   {
+      CloudFoundryClientService.getInstance().checkFileExists(workDir, "pom.xml", new AsyncRequestCallback<String>(eventBus)
+      {
+         @Override
+         protected void onSuccess(String result)
+         {
+            buildApplication();
+            closeView();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               ServerException serverException = (ServerException)exception;
+               if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
+               {
+                  createApplication();
+                  closeView();
+                  return;
+               }
+               else
+               {
+                  super.onFailure(exception);
+               }
+            }
+            super.onFailure(exception);
+         }
+      });
    }
    
    private void buildApplication()

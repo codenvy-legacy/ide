@@ -74,9 +74,15 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
          else
          {
 
-            String msg =
-               serverException.isErrorMessageProvided() ? serverException.getLocalizedMessage() : "Status:&nbsp;"
-                  + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+            String msg = "";
+            if (serverException.isErrorMessageProvided())
+            {
+               msg = serverException.getLocalizedMessage();
+            }
+            else
+            {
+               msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+            }
             Dialogs.getInstance().showError(msg);
             return;
          }
