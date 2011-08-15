@@ -51,7 +51,7 @@ public class CdCommand extends ClientCommand
     */
    public CdCommand()
    {
-      super(commads, new Options(), "Changes the current folder");
+      super(commads, new Options(), CloudShell.messages.cdHelp());
    }
 
    /**
@@ -62,6 +62,13 @@ public class CdCommand extends ClientCommand
    {
       List<String> args = commandLine.getArgList();
       args.remove(0);
+
+      if (commandLine.hasOption('h'))
+      {
+         printHelp(CloudShell.messages.cdUsage());
+         return;
+      }
+
       if (args.isEmpty())
       {
          CloudShell.console().printPrompt();
@@ -81,7 +88,7 @@ public class CdCommand extends ClientCommand
       }
       else
       {
-         CloudShell.console().print("Can't parse arguments \n");
+         CloudShell.console().print(CloudShell.messages.cdError() + "\n");
       }
    }
 
@@ -107,7 +114,7 @@ public class CdCommand extends ClientCommand
          protected void onFailure(Throwable exception)
          {
             super.onFailure(exception);
-            CloudShell.console().print(newFolder.getName() + " not a folder or folder not exist.\n");
+            CloudShell.console().print(CloudShell.messages.cdErrorFolder(newFolder.getName()) + "\n");
          }
       });
    }

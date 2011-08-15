@@ -418,7 +418,7 @@ public class HelpFormatter
         PrintWriter pw = new PrintWriter();
 
         printHelp(pw, width, cmdLineSyntax, header, options, defaultLeftPad, defaultDescPad, footer, autoUsage);
-//        pw.flush();
+        pw.flush();
     }
 
     /**

@@ -353,4 +353,22 @@ public class ShellPresenter implements ConsoleWriter
    {
       display.printPrompt();
    }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ConsoleWriter#printToBuffer(java.lang.String)
+    */
+   @Override
+   public void printToBuffer(String str)
+   {
+      display.printToBuffer(str);
+   }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ConsoleWriter#flush()
+    */
+   @Override
+   public void flush()
+   {
+      display.flush();
+   }
 }

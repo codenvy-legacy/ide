@@ -18,8 +18,6 @@
  */
 package org.exoplatform.cloudshell.client.commands;
 
-import com.google.gwt.http.client.Request;
-
 import org.exoplatform.cloudshell.client.CloudShell;
 import org.exoplatform.cloudshell.client.EnvironmentVariables;
 import org.exoplatform.cloudshell.client.cli.CommandLine;
@@ -53,7 +51,7 @@ public class RmCommand extends ClientCommand
     */
    public RmCommand()
    {
-      super(commads, new Options(), "Remove file or folder");
+      super(commads, new Options(), CloudShell.messages.rmHelp());
    }
 
    /**
@@ -62,6 +60,11 @@ public class RmCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
+      if (commandLine.hasOption("h"))
+      {
+         printHelp(CloudShell.messages.rmUsage(), CloudShell.messages.rmHeader());
+         return;
+      }
       List<String> args = commandLine.getArgList();
       args.remove(commads.iterator().next());
       if (args.size() == 1)
@@ -72,13 +75,13 @@ public class RmCommand extends ClientCommand
                VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
          VirtualFileSystem.getInstance().deleteItem(deleteItem, new AsyncRequestCallback<Item>()
          {
-            
+
             @Override
             protected void onSuccess(Item result)
             {
                CloudShell.console().printPrompt();
             }
-            
+
             /**
              * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
              */

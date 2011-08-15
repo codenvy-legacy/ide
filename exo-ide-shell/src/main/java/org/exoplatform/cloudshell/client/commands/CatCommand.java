@@ -18,8 +18,6 @@
  */
 package org.exoplatform.cloudshell.client.commands;
 
-import com.google.gwt.user.client.Window;
-
 import org.exoplatform.cloudshell.client.CloudShell;
 import org.exoplatform.cloudshell.client.EnvironmentVariables;
 import org.exoplatform.cloudshell.client.cli.CommandLine;
@@ -62,7 +60,7 @@ public class CatCommand extends ClientCommand
     */
    public CatCommand()
    {
-      super(commads, new Options(), "Concatenate files and print on the console");
+      super(commads, new Options(), CloudShell.messages.catHelp());
    }
 
    /**
@@ -73,9 +71,22 @@ public class CatCommand extends ClientCommand
    {
       List<String> args = commandLine.getArgList();
       args.remove(0);
-      files = args;
-      out.setLength(0);
-      getNextContent();
+      if (commandLine.hasOption("h"))
+      {
+         printHelp(CloudShell.messages.catUsage(commads.iterator().next()));
+         return;
+      }
+
+      if (args.isEmpty())
+      {
+         printHelp(CloudShell.messages.catUsage(commads.iterator().next()));
+      }
+      else
+      {
+         files = args;
+         out.setLength(0);
+         getNextContent();
+      }
    }
 
    private void getNextContent()
@@ -115,12 +126,12 @@ public class CatCommand extends ClientCommand
                      @Override
                      protected void onFailure(Throwable exception)
                      {
-                        CloudShell.console().print("Can't get file content" + "\n");
+                        CloudShell.console().print(CloudShell.messages.catGetFileContentError() + "\n");
                      }
                   });
                else
                {
-                  CloudShell.console().print(files.get(0) + " is a directory\n");
+                  CloudShell.console().print(CloudShell.messages.catFolderError(files.get(0)) + "\n");
                }
 
             }
@@ -131,7 +142,7 @@ public class CatCommand extends ClientCommand
             @Override
             protected void onFailure(Throwable exception)
             {
-               CloudShell.console().print(files.get(0) + " not found\n");
+               CloudShell.console().print(CloudShell.messages.catFileNotFound(files.get(0)) + "\n");
             }
          });
 

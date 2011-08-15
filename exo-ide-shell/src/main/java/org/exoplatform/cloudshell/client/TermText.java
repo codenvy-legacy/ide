@@ -220,6 +220,11 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       printPrompt();
    }
 
+   void printToBuffer(String text)
+   {
+      state.append(text);
+   }
+
    void printPrompt()
    {
       String path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);

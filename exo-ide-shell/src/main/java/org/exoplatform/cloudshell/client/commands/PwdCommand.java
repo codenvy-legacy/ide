@@ -48,7 +48,7 @@ public class PwdCommand extends ClientCommand
     */
    public PwdCommand()
    {
-      super(commads, new Options(), "Print current folder path");
+      super(commads, new Options(), CloudShell.messages.pwdHelp());
    }
 
    /**
@@ -57,6 +57,11 @@ public class PwdCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
+      if(commandLine.hasOption("h"))
+      {
+         printHelp(CloudShell.messages.pwdUsage(), CloudShell.messages.pwdHeader());
+         return;
+      }
       String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
       String entryPoint = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT);
       workdir = workdir.substring(entryPoint.length() - 1);

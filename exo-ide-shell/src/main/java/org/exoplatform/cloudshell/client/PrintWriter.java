@@ -25,10 +25,15 @@ package org.exoplatform.cloudshell.client;
 */
 public class PrintWriter
 {
-   
+
    public void println(String s)
    {
-     // TODO CloudShell.term.print(s);
+      CloudShell.console().printToBuffer(s + "\n");
+   }
+
+   public void flush()
+   {
+      CloudShell.console().flush();
    }
 
 }

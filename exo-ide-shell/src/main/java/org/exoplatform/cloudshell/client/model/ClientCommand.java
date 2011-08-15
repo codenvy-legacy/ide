@@ -19,6 +19,7 @@
 package org.exoplatform.cloudshell.client.model;
 
 import org.exoplatform.cloudshell.client.cli.CommandLine;
+import org.exoplatform.cloudshell.client.cli.HelpFormatter;
 import org.exoplatform.cloudshell.client.cli.Options;
 import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.cloudshell.shared.CLIResourceParameter;
@@ -54,6 +55,7 @@ public abstract class ClientCommand extends CLIResource
    {
       super(command, null, null, null, null, null, description);
       this.options = options;
+      options.addOption("h", false, "display this help");
    }
 
    /**
@@ -62,6 +64,17 @@ public abstract class ClientCommand extends CLIResource
    public Options getOptions()
    {
       return options;
+   }
+
+   public void printHelp(String usage)
+   {
+      printHelp(usage, null);
+   }
+
+   public void printHelp(String usage, String header)
+   {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp(usage, header, options, null);
    }
 
    public abstract void execute(CommandLine commandLine);

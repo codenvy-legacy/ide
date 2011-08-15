@@ -27,6 +27,17 @@ public interface ConsoleWriter
 {
    void print(String str);
    
+   /**
+    * Print to console buffer(without add prompt on each call this method)
+    * @param str
+    */
+   void printToBuffer(String str);
+   
+   /**
+    * Refresh console
+    */
+   void flush();
+   
    void printPrompt();
    
    void clearConsole();

@@ -235,4 +235,23 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
       refreshConsole();
       focusInConsole();
    }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ConsoleWriter#printToBuffer(java.lang.String)
+    */
+   @Override
+   public void printToBuffer(String str)
+   {
+      termText.printToBuffer(str);
+   }
+
+   /**
+    * @see org.exoplatform.cloudshell.client.ConsoleWriter#flush()
+    */
+   @Override
+   public void flush()
+   {
+      termText.printPrompt();
+      termText.repaint();
+   }
 }

@@ -49,7 +49,7 @@ public class HelpCommand extends ClientCommand
     */
    public HelpCommand()
    {
-      super(commands, new Options(), "Type 'help' to see this list");
+      super(commands, new Options(), CloudShell.messages.helpHelp());
    }
    /**
     * @see org.exoplatform.cloudshell.client.model.ClientCommand#execute(org.exoplatform.cloudshell.client.cli.CommandLine)

@@ -40,13 +40,13 @@ public class ClearCommand extends ClientCommand
    {
       commads.add("clear");
    }
-   
+
    /**
     * 
     */
    public ClearCommand()
    {
-     super(commads, new Options(), "Clear the shell screen");
+      super(commads, new Options(), CloudShell.messages.clearHelp());
    }
 
    /**

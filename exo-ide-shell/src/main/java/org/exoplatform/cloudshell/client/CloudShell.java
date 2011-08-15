@@ -3,7 +3,6 @@ package org.exoplatform.cloudshell.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.i18n.client.Messages;
 
 import org.exoplatform.cloudshell.client.commands.CatCommand;
 import org.exoplatform.cloudshell.client.commands.CdCommand;
@@ -23,7 +22,7 @@ import java.util.Set;
  */
 public class CloudShell implements EntryPoint
 {
-   private static final Messages messages = GWT.create(Messages.class);
+   public static final Messages messages = GWT.create(Messages.class);
 
    static ConsoleWriter consoleWriter;
 

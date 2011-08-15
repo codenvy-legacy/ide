@@ -51,7 +51,7 @@ public class MkdirCommand extends ClientCommand
     */
    public MkdirCommand()
    {
-      super(commads, new Options(), "Create new folder");
+      super(commads, new Options(), CloudShell.messages.mkdirHelp());
    }
 
    /**
@@ -60,11 +60,16 @@ public class MkdirCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
+      if (commandLine.hasOption("h"))
+      {
+         printHelp(CloudShell.messages.mkdirUsage(), CloudShell.messages.mkdirHeader());
+         return;
+      }
       List<String> args = commandLine.getArgList();
       args.remove(0);
       if (args.isEmpty())
       {
-         CloudShell.console().print("mkdir: missing folder name \n");
+         CloudShell.console().print(CloudShell.messages.mkdirError() + "\n");
          return;
       }
       for (String name : args)

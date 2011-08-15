@@ -52,7 +52,7 @@ public class LsCommand extends ClientCommand
     */
    public LsCommand()
    {
-      super(commads, new Options(), "List information about the files and folders in the current directory.");
+      super(commads, new Options(), CloudShell.messages.lsHelp());
    }
 
    /**
@@ -63,6 +63,12 @@ public class LsCommand extends ClientCommand
    {
       List<String> args = commandLine.getArgList();
       args.remove(0);
+
+      if (commandLine.hasOption("h"))
+      {
+         printHelp(CloudShell.messages.lsUsage(), CloudShell.messages.lsHeader());
+         return;
+      }
       String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
       if (args.size() == 0)
       {
@@ -99,7 +105,7 @@ public class LsCommand extends ClientCommand
          @Override
          protected void onFailure(Throwable exception)
          {
-            CloudShell.console().print(path + " not a folder.\n");
+            CloudShell.console().print(CloudShell.messages.lsError(path) + "\n");
          }
       });
    }
