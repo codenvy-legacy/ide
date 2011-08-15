@@ -451,6 +451,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       params += (appName == null) ? "" : "&name=" + appName;
       params += (framework == null) ? "" : "&type=" + framework;
       params += (url == null) ? "" : "&url=" + url;
+      params += "&instances=" + instances;
+      params += "&mem=" + memory;
+      params += "&nostart=" + nostart;
       params += (workDir == null) ? "" : "&workdir=" + workDir;
 
       callback.setEventBus(eventBus);
