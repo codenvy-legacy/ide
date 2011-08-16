@@ -129,7 +129,7 @@ public interface MenuCommands
 
       String OLDER_VERSION = "Older Version";
       
-      String LOG_READER = "LogReader";
+      String LOG_READER = "Log";
 
    }
 
