@@ -219,10 +219,12 @@ public class ShellService
          String value = "";
          for (String type : resource.getProduces())
          {
-            value += "," + type;
+            value += (MimeType.TEXT_PLAIN.equals(type)) ? "," + type + ";q=0.6" : "," + type + ";q=0.4";
          }
          //Remove last separator:
          value = value.replaceFirst(",", "");
+         //TODO temporary solution to get response in "text/plain" format, if there is method, that produces it.
+         value = (value.contains(MimeType.TEXT_PLAIN)) ? value : MimeType.TEXT_PLAIN + ";q=0.6," + value;
          asyncRequest.header(HTTPHeader.ACCEPT, value);
       }
    }
