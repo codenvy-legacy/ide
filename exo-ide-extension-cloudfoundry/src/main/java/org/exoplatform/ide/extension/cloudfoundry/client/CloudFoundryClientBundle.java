@@ -134,5 +134,11 @@ public interface CloudFoundryClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/app_memory_Disabled.png")
    ImageResource appMemoryDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/settings.png")
+   ImageResource settings();
+
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/settings_Disabled.png")
+   ImageResource settingsDisabled();
 
 }

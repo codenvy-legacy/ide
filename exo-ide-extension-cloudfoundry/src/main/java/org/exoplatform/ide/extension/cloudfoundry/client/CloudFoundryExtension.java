@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicati
 import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.MapUrlControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.RestartApplicationControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.SettingsControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StartApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.StopApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.UnmapUrlControl;
@@ -99,6 +100,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       
       IDE.getInstance().addControl(new UpdateMemoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UpdateInstancesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new SettingsControl(), DockTarget.NONE, false);
       
       new CreateApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);

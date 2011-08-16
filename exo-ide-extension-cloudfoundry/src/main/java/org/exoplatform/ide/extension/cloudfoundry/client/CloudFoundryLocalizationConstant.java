@@ -167,6 +167,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.updInstances.prompt")
    String updateInstancesControlPrompt();
    
+   @Key("control.settings.id")
+   String settingsControlId();
+   
+   @Key("control.settings.title")
+   String settingsControlTitle();
+   
+   @Key("control.settings.prompt")
+   String settingsControlPrompt();
+   
    /*
     * LoginView.
     */
