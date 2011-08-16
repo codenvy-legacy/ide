@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -74,7 +73,7 @@ public class LogReaderView extends ViewImpl implements LogReaderPresenter.Displa
 
    public LogReaderView()
    {
-      super(ID, ViewType.OPERATION, "Log Reader", new Image(LogReaderClientBundle.INSTANCE.logReader()));
+      super(ID, ViewType.OPERATION, "Log", new Image(LogReaderClientBundle.INSTANCE.logReader()));
       add(uiBinder.createAndBindUi(this));
 
       prevLogButton =

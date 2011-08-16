@@ -36,17 +36,17 @@ public class LogReaderControl extends SimpleControl implements IDEControl
    /**
     * Control ID.
     */
-   public static final String ID = "View/Log Reader";
+   public static final String ID = "View/Log";
 
    /**
     * Control's title.
     */
-   public static final String TITLE = "LogReader";
+   public static final String TITLE = "Log";
 
    /**
    * Control's prompt, when user hovers the mouse on it.
    */
-   public static final String PROMPT = "Show LogReader form";
+   public static final String PROMPT = "Show Log form";
 
    public LogReaderControl()
    {
