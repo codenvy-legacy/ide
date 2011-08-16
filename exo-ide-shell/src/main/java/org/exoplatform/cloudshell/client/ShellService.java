@@ -104,7 +104,7 @@ public class ShellService
       List<CLIResource> appropriateCommands = findAppropriateCommands(cmd);
       if (appropriateCommands.size() <= 0)
       {
-         CloudShell.console().print("No appropriate command is found for : " + cmd + "\n");
+         CloudShell.console().print(CloudShell.messages.noAppropriateCommandError(cmd));
       }
       else if (appropriateCommands.size() == 1)
       {
@@ -151,7 +151,7 @@ public class ShellService
          {
             e.printStackTrace();
             //TODO
-            CloudShell.console().print("Syntax error in : " + cmd + "\n");
+            CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
          }
       }
       else
@@ -287,8 +287,8 @@ public class ShellService
             List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
             if ((values == null || values.size() == 0) && parameter.isMandatory())
             {
-               throw new MandatoryParameterNotFoundException("Required argument " + parameter.getName()
-                  + " is not found.");
+               throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredArgumentNotFound(parameter
+                  .getName()));
             }
             else if (values != null && values.size() > 0)
             {
@@ -302,8 +302,8 @@ public class ShellService
 
             if (parameter.isMandatory() && value == null)
             {
-               throw new MandatoryParameterNotFoundException("Required option "
-                  + optionsToString(parameter.getOptions()) + " is not found.");
+               throw new MandatoryParameterNotFoundException(
+                  CloudShell.messages.requiredOptionNotFound(optionsToString(parameter.getOptions())));
             }
             else if (value != null)
             {
@@ -384,8 +384,8 @@ public class ShellService
             List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
             if ((values == null || values.size() == 0) && param.isMandatory())
             {
-               throw new MandatoryParameterNotFoundException("Required argument [" + param.getName()
-                  + "] is not found.");
+               throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredArgumentNotFound(param
+                  .getName()));
             }
             else if (values != null && values.size() > 0)
             {
@@ -397,8 +397,8 @@ public class ShellService
             String value = getOptionValue(param.getOptions(), commandLine);
             if (param.isMandatory() && value == null)
             {
-               throw new MandatoryParameterNotFoundException("Required option " + optionsToString(param.getOptions())
-                  + " is not found.");
+               throw new MandatoryParameterNotFoundException(
+                  CloudShell.messages.requiredOptionNotFound(optionsToString(param.getOptions())));
             }
             query += param.getName() + "=" + value + "&";
          }
@@ -495,8 +495,8 @@ public class ShellService
             String value = getOptionValue(parameter.getOptions(), commandLine);
             if (parameter.isMandatory() && value == null)
             {
-               throw new MandatoryParameterNotFoundException("Required option "
-                  + optionsToString(parameter.getOptions()) + " is not found.");
+               throw new MandatoryParameterNotFoundException(
+                  CloudShell.messages.requiredOptionNotFound(optionsToString(parameter.getOptions())));
             }
             asyncRequest.header(parameter.getName(), value);
          }
@@ -516,7 +516,7 @@ public class ShellService
       String value = VirtualFileSystem.getInstance().getEnvironmentVariable(propertyName);
       if (value == null && parameter.isMandatory())
       {
-         throw new MandatoryParameterNotFoundException("Required property " + propertyName + " is not set.");
+         throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredPropertyNotSet(propertyName));
       }
       return value;
    }

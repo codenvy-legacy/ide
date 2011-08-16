@@ -99,4 +99,23 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
    
    @Key("rm.header")
    String rmHeader();
+   
+   //Errors
+   @Key("commands.unmarshaller.error")
+   String commandsUnmarshallerError();
+   
+   @Key("no.appropriate.command")
+   String noAppropriateCommandError(String command);
+   
+   @Key("syntax.error")
+   String syntaxtError(String command);
+   
+   @Key("required.argument.not.found")
+   String requiredArgumentNotFound(String command);
+   
+   @Key("required.option.not.found")
+   String requiredOptionNotFound(String command);
+   
+   @Key("required.property.not.set")
+   String requiredPropertyNotSet(String property);
 }

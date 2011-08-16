@@ -91,8 +91,7 @@ public class CLIResourceUnmarshaller implements Unmarshallable, Constants
       catch (Exception e)
       {
          e.printStackTrace();
-         //TODO
-         throw new UnmarshallerException("");
+         throw new UnmarshallerException(CloudShell.messages.commandsUnmarshallerError());
       }
    }
 
