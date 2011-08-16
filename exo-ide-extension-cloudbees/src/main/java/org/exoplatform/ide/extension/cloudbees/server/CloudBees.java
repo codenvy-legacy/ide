@@ -225,7 +225,7 @@ public class CloudBees
       }
       finally
       {
-         if (conn != null && "http".equals(protocol) || "https".equals(protocol))
+         if (conn != null && ("http".equals(protocol) || "https".equals(protocol)))
             ((HttpURLConnection)conn).disconnect();
       }
       return war;
