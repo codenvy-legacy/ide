@@ -72,6 +72,12 @@
 	  "options":["-u", "--update"],
 	  "hasArg": false,
 	  "mandatory": false
+      },
+      {
+      "name": "filepattern",
+	  "type": "BODY",
+	  "options":[],
+	  "mandatory": false
       }
     ]
 },
