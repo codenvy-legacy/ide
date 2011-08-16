@@ -108,5 +108,153 @@
 	  "mandatory": false
       }
     ]
+},
+{
+    "command": ["vmc login"],
+    "path": "/ide/cloudfoundry/login",
+    "method": "POST",
+    "description" : "Login to Cloud Foundry",
+    "params": [
+    {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["vmc delete"],
+    "path": "/ide/cloudfoundry/apps/delete",
+    "method": "POST",
+    "description" : "Delete the Cloud Foundry application",
+    "params": [
+     {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "delete-services",
+	  "type": "QUERY",
+	  "options":["-d", "--delete-services"],
+	  "hasArg": false,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["vmc start"],
+    "path": "/ide/cloudfoundry/apps/start",
+    "method": "POST",
+    "description" : "Start the Cloud Foundry application",
+    "params": [
+     {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
 }
+,
+{
+    "command": ["vmc stop"],
+    "path": "/ide/cloudfoundry/apps/stop",
+    "method": "POST",
+    "description" : "Stop the Cloud Foundry application",
+    "params": [
+     {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["vmc restart"],
+    "path": "/ide/cloudfoundry/apps/restart",
+    "method": "POST",
+    "description" : "Restart the Cloud Foundry application",
+    "params": [
+     {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["vmc stats"],
+    "path": "/ide/cloudfoundry/apps/stats",
+    "method": "GET",
+    "description" : "Display resource usage for the Cloud Foundry application",
+    "params": [
+     {
+	  "name": "$workdir",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["vmc info"],
+    "path": "/ide/cloudfoundry/info/system",
+    "method": "GET",
+    "description" : "Cloud Foundry system and account information"
+},
+{
+    "command": ["vmc apps"],
+    "path": "/ide/cloudfoundry/apps",
+    "method": "GET",
+    "description" : "List deployed applications on Cloud Foundry"
+}
+
 ]

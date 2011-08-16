@@ -28,6 +28,7 @@ import org.exoplatform.cloudshell.client.cli.CommandLine;
 import org.exoplatform.cloudshell.client.cli.GnuParser;
 import org.exoplatform.cloudshell.client.cli.Parser;
 import org.exoplatform.cloudshell.client.cli.Util;
+import org.exoplatform.cloudshell.client.marshal.GenericJsonUnmarshaller;
 import org.exoplatform.cloudshell.client.marshal.LoginMarshaller;
 import org.exoplatform.cloudshell.client.marshal.ShellConfigurationUnmarshaller;
 import org.exoplatform.cloudshell.client.marshal.StringUnmarshaller;
@@ -139,7 +140,12 @@ public class ShellService
                }
                setAcceptTypes(resource, asyncRequest);
                setContentType(resource, asyncRequest);
-               callback.setPayload(new StringUnmarshaller(callback));
+               if (resource.getProduces().contains(MimeType.APPLICATION_JSON))
+               {
+                  callback.setPayload(new GenericJsonUnmarshaller(callback));
+               }
+               else
+                  callback.setPayload(new StringUnmarshaller(callback));
                asyncRequest.send(callback);
             }
          }

@@ -1,5 +1,4 @@
 /** Add css rules here for your application. */
-
 /** Example rules used by the template application (remove for your app) */
 h1 {
 	font-size: 2em;
@@ -9,8 +8,7 @@ h1 {
 	text-align: center;
 }
 
-html, body
-{
+html,body {
 	background: #000000 none repeat scroll 0 0;
 	height: 100%;
 }
@@ -49,6 +47,11 @@ html, body
 	height: 100%;
 }
 
+.crash-term span {
+	font-family: "DejaVu Sans Mono", courier, monospace;
+	font-size: 11px;
+}
+
 #paste-box {
 	padding: 0px;
 	border: none;
@@ -57,7 +60,7 @@ html, body
 
 .shell-container {
 	background: #000000;
-	min-height : 100%;
+	min-height: 100%;
 }
 
 .crash-blink .crash-cursor {

@@ -33,7 +33,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 public class StringUnmarshaller implements Unmarshallable
 {
 
-   private AsyncRequestCallback<String> callback;
+   protected AsyncRequestCallback<String> callback;
 
    /**
     * @param callback

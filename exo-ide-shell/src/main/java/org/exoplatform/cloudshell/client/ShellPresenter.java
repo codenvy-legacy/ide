@@ -152,7 +152,7 @@ public class ShellPresenter implements ConsoleWriter
             {
                char c = event.getCharCode();
                // if 
-               if ((int)c != 0)
+               if ((int)c != 0 || event.isControlKeyDown())
                   display.appendBuffer(c);
                handled = true;
             }
@@ -310,7 +310,8 @@ public class ShellPresenter implements ConsoleWriter
          }
          display.submitBuffer();
          display.printPrompt();
-//         display.refreshConsole();
+         display.appendBuffer(prefix);
+         display.refreshConsole();
       }
 
    }

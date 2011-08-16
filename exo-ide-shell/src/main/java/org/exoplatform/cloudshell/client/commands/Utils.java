@@ -84,4 +84,20 @@ public class Utils
       }
    }
 
+   /**
+    * HTML-encode a string. This simple method only replaces the five characters &, <, >, ", and '.
+    * 
+    * @param input the String to convert
+    * @return a new String with HTML encoded characters
+    */
+   public static String htmlEncode(String input)
+   {
+      String output = input.replaceAll("&", "&amp;");
+      output = output.replaceAll("<", "&lt;");
+      output = output.replaceAll(">", "&gt;");
+      output = output.replaceAll("\"", "&quot;");
+      output = output.replaceAll("'", "&#039;");
+      return output;
+   }
+
 }

@@ -111,9 +111,7 @@ public class CatCommand extends ClientCommand
                      @Override
                      protected void onSuccess(File result)
                      {
-                        String content = result.getContent();
-                        content = content.replaceAll("<", "&lt;");
-                        content = content.replaceAll(">", "&gt;");
+                        String content = Utils.htmlEncode(result.getContent());
                         out.append(content);
                         out.append("\n");
                         files.remove(0);

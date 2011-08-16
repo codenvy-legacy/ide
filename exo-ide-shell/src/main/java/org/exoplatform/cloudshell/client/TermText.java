@@ -202,9 +202,9 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
    String bufferSubmit()
    {
       String s = buffer.toString() + afterCursor;
+      state.append(afterCursor).append('\n');
       buffer.setLength(0);
       afterCursor = "";
-      state.append('\n');
       return s;
    }
 
