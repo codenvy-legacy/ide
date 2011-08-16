@@ -23,7 +23,7 @@ import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundaryApplicationStatistics;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryError;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
@@ -777,7 +777,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public Map<String, CloudfoundaryApplicationStatistics> applicationStats(String app, File workDir)
+   public Map<String, CloudfoundryApplicationStatistics> applicationStats(String app, File workDir)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -791,7 +791,7 @@ public class Cloudfoundry
    }
 
    @SuppressWarnings({"serial", "rawtypes", "unchecked"})
-   private Map<String, CloudfoundaryApplicationStatistics> applicationStats(CloudfoundryCredentials credentials,
+   private Map<String, CloudfoundryApplicationStatistics> applicationStats(CloudfoundryCredentials credentials,
       String app) throws IOException, ParsingResponseException, CloudfoundryException
    {
       Map cloudStats =
@@ -801,14 +801,14 @@ public class Cloudfoundry
             }.getClass().getGenericSuperclass());
       if (cloudStats != null && cloudStats.size() > 0)
       {
-         Map<String, CloudfoundaryApplicationStatistics> stats =
-            new HashMap<String, CloudfoundaryApplicationStatistics>(cloudStats.size());
+         Map<String, CloudfoundryApplicationStatistics> stats =
+            new HashMap<String, CloudfoundryApplicationStatistics>(cloudStats.size());
          for (Iterator<Map.Entry> iter = cloudStats.entrySet().iterator(); iter.hasNext();)
          {
             Entry next = iter.next();
             Stats s = (Stats)next.getValue();
 
-            CloudfoundaryApplicationStatistics appStats = new CloudfoundaryApplicationStatistics();
+            CloudfoundryApplicationStatistics appStats = new CloudfoundryApplicationStatistics();
             appStats.setState(s.getState());
             if (s.getStats() != null)
             {
@@ -832,6 +832,14 @@ public class Cloudfoundry
          return stats;
       }
       return Collections.emptyMap();
+   }
+
+   public CloudfoundryApplication[] listApplications() throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      CloudfoundryCredentials credentials = getCredentials();
+      return JsonHelper.fromJson(getJson(credentials.getTarget() + "/apps", credentials.getToken(), 200),
+         CloudfoundryApplication[].class, null);
    }
 
    /**

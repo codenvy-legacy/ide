@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundaryApplicationStatistics
+public class CloudfoundryApplicationStatistics
 {
    /** Application name. */
    private String name;

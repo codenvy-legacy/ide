@@ -22,7 +22,7 @@ import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.ParsingResponseException;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundaryApplicationStatistics;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -278,13 +278,22 @@ public class CloudfoundryService
    @Path("apps/stats")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, CloudfoundaryApplicationStatistics> applicationStats( //
+   public Map<String, CloudfoundryApplicationStatistics> applicationStats( //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
       return cloudfoundry.applicationStats(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("apps")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public CloudfoundryApplication[] listApplications() throws IOException, ParsingResponseException,
+      CloudfoundryException
+   {
+      return cloudfoundry.listApplications();
    }
 
    @Path("services")
