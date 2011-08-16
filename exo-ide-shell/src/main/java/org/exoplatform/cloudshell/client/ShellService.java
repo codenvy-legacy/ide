@@ -129,7 +129,7 @@ public class ShellService
                if (canParseOptions(resource, cmd, asyncRequest))
                {
                   CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
-                  String query = formQueryString(resource.getParams(), commandLine);
+                  String query = formQueryString(resource, commandLine, cmd);
                   url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
                   //Recreate, because of the URL:
                   asyncRequest = createAsyncRequest(resource.getMethod(), url);
@@ -351,14 +351,14 @@ public class ShellService
     * @return {@link String}  string with query parameters
     * @throws MandatoryParameterNotFoundException
     */
-   protected String formQueryString(Set<CLIResourceParameter> params, CommandLine commandLine)
+   protected String formQueryString(CLIResource resource, CommandLine commandLine, String cmd)
       throws MandatoryParameterNotFoundException
    {
-      if (params == null || params.size() <= 0)
+      if (resource.getParams() == null || resource.getParams().size() <= 0)
          return null;
 
       String query = "";
-      for (CLIResourceParameter param : params)
+      for (CLIResourceParameter param : resource.getParams())
       {
          if (!Type.QUERY.equals(param.getType()))
          {
@@ -376,12 +376,21 @@ public class ShellService
          //Parameter has no arguments, so get option is present or not.
          if (!param.isHasArg())
          {
-            query += param.getName() + isOptionPresent(param.getOptions(), commandLine);
+            query += param.getName() + "=" + isOptionPresent(param.getOptions(), commandLine) + "&";
          }
+         //Process arguments without options:
          else if (param.getOptions() == null || param.getOptions().size() == 0)
          {
-            //Parameter can be without options, so get the array of values:
-            //TODO
+            List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
+            if ((values == null || values.size() == 0) && param.isMandatory())
+            {
+               throw new MandatoryParameterNotFoundException("Required argument [" + param.getName()
+                  + "] is not found.");
+            }
+            else if (values != null && values.size() > 0)
+            {
+               query += param.getName() + "=" + values.get(0) + "&";
+            }
          }
          else
          {
