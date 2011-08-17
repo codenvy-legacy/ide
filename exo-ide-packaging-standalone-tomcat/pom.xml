@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
-   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
-   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
-   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
-   site: http://www.fsf.org. -->
+<!-- Copyright (C) 2009 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
+   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
+   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
@@ -45,14 +43,14 @@
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>
          <exclusions>
-           <exclusion>
-              <groupId>com.google.gwt</groupId>
-              <artifactId>gwt-dev</artifactId>
-           </exclusion>
-           <exclusion>
-              <artifactId>log4j</artifactId>
-              <groupId>log4j</groupId>
-           </exclusion>
+            <exclusion>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-dev</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>log4j</artifactId>
+               <groupId>log4j</groupId>
+            </exclusion>
          </exclusions>
          <type>jar</type>
       </dependency>
@@ -67,6 +65,11 @@
          <artifactId>exo-ide-git-server</artifactId>
          <version>${project.version}</version>
          <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform</groupId>
+         <artifactId>user-service</artifactId>
+         <version>1.0-Alpha02-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
@@ -103,9 +106,9 @@
          <artifactId>crsh.jcr</artifactId>
          <version>${crash.version}</version>
       </dependency>
-      
+
       <!--GIT Server -->
-       <dependency>
+      <dependency>
          <groupId>org.eclipse.jgit</groupId>
          <artifactId>org.eclipse.jgit.http.server</artifactId>
          <version>0.10.1</version>
@@ -126,7 +129,7 @@
          <artifactId>jsch</artifactId>
          <version>0.1.44-1</version>
       </dependency>
-      
+
    </dependencies>
 
    <build>
@@ -472,10 +475,14 @@
                         <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                            <fileset dir="${project.build.directory}/packager-conf/unwar" />
                         </war>
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war"
+                           overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -547,8 +554,10 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
+                                 overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -598,14 +607,19 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-configuration.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-configuration.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html"
+                                 overwrite="true" />
                               <copy todir="${project.build.directory}/tomcat-ide/conf" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/selenium/conf" />
                               </copy>
 
-                              <!-- <copy file="${basedir}/src/main/resources/tomcat/selenium/conf/server.xml" tofile="${project.build.directory}/tomcat-ide/conf/server.xml" overwrite="true" /> -->
+                              <!-- <copy file="${basedir}/src/main/resources/tomcat/selenium/conf/server.xml" tofile="${project.build.directory}/tomcat-ide/conf/server.xml" 
+                                 overwrite="true" /> -->
                            </tasks>
                         </configuration>
                         <goals>
