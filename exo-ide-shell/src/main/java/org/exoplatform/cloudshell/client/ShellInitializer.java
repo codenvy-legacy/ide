@@ -18,12 +18,13 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window.Location;
 
 import org.exoplatform.cloudshell.client.model.ShellConfiguration;
 import org.exoplatform.cloudshell.shared.CLIResource;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
 
@@ -82,6 +83,7 @@ public class ShellInitializer
 
             VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.USER_NAME,
                result.getUserInfo().getName());
+            updateCurrentDir();
             CloudShell.consoleWriter = new ShellPresenter();
 
             ShellService.getService().getCommands(new AsyncRequestCallback<Set<CLIResource>>()
@@ -119,6 +121,41 @@ public class ShellInitializer
             CloudShell.console().print(exception.getMessage());
          }
       });
+   }
+
+   private void updateCurrentDir()
+   {
+      String path = Location.getParameter("workdir");
+      if (path != null && !path.isEmpty())
+      {
+         if (path.startsWith("/"))
+         {
+            path = path.substring(1);
+         }
+         if (!path.endsWith("/"))
+            path = path + "/";
+         final Folder f =
+            new Folder(VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT) + path);
+         VirtualFileSystem.getInstance().getChildren(f, new AsyncRequestCallback<Folder>()
+         {
+
+            @Override
+            protected void onSuccess(Folder result)
+            {
+               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               super.onFailure(exception);
+               CloudShell.console().print(CloudShell.messages.cdErrorFolder(f.getName()) + "\n");
+            }
+         });
+      }
    }
 
 }

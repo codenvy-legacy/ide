@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -105,8 +108,7 @@ import java.util.List;
  * @version $Id: $
  *
  */
-public class NavigationModule implements UploadFileHandler, CopyItemsHandler, CutItemsHandler, 
-   ItemsSelectedHandler, 
+public class NavigationModule implements UploadFileHandler, CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler,
    EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, InitializeServicesHandler
 {
    private HandlerManager eventBus;
@@ -118,7 +120,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private String entryPoint;
-   
+
    public NavigationModule(HandlerManager eventBus, ApplicationContext context)
    {
       this.eventBus = eventBus;
@@ -160,9 +162,9 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new UploadFolderControl()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
-      
+
       new OpenFileByURLPresenter(eventBus);
-      
+
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), DockTarget.TOOLBAR));
@@ -209,7 +211,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       new SearchResultsPresenter(eventBus);
       new DeleteItemsPresenter(eventBus);
       new GetItemURLPresenter(eventBus);
-      
+
       new CreateFolderPresenter(eventBus);
       new OpenFileByPathPresenter(eventBus);
       new SaveAsTemplatePresenter(eventBus);
@@ -284,6 +286,21 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      if (!selectedItems.isEmpty())
+         updateLinkToCloudShell(selectedItems.get(0));
+   }
+
+   private void updateLinkToCloudShell(Item selectedItem)
+   {
+      String path = selectedItem.getHref();
+      path = path.substring(applicationConfiguration.getDefaultEntryPoint().length() - 1);
+      Element ae = DOM.getElementById("exo-ide-shell-link");
+      if(ae == null)
+         return;
+      
+      AnchorElement a = AnchorElement.as(ae);
+      String newHref = "/shell/Shell.html?workdir=" + path;
+      a.setHref(newHref);
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
