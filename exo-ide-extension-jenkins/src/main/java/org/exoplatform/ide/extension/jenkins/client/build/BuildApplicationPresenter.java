@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.build;
 
+import com.google.gwt.user.client.Random;
+
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
@@ -99,7 +101,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private Status prevStatus = null;
 
    private String entryPoint;
-   
+
    private boolean buildInProgress = false;
 
    /**
@@ -121,14 +123,15 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    @Override
    public void onBuildApplication(BuildApplicationEvent event)
    {
-      if (buildInProgress) {
+      if (buildInProgress)
+      {
          String message = "You can not start the build of two projects at the same time.<br>";
          message += "Building of project <b>" + getProjectDir() + "</b> is performed.";
-         
+
          Dialogs.getInstance().showError(message);
          return;
       }
-      
+
       getWorkDir();
    }
 
@@ -195,8 +198,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
 
-      JenkinsService.get().createJenkinsJob("" + System.currentTimeMillis(), repository, userInfo.getName(), mail,
-         workDir, new AsyncRequestCallback<Job>()
+      JenkinsService.get().createJenkinsJob(userInfo.getName() + "-" + getProjectName() + "-" + Random.nextInt(),
+         repository, userInfo.getName(), mail, workDir, new AsyncRequestCallback<Job>()
          {
             @Override
             protected void onSuccess(Job result)
@@ -221,23 +224,25 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
       return projectName;
    }
-   
+
    /**
     * Get project's directory ( from root of workspace ).
     * 
     * @return
     */
-   private String getProjectDir() {
+   private String getProjectDir()
+   {
       String wd = workDir;
       if (wd.endsWith("/"))
       {
-        wd = wd.substring(0, wd.length() - 1);
+         wd = wd.substring(0, wd.length() - 1);
       }
       wd = wd.substring(0, wd.lastIndexOf("/"));
 
       String ep = entryPoint;
-      if (ep.endsWith("/")) {
-        ep = ep.substring(0, ep.length() - 1);
+      if (ep.endsWith("/"))
+      {
+         ep = ep.substring(0, ep.length() - 1);
       }
       ep = ep.substring(0, ep.lastIndexOf("/"));
 
@@ -256,7 +261,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          protected void onSuccess(String result)
          {
             buildInProgress = true;
-            
+
             String projectDir = getProjectDir();
             showBuildMessage("Building project <b>" + projectDir + "</b>");
 
@@ -268,37 +273,40 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          }
       });
    }
-   
+
    /**
     * Sets Building status: Queue
     * 
     * @param status
     */
-   private void setBuildStatusQueue(JobStatus status) {
+   private void setBuildStatusQueue(JobStatus status)
+   {
       prevStatus = Status.QUEUE;
       showBuildMessage("Status: " + status.getStatus());
-      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);      
+      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
    }
-   
+
    /**
     * Sets Building status: Building
     * 
     * @param status
     */
-   private void setBuildStatusBuilding(JobStatus status) {
+   private void setBuildStatusBuilding(JobStatus status)
+   {
       prevStatus = Status.BUILD;
       showBuildMessage("Status: " + status.getStatus());
-      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), true);      
+      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.blue()), true);
    }
-   
+
    /**
     * Sets Building status: Finished
     * 
     * @param status
     */
-   private void setBuildStatusFinished(JobStatus status) {
+   private void setBuildStatusFinished(JobStatus status)
+   {
       buildInProgress = false;
-      
+
       if (display != null)
       {
          if (closed)
@@ -313,15 +321,16 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
 
       prevStatus = Status.END;
-      
+
       String projectDir = getProjectDir();
 
-      String message = "Building project <b>" + projectDir + "</b> has been finished.\r\nResult: " 
-         + status.getLastBuildResult() == null ? "Unknown" : status.getLastBuildResult();
-      
+      String message =
+         "Building project <b>" + projectDir + "</b> has been finished.\r\nResult: " + status.getLastBuildResult() == null
+            ? "Unknown" : status.getLastBuildResult();
+
       showBuildMessage(message);
       display.stopAnimation();
-      
+
       if (status.getLastBuildResult() == null)
       {
          display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
@@ -400,12 +409,13 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   schedule(delay);
                }
             }
-            
-            protected void onFailure(Throwable exception) {
+
+            protected void onFailure(Throwable exception)
+            {
                buildInProgress = false;
                super.onFailure(exception);
             };
-            
+
          });
       }
    };
