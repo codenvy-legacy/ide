@@ -198,7 +198,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
 
-      JenkinsService.get().createJenkinsJob(userInfo.getName() + "-" + getProjectName() + "-" + Random.nextInt(),
+      JenkinsService.get().createJenkinsJob(userInfo.getName() + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
          repository, userInfo.getName(), mail, workDir, new AsyncRequestCallback<Job>()
          {
             @Override
