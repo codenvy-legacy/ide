@@ -82,7 +82,11 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private static int characterWidth = 8; // width of character in the CodeMirror in px
 
-   private static int firstCharacterOffsetLeft = (BrowserResolver.CURRENT_BROWSER.equals(Browser.IE) ? 0 : 5); // left offset of character of the line in px
+   private static int firstCharacterOffsetLeft = 11; // left offset of character of the line in px
+   
+   private static int codeErrorCorrectionPopupOffsetLeft = 6; // top offset of character of the line in px
+   
+   private static int codeErrorCorrectionPopupOffsetTop = 22; // top offset of character of the line in px
 
    private CodeAssistant codeAssistant;
 
@@ -462,7 +466,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       // calculate cursorOffsetX
       int cursorCol = cursorPositionCol;
-      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + 11; // 8px per symbol 
+      int cursorOffsetX = (cursorCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol 
 
       if (this.showLineNumbers)
       {
@@ -657,7 +661,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       if (CodeValidator.isExistedCodeError(lineNumber, codeErrorList))
       {
          codeAssistant.errorMarkClicked(this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
-            (getAbsoluteTop() + getCursorOffsetY(lineNumber)), (getAbsoluteLeft() + lineNumberFieldWidth),
+            (getAbsoluteTop() + getCursorOffsetY(lineNumber) + codeErrorCorrectionPopupOffsetTop), (getAbsoluteLeft() + lineNumberFieldWidth + codeErrorCorrectionPopupOffsetLeft),
             (String)params.get(EditorParameters.MIME_TYPE));
       }
    };
