@@ -64,7 +64,7 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
 
    static
    {
-      defaultColorMap.put(STRING, new JSONString("#483D8B"));
+      defaultColorMap.put(STRING, new JSONString("#246fd5"));
       defaultColorMap.put(NUMBER, new JSONString("#8B008B"));
       defaultColorMap.put(BOOLEAN, new JSONString("#CD5C5C"));
       defaultColorMap.put(NULL, new JSONString("#696969"));

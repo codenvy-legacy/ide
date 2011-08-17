@@ -151,10 +151,12 @@ public class ShellPresenter implements ConsoleWriter
             else
             {
                char c = event.getCharCode();
-               // if 
-               if ((int)c != 0 || event.isControlKeyDown())
+
+               if ((int)c != 0 && !event.isControlKeyDown())
+               {
                   display.appendBuffer(c);
-               handled = true;
+                  handled = true;
+               }
             }
 
             if (handled)
