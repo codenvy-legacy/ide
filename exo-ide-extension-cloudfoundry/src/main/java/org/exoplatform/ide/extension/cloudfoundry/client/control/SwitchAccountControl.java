@@ -27,28 +27,29 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
- * Control for changing settings (now only for login operation).
+ * Control for switching between accounts.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Aug 16, 2011 12:54:05 PM anya $
  *
  */
-public class SettingsControl extends SimpleControl implements IDEControl
+public class SwitchAccountControl extends SimpleControl implements IDEControl
 {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.settingsControlId();
+   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.settingsControlTitle();
+   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.settingsControlPrompt();
+   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
 
-   public SettingsControl()
+   public SwitchAccountControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.settings(), CloudFoundryClientBundle.INSTANCE.settingsDisabled());
+      setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(), CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
       setEvent(new LoginEvent(null, null));
+      setDelimiterBefore(true);
    }
 
    /**

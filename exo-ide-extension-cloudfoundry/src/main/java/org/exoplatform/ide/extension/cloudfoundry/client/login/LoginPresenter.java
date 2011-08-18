@@ -27,7 +27,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -36,6 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 /**
  * Presenter for login view.
@@ -93,9 +96,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    private Display display;
 
    private HandlerManager eventBus;
-   
+
    private LoggedInHandler loggedIn;
-   
+
    private LoginCanceledHandler loginCanceled;
 
    public LoginPresenter(HandlerManager eventBus)
@@ -121,7 +124,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          {
             if (loginCanceled != null)
                loginCanceled.onLoginCanceled();
-            
+
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
@@ -181,7 +184,37 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          IDE.getInstance().openView(display.asView());
          display.enableLoginButton(false);
          display.focusInEmailField();
+         getSystemInformation();
       }
+
+   }
+
+   /**
+    * Get Cloud Foundry system information to fill the login field,
+    *  if user is logged in.
+    */
+   protected void getSystemInformation()
+   {
+      CloudFoundryClientService.getInstance().getSystemInfo(new AsyncRequestCallback<SystemInfo>()
+      {
+         @Override
+         protected void onSuccess(SystemInfo result)
+         {
+            display.getEmailField().setValue(result.getUser());
+         }
+
+         /**
+          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+          */
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof UnmarshallerException)
+            {
+               Dialogs.getInstance().showError(exception.getMessage());
+            }
+         }
+      });
    }
 
    /**

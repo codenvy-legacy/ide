@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.List;
 
@@ -168,5 +169,12 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void checkFileExists(String location, String fileName, AsyncRequestCallback<String> callback);
-
+   
+   /**
+    * Get Cloud Foundry system information.
+    * 
+    * @param callback callback, that client has to implement to handle response from server
+    */
+   public abstract void getSystemInfo(AsyncRequestCallback<SystemInfo> callback);
+   
 }

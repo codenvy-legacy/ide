@@ -167,14 +167,14 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.updInstances.prompt")
    String updateInstancesControlPrompt();
    
-   @Key("control.settings.id")
-   String settingsControlId();
+   @Key("control.switchAccount.id")
+   String switchAccountControlId();
    
-   @Key("control.settings.title")
-   String settingsControlTitle();
+   @Key("control.switchAccount.title")
+   String switchAccountControlTitle();
    
-   @Key("control.settings.prompt")
-   String settingsControlPrompt();
+   @Key("control.switchAccount.prompt")
+   String switchAccountControlPrompt();
    
    /*
     * LoginView.
@@ -277,6 +277,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("loginFailed")
    String loginFailed();
+   
+   @Key("systemInfo.umarshaller.error")
+   String systemInfoUnmarshallerError();
    
    /*
     * DeployApplicationPresenter
