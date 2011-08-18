@@ -221,7 +221,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          projectName = projectName.substring(0, projectName.length() - 1);
       }
-      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length());
+      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length()-1);
       return projectName;
    }
 
@@ -237,16 +237,17 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          wd = wd.substring(0, wd.length() - 1);
       }
-      wd = wd.substring(0, wd.lastIndexOf("/"));
+      wd = wd.substring(entryPoint.length()-1);
+//      wd = wd.substring(0, wd.lastIndexOf("/"));
+//
+//      String ep = entryPoint;
+//      if (ep.endsWith("/"))
+//      {
+//         ep = ep.substring(0, ep.length() - 1);
+//      }
+//      ep = ep.substring(0, ep.lastIndexOf("/"));
 
-      String ep = entryPoint;
-      if (ep.endsWith("/"))
-      {
-         ep = ep.substring(0, ep.length() - 1);
-      }
-      ep = ep.substring(0, ep.lastIndexOf("/"));
-
-      return wd.substring(ep.length());
+      return wd;//.substring(ep.length());
    }
 
    /**
