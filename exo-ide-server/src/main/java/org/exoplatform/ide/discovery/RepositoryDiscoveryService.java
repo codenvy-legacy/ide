@@ -36,6 +36,7 @@ import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.ws.rs.GET;
@@ -206,7 +207,8 @@ public class RepositoryDiscoveryService
    }
 
    /**
-    * Find file and return content
+    * Find file and return content.
+    * Search of file stars from <code>location</code> and walk up to the root folder.
     * @param uriInfo
     * @param location Start point to search
     * @param name File name
@@ -235,6 +237,57 @@ public class RepositoryDiscoveryService
          {
             throw new FileNotFoundException("File " + name + " not found.");
          }
+      }
+      catch (RepositoryException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (RepositoryConfigurationException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 500));
+      }
+      catch (FileNotFoundException e)
+      {
+         throw new WebApplicationException(e, createErrorResponse(e, 404));
+      }
+   }
+   
+   /**
+    * Check, is file exists.
+    * 
+    * @param uriInfo
+    * @param location the location of file
+    */
+   @GET
+   @Path("/find/file")
+   public void fileExists(@Context UriInfo uriInfo, @QueryParam("location") String location)
+   {
+      String baseUri = uriInfo.getBaseUri().toASCIIString();
+      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
+      try
+      {
+         Session session =
+            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
+               + jcrLocation[2]);
+         Node rootNode = session.getRootNode();
+         try
+         {
+            rootNode.getNode(jcrLocation[2]);
+            return;
+         }
+         catch (PathNotFoundException e)
+         {
+            throw new FileNotFoundException("File " + location + " not found.");
+         }
+//         Node itemNode = findNode(node, name);
+//         if (itemNode != null)
+//         {
+//            return;
+//         }
+//         else
+//         {
+//            throw new FileNotFoundException("File " + location + " not found.");
+//         }
       }
       catch (RepositoryException e)
       {
