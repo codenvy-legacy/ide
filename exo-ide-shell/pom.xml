@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
@@ -107,6 +106,10 @@
             <exclusion>
                <artifactId>slf4j-api</artifactId>
                <groupId>org.slf4j</groupId>
+            </exclusion>
+            <exclusion>
+               <groupId>commons-fileupload</groupId>
+               <artifactId>commons-fileupload</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -326,6 +329,12 @@
                   </exclusion>
                </exclusions>
             </dependency>
+
+         <!--DELETE-->
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-git</artifactId>
+            </dependency>
          </dependencies>
          <build>
             <plugins>
@@ -361,6 +370,7 @@
                      <skipTests>${gwt.test.skip}</skipTests>
                      <port>${gwt.port}</port>
                      <bindAddress>0.0.0.0</bindAddress>
+                     <extraJvmArgs>-Dorg.exoplatform.ide.server.fs-root-path=git</extraJvmArgs>
                   </configuration>
                </plugin>
             </plugins>

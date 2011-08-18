@@ -70,6 +70,16 @@
          <groupId>org.exoplatform</groupId>
          <artifactId>user-service</artifactId>
          <version>1.0-Alpha02-SNAPSHOT</version>
+         <exclusions>
+            <exclusion>
+               <groupId>commons-collections</groupId>
+               <artifactId>commons-collections</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
@@ -99,12 +109,18 @@
       <dependency>
          <groupId>org.crsh</groupId>
          <artifactId>crsh.shell.core</artifactId>
-         <version>${crash.version}</version>
+         <version>${crash.version}</version>  
       </dependency>
       <dependency>
          <groupId>org.crsh</groupId>
          <artifactId>crsh.jcr</artifactId>
          <version>${crash.version}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>org.bouncycastle</groupId>
+               <artifactId>bcprov-jdk15</artifactId>
+            </exclusion>
+         </exclusions> 
       </dependency>
 
       <!--GIT Server -->
