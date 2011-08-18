@@ -237,7 +237,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
          {
             uri = "http://" + uri;
          }
-         appUris += ", " + "<a href=\"" + uri + "\">" + uri + "</a>";
+         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
       }
       if (!appUris.isEmpty())
       {

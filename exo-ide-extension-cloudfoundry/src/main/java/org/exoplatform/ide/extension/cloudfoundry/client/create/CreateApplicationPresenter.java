@@ -526,7 +526,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          {
             uri = "http://" + uri;
          }
-         appUris += ", " + "<a href=\"" + uri + "\">" + uri + "</a>";
+         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
       }
       if (!appUris.isEmpty())
       {

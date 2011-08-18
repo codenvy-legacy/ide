@@ -134,7 +134,7 @@ public class MapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
                {
                   registeredUrl = "http://" + url;
                }
-               registeredUrl = "<a href=\"" + registeredUrl + "\">" + registeredUrl + "</a>";
+               registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
                String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
                eventBus.fireEvent(new OutputEvent(msg));
             }
