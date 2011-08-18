@@ -230,6 +230,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("createApp.appCreated")
    String applicationCreatedSuccessfully(String name);
    
+   @Key("create.appStartedOnUrl")
+   String applicationStartedOnUrl(String urls);
+   
+   @Key("create.appStarted.noUrls")
+   String applicationStartedWithNoUrls();
+   
    @Key("createApp.warUrlIsNull")
    String createApplicationWarIsNull();
    
@@ -240,7 +246,7 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String applicationStarted(String name);
    
    @Key("startApp.appStarted.uris")
-   String applicationStartedUris(String name, String uris);
+   String applicationStartedOnUrls(String name, String uris);
    
    @Key("startApp.appStopped")
    String applicationStopped(String name);
@@ -251,11 +257,17 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("startApp.appRestarted.uris")
    String applicationRestartedUris(String name, String uris);
    
+   @Key("startApp.appAlreadyStarted")
+   String applicationAlreadyStarted(String name);
+   
+   @Key("startApp.appAlreadyStopped")
+   String applicationAlreadyStopped(String name);
+   
    /*
     * UpdateApplicationPresenter
     */
    @Key("update.applicationUpdated")
-   String updateApplicationSuccess();
+   String updateApplicationSuccess(String name);
    
    /*
     * Messages

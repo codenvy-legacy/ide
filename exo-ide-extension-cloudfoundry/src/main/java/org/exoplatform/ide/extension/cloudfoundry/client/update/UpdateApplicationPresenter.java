@@ -33,6 +33,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -117,8 +118,17 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                  .updateApplicationSuccess(), Type.INFO));
+               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
+                  {
+
+                     @Override
+                     protected void onSuccess(CloudfoundryApplication result)
+                     {
+                        eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                           .updateApplicationSuccess(result.getName()), Type.INFO));
+                     }
+                  });
             }
          });
    }

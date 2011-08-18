@@ -84,7 +84,7 @@ RestartApplicationHandler
    @Override
    public void onStopApplication(StopApplicationEvent event)
    {
-      stopApplication();
+      checkIsStopped();
    }
    
    /**
@@ -110,14 +110,86 @@ RestartApplicationHandler
          stopApplication();
       }
    };
-
+   
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler checkIsStartedLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         checkIsStarted();
+      }
+   };
+   
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler checkIsStoppedLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         checkIsStopped();
+      }
+   };
+   
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationHandler#onStartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent)
     */
    @Override
    public void onStartApplication(StartApplicationEvent event)
    {
-      startApplication();
+      checkIsStarted();
+   }
+   
+   private void checkIsStarted()
+   {
+      String workDir = getWorkDir();
+
+      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, checkIsStartedLoggedInHandler, null)
+         {
+
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               if ("STARTED".equals(result.getState()))
+               {
+                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStarted(result.getName());
+                  eventBus.fireEvent(new OutputEvent(msg));
+               }
+               else
+               {
+                  startApplication();
+               }
+            }
+         });
+   }
+   
+   private void checkIsStopped()
+   {
+      String workDir = getWorkDir();
+
+      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, checkIsStoppedLoggedInHandler, null)
+         {
+
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               if ("STOPPED".equals(result.getState()))
+               {
+                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStopped(result.getName());
+                  eventBus.fireEvent(new OutputEvent(msg));
+               }
+               else
+               {
+                  stopApplication();
+               }
+            }
+         });
    }
    
    private void startApplication()
@@ -138,7 +210,7 @@ RestartApplicationHandler
                }
                else
                {
-                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedUris(result.getName(), appUris);
+                  msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(), appUris);
                }
                eventBus.fireEvent(new OutputEvent(msg));
             }
@@ -150,7 +222,11 @@ RestartApplicationHandler
       String appUris = "";
       for (String uri : application.getUris())
       {
-         appUris += ", " + uri;
+         if (!uri.startsWith("http"))
+         {
+            uri = "http://" + uri;
+         }
+         appUris += ", " + "<a href=\"" + uri + "\">" + uri + "</a>";
       }
       if (!appUris.isEmpty())
       {
@@ -162,8 +238,7 @@ RestartApplicationHandler
    
    private void stopApplication()
    {
-      String workDir = getWorkDir();
-      final String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(workDir);
+      final String workDir = getWorkDir();
       
       CloudFoundryClientService.getInstance().stopApplication(workDir, null,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, stopLoggedInHandler, null)
@@ -171,7 +246,15 @@ RestartApplicationHandler
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(msg));
+               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
+               {
+                  @Override
+                  protected void onSuccess(CloudfoundryApplication result)
+                  {
+                     final String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
+                     eventBus.fireEvent(new OutputEvent(msg));
+                  }
+               });
             }
          });
    }

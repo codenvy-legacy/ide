@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 
-import java.util.Map.Entry;
-
 /**
  * Application information view.
  * 
@@ -120,16 +118,6 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
       return okButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter.Display#getApplicationInfoGrid()
-    */
-   @Override
-   public ListGridItem<Entry<String, String>> getApplicationInfoGrid()
-   {
-//      return applicationInfoGrid;
-      return null;
-   }
-   
    @Override
    public void setName(String text)
    {

@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncReques
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
@@ -85,6 +86,71 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
 
    
    /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler#onUpdateMemory(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent)
+    */
+   @Override
+   public void onUpdateMemory(UpdateMemoryEvent event)
+   {
+      getOldMemoryValue();
+   }
+   
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler getOldMemoryValueLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         getOldMemoryValue();
+      }
+   };
+   
+   private void getOldMemoryValue()
+   {
+      String workDir = getWorkDir();
+      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldMemoryValueLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               askForNewMemoryValue(result.getResources().getMemory());
+            }
+         });
+   }
+   
+   private void askForNewMemoryValue(int oldMemoryValue)
+   {
+      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(),
+         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage(), String.valueOf(oldMemoryValue),
+         new StringValueReceivedHandler()
+         {
+            @Override
+            public void stringValueReceived(String value)
+            {
+               if (value == null)
+               {
+                  return;
+               }
+               else
+               {
+                  try
+                  {
+                     memory = Integer.parseInt(value);
+                     updateMemory(memory);
+                  }
+                  catch (NumberFormatException e)
+                  {
+                     String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
+                     eventBus.fireEvent(new ExceptionThrownEvent(msg));
+                  }
+               }
+            }
+         });
+   }
+   
+   /**
     * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
    private LoggedInHandler updateMemoryLoggedInHandler = new LoggedInHandler()
@@ -95,44 +161,6 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
          updateMemory(memory);
       }
    };
-   
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler#onUpdateMemory(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent)
-    */
-   @Override
-   public void onUpdateMemory(UpdateMemoryEvent event)
-   {
-      askForNewMemoryValue();
-   }
-   
-   private void askForNewMemoryValue()
-   {
-      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(), 
-         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage(), "", new StringValueReceivedHandler()
-      {
-         @Override
-         public void stringValueReceived(String value)
-         {
-            if (value == null)
-            {
-               return;
-            }
-            else
-            {
-               try
-               {
-                  memory = Integer.parseInt(value);
-                  updateMemory(memory);
-               }
-               catch (NumberFormatException e)
-               {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
-                  eventBus.fireEvent(new ExceptionThrownEvent(msg));
-               }
-            }
-         }
-      });
-   }
    
    private void updateMemory(final int memory)
    {
@@ -169,13 +197,39 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
    @Override
    public void onUpdateInstances(UpdateInstancesEvent event)
    {
-      askForUrlToUnmap();
+      getOldInstancesValue();
    }
    
-   private void askForUrlToUnmap()
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         getOldInstancesValue();
+      }
+   };
+   
+   private void getOldInstancesValue()
+   {
+      String workDir = getWorkDir();
+      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldInstancesValueLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               askForInstancesNumber(result.getInstances());
+            }
+         });
+   }
+   
+   private void askForInstancesNumber(int oldInstancesValue)
    {
       Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle(),
-         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage(), "",
+         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage(), String.valueOf(oldInstancesValue),
          new StringValueReceivedHandler()
          {
             @Override
@@ -189,16 +243,10 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
                {
 
                   instances = value;
-                  String intValue = value;
-                  
-                  if (intValue.startsWith("+") || intValue.startsWith("-"))
-                  {
-                     intValue = intValue.substring(1);
-                  }
                   try
                   {
-                     //check, is intValue contains only numbers
-                     Integer.parseInt(intValue);
+                     //check, is instances contains only numbers
+                     Integer.parseInt(instances);
                      updateInstances(instances);
                   }
                   catch (NumberFormatException e)
@@ -230,18 +278,28 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
     */
    private void updateInstances(final String instancesExpression)
    {
-      String workDir = getWorkDir();
-      
+      final String workDir = getWorkDir();
+
       String encodedExp = URL.encodePathSegment(instancesExpression);
-      
+
       CloudFoundryClientService.getInstance().updateInstances(workDir, null, encodedExp,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, updateInstancesLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(instancesExpression);
-               eventBus.fireEvent(new OutputEvent(msg));
+               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+                  new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
+                  {
+                     @Override
+                     protected void onSuccess(CloudfoundryApplication result)
+                     {
+                        String msg =
+                           CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String.valueOf(result
+                              .getInstances()));
+                        eventBus.fireEvent(new OutputEvent(msg));
+                     }
+                  });
             }
          });
    }

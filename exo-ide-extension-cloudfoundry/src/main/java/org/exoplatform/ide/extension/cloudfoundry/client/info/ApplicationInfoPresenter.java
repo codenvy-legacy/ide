@@ -38,7 +38,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * Presenter for showing application info.
@@ -53,8 +52,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
    {
       HasClickHandlers getOkButton();
 
-      ListGridItem<Entry<String, String>> getApplicationInfoGrid();
-      
       ListGridItem<String> getApplicationUrisGrid();
       
       ListGridItem<String> getApplicationServicesGrid();

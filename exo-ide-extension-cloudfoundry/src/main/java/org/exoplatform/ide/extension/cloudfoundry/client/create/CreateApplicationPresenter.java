@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -103,6 +104,8 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    }
    
    private static final String DEFAULT_APPLICATION_URL = ".cloudfoundry.com";
+   
+   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
    
    private Display display;
    
@@ -194,7 +197,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
             else
             {
-               display.getUrlField().setValue(display.getNameField().getValue() + ".cloudfoundry.com");
+               display.getUrlField().setValue(display.getNameField().getValue().toLowerCase() + ".cloudfoundry.com");
             }
          }
       });
@@ -366,14 +369,25 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    {
       CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null)
-      {
-         @Override
-         protected void onSuccess(CloudfoundryApplication result)
          {
-            String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationCreatedSuccessfully(result.getName());
-            eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-         }
-      });
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               String msg = lb.applicationCreatedSuccessfully(result.getName());
+               if ("STARTED".equals(result.getState()))
+               {
+                  if (result.getUris().isEmpty())
+                  {
+                     msg += "<br>" + lb.applicationStartedWithNoUrls();
+                  }
+                  else
+                  {
+                     msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                  }
+               }
+               eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+            }
+         });
    }
    
    /**
@@ -475,6 +489,25 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       {
          eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
       }
+   }
+   
+   private String getAppUrlsAsString(CloudfoundryApplication application)
+   {
+      String appUris = "";
+      for (String uri : application.getUris())
+      {
+         if (!uri.startsWith("http"))
+         {
+            uri = "http://" + uri;
+         }
+         appUris += ", " + "<a href=\"" + uri + "\">" + uri + "</a>";
+      }
+      if (!appUris.isEmpty())
+      {
+         //crop unnecessary symbols
+         appUris = appUris.substring(2);
+      }
+      return appUris;
    }
 
 }

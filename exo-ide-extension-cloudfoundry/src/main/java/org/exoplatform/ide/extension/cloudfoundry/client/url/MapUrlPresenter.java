@@ -129,7 +129,13 @@ public class MapUrlPresenter implements ItemsSelectedHandler, MapUrlHandler
             @Override
             protected void onSuccess(String result)
             {
-               String msg = localeBundle.mapUrlRegisteredSuccess(url);
+               String registeredUrl = url;
+               if (!url.startsWith("http"))
+               {
+                  registeredUrl = "http://" + url;
+               }
+               registeredUrl = "<a href=\"" + registeredUrl + "\">" + registeredUrl + "</a>";
+               String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });     
