@@ -30,6 +30,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticS
 import org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter;
 import org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
@@ -47,6 +48,8 @@ public class ChromatticExtension extends Extension implements InitializeServices
     */
    private HandlerManager eventBus;
 
+   public static final ChromatticLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(ChromatticLocalizationConstant.class);
+   
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */

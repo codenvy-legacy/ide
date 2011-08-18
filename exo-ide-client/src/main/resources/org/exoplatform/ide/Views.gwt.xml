@@ -147,4 +147,12 @@
       <when-type-is class="org.exoplatform.ide.client.project.CreateProjectTemplatePresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypeView">
+      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypeView">
+      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display" />
+   </replace-with>
+   
 </module>

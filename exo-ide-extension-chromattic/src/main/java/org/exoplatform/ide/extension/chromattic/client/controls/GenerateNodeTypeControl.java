@@ -23,7 +23,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.chromattic.client.Images;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -43,24 +44,14 @@ public class GenerateNodeTypeControl extends SimpleControl implements IDEControl
    public static final String ID = "Run/Preview node type";
 
    /**
-    * Control's title.
-    */
-   public static final String TITLE = "Preview node type";
-
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Preview node type";
-
-   /**
     * Default constructor.
     */
    public GenerateNodeTypeControl()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setIcon(Images.Controls.PREVIEW_NODE_TYPE);
+      setTitle(ChromatticExtension.LOCALIZATION_CONSTANT.previewNodeTypeControlTitle());
+      setPrompt(ChromatticExtension.LOCALIZATION_CONSTANT.previewNodeTypeControlTitle());
+      setImages(ChromatticClientBundle.INSTANCE.previewNodeTypeControl(), ChromatticClientBundle.INSTANCE.previewNodeTypeControlDisabled());
       setEvent(new GenerateNodeTypeEvent());
    }
 

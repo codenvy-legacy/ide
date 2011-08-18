@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,6 +28,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
@@ -45,13 +48,8 @@ import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeT
 public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, EditorActiveFileChangedHandler
 {
    
-   interface Display
+   interface Display extends IsView
    {
-      /**
-       * Close view.
-       */
-      void closeView();
-
       /**
        * Get cancel button.
        * 
@@ -109,19 +107,15 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
 
    /**
     * Bind view with presenter.
-    * 
-    * @param d 
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            display.closeView();
+            closeView();
          }
       });
 
@@ -135,6 +129,11 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       });
 
    }
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
 
    /**
     * @see org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeHandler#onGenerateNodeType(org.exoplatform.ide.client.module.chromattic.event.GenerateNodeTypeEvent)
@@ -144,8 +143,15 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    {
       if (activeFile == null)
          return;
-      bindDisplay(new GenerateNodeTypeForm(eventBus));
-      display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
+
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
+      }
+
+      IDE.getInstance().openView(display.asView());
    }
 
    /**
@@ -163,7 +169,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
             protected void onSuccess(GenerateNodeTypeResult result)
             {
                eventBus.fireEvent(new NodeTypeGenerationResultReceivedEvent(result));
-               display.closeView();
+               closeView();
             }
 
             @Override
@@ -173,7 +179,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
                   new NodeTypeGenerationResultReceivedEvent(this.getResult());
                event.setException(exception);
                eventBus.fireEvent(event);
-               display.closeView();
+               closeView();
             }
          });
    }

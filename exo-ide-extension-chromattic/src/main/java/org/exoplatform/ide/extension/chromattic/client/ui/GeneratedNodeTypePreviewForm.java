@@ -26,7 +26,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
-import org.exoplatform.ide.extension.chromattic.client.Images;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -47,10 +48,8 @@ import com.google.gwt.user.client.ui.Image;
 public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedNodeTypePreviewPresenter.Display
 {
 
-   //public static final String FORM_ID = "ideGeneratedTypePreviewForm";
-
-   public static final String TITLE = "Node Type Preview";
-
+   static final String ID = "ideGeneratedTypePreviewView";
+   
    /**
     * Handlers manager.
     */
@@ -66,7 +65,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
     */
    public GeneratedNodeTypePreviewForm(HandlerManager eventBus)
    {
-      super(ID, "operation", TITLE, new Image(Images.Controls.PREVIEW_NODE_TYPE));
+      super(ID, "operation", ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypePreviewFormTitle(), new Image(ChromatticClientBundle.INSTANCE.previewNodeTypeControl()));
       this.eventBus = eventBus;
       createEditor();
    }
@@ -141,16 +140,6 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
       {
          e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();});
       }
-   }-*/;
-
-   /**
-    * Get editor's iframe content.
-    * 
-    * @param iframe
-    * @return {@link Document}
-    */
-   private native Document getIFrameDocument(IFrameElement iframe)/*-{
-      return iframe.contentDocument || iframe.contentWindow.document;
    }-*/;
 
 }

@@ -24,7 +24,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.extension.chromattic.client.Images;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
+import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -46,24 +47,14 @@ public class DeployNodeTypeControl extends SimpleControl implements IDEControl, 
    public static final String ID = "Run/Deploy node type";
 
    /**
-    * Control's title.
-    */
-   public static final String TITLE = "Deploy node type";
-   
-   /**
-   * Control's prompt, when user hovers the mouse on it.
-   */
-   public static final String PROMPT = "Deploy node type";
-
-   /**
     * Default constructor.
     */
    public DeployNodeTypeControl()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setIcon(Images.Controls.DEPLOY_NODE_TYPE);
+      setTitle(ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeControlTitle());
+      setPrompt(ChromatticExtension.LOCALIZATION_CONSTANT.deployNodeTypeControlTitle());
+      setImages(ChromatticClientBundle.INSTANCE.deployNodeTypeControl(), ChromatticClientBundle.INSTANCE.deployNodeTypeControlDisabled());
       setEvent(new DeployNodeTypeEvent());
    }
 

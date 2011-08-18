@@ -41,13 +41,13 @@ import org.junit.Test;
 public class PreviewNodeTypeTest extends BaseTest
 {
    //---- Locators ------------
-   public static final String GENERATE_NODE_TYPE_DIALOG_ID = "ideGenerateNodeTypeForm";
+   public static final String GENERATE_NODE_TYPE_DIALOG_ID = "//div[@view-id='ideGenerateNodeTypeView']";
    
-   public static final String GENERATE_NODE_TYPE_FORMAT_FIELD = "ideGenerateNodeTypeFormFormatField";
+   public static final String GENERATE_NODE_TYPE_FORMAT_FIELD = "ideGenerateNodeTypeViewFormatField";
    
-   public static final String GENERATE_NODE_TYPE_GENERATE_BUTTON_ID = "ideGenerateNodeTypeFormGenerateButton";
+   public static final String GENERATE_NODE_TYPE_GENERATE_BUTTON_ID = "ideGenerateNodeTypeViewGenerateButton";
    
-   public static final String GENERATE_NODE_TYPE_CANCEL_BUTTON_ID = "ideGenerateNodeTypeFormCancelButton";
+   public static final String GENERATE_NODE_TYPE_CANCEL_BUTTON_ID = "ideGenerateNodeTypeViewCancelButton";
    
    //---- Variables ------------
    private final static String FOLDER_NAME = PreviewNodeTypeTest.class.getSimpleName();
@@ -119,7 +119,7 @@ public class PreviewNodeTypeTest extends BaseTest
     * Tests the appearance of preview node type dialog window.
     */
    @Test
-   public void testGenerateNodeTypeForm() throws Exception
+   public void testGenerateNodeTypeView() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");

@@ -41,15 +41,15 @@ public class DeployNodeTypeTest extends BaseTest
    //---- Locators ------------
    public static final String IDE_GENERATED_TYPE_PREVIEW_VIEW_LOCATOR = "//div[@view-id='ideGeneratedTypePreviewView']";
    
-   public static final String DEPLOY_NODE_TYPE_DIALOG_ID = "ideDeployNodeTypeForm";
+   public static final String DEPLOY_NODE_TYPE_DIALOG_ID = "//div[@view-id='ideDeployNodeTypeView']";
    
-   public static final String DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME = "ideDeployNodeTypeFormFormatField";
+   public static final String DEPLOY_NODE_TYPE_FORMAT_FIELD_NAME = "ideDeployNodeTypeViewFormatField";
    
-   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME = "ideDeployNodeTypeFormAlreadyExistBehaviorField";
+   public static final String DEPLOY_NODE_TYPE_ALREADY_EXIST_FIELD_NAME = "ideDeployNodeTypeViewAlreadyExistBehaviorField";
    
-   public static final String DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID = "ideDeployNodeTypeFormDeployButton";
+   public static final String DEPLOY_NODE_TYPE_DEPLOY_BUTTON_ID = "ideDeployNodeTypeViewDeployButton";
    
-   public static final String DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID = "ideDeployNodeTypeFormCancelButton";
+   public static final String DEPLOY_NODE_TYPE_CANCEL_BUTTON_ID = "ideDeployNodeTypeViewCancelButton";
    
    //---- Variables ------------
    private final static String FOLDER_NAME = DeployNodeTypeTest.class.getSimpleName();
@@ -94,7 +94,7 @@ public class DeployNodeTypeTest extends BaseTest
     * Tests the appearance of deploy node type dialog window.
     */
    @Test
-   public void testGenerateNodeTypeForm() throws Exception
+   public void testGenerateNodeTypeView() throws Exception
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");

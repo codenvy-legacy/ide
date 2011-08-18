@@ -25,8 +25,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandler;
@@ -36,6 +38,7 @@ import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeRes
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -51,7 +54,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorActiveFileChangedHandler
 {
-   interface Display
+   interface Display extends IsView
    {
       /**
        * Get deploy button.
@@ -95,11 +98,6 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
        * @param values
        */
       void setBehaviorIfExistValues(LinkedHashMap<String, String> values);
-
-      /**
-       * Close view.
-       */
-      void closeView();
    }
 
    /**
@@ -124,23 +122,24 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       eventBus.addHandler(DeployNodeTypeEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
-
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+   
    /**
     * Bind view with presenter.
-    * 
-    * @param d display
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      this.display = d;
-
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            display.closeView();
+            closeView();
          }
       });
 
@@ -165,18 +164,22 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       if (activeFile == null)
          return;
 
-      Display display = new DeployNodeTypeForm(eventBus);
-      bindDisplay(display);
-
-      display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
-      LinkedHashMap<String, String> alreadyExistsBehaviourValues = new LinkedHashMap<String, String>();
-      for (EnumAlreadyExistsBehaviour value : EnumAlreadyExistsBehaviour.values())
+      if (display == null)
       {
-         alreadyExistsBehaviourValues.put(String.valueOf(value.getCode()), value.getDisplayName());
+         display = GWT.create(Display.class);
+         bindDisplay();
+         
+         display.setNodeTypeFormatValues(EnumNodeTypeFormat.getValues());
+         LinkedHashMap<String, String> alreadyExistsBehaviourValues = new LinkedHashMap<String, String>();
+         for (EnumAlreadyExistsBehaviour value : EnumAlreadyExistsBehaviour.values())
+         {
+            alreadyExistsBehaviourValues.put(String.valueOf(value.getCode()), value.getDisplayName());
+         }
+
+         display.setBehaviorIfExistValues(alreadyExistsBehaviourValues);
       }
 
-      display.setBehaviorIfExistValues(alreadyExistsBehaviourValues);
-
+      IDE.getInstance().openView(display.asView());
    }
 
    /**
@@ -196,14 +199,14 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
             @Override
             protected void onSuccess(String result)
             {
-               display.closeView();
+               closeView();
                Dialogs.getInstance().showInfo("Node type successfully deployed.");               
             }
             
             @Override
             protected void onFailure(Throwable exception)
             {
-               display.closeView();
+               closeView();
                Dialogs.getInstance().showError(getErrorMessage(exception));               
             }
          });

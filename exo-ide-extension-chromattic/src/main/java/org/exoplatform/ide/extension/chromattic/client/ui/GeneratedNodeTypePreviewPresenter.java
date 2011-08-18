@@ -61,9 +61,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
 
    interface Display extends IsView
    {
-
-      String ID = "ideGeneratedTypePreviewView";
-
       /**
        * Set content to be displayed in editor. 
        * 
@@ -161,8 +158,6 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      System.out.println("GeneratedNodeTypePreviewPresenter.onViewClosed()");
-      
 //      if (GeneratedNodeTypePreviewForm.ID.equals(event.getViewId()))
 //      {
 //         isOpened = false;
