@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.shell.client;
+
+import java.util.ArrayList;
+
+/**
+ * Buffer of the shell commands.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Aug 4, 2011 10:14:20 AM anya $
+ *
+ */
+public class ShellComandBuffer extends ArrayList<String>
+{
+   private final int MAX_SIZE = 32;
+
+   private static final long serialVersionUID = 1L;
+
+   private int iterator = -1;
+
+   /**
+    * @see java.util.ArrayList#add(java.lang.Object)
+    */
+   @Override
+   public boolean add(String e)
+   {
+      if (MAX_SIZE == size())
+      {
+         remove(0);
+      }
+      if (size() > 0 && e.equals(get(size()-1)))
+      {
+         resetIterator();
+         return false;
+      }
+      
+      boolean result = super.add(e);
+      resetIterator();
+      return result;
+   }
+
+   /**
+    * Reset the list iterator.
+    */
+   public void resetIterator()
+   {
+      iterator = size();
+   }
+
+   /**
+    * Get the next value upper in the list.
+    * 
+    * @return {@link String}
+    */
+   public String goUp()
+   {
+      if (iterator <= 0)
+         return null;
+      iterator--;
+      return get(iterator);
+   }
+
+   /**
+    * Get the next value down the list.
+    * 
+    * @return {@link String}
+    */
+   public String goDown()
+   {
+      if (iterator < 0 || iterator == size()-1)
+      {
+         resetIterator();
+         return null;
+      }
+      if (iterator < size() - 1)
+      {
+         iterator++;
+      }
+      return get(iterator);
+   }
+
+}

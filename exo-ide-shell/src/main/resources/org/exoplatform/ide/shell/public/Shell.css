@@ -1,0 +1,77 @@
+/** Add css rules here for your application. */
+/** Example rules used by the template application (remove for your app) */
+h1 {
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 40px 0px 70px;
+	text-align: center;
+}
+
+html,body {
+	background: #000000 none repeat scroll 0 0;
+	height: 100%;
+}
+
+.sendButton {
+	display: block;
+	font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+	width: 400px;
+}
+
+.dialogVPanel {
+	margin: 5px;
+}
+
+.serverResponseLabelError {
+	color: red;
+}
+
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+	margin: 15px 6px 6px;
+}
+
+.crash-term {
+	background: #000000;
+	color: #1FBE1F;
+	font-family: "DejaVu Sans Mono", courier, monospace;
+	font-size: 11px;
+	outline: 0;
+	width: 99%;
+	margin: auto;
+	height: 100%;
+}
+
+.crash-term span {
+	font-family: "DejaVu Sans Mono", courier, monospace;
+	font-size: 11px;
+}
+
+#paste-box {
+	padding: 0px;
+	border: none;
+	height: 1px;
+}
+
+.shell-container {
+	background: #000000;
+	min-height: 100%;
+}
+
+.crash-blink .crash-cursor {
+	background: #1FBE1F;
+	color: black;
+}
+
+.crash-autocomplete {
+	font-family: monospace !important;
+}
+
+.crash-autocomplete:hover {
+	font-weight: bold;
+}
