@@ -18,12 +18,12 @@
  */
 package org.exoplatform.cloudshell.client;
 
-import org.exoplatform.cloudshell.client.cli.CommandLine;
-import org.exoplatform.cloudshell.client.cli.GnuParser;
-import org.exoplatform.cloudshell.client.cli.Option;
-import org.exoplatform.cloudshell.client.cli.Options;
-import org.exoplatform.cloudshell.client.cli.Parser;
-import org.exoplatform.cloudshell.client.cli.Util;
+import org.exoplatform.ide.shell.client.cli.CommandLine;
+import org.exoplatform.ide.shell.client.cli.GnuParser;
+import org.exoplatform.ide.shell.client.cli.Option;
+import org.exoplatform.ide.shell.client.cli.Options;
+import org.exoplatform.ide.shell.client.cli.Parser;
+import org.exoplatform.ide.shell.client.cli.Util;
 import org.junit.Test;
 
 import junit.framework.Assert;

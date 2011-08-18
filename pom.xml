@@ -38,7 +38,7 @@
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <javax.jcr.version>1.0</javax.jcr.version>
       <javax.annotation.version>1.0</javax.annotation.version>
-      <groovy.version>1.6.5</groovy.version>
+      <groovy.version>1.7.6</groovy.version>
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
@@ -459,6 +459,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.7</version>
+         </dependency>
+         <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.kernel</groupId>

@@ -20,8 +20,9 @@ package org.exoplatform.cloudshell.server;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.cloudshell.shared.CLIResource;
-import org.exoplatform.cloudshell.shared.CLIResourceParameter;
+import org.exoplatform.ide.shell.server.CLIResourceFactory;
+import org.exoplatform.ide.shell.shared.CLIResource;
+import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.impl.resource.AbstractResourceDescriptorImpl;
 

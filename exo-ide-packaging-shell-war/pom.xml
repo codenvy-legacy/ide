@@ -94,8 +94,8 @@
             <artifactId>gwt-maven-plugin</artifactId>
             <version>${gwt.maven.plugin.version}</version>
             <configuration>
-               <module>org.exoplatform.cloudshell.Shell</module>
-               <runTarget>org.exoplatform.cloudshell.Shell/Shell.html</runTarget>
+               <module>org.exoplatform.ide.shell.Shell</module>
+               <runTarget>org.exoplatform.ide.shell.Shell/Shell.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
             </configuration>

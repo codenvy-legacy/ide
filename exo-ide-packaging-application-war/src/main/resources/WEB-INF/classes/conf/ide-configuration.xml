@@ -60,15 +60,12 @@
    </component>
    
   <component>
-     <type>org.exoplatform.cloudshell.server.ShellApplication</type>
+     <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
   </component>
     
+    
   <component>
-     <type>org.exoplatform.cloudshell.server.rest.CLIResourcesApplication</type>
-  </component>
-  
-  <component>
-     <type>org.exoplatform.cloudshell.server.CLIResourceFactory</type>
+     <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
   </component>
 
    <component>
