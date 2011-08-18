@@ -34,6 +34,24 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler>
     */
    public static final GwtEvent.Type<StopApplicationHandler> TYPE = new GwtEvent.Type<StopApplicationHandler>();
 
+   private String applicationName;
+
+   /**
+    * 
+    */
+   public StopApplicationEvent()
+   {
+   }
+
+   /**
+    * @param applicationName
+    */
+   public StopApplicationEvent(String applicationName)
+   {
+      super();
+      this.applicationName = applicationName;
+   }
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
@@ -50,6 +68,14 @@ public class StopApplicationEvent extends GwtEvent<StopApplicationHandler>
    protected void dispatch(StopApplicationHandler handler)
    {
       handler.onStopApplication(this);
+   }
+
+   /**
+    * @return the applicationName
+    */
+   public String getApplicationName()
+   {
+      return applicationName;
    }
 
 }

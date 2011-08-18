@@ -171,6 +171,12 @@ public abstract class CloudFoundryClientService
    public abstract void checkFileExists(String location, String fileName, AsyncRequestCallback<String> callback);
    
    /**
+    * Get list deployed applications
+    * @param callback
+    */
+   public abstract void getApplicationList(CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback);
+   
+   /**
     * Get Cloud Foundry system information.
     * 
     * @param callback callback, that client has to implement to handle response from server

@@ -141,4 +141,10 @@ public interface CloudFoundryClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/switchAccount_Disabled.png")
    ImageResource switchAccountDisabled();
    
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/apps-list.png")
+   ImageResource appsList();
+   
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/apps-list_Disabled.png")
+   ImageResource appsListDisabled();
+
 }

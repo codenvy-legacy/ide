@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.delete;
 
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -34,6 +33,24 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
     * Type used to register this event.
     */
    public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
+
+   private String applicationName;
+
+   /**
+    * 
+    */
+   public DeleteApplicationEvent()
+   {
+   }
+
+   /**
+    * @param applicationName
+    */
+   public DeleteApplicationEvent(String applicationName)
+   {
+      super();
+      this.applicationName = applicationName;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -51,6 +68,14 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
    protected void dispatch(DeleteApplicationHandler handler)
    {
       handler.onDeleteApplication(this);
+   }
+
+   /**
+    * @return the applicationName
+    */
+   public String getApplicationName()
+   {
+      return applicationName;
    }
 
 }

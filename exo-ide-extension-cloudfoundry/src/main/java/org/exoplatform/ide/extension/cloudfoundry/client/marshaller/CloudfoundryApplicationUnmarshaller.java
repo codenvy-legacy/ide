@@ -122,7 +122,7 @@ public class CloudfoundryApplicationUnmarshaller implements Unmarshallable
       }
    }
    
-   private void parseObject(JSONObject jsonObject)
+   void parseObject(JSONObject jsonObject)
    {
       for (String key : jsonObject.keySet())
       {

@@ -16,47 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.client.start;
+package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event, occurs after pressing Start Application command.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: StartApplicationEvent.java Jul 12, 2011 3:51:16 PM vereshchaka $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:  Aug 18, 2011 evgen $
  *
  */
-public class StartApplicationEvent extends GwtEvent<StartApplicationHandler>
+public class ShowApplicationsEvent extends GwtEvent<ShowApplicationsHandler>
 {
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<StartApplicationHandler> TYPE = new GwtEvent.Type<StartApplicationHandler>();
 
-   private String applicationName;
-
-   /**
-    * 
-    */
-   public StartApplicationEvent()
-   {
-   }
-
-   /**
-    * @param applicationName
-    */
-   public StartApplicationEvent(String applicationName)
-   {
-      super();
-      this.applicationName = applicationName;
-   }
+   public static GwtEvent.Type<ShowApplicationsHandler> TYPE = new Type<ShowApplicationsHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StartApplicationHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationsHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -65,17 +43,9 @@ public class StartApplicationEvent extends GwtEvent<StartApplicationHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(StartApplicationHandler handler)
+   protected void dispatch(ShowApplicationsHandler handler)
    {
-      handler.onStartApplication(this);
-   }
-
-   /**
-    * @return the applicationName
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
+      handler.onShowApplications(this);
    }
 
 }

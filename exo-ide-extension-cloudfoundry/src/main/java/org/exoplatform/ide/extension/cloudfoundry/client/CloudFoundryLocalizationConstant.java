@@ -176,6 +176,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("control.switchAccount.prompt")
    String switchAccountControlPrompt();
    
+   @Key("control.appsList.id")
+   String appsControlId();
+   
+   @Key("control.appsList.title")
+   String appsControlTitle();
+   
+   @Key("control.apps.List.prompt")
+   String appsControlPrompt();
+   
    /*
     * LoginView.
     */
@@ -433,5 +442,11 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("create.error.instancesFormat")
    String errorInstancesFormat();
+   
+   /*
+    * ApplicationsView
+    */
+   @Key("apps.view.title")
+   String appsViewTitle();
 
 }

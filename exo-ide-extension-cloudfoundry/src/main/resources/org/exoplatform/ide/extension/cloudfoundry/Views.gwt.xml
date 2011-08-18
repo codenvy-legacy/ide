@@ -43,4 +43,7 @@
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display" />
    </replace-with>
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display" />
+   </replace-with>
 </module>

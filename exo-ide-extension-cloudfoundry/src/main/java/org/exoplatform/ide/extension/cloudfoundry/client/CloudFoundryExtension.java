@@ -26,7 +26,9 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationInfoControl;
+import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CreateApplicationControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.DeleteApplicationControl;
@@ -62,8 +64,9 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
     * Events handler.
     */
    private HandlerManager eventBus;
-   
-   public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(CloudFoundryLocalizationConstant.class);
+
+   public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
+      .create(CloudFoundryLocalizationConstant.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
@@ -82,36 +85,38 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    {
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new CloudFoundryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UpdateApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
       //rename doesn't work
-//      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
+      //      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new ApplicationInfoControl(), DockTarget.NONE, false);
-      
+
       IDE.getInstance().addControl(new StartApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new StopApplicationControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new RestartApplicationControl(), DockTarget.NONE, false);
-      
+
       IDE.getInstance().addControl(new MapUrlControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UnmapUrlControl(), DockTarget.NONE, false);
-      
+
       IDE.getInstance().addControl(new UpdateMemoryControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new UpdateInstancesControl(), DockTarget.NONE, false);
       IDE.getInstance().addControl(new SwitchAccountControl(), DockTarget.NONE, false);
-      
+      IDE.getInstance().addControl(new ApplicationsControl(), DockTarget.NONE, false);
+
       new CreateApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       new StartApplicationPresenter(eventBus);
       new ApplicationInfoPresenter(eventBus);
       new UpdateApplicationPresenter(eventBus);
-//      new RenameApplicationPresenter(eventBus);
+      //      new RenameApplicationPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
       new MapUrlPresenter(eventBus);
       new UnmapUrlPresenter(eventBus);
       new UpdatePropertiesPresenter(eventBus);
+      new ApplicationsPresenter();
    }
 
 }

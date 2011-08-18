@@ -73,46 +73,47 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
-      
+
       /**
        * Set the ask message to delete application.
        * @param message
        */
       void setAskMessage(String message);
-      
+
       void setAskDeleteServices(String text);
    }
-   
+
    private Display display;
+
    /**
     * Events handler.
     */
    private HandlerManager eventBus;
-   
+
    /**
     * Selected items in navigation tree.
     */
    private List<Item> selectedItems;
-   
+
    /**
     * Location of working copy of application.
     */
    private String workDir;
-   
+
    /**
     * The name of application.
     */
    private String appName;
-   
+
    public DeleteApplicationPresenter(HandlerManager eventbus)
    {
       this.eventBus = eventbus;
-      
+
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    public void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -134,7 +135,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          }
       });
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
@@ -143,10 +144,11 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    {
       selectedItems = event.getSelectedItems();
       this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0) {
+      if (selectedItems.size() == 0)
+      {
          return;
       }
-      
+
       workDir = selectedItems.get(0).getHref();
    }
 
@@ -156,9 +158,15 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      getApplicationInfo();
+      if (event.getApplicationName() == null)
+         getApplicationInfo();
+      else
+      {
+         appName = event.getApplicationName();
+         showDeleteDialog(appName);
+      }
    }
-   
+
    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -167,7 +175,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          getApplicationInfo();
       }
    };
-   
+
    private void getApplicationInfo()
    {
       CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
@@ -181,7 +189,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
             }
          });
    }
-   
+
    private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -190,23 +198,23 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          deleteApplication();
       }
    };
-   
+
    private void deleteApplication()
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
-      CloudFoundryClientService.getInstance().deleteApplication(workDir, null, isDeleteServices,
+      CloudFoundryClientService.getInstance().deleteApplication(workDir, appName, isDeleteServices,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, deleteAppLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
                closeView();
-               eventBus.fireEvent(new OutputEvent(
-                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName), Type.INFO));
+               eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                  .applicationDeletedMsg(appName), Type.INFO));
             }
          });
    }
-   
+
    private void showDeleteDialog(String appName)
    {
       if (display == null)
@@ -218,7 +226,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          display.setAskDeleteServices(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationAskDeleteServices());
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());

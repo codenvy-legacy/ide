@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
@@ -84,6 +85,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
    private static final String VALIDATE_ACTION = BASE_URL + "/apps/validate-action";
 
+   private static final String APPS = BASE_URL + "/apps";
+   
    /**
     * Events handler.
     */
@@ -182,7 +185,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + APPS_INFO;
 
-      String appIdParam = (appId != null) ? "appid=" + appId : null;
+      String appIdParam = (appId != null) ? "name=" + appId : null;
       String workDirParam = (workDir != null) ? "workdir=" + workDir : null;
       String params = "";
       if (appIdParam != null && workDirParam != null)
@@ -214,7 +217,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       final String url = restServiceContext + DELETE;
 
-      String params = (appId != null) ? "appid=" + appId + "&" : "";
+      String params = (appId != null) ? "name=" + appId + "&" : "";
       params += (workDir != null) ? "workdir=" + workDir + "&" : "";
       params += "delete-services=" + String.valueOf(deleteServices);
 
@@ -484,6 +487,20 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationList(CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback)
+   {
+      String url = restServiceContext + APPS;
+      callback.setEventBus(eventBus);
+      List<CloudfoundryApplication> apps = new ArrayList<CloudfoundryApplication>();
+      callback.setPayload(new ApplicationListUnmarshaller(apps));
+      callback.setResult(apps);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }
