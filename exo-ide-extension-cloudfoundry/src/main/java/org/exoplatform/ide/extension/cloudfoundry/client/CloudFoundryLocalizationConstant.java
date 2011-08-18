@@ -245,8 +245,14 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("create.appStarted.noUrls")
    String applicationStartedWithNoUrls();
    
-   @Key("createApp.warUrlIsNull")
-   String createApplicationWarIsNull();
+   @Key("create.application.forbidden")
+   String createApplicationForbidden(String folderName);
+   
+   @Key("create.application.selectFolder")
+   String selectFolderToCreate();
+   
+   @Key("create.application.notFolder")
+   String createApplicationNotFolder(String name);
    
    /*
     * StartApplicationPresenter
@@ -272,11 +278,23 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("startApp.appAlreadyStopped")
    String applicationAlreadyStopped(String name);
    
+   @Key("startApp.error.appNotStarted")
+   String applicationWasNotStarted(String name);
+   
    /*
     * UpdateApplicationPresenter
     */
    @Key("update.applicationUpdated")
    String updateApplicationSuccess(String name);
+   
+   @Key("update.application.forbidden")
+   String updateApplicationForbidden(String name);
+   
+   @Key("update.application.selectFolder")
+   String selectFolderToUpdate();
+   
+   @Key("update.application.notFolder")
+   String updateApplicationNotFolder(String name);
    
    /*
     * Messages

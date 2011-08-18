@@ -207,6 +207,12 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
             @Override
             protected void onSuccess(CloudfoundryApplication result)
             {
+               if (!"STARTED".equals(result.getState()))
+               {
+                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
+                  eventBus.fireEvent(new OutputEvent(msg));
+                  return;
+               }
                final String appUris = getAppUrisAsString(result);
                String msg = "";
                if (appUris.isEmpty())

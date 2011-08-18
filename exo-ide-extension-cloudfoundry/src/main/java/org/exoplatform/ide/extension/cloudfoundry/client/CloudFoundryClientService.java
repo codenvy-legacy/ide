@@ -165,10 +165,9 @@ public abstract class CloudFoundryClientService
    /**
     * Check, is file exists.
     * @param location the location of work dir.
-    * @param fileName the file name.
     * @param callback callback, that client has to implement to handle response from server.
     */
-   public abstract void checkFileExists(String location, String fileName, AsyncRequestCallback<String> callback);
+   public abstract void checkFileExists(String location, AsyncRequestCallback<String> callback);
    
    /**
     * Get list deployed applications

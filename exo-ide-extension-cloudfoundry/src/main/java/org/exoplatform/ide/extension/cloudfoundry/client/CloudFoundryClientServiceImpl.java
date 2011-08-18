@@ -461,9 +461,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#checkFileExists(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void checkFileExists(String location, String fileName, AsyncRequestCallback<String> callback)
+   public void checkFileExists(String location, AsyncRequestCallback<String> callback)
    {
-      String url = restServiceContext + "/ide/discovery/find/content?location=" + location + "&name=" + fileName;
+      String url = restServiceContext + "/ide/discovery/find/file?location=" + location;
 
       callback.setEventBus(eventBus);
 

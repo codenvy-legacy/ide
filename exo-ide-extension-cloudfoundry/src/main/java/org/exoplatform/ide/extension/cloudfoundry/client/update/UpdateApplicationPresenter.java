@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -94,11 +95,13 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    {
       selectedItems = event.getSelectedItems();
       this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0) {
+      if (selectedItems.size() == 0)
+      {
+         workDir = null;
          return;
       }
-      
-      workDir = selectedItems.get(0).getWorkDir();
+
+      workDir = selectedItems.get(0).getHref();
    }
 
    /**
@@ -107,7 +110,13 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      validateData();
+      if (workDir == null)
+      {
+         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToUpdate();
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         return;
+      }
+      isBuildApplication(workDir);
    }
    
    private void updateApplication()
@@ -145,10 +154,6 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
          warUrl = event.getJobStatus().getArtifactUrl();
          updateApplication();
       }
-      else
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
-      }
    }
    
    private LoggedInHandler validateHandler = new LoggedInHandler()
@@ -168,27 +173,36 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
             @Override
             protected void onSuccess(String result)
             {
-               isBuildApplication(workDir);
+               buildApplication();
             }
          });
    }
    
    /**
-    * Check, is work dir contains <code>pom.xml</code> file,
-    * that starts build project.
-    * <p/>
-    * Otherwise, create Cloud Foundry application.
+    * Check, is work directory contains <code>pom.xml</code> file.
     * 
     * @param workDir
     */
    private void isBuildApplication(String workDir)
    {
-      CloudFoundryClientService.getInstance().checkFileExists(workDir, "pom.xml", new AsyncRequestCallback<String>(eventBus)
+      if (!(selectedItems.get(0) instanceof Folder))
+      {
+         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationNotFolder(selectedItems.get(0).getName());
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         return;
+      }
+      
+      final String folderName = selectedItems.get(0).getName();
+      if (!workDir.endsWith("/"))
+      {
+         workDir += "/";
+      }
+      CloudFoundryClientService.getInstance().checkFileExists(workDir + "pom.xml", new AsyncRequestCallback<String>(eventBus)
       {
          @Override
          protected void onSuccess(String result)
          {
-            buildApplication();
+            validateData();
          }
          
          @Override
@@ -199,7 +213,8 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
                {
-                  updateApplication();
+                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(folderName);
+                  eventBus.fireEvent(new ExceptionThrownEvent(msg));
                   return;
                }
                else

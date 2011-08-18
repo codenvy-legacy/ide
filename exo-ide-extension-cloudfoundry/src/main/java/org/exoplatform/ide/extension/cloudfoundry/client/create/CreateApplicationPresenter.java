@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -247,6 +248,66 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       display.getUrlField().setValue(projectName.toLowerCase() + DEFAULT_APPLICATION_URL);
    }
    
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+      this.selectedItems = event.getSelectedItems();
+      if (selectedItems.size() == 0)
+      {
+         workDir = null;
+         return;
+      }
+
+      workDir = selectedItems.get(0).getHref();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent)
+    */
+   @Override
+   public void onCreateApplication(CreateApplicationEvent event)
+   {
+      if (workDir == null)
+      {
+         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         return;
+      }
+      isBuildApplication(workDir);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+   
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    */
+   @Override
+   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   {
+      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getJobStatus().getArtifactUrl() != null)
+      {
+         warUrl = event.getJobStatus().getArtifactUrl();
+         createApplication();
+      }
+   }
+   
+   //----Implementation------------------------
+   
    LoggedInHandler createAppHandler = new LoggedInHandler()
    {
       
@@ -259,7 +320,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    
    private void validate()
    {
-
       name = display.getNameField().getValue();
       if (display.getAutodetectTypeCheckItem().getValue())
       {
@@ -291,7 +351,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          return;
       }
       nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      workDir = selectedItems.get(0).getWorkDir();
       
       validateData();
    }
@@ -313,50 +372,67 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             @Override
             protected void onSuccess(String result)
             {
-               isBuildApplication(workDir);
+               buildApplication();
+               closeView();
             }
          });
    }
    
    /**
-    * Check, is work dir contains <code>pom.xml</code> file,
-    * that starts build project.
-    * <p/>
-    * Otherwise, create Cloud Foundry application.
+    * Check, is work directory contains <code>pom.xml</code> file,
     * 
     * @param workDir
     */
    private void isBuildApplication(String workDir)
    {
-      CloudFoundryClientService.getInstance().checkFileExists(workDir, "pom.xml", new AsyncRequestCallback<String>(eventBus)
+      if (!(selectedItems.get(0) instanceof Folder))
       {
-         @Override
-         protected void onSuccess(String result)
+         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         return;
+      }
+      
+      final String folderName = selectedItems.get(0).getName();
+      if (!workDir.endsWith("/"))
+      {
+         workDir += "/";
+      }
+      CloudFoundryClientService.getInstance().checkFileExists(workDir + "pom.xml",
+         new AsyncRequestCallback<String>(eventBus)
          {
-            buildApplication();
-            closeView();
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+            @Override
+            protected void onSuccess(String result)
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
-               {
-                  createApplication();
-                  closeView();
-                  return;
-               }
-               else
-               {
-                  super.onFailure(exception);
-               }
+               CloudFoundryClientService.getInstance().getFrameworks(
+                  new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, null, null)
+                  {
+                     @Override
+                     protected void onSuccess(List<Framework> result)
+                     {
+                        showView(result);
+                     }
+                  });
             }
-            super.onFailure(exception);
-         }
-      });
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  ServerException serverException = (ServerException)exception;
+                  if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(folderName)));
+                     return;
+                  }
+                  else
+                  {
+                     super.onFailure(exception);
+                  }
+               }
+               super.onFailure(exception);
+            }
+         });
    }
    
    private void buildApplication()
@@ -386,6 +462,12 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
                   }
                }
                eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               super.onFailure(exception);
             }
          });
    }
@@ -419,44 +501,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       return null;
    }
    
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent)
-    */
-   @Override
-   public void onCreateApplication(CreateApplicationEvent event)
-   {
-      CloudFoundryClientService.getInstance().getFrameworks(
-         new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, null, null)
-         {
-            @Override
-            protected void onSuccess(List<Framework> result)
-            {
-               showView(result);
-            }
-         });
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-   
    private void showView(List<Framework> frameworks)
    {
       if (display == null)
@@ -473,24 +517,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       IDE.getInstance().closeView(display.asView().getId());
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
-    */
-   @Override
-   public void onApplicationBuilt(ApplicationBuiltEvent event)
-   {
-      eventBus.removeHandler(event.getAssociatedType(), this);
-      if (event.getJobStatus().getArtifactUrl() != null)
-      {
-         warUrl = event.getJobStatus().getArtifactUrl();
-         createApplication();
-      }
-      else
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationWarIsNull()));
-      }
-   }
-   
    private String getAppUrlsAsString(CloudfoundryApplication application)
    {
       String appUris = "";
