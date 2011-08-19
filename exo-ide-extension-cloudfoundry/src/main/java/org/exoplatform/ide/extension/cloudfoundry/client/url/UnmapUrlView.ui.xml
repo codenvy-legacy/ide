@@ -10,15 +10,39 @@
    <f:VPanel>
       <f:Border margin="10">
          <g:ScrollPanel>
-         <e:RegisteredUrlsGrid width="100%" ui:field="registeredUrlsGrid"></e:RegisteredUrlsGrid>
+            <e:RegisteredUrlsGrid width="100%" ui:field="registeredUrlsGrid"></e:RegisteredUrlsGrid>
          </g:ScrollPanel>
       </f:Border>
+      
+      <g:HorizontalPanel height="30px" verticalAlignment="ALIGN_MIDDLE" spacing="0" width="100%">
+         <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE" width="10px">
+            <g:Label text="" width="10px" height="22px"></g:Label>
+         </g:cell>
+         
+         <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE" width="100%">
+            <f:TextField ui:field="mapUrlField" width="100%" height="22px" showTitle="false"></f:TextField>
+         </g:cell>
+         
+         <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE" width="10px">
+            <g:Label text="" width="10px" height="22px"></g:Label>
+         </g:cell>
+         
+         <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE" width="90px">
+            <f:ImageButton ui:field="mapUrlButton" width="90px" height="22px" text="{locale.mapButton}" imageResource="{resource.addButton}"
+               disabledImageResource="{resource.addButtonDisabled}"></f:ImageButton>
+         </g:cell>
+         <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE" width="10px">
+            <g:Label text="" width="10px" height="22px"></g:Label>
+         </g:cell>
+      </g:HorizontalPanel>
+      
+      <g:FlowPanel height="5px"></g:FlowPanel>
 
-      <g:HorizontalPanel height="30px" horizontalAlignment="center">
-         <f:ImageButton ui:field="deleteButton" width="100" height="22" text="{locale.deleteButton}" imageResource="{resource.deleteButton}"
-            disabledImageResource="{resource.deleteButtonDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="closeButton" width="100" height="22" text="{locale.closeButton}" imageResource="{resource.cancelButton}"
+      <g:HorizontalPanel height="30px" horizontalAlignment="center" verticalAlignment="ALIGN_MIDDLE">
+         <f:ImageButton ui:field="closeButton" width="100" height="22" text="{locale.closeButton}" imageResource="{resource.cancelButton}"
             disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
       </g:HorizontalPanel>
+      
+      <g:FlowPanel height="10px"></g:FlowPanel>
    </f:VPanel>
 </ui:UiBinder> 

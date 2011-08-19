@@ -392,6 +392,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       params += "url=" + url;
 
       callback.setEventBus(eventBus);
+      
+      callback.setResult(url);
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);

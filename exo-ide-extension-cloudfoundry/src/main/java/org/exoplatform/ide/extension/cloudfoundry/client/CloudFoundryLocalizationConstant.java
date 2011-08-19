@@ -47,6 +47,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("button.close")
    String closeButton();
    
+   @Key("button.unmap")
+   String unmapButton();
+   
+   @Key("button.map")
+   String mapButton();
+   
    /*
     * Controls.
     */
@@ -408,13 +414,19 @@ public interface CloudFoundryLocalizationConstant extends Messages
    String mapUrlRegisteredSuccess(String url);
    
    @Key("unmapUrl.success")
-   String unmapUrlUnregisteredSuccess(String url);
+   String unmapUrlSuccess(String url);
    
    @Key("unmapUrl.confirmationDialog.title")
    String unmapUrlConfirmationDialogTitle();
    
    @Key("unmapUrl.confirmationDialog.message")
    String unmapUrlConfirmationDialogMessage();
+   
+   @Key("unmapUrl.lisgrid.column.title")
+   String unmapUrlListGridColumnTitle();
+   
+   @Key("mapUrl.alreadyRegistered")
+   String mapUrlAlredyRegistered();
    
    /*
     * UpdatePropertiesPresenter

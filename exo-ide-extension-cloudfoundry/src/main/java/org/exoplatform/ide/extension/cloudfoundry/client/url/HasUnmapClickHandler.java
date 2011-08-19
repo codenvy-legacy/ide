@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
-import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link MapUrlEvent} event.
+ * A widget that implements this interface provides registration for
+ * Unmap button click handler instance.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: StartApplicationHandler.java Jul 12, 2011 3:51:51 PM vereshchaka $
- *
+ * @version $Id: HasUnmapClickHandler.java Aug 19, 2011 11:47:14 AM vereshchaka $
  */
-public interface MapUrlHandler extends EventHandler
+public interface HasUnmapClickHandler
 {
    /**
-    * Perform actions, when user tries to start application.
+    * Adds a {@link UnmapHandler} handler.
     * 
-    * @param event
+    * @param handler the unmap button click handler
     */
-   void onMapUrl(MapUrlEvent event);
-
+   void addUnmapClickHandler(UnmapHandler handler);
 }

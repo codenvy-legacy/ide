@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
-import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -33,11 +34,17 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
  * @version $Id: UnmapUrlGrid.java Jul 19, 2011 10:54:05 AM vereshchaka $
  *
  */
-public class RegisteredUrlsGrid extends ListGrid<UrlData>
+public class RegisteredUrlsGrid extends ListGrid<String> implements HasUnmapClickHandler
 {
    private final String ID = "ideCloudFoundryUnmapUrlGrid";
    
    private final String URL = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationUnmapUrlGridUrlField();
+   
+   private final String UNMAP_BUTTON_TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapButton();
+   
+   private final String UNMAP_COLUMN_HEADER = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlListGridColumnTitle();
+   
+   private Column<String, String> buttonColumn;
    
    public RegisteredUrlsGrid()
    {
@@ -45,36 +52,51 @@ public class RegisteredUrlsGrid extends ListGrid<UrlData>
 
       setID(ID);
       
-      Column<UrlData, Boolean> checkColumn = new Column<UrlData, Boolean>(new CheckboxCell(true, false))
+      buttonColumn = new Column<String, String>(new ButtonCell())
       {
          @Override
-         public Boolean getValue(UrlData object)
+         public String getValue(String object)
          {
-            return object.isChecked();
+            return UNMAP_BUTTON_TITLE;
+         }
+      };
+      
+      Column<String, SafeHtml> valueColumn = new Column<String, SafeHtml>(new SafeHtmlCell())
+      {
+         @Override
+         public SafeHtml getValue(final String url)
+         {
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               public String asString()
+               {
+                  return "<a target=\"_blank\" href=\"http://" + url + "\">" + url + "</a>";
+               }
+            };
+            return html;
          }
       };
 
-
-      Column<UrlData, String> valueColumn = new Column<UrlData, String>(new TextCell())
-      {
-         @Override
-         public String getValue(UrlData data)
-         {
-            return data.getUrl();
-         }
-      };
-
-      getCellTable().addColumn(checkColumn, "");
-      getCellTable().setColumnWidth(checkColumn, "25%");
       getCellTable().addColumn(valueColumn, URL);
       getCellTable().setColumnWidth(valueColumn, "75%");
-      
-      checkColumn.setFieldUpdater(new FieldUpdater<UrlData, Boolean>()
+      getCellTable().addColumn(buttonColumn, UNMAP_COLUMN_HEADER);
+      getCellTable().setColumnWidth(buttonColumn, "25%");
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.HasUnmapClickHandler#addUnmapClickHandler(com.google.gwt.event.dom.client.ClickHandler)
+    */
+   @Override
+   public void addUnmapClickHandler(final UnmapHandler handler)
+   {
+      buttonColumn.setFieldUpdater(new FieldUpdater<String, String>()
       {
          @Override
-         public void update(int index, UrlData object, Boolean value)
+         public void update(int index, String url, String value)
          {
-            object.setChecked(value);
+            handler.onUnmapUrl(url);
          }
       });
    }

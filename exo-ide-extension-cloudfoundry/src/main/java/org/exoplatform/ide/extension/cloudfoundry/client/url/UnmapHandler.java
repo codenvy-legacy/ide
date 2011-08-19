@@ -19,46 +19,13 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
 /**
- * Used as data for {@link RegisteredUrlsGrid}: wich URLs were selected for deletion.
+ * Handler for unmaping URL from application.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: UnmapUrlData.java Jul 19, 2011 11:09:01 AM vereshchaka $
+ * @version $Id: UnmapHandler.java Aug 19, 2011 12:03:55 PM vereshchaka $
+ *
  */
-public class UrlData
+public interface UnmapHandler
 {
-   
-   private boolean checked;
-   
-   private String url;
-   
-   public UrlData(String url, boolean checked)
-   {
-      this.url = url;
-      this.checked = checked;
-   }
-   
-   /**
-    * @return the url
-    */
-   public String getUrl()
-   {
-      return url;
-   }
-   
-   /**
-    * @return the checked
-    */
-   public boolean isChecked()
-   {
-      return checked;
-   }
-   
-   /**
-    * @param checked the checked to set
-    */
-   public void setChecked(boolean checked)
-   {
-      this.checked = checked;
-   }
-
+   void onUnmapUrl(String url);
 }

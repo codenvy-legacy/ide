@@ -49,6 +49,7 @@ public class UnmapUrlControl extends SimpleControl implements IDEControl
       setPrompt(PROMPT);
       setImages(CloudFoundryClientBundle.INSTANCE.unmapUrl(), CloudFoundryClientBundle.INSTANCE.unmapUrlDisabled());
       setEvent(new UnmapUrlEvent());
+      setDelimiterBefore(true);
    }
 
    /**

@@ -22,7 +22,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -30,6 +33,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -42,7 +46,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizatio
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,11 +59,17 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
 {
    interface Display extends IsView
    {
+      HasValue<String> getMapUrlField();
+      
+      HasClickHandlers getMapUrlButton();
+      
       HasClickHandlers getCloseButton();
       
-      HasClickHandlers getDeleteButton();
-
-      ListGridItem<UrlData> getRegisteredUrlsGrid();
+      ListGridItem<String> getRegisteredUrlsGrid();
+      
+      HasUnmapClickHandler getUnmapUrlListGridButton();
+      
+      void enableMapUrlButton(boolean enable);
    }
    
    private CloudFoundryLocalizationConstant localeBundle = CloudFoundryExtension.LOCALIZATION_CONSTANT;
@@ -77,15 +86,11 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
     */
    private List<Item> selectedItems;
    
-   /**
-    * List of urls to unregister.
-    */
-   private List<UrlData> unregisterUrlData;
+   private List<String> registeredUrls;
    
-   /**
-    * List of all urls. Unregistered urls will be removed from this list.
-    */
-   private List<UrlData> allUrlData;
+   private String unregisterUrl;
+   
+   private String urlToMap;
    
    public UnmapUrlPresenter(HandlerManager eventbus)
    {
@@ -96,8 +101,46 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
    
-   public void bindDisplay(List<String> registeredUrls)
+   public void bindDisplay(List<String> urls)
    {
+      registeredUrls = urls;
+      
+      display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            String value = display.getMapUrlField().getValue();
+            if (value == null || value.isEmpty())
+            {
+               display.enableMapUrlButton(false);
+            }
+            else
+            {
+               display.enableMapUrlButton(true);
+            }
+         }
+      });
+      
+      display.getMapUrlButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            urlToMap = display.getMapUrlField().getValue();
+            for (String url : registeredUrls)
+            {
+               if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
+               {
+                  Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
+                  return;
+               }
+            }
+            mapUrl(urlToMap);
+         }
+      });
+      
       display.getCloseButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -107,40 +150,59 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
          }
       });
       
-      display.getDeleteButton().addClickHandler(new ClickHandler()
+      display.getUnmapUrlListGridButton().addUnmapClickHandler(new UnmapHandler()
       {
+         
          @Override
-         public void onClick(ClickEvent event)
+         public void onUnmapUrl(String url)
          {
-            confirmUnregisteringUrls();
+            askForUnmapUrl(url);
          }
       });
       
-      List<UrlData> urlData = new ArrayList<UrlData>();
-      for (String url : registeredUrls)
-      {
-         urlData.add(new UrlData(url, false));
-      }
-      
-      display.getRegisteredUrlsGrid().setValue(urlData);
+      display.getRegisteredUrlsGrid().setValue(registeredUrls);
    }
    
    /**
-    * Show confirmation dialog to unregister urls.
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
-   private void confirmUnregisteringUrls()
+   private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler()
    {
-      allUrlData = display.getRegisteredUrlsGrid().getValue();
-      unregisterUrlData = new ArrayList<UrlData>();
-      
-      for (UrlData obj : allUrlData)
+      @Override
+      public void onLoggedIn()
       {
-         if (obj.isChecked())
-         {
-            unregisterUrlData.add(obj);
-         }
+         mapUrl(urlToMap);
       }
+   };
+   
+   private void mapUrl(final String url)
+   {
+      String workDir = getWorkDir();
       
+      CloudFoundryClientService.getInstance().mapUrl(workDir, null, url,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, mapUrlLoggedInHandler, null)
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               String registeredUrl = url;
+               if (!url.startsWith("http"))
+               {
+                  registeredUrl = "http://" + url;
+               }
+               registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
+               String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
+               eventBus.fireEvent(new OutputEvent(msg));
+               registeredUrls.add(url);
+               display.getRegisteredUrlsGrid().setValue(registeredUrls);
+               display.getMapUrlField().setValue("");
+            }
+         });     
+   }
+   
+   private void askForUnmapUrl(final String url)
+   {
       Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
          localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler()
          {
@@ -150,55 +212,36 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
                if (value == null || !value)
                   return;
                
-               unregisterUrls();
+               unregisterUrl = url;
+               unregisterUrl(unregisterUrl);
             }
          });
    }
    
-   /**
-    * Update list grid after unregistering selected urls.
-    */
-   private void updateRegisteredUrlsValue()
-   {
-      display.getRegisteredUrlsGrid().setValue(allUrlData);
-   }
-   
-   /**
-    * Unregister selected urls from application.
-    */
-   private void unregisterUrls()
-   {
-      if (unregisterUrlData.isEmpty())
-      {
-         updateRegisteredUrlsValue();
-         return;
-      }
-
-      final UrlData urlData = unregisterUrlData.get(0);
-      CloudFoundryClientService.getInstance().unmapUrl(getWorkDir(), null, urlData.getUrl(),
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, unmapUrlLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               unregisterUrlData.remove(urlData);
-               allUrlData.remove(urlData);
-               unregisterUrls();
-            }
-         });
-   }
-   
-   /**
-    * Logged in hanldler, which will be called after authorization.
-    */
-   private LoggedInHandler unmapUrlLoggedInHandler = new LoggedInHandler()
+   LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()
    {
       @Override
       public void onLoggedIn()
       {
-         unregisterUrls();
+         unregisterUrl(unregisterUrl);
       }
    };
+   
+   private void unregisterUrl(String url)
+   {
+      CloudFoundryClientService.getInstance().unmapUrl(getWorkDir(), null, url,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, unregisterUrlLoggedInHandler, null)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               registeredUrls.remove(result);
+               display.getRegisteredUrlsGrid().setValue(registeredUrls);
+               String msg = localeBundle.unmapUrlSuccess(result);
+               eventBus.fireEvent(new OutputEvent(msg));
+            }
+         });
+   }
    
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
