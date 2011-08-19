@@ -250,7 +250,7 @@ public class Cloudfoundry
             JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credentials.getToken(), null, 200),
                CloudfoundryApplication.class, null);
 
-         if (warFile != null)
+         if (("spring".equals(cfg.getType()) || "spring".equals(cfg.getType())) && warFile != null)
             uploadApplication(credentials, app, warFile);
          else
             uploadApplication(credentials, app, workDir);

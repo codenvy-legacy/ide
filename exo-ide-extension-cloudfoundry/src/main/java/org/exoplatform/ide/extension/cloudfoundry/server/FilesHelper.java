@@ -60,6 +60,8 @@ class FilesHelper
    static final FilenameFilter WAR_FILE_FILTER = new TypeFileFilter(".war");
    static final FilenameFilter RUBY_FILE_FILTER = new TypeFileFilter(".rb");
    static final FilenameFilter JS_FILE_FILTER = new TypeFileFilter(".js");
+   static final FilenameFilter JAVA_FILE_FILTER = new TypeFileFilter(".java");
+   static final FilenameFilter GROOVY_FILE_FILTER = new TypeFileFilter(".groovy");
 
    private static class TypeFileFilter implements FilenameFilter
    {
@@ -352,6 +354,18 @@ class FilesHelper
                return "node";
          }
       }
+
+      List<File> tmp = new ArrayList<File>();
+      fileList(path, tmp, JAVA_FILE_FILTER);
+      if (tmp.size() > 0)
+         return "spring";
+
+      tmp.clear();
+      fileList(path, tmp, GROOVY_FILE_FILTER);
+      if (tmp.size() > 0)
+         return "grails";
+      
+      tmp.clear();
 
       return null;
    }
