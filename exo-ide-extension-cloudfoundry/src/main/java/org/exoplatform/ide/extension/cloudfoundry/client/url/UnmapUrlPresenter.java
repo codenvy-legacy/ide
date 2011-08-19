@@ -241,7 +241,12 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
             {
                registeredUrls.remove(result);
                display.getRegisteredUrlsGrid().setValue(registeredUrls);
-               String msg = localeBundle.unmapUrlSuccess(result);
+               String unmappedUrl = result;
+               if (!unmappedUrl.startsWith("http"))
+               {
+                  unmappedUrl = "http://" + unmappedUrl;
+               }
+               String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
                eventBus.fireEvent(new OutputEvent(msg));
             }
          });
