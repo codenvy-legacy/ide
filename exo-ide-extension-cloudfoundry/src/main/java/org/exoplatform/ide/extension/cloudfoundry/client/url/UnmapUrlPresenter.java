@@ -137,6 +137,10 @@ public class UnmapUrlPresenter implements ItemsSelectedHandler, UnmapUrlHandler,
                   return;
                }
             }
+            if (urlToMap.startsWith("http://"))
+            {
+               urlToMap = urlToMap.substring(7);
+            }
             mapUrl(urlToMap);
          }
       });
