@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -20,8 +21,8 @@
          <artifactId>exo.kernel.container</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -30,8 +31,8 @@
          <artifactId>exo.jcr.component.core</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -40,8 +41,8 @@
          <artifactId>exo.jcr.component.ext</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -133,6 +134,9 @@
                   <systemPropertyVariables>
                      <java.src>${env.JAVA_HOME}${file.separator}src.zip</java.src>
                   </systemPropertyVariables>
+                  <excludes>
+                     <exclude>**/DocExtractorTest.java</exclude>
+                  </excludes>
                </configuration>
             </plugin>
          </plugins>
