@@ -63,6 +63,43 @@ public class CLIResourcesService
          AbstractResourceDescriptor descriptor = (AbstractResourceDescriptor)array[i].getObjectModel();
          result.addAll(cliResourceFactory.getCLIResources(descriptor));
       }
+//      if (result.isEmpty())
+//      {
+//         Method method;
+//         try
+//         {
+//            method = binder.getClass().getMethod("getTenancyResources");
+//            Map<String, List<ObjectFactory<AbstractResourceDescriptor>>> map =
+//               (Map<String, List<ObjectFactory<AbstractResourceDescriptor>>>)method.invoke(binder);
+//            List<ObjectFactory<AbstractResourceDescriptor>> list = map.get(null);
+//            ObjectFactory[] array2 = list.toArray(new ObjectFactory[resources.size()]);
+//            for (int i = 0; i < array2.length; i++)
+//            {
+//               AbstractResourceDescriptor descriptor = (AbstractResourceDescriptor)array2[i].getObjectModel();
+//               result.addAll(cliResourceFactory.getCLIResources(descriptor));
+//            }
+//         }
+//         catch (SecurityException e)
+//         {
+//            e.printStackTrace();
+//         }
+//         catch (NoSuchMethodException e)
+//         {
+//            e.printStackTrace();
+//         }
+//         catch (IllegalArgumentException e)
+//         {
+//            e.printStackTrace();
+//         }
+//         catch (IllegalAccessException e)
+//         {
+//            e.printStackTrace();
+//         }
+//         catch (InvocationTargetException e)
+//         {
+//            e.printStackTrace();
+//         }
+//      }
       return result;
    }
 }
