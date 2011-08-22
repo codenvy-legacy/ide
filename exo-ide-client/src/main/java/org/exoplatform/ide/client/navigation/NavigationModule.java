@@ -294,7 +294,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    {
       String path = selectedItem.getHref();
       path = path.substring(applicationConfiguration.getDefaultEntryPoint().length() - 1);
-      Element ae = DOM.getElementById("exo-ide-shell-link");
+      Element ae = DOM.getElementById("shell-link");
       if(ae == null)
          return;
       

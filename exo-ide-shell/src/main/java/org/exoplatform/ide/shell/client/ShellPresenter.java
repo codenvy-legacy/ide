@@ -289,6 +289,9 @@ public class ShellPresenter implements ConsoleWriter
    public void performComplete()
    {
       String prefix = display.getBuffer();
+      if (prefix.isEmpty())
+         return;
+
       List<String> commands = CLIResourceUtil.getAllCommandNames(CloudShell.getCommands());
       List<String> suggestions = new ArrayList<String>();
       for (String name : commands)
