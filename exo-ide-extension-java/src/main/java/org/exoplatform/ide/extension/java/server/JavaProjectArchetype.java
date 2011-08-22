@@ -31,6 +31,9 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -96,6 +99,7 @@ public class JavaProjectArchetype
 
    private void copyJarResources(final JarURLConnection jarConnection) throws IOException
    {
+      @SuppressWarnings("restriction")
       final JarFile jarFile = jarConnection.getJarFile();
 
       for (final Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();)
@@ -123,7 +127,7 @@ public class JavaProjectArchetype
             {
                if (!ensureDirectoryExists(f))
                {
-                  throw new IOException("Could not create directory: " + f.getAbsolutePath());
+                  throw new WebApplicationException(Response.serverError().entity("Could not create directory: " + f.getAbsolutePath()).build());
                }
             }
          }

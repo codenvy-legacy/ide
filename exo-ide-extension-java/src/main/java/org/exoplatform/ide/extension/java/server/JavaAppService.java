@@ -88,7 +88,6 @@ public class JavaAppService
     */
    @POST
    @Path("create")
-   @Produces(MediaType.APPLICATION_JSON)
    public Response createApplication(
       @QueryParam("workdir") FSLocation baseDir,
       @QueryParam("projectName") String projectName,
@@ -120,7 +119,7 @@ public class JavaAppService
          if (LOG.isDebugEnabled())
             LOG.error(e);
 
-         return Response.serverError().entity(e).build();
+         return Response.serverError().entity(e.getMessage()).build();
       }
       return Response.ok().build();      
    }
