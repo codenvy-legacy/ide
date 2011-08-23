@@ -94,7 +94,15 @@ public class LsCommand extends ClientCommand
             StringBuilder res = new StringBuilder();
             for (Item i : result.getChildren())
             {
-               res.append(i.getName());
+               if(i instanceof Folder)
+               {
+                  res.append("<span style=\"color:#246fd5;\">").append(i.getName()).append("</span>");
+               }
+               else
+               {
+                  res.append(i.getName());
+               }
+               
                res.append("\n");
             }
             CloudShell.console().print(res.toString());
