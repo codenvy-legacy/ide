@@ -1,94 +1,187 @@
+eXo IDE allows not only to create PHP, Java, Ruby and Ruby on Rails projects, but also provides all necessary tools for their easy deployment on Heroku, OpenShift and CloudBees PaaS.
+Git is among the tools provided by the IDE, required for the successful deployment. Go to Git Version Control System and SSH keys chapters of the eXo IDE User Manual to learn more about Git usage.
+
+
 h1. Heroku
 
-1. Make sure you have registered an account at [http://heroku.com|http://heroku.com/].
+Heroku is a free, cloud-based platform for Ruby application deployment. To deploy your Ruby and Ruby on Rails projects, do as follows:
 
-2. In your left pane Site Explorer, select the folder you want to deploy to Heroku. The folder must be an initialized Git repository. If you are starting from a new folder, use Init Repository in the Git menu.
+* *Step 1:* Make sure you have registered an account at [http://heroku.com|http://heroku.com/]
 
-3. In the Heroku menu, select Create Application.
+* *Step 2:* In your left pane Site Explorer, select the folder you want to deploy to Heroku. The folder must be an initialized Git repository. If you are starting from a new folder, use Init Repository in the Git menu.
 
-  !Heroku.png|border=1!
+* *Step 3:* Go to *PaaS > Heroku > Create Application...* .
 
-4. The location of the Git repository will be set by default with the folder you selected. The application name will be used to identify the application on the Heroku server. Your application will be located at the URL: name.heroku.com
-If you do not choose a name, a random name will be chosen for you. The remote repository name will be used to identify the Heroku remote in the Git menu. By default, the repository will be called "heroku". 
+!Heroku.png|border=0!
 
-5. Validate to create the new app. If the application creation is successful, you will see the URL, name and GitURL of your application in the Output console. 
+*Illustration. Heroku menu*
+
+* *Step 4:* The location of the Git repository will be set by default with the folder you have selected. The application name will be used to identify the application on the Heroku server. Your application will be located at the URL: name.heroku.com
+If you do not choose a name, a random name will be chosen for you. The remote repository name will be used to identify the Heroku remote in the Git menu. By default, the repository will be called "heroku".
+
+* *Step 5:* Validate to create the new app. If the application creation is successful, you will see the URL, name and Git URL of your application in the Output console.
+
+!output.png|border=0!
+
+*Illustration. Output message about the creation of application.*
 
 
-!output.png|border=1!
+* *Step 6:* Generate a new SSH key and push it to Heroku by selecting the Deploy public key option. You can view your public key from the SSH key manager in the Window menu.
 
-6. Generate a new SSH key and push it to Heroku by selecting the Deploy public key option. You can view your public key from the SSH key manager in the Window menu. 
+!SSH-key.png|border=0!
 
-!SSH-key.png|border=1!
+*Illustration. "SSH keys" window*
 
 
-7. To push your application to Heroku, make a Git Push in the Git > Remote menu. Choose the "heroku" remote repository (or the name you chose earlier). Once the code is pushed, you will get a notification in your the console.
+* *Step 7:* Go to Git > Remote > Push... to push your application to Heroku. Choose the "heroku" remote repository (or the name you have chosen earlier). Once the code is pushed, you will get a notification in your the console.
 
-8. Finally, you can run rake tasks in the Heroku environment by using the Rake option in the Heroku menu. Type your Rake command and the output will be displayed in the console. Read more about Heroku's rake support: [http://devcenter.heroku.com/articles/rake|http://devcenter.heroku.com/articles/rake] 
+* *Step 8:* Finally, you can run rake tasks in the Heroku environment by using the Rake option in the Heroku menu. Type your Rake command and the output will be displayed in the console. Read more about Heroku's rake support: [http://devcenter.heroku.com/articles/rake|http://devcenter.heroku.com/articles/rake]
 
-!rake-migrate.png|border=1!
+!rake-migrate.png|border=0!
 
-9. After creating an application you can delete, rename or view the application's info using the Heroku menu.
+*Illustration. "Execute rake command" window*
+
+* *Step 9:* After creating an application you can delete, rename or view the application's info using the Heroku menu.
+
 
 h1. OpenShift Express
 
-1. Make sure you have created an account at \[http://openshift.redhat.com/app/express\|http://openshift.redhat.com/app/express\].
+OpenShift Express is a PaaS for Perl, PHP, Python, and Ruby applications deployment in a shared-hosting model. To deploy your applications on OpenShift, follow the next steps:
 
-2. In the OpenShift menu, choose Create Domain. You can only create one domain and this will be considered as your application name space. 
+* *Step 1:* Make sure you have created an account at [http://openshift.redhat.com/app/express]
 
-!OpenShift.png|border=1!
+* *Step 2:* In the OpenShift menu, choose Create Domain. You can only create one domain and this will be considered as your application name space.
 
-3. On the first usage, the application will prompt you for your OpenShift credentials.
+!OpenShift.png|border=0!
 
-4. Enter your credentials and validate to create your domain. At this point, the IDE will create a SSH public and private key and deploy the public key to your OpenShift account. You can view you SSH keys in the SSH Key Manager.
+*Illustration. OpenShift menu*
 
-5. You can now create an application. Create a new folder and select it. In the OpenShift menu, choose Create Application. You will be asked to choose an application name and an application type. After validation, OpenShift will generate the default structure of your application in its remote repository. The repository will automatically be added to the list of remotes and named as "express".
+* *Step 3:* On the first usage, the application will prompt you for your OpenShift credentials.
 
-6. To pull the application to your folder, make a Git Pull.
+* *Step 4:* Enter your credentials and validate to create your domain. At this point, the IDE will create an SSH public and private keys and deploy the public key to your OpenShift account. You can view you SSH keys in the SSH Key Manager.
 
-7. You can now modify your application. To update it on the OpenShift server, simply make a Git Add, Git Commit, and Git Push.
+* *Step 5:* You can now create an application. Create a new folder and select it. In the OpenShift menu, choose Create Application. You will be asked to choose an application name and an application type. After validation, OpenShift will generate the default structure of your application in its remote repository. The repository will automatically be added to the list of remotes and named as "express".
 
-8. At all times, you can use the User Info menu to see the list of applications and their related information. 
+* *Step 6:* To pull the application to your folder, make a Git Pull.
 
-!User-info.png|border=1!
+* *Step 7:* You can now modify your application. To update it on the OpenShift server, simply make a Git Add, Git Commit, and Git Push.
+
+* *Step 8:* At all times, you can use the User Info menu to see the list of applications and their related information.
+
+!User-info.png|border=0!
+
+*Illustration. User information window*
+
+h1. CloudFoundry
+
+Cloud Foundry is a free, open source cloud platform as a service software to deploy Java projects. To deploy your projects, do as follows: 
+
+* *Step 1:* Be sure that you have an account at  http://www.cloudfoundry.com/ 
+
+* *Step 2:* Select your project folder and go to *PaaS > CloudFoundry > Create application* as shown below:
+
+!CloudFoundry_create.png|border=0!
+
+*Illustration. CloudFoundry menu*
+
+* *Step 3:* In the appeared window you can edit application name and get its URL as shown below:
+
+!Cloudfoundry_initialize.png|border=0!
+
+*Illustration. "Create Application" dialog window*
+
+If you'll uncheck the *Autodetect* checkbox, you'll be able to select the project type and indicate the required memory size for your project. You can also choose the application URL  different from the default one. To do this, check the *Custom* checkbox and edit the URL.
+
+* *Step 4:* Put a check at Start After Creation box, if you want to deploy your application after build automatically, and click *Create*
+
+You may be asked to log in to CloudFoundry if you haven't done it before, using *Switch Account* command of CloudFoundry menu. In the appeared window enter your email and password to proceed. You will be asked also to initialize your project folder as GIT repository. Click OK and monitor the application build. The messages about succesfull login and GIT repository creation will be displayed in the Output window.
+
+* *Step 5:* The build status displays in the *Building* window. If it is successful, you will receive a message with your application domain.
+
+When the application is created, you can edit, delete, rename or view the application's info using the CloudFoundry menu.
+
+Go to *PaaS > CloudFoundry > Application URLs* to edit your application URLs.
+
+!app_urls.png|border=0!
+
+*Illustration. "Application URLs" dialog window*
+
+Click *Unmap* button to delete the URL. If you need to add a new one, type it to the dialog box and click *Map* button to approve. The new URL will appear in the list.
+
+
+
+To view the applications satatus and information, go to *PaaS > CloudFoundry > Applications* 
+
+!application-info.png|border=0!
+
+*Illustration. Application window*
+
+Use Start, Stop, Restart or Delete buttons to manage the applications.
+
 
 h1. CloudBees
 
-1. Make sure you have an account on Cloudbees and that you have suscribed to the basic Dev@Cloud and Run@Cloud services.
+CloudBees is a cloud platform to deploy Java applications. To deploy applications on CloudBees, do as follows:
 
-2. Create a new Java project by selecting Java Project in the File/New menu.
+* *Step 1:* Make sure you have an account on Cloudbees and that you have subscribed to the basic Dev@Cloud and Run@Cloud services.
 
-3. Select the Java application you just created and in the Cloudbees menu, select Initialize Application. You will be asked for your Cloudbees Login and Password.
+   To make your builds deployable to Run@Cloud configure Jenkins as following:
+* Make sure you installed CloudBees Deployer plugin (Manage Jenkins \-> Manage Plugins), if not - add it from Available list
 
-  !CB-menu.png|border=1!
+!deplplugin.jpg|border=0!
 
-4. Choose the Cloudbees domain you want to deploy to and give a name to your application. This will initialize your application on Run@Cloud.
+*Illustration. Plugins window*
 
+* To make it work properly you might need to enter your CloudBees account info to Jenkins. To do that: copy/paste your Account name, API and Secret keys from your Account \-> Security Keys to Manage Jenkins \-> Configure System window, so you'll have something like:
 
-!cloudbees-init.png|border=1!
+!cbapikey.jpg|border=0!
 
-
-5. We now need to push our code to a remote repository, in order to build it on Dev@Cloud. For this, we will use GitHub as an intermediary. Start by initializing a Git repository on your project (Git menu-> Initialize repository).
-
-6. If you haven't set up your GitHub account to work with your IDE yet, generate a new SSH key for [github.com|http://github.com/] and copy the public key to your GitHub account (Account Settings).
-
-7. Create a new repository in GitHub and copy the SSH url.
-
-8. Back in the IDE, in the Git/Remote/Remotes menu, add GitHub as a remote repository and paste the SSH url.
-
-9. Push you project to GitHub.
-
-10. Go to your Cloudbees Jenkins dashboard ([https://yourname.ci.cloudbees.com/]) and create a new Job.
-
-11. Choose a Job name, select Maven project and continue to the next screen.
+*Illustration. "Configure System" window*
 
 
-!maven.png|border=1!
+* *Step 2:* Create a new Java project by selecting Java Project in *File > New menu*.
+
+* *Step 3:* Select the Java application you just have created and go to *PaaS > CloudBees > Initialize Application*. You will be asked for your Cloudbees Login and Password.
+
+!CB-menu.png|border=0!
+
+*Illustration. CloudBees menu*
+
+* *Step 4:* Choose the Cloudbees domain you want to deploy to and give a name to your application. This will initialize your application on Run@Cloud.
+
+!cloudbees-init.png|border=0!
+
+*Illustration. Output message about application initialization*
+
+* *Step 5:* We now need to push our code to a remote repository, in order to build it on Dev@Cloud. For this, we will use GitHub as an intermediary. Start by initializing a Git repository on your project (*Git > Initialize repository*).
+
+* *Step 6:* If you haven't set up your GitHub account to work with your IDE yet, generate a new SSH key for [github.com|http://github.com/]and copy the public key to your GitHub account (Account Settings).
+
+* *Step 7:* Create a new repository in GitHub and copy the SSH url.
+
+* *Step 8:* Go to the IDE: *Git > Remote > Remotes...*, add GitHub as a remote repository and paste the SSH url.
+
+* *Step 9:* Push your project to GitHub.
+
+* *Step 10:* Go to your Cloudbees Jenkins dashboard ([https://yourname.ci.cloudbees.com/]) and create a new Job.
+
+* *Step 11:* Choose a Job name, select Maven project and continue to the next screen.
+
+!maven.png|border=0!
+
+*Illustration. Jenkins dashboard/New Job*
 
 
-12. In the "Source Code Management" section, select Git. Insert the URL of the GitHub repository.
+* *Step 12:* In the "Source Code Management" section, select Git. Insert the URL of the GitHub repository.
 
-13. Copy the SSH public key that Cloudbees generated to your GitHub account (Account Settings).
+* *Step 13:* Copy the SSH public key that Cloudbees generated to your GitHub account (Account Settings).
 
-14. In the "Post-build Actions" section, select Cloudbees Deployment and enter the Application Id that you had chosen when initializing the application.
+* *Step 14:* In the "Post-build Actions" section, select Cloudbees Deployment and enter the Application Id that you had chosen when initializing the application.
 
-15. Launch the build. Once built, the application will be deployed to Run@Cloud.
+!depl2cb.jpg|border=0!
+
+*Illustration."Post-build Actions" section*
+
+* *Step 15:* Launch the build. Once built, the application will be deployed to Run@Cloud.
+
+Now, having your application deployed, you can continue to use them according to your goals.

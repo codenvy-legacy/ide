@@ -18,8 +18,7 @@ To generate the node type definition and preview it, do as follows:
 
 *Step 3.* Click *Generate* button. The generated node type definition will be  displayed in the separate tab of _Operation Panel_ with title *Preview node type*:
 
-
-!previewNodeType.png|border=1!
+!previewNodeType.png|border=0!
 
 *Illustration. Preview node type definition*
 
@@ -40,7 +39,7 @@ To create new node type, do as follows:
 * *Step 4.* Click *Deploy* button.
 
 
-!deployNodeType.png|border=1!
+!deployNodeType.png|border=0!
 
 *Illustration. Deploy the node type definition*
 

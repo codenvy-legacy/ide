@@ -13,7 +13,8 @@ The eXo IDE application provides the original approach to operate with _REST Ser
 
 With eXo IDE, you can validate REST Service before saving, deploying, launching or undeploying the service. The feedback from server is displayed in the _Output Tab_:
 
-!ide-groovy_script_operations.png!
+
+!groovy_script_operations.png|border=0!
 
 *Illustration. REST Service operations*
 
@@ -111,7 +112,8 @@ This function is for users with the _administrators_ role only.
 
 REST Service is deployed automatically on the server after being saved, if the *Autoload* property is set to _True_. You can view this property in the _Property Tab_ by clicking the *Show Properties* button. To manage the *Autoload* property use *Set/Unset Autoload* commands respectively. These commands are displayed to the current status of the *Autoload* property, so you can invert this property. The default value of the *Autoload* property is set to _False_. For more details, see the illustration below:
 
-!ide_change_autoload_property.png!
+
+!change_autoload_property.png|border=0!
 
 *Illustration. Change Autoload service property*
 
@@ -180,7 +182,8 @@ In eXo IDE, developers can secure deploy untested REST Service for testing in an
 
 To undeploy from sandbox, select the *Undeploy REST Service from Sandbox* button on the toolbar, or go to *Run > Undeploy from Sandbox* on the top menu.
 
-!deploy_undeploy_sandbox.png|border=1!
+
+!deploy_undeploy_sandbox.png|border=0!
 
 *Illustration. Using REST Services Sandbox*
 
@@ -197,7 +200,7 @@ h1. REST Service Discovery
 
 In the eXo IDE, you can explore all REST Services which are available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
 
-!RestServiceDiscovery.png|border=1!
+!RestServiceDiscovery.png|border=0!
 
 *Illustration. REST Service Discovery form*
 
@@ -208,16 +211,17 @@ The  class path configuration means the setting of paths to the  source files or
 * *Step 1.* Select the created project item in _Workspace Panel_.
 * *Step 2.* Go to *File > Configure Classpath...* on the top menu to open the *Configure Classpath* window as below:
 
-!configure-classpath.png|border=1!
+
+!configure_classpath.png|border=0!
 
 *Illustration. Configure classpath form*
 
 * *Step 3.* Add or remove source in the tree.
 * *Step 4.* Click the *Save* button to save changes in classpath configuration, or the *Cancel* button to discard changes in tree.
 
-{note}
+{info}
 If selected in "Workspace Panel" item is not a project or part of it, then you will get an error message.
-{note}
+{info}
 
 
 
@@ -229,7 +233,7 @@ To add source to classpath, do as follows:
 * *Step 2.* Select one or more sources in the tree.
 * *Step 3.* Click *Ok* button.
 
-!add-source.png|border=1!
+!add-source.png|border=0!
 
 *Illustration. Add source to classpath*
 
@@ -238,9 +242,9 @@ Use "CTRL" key to select more than one item in the tree.
 {tip}
 
 
-{note}
+{info}
 The "Ok" button is disabled if workspace root folder is selected in the "Choose source path" dialog.
-{note}
+{info}
 
 
 
@@ -248,9 +252,9 @@ h2. Remove Source from Classpath
 
 To remove source(s) from project's classpath, select source in the tree of *Configure Classpath* dialog and click the *Remove* button.
 
-{note}
+{info}
 The "Remove" button is disabled if there is no source selected in the tree.
-{note}
+{info}
 
 
 

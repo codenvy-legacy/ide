@@ -1,1 +1,0 @@
-eXo IDE supports validating and classpath configuration of POGO files that is similar to REST Service.

@@ -15,7 +15,8 @@ To create a Netvibes widget, click the *New* icon on the toolbar and then select
 
 The new Netvibes Widget file is opened in the editor, enabling you to edit and save it.
 
-!createNetvibesWidget.png|border=1!
+
+!createNetvibesWidget.png|border=0!
 
 *Illustration. Create new Netvibes widget*
 
@@ -23,7 +24,7 @@ The new Netvibes Widget file is opened in the editor, enabling you to edit and s
 h1. Preview Netvibes Widget
 
 To preview the Netvibes widget, do as follows:
-* *Step 1:* Open your desired widget file in the _Content Panel_.
+* *Step 1:* Open your widget file in the _Content Panel_.
 * *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
 
 The selected widget is opened in the _Preview Tab_.
@@ -40,7 +41,7 @@ There are a couple of ways to deploy a _Netvibes widget_. You can do it manually
 
 * *Step 2:* Go to the [netvibes ecosystem|http://eco.netvibes.com/widgets], click on *Create or submit* and *Submit Widget*.
 
-* *Step 3:* Paste the url of your gadget, and don’t forget to remove the “*/private*” part from it. If you do not do this, _Netvibes_ will not be able to access it.
+* *Step 3:* Paste the url of your gadget, and don’t forget to remove the "*/private*" part from it. If you do not do this, _Netvibes_ will not be able to access it.
 
 * *Step 4:* Fill-in the form and finish the process. The widget is now available in the ecosystem.
 
@@ -54,22 +55,26 @@ There are a couple of ways to deploy a _Netvibes widget_. You can do it manually
 
 * *Step 2:* Click on *Deploy UWA widget to Ecosystem* button on the toolbar; or go to *Run > Deploy UWA widget* on the top menu to open the *Deploy UWA widget to Ecosystem*:
 
-!deployNetvibesWidget.png|border=1!
+
+!deploy_netvibes_widget.png|border=0!
 
 *Illustration. Deploy UWA widget to Netvibes Ecosystem*
 
-* *Step 3:* Paste the url of your gadget, and don’t forget to remove the “/*private*” part from it, or netvibes will not be able to access it
+* *Step 3:* Paste the url of your gadget, and don’t forget to remove the "/*private*" part from it, or netvibes will not be able to access it
 
 * *Step 4:* Enter the information about the widget in the fields in the *Step 2* form. The fields marked with asterisks (*\**), including "*Title*", "*Description*", "*Main language*", "*Most appropriate region*" and "*Most appropriate category*" are required.
 
 Click *Next* after completing your details.
-!step2.png|border=1!
+
+
+!step2.png|border=0!
 
 *Illustration. Dialog "Step 2. Detailed Information"*
 
 * *Step 5:* Enter your netvibes credentials and the API key/secret that netvibes gave you by email. All these fields are mandatory.
 
-!step3.png|border=1!
+
+!step3.png|border=0!
 
 *Illustration. Dialog "Step 3. Private Information"*
 
@@ -112,6 +117,6 @@ There is a convenient way to view the developer's documentation, while creating 
 
 Top menu item and a panel with loaded documentation will be opened at the right part of the application.
 
+!netvibes_documentation.png|border=0!
 
-!netvibes-documentation.png|border=1!
 *Illustration. View Netvibes Documentation*

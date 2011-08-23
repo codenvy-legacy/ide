@@ -1,18 +1,30 @@
 h1. Introduction
-
 {include:document="IDE/Introduction.wiki" /} 
 
-h1. Basic Operations
-{include:document="IDE/BasicOperations.wiki" /}
+h1. Interface Overview
+{include:document="IDE/Interface Overview.wiki" /} 
 
-h1. Operations With Folder
-{include:document="IDE/Operations with Folder.wiki" /}
 
-h1. Operations With File
-{include:document="IDE/Operations with File.wiki" /}
+h1. Basic Operations with Files and Folders
+{include:document="IDE/Basic Operations with Files and Folders.wiki" /}
 
-h1. Preview HTML File
-{include:document="IDE/Preview HTML File.wiki" /}
+h1. Operations with Folders
+{include:document="IDE/Operations with Folders.wiki" /}
+
+h1. Operations With Files
+{include:document="IDE/Operations With Files.wiki" /}
+
+h1. Use File Template
+{include:document="IDE/Use File Template.wiki" /}
+
+h1. Use Project Template
+{include:document="IDE/Use Project Template.wiki" /}
+
+h1. Edit Files in the Code Editor
+{include:document="IDE/Edit Files in the Code Editor.wiki" /}
+
+h1. Supported Languages
+{include:document="IDE/Supported Languages.wiki" /}
 
 h1. Search Files
 {include:document="IDE/Search Files.wiki" /}
@@ -20,19 +32,22 @@ h1. Search Files
 h1. REST Service Operations
 {include:document="IDE/REST Service Operations.wiki" /}
 
-h1. GIT Version Control System
-{include:document="IDE/GIT Version Control System.wiki" /}
+h1. Git Version Control System
+{include:document="IDE/Git Version Control System.wiki" /}
+
+h1. SSH Keys
+{include:document="IDE/SSH Keys.wiki" /}
 
 h1. Operations With POGO File
-{include:document="IDE/POGO File Operations.wiki" /}
+{include:document="IDE/Operations With POGO File.wiki" /}
 
 h1. Operations With Google Gadget
-{include:document="IDE/Google Gadget Operations.wiki" /}
+{include:document="IDE/Operations With Google Gadget.wiki" /}
 
-h1. Operations With Templates 
+h1. Operations With Templates
 {include:document="IDE/Operations With Templates.wiki" /}
 
-h1. Operations With Netvibes Widget 
+h1. Operations With Netvibes Widget
 {include:document="IDE/Operations With Netvibes Widget.wiki" /}
 
 h1. Chromattic Data Object Usage
@@ -44,8 +59,11 @@ h1. Versioning
 h1. PaaS Deployment
 {include:document="IDE/PaaS Deployment.wiki" /}
 
+h1. Shell Console Application
+{include:document="IDE/Shell Console Application.wiki" /}
+
 h1. Miscellaneous and Tips
-{include:document="IDE/Miscellaneous.wiki" /}
+{include:document="IDE/Miscellaneous and Tips.wiki" /}
 
 h1. Links
 * [Codemirror usage|http://codemirror.net]

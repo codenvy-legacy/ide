@@ -9,7 +9,9 @@ To create a new Groovy template, do as follows:
 * *Step 3:* Save the file by selecting *File > Save As* on the top menu, or by clicking the *Save As* icon on the toolbar.
 Both _Outline Panel_ and Autocomplete form can be used to edit the Groovy Template.
 
-!groovy_template.png|border=1!
+
+!groovy_template.png|border=0!
+
 
 *Illustration. Operations with ECM templates*
 
@@ -23,10 +25,11 @@ h1. Preview Template
 
 To preview the ECM template, do as follows:
 
-* *Step 1:* Open your desired Groovy template in the _Content Panel_.
+* *Step 1:* Open Groovy template in the _Content Panel_.
 * *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
 The selected template is opened in the _Gadget Container_ of the _Preview Tab_ as below:
 
-!gtmpl_operations.png|border=1!
+
+!gtmpl_operations.png|border=0!
 
 *Illustration. Groovy Templates preview*

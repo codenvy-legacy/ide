@@ -1,9 +1,9 @@
 eXo IDE is a powerful Web application which provides a rich environment for developing different content, scripts, and services. It requires no additional installations, runs in a browser and allows to access and work with files online from anywhere. eXo IDE offers:
 
 * Work with the Remote File System through _Virtual File System_ including Browsing, File Locking, File Search, Versioning.
-* Code Editor with syntax highlighting for many popular languages ??and advanced features such as: Code Autocomplete, Code Outline and WYSIWYG Editor for HTML
-* Support for multiple programming and descriptive languages such as: JavaScript, HTML, XML, CSS, Groovy, etc.
-* Tools for developing client side applications including technologies such as Netvibes Widgets, Google Gadgets and Groovy Templates;
+* Code Editor with Syntax Highlighting for many popular languages ??and advanced features such as: Code Autocomplete, Code Outline and WYSIWYG Editor for HTML and Google Gadget.
+* Support for multiple programming and descriptive languages such as: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Ruby, JSP, etc.
+* Tools for developing client side applications including technologies such as Netvibes Widgets, Google Gadgets, Groovy Templates, Java Projects and Ruby on Rails Projects;
 * Development of server-side applications, running, debugging, and interaction with the client side via REST Service.
 
 The eXo IDE User Guide aims at providing explanations and step-by-step instructions of functions in eXo IDE.
@@ -17,3 +17,4 @@ Supported Web browsers:
 * Mozilla Firefox 3.6\+
 * Safari 5.0\+
 * Google Chrome 11.0\+
+* Internet Explorer 7.0\+

@@ -10,19 +10,17 @@ Start using Git by initializing a Git repository as follows:
 
 3. If the operation is successful, then the repository directory will be marked as follows:
 
-!git folder view.png|border=1!
+!git folder view.png|border=0!
 
-*Illustration: Git repository directory.*
+*Illustration. Git repository directory*
 
-The following message will appear in the _Output Tab_:
+The following message will appear in the _Output Tab_
 
-{code}
 \[INFO\] Repository was successfully initialized.
-{code}
 
-{note}
+{info}
 You can initialise any directory except the root folder.
-{note}
+{info}
 
 To delete a repository, go to *Git > Delete Repository*. A message confirming the deletion will be displayed.
 
@@ -30,23 +28,23 @@ h1. Clone Repository
 
 To clone a repository, go to *Git > Clone repository*. In the dialog window, indicate the remote repository URI and its name. The default name is *origin*, but you can choose a new one. The work directory of the cloned repository is indicated in Work directory field. Click *Clone* to proceed.
 
-!Clone repository.png|border=1!
+!Clone repository.png|border=0!
 
-*Illustration: Clone remote repository dialog window*
+*Illustration. "Clone remote repository" dialog window*
 
 h1. Add files to index
 
-Untracked files are new files that are added to the repository but have never been added to index and committed. They are marked with a question mark: !Untracked.png|border=1!
+Untracked files are new files that are added to the repository but have never been added to index and committed. They are marked with a question mark: !Untracked.png|border=0!
 
-To start tracking new files, you need to add them to the index. To do this, select the file and go to *Git >Add...* Indexed files are marked with an arrow: !Arrow sign.png|border=1!
+To start tracking new files, you need to add them to the index. To do this, select the file and go to *Git >Add...* Indexed files are marked with an arrow: !Arrow sign.png|border=0!
 
 h1. Reset Files
 
 To remove files from the index, but not from the repository directory go to *Git > Reset files*. The dialog window asking you to choose files for removal will appear as shown below:
 
-!Reset files.png|border=1!
+!Reset files.png|border=0!
 
-*Illustration: Select files to reset dialog window*
+*Illustration. "Select files to reset" dialog window*
 
 
 Select files that you need to reset and click *Reset*.
@@ -57,9 +55,9 @@ To remove files from index and repository directory at once, go to *Git > Remove
 
 h1. Commit Files
 
-To commit files, go to *Git > Commit*. The committed files are marked as follows: !Commited files.png|border=1!
+To commit files, go to *Git > Commit*. The committed files are marked as follows: !Commited files.png|border=0!
 
-When committed files are changed but new changes are not committed, these files are marked with asterisk: !Commited but changed.png|border=1!
+When committed files are changed but new changes are not committed, these files are marked with asterisk: !Commited but changed.png|border=0!
 
 To commit new changes to Git, you need to add changed files first to index and then make new commit as described above.
 
@@ -70,7 +68,9 @@ To revert to the particular commit, select the repository and go to *Git > Reset
 1. In the dialog window select the commit that you want to revert to.
 2. Choose one of the three reset types that suits you and click *Reset*.
 
-!Reset().png|border=1!
+!Reset().png|border=0!
+
+*Illustration. "Reset to commit" dialog window*
 
 *soft* \- resets the head to the selected commit,
 
@@ -84,9 +84,9 @@ h1. Branches
 One git repository can maintain several branches of development. To perform operations with branches go to *Git > Branches...* The following dialog window will appear:
 
 
-!branches.png|border=1!
+!branches.png|border=0!
 
-*Illustration: Branches dialog window*
+*Illustration. "Branches" dialog window*
 
 The default branch is called *master*.
 
@@ -94,9 +94,9 @@ To create a new branch, click the *Create* button. In the pop up window that wil
 
 To delete a branch, select it and click *Delete* button.
 
-{note}
+{info}
 You cannot delete the current (checked) branch. If the current branch is checked, then *Delete* button is disabled.
-{note}
+{info}
 
 To switch between branches, select the branch and click the *Checkout* button.
 
@@ -105,21 +105,23 @@ h1. Check Status
 
 To watch the status of file or repository, select it and go to *Git > Status*. The status will appear in the _Output Tab_ as shown below:
 
-!Status.png|border=1!
+!Status.png|border=0!
+
+*Illustration. Files status in the Output window*
 
 
 h1. View history
 
 To view history of commits and changes, select the repository and go to *Git > Show History...* The following History Panel will appear:
 
-!History shorter.png|border=1!
+!History shorter.png|border=0!
 
-*Illustration: History Panel*
+*Illustration. History Panel*
 
 
-{note}
+{info}
 If the repository is not selected, the following error message will appear in the pop up window: Not a Git repository (or any of the parent directories).
-{note}
+{info}
 
 Use different options of comparison and view the following differences:
 
@@ -137,24 +139,24 @@ To view differences with working tree, select a commit and click *Show differenc
 
 Switch between *Show changes in project* and *Show changes of selected resources* modes to track changes respectively in particular file or in the whole repository.  For example, if you need to see the differences between the index and some files in the repository - not the whole repository - switch to *Show changes of selected resources* mode and click *Show differences with index* button as shown below:
 
-!Index selected resourcesl.png|border=1!
+!Index selected resourcesl.png|border=0!
 
-*Illustration: "Show changes of selected resources" mode*
+*Illustration. "Show changes of selected resources" mode*
 
 h1. Add Remote Repositories
 
 To add remote repository, select your local repository and go to *Git > Remote > Remotes...* The following dialog window will appear:
 
-!List of remote repositories.png|border=1!
+!List of remote repositories.png|border=0!
 
-*Illustration: Remote repositories dialog window*
+*Illustration. "Remote repositories" dialog window*
 
 
 To add a remote repository, click *Add* button. In the *Add remote repository* dialog window, choose a name and indicate location of the remote repository and click *Ok*:
 
-!Add remote repository.png|border=1!
+!Add remote repository.png|border=0!
 
-*Illustration: Add remote repository dialog window*
+*Illustration. "Add remote repository" dialog window*
 
 A remote repository will be added to the list of remote repositories.
 
@@ -164,22 +166,22 @@ h1. Push
 
 To perform a push operation to a remote repository, select a repository and go to *Git > Remote > Push...* In the dialog window, choose the remote repository, the branch that you want to push and the branch of remote repository that you want to push to, and click OK as shown below:
 
-!Push.png|border=1!
+!Push.png|border=0!
 
-*Illustration: Push to remote repository dialog window*
+*Illustration. "Push to remote repository" dialog window*
 
 
 If no remote repositories are added, then the following error message will appear:
 
-!No repositories.png|border=1!
+!No repositories.png|border=0!
 
-*Illustration: No repositories error message*
+*Illustration. No repositories error message*
 
 
 h1. Pull/Fetch
 
 To perform pull or fetch operation, go to *Git > Remote > Pull/Fetch...* In the dialog window, choose the remote repository, a remote branch to pull/fetch from, and a local branch to pull/fetch to, as shown below and click *Pull/Fetch*:
 
-!Pull.png|border=1!
+!Pull.png|border=0!
 
-*Illustration: "Pull from remote repository" dialog window*
+*Illustration. "Pull from remote repository" dialog window*
