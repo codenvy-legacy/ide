@@ -1,0 +1,45 @@
+_File Template_ is stored in the IDE registry file, and then can be used to create another files with the same MIME type.
+
+
+h1. Save File as Template
+
+To save the selected file as a template with the same MIME type, do as follows:
+* *Step 1:* Go to *File > Save As Template...* on the top menu.
+* *Step 2:* Enter the template name.
+* *Step 3:* Define the brief description of the template.
+* *Step 4:* Click *Save* to accept.
+You can also save the uploaded file as template.
+
+
+!save_file_as_template.png|border=0!
+
+*Illustration. Save file as template*
+
+
+h1. Create File from Template
+
+The *File From Template...* function enables you to create a file from the predefined template. For example, to create a simple gadget XML file, do as follows:
+
+* *Step 1:* Click the *New* button on the toolbar and select *File From Template...* from the pop-up to open the dialog, or press *Ctrl+N* hotkeys.
+* *Step 2:* Select the required type and template for the file.
+* *Step 3:* Enter the name into the *File Name* field, and click *Create* to complete adding your new file. The newly created file is opened automatically in the _Content Panel_.
+
+
+!create_From_Template.png|border=0!
+
+
+*Illustration. Create the gadget from template*
+
+
+h1. Remove Non-default File Template
+
+To remove a non-default file template, do as follows:
+
+* *Step 1:* Click the *New* button on the toolbar.
+* *Step 2:* Select *File From Template...*; or press *Ctrl+N* hotkeys.
+* *Step 3:* Select the needed non-default template in black and click *Delete*.
+The confirmation dialog will appear for you to verify your deletion.
+
+{warning}
+After deleting the file template which has been used in the project template, a new project will be created from such project template without this file.
+{warning}

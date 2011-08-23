@@ -1,0 +1,63 @@
+_Project Template_ helps you create folders and files with the predefined structure and content. You can create, update or remove your project template and add new folders and files from your template.
+
+
+h1. Create Project Template
+
+To create a project template, do as follows:
+* *Step 1:* Go to *File > New > Project Template...* on the top menu; or click the *New* button on the toolbar and select the *Project Template...* command:
+
+
+!create_project_template.png|border=0!
+
+
+*Illustration. "Create project template" dialog window.*
+
+
+* *Step 2:* Enter the name and brief description in the *Create project template* form
+* *Step 3:* Edit its structure by clicking buttons *Add Folder*, *Add File*, *Delete* at the right part of the *Create project template* dialog.
+* *Step 4:* Click *Create* button to complete your project template.
+
+
+h1. Remove Project Template
+
+To remove a project template, do as follows:
+* *Step 1:* Click *New > Project From Template...* on the toolbar; or go to *File > New > Project From Template...* from the top menu.
+* *Step 2:* Select your target project template from the list.
+* *Step 3:* Click the *Delete* button.
+
+h1. Java project
+
+To create java project do as follows:
+
+* *Step 1.* Select the folder in which you want to create a project
+* *Step 2.* Go to *File > New > Java Project...*
+* *Step 3.* Type a project name in the dialog window and click *Create* as shown below:
+
+
+!java project.png|border=0!
+
+*Illustration. "Create new java project" dialog window*
+
+The project will be created in the selected folder.
+
+h1. Java Spring Project. 
+
+* *Step 1.* Select the destination folder.
+* *Step 2.* Go to *File > New > Java Spring Project...*
+* *Step 3.* Type a project name in the dialog window and click *Create*
+
+The project will be created in the selected folder.
+
+h1. Ruby on Rails project
+
+Create Ruby on Rails (RoR) project as follows:
+
+* *Step 1.* Select the folder in which you want to have your project.
+* *Step 2.* Go to *File > New > RoR project...*
+* *Step 3.* Type a project name in the dialog window and click *Create* as shown below:
+
+!ror_project.png|border=0!
+
+*Illustration. "Create new RoR project" dialog window*
+
+The project will be created in the selected folder.

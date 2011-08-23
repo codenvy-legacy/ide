@@ -1,0 +1,168 @@
+h1. Create File
+
+To create a new file go to *File > New* and select the required file type. A new file will be displayed in new tab of Editor Panel.
+
+
+h1. Open File
+
+To open a file in the _Content Panel_, double-click the file item in the _Workspace Panel_.
+
+
+h1. Save/Save all/Save As... File
+
+To save a new file, select a folder to save to and go to *File > Save as...* You can also use *Ctrl+S* shortcut or click the corresponding button on the Toolbar. Enter a file name in the dialog box and click Yes. By default, the file will be saved in the selected folder.
+
+Go to *File > Save* to save changes in the opened file.
+
+To save changes in all opened files, go to *File > Save all*.
+
+{info}
+If there is any file with the same name in the target folder, it will be rewritten by the "Save As..." command.
+{info}
+
+{tip}
+If your new file name has been existing in the target folder, you will receive an error message.
+{tip}
+{warning}
+Do not forget to undeploy the REST Services if they were deployed before renaming.
+{warning}
+
+h1. Open/Select/Close/Browse tabs
+
+To switch to the necessary file, click the tab title with the appropriate name. To close the file, just click the *X* button on the tab title.
+You can also use the tab browsing buttons *<*, *>* at the top right corner of the _Content Panel_ as shown below:
+
+!code_editor_browsing_buttons.png|border=0!
+
+*Illustration. File tab browsing buttons.*
+
+{tip}
+You can view the full path to the opened file in the tip of the tab title.
+{tip}
+
+
+You can see some useful commands represented with special buttons on the toolbar and in the *Edit* on the top menu: *Undo/Redo Typing*, *Format*, *Show/Hide Line Numbers*:
+
+
+!edit.png|border=0!
+
+*Illustration. Undo/Redo, Format and Show/Hide Line Numbers on the toolbar and on the top menu*.
+
+
+h1. Change MIME Type of File
+
+You can change the MIME type of the closed file as follows:
+* *Step 1:* Click the target file in the _Workspace Panel_.
+* *Step 2:* Go to *File > Rename...* from the top menu.
+* *Step 3:* Select the new MIME type from *Select mime-type* combo-box, or type another non-registered MIME type in this field.
+* *Step 4:* Click *Rename* to change the MIME type.
+
+{note}
+You cannot open the file with the non-registered MIME type in eXo IDE.
+{note}
+
+h1. Preview File Properties
+
+Connected with the JCR repository node, file properties are displayed in the _Properties Tab_ in the bottom of _Content Panel_. To view file properties, do as follows:
+
+* *Step 1:* Open the file in the _Content Panel_.
+* *Step 2:* Click the *Show Properties* button at the right corner of the toolbar; or go to *View > Properties* on the top menu.
+
+
+!change_file_property.png|border=0!
+
+*Illustration. View file properties*
+
+{note}
+It is impossible to view the properties of files created but not saved yet.
+{note}
+
+
+h1. Lock File
+
+This feature is used to protect your files from being changed or removed by another users. Lock or unlock a file by clicking the *Lock* or *Unlock* icon on the toolbar, or go to *Edit > Lock/Unlock File* on the top menu.
+
+The "Lock" icon is located next to the title of the locked file in the _Workspace Panel_ and at the title of a such file tab in the _Content Panel_:
+
+
+!locked_file.png|border=0!
+
+*Illustration. Locked file in Workspace Panel*
+
+
+!locked_read_only_mode.png|border=0!
+
+
+*Illustration. Locked file in Content Panel*
+
+
+Another users can open the locked files to read only.
+
+{warning}
+If you open the locked file with the WYSIWYG Editor, you can edit its content, but the "Save" function is disabled.
+{warning}
+
+
+h1. Open Local File
+
+In eXo IDE, you can edit some local files with the registered type within the _Code Editor_ or _WYSIWYG Editor_. During opening, you can directly define the correct file type. To edit the local file content in eXo IDE, do as follows:
+* *Step 1:* Go to *File > Open Local File...* on the top menu.
+* *Step 2:* Click the *Browse...* button in the *Open file* dialog to select the required local file.
+* *Step 3:* Check the file's MIME type, based on the file extension. If needed, select another MIME type from the list.
+* *Step 4:* Press the *Open* button to open the selected file content in the default editor of the _Content Panel_ with the local file name.
+
+
+!open_local_file.png|border=0!
+
+
+*Illustration. Example of opening the local Ruby file*
+
+The following table is the list of MIME types registered in the eXo IDE.
+
+*Table. Registered MIME Types*
+|| File Type || MIME Type || Default File Extension || Default Editor ||
+| *Text* | text/plain | .txt | Code Editor |
+| *XML* | text/xml; application/xml | .xml | Code Editor |
+| *REST Service* | application/x-jaxrs+groovy | .grs | Code Editor |
+| *POGO* | application/x-groovy | .groovy | Code Editor |
+| *Template* | application/x-groovy+html | .gtmpl | Code Editor |
+| *HTML* | text/html | .html | Code Editor |
+| *Google Gadget* | application/x-google-gadget | .xml | Code Editor |
+| *JavaScript* | text/javascript; application/javascript; application/x-javascript | .js | Code Editor |
+| *CSS* | text/css | .css | Code Editor |
+| *Netvibes Widget* | application/x-uwa-widget | .html | Code Editor |
+| *Data Object* | application/x-chromattic+groovy | .groovy | Code Editor |
+| *<unrecognized>* | binary/octet-stream | | |
+
+{info}
+To load the Google Gadget file, you should set the MIME Type as "application/x-google-gadget" in the "Open file" dialog as figured out in the below illustration:
+{info}
+
+!mimetypes.png!
+
+*Illustration. Open the Google Gadget file*
+
+
+h1. Upload File
+
+To upload a loclal file directly to the _IDE Workspace_, go to *File > Upload File...*. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
+* *Step 1:* Select the *Gadget* folder in the _Workspace Panel._
+* *Step 2:* Go to *File > Upload File...* on the top menu.
+* *Step 3:* Click the *Browse...* button to select the *gadget.xml* file from the local device in the *File upload* dialog.
+* *Step 4:* Select the appropriate MIME type as _application/x-google-gadget_.
+* *Step 5:* Press the *Upload* button.
+The *gadget.xml* gadget is uploaded to the server and placed in the *Gadget* folder.
+
+h1. Open File by Path
+
+To open a file by its path, for example *Example.groovy*, do as follows:
+
+* *Step 1:* Go to *File > Open File By Path...* on the top menu.
+* *Step 2:* Enter the path of the target file "http://127.0.0.1:8080/rest/private/ide-vfs-webdav/repository/production/Example.groovy" into the *File URL* field of the *Open file by path* dialog.
+* *Step 3:* Click the *Open* button to show the *Example.groovy* file in the new file tab of the _Content Panel_.
+
+You can select *View > Get URL...* on the top menu to obtain the file path.
+
+{info}
+The target file should be placed at the same domain as IDE.
+{info}

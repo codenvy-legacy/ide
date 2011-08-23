@@ -1,0 +1,262 @@
+eXo IDE supports the following programming and scripting languages: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Ruby and JSP. Editing files in the IDE you have such editing functions as Syntax Highlighting, Code formatting, Code Autocompletion, Error Marking and Outliner. There are also preview mode for HTML, Javascript and Google gadget files. Finally IDE makes online development simple, providing deployment of your Java, PHP and Ruby applications to such cloud platforms (PaaS)as Heroku, Openshift and CloudBees out of the box.
+
+h1. Java
+
+For Java code available are Java Syntax Highlighting, Code Autocompletion, Code Formatting, Error Marking and Outliner. 
+
+h2. Java Code Autocomplete.
+
+h3. Object's Fields and Methods Autocompletion
+
+You can also view JavaDoc and autocomplete the object's fields and methods as follows:
+* *Step 1:* Print the instance name with the dot (.) at the end.
+* *Step 2:* Press *Ctrl+Space* to view all public methods and fields of the object. The JavaDoc for the selected field or method is shown.
+* *Step 3:* Select the appropriate item in the autocomplete form and click the *Enter* key; or double-click this item.
+
+!methods_autocomplete.png|border=0!
+
+*Illustration. Java autocomplete form for public methods*
+
+
+h3. Static Fields and Methods Autocompletion
+
+eXo IDE supports the autocompletion of static fields, methods and object's fields and methods.
+
+{info}
+The autocompletion for methods and fields of the class or instance can only work, if it is called after the symbol ".".
+{info}
+
+h3. Java keywords autocomplete
+
+eXo IDE supports autocomplete for Java keywords ({{abstract, assert class, continue, synchronized}}, etc.) as shown below:
+
+!java_keywords_autocomplete.png|border=0!
+
+*Illustration. Java autocomplete*
+
+
+h3. Annotations Autocompletion
+
+It is possible to autocomplete the annotations, followed by symbol "@". The Autocomplete form for annotation contains the list of available annotations like this:
+
+!annotations_autocomplete.png|border=0!
+
+*Illustration. Java autocomplete form for annotations*
+
+
+h3. Local Variables and Parameters Autocompletion
+
+Local variables and method's parameters are marked with the special icon in the autocomplete form - !local.png!. eXo IDE supports the autocompletion for local variables and method's parameters.
+
+
+
+h3. Validate Java Types and Fix Import Statements
+
+If you forget to insert the import statement, the line with error will be marked as follows:
+
+
+!error_autocomplete.png|border=0!
+
+*Illustration. Java Code Error Mark*
+
+To view and fix the Java type error, do as follows:
+* *Step 1:* Hover the cursor on error marks to see the error message in tool tips.
+* *Step 2:* Click the error icon in the _Line numbers_ field.
+* *Step 3:* Select the appropriate import statement and press the *Enter* key; or double-click to insert it into the header of the file.
+
+h1. Groovy
+
+Groovy code is used for REST service and POGO files. The Editing functions are the same as for Java code.
+
+h2. Groovy Code Specific Autocomplete List
+
+Groovy is the Java based language, therefore Groovy code supports Java Autocomplete list with special features for Groovy. These features are for *REST Service* ("application/x-jaxrs+groovy"), *POGO* ("application/x-groovy") and *Data Object* ("application/x-chromattic+groovy"). The keywords of Groovy code are not marked with icons in the autocomplete list.  The autocomplete list varies, depending on Java types and is shown in the following cases:
+
+* <local variable name>.
+* <object's field name>.\_
+* <static field name>.\_
+* <method's parameter name>.\_
+* <class name>.\_
+* @<annotation name>\_
+* in the line after the space.
+
+IDE compiles classes, which are described in the project's classpath, before generation of _Autocomplete list_. If the compilation of some class is failed, the error message will appear in _Output Panel_ instead of *Autocomplete Form* as shown below:
+{code}
+[ERROR] Error (500: Internal Server Error)
+startup failed, /ide-project/data/Pojo.groovy: 9: unexpected token: vpid @ line 9, column 3.
+vpid fg(){
+^
+{code}
+To display classes from folder, described as _folder source_ in the project's classpath, in the _Autocomplete Form_, the files with such classes should fulfill conditions as follows:
+
+# Must be located in folder with respect to package structure.
+# The name must be the same as the class name located in a file.
+# Must have extension ".groovy" or ".grs".
+
+h3. Class Name Autocomplete
+
+You can view class's JavaDoc and class name from the autocomplete form. eXo IDE provides appropriate import statement into the file header automatically, if needed.
+There is a list of default packages for the Groovy code:
+* *java.lang.*\*
+* *java.io.\**
+* *java.math.BigDecimal*
+* *java.math.BigInteger*
+* *java.net.\**
+* *java.util.\**
+* *groovy.lang.\**
+* *groovy.util.\**
+
+!class.png|border=0!
+
+*Illustration. Groovy autocomplete form for classes*
+
+The autocomplete function is also supported for classes created by a user and added to Groovy classpath. For more details go to "Add Source to Classpath" chapter.
+
+h2. Code Outline for Groovy
+
+In the _Outline Panel_ for the Groovy code of REST Service, ECM Template, POGO and Data Object files, you can see not only names and types of your classes, variables, methods, fields, or parameters, but also their modifiers and annotations in the view of icons and tooltips.
+
+The following is the list of icons connected to different access modifiers.
+
+|| Access modification || Icon ||
+| _private_ | Red square |
+| _public_ | Green circle |
+| _protected_ | Yellow rhombus |
+| without access modifier | Blue triangle |
+
+The next is the list of letters placed over the node icons of outline node and one icon connected to special modifiers.
+
+|| Letter/Icon || Modifier ||
+| *a* | Abstract |
+| *s* | Static |
+| *f* | Final |
+| *t* | Transient |
+| *v* | Volatile |
+| Clock | Synchronized |
+
+Class or method with annotation(s) is displayed with the *@* symbol near the title in the outline tree. To see the full list of annotations, hover the cursor on *@*.
+
+!rest-service-outline.png!
+
+*Illustration. REST Service Code Outline*
+
+h1. JSP
+
+JSP is another Java based language, therefore autocomplete for JSP files consists of Java Autocomplete list plus JSP objects. As before, every file has color syntaxing, code completion and outline. 
+
+Go to *File > New > JSP* to create new JSP file.
+
+h2. JSP Specific Autocomplete List
+
+Autocomplete for JSP objects ({{request, response, application, config}}, etc.) is supported in code written within <% %> tags.
+
+!jsp.png|border=0!
+
+*Illustration. JSP autocomplete form with description*
+
+Outside these tags the supported autocomplete is for HTML.
+
+
+h1. HTML
+
+eXo IDE allows to edit and preview HTML files.
+
+h2. Create new HTML file
+
+Go to *File > New > HTML* to create a new HTML file. A new file with opening tags will be displayed in the _Content Panel_.
+
+h2. HTML Specific Autocomplete List
+
+Press *Ctrl+Space* to call the autocomplete. There are two HTML autocomplete lists: one of all HTML tags, and the other of all properties of the pointed tag.
+
+!ide-autocomplete-html.png! !ide-autocomplete-html-tag.png!
+
+*Illustration. HTML autocomplete form*
+
+{info}
+You can call the CSS properties and JavaScript autocomplete list if your current cursor position is inside <style> or <script> tags respectively.
+{info}
+
+h2. Preview HTML File
+
+To preview the HTML file simply click the *Show Preview* button on the right part of the toolbar, or go to *Run > Show Preview* on the Menu Bar, after opening the HTML file in the _Content Panel_. The content of the HTML file is opened as a webpage in the _Preview Tab_.
+
+{note}
+* You cannot view files created but not saved yet.
+* Unsaved changes are not displayed when you edit the HTML file.
+{note}
+
+
+h1. PHP
+
+For PHP files the following editing functions are available: Code Autocompletion, Code Formatting, Error Marking, Outliner and Syntax Highlighting. Exo IDE allows you also to edit PHP files and provides with tools to deploy your applications to OpenShift PaaS. 
+
+To create a new PHP file, go to *File > New > PHP File*
+
+h2. PHP Specific Autocomplete List
+
+The autocomplete in PHP files is supported for code written between "<?php…?>" or "<?…?>"  tags as shown below:
+
+!php_autocomplete.png|border=0!
+
+*Illustration. PHP autocomplete*
+
+Outside these tags the supported autocomplete is for HTML.
+
+h1. JavaScript.
+
+If you are working with JavaScript, the editor will autocomplete and syntax highlight your code and outline the functions in your JavaScript code. You will see the functions outline and markers for problem areas of your code. Except editing you can preview your Javascript code. 
+
+To create a new JavaScript file, go to *File > New > JavaScript*
+
+h2. JavaScript Specific Autocomplete List
+
+There are some special template tokens in the autocomplete list to insert the code template. For example, the *if-condition* template is shown as below:
+
+{code:lang=javascript}if (condition)
+{
+
+}{code}
+
+
+Template tokens have the special icon as shown in *Illustration. Autocomplete form* and tokens of different types are marked with different colors, including:
+
+|| Token || Marked color ||
+| Function name | Green |
+| Variable name | Red |
+| Javascript key | Grey |
+
+
+h1. XML
+
+For the XML files, there is only one autocomplete list for the previously typed tag. There is no schema or namespace analysis.
+
+Go to *File > New > XML* to create a new XML file.
+
+
+h1. Ruby
+
+To create Ruby file, go to *File > New > Ruby file*
+
+h2. Ruby Specific Autocomplete List
+
+Ruby files support autocomplete for basic class names and their methods. The autocomplete is only supported for the default classes names and the classes described by a user in the current file.  This function is available for classes, constants, variables and global variables declared in the file, in which the autocomplete list is used. Within a class, you can autocomplete the class variables and object variables. The autocomplete form is shown below.
+
+
+!ruby_autocomplete.png|border=0!
+
+*Illustration. Ruby autocomplete form*
+
+h1. CSS
+
+Syntax highlighting, Code formatting and Code autocompletion of CSS files is also supported, but no outlining support has been provided yet.
+
+To create a new CSS file go to *File > New > CSS* to create new CSS file.
+
+h2. CSS Specific Autocomplete List
+
+!ide-autocomplete-css.png!
+
+*Illustration. CSS autocomplete*
+
+In the CSS file, the autocomplete list contains all the properties of Cascading Style Sheets. They are marked with the yellow token icons.

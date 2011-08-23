@@ -1,0 +1,31 @@
+The Google Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In eXo IDE, you can do the following actions on the Google Gadget files:
+
+* Create *.xml* files.
+* Edit *.xml* files in the _Code_ or _WYSIWYG Editor_.
+* Preview them in the _Preview Tab_.
+
+
+h1. Create Google Gadget
+
+To create the Google Gadget within eXo IDE, do one of the following ways:
+
+1. Click the *New* icon on the toolbar and then select *Google Gadget* from the drop-down menu.
+
+2. Select *File > New > Google Gadget* on the top menu.
+
+3. Open the existing gadget from the local system by selecting *File > Open Local File* on the top menu.
+
+4. Upload the existed gadget directly to the Workspace by selecting *File > Upload File...* on the top menu.
+
+For the third and forth ways, you must select the MIME type: _"application/x-google-gadget"_.
+
+!google_gadget_interface.png|border=0!
+
+*Illustration. Google Gadget file with preview*
+
+h1. Preview Google Gadget
+
+To preview the Google Gadget, do as follows:
+* *Step 1:* Open the required Goodgle Gadget file which was previously saved.
+* *Step 2:* Click the *Show Preview* button on the toolbar; or select *Run > Show Preview* on the top menu.
+The gadget is opened in the _Gadget Container_ of the _Preview Tab_ as described in the *Illustration. Google Gadget file with preview* above.

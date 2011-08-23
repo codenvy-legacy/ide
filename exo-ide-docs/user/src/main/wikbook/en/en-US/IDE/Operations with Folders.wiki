@@ -1,0 +1,43 @@
+h1. Create a New Folder
+
+Select the destination folder and go to *File > New > Folder...* Enter a new folder name and click *Create* to proceed.
+
+
+h1. Refresh Selected Folder
+
+To refresh content of the selected folder, click the *Refresh Selected Folder* button on the toolbar, or go to *File > Refresh*. Refresh means the status synchronization with server repository.
+
+h1. Go to Folder
+
+You can quickly find the opened file in the _Workspace Panel_ using the *Go to Folder* function as follows:
+* *Step 1:* Select the appropriate file tab in the _Editor Panel_.
+* *Step 2:* Go to *View > Go to Folder* on the top menu.
+
+Your selected file will be highlighted in the _Workspace Panel_. Similarly, you can localize the found file from the _Search Tab_.
+
+
+h1. Download Zipped Folder
+
+If you want to download some folders from server _Workspace_, do as follows:
+
+* *Step 1:* Click the target folder in the _Workspace Panel_.
+* *Step 2:* Go to *File > Download Zipped Folder...* from the Menu Bar.
+
+Click *OK* to save the zip-archive with folder content.
+
+
+h1. Upload Zipped Folder
+
+If you need to upload some content to the server _Workspace_, you need to add the folder with content to zip archive. To upload a zipped folder follow the next steps:
+
+* *Step 1:* Select the parent folder in the _Workspace Panel._
+* *Step 2:* Go to *File > Upload Zipped Folder...* on the top menu.
+* *Step 3:* Click the *Browse...* button to select the zipped folder from the local device in the *Upload folder* dialog.
+* *Step 4:* Press the *Upload* button.
+
+The zipped folder is uploaded to the sever and unzipped in the folder selected in step 1.
+
+
+{note}
+The archive uses UTF-8 encoding in entry names. Be sure that your zip extractor supports UTF-8 in file names. The Windows Explorer does not support it, you may use 7zip to unzip the archive. In Linux, the unzip (6.0 or below) command also does not support UTF-8 (depending on distributive). If you use KDE 4 as DE, you may configure Dolphin to use archive as folder by going to "Settings > Configure Dolphin.. > Navigation", and then selecting the "Open archive as folder" checkbox.
+{note}

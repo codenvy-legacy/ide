@@ -1,0 +1,29 @@
+Exo IDE _Virtual File System_ allows you to manage files and folders in a familiar way.
+
+h1. Copy, Cut and Paste Operations
+
+Select file or folder and go to *Edit > Copy/Cut/Paste* to perform copy, cut or paste operations. You can also use the corresponding buttons on the Toolbar as shown below:
+
+!cut_copy_paste_toolbar.png|border=0!
+
+*Illustration. Copy, Cut and Paste buttons on the Toolbar*
+
+Copied or cut item will be pasted to the selected folder.
+
+
+h1. Rename
+
+To rename file or folder, select it and go to *File> Rename...* In the dialog window enter a new name and click *Rename* to confirm the action.
+
+If the new item name has been existing in the target folder, you will receive an error message as shown below:
+
+
+!error_412.png|border=0!
+
+
+h1. View and Copy File or Folder URL
+
+To view the absolute URL of a file/folder and copy it to the clipboard, do as follows:
+* *Step 1:* Select the appropriate item in the _Workspace Panel_.
+* *Step 2:* Go to *View > Get URL...* from the top menu to open the *Item URL* window.
+* *Step 3:* Click *OK* to accept copying the target URL to the clipboard.

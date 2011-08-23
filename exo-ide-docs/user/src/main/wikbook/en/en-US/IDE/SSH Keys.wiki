@@ -1,0 +1,28 @@
+SSH is a network protocol that allows to secure information exchange.
+
+To operate Ssh keys go to *Windows > Ssh Key manager*. The following dialog window will appear:
+
+
+!ssh key manager.png|border=0!
+
+*Illustration. "Ssh Keys" dialog window*
+
+Click *Generate Key* button to generate keys. In the dialog window that will appear, type host name and click *OK* to generate as shown below:
+
+
+!generate_ssh_key.png|border=0!
+
+*Illustrtation. "Generate Ssh keys" dialog box*
+
+The key name will appear in Ssh Keys list.
+
+To upload private Ssh key, click Upload Key button. In the dialog window, type host name, choose the file to upload and click Upload as shown below:
+
+
+!upload_private_key.png|border=0!
+
+*Illustration: "Upload private SSH Key" dialog window*
+
+The uploaded key will appear in Ssh keys list.
+
+Click *View* link to view a public key and click *Delete* to Delete it. View option is not available for private keys.

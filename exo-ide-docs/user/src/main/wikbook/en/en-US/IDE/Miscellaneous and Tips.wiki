@@ -1,0 +1,96 @@
+h1. View information about eXo IDE
+
+To view information about the current version of eXo IDE, go to *Help > About* on the top menu.
+
+
+h1. Customize Toolbar
+
+If you want to customize the toolbar, such as adding or removing some buttons, changing their positions or delimiters, select *Window > Customize Toolbar...* on the top menu. This dialog will show typical interfaces and commands set for such operations:
+
+
+!customize_toolbar.png|border=0!
+
+*Illustration. Customize* *_Toolbar_*
+
+
+h1. Customize Hotkeys
+
+The hotkey manager enables you to customize hotkeys applied for eXo IDE. If your customized hotkeys are matching with browser hotkeys, only eXo IDE hotkeys will work out.
+
+If hotkeys of the browser and of eXo IDE are not overridden, they will work as usual.
+
+To customize your own hotkeys, do as follows:
+
+* *Step 1:* Go to *Window > Customize Hotkeys...* on the top menu to open the *Customize hotkeys* dialog.
+
+
+
+!customize_hotkeys.png|border=0!
+
+*Illustration. Customize hotkeys*
+
+The *Customize hotkeys* dialog consists of the list grid with all commands divided to groups and their hotkeys.
+
+* *Step 2:* Click on the action in the *Customize hotkeys* dialog.
+* *Step 3:* Enter the hotkeys combination in the *Hotkey* field. The first key should be "Ctrl" or "Alt".
+If the hotkeys combination is not already assigned to another command, the *Bind* button will be active. Otherwise, the error message is shown under the *Hotkey* field. For example:
+
+!customize-hotkeys-error.png!
+
+*Illustration. Error message*
+
+* *Step 4:* Click the *Bind* button.
+* *Step 5:* Click *Save* to accept your new settings on the server.
+
+
+To unbind hotkeys for one command, do as follows:
+
+* *Step 1:* Open the *Customize hotkeys* window.
+* *Step 2:* Select your needed command in the list grid.
+* *Step 3:* Click *Unbind*.
+* *Step 4:* Click *Save* to accept your new settings on the server.
+
+{info}
+* You can not make any changes for hotkeys of the "Editor hotkeys" group, because they are reserved and used in editors. These hotkeys also can not be reapplied for other commands. To see these hotkeys, scroll down the end of the "Customize hotkeys" window and click the plus icon next to "Editor hotkeys".
+
+* If you still want to bind the hotkeys which are the same as the predefined hotkeys, except those of the "Editor hotkeys" group, first select and unbind the predefined hotkeys.
+{info}
+
+
+The following is the list of predefined hotkeys:
+
+* Default global hotkeys
+
+|| Hotkeys || Functions ||
+| *Ctrl+F* | Find/Replace |
+| *Ctrl+D* | Delete line |
+| *Ctrl+L* | Go to line |
+| *Ctrl+N* | Create file from template |
+| *Ctrl+S* | Save file |
+
+* Non-changeable hotkeys within editors
+
+|| Hotkeys || Functions ||
+| *Ctrl+Space* | Autocomplete |
+| *Ctrl+B* | Make text bold |
+| *Ctrl+I* | Make text italic |
+| *Ctrl+U* | Make text underlined |
+| *Ctrl+C* | Copy selected text |
+| *Ctrl+V* | Paste copied text |
+| *Ctrl+X* | Cut selected text |
+| *Ctrl+Z* | Undo typing |
+| *Ctrl+Y* | Redo typing |
+| *Ctrl+A* | Select all |
+| *Ctrl+Home* | Go to the start of document |
+| *Ctrl+End* | Go to the end of document |
+
+h1. Available Dependencies
+
+This option allows you to view the list of JAR Libraries along with their attributes. These libraries are available on the server for your REST Service, Templates, POGO files, Data objects and Groovy projects.
+
+To view the list of libraries go to *Help > Available dependencies*, the following window will appear:
+
+
+!available dependences.png|border=0!
+
+*Illustration. Available JAR Packages with attributes*
