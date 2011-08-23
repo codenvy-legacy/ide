@@ -43,6 +43,8 @@ public class GroovyParser extends CodeMirrorParserImpl
 
    private String lastNodeType;
 
+   private final static String TRIANGLE_BRACKET = "<...>";
+   
    /**
     * Position within the 'method(...)'
     */   
@@ -71,7 +73,7 @@ public class GroovyParser extends CodeMirrorParserImpl
    /**
     * Stack of blocks "{... {...} ...}"
     */
-   private Stack<TokenType> enclosers = new Stack<TokenType>();
+   private Stack<String> enclosers = new Stack<String>();
    
    /**
     * To store complex java types for properties/methods like "java.lang.String a;"
@@ -122,15 +124,16 @@ public class GroovyParser extends CodeMirrorParserImpl
       if ((node == null) || Node.getName(node).equals("BR"))
       {
          currentJavaType = lastJavaType = "";  // clear variables to correct complex JavaTypes like 'java.lang.String'
-         
-//         inAnnotationBrackets = false;  // prevent multilines annotations
-         
+                 
          modifiers = new LinkedList<Modifier>();
          
          // clear variables after the end of line 
          inImportStatement = inPackageStatement = inDefStatement = false;
          
          lastNodeContent = lastNodeType = null;
+         
+         // pass lines with code like "a < b" with operators "<", "<<=", "<=", "<<"
+         clearAllLastTriangularBrackets(enclosers);
          
          return currentToken;
       }
@@ -145,10 +148,12 @@ public class GroovyParser extends CodeMirrorParserImpl
       // recognize "("
       if (isOpenBracket(nodeType, nodeContent))
       {        
+         currentJavaType = lastJavaType = "";  // clear type for cases like "ShoppingCart cart = session.findByPath(ShoppingCart, name);"
+         
          // recognize "(" within the annotation like '@PathParam("name")'
          if (isAnnotation(lastNodeType))
          {
-            enclosers.push(TokenType.ANNOTATION);
+            enclosers.push(TokenType.ANNOTATION.toString());
             
             if (!inMethodBrackets)
             {
@@ -209,8 +214,8 @@ public class GroovyParser extends CodeMirrorParserImpl
       {    
          currentJavaType = lastJavaType = "";  // clear type for cases like "cart.items.each { ItemToPurchase item ->"
          
-         // filter code like this "boolean isSelected = false; /n for(category in categories) {"
-         if (wereMethodBrackets
+         // recognize open brace "{" of method or "def" declaration, but filter code like this "boolean isSelected = false; /n for(category in categories) {"
+         if ((wereMethodBrackets || inDefStatement)
                     && currentToken.getLastSubToken() != null
                     && TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
                     && ! TokenType.INTERFACE.equals(currentToken.getType())
@@ -218,7 +223,7 @@ public class GroovyParser extends CodeMirrorParserImpl
          {            
             transformPropertyOnMethod(currentToken);                     
 
-            enclosers.push(TokenType.METHOD);
+            enclosers.push(TokenType.METHOD.toString());
             
             // set method as current token to add variables
             if (currentToken != null
@@ -233,7 +238,7 @@ public class GroovyParser extends CodeMirrorParserImpl
                     &&  ! TokenType.INTERFACE.equals(currentToken.getType())
                  )
          {
-            enclosers.push(TokenType.BLOCK);
+            enclosers.push(TokenType.BLOCK.toString());
          }
          
          wereMethodBrackets = false;
@@ -251,9 +256,9 @@ public class GroovyParser extends CodeMirrorParserImpl
             
             if (currentToken.getParentToken() != null
                    && !enclosers.isEmpty() 
-                   && (TokenType.METHOD.equals(enclosers.lastElement()) 
-                            || TokenType.CLASS.equals(enclosers.lastElement()) 
-                            || TokenType.INTERFACE.equals(enclosers.lastElement())
+                   && (TokenType.METHOD.toString().equals(enclosers.lastElement()) 
+                            || TokenType.CLASS.toString().equals(enclosers.lastElement()) 
+                            || TokenType.INTERFACE.toString().equals(enclosers.lastElement())
                       )
                )
             {         
@@ -277,14 +282,52 @@ public class GroovyParser extends CodeMirrorParserImpl
          transformPropertyOnMethod(currentToken);
       }
       
+
+      else if(isOpenTriangleBracket(lastNodeType, lastNodeContent) && isEqualSign(nodeType, nodeContent) // pass "<=" signs and fix enclosers tree
+               || isOpenTriangleBracket(lastNodeType, lastNodeContent) && isOpenTriangleBracket(nodeType, nodeContent) // pass left shift operator "<<" in code like "col << row" and fix enclosers tree     
+              )
+      {         
+         clearAllLastTriangularBrackets(enclosers);
+         currentJavaType = "";
+      }
+      
+      // recognize "<" for java type described out the method;
+      else if (isOpenTriangleBracket(nodeType, nodeContent) && isGroovyVariable(lastNodeType))
+      {                          
+         // taking in mind type definition before first open bracket like "HashMap" in type "HashMap<String, List<String>>"
+         if (enclosers.isEmpty() || !inTriangularBracket())
+         {
+            currentJavaType += lastNodeContent;
+         }
+
+         currentJavaType += "<";
+      
+         enclosers.push(TRIANGLE_BRACKET);
+      }
+      
+      // recognize ">" for java type, but filter closures code like "cart.items.each { ItemToPurchase item ->"
+      else if (isCloseTriangleBracket(nodeType, nodeContent) && inTriangularBracket())
+      {
+         if (! enclosers.isEmpty())
+         {
+            enclosers.pop();
+            currentJavaType += ">";
+         }
+      }
+      
+      // parse parameterized types code between "<..>" like "Map<String, HashMap<String, Object>> ", "ItemTreeGrid<T extends Item>" etc.
+      else if (inTriangularBracket())
+      {
+         currentJavaType += nodeContent;
+      }
+         
       // parse elements not within the "{}" of method
-//      else if (!inMethodBraces)
       else
       {
          if (! isWhitespace(nodeType))
          {
             wereMethodBrackets = false;
-         }
+         }         
          
          // recognize types like this "java.lang.String a" 
          if (isPoint(nodeType, nodeContent)
@@ -321,12 +364,19 @@ public class GroovyParser extends CodeMirrorParserImpl
                methodParameter.lastAnnotationTokenNameConcat(nodeContent); // to display token like '@PathParam("pathParam")'
             }
                         
-            // recognize method's parameter like "hello(String par1, int par2, ..."
-            else if ((isGroovyVariable(lastNodeType) || isJavaType(lastNodeType))
-                       && !isComma(nodeType, nodeContent)
+            // recognize method's parameter like "hello(String par1, int par2, List<Item> par3 ...)"
+            else if ((isGroovyVariable(lastNodeType) 
+                        || isJavaType(lastNodeType)
+                        || (isCloseTriangleBracket(lastNodeType, lastNodeContent) && ! currentJavaType.equals(""))
+                      )
+                      && !isComma(nodeType, nodeContent)
                     )
             {
-               currentJavaType += lastNodeContent;
+               // taking in mind "String" type, not "List<Item>"
+               if (! isCloseTriangleBracket(lastNodeType, lastNodeContent))
+               {
+                  currentJavaType += lastNodeContent;
+               }
 
                if (methodParameter == null)
                {
@@ -383,7 +433,7 @@ public class GroovyParser extends CodeMirrorParserImpl
                   currentToken.addSubToken(newToken);            
                   currentToken = newToken;
                   
-                  enclosers.push(TokenType.valueOf(lastNodeContent.toUpperCase()));
+                  enclosers.push(TokenType.valueOf(lastNodeContent.toUpperCase()).toString());
                }
       
                // recognize variable/method definition "def var = "
@@ -401,10 +451,17 @@ public class GroovyParser extends CodeMirrorParserImpl
                   inDefStatement = true;
                }
       
-               // recognize variable/method declaration like "String hello(..." or "boolean hello"
-               else if (isGroovyVariable(lastNodeType) || isJavaType(lastNodeType))
+               // recognize variable/method declaration like "String hello(...", or "boolean hello", or "List<Item>"
+               else if (isGroovyVariable(lastNodeType) 
+                        || isJavaType(lastNodeType) 
+                        || (isCloseTriangleBracket(lastNodeType, lastNodeContent) && ! currentJavaType.equals(""))
+                       )
                {
-                  currentJavaType += lastNodeContent;
+                  // taking in mind "String" type, not "List<Item>"
+                  if (! isCloseTriangleBracket(lastNodeType, lastNodeContent))
+                  {
+                     currentJavaType += lastNodeContent;
+                  }
                   
                   // update property token in case like "def String a"; so, the currentToken.lastSubToken() should be with name "String" and type of PROPERTY or VARIABLE 
                   if (inDefStatement)
@@ -440,7 +497,7 @@ public class GroovyParser extends CodeMirrorParserImpl
                // recognize variables like this "String a, b, c;" 
                else if (isComma(lastNodeType, lastNodeContent)
                         && currentToken.getLastSubToken() != null
-                        && currentToken.getLastSubToken().getLineNumber() == lineNumber
+                        && !lastJavaType.isEmpty()
                         && (TokenType.VARIABLE.equals(currentToken.getLastSubToken().getType())
                               || TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
                             )
@@ -708,8 +765,7 @@ public class GroovyParser extends CodeMirrorParserImpl
    /**
     * Recognize open brackets "(" 
     * @param nodeType
-    * @param nodeContent
-    * @param inMethodBrackets 
+    * @param nodeContent 
     * @return
     */
    private boolean isOpenBracket(String nodeType, String nodeContent)
@@ -795,8 +851,47 @@ public class GroovyParser extends CodeMirrorParserImpl
    /**
     * Position within the '@Path(...)'
     */
-   private boolean inAnnotationBrackets(Stack<TokenType> enclosers)
+   private boolean inAnnotationBrackets(Stack<String> enclosers)
    {
-      return ! enclosers.isEmpty()&& TokenType.ANNOTATION.equals(enclosers.lastElement());
+      return ! enclosers.isEmpty()&& TokenType.ANNOTATION.toString().equals(enclosers.lastElement());
+   }
+   
+   /**
+    * Is current node between "<...>" brackets 
+    * @return
+    */
+   private boolean inTriangularBracket()
+   {
+      return ! enclosers.isEmpty() && TRIANGLE_BRACKET.equals(enclosers.lastElement());
+   }
+   
+   /**
+    * Recognize open brackets "<"
+    * @param node
+    */
+   private boolean isOpenTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "groovyOperator".equals(nodeType) && "&lt;".equals(nodeContent);     
+   }
+
+   /**
+    * Recognize close brackets ">"
+    * @param node
+    */
+   private boolean isCloseTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "groovyOperator".equals(nodeType) && "&gt;".equals(nodeContent);
+   }
+ 
+   /**
+    * Remove all last triangular bracket enclosers
+    * @param enclosers
+    */
+   private void clearAllLastTriangularBrackets(Stack<String> enclosers)
+   {
+      while (!enclosers.isEmpty() && TRIANGLE_BRACKET.toString().equals(enclosers.lastElement()))
+      {
+         enclosers.pop();
+      }      
    }
 }

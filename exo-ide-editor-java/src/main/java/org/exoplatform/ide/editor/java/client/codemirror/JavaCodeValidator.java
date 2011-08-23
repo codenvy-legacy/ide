@@ -139,6 +139,8 @@ public class JavaCodeValidator extends CodeValidator
       String javaType = currentToken.getElementType();
       if (javaType != null && !javaType.isEmpty())
       {
+         javaType = getTypeWithoutParameter(javaType);
+         
          // filter FQN type for full java types like "javax.ws.rs.GET", and "data.ProductItem", but parse type like "ResourceBundle.Control"
          if (javaType.contains(".")
                 && (javaType.split("[.]").length > 2
@@ -204,6 +206,18 @@ public class JavaCodeValidator extends CodeValidator
 
       return javaTypeErrorList;
    }
+
+   /**
+    * Return type where parameter part of parameterized type like "<Item>" in type "List<Item>" is removed
+    * @param javaType
+    * @return 
+    */
+   private String getTypeWithoutParameter(String javaType)
+   {
+      return javaType.replaceAll("<.*>", "");
+   }
+
+
 
    /**
     * 

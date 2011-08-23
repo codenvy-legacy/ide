@@ -43,6 +43,8 @@ public class JavaParser extends CodeMirrorParserImpl
 
    private String lastNodeType;
 
+   private final static String TRIANGLE_BRACKET = "<...>";
+   
    /**
     * Position within the 'method(...)'
     */   
@@ -66,7 +68,7 @@ public class JavaParser extends CodeMirrorParserImpl
    /**
     * Stack of blocks "{... {...} ...}"
     */
-   private Stack<TokenType> enclosers = new Stack<TokenType>();
+   private Stack<String> enclosers = new Stack<String>();
    
    /**
     * To store complex java types for properties/methods like "java.lang.String a;"
@@ -118,8 +120,6 @@ public class JavaParser extends CodeMirrorParserImpl
       {
          currentJavaType = lastJavaType = "";  // clear variables to correct complex JavaTypes like 'java.lang.String'
          
-//         inAnnotationBrackets = false;  // prevent multilines annotations
-         
          modifiers = new LinkedList<Modifier>();
          
          // clear variables after the end of the import or package statement 
@@ -130,6 +130,9 @@ public class JavaParser extends CodeMirrorParserImpl
          }
          
          lastNodeContent = lastNodeType = null;
+         
+         // pass lines with code like "a < b" with operators "<", "<<=", "<=", "<<"
+         clearAllLastTriangularBrackets(enclosers);
          
          return currentToken;
       }
@@ -144,10 +147,12 @@ public class JavaParser extends CodeMirrorParserImpl
       // recognize "("
       if (isOpenBracket(nodeType, nodeContent))
       {        
+         currentJavaType = lastJavaType = "";  // clear type for cases like "ShoppingCart cart = session.findByPath(ShoppingCart, name);"
+         
          // recognize "(" within the annotation like '@PathParam("name")'
          if (isAnnotation(lastNodeType))
          {
-            enclosers.push(TokenType.ANNOTATION);
+            enclosers.push(TokenType.ANNOTATION.toString());
             
             if (!inMethodBrackets)
             {
@@ -206,6 +211,8 @@ public class JavaParser extends CodeMirrorParserImpl
       // recognize open brace "{"
       else if (isOpenBrace(nodeType, nodeContent))
       {        
+         currentJavaType = lastJavaType = "";  // clear type after new "{"
+         
          // filter code like this "boolean isSelected = false; /n for(category in categories) {"
          if (wereMethodBrackets
                     && currentToken.getLastSubToken() != null
@@ -215,7 +222,7 @@ public class JavaParser extends CodeMirrorParserImpl
          {            
             transformPropertyOnMethod(currentToken);                     
 
-            enclosers.push(TokenType.METHOD);
+            enclosers.push(TokenType.METHOD.toString());
             
             // set method as current token to add variables
             if (currentToken != null
@@ -230,7 +237,7 @@ public class JavaParser extends CodeMirrorParserImpl
                     &&  ! TokenType.INTERFACE.equals(currentToken.getType())
                  )
          {
-            enclosers.push(TokenType.BLOCK);
+            enclosers.push(TokenType.BLOCK.toString());
          }
          
          wereMethodBrackets = false;
@@ -248,9 +255,9 @@ public class JavaParser extends CodeMirrorParserImpl
             
             if (currentToken.getParentToken() != null
                    && !enclosers.isEmpty() 
-                   && (TokenType.METHOD.equals(enclosers.lastElement()) 
-                            || TokenType.CLASS.equals(enclosers.lastElement()) 
-                            || TokenType.INTERFACE.equals(enclosers.lastElement())
+                   && (TokenType.METHOD.toString().equals(enclosers.lastElement()) 
+                            || TokenType.CLASS.toString().equals(enclosers.lastElement()) 
+                            || TokenType.INTERFACE.toString().equals(enclosers.lastElement())
                       )
                )
             {         
@@ -274,8 +281,56 @@ public class JavaParser extends CodeMirrorParserImpl
          transformPropertyOnMethod(currentToken);
       }
       
+      else if(isOpenTriangleBracket(lastNodeType, lastNodeContent) && isEqualSign(nodeType, nodeContent) // pass "<=" signs and fix enclosers tree
+               || isOpenTriangleBracket(lastNodeType, lastNodeContent) && isOpenTriangleBracket(nodeType, nodeContent) // pass left shift operator "<<" in code like "col << row" and fix enclosers tree     
+              )
+      {         
+         clearAllLastTriangularBrackets(enclosers);
+         currentJavaType = "";
+      }
+      
+      // recognize "<" for java type described out the method;
+      else if (isOpenTriangleBracket(nodeType, nodeContent) && isJavaVariable(lastNodeType))
+      {                          
+         // taking in mind type definition before first open bracket like "HashMap" in type "HashMap<String, List<String>>"
+         if (enclosers.isEmpty() || !inTriangularBracket())
+         {
+            currentJavaType += lastNodeContent;
+         }
+
+         currentJavaType += "<";
+      
+         enclosers.push(TRIANGLE_BRACKET);
+      }
+      
+      // recognize ">" for java type
+      else if (isCloseTriangleBracket(nodeType, nodeContent) && inTriangularBracket())
+      {
+         if (! enclosers.isEmpty())
+         {
+            enclosers.pop();
+            currentJavaType += ">";
+         }
+      }
+
+      // recognize ">>" for java type
+      else if (isDoubleCloseTriangleBracket(nodeType, nodeContent) && inTriangularBracket())
+      {
+         if (enclosers.size() > 1)
+         {
+            enclosers.pop();
+            enclosers.pop();
+            currentJavaType += ">>";
+         }
+      }
+      
+      // parse parameterized types code between "<..>" like "Map<String, HashMap<String, Object>> ", "ItemTreeGrid<T extends Item>" etc.
+      else if (inTriangularBracket())
+      {
+         currentJavaType += nodeContent;
+      }
+         
       // parse elements not within the "{}" of method
-//      else if (!inMethodBraces)
       else
       {
          if (! isWhitespace(nodeType))
@@ -318,12 +373,19 @@ public class JavaParser extends CodeMirrorParserImpl
                methodParameter.lastAnnotationTokenNameConcat(nodeContent); // to display token like '@PathParam("pathParam")'
             }
                         
-            // recognize method's parameter like "hello(String par1, int par2, ..."
-            else if ((isJavaVariable(lastNodeType) || isJavaType(lastNodeType, lastNodeContent))
-                       && !isComma(nodeType, nodeContent)
+            // recognize method's parameter like "hello(String par1, int par2, List<Item> par3,  List<Item> par3, Collection<HashMap<String,String>>par4, ...)"
+            else if ((isJavaVariable(lastNodeType) 
+                        || isJavaType(lastNodeType, lastNodeContent)
+                        || !currentJavaType.equals("") && isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent) 
+                      )
+                      && !isComma(nodeType, nodeContent)
                     )
             {
-               currentJavaType += lastNodeContent;
+               // taking in mind "String" type, not "List<Item>"
+               if (! isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent))
+               {
+                  currentJavaType += lastNodeContent;
+               }
 
                if (methodParameter == null)
                {
@@ -380,13 +442,21 @@ public class JavaParser extends CodeMirrorParserImpl
                   currentToken.addSubToken(newToken);            
                   currentToken = newToken;
                   
-                  enclosers.push(TokenType.valueOf(lastNodeContent.toUpperCase()));
+                  enclosers.push(TokenType.valueOf(lastNodeContent.toUpperCase()).toString());
                }
       
-               // recognize variable/method declaration like "String hello(..." or "boolean hello"
-               else if (isJavaVariable(lastNodeType) || isJavaType(lastNodeType, lastNodeContent))
+               // recognize variable/method declaration like "String hello(..." or "boolean hello", or "List<Item>"
+               else if (isJavaVariable(lastNodeType) 
+                          || isJavaType(lastNodeType, lastNodeContent) 
+                          || (isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent) && ! currentJavaType.equals(""))
+                       )
                {
-                  currentJavaType += lastNodeContent;
+                  // taking in mind "String" type, not "List<Item>"
+                  if (! isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent))
+                  {
+                     currentJavaType += lastNodeContent;
+                  }
+
                   currentToken.addSubToken(new TokenBeenImpl(
                      nodeContent, 
                      (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
@@ -707,7 +777,6 @@ public class JavaParser extends CodeMirrorParserImpl
     * Recognize open brackets "(" 
     * @param nodeType
     * @param nodeContent
-    * @param inMethodBrackets 
     * @return
     */
    private boolean isOpenBracket(String nodeType, String nodeContent)
@@ -781,8 +850,76 @@ public class JavaParser extends CodeMirrorParserImpl
    /**
     * Position within the '@Path(...)'
     */
-   private boolean inAnnotationBrackets(Stack<TokenType> enclosers)
+   private boolean inAnnotationBrackets(Stack<String> enclosers)
    {
-      return ! enclosers.isEmpty()&& TokenType.ANNOTATION.equals(enclosers.lastElement());
+      return ! enclosers.isEmpty()&& TokenType.ANNOTATION.toString().equals(enclosers.lastElement());
+   }
+   
+   /**
+    * Is current node between "<...>" brackets 
+    * @return
+    */
+   private boolean inTriangularBracket()
+   {
+      return ! enclosers.isEmpty() && TRIANGLE_BRACKET.equals(enclosers.lastElement());
+   }
+   
+   /**
+    * Recognize open brackets "<"
+    * @param node
+    */
+   private boolean isOpenTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "java-operator".equals(nodeType) && "&lt;".equals(nodeContent);     
+   }
+
+   /**
+    * Recognize double open brackets "<<"
+    * @param node
+    */
+   private boolean isDoubleOpenTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "java-operator".equals(nodeType) && "&lt;&lt;".equals(nodeContent);     
+   }
+   
+   /**
+    * Recognize close brackets ">"
+    * @param node
+    */
+   private boolean isCloseTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "java-operator".equals(nodeType) && "&gt;".equals(nodeContent);
+   }
+
+   /**
+    * Recognize close brackets ">>"
+    * @param node
+    */
+   private boolean isDoubleCloseTriangleBracket(String nodeType, String nodeContent)
+   {
+      return "java-operator".equals(nodeType) && "&gt;&gt;".equals(nodeContent);
+   }
+   
+   /**
+    * Recognize single ">" or double ">>" close triangular bracket 
+    * @param nodeType
+    * @param nodeContent
+    * @return
+    */
+   private boolean isSingleOrDoubleCloseTriangleBracket(String nodeType, String nodeContent)
+   {
+      return isCloseTriangleBracket(nodeType, nodeContent) || isDoubleCloseTriangleBracket(nodeType, nodeContent);
+   }
+   
+   /**
+    * Remove all last triangular bracket enclosers
+    * @param enclosers
+    */
+   private void clearAllLastTriangularBrackets(Stack<String> enclosers)
+   {
+      while (!enclosers.isEmpty() && TRIANGLE_BRACKET.toString().equals(enclosers.lastElement()))
+      {
+         enclosers.pop();
+      }      
    }
 }

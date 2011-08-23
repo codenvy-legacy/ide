@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.editor.groovy.client.codemirror;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.groovy.client.Images;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaOutlineItemCreator;
 

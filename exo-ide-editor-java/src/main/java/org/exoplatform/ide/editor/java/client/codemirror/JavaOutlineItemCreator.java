@@ -20,8 +20,8 @@ package org.exoplatform.ide.editor.java.client.codemirror;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
@@ -196,7 +196,7 @@ public class JavaOutlineItemCreator extends OutlineItemCreatorImpl
 
             parametersDescription +=
                "<span title=\"" + annotationList + "\">" + getAnnotationSign(annotationList)
-                  + "<span class='item-parameter'>" + parameter.getElementType() + "</span></span>";
+                  + "<span class='item-parameter'>" + StringEscapeUtils.htmlEncode(parameter.getElementType()) + "</span></span>";
          }
       }
 

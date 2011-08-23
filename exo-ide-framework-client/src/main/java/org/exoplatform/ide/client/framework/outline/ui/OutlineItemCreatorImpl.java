@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.framework.outline.ui;
 
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -103,7 +104,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
               parametersDescription += ", ";
            }
            
-           parametersDescription += "<span class='item-parameter'>" + parameter.getElementType() + "</span>";
+           parametersDescription += "<span class='item-parameter'>" + StringEscapeUtils.htmlEncode(parameter.getElementType()) + "</span>";
         }
      }
 
@@ -119,7 +120,8 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
   {
      if (token.getElementType() != null)
      {
-        return "<span style='color:#644a17;' class='item-type' > : " + token.getElementType() + "</span>";
+        // encode "<>" in HTML entities
+        return "<span style='color:#644a17;' class='item-type' > : " + StringEscapeUtils.htmlEncode(token.getElementType()) + "</span>";
      }
      
      return "";
@@ -208,7 +210,7 @@ public abstract class OutlineItemCreatorImpl implements OutlineItemCreator
         }
 
         // replace all '"' on HTML Entity "&#34;"
-        return title.replaceAll("\"", "&#34;");
+        return StringEscapeUtils.htmlEncode(title);
      }
 
      return "";
