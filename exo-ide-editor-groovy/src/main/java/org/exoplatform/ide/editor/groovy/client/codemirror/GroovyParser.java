@@ -215,12 +215,11 @@ public class GroovyParser extends CodeMirrorParserImpl
          currentJavaType = lastJavaType = "";  // clear type for cases like "cart.items.each { ItemToPurchase item ->"
          
          // recognize open brace "{" of method or "def" declaration, but filter code like this "boolean isSelected = false; /n for(category in categories) {"
-         if (wereMethodBrackets
-                && currentToken.getLastSubToken() != null
-                && TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
-                && ! TokenType.INTERFACE.equals(currentToken.getType())
-             || inDefStatement
-            )
+         if ((wereMethodBrackets || inDefStatement)
+                    && currentToken.getLastSubToken() != null
+                    && TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
+                    && ! TokenType.INTERFACE.equals(currentToken.getType())
+                 )
          {            
             transformPropertyOnMethod(currentToken);                     
 
