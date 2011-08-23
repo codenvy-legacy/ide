@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.event;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -27,25 +27,25 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: Jan 6, 2011 $
  *
  */
-public class ConfigureBuildPathEvent extends GwtEvent<ConfigureBuildPathHandler>
+public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
 {
 
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<ConfigureBuildPathHandler> TYPE = new GwtEvent.Type<ConfigureBuildPathHandler>();
+   public static final GwtEvent.Type<ProjectCreatedHandler> TYPE = new GwtEvent.Type<ProjectCreatedHandler>();
 
    private String projectLocation;
    
    /**
     * 
     */
-   public ConfigureBuildPathEvent()
+   public ProjectCreatedEvent()
    {
       this.projectLocation = null;
    }
    
-   public ConfigureBuildPathEvent(String projectLocation)
+   public ProjectCreatedEvent(String projectLocation)
    {
       this.projectLocation = projectLocation;
    }
@@ -54,7 +54,7 @@ public class ConfigureBuildPathEvent extends GwtEvent<ConfigureBuildPathHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ConfigureBuildPathHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ProjectCreatedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -63,7 +63,7 @@ public class ConfigureBuildPathEvent extends GwtEvent<ConfigureBuildPathHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ConfigureBuildPathHandler handler)
+   protected void dispatch(ProjectCreatedHandler handler)
    {
       handler.onConfigureBuildPath(this);
    }

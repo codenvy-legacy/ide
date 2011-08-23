@@ -33,12 +33,10 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -67,10 +65,6 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
-import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
-import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +77,7 @@ import java.util.List;
  */
 
 public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, ViewClosedHandler, TemplatesMigratedHandler
+    ItemsSelectedHandler, ViewClosedHandler, TemplatesMigratedHandler
 {
 
    /**
@@ -179,8 +173,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    protected List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
-   private String restServiceContext;
-
    private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
@@ -194,7 +186,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       this.eventBus = eventBus;
 
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -451,13 +442,13 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
 
-      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
-      selectedTemplate.getChildren().add(classPathTemplate);
+//      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
+//      selectedTemplate.getChildren().add(classPathTemplate);
 
       folderList.clear();
       build(selectedTemplate.getChildren(), baseHref + URL.encodePathSegment(projectName) + "/");
       projectFolder = new Folder(baseHref + URL.encodePathSegment(projectName) + "/");
-      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+//      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
 
       VirtualFileSystem.getInstance().createFolder(projectFolder, new AsyncRequestCallback<Folder>()
       {
@@ -480,42 +471,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       IDE.getInstance().closeView(Display.ID);
 
       eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
-      eventBus.fireEvent(new ConfigureBuildPathEvent(projectFolder.getHref()));
-   }
-
-   /**
-    * Get classpath file.
-    * 
-    * @param href - href of project (encoded)
-    * @return {@link File} classpath file
-    */
-   private File createClasspathFile(String href)
-   {
-      href = (href.endsWith("/")) ? href : href + "/";
-      String contentType = MimeType.APPLICATION_JSON;
-      File newFile = new File(href + ".groovyclasspath");
-      newFile.setContentType(contentType);
-      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-      newFile.setIcon(ImageUtil.getIcon(contentType));
-      newFile.setNewFile(true);
-
-      String path = GroovyClassPathUtil.formPathFromHref(href, restServiceContext);
-      GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
-      List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
-      groovyClassPathEntries.add(projectClassPathEntry);
-
-      String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
-      newFile.setContent(content);
-      return newFile;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
-    */
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      restServiceContext = event.getConfiguration().getContext();
+      eventBus.fireEvent(new ProjectCreatedEvent(projectFolder.getHref()));
    }
 
    @Override

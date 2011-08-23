@@ -22,8 +22,8 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
 
 /**
  * Control for calling the dialog for configuring classpath file.
@@ -47,7 +47,7 @@ public class ConfigureBuildPathCommand extends SimpleControl implements IDEContr
       setTitle(TITLE);
       setPrompt(PROMPT);
       setIcon(Images.Controls.CONFIGURE_BUILD_PATH);
-      setEvent(new ConfigureBuildPathEvent());
+      setEvent(new ProjectCreatedEvent());
       setDelimiterBefore(true);
    }
 

@@ -18,20 +18,28 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.event.ProjectCreatedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
@@ -39,22 +47,19 @@ import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
+import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathHandler;
-import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathEvent;
-import org.exoplatform.ide.extension.groovy.client.event.ConfigureBuildPathHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for configuring class path file.
@@ -63,9 +68,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: Jan 6, 2011 $
  *
  */
-public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, AddSourceToBuildPathHandler,
-   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
-   EntryPointChangedHandler
+public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
+   ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EntryPointChangedHandler
 {
    public interface Display
    {
@@ -158,7 +162,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    public ConfigureBuildPathPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      eventBus.addHandler(ConfigureBuildPathEvent.TYPE, this);
+      eventBus.addHandler(ProjectCreatedEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
@@ -239,11 +243,36 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.groovy.event.ConfigureBuildPathHandler#onConfigureBuildPath(org.exoplatform.ide.client.module.groovy.event.ConfigureBuildPathEvent)
+    * @see org.exoplatform.ide.client.framework.event.ProjectCreatedHandler.groovy.event.ConfigureBuildPathHandler#onConfigureBuildPath(org.exoplatform.ide.client.framework.event.ProjectCreatedEvent.groovy.event.ConfigureBuildPathEvent)
     */
-   public void onConfigureBuildPath(ConfigureBuildPathEvent event)
+   public void onConfigureBuildPath(ProjectCreatedEvent event)
    {
       getClassPathLocation(event.getProjectLocation());
+   }
+
+   /**
+    * Get classpath file.
+    * 
+    * @param href - href of project (encoded)
+    * @return {@link File} classpath file
+    */
+   private File createClasspathFile(String href)
+   {
+      href = (href.endsWith("/")) ? href : href + "/";
+      String contentType = MimeType.APPLICATION_JSON;
+      File newFile = new File(href + ".groovyclasspath");
+      newFile.setContentType(contentType);
+      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));      
+      newFile.setNewFile(true);
+
+      String path = GroovyClassPathUtil.formPathFromHref(href, restContext);
+      GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
+      List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
+      groovyClassPathEntries.add(projectClassPathEntry);
+
+      String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
+      newFile.setContent(content);
+      return newFile;
    }
 
    /**
@@ -253,40 +282,46 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
    {
       if (projectLocation != null)
       {
-         GroovyService.getInstance().getClassPathLocation(projectLocation, new AsyncRequestCallback<ClassPath>()
+         final File classpath = createClasspathFile(projectLocation);
+         VirtualFileSystem.getInstance().saveContent(classpath, null,
+            new FileContentSaveCallback()
+            {
+
+               @Override
+               protected void onSuccess(FileData result)
+               {
+                  classPathFile(classpath.getHref());
+               }
+            });
+      }
+      else
+      {
+
+         if (selectedItem == null)
+            return;
+         GroovyService.getInstance().getClassPathLocation(selectedItem.getHref(), new AsyncRequestCallback<ClassPath>()
          {
-            
+
             @Override
             protected void onSuccess(ClassPath result)
             {
-               Display display = new ConfigureBuildPathForm(eventBus);
-               bindDisplay(display);
-               display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
-               display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
-
-               File file = new File(result.getLocation());
-               getFileProperties(file);
+               classPathFile(result.getLocation());
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
                Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
             }
          });
-         return;
       }
-
-      if (selectedItem == null)
-         return;
-      getClassPathLocation(selectedItem.getHref());
    }
-   
+
    private void getFileProperties(File file)
    {
       VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
       {
-         
+
          @Override
          protected void onSuccess(Item result)
          {
@@ -297,12 +332,12 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
          }
       });
    }
-   
+
    private void getFileContent(File file)
    {
       VirtualFileSystem.getInstance().getContent(file, new FileCallback()
       {
-         
+
          @Override
          protected void onSuccess(File result)
          {
@@ -328,7 +363,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       classPathFile.setContent(content);
       VirtualFileSystem.getInstance().saveContent(classPathFile, null, new FileContentSaveCallback()
       {
-         
+
          @Override
          protected void onSuccess(FileData result)
          {
@@ -339,7 +374,7 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
                {
                   eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getHref()), classPathFile));
                }
-            }            
+            }
          }
       });
    }
@@ -441,5 +476,19 @@ public class ConfigureBuildPathPresenter implements ConfigureBuildPathHandler, A
       path = path.startsWith("/") ? path.substring(1) : path;
       index = path.indexOf("/");
       return (index >= 0) ? path.substring(0, index) : null;
+   }
+
+   /**
+    * @param result
+    */
+   private void classPathFile(String href)
+   {
+      Display display = new ConfigureBuildPathForm(eventBus);
+      bindDisplay(display);
+      display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
+      display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
+
+      File file = new File(href);
+      getFileProperties(file);
    }
 }

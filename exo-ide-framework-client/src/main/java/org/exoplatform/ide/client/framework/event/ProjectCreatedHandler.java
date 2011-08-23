@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.event;
+package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ConfigureBuildPathEvent} event.
+ * Handler for {@link ProjectCreatedEvent} event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
  *
  */
-public interface ConfigureBuildPathHandler extends EventHandler
+public interface ProjectCreatedHandler extends EventHandler
 {
    /**
     * Perform actions, when user wants to configure build pah of the project. 
     * 
     * @param event
     */
-   void onConfigureBuildPath(ConfigureBuildPathEvent event);
+   void onConfigureBuildPath(ProjectCreatedEvent event);
 }
