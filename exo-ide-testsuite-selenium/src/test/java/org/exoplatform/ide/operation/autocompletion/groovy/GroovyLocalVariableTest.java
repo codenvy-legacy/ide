@@ -74,14 +74,14 @@ public class GroovyLocalVariableTest extends BaseTest
 
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
       IDE.CODEASSISTANT.closeForm();
 
       moveCursorDown(5);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementPresent("s:String");
       IDE.CODEASSISTANT.checkElementPresent("name:String");
@@ -93,7 +93,7 @@ public class GroovyLocalVariableTest extends BaseTest
 
       moveCursorDown(2);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementPresent("s:String");
       IDE.CODEASSISTANT.checkElementPresent("name:String");
@@ -105,7 +105,7 @@ public class GroovyLocalVariableTest extends BaseTest
 
       moveCursorDown(7);
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementPresent("s:String");
       IDE.CODEASSISTANT.checkElementNotPresent("name:String");
@@ -118,7 +118,7 @@ public class GroovyLocalVariableTest extends BaseTest
       moveCursorDown(2);
       IDE.CODEASSISTANT.openForm();
 
-      IDE.CODEASSISTANT.checkElementPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
       IDE.CODEASSISTANT.checkElementNotPresent("name:String");
@@ -131,7 +131,7 @@ public class GroovyLocalVariableTest extends BaseTest
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
 
       IDE.CODEASSISTANT.openForm();
-      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):String");
+      IDE.CODEASSISTANT.checkElementNotPresent("hello(String):List<Item>");
       IDE.CODEASSISTANT.checkElementNotPresent("getInt(Double):Integer");
       IDE.CODEASSISTANT.checkElementNotPresent("s:String");
       IDE.CODEASSISTANT.checkElementNotPresent("name:String");

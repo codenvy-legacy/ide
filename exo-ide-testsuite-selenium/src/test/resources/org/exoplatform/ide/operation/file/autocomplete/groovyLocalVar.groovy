@@ -16,7 +16,7 @@ public class HelloWorld {
  
   @GET
   @Path("helloworld/{name}")
-  public String hello(@PathParam("name") String name) {
+  public List<Item> hello(@PathParam("name") String name) {
     Exception e;
     
     PrintStream stream = System.out;
