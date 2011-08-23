@@ -11,8 +11,8 @@ h1. Basic Operations with Files and Folders
 h1. Operations with Folders
 {include:document="IDE/Operations with Folders.wiki" /}
 
-h1. Operations With Files
-{include:document="IDE/Operations With Files.wiki" /}
+h1. Operations with Files
+{include:document="IDE/Operations with Files.wiki" /}
 
 h1. Use File Template
 {include:document="IDE/Use File Template.wiki" /}
@@ -38,17 +38,17 @@ h1. Git Version Control System
 h1. SSH Keys
 {include:document="IDE/SSH Keys.wiki" /}
 
-h1. Operations With POGO File
-{include:document="IDE/Operations With POGO File.wiki" /}
+h1. Operations with POGO File
+{include:document="IDE/Operations with POGO File.wiki" /}
 
-h1. Operations With Google Gadget
-{include:document="IDE/Operations With Google Gadget.wiki" /}
+h1. Operations with Google Gadget
+{include:document="IDE/Operations with Google Gadget.wiki" /}
 
-h1. Operations With Templates
-{include:document="IDE/Operations With Templates.wiki" /}
+h1. Operations with Templates
+{include:document="IDE/Operations with Templates.wiki" /}
 
-h1. Operations With Netvibes Widget
-{include:document="IDE/Operations With Netvibes Widget.wiki" /}
+h1. Operations with Netvibes Widget
+{include:document="IDE/Operations with Netvibes Widget.wiki" /}
 
 h1. Chromattic Data Object Usage
 {include:document="IDE/Chromattic Data Object Usage.wiki" /}
