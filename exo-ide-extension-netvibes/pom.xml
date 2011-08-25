@@ -126,39 +126,31 @@
          <artifactId>hsqldb</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.hsqldb</groupId>
-         <artifactId>hsqldb</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>commons-lang</groupId>
-         <artifactId>commons-lang</artifactId>
-         <version>2.6</version>
-      </dependency>
-      
       <!-- 
       Dependencies for client side
        -->
-       
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+         <scope>provided</scope>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
+         <scope>provided</scope>
       </dependency>            
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
+         <scope>provided</scope>
       </dependency>      
       
    </dependencies>

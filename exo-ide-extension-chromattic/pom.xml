@@ -13,88 +13,6 @@
 
    <dependencies>
 
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>avalon-framework</groupId>
-               <artifactId>avalon-framework</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>bouncycastle</groupId>
-               <artifactId>bcmail-jdk14</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>bouncycastle</groupId>
-               <artifactId>bcprov-jdk14</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>c3p0</groupId>
-               <artifactId>c3p0</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.objectweb.carol</groupId>
-               <artifactId>carol</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.infinispan</groupId>
-               <artifactId>infinispan-core</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.infinispan</groupId>
-               <artifactId>infinispan-cachestore-jdbc</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>quartz</groupId>
-               <artifactId>quartz</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>stax</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.codehaus.woodstox</groupId>
-               <artifactId>wstx-asl</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>xdoclet</groupId>
-               <artifactId>xdoclet-hibernate-module</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>xdoclet</groupId>
-               <artifactId>xdoclet-xdoclet-module</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>xdoclet</groupId>
-               <artifactId>xjavadoc</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>xstream</groupId>
-               <artifactId>xstream</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.jgroups</groupId>
-               <artifactId>jgroups</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.jboss.cache</groupId>
-               <artifactId>jbosscache-core</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>jboss.jbossts</groupId>
-               <artifactId>jbossjts</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>jboss.jbossts</groupId>
-               <artifactId>jbossts-common</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.tool</groupId>
-               <artifactId>exo.tool.framework.junit</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -108,6 +26,10 @@
             <exclusion>
                <groupId>org.exoplatform.tool</groupId>
                <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -138,11 +60,6 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
-         <scope>test</scope>
-      </dependency>
 
       <dependency>
          <groupId>org.hsqldb</groupId>
@@ -169,31 +86,70 @@
                <groupId>org.exoplatform.tool</groupId>
                <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.ext</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
+
+
+
 
       <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.metamodel</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.cache</groupId>
-         <artifactId>jbosscache-core</artifactId>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-groovy</artifactId>
+         <artifactId>exo-ide-framework-client</artifactId>
+         <scope>provided</scope>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-framework</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.security.core</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.rest.ext</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.ext</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-servlet</artifactId>
+         <scope>provided</scope>
+      </dependency>
    </dependencies>
 
    <build>

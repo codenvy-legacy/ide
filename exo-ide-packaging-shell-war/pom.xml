@@ -16,6 +16,12 @@
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>
        </dependency>
+        <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      
    </dependencies>
    <build>
       <resources>

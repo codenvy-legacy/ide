@@ -8,7 +8,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M3-SNAPSHOT</version>
+   <version>1.2.0-M4-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
@@ -371,11 +371,6 @@
          </dependency>
 	 		<dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-maven</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-	 		<dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-maven-webapp-archetype</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -508,6 +503,12 @@
             <artifactId>quartz</artifactId>
             <version>1.5.2</version>
          </dependency>
+
+        <dependency>
+          <groupId>picocontainer</groupId>
+          <artifactId>picocontainer</artifactId>
+          <version>1.1</version>
+       </dependency>
 
       </dependencies>
    </dependencyManagement>

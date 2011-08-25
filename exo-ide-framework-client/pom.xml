@@ -22,6 +22,7 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>

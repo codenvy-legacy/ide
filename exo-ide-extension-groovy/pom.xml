@@ -37,6 +37,10 @@
              <groupId>org.exoplatform.tool</groupId>
              <artifactId>exo.tool.framework.junit</artifactId>
            </exclusion>
+            <exclusion>
+               <artifactId>sjsxp</artifactId>
+               <groupId>com.sun.xml.stream</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -130,14 +134,21 @@
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+         <scope>provided</scope>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
+         <scope>provided</scope>
       </dependency>
-                  
-      
+
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor</artifactId>
+         <scope>provided</scope>
+      </dependency>
    </dependencies>
    <build>
 
