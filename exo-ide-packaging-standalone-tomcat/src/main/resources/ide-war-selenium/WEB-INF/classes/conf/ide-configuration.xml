@@ -43,9 +43,9 @@
       </init-params>
    </component>
    
-   <component>
+   <!--component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
-   </component>
+   </component -->
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
@@ -77,14 +77,6 @@
    
    <component>
      <type>org.exoplatform.ide.maven.TaskService</type>
-   </component>
-   
-    <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
-   </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
 
    <component>
@@ -125,6 +117,10 @@
 
    <component>
       <type>org.exoplatform.ide.testframework.server.MockApplication</type>
+   </component>
+   
+    <component>
+      <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
    </component>
 
 

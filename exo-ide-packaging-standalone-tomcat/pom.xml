@@ -623,6 +623,12 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/web.xml"                
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/web.xml"
+                                 overwrite="true" />
                               <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
                                  tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
                                  overwrite="true" />
@@ -633,9 +639,6 @@
                               <copy todir="${project.build.directory}/tomcat-ide/conf" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/selenium/conf" />
                               </copy>
-
-                              <!-- <copy file="${basedir}/src/main/resources/tomcat/selenium/conf/server.xml" tofile="${project.build.directory}/tomcat-ide/conf/server.xml" 
-                                 overwrite="true" /> -->
                            </tasks>
                         </configuration>
                         <goals>
