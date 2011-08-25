@@ -135,10 +135,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
       <key>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</key>
       <type>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</type>
    </component>
@@ -218,9 +214,7 @@
       <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
-   </component>
+   
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
