@@ -56,6 +56,8 @@ public interface MenuCommands
       String PROJECT_FROM_TEMPLATE = "Project From Template...";
 
       String FOLDER = "Folder...";
+      
+      String JAVA_PROJECT = "Java Project...";
 
       String CHROMATTIC = "Data Object";
 
