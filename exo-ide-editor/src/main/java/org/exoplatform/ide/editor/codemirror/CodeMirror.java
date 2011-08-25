@@ -68,7 +68,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
-   private boolean needValidateCode = false; // validate code
+   private boolean needValidateCode = true; // validate code at start after the "initCallback" handler has been called
 
    private boolean showLineNumbers = true;
 
