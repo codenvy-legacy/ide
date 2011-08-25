@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -113,17 +113,24 @@ public class CodeOutLineGroovyTest extends BaseTest
       outlineTreeHelper.addOutlineItem("c2 : String", 27);
       outlineTreeHelper.addOutlineItem("d : java.lang.String", 31);
       outlineTreeHelper.addOutlineItem("setValue2(@String) : void", 33);
-      outlineTreeHelper.addOutlineItem("printClosureInner", 35);
-      outlineTreeHelper.addOutlineItem("printClosureOuter", 40);
-      outlineTreeHelper.addOutlineItem("hello()", 42);
+      outlineTreeHelper.addOutlineItem("printClosureInner : Object", 35, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("printClosureOuter() : Object", 40, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("hello() : Object", 42);
       outlineTreeHelper.addOutlineItem("name4 : String", 44);
-      outlineTreeHelper.addOutlineItem("g : String", 47, false); // false, because outline node is not highlighted from test, but highlighted when goto this line manually     
+      outlineTreeHelper.addOutlineItem("g : String", 47, false, TokenType.PROPERTY); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      outlineTreeHelper.addOutlineItem("@get(@java.lang.List<? extends Tree>) : Collection<HashMap<String,String>>", 53, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("col : Object", 54, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("var1 : List<String>", 55, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("products : Object", 59, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("row : Object", 61, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("var2 : List<String>", 66, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 75, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 78, false, TokenType.VARIABLE); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
 
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
    }
 
-   //TODO Issue IDE - 466
    @After
    public void tearDown() throws Exception
    {

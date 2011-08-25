@@ -19,10 +19,13 @@
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -35,11 +38,35 @@ import org.junit.Test;
 public class GroovyObjectCompletionTest extends BaseTest
 {
 
+   private static final String FOLDER_NAME = GroovyObjectCompletionTest.class.getSimpleName();
+
+   private static final String FILE_NAME = "groovyObjectCompetitionTest.grs";
+
+   @BeforeClass
+   public static void setUp()
+   {
+      try
+      {
+         VirtualFileSystemUtils.mkcol(WS_URL + FOLDER_NAME + "/");
+         VirtualFileSystemUtils.put(
+            "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovy/groovyObjectCompetitionTest.grs",
+            MimeType.GROOVY_SERVICE, WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         fail("Can't create test folder");
+      }
+   }
+   
    @Test
    public void testGroovyObjectCompletion() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
+
+      IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
+      
       Thread.sleep(TestConstants.SLEEP);
 
       for (int i = 0; i < 10; i++)
@@ -49,7 +76,7 @@ public class GroovyObjectCompletionTest extends BaseTest
       }
 
       selenium().keyDown("//body[@class='editbox']", "\\35");
-     IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.typeTextIntoEditor(0, ".");
 
       IDE.CODEASSISTANT.openForm();
 
@@ -69,8 +96,8 @@ public class GroovyObjectCompletionTest extends BaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
 
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-     //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-     IDE.EDITOR.closeTabIgnoringChanges(0);
+
+      IDE.EDITOR.closeFile(0);
    }
 
 }

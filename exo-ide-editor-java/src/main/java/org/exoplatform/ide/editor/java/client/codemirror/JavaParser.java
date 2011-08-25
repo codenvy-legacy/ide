@@ -289,8 +289,10 @@ public class JavaParser extends CodeMirrorParserImpl
          currentJavaType = "";
       }
       
-      // recognize "<" for java type described out the method;
-      else if (isOpenTriangleBracket(nodeType, nodeContent) && isJavaVariable(lastNodeType))
+      // recognize "<" or "<?" for java type;
+      else if ((isOpenTriangleBracket(nodeType, nodeContent) 
+                 || isOpenTriangleBracketAndQuestionSign(nodeType, nodeContent)
+                ) && isJavaVariable(lastNodeType))
       {                          
          // taking in mind type definition before first open bracket like "HashMap" in type "HashMap<String, List<String>>"
          if (enclosers.isEmpty() || !inTriangularBracket())
@@ -298,7 +300,7 @@ public class JavaParser extends CodeMirrorParserImpl
             currentJavaType += lastNodeContent;
          }
 
-         currentJavaType += "<";
+         currentJavaType += Node.getContent(node).replaceAll("&lt;", "<");  // get node content with possible ended spaces
       
          enclosers.push(TRIANGLE_BRACKET);
       }
@@ -327,7 +329,7 @@ public class JavaParser extends CodeMirrorParserImpl
       // parse parameterized types code between "<..>" like "Map<String, HashMap<String, Object>> ", "ItemTreeGrid<T extends Item>" etc.
       else if (inTriangularBracket())
       {
-         currentJavaType += nodeContent;
+         currentJavaType += Node.getContent(node).replaceAll("  ", " "); // taking in mind spaces in code "<? extends Tree>"
       }
          
       // parse elements not within the "{}" of method
@@ -376,7 +378,7 @@ public class JavaParser extends CodeMirrorParserImpl
             // recognize method's parameter like "hello(String par1, int par2, List<Item> par3,  List<Item> par3, Collection<HashMap<String,String>>par4, ...)"
             else if ((isJavaVariable(lastNodeType) 
                         || isJavaType(lastNodeType, lastNodeContent)
-                        || !currentJavaType.equals("") && isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent) 
+                        || isSingleOrDoubleCloseTriangleBracket(lastNodeType, lastNodeContent) && ! currentJavaType.equals("") 
                       )
                       && !isComma(nodeType, nodeContent)
                     )
@@ -465,18 +467,18 @@ public class JavaParser extends CodeMirrorParserImpl
                      currentJavaType,
                      modifiers
                   ));
-                  
-                  lastJavaType = currentJavaType;
-   
-                  currentJavaType = "";
-                  
+                                    
                   // set collected earlier annotations in case of '@Mandatory @MappedBy("product") Product product'
-                  setPossibleAnnotations(currentToken.getLastSubToken());                  
+                  setPossibleAnnotations(currentToken.getLastSubToken());
+
+                  lastJavaType = currentJavaType;
+                  currentJavaType = "";
                }
       
                // recognize variables like this "String a, b, c;" 
                else if (isComma(lastNodeType, lastNodeContent)
                         && currentToken.getLastSubToken() != null
+                        && !lastJavaType.isEmpty()
                         && currentToken.getLastSubToken().getLineNumber() == lineNumber
                         && (TokenType.VARIABLE.equals(currentToken.getLastSubToken().getType())
                               || TokenType.PROPERTY.equals(currentToken.getLastSubToken().getType())
@@ -873,6 +875,15 @@ public class JavaParser extends CodeMirrorParserImpl
       return "java-operator".equals(nodeType) && "&lt;".equals(nodeContent);     
    }
 
+   /**
+    * Recognize word "<?"
+    * @param node
+    */
+   private boolean isOpenTriangleBracketAndQuestionSign(String nodeType, String nodeContent)
+   {
+      return "java-operator".equals(nodeType) && "&lt;?".equals(nodeContent);     
+   }
+   
    /**
     * Recognize double open brackets "<<"
     * @param node

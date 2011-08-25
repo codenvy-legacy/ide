@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -29,8 +31,6 @@ import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -107,6 +107,12 @@ public class CodeOutLineJavaTest extends BaseTest
       outlineTreeHelper.addOutlineItem("ColoredRect(int, int, int, int, Color, Color) : void", 17, TokenType.METHOD, "ColoredRect");
       outlineTreeHelper.addOutlineItem("draw(@Graphics) : void", 27, TokenType.METHOD, "draw");
       outlineTreeHelper.addOutlineItem("color : String", 30, false, TokenType.VARIABLE, "color");   // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      
+      outlineTreeHelper.addOutlineItem("@get(@java.lang.List<? extends Tree>) : Collection<HashMap<String,String>>", 38, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("var1 : List<String>", 39, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("var2 : List<String>", 48, TokenType.VARIABLE);
+      outlineTreeHelper.addOutlineItem("@add(HashMap<String,String>) : HashMap<String,String>", 58, TokenType.METHOD);
+      outlineTreeHelper.addOutlineItem("addVar1 : List<Tree>", 61, TokenType.VARIABLE);
       
       Thread.sleep(TestConstants.SLEEP * 3);
       

@@ -30,4 +30,37 @@ public class JavaCodeOutline extends DrawableRect {
       String color = g.getColor();
     }
   }
+  
+  // test parsing parameterized types
+  @POST
+  @Path("products")
+  @Produces("application/json")
+  public Collection<HashMap<String,String>> get(@Path("Inner/{pathParam}") java.lang.List<? extends Tree> pathParam) {
+     List<String> var1;
+     var1 <=> col;
+     col < var1;
+     col >> var1;
+     
+     row["price"] = "" + product.price;
+     row["name"] = product.getName();
+     row["description"] = product.getDescription();
+     row["id"] = product.getId();
+     List<String> var2;
+     
+     col << row;
+       
+     return col;
+  }
+
+  @POST
+  @Path("add-product")
+  @Produces("application/json")
+  public HashMap<String,String> add(HashMap<String,String> map) {
+     addProduct(map)
+     
+     List<Tree> addVar1;  
+     String[] addVar2;
+     
+     return map;
+  }
 }

@@ -18,7 +18,7 @@ public class HelloWorld {
   @Path("helloworld/{name}")
   public List<Item> hello(@PathParam("name") String name) {
     Exception e;
-    
+    def col = []
     PrintStream stream = System.out;
    
     return "Hello " + name
@@ -29,5 +29,11 @@ public class HelloWorld {
     Integer ii;
     
   }
-  
+
+  def printClosureOuter = {name2 -> println "Hello, ${name2}" }
+
+  def hello(name3) {
+    "Hello, ${name3}"
+    String name4 = "test";
+  }
 }

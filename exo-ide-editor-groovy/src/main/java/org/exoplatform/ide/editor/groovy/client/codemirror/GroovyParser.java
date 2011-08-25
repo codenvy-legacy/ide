@@ -291,7 +291,7 @@ public class GroovyParser extends CodeMirrorParserImpl
          currentJavaType = "";
       }
       
-      // recognize "<" for java type described out the method;
+      // recognize "<" for java type
       else if (isOpenTriangleBracket(nodeType, nodeContent) && isGroovyVariable(lastNodeType))
       {                          
          // taking in mind type definition before first open bracket like "HashMap" in type "HashMap<String, List<String>>"
@@ -318,7 +318,7 @@ public class GroovyParser extends CodeMirrorParserImpl
       // parse parameterized types code between "<..>" like "Map<String, HashMap<String, Object>> ", "ItemTreeGrid<T extends Item>" etc.
       else if (inTriangularBracket())
       {
-         currentJavaType += nodeContent;
+         currentJavaType += Node.getContent(node).replaceAll("  ", " "); // taking in mind spaces in code "<? extends Tree>"
       }
          
       // parse elements not within the "{}" of method
@@ -443,7 +443,8 @@ public class GroovyParser extends CodeMirrorParserImpl
                      .addSubToken(new TokenBeenImpl(nodeContent, 
                         (inMethodBraces(currentToken) ? TokenType.VARIABLE : TokenType.PROPERTY), 
                         lineNumber, 
-                        MimeType.APPLICATION_GROOVY)
+                        MimeType.APPLICATION_GROOVY,
+                        "Object")   // set "Object" element type by default
                      );
 
                   // set collected earlier annotations in case of '@Mandatory @MappedBy("product") def Product product'
