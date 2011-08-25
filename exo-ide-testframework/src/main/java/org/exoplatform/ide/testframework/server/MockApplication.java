@@ -23,9 +23,12 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import org.exoplatform.ide.testframework.server.cloudbees.CloudbeesExceptionMapper;
+import org.exoplatform.ide.testframework.server.cloudbees.MockCloudbeesService;
 import org.exoplatform.ide.testframework.server.git.MockGitRepoService;
 import org.exoplatform.ide.testframework.server.heroku.HerokuExceptionMapper;
 import org.exoplatform.ide.testframework.server.heroku.MockHerokuService;
+import org.exoplatform.ide.testframework.server.jenkins.MockJenkinsService;
 import org.exoplatform.ide.testframework.server.openshift.MockExpressService;
 
 /**
@@ -42,10 +45,13 @@ public class MockApplication extends Application
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(MockHerokuService.class);
-      classes.add(MockExpressService.class);
-      classes.add(MockGitRepoService.class);
+//      classes.add(MockExpressService.class);
+//      classes.add(MockGitRepoService.class);
+      classes.add(MockCloudbeesService.class);
+      classes.add(MockJenkinsService.class);
       singletons = new HashSet<Object>(1);
       singletons.add(new HerokuExceptionMapper());
+      singletons.add(new CloudbeesExceptionMapper());
    }
 
    /**

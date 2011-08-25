@@ -36,6 +36,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.exoplatform.ide.testframework.server.FSLocation;
 import org.exoplatform.ide.testframework.server.git.MockGitRepoService;
 
 /**
