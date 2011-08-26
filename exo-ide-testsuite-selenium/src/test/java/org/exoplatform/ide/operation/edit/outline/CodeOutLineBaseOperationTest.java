@@ -112,7 +112,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       IDE.OUTLINE.doubleClickItem(1);
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
-      assertEquals("a1", IDE.OUTLINE.getItemLabel(2));
+      assertEquals("a1 : Object", IDE.OUTLINE.getItemLabel(2));
       //check selection in outline tree
       IDE.OUTLINE.checkOutlineTreeNodeSelected(1, "groovy code", true);
 

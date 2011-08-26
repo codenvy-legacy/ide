@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import java.io.IOException;
+
 import org.exoplatform.common.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -28,8 +30,6 @@ import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a> 
@@ -112,8 +112,8 @@ public class CodeOutLineChromatticTest extends BaseTest
       outlineTreeHelper.addOutlineItem("@product : Product", 15, TokenType.VARIABLE, "product");
       outlineTreeHelper.addOutlineItem("@quantity : int", 21, TokenType.PROPERTY, "quantity");
       outlineTreeHelper.addOutlineItem("getValue() : void", 23, TokenType.METHOD, "getValue");
-      outlineTreeHelper.addOutlineItem("c1", 24, TokenType.VARIABLE, "c1");
-      outlineTreeHelper.addOutlineItem("c2", 37, false, TokenType.VARIABLE, "c2");  // false, because outline node is not highlighted from test, but highlighted when goto this line manually
+      outlineTreeHelper.addOutlineItem("c1 : Object", 24, TokenType.VARIABLE, "c1");
+      outlineTreeHelper.addOutlineItem("c2 : Object", 37, false, TokenType.VARIABLE, "c2");  // false, because outline node is not highlighted from test, but highlighted when goto this line manually
       
       // check is tree created correctly      
       outlineTreeHelper.checkOutlineTree();
