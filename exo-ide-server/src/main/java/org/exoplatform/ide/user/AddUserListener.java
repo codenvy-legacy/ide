@@ -47,25 +47,7 @@ import org.exoplatform.services.organization.UserEventListener;
 public class AddUserListener extends UserEventListener
 {
 
-   /**
-    * Name of Workspace in which user's folder will be created.
-    */
-   public static final String WORKSPACE_NAME = "dev-monit";
 
-   /**
-    * IDE Developers group.
-    */
-   public static final String IDE_DEVELOPERS_GROUP = "/ide/developers";
-
-   /**
-    * IDE Users group.
-    */
-   public static final String IDE_USERS_GROUP = "/ide/users";
-
-   /**
-    * IDE Administrators group.
-    */
-   public static final String IDE_ADMINISTRATORS_GROUP = "/ide/administrators";
 
    /**
     * ExoLogger instance.
@@ -130,7 +112,7 @@ public class AddUserListener extends UserEventListener
    {
       ManageableRepository repository = repositoryService.getCurrentRepository();
 
-      Session session = repository.getSystemSession(WORKSPACE_NAME);
+      Session session = repository.getSystemSession(Constants.WORKSPACE_NAME);
       Node rootNode = session.getRootNode();
 
       if (rootNode.hasNode(userId)) {
@@ -143,7 +125,7 @@ public class AddUserListener extends UserEventListener
       userNode.addMixin("exo:privilegeable");
 
       ((NodeImpl)userNode).setPermission(userId, PermissionType.ALL);
-      ((NodeImpl)userNode).setPermission("*:" + IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
+      ((NodeImpl)userNode).setPermission("*:" + Constants.IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
       ((NodeImpl)userNode).removePermission("any");
 
       session.save();
@@ -190,8 +172,8 @@ public class AddUserListener extends UserEventListener
 
       try
       {
-         addMember(user.getUserName(), IDE_DEVELOPERS_GROUP);
-         addMember(user.getUserName(), IDE_USERS_GROUP);
+         addMember(user.getUserName(), Constants. IDE_DEVELOPERS_GROUP);
+         addMember(user.getUserName(), Constants.IDE_USERS_GROUP);
       }
       catch (Exception e)
       {
