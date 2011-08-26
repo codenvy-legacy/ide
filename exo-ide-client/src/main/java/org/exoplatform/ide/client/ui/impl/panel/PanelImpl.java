@@ -116,15 +116,15 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
     */
    private TabPanel tabPanel;
 
-   /**
-    * List of handlers for notify that we have to show this panel.
-    */
-   private List<ShowPanelHandler> showPanelHandlers = new ArrayList<ShowPanelHandler>();
+//   /**
+//    * List of handlers for notify that we have to show this panel.
+//    */
+//   private List<ShowPanelHandler> showPanelHandlers = new ArrayList<ShowPanelHandler>();
 
-   /**
-    * List of handlers for notify that we have to hide this panel.
-    */
-   private List<HidePanelHandler> hidePanelHandlers = new ArrayList<HidePanelHandler>();
+//   /**
+//    * List of handlers for notify that we have to hide this panel.
+//    */
+//   private List<HidePanelHandler> hidePanelHandlers = new ArrayList<HidePanelHandler>();
 
    /**
     * List of handlers for notify that we have to maximize this panel.
@@ -454,13 +454,14 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    @Override
    public void addView(View view)
    {
-      if (views.size() == 0 && showPanelHandlers.size() > 0)
+      if (views.size() == 0)
       {
          ShowPanelEvent showPanelEvent = new ShowPanelEvent(panelId);
-         for (ShowPanelHandler showPanelHandler : showPanelHandlers)
-         {
-            showPanelHandler.onShowPanel(showPanelEvent);
-         }
+         fireEvent(showPanelEvent);
+//         for (ShowPanelHandler showPanelHandler : showPanelHandlers)
+//         {
+//            showPanelHandler.onShowPanel(showPanelEvent);
+//         }
       }
 
       views.put(view.getId(), view);
@@ -473,7 +474,7 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
 
       final ViewController controller = new ViewController(viewWidget);
       viewControllers.put(view.getId(), controller);
-      tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.hasCloseButton());
+      tabPanel.addTab(view.getId(), view.getIcon(), view.getTitle(), controller, view.canBeClosed());
       controller.onResize();
 
       // add handlers to view
@@ -602,13 +603,15 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
       views.remove(view.getId());
       viewControllers.remove(view.getId());
 
-      if (views.size() == 0 && hidePanelHandlers.size() > 0)
+      if (views.size() == 0)
       {
          HidePanelEvent hidePanelEvent = new HidePanelEvent(panelId);
-         for (HidePanelHandler hidePanelHandler : hidePanelHandlers)
-         {
-            hidePanelHandler.onHidePanel(hidePanelEvent);
-         }
+         fireEvent(hidePanelEvent);
+         
+//         for (HidePanelHandler hidePanelHandler : hidePanelHandlers)
+//         {
+//            hidePanelHandler.onHidePanel(hidePanelEvent);
+//         }
       }
 
       updateViewTabIndex();
@@ -633,15 +636,19 @@ public class PanelImpl extends AbsolutePanel implements Panel, Resizeable, Requi
    @Override
    public HandlerRegistration addShowPanelHandler(ShowPanelHandler showPanelHandler)
    {
-      showPanelHandlers.add(showPanelHandler);
-      return new ListBasedHandlerRegistration(showPanelHandlers, showPanelHandler);
+      return addHandler(showPanelHandler, ShowPanelEvent.TYPE);
+      
+//      showPanelHandlers.add(showPanelHandler);
+//      return new ListBasedHandlerRegistration(showPanelHandlers, showPanelHandler);
    }
 
    @Override
    public HandlerRegistration addHidePanelHandler(HidePanelHandler hidePanelHandler)
    {
-      hidePanelHandlers.add(hidePanelHandler);
-      return new ListBasedHandlerRegistration(hidePanelHandlers, hidePanelHandler);
+      return addHandler(hidePanelHandler, HidePanelEvent.TYPE);
+      
+//      hidePanelHandlers.add(hidePanelHandler);
+//      return new ListBasedHandlerRegistration(hidePanelHandlers, hidePanelHandler);
    }
 
    @Override

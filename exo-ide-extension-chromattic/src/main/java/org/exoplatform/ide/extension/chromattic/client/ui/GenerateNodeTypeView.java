@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.chromattic.client.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
 import com.google.gwt.core.client.GWT;

@@ -16,10 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.api.event.prototype;
+package org.exoplatform.ide.client.framework.ui.api.event;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -28,9 +27,9 @@ import com.google.gwt.event.shared.HasHandlers;
  * @version $
  */
 
-public interface HasViewLoseActivityHandler extends HasHandlers
+public interface ViewLostActivityHandler extends EventHandler
 {
 
-   HandlerRegistration addViewLoseActivityHandler(ViewLoseActivityHandler handler);
-
+   void onViewLostActivity(ViewLostActivityEvent event);
+   
 }

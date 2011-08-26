@@ -9,8 +9,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display;

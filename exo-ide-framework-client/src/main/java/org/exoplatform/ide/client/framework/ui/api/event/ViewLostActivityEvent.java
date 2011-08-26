@@ -16,9 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.ui.api.event.prototype;
+package org.exoplatform.ide.client.framework.ui.api.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,9 +29,33 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $
  */
 
-public interface ViewLoseActivityHandler extends EventHandler
+public class ViewLostActivityEvent extends GwtEvent<ViewLostActivityHandler>
 {
 
-   void onViewLoseActivity(ViewLoseActivityEvent event);
-   
+   public static final GwtEvent.Type<ViewLostActivityHandler> TYPE = new GwtEvent.Type<ViewLostActivityHandler>();
+
+   private View view;
+
+   public ViewLostActivityEvent(View view)
+   {
+      this.view = view;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ViewLostActivityHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(ViewLostActivityHandler handler)
+   {
+      handler.onViewLostActivity(this);
+   }
+
+   public View getView()
+   {
+      return view;
+   }
+
 }

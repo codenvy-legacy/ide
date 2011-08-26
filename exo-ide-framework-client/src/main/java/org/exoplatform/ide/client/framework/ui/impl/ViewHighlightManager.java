@@ -19,11 +19,11 @@
 package org.exoplatform.ide.client.framework.ui.impl;
 
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.ViewLoseActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -89,7 +89,7 @@ public class ViewHighlightManager implements ViewClosedHandler
       {
          currentActiveView.fireEvent(new BeforeViewLoseActivityEvent(currentActiveView));
          ((ViewImpl)currentActiveView).setActivated(false);
-         currentActiveView.fireEvent(new ViewLoseActivityEvent(currentActiveView));
+         currentActiveView.fireEvent(new ViewLostActivityEvent(currentActiveView));
       }
 
       currentActiveView = view;

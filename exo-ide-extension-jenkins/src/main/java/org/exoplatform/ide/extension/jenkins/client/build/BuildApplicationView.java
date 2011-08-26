@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.build;
 
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 
 import com.google.gwt.core.client.GWT;

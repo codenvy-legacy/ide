@@ -20,8 +20,8 @@ package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.framework.ui.api.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;

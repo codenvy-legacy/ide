@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.HasBeforeViewLoseActivityHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.HasViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasBeforeViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.HasViewLostActivityHandler;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface View extends HasBeforeViewLoseActivityHandler, HasViewLoseActivityHandler
+public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActivityHandler
 {
    
    /**
@@ -79,11 +79,11 @@ public interface View extends HasBeforeViewLoseActivityHandler, HasViewLoseActiv
    void setIcon(Image icon);
    
    /**
-    * Determines whether or not this button can close button. 
+    * Determines whether or not this view can be closed. 
     * 
-    * @return <b>true</b> if this view has close button ( can be closed ), <b>false</b> otherwise
+    * @return <b>true</b> if this view can be closed, <b>false</b> otherwise
     */
-   boolean hasCloseButton();
+   boolean canBeClosed();
 
    /**
     * Get is this view is visible.

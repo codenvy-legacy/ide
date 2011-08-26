@@ -18,18 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.Resizeable;
 import org.exoplatform.gwtframework.ui.client.component.Border;
-import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.BeforeViewLoseActivityHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.ViewLoseActivityEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.prototype.ViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewLostActivityHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewIconHandler;
 import org.exoplatform.ide.client.framework.ui.impl.event.ChangeViewTitleEvent;
@@ -73,16 +69,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    private boolean canResize = true;
 
    /**
-    * List of ChangeViewIconHandler
-    */
-   private List<ChangeViewIconHandler> changeViewIconHandlers = new ArrayList<ChangeViewIconHandler>();
-
-   /**
-    * List of ChangeViewTitleHandler
-    */
-   private List<ChangeViewTitleHandler> changeViewTitleHandlers = new ArrayList<ChangeViewTitleHandler>();
-
-   /**
     * View's default height
     */
    protected int defaultHeight = 200;
@@ -95,7 +81,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    /**
     * Is this view has close button ( can be closed )
     */
-   private boolean hasCloseButton = true;
+   private boolean canBeClosed = true;
 
    /**
     * View's icon
@@ -106,11 +92,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
     * View's ID
     */
    private String id;
-
-   /**
-    * List of SetViewVisibleHandler
-    */
-   private List<SetViewVisibleHandler> setViewVisibleHandlers = new ArrayList<SetViewVisibleHandler>();
 
    /**
     * Title of this view.
@@ -204,7 +185,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       viewBorder.setWidth("100%");
       viewBorder.setHeight("100%");
 
-      sinkEvents(Event.ONMOUSEDOWN);
+      sinkEvents(Event.ONMOUSEDOWN);      
    }
 
    /**
@@ -243,8 +224,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler)
    {
-      changeViewIconHandlers.add(changeViewIconHandler);
-      return new ListBasedHandlerRegistration(changeViewIconHandlers, changeViewIconHandler);
+      return addHandler(changeViewIconHandler, ChangeViewIconEvent.TYPE);
    }
 
    /**
@@ -255,8 +235,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public HandlerRegistration addChangeViewTitleHandler(ChangeViewTitleHandler changeViewTitleHandler)
    {
-      changeViewTitleHandlers.add(changeViewTitleHandler);
-      return new ListBasedHandlerRegistration(changeViewTitleHandlers, changeViewTitleHandler);
+      return addHandler(changeViewTitleHandler, ChangeViewTitleEvent.TYPE);
    }
 
    /**
@@ -267,8 +246,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    @Override
    public HandlerRegistration addSetViewVisibleHandler(SetViewVisibleHandler setViewVisibleHandler)
    {
-      setViewVisibleHandlers.add(setViewVisibleHandler);
-      return new ListBasedHandlerRegistration(setViewVisibleHandlers, setViewVisibleHandler);
+      return addHandler(setViewVisibleHandler, SetViewVisibleEvent.TYPE);
    }
 
    /**
@@ -360,14 +338,14 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    }
 
    /**
-    * Determines whether this view has close button.
+    * Determines whether this view can be closed.
     * 
-    * @see org.exoplatform.ide.client.framework.ui.api.View#hasCloseButton()
+    * @see org.exoplatform.ide.client.framework.ui.api.View#canBeClosed()
     */
    @Override
-   public boolean hasCloseButton()
+   public boolean canBeClosed()
    {
-      return hasCloseButton;
+      return canBeClosed;
    }
 
    /**
@@ -427,13 +405,13 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    }
 
    /**
-    * Sets this view has close button.
+    * Sets this view can be closed.
     * 
-    * @param hasCloseButton
+    * @param canBeClosed <b>true</b> makes view closeable, <
     */
-   public void setHasCloseButton(boolean hasCloseButton)
+   public void setCanBeClosed(boolean canBeClosed)
    {
-      this.hasCloseButton = hasCloseButton;
+      this.canBeClosed = canBeClosed;
    }
 
    /**
@@ -447,10 +425,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       this.icon = icon;
 
       ChangeViewIconEvent changeViewIconEvent = new ChangeViewIconEvent(getId(), icon);
-      for (ChangeViewIconHandler changeViewIconHandler : changeViewIconHandlers)
-      {
-         changeViewIconHandler.onChangeViewIcon(changeViewIconEvent);
-      }
+      fireEvent(changeViewIconEvent);
    }
 
    /**
@@ -464,10 +439,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       this.tiltle = title;
 
       ChangeViewTitleEvent changeViewTitleEvent = new ChangeViewTitleEvent(getId(), title);
-      for (ChangeViewTitleHandler changeViewTitleHandler : changeViewTitleHandlers)
-      {
-         changeViewTitleHandler.onChangeViewTitle(changeViewTitleEvent);
-      }
+      fireEvent(changeViewTitleEvent);
    }
 
    /**
@@ -479,10 +451,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    public void setViewVisible()
    {
       SetViewVisibleEvent event = new SetViewVisibleEvent(getId());
-      for (SetViewVisibleHandler setViewVisibleHandler : setViewVisibleHandlers)
-      {
-         setViewVisibleHandler.onSetViewVisible(event);
-      }
+      fireEvent(event);
    }
 
    /**
@@ -525,18 +494,17 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    }
 
    @Override
-   public HandlerRegistration addBeforeViewLoseActivityHandler(
-      BeforeViewLoseActivityHandler beforeViewLoseActivityHandler)
+   public HandlerRegistration addBeforeViewLoseActivityHandler(BeforeViewLoseActivityHandler beforeViewLoseActivityHandler)
    {
       return addHandler(beforeViewLoseActivityHandler, BeforeViewLoseActivityEvent.TYPE);
    }
 
    @Override
-   public HandlerRegistration addViewLoseActivityHandler(ViewLoseActivityHandler viewLoseActivityHandler)
+   public HandlerRegistration addViewLoseActivityHandler(ViewLostActivityHandler viewLoseActivityHandler)
    {
-      return addHandler(viewLoseActivityHandler, ViewLoseActivityEvent.TYPE);
+      return addHandler(viewLoseActivityHandler, ViewLostActivityEvent.TYPE);
    }
-   
+
    @Override
    public String toString()
    {

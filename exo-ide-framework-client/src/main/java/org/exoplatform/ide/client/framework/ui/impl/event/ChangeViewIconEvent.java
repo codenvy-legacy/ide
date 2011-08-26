@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.Image;
 public class ChangeViewIconEvent extends GwtEvent<ChangeViewIconHandler>
 {
 
-   private static final GwtEvent.Type<ChangeViewIconHandler> TYPE = new GwtEvent.Type<ChangeViewIconHandler>();
+   public static final GwtEvent.Type<ChangeViewIconHandler> TYPE = new GwtEvent.Type<ChangeViewIconHandler>();
 
    private String viewId;
 
