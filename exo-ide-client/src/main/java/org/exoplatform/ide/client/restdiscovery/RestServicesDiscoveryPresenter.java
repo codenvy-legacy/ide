@@ -78,8 +78,6 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
    public interface Display extends IsView
    {
 
-      String ID = "ideResrServicesDiscoveryView";
-
       HasClickHandlers getOkButton();
 
       UntypedTreeGrid getTreeGrid();
@@ -123,6 +121,8 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       eventBus.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new RestServicesDiscoveryControl());
    }
 
    /**
@@ -154,7 +154,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       {
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 

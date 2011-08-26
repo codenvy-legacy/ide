@@ -55,6 +55,8 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
    {
       eventBus.addHandler(ShowAboutDialogEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new ShowAboutControl());
    }
 
    @Override

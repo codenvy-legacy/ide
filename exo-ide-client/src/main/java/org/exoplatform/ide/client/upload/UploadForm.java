@@ -144,7 +144,7 @@ public class UploadForm extends IDEDialogWindow implements UploadPresenter.Uploa
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
       presenter = createPresenter(eventBus, selectedItems, path);
-      fileUploadInput.setFileSelectedHandler(presenter);
+      fileUploadInput.addFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
    }
    

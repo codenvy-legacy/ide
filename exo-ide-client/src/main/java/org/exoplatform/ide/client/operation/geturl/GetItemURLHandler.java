@@ -16,20 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.operation.geturl;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface OpenFileByPathHandler extends EventHandler
+public interface GetItemURLHandler extends EventHandler
 {
 
-   void onOpenFileByPath(OpenFileByPathEvent event);
+   void onGetItemURL(GetItemURLEvent event);
 
 }

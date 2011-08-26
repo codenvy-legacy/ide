@@ -259,8 +259,8 @@ public interface IdeLocalizationConstant extends Constants
    /*
     * GET FILE URL
     */
-   @Key("control.getFileUrl")
-   String getFileUrlControl();
+   @Key("control.getItemUrl")
+   String getItemUrlControl();
 
    @Key("control.goToFolder")
    String goToFolderControl();

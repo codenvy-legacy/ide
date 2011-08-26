@@ -28,8 +28,10 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
+import org.exoplatform.ide.client.debug.DebugModule;
 import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
+import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -53,10 +55,13 @@ import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.NavigationModule;
-import org.exoplatform.ide.client.operation.OperationModule;
+import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
+import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
+import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
+import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.core.client.GWT;
@@ -146,10 +151,14 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new NavigationModule(EVENT_BUS, context);
       new ProjectSupportingModule(EVENT_BUS);
       new TextEditModule(EVENT_BUS);
-      new OperationModule(EVENT_BUS);
+      
+      new PropertiesPresenter(EVENT_BUS);
+      new OutlinePresenter(EVENT_BUS);
+      new PreviewHTMLPresenter();
+      new DocumentationPresenter(EVENT_BUS);
+      new OutputPresenter(EVENT_BUS);
 
       new PreferencesModule(EVENT_BUS);
-
       new HotKeyManagementModule(EVENT_BUS);
       
       //initialize extensions

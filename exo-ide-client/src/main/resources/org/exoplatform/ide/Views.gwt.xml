@@ -43,8 +43,8 @@
       <when-type-is class="org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.GetItemURLView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.geturl.GetItemURLView">
+      <when-type-is class="org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
@@ -119,13 +119,17 @@
       <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.upload.OpenFileByPathView">
-      <when-type-is class="org.exoplatform.ide.client.upload.OpenFileByPathPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathView">
+      <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display" />
    </replace-with>
    
    <replace-with class="org.exoplatform.ide.client.remote.OpenFileByURLView">
       <when-type-is class="org.exoplatform.ide.client.remote.OpenFileByURLPresenter.Display" />
-   </replace-with>   
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
+   </replace-with>
    
    <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
       <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />

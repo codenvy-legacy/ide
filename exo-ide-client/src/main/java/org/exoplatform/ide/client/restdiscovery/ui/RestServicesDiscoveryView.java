@@ -49,6 +49,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class RestServicesDiscoveryView extends ViewImpl implements
    org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display
 {
+   
+   /**
+    * ID of this view.
+    */
+   private static final String ID = "ideResrServicesDiscoveryView";   
 
    /**
     * Initial width of this view

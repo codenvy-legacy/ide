@@ -60,7 +60,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    
    public interface Display extends IsView
    {
-      public static final String ID = "ideCreateFolderForm";
       
       HasValue<String> getFolderNameField();
 
@@ -98,7 +97,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       {
          public void onClick(ClickEvent event)
          {
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -127,11 +126,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
 
    }
    
-   private void closeView()
-   {
-      IDE.getInstance().closeView(Display.ID);
-   }
-
    protected void createFolder()
    {
       final String newFolderName = display.getFolderNameField().getValue();
@@ -144,7 +138,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
          {
             String folder = selectedItems.get(0).getWorkDir();
             eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), result));
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
    }

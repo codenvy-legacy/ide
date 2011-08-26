@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
@@ -51,6 +52,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class UploadPresenter implements FileSelectedHandler
 {
+   
    interface UploadDisplay
    {
 
@@ -225,9 +227,10 @@ public class UploadPresenter implements FileSelectedHandler
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
    }
 
-   public void onFileSelected(String fileName)
+   @Override
+   public void onFileSelected(FileSelectedEvent event)
    {
-      String file = fileName;
+      String file = event.getFileName();
       file = file.replace('\\', '/');
 
       if (file.indexOf('/') >= 0)

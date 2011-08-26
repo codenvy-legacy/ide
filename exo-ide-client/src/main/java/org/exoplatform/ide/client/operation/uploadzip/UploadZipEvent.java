@@ -16,8 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.debug;
+package org.exoplatform.ide.client.operation.uploadzip;
 
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,14 +27,21 @@ package org.exoplatform.ide.client.debug;
  * @version $
  */
 
-public class DebugModule
+public class UploadZipEvent extends GwtEvent<UploadZipHandler>
 {
 
-   public DebugModule()
+   public static final GwtEvent.Type<UploadZipHandler> TYPE = new GwtEvent.Type<UploadZipHandler>();
+   
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UploadZipHandler> getAssociatedType()
    {
-      //new ShowImagesPresenter(eventBus);
-      //new PopupWindowLogger();
-      //new DOMInspector();
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(UploadZipHandler handler)
+   {
+      handler.onUploadZip(this);
    }
 
 }

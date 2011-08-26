@@ -16,7 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.upload;
+package org.exoplatform.ide.client.operation.openbypath;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -28,17 +36,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent;
-import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -48,7 +45,7 @@ import org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler;
 public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPathHandler
 {
 
-   interface Display extends IsView
+   public interface Display extends IsView
    {
       HasClickHandlers getOpenButton();
 
@@ -67,16 +64,14 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       TextFieldItem getFilePathFieldOrigin(); 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
-   public OpenFileByPathPresenter(HandlerManager eventBus)
+   public OpenFileByPathPresenter()
    {
-      this.eventBus = eventBus;
+      IDE.getInstance().addControl(new OpenFileByPathCommand());
       
-      eventBus.addHandler(OpenFileByPathEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(OpenFileByPathEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
@@ -98,7 +93,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       {
          public void onClick(ClickEvent event)
          {
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
       
@@ -151,8 +146,8 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          return;
       }
       
-      eventBus.fireEvent(new OpenFileEvent(filePath));
-      closeView();
+      IDE.EVENT_BUS.fireEvent(new OpenFileEvent(filePath));
+      IDE.getInstance().closeView(display.asView().getId());
    }
    
    /**
@@ -167,11 +162,6 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       }
    }
    
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
    /**
     * @see org.exoplatform.ide.client.navigation.event.OpenFileByPathHandler#onOpenFileByPath(org.exoplatform.ide.client.navigation.event.OpenFileByPathEvent)
     */
@@ -187,7 +177,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display OpenFileByPath must be null"));
       }
    }
    

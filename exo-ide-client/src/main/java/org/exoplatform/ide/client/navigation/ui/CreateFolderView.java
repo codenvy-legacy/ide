@@ -45,6 +45,8 @@ import org.exoplatform.ide.client.navigation.CreateFolderPresenter;
 
 public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.Display
 {
+   
+   public static final String ID = "ideCreateFolderForm";
 
    public static final int WIDTH = 400;
 

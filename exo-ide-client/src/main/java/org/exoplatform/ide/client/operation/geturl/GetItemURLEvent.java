@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.operation.geturl;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -27,19 +27,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class GetFileURLEvent extends GwtEvent<GetFileURLHandler>
+public class GetItemURLEvent extends GwtEvent<GetItemURLHandler>
 {
 
-   public static final GwtEvent.Type<GetFileURLHandler> TYPE = new GwtEvent.Type<GetFileURLHandler>();
+   public static final GwtEvent.Type<GetItemURLHandler> TYPE = new GwtEvent.Type<GetItemURLHandler>();
 
    @Override
-   protected void dispatch(GetFileURLHandler handler)
+   protected void dispatch(GetItemURLHandler handler)
    {
-      handler.onGetFileURL(this);
+      handler.onGetItemURL(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GetFileURLHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<GetItemURLHandler> getAssociatedType()
    {
       return TYPE;
    }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.preview;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -77,11 +78,13 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
 
    private File activeFile;
 
-   public PreviewHTMLPresenter(HandlerManager eventBus)
+   public PreviewHTMLPresenter()
    {
-      eventBus.addHandler(PreviewHTMLEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(PreviewHTMLEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new PreviewHTMLControl(), DockTarget.TOOLBAR, true);
    }
 
    /**

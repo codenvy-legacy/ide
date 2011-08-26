@@ -35,7 +35,6 @@ import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -159,7 +158,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(CustomizeToolbarEvent.TYPE, this);
 
-      eventBus.fireEvent(new RegisterControlEvent(new CustomizeToolbarCommand()));
+      IDE.getInstance().addControl(new CustomizeToolbarCommand());
    }
 
    @Override

@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
@@ -158,9 +159,9 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
    }
    
    @Override
-   public void onFileSelected(String fileName)
+   public void onFileSelected(FileSelectedEvent event)
    {
-      String file = fileName;
+      String file = event.getFileName();
       file = file.replace('\\', '/');
 
       if (file.indexOf('/') >= 0)
@@ -174,7 +175,7 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
       List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
       Collections.sort(mimeTypes);
 
-      List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(fileName);
+      List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(event.getFileName());
 
       String[] valueMap = mimeTypes.toArray(new String[0]);
 

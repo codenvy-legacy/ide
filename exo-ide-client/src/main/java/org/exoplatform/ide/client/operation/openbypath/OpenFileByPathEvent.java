@@ -16,53 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.operation.openbypath;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
  * @version $
  */
 
-public class UploadFileEvent extends GwtEvent<UploadFileHandler>
+public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler>
 {
-   public enum UploadType
-   {
-      FOLDER,
-      FILE,
-      OPEN_FILE
-   }
 
-   public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
+   public static final GwtEvent.Type<OpenFileByPathHandler> TYPE = new GwtEvent.Type<OpenFileByPathHandler>();
 
-   private UploadType uploadType;
-
-   public UploadFileEvent(UploadType type)
+   public OpenFileByPathEvent()
    {
-      uploadType = type;
-   }
-   
-   /**
-    * Type of uploading form.
-    * 
-    * @return the uploadType
-    */
-   public UploadType getUploadType()
-   {
-      return uploadType;
    }
 
    @Override
-   protected void dispatch(UploadFileHandler handler)
+   protected void dispatch(OpenFileByPathHandler handler)
    {
-      handler.onUploadFile(this);
+      handler.onOpenFileByPath(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByPathHandler> getAssociatedType()
    {
       return TYPE;
    }

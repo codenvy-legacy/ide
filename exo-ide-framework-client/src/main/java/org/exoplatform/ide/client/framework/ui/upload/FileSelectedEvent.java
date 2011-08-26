@@ -16,8 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.debug;
+package org.exoplatform.ide.client.framework.ui.upload;
 
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -26,14 +27,33 @@ package org.exoplatform.ide.client.debug;
  * @version $
  */
 
-public class DebugModule
+public class FileSelectedEvent extends GwtEvent<FileSelectedHandler>
 {
 
-   public DebugModule()
+   public static final GwtEvent.Type<FileSelectedHandler> TYPE = new GwtEvent.Type<FileSelectedHandler>();
+
+   private String fileName;
+
+   public FileSelectedEvent(String fileName)
    {
-      //new ShowImagesPresenter(eventBus);
-      //new PopupWindowLogger();
-      //new DOMInspector();
+      this.fileName = fileName;
+   }
+
+   public String getFileName()
+   {
+      return fileName;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<FileSelectedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(FileSelectedHandler handler)
+   {
+      handler.onFileSelected(this);
    }
 
 }

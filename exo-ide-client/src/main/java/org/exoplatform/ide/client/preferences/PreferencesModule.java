@@ -81,13 +81,11 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       /*
        * About IDE.
        */
-      eventBus.fireEvent(new RegisterControlEvent(new ShowAboutControl(eventBus)));
       new AboutIDEPresenter(eventBus);
 
       /*
        * Rest Services Discovery.
        */
-      eventBus.fireEvent(new RegisterControlEvent(new RestServicesDiscoveryControl()));
       new RestServicesDiscoveryPresenter(eventBus);
    }
 

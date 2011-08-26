@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.upload;
+package org.exoplatform.ide.client.operation.openbypath;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-public class OpenFileByPathView extends ViewImpl implements OpenFileByPathPresenter.Display
+public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display
 {
 
    public static final int WIDTH = 500;
@@ -127,4 +127,5 @@ public class OpenFileByPathView extends ViewImpl implements OpenFileByPathPresen
    {
       filePathField.focusInItem();
    }
+   
 }

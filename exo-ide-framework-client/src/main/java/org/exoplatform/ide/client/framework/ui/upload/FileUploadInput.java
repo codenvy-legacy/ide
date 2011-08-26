@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.ui.upload;
 
+import org.exoplatform.gwtframework.ui.client.GwtResources;
+
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FileUpload;
 
@@ -31,10 +34,8 @@ import com.google.gwt.user.client.ui.FileUpload;
  * @version $
  */
 
-public class FileUploadInput extends FileUpload
+public class FileUploadInput extends FileUpload implements HasFileSelectedHandler
 {
-
-   private FileSelectedHandler fileSelectedHandler;
 
    public FileUploadInput()
    {
@@ -43,17 +44,6 @@ public class FileUploadInput extends FileUpload
 
       ((InputElement)getElement().cast()).setSize(1);
       sinkEvents(Event.ONCHANGE);
-   }
-
-   public FileUploadInput(FileSelectedHandler fileSelectedHandler)
-   {
-      this();
-      this.fileSelectedHandler = fileSelectedHandler;
-   }
-
-   public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler)
-   {
-      this.fileSelectedHandler = fileSelectedHandler;
    }
 
    public void onBrowserEvent(Event event)
@@ -65,10 +55,38 @@ public class FileUploadInput extends FileUpload
          return;
       }
 
-      if (fileSelectedHandler != null)
+      FileSelectedEvent fileSelectedEvent = new FileSelectedEvent(fileName);
+      fireEvent(fileSelectedEvent);
+   }
+
+   @Override
+   public void setWidth(String width)
+   {
+      super.setWidth(width);
+   }
+
+   @Override
+   public void setHeight(String height)
+   {
+      super.setHeight(height);
+   }
+
+   public void setTransparent(boolean transparent)
+   {
+      if (transparent)
       {
-         fileSelectedHandler.onFileSelected(fileName);
+         setStyleName(GwtResources.INSTANCE.css().transparent(), true);
       }
+      else
+      {
+         removeStyleName(GwtResources.INSTANCE.css().transparent());
+      }
+   }
+
+   @Override
+   public HandlerRegistration addFileSelectedHandler(FileSelectedHandler handler)
+   {
+      return addHandler(handler, FileSelectedEvent.TYPE);
    }
 
 }

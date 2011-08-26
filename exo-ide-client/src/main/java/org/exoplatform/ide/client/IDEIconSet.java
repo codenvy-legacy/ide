@@ -44,6 +44,8 @@ public class IDEIconSet
       ImageFactory.addImage("up", IDEImageBundle.INSTANCE.up(), IDEImageBundle.INSTANCE.upDisabled());
       ImageFactory.addImage("down", IDEImageBundle.INSTANCE.down(), IDEImageBundle.INSTANCE.downDisabled());
       ImageFactory.addImage("defaults", IDEImageBundle.INSTANCE.defaults(), IDEImageBundle.INSTANCE.defaultsDisabled());
+      
+      ImageFactory.addImage("upload", IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
    }
 
 }

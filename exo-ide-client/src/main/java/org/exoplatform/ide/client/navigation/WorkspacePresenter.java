@@ -204,21 +204,6 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       bindDisplay();
    }
 
-   /**
-    * Remove handlers, that are no longer needed.
-    */
-   private void removeHandlers()
-   {
-      //TODO: such method is not very convenient.
-      //If gwt mvp framework will be used , it will be good to use
-      //ResettableEventBus class
-      for (HandlerRegistration h : handlerRegistrations.values())
-      {
-         h.removeHandler();
-      }
-      handlerRegistrations.clear();
-   }
-
    public void bindDisplay()
    {
       display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
@@ -76,8 +75,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public interface Display extends IsView
    {
-
-      String ID = "ideDeleteItemsView";
 
       HasValue<String> getPromptField();
 
@@ -144,7 +141,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public void onDeleteItem(DeleteItemEvent event)
    {
-      Log.info("DeleteItemPresenter > onDeleteItem");
       if (display == null)
       {
          Display d = GWT.create(Display.class);
@@ -166,8 +162,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          public void onClick(ClickEvent event)
          {
-            Log.info("DeleteItemPresenter > cancel clicked");
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -175,7 +170,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          public void onClick(ClickEvent event)
          {
-            Log.info("DeleteItemPresenter > Login clicked");
             deleteNextItem();
          }
       });
@@ -183,18 +177,14 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private void deleteNextItem()
    {
-      Log.info("selected items > " + selectedItems.size());
-      
       if (selectedItems.size() == 0)
       {
-         IDE.getInstance().closeView(Display.ID);
+         IDE.getInstance().closeView(display.asView().getId());
          deleteItemsComplete();
          return;
       }
 
       Item item = selectedItems.get(0);
-      Log.info("Item to delete > " + item.getHref());
-
       if (item instanceof File)
       {
          if (openedFiles.get(item.getHref()) != null)
@@ -321,7 +311,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          protected void onFailure(Throwable exception)
          {
             eventBus.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
    }
@@ -338,7 +328,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             }
             else
             {
-               IDE.getInstance().closeView(Display.ID);
+               IDE.getInstance().closeView(display.asView().getId());
                deleteItemsComplete();
             }
          }

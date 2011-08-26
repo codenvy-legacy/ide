@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
@@ -150,7 +151,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorContentChangedEvent.TYPE, this);
       eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);      
-      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);      
+      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new ShowOutlineControl(), DockTarget.TOOLBAR, false);
    }
 
    @Override

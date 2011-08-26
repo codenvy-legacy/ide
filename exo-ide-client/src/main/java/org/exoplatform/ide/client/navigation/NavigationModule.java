@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -50,10 +48,7 @@ import org.exoplatform.ide.client.navigation.control.CutItemsCommand;
 import org.exoplatform.ide.client.navigation.control.DeleteItemCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadFileCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand;
-import org.exoplatform.ide.client.navigation.control.GetFileURLControl;
 import org.exoplatform.ide.client.navigation.control.GoToFolderControl;
-import org.exoplatform.ide.client.navigation.control.OpenFileByPathCommand;
-import org.exoplatform.ide.client.navigation.control.OpenLocalFileCommand;
 import org.exoplatform.ide.client.navigation.control.PasteItemsCommand;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
 import org.exoplatform.ide.client.navigation.control.RenameItemCommand;
@@ -62,8 +57,6 @@ import org.exoplatform.ide.client.navigation.control.SaveFileAsCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.client.navigation.control.SearchFilesCommand;
-import org.exoplatform.ide.client.navigation.control.UploadFileCommand;
-import org.exoplatform.ide.client.navigation.control.UploadFolderControl;
 import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
@@ -73,8 +66,6 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsHandler;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsHandler;
 import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent;
-import org.exoplatform.ide.client.navigation.event.UploadFileEvent;
-import org.exoplatform.ide.client.navigation.event.UploadFileHandler;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.navigation.handler.GoToFolderCommandHandler;
@@ -84,12 +75,18 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
+import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
+import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
-import org.exoplatform.ide.client.upload.OpenFileByPathPresenter;
+import org.exoplatform.ide.client.upload.OpenLocalFileCommand;
 import org.exoplatform.ide.client.upload.OpenLocalFileForm;
+import org.exoplatform.ide.client.upload.UploadFileCommand;
+import org.exoplatform.ide.client.upload.UploadFileEvent;
 import org.exoplatform.ide.client.upload.UploadFileForm;
+import org.exoplatform.ide.client.upload.UploadFileHandler;
 import org.exoplatform.ide.client.upload.UploadForm;
 import org.exoplatform.ide.client.versioning.VersionsListPresenter;
 import org.exoplatform.ide.client.versioning.control.RestoreToVersionControl;
@@ -100,8 +97,7 @@ import org.exoplatform.ide.client.versioning.control.ViewVersionListControl;
 import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHandler;
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -148,10 +144,9 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New CSS", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewCssTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewCssPrompt(), Images.FileTypes.CSS,
          MimeType.TEXT_CSS).setGroup(1)));
+      
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
-
-      //      eventBus.fireEvent(new RegisterControlEvent(new ViewItemPropertiesCommand(), DockTarget.TOOLBAR, true));
 
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), DockTarget.TOOLBAR, true));
@@ -159,11 +154,13 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new UploadFolderControl()));
+      
+      new UploadZipPresenter();
+      
       eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new OpenFileByPathCommand()));
-
-      new OpenFileByURLPresenter(eventBus);
+      
+      new OpenFileByPathPresenter();
+      new OpenFileByURLPresenter();
 
       eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
       eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
@@ -179,7 +176,9 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new GetFileURLControl()));
+
+      new GetItemURLPresenter();
+      
       eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(), DockTarget.STATUSBAR));
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
@@ -210,14 +209,14 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
       new DeleteItemsPresenter(eventBus);
-      new GetItemURLPresenter(eventBus);
 
       new CreateFolderPresenter(eventBus);
-      new OpenFileByPathPresenter(eventBus);
       new SaveAsTemplatePresenter(eventBus);
       new VersionsListPresenter(eventBus);
       new RenameFilePresenter(eventBus);
       new RenameFolderPresenter(eventBus);
+      
+      new ShellLinkUpdater(eventBus);
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -249,8 +248,10 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
             path = path.substring(path.lastIndexOf("/"));
          }
       }
+      
       //      eventBus.fireEvent(new ClearFocusEvent());
       ClearFocusForm.getInstance().clearFocus();
+      
       if (UploadFileEvent.UploadType.OPEN_FILE.equals(event.getUploadType()))
       {
          new OpenLocalFileForm(eventBus, selectedItems, path, applicationConfiguration);
@@ -263,7 +264,6 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       {
          new UploadForm(eventBus, selectedItems, path, applicationConfiguration);
       }
-
    }
 
    public void onCopyItems(CopyItemsEvent event)
@@ -286,21 +286,6 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      if (!selectedItems.isEmpty())
-         updateLinkToCloudShell(selectedItems.get(0));
-   }
-
-   private void updateLinkToCloudShell(Item selectedItem)
-   {
-      String path = selectedItem.getHref();
-      path = path.substring(applicationConfiguration.getDefaultEntryPoint().length() - 1);
-      Element ae = DOM.getElementById("shell-link");
-      if(ae == null)
-         return;
-      
-      AnchorElement a = AnchorElement.as(ae);
-      String newHref = "/shell/Shell.html?workdir=" + path;
-      a.setHref(newHref);
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)

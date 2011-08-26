@@ -33,7 +33,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.UploadSshKeyView;
 
@@ -87,10 +89,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
        */
       void setMessage(String message);
 
-      /**
-       * @param fileSelectedHandler
-       */
-      void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler);
+      HasFileSelectedHandler getFileUploadInput();
 
       /**
        * Enable Upload button
@@ -170,7 +169,7 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
          }
       });
 
-      display.setFileSelectedHandler(this);
+      display.getFileUploadInput().addFileSelectedHandler(this);
    }
 
    /**
@@ -206,12 +205,12 @@ public class UploadSshKeyPresenter implements ViewClosedHandler, FileSelectedHan
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler#onFileSelected(java.lang.String)
+    * @see org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler#onFileSelected(org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent)
     */
    @Override
-   public void onFileSelected(String fileName)
+   public void onFileSelected(FileSelectedEvent event)
    {
-      String file = fileName;
+      String file = event.getFileName();
       file = file.replace('\\', '/');
 
       if (file.indexOf('/') >= 0)

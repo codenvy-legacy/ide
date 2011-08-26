@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.ui;
+package org.exoplatform.ide.client.operation.geturl;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version @version $Id: $
  */
 
-public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.client.navigation.GetItemURLPresenter.Display
+public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display
 {
    
    private static final String ID = "ideGetItemURLForm";

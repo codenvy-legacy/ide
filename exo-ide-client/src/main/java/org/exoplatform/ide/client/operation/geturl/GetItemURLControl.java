@@ -16,10 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.control;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.exoplatform.ide.client.operation.geturl;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -34,37 +31,33 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
-import org.exoplatform.ide.client.navigation.event.UploadFileEvent;
 
 import com.google.gwt.event.shared.HandlerManager;
 
 /**
- * Opens upload zip folder dialog window.
+ * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: Dec 10, 2010 $
- *
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class UploadFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+public class GetItemURLControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    ViewVisibilityChangedHandler, EntryPointChangedHandler
 {
 
-   private final static String ID = "File/Upload Zipped Folder...";
+   private static final String ID = "View/Get URL...";
 
-   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFolderControl();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.getItemUrlControl();
 
-   private boolean browserPanelSelected = true;
+   private Item selectedItem;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
-
-   public UploadFolderControl()
+   public GetItemURLControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      setEvent(new UploadFileEvent(UploadFileEvent.UploadType.FOLDER));
+      setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
+      setEvent(new GetItemURLEvent());
    }
 
    /**
@@ -77,29 +70,27 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
    }
 
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      selectedItem = event.getSelectedItems().get(0);
+      updateEnabling();
+   }
+
    private void updateEnabling()
    {
-      if (browserPanelSelected)
-      {
-         if (selectedItems.size() == 1)
-         {
-            setEnabled(true);
-         }
-         else
-         {
-            setEnabled(false);
-         }
-      }
-      else
+      if (selectedItem == null)
       {
          setEnabled(false);
       }
-   }
-
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
+      else
+      {
+         setEnabled(true);
+      }
    }
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
@@ -112,6 +103,7 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
       {
          setVisible(false);
       }
+
    }
 
    /**
@@ -122,9 +114,7 @@ public class UploadFolderControl extends SimpleControl implements IDEControl, It
    {
       if (event.getView() instanceof WorkspacePresenter.Display)
       {
-         browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();
       }
    }
-
 }

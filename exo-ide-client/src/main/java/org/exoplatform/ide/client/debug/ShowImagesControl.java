@@ -39,7 +39,7 @@ import com.google.gwt.event.shared.HandlerManager;
 public class ShowImagesControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler
 {
 
-   public static final String ID = "Help/Debug/Show Images";
+   public static final String ID = "Debug/Show Images";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showImagesControl();
 

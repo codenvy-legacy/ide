@@ -40,7 +40,7 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.aboutControl();
 
-   public ShowAboutControl(HandlerManager eventBus)
+   public ShowAboutControl()
    {
       super(ID);
       setTitle(TITLE);

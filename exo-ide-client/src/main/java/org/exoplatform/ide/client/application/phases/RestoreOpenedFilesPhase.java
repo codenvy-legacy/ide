@@ -52,8 +52,10 @@ import com.google.gwt.user.client.Timer;
  * @version $
  */
 
-public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHandler, EditorActiveFileChangedHandler
+public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorActiveFileChangedHandler
 {
+   
+   public static final int SCHEDULE_START = 100;
 
    private HandlerManager eventBus;
 
@@ -84,9 +86,17 @@ public class RestoreOpenedFilesPhase extends Phase implements ExceptionThrownHan
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            execute();
+         }
+      }.schedule(SCHEDULE_START);      
    }
 
-   @Override
    protected void execute()
    {
       filesToLoad = applicationSettings.getValueAsList("opened-files");

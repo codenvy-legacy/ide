@@ -16,36 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.upload;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:dmitry.ndp@gmail.com">Dmitry Nochevnov</a>
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler>
+public interface UploadFileHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<OpenFileByPathHandler> TYPE = new GwtEvent.Type<OpenFileByPathHandler>();
-
-   public OpenFileByPathEvent()
-   {
-   }
-
-   @Override
-   protected void dispatch(OpenFileByPathHandler handler)
-   {
-      handler.onOpenFileByPath(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenFileByPathHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onUploadFile(UploadFileEvent event);
 
 }

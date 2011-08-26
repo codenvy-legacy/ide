@@ -104,11 +104,6 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    }
 
    /**
-    * Events handler manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Instance of {@link Display} implementation.
     */
    private Display display;
@@ -123,16 +118,14 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     * 
     * @param eventBus event handler manager.
     */
-   public OpenFileByURLPresenter(HandlerManager eventBus)
+   public OpenFileByURLPresenter()
    {
-      this.eventBus = eventBus;
-
       IDE.getInstance().addControl(new OpenFileByURLControl(), DockTarget.NONE, false);
 
-      eventBus.addHandler(OpenFileByURLEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(OpenFileByURLEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -141,7 +134,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new RemoteFileService(eventBus, event.getLoader(), event.getApplicationConfiguration().getContext());
+      new RemoteFileService(IDE.EVENT_BUS, event.getLoader(), event.getApplicationConfiguration().getContext());
    }
 
    /**
@@ -305,7 +298,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       try
       {
          EditorProducer editorProducer = IDE.getInstance().getEditor(file.getContentType());
-         eventBus.fireEvent(new EditorOpenFileEvent(fileToOpen, editorProducer));
+         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(fileToOpen, editorProducer));
          IDE.getInstance().closeView(display.asView().getId());
       }
       catch (EditorNotFoundException e)

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.properties;
 
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -63,6 +64,8 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       eventBus.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       eventBus.addHandler(ShowPropertiesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new ShowPropertiesControl(), DockTarget.TOOLBAR, true);
    }
 
    @Override

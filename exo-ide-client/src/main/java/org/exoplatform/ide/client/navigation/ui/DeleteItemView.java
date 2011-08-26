@@ -44,6 +44,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 public class DeleteItemView extends ViewImpl implements
    org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display
 {
+   
+   private static final String ID = "ideDeleteItemsView";   
 
    public static final int DEFAULT_WIDTH = 500;
 

@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
@@ -149,11 +150,11 @@ public class UploadFilePresenter extends UploadPresenter
    }
 
    @Override
-   public void onFileSelected(String fileName)
+   public void onFileSelected(FileSelectedEvent event)
    {
       isSetAll = false;
       
-      String file = fileName;
+      String file = event.getFileName();
       file = file.replace('\\', '/');
 
       if (file.indexOf('/') >= 0)

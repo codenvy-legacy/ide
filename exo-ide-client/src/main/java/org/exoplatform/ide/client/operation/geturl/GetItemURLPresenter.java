@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.operation.geturl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +25,14 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.navigation.event.GetFileURLEvent;
-import org.exoplatform.ide.client.navigation.event.GetFileURLHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -46,7 +42,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $
  */
 
-public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHandler, ViewClosedHandler
+public class GetItemURLPresenter implements GetItemURLHandler, ItemsSelectedHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -62,11 +58,13 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public GetItemURLPresenter(HandlerManager eventBus)
+   public GetItemURLPresenter()
    {
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(GetFileURLEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.getInstance().addControl(new GetItemURLControl());
+      
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(GetItemURLEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -77,7 +75,7 @@ public class GetItemURLPresenter implements GetFileURLHandler, ItemsSelectedHand
    }
 
    @Override
-   public void onGetFileURL(GetFileURLEvent event)
+   public void onGetItemURL(GetItemURLEvent event)
    {
       if (display == null)
       {
