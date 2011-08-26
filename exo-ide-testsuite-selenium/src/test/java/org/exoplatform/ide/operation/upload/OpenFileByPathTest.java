@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.upload;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.common.http.client.ModuleException;
@@ -138,10 +139,12 @@ public class OpenFileByPathTest extends BaseTest
 
       Thread.sleep(TestConstants.SLEEP);
 
-      assertTrue(selenium().isElementPresent(OPEN_FILE_BY_PATH_WINDOW_LOCATOR));
+      assertFalse(selenium().isElementPresent(OPEN_FILE_BY_PATH_WINDOW_LOCATOR));
 
       // close window
-      selenium().click(CANCEL_BUTTON_ID);
+      
+      //after closing of the error message window, open file by path window also  is closing
+      //selenium().click(CANCEL_BUTTON_ID);
       waitForElementNotPresent(OPEN_FILE_BY_PATH_WINDOW_LOCATOR);
 
       // trying to open file by correct url and using "Open" key
