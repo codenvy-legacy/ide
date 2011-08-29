@@ -43,13 +43,13 @@ public class ClasspathProject extends AbstractTestModule
 
    private static final String REMOVE_BUTTON_ID = "ideConfigureBuildPathFormRemoveButton";
 
-   private static final String CHOOSE_SOURCE_VIEW_ID = "ideChooseSourcePathForm";
+   private static final String CHOOSE_SOURCE_VIEW_ID = "//div[@view-id='ideChooseSourcePathView']";
 
-   private static final String CHOOSE_SOURCE_OK_BUTTON_ID = "ideChooseSourcePathFormOkButton";
+   private static final String CHOOSE_SOURCE_OK_BUTTON_ID = "ideChooseSourcePathViewOkButton";
 
-   private static final String CHOOSE_SOURCE_CANCEL_BUTTON_ID = "ideChooseSourcePathFormCancelButton";
+   private static final String CHOOSE_SOURCE_CANCEL_BUTTON_ID = "ideChooseSourcePathViewCancelButton";
 
-   private static final String CHOOSE_SOURCE_TREE_ID = "ideChooseSourcePathFormTreeGrid";
+   private static final String CHOOSE_SOURCE_TREE_ID = "ideChooseSourcePathViewTreeGrid";
 
    /**
     * Wait, while Configure Classpath form appears.

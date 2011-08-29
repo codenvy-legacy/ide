@@ -21,10 +21,9 @@ package org.exoplatform.ide.extension.groovy.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
 
@@ -100,40 +99,30 @@ public interface GroovyClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/groovy/client/images/preview_Disabled.png")
    ImageResource previewDisabled();
    
-   //   @Source("../public/images/module/groovy/bundled/set_autoload.png")
-//   ImageResource setAutoLoad();
-//
-//   @Source("../public/images/module/groovy/bundled/set_autoload_Disabled.png")
-//   ImageResource setAutoLoadDisabled();
-//
-//   @Source("../public/images/module/groovy/bundled/unset_autoload.png")
-//   ImageResource unsetAutoLoad();
-//
-//   @Source("../public/images/module/groovy/bundled/unset_autoload_Disabled.png")
-//   ImageResource unsetAutoLoadDisabled();
-//
-//   @Source("../public/images/module/groovy/bundled/validate.png")
-//   ImageResource validateGroovy();
-//
-//   @Source("../public/images/module/groovy/bundled/validate_Disabled.png")
-//   ImageResource validateGroovyDisabled();
-//
-//   @Source("../public/images/module/groovy/bundled/deploy.png")
-//   ImageResource deployGroovy();
-//
-//   @Source("../public/images/module/groovy/bundled/deploy_Disabled.png")
-//   ImageResource deployGroovyDisabled();
-//
-//   @Source("../public/images/module/groovy/bundled/undeploy.png")
-//   ImageResource undeployGroovy();
-//
-//   @Source("../public/images/module/groovy/bundled/undeploy_Disabled.png")
-//   ImageResource undeployGroovyDisabled();
-//
-//   @Source("../public/images/module/groovy/bundled/output.png")
-//   ImageResource groovyOutput();
-//
-//   @Source("../public/images/module/groovy/bundled/output_Disabled.png")
-//   ImageResource groovyOutputDisabled();
+   /*
+    * Buttons
+    */
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/ok.png")
+   ImageResource okButton();
+
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/ok_Disabled.png")
+   ImageResource okButtonDisabled();
    
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/cancel.png")
+   ImageResource cancelButton();
+
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/cancel_Disabled.png")
+   ImageResource cancelButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/add.png")
+   ImageResource addButton();
+   
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/add_Disabled.png")
+   ImageResource addButtonDisabled();
+
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/remove.png")
+   ImageResource removeButton();
+   
+   @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/remove_Disabled.png")
+   ImageResource removeButtonDisabled();
 }

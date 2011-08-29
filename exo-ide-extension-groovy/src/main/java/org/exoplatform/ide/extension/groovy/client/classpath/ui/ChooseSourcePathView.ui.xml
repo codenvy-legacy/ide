@@ -1,0 +1,45 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:h="urn:import:org.exoplatform.ide.extension.groovy.client.classpath.ui">
+	
+	 <ui:with field='resource' type='org.exoplatform.ide.extension.groovy.client.GroovyClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.groovy.client.GroovyLocalizationConstant"></ui:with>
+	
+	 <ui:style>
+      .pathTreeGrid
+	    {
+	       z-index:0;
+	       width:100%;
+	       height:250px;
+	    } 
+	    
+	    .pathTreeGridContainer
+	    {
+	       border: 1px solid #a7abb4;
+	       z-index:0;
+	       width:100%;
+	       height:100%;
+	    }
+	 </ui:style>
+	 
+   <f:Border margin="15" borderColor="transparent">
+     <g:VerticalPanel spacing="3" horizontalAlignment="center">
+         <g:HorizontalPanel width="100%" height="100%" spacing="0">
+             <g:cell verticalAlignment="middle">
+                <g:ScrollPanel styleName="{style.pathTreeGridContainer}">
+                    <h:ItemTreeGrid styleName="{style.pathTreeGrid}" ui:field="pathTreeGrid"></h:ItemTreeGrid>
+	              </g:ScrollPanel>
+	           </g:cell>
+         </g:HorizontalPanel>
+   
+			   <g:HorizontalPanel height="40px" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+			      <f:ImageButton ui:field="okButton" width="90" height="22px" text="{locale.okButton}" imageResource="{resource.okButton}"
+			         disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+			      <f:ImageButton ui:field="cancelButton" width="90" height="22px" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+			         disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>            
+			   </g:HorizontalPanel>
+      </g:VerticalPanel>
+	 </f:Border>
+</ui:UiBinder> 

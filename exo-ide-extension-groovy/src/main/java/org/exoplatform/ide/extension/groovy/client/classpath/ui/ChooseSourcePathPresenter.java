@@ -18,14 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,6 +27,8 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.Item;
@@ -44,8 +40,15 @@ import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil
 import org.exoplatform.ide.extension.groovy.client.classpath.Workspace;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for choosing source for class path.
@@ -56,7 +59,7 @@ import java.util.List;
  */
 public class ChooseSourcePathPresenter
 {
-   public interface Display
+   interface Display extends IsView
    {
       /**
        * Get confirm button.
@@ -78,11 +81,6 @@ public class ChooseSourcePathPresenter
        * @return {@link TreeGridItem} tree
        */
       TreeGridItem<Item> getItemsTree();
-
-      /**
-       * Close the view.
-       */
-      void closeView();
 
       /**
        * Get the list of selected items in the tree.
@@ -123,21 +121,23 @@ public class ChooseSourcePathPresenter
       this.eventBus = eventBus;
       this.restContext = restContext;
 
-      Display display = new ChooseSourcePathForm(eventBus);
-      bindDisplay(display);
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+
+      IDE.getInstance().openView(display.asView());
+      
       display.enableOkButtonState(false);
       getWorkspaces();
    }
 
    /**
     * Bind pointed display with presenter.
-    * 
-    * @param d display
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      this.display = d;
-
       display.getItemsTree().addOpenHandler(new OpenHandler<Item>()
       {
 
@@ -172,11 +172,17 @@ public class ChooseSourcePathPresenter
 
          public void onClick(ClickEvent event)
          {
-            display.closeView();
+            closeView();
          }
       });
    }
 
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+   
    /**
     * Perform actions on selection in the tree with items changed.
     */
@@ -262,7 +268,7 @@ public class ChooseSourcePathPresenter
       }
 
       eventBus.fireEvent(new AddSourceToBuildPathEvent(classPathEntries));
-      display.closeView();
+      closeView();
    }
 
 }

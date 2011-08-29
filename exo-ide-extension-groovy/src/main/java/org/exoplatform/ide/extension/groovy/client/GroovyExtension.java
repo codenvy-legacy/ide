@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.http.client.URL;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -81,9 +79,11 @@ import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Image;
 
 /**
@@ -119,6 +119,8 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
 
    private PreviewForm previewForm;
 
+   public static final GroovyLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(GroovyLocalizationConstant.class);
+   
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */

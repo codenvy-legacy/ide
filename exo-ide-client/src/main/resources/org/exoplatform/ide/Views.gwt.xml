@@ -158,5 +158,13 @@
    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypeView">
       <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display" />
    </replace-with>
+ 
+   <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathView">
+      <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathView">
+      <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
+   </replace-with>
    
 </module>

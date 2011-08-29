@@ -40,15 +40,6 @@ import java.util.List;
 public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.ui.client.component.Tree<T>
 {
    /**
-    * @param id id of the tree
-    */
-   public ItemTreeGrid(String id)
-   {
-      getElement().setId(id);
-      DOM.setStyleAttribute(getElement(), "zIndex", "0");
-   }
-
-   /**
     * @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue()
     */
    @Override

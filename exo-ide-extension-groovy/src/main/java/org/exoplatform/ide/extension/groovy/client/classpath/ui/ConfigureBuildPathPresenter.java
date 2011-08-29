@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -33,7 +30,6 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedE
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
@@ -42,6 +38,7 @@ import org.exoplatform.ide.client.framework.event.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.FileCallback;
 import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
@@ -57,9 +54,13 @@ import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceT
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Presenter for configuring class path file.
@@ -71,7 +72,7 @@ import java.util.Map;
 public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
    ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EntryPointChangedHandler
 {
-   public interface Display
+   public interface Display extends IsView
    {
       /**
        * Get add source button.
@@ -102,11 +103,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       HasClickHandlers getCancelButton();
 
       ListGridItem<GroovyClassPathEntry> getClassPathEntryListGrid();
-
-      /**
-       * Close view.
-       */
-      void closeView();
 
       /**
        * Change the state of remove button.
@@ -175,10 +171,8 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     * 
     * @param d display
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      this.display = d;
-
       display.getClassPathEntryListGrid().addSelectionHandler(new SelectionHandler<GroovyClassPathEntry>()
       {
 
@@ -224,12 +218,18 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
 
          public void onClick(ClickEvent event)
          {
-            display.closeView();
+            closeView();
          }
 
       });
    }
 
+   
+   private void closeView()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+   
    /**
     * Do remove the source(s).
     * 
@@ -369,7 +369,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
          {
             if (classPathFile.getHref().equals(result.getFile().getHref()))
             {
-               display.closeView();
+               closeView();
                if (openedFiles != null && openedFiles.containsKey(classPathFile.getHref()))
                {
                   eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getHref()), classPathFile));
@@ -483,8 +483,14 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    private void classPathFile(String href)
    {
-      Display display = new ConfigureBuildPathForm(eventBus);
-      bindDisplay(display);
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      
+      IDE.getInstance().openView(display.asView());
+      
       display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
 

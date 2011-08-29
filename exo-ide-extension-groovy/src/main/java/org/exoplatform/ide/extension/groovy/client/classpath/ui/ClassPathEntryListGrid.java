@@ -95,7 +95,7 @@ public class ClassPathEntryListGrid extends ListGrid<GroovyClassPathEntry>
       };
       
       getCellTable().addColumn(pathColumn, PATH);
-      getCellTable().setColumnWidth(pathColumn, 100, Unit.PCT);
+      getCellTable().setColumnWidth(pathColumn, "100%");
       
       removeTableHeader();
       
