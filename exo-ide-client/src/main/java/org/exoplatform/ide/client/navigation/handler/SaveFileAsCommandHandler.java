@@ -155,8 +155,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       @Override
       public void execute(String value)
       {
-         System.out.println("ValueCallback > ");
-         
          if (value == null)
          {
             if (eventFiredOnCancelButtonPressed != null)
@@ -176,8 +174,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       @Override
       public void discard()
       {
-         System.out.println("ValueDiscardCallback > ");
-         
          if (eventFiredOnNoButtonPressed != null)
          {
             eventBus.fireEvent(eventFiredOnNoButtonPressed);
