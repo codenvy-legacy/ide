@@ -405,7 +405,8 @@ class FileData extends ItemData
             session.addLockToken(lockToken);
          if (newname != null && newname.length() > 0)
          {
-            String destinationPath = node.getParent().getPath() + "/" + newname;
+            Node parent = node.getParent();
+            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newname;
             session.move(node.getPath(), destinationPath);
             node = (Node)session.getItem(destinationPath);
          }
