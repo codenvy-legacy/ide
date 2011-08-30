@@ -89,12 +89,18 @@ public class ZipUtils
       {
          //for each entry to be extracted
          String entryName = zipentry.getName();
+
          if (zipentry.isDirectory())
          {
             Utils.putFolder(session, parentFolderPath, entryName);
          }
          else
          {
+            if (entryName.indexOf("/") > 0) {
+               String path = entryName.substring(0, entryName.lastIndexOf("/"));
+               Utils.ensureFoldersCreated(session, parentFolderPath, path);               
+            }
+
             int bytesRead;
             ByteArrayOutputStream outS = new ByteArrayOutputStream();
 
@@ -108,8 +114,8 @@ public class ZipUtils
 
             MimeTypeResolver resolver = new MimeTypeResolver();
             Utils.putFile(session, parentFolderPath, entryName, data, resolver.getMimeType(entryName), null, null);
-
          }
+         
          zin.closeEntry();
          zipentry = zin.getNextEntry();
 

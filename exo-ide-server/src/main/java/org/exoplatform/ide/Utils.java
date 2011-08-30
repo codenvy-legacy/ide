@@ -18,6 +18,15 @@
  */
 package org.exoplatform.ide;
 
+import java.io.InputStream;
+import java.util.Calendar;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -27,15 +36,6 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-
-import java.io.InputStream;
-import java.util.Calendar;
-
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 /**
  * Utils class, that contains methods for creation of folders and files nodes in jcr.
@@ -51,7 +51,7 @@ public class Utils
    public static final String DEFAULT_FILE_NODE_TYPE = "nt:file";
 
    public static final String WEBDAV_CONTEXT = "/jcr/";
-   
+
    /**
     * Read value param from init params.
     * @param initParams
@@ -68,7 +68,7 @@ public class Utils
       }
       return null;
    }
-   
+
    /**
     * Get session.
     * 
@@ -159,7 +159,31 @@ public class Utils
    public static void putFolder(Session session, String parentPath, String folderPath) throws RepositoryException
    {
       Node parent = parentPath != null ? session.getRootNode().getNode(parentPath) : session.getRootNode();
+      if (parent.hasNode(folderPath))
+      {
+         return;
+      }
+
       parent.addNode(folderPath, "nt:folder");
+   }
+
+   public static void ensureFoldersCreated(Session session, String parentPath, String folders)
+      throws RepositoryException
+   {
+      Node node = parentPath != null ? session.getRootNode().getNode(parentPath) : session.getRootNode();
+
+      String[] parts = folders.split("/");
+      for (String part : parts)
+      {
+         if (node.hasNode(part))
+         {
+            node = node.getNode(part);
+         }
+         else
+         {
+            node = node.addNode(part, "nt:folder");
+         }
+      }
    }
 
    public static void putFolders(Session session, String folderPath) throws RepositoryException
@@ -190,7 +214,7 @@ public class Utils
          }
       }
    }
-   
+
    /**
     * Parse JCR path to retrieve repository name, 
     * workspace name and absolute path in repository.
@@ -215,7 +239,7 @@ public class Utils
       elements[2] = location.substring(location.indexOf('/') + 1);
       return elements;
    }
-   
+
    /**
     * @param repositoryService repository service
     * @param sessionProviderService session provider service
