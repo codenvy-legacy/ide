@@ -142,8 +142,7 @@ public class UploadService
       }
       catch (Exception e)
       {
-         if (log.isDebugEnabled())
-            e.printStackTrace();
+         e.printStackTrace();
          throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
       }
 

@@ -55,7 +55,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $
  */
 
-public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelectedHandler,
+public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelectedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler
 {
 
@@ -68,15 +68,31 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
    private File activeFile;
 
    private Map<String, String> lockTokens;
-   
-   private static final String PREFIX = IDE.NAVIGATION_CONSTANT.saveFileAsNewFileNamePrefix();
-   
-   private static final String SAVE_AS_DIALOG_TITLE = IDE.NAVIGATION_CONSTANT.saveFileAsDialogTitle();
-   
-   private static final String SAVE_AS_DIALOG_ENTER_NEW_NAME = IDE.NAVIGATION_CONSTANT.saveFileAsDialogEnterNewName();
-   
-   private static final String SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE = IDE.NAVIGATION_CONSTANT.saveFileAsDialogDoYouWantToSave();
 
+   private static final String PREFIX = IDE.NAVIGATION_CONSTANT.saveFileAsNewFileNamePrefix();
+
+   private static final String SAVE_AS_DIALOG_TITLE = IDE.NAVIGATION_CONSTANT.saveFileAsDialogTitle();
+
+   private static final String SAVE_AS_DIALOG_ENTER_NEW_NAME = IDE.NAVIGATION_CONSTANT.saveFileAsDialogEnterNewName();
+
+   private static final String SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE = IDE.NAVIGATION_CONSTANT
+      .saveFileAsDialogDoYouWantToSave();
+
+   /**
+    * Event to be fired after pressing No button in ask dialog.
+    */
+   private GwtEvent<?> eventFiredOnNoButtonPressed;
+
+   /**
+    * Event to be fired after pressing Cancel button in ask dialog.
+    */
+   private GwtEvent<?> eventFiredOnCancelButtonPressed;
+
+   /**
+    * File to be saved.
+    */
+   private File fileToSave;   
+   
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -102,7 +118,14 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
       }
 
       File file = event.getFile() != null ? event.getFile() : activeFile;
-      askForNewFileName(file, event.getDialogType(), event.getEventFiredOnNo(), event.getEventFiredOnCancel());
+
+      eventFiredOnCancelButtonPressed = event.getEventFiredOnCancel();
+      
+      eventFiredOnNoButtonPressed = event.getEventFiredOnNo();
+      
+      fileToSave = file;
+
+      askForNewFileName(event.getDialogType());
    }
 
    /**
@@ -110,70 +133,57 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
     * 
     * @param file
     */
-   private void askForNewFileName(final File file, SaveFileAsEvent.SaveDialogType type, final GwtEvent<?> eventFiredOnNo, final GwtEvent<?> eventFiredOnCancel)
+   private void askForNewFileName(SaveFileAsEvent.SaveDialogType type)
    {
-      final String newFileName = file.isNewFile() ? file.getName() : PREFIX + " " + file.getName();
-      sourceHref = file.getHref();
+      final String newFileName = fileToSave.isNewFile() ? fileToSave.getName() : PREFIX + " " + fileToSave.getName();
+      sourceHref = fileToSave.getHref();
 
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
-         ValueCallback valueCallback = new ValueCallback()
-         {
-            @Override
-            public void execute(String value)
-            {
-               if (value == null)
-               {
-                  if (eventFiredOnCancel != null)
-                  {
-                     eventBus.fireEvent(eventFiredOnCancel);
-                  }
-
-                  return;
-               }
-
-               saveFileAs(file, value);
-            }
-         };
-         
-         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, valueCallback);
+         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE,
+            SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, fileNameEnteredCallback);
       }
       else
       {
-         ValueCallback valueCallback = new ValueCallback()
-         {
-            @Override
-            public void execute(String value)
-            {
-               if (value == null)
-               {
-                  if (eventFiredOnCancel != null)
-                  {
-                     eventBus.fireEvent(eventFiredOnCancel);
-                  }
-
-                  return;
-               }
-
-               saveFileAs(file, value);               
-            }
-         };
-         
-         ValueDiscardCallback valueDiscardCallback = new ValueDiscardCallback()
-         {
-            @Override
-            public void discard()
-            {
-               if (eventFiredOnNo != null)
-               {
-                  eventBus.fireEvent(eventFiredOnNo);
-               }               
-            }
-         };
-         
-         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE, SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, valueCallback, valueDiscardCallback);
+         org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE,
+            SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, fileNameEnteredCallback, noButtonSelectedCallback);
       }
    }
+
+   private ValueCallback fileNameEnteredCallback = new ValueCallback()
+   {
+      @Override
+      public void execute(String value)
+      {
+         System.out.println("ValueCallback > ");
+         
+         if (value == null)
+         {
+            if (eventFiredOnCancelButtonPressed != null)
+            {
+               eventBus.fireEvent(eventFiredOnCancelButtonPressed);
+            }
+
+            return;
+         }
+
+         saveFileAs(fileToSave, value);
+      }
+   };
+
+   ValueDiscardCallback noButtonSelectedCallback = new ValueDiscardCallback()
+   {
+      @Override
+      public void discard()
+      {
+         System.out.println("ValueDiscardCallback > ");
+         
+         if (eventFiredOnNoButtonPressed != null)
+         {
+            eventBus.fireEvent(eventFiredOnNoButtonPressed);
+         }
+      }
+   };
 
    private void saveFileAs(File file, String value)
    {
@@ -199,7 +209,7 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
          protected void onSuccess(FileData result)
          {
             File file = result.getFile();
-            
+
             if (file.isPropertiesChanged())
             {
                saveFileProperties(file, lockTokens.get(file.getHref()));
@@ -207,7 +217,7 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
             else
             {
                getProperties(file);
-            }            
+            }
          }
       });
 
@@ -250,7 +260,6 @@ public class SaveFileAsCommandHandler implements  SaveFileAsHandler, ItemsSelect
          }
       });
    }
-
 
    private void refreshBrowser(String hrefFolder)
    {

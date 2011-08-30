@@ -26,6 +26,8 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -112,6 +114,24 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
    public void setYesButtonEnabled(boolean enabled)
    {
       yesButton.setEnabled(enabled);
+   }
+   
+   @Override
+   protected void onAttach()
+   {
+      super.onAttach();
+      
+      ScheduledCommand command = new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            textField.focusInItem();
+            textField.selectValue();
+         }
+      };
+      
+      Scheduler.get().scheduleDeferred(command);
    }
 
 }
