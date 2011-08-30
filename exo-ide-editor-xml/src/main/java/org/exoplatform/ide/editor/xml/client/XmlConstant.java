@@ -30,4 +30,11 @@ public interface XmlConstant extends Messages
 
    @Key("xmlEditor")
    String xmlEditor();
+   
+   @Key("control.new.xml.title")
+   String controlNewXmlTitle();
+
+   @Key("control.new.xml.prompt")
+   String controlNewXmlPrompt();   
+   
 }

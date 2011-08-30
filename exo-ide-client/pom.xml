@@ -11,11 +11,21 @@
    <name>eXo IDE :: Client</name>
 
    <dependencies>
+   
+   <!-- 
+			eXo GWT Framework   
+    -->
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+      
+<!-- 
+
+			
+
+ -->
       
       <dependency>
          <groupId>org.exoplatform.log-reader</groupId>
@@ -296,6 +306,7 @@
 
       </plugins>
    </build>
+   
    <profiles>
       <profile>
          <id>shell</id>

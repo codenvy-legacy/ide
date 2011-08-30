@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.css.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -48,8 +49,14 @@ public class CssEditorExtension extends Extension
    @Override
    public void initialize()
    {
-      
       RESOURCES.css().ensureInjected();
+      
+      IDE.getInstance().addControl(new NewItemControl(
+         "File/New/New CSS",
+         MESSAGES.controlNewCssTitle(),
+         MESSAGES.controlNewCssPrompt(),
+         Images.CSS,
+         MimeType.TEXT_CSS).setGroup(1));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css",
          Images.CSS, true, 

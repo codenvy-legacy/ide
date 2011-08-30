@@ -29,4 +29,11 @@ public interface JavaScriptMessages extends Messages
 {
    @Key("javascriptEditor")
    String javaScriptEditor();
+   
+   @Key("control.new.javascript.title")
+   String controlNewJavascriptTitle();
+
+   @Key("control.new.javascript.prompt")
+   String controlNewJavascriptPrompt();   
+   
 }

@@ -27,7 +27,9 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  */
 public interface Images
 {
+   
   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
    
    public static final String XML = IMAGE_URL +  "xml/xml.png";
+   
 }

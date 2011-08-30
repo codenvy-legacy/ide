@@ -412,35 +412,11 @@ public interface IdeLocalizationConstant extends Constants
    /*
     * Controls from menu "New"
     */
-   @Key("control.new.xml.title")
-   String controlNewXmlTitle();
-
-   @Key("control.new.xml.prompt")
-   String controlNewXmlPrompt();
-
-   @Key("control.new.html.title")
-   String controlNewHtmlTitle();
-
-   @Key("control.new.html.prompt")
-   String controlNewHtmlPrompt();
-
    @Key("control.new.text.title")
    String controlNewTextTitle();
 
    @Key("control.new.text.prompt")
    String controlNewTextPrompt();
-
-   @Key("control.new.javascript.title")
-   String controlNewJavascriptTitle();
-
-   @Key("control.new.javascript.prompt")
-   String controlNewJavascriptPrompt();
-
-   @Key("control.new.css.title")
-   String controlNewCssTitle();
-
-   @Key("control.new.css.prompt")
-   String controlNewCssPrompt();
 
    /*
     * Menu

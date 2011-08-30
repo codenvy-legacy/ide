@@ -40,36 +40,7 @@
    <!-- Initialise Virtual File System -->
    <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
    
-   <!-- EDITOR EXTENSIONS -->
-   <inherits name="org.exoplatform.ide.editor.gadget.GadgetEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.groovy.GroovyEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.gtmpl.GtmplEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.chromattic.ChromatticEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.netvibes.NetvibesEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.jsp.JspEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.ruby.RubyEditorExtension" />   
-   <inherits name="org.exoplatform.ide.editor.php.PhpEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.xml.XmlEditorExtension" />  
-   <inherits name="org.exoplatform.ide.editor.javascript.JavaScriptEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.html.HtmlEditorExtension" />
-   <inherits name="org.exoplatform.ide.editor.css.CssEditorExtension" />   
-   
-   <!-- EXTENSIONS -->
-   <inherits name='org.exoplatform.ide.extension.netvibes.NetvibesExtension' />
-   <inherits name='org.exoplatform.ide.extension.groovy.GroovyExtension' />
-   <inherits name='org.exoplatform.ide.extension.gadget.GadgetExtension' />
-   <inherits name='org.exoplatform.ide.extension.chromattic.ChromatticExtension' />
-   <inherits name='org.exoplatform.ide.git.GitExtension' />
-   <inherits name='org.exoplatform.ide.extension.ssh.SshExtension' />
-   <inherits name='org.exoplatform.ide.extension.cloudbees.CloudBeesExtension' />
-   <inherits name='org.exoplatform.ide.extension.cloudfoundry.CloudFoundryExtension' />
-   <inherits name='org.exoplatform.ide.extension.heroku.HerokuExtension' />
-   <inherits name='org.exoplatform.ide.extension.openshift.OpenShiftExtension' />
-   <inherits name='org.exoplatform.ide.extension.java.JavaExtension' />
-   <inherits name='org.exoplatform.ide.extension.ruby.RubyExtension' />
-   <inherits name='org.exoplatform.ide.extension.logreader.LogReaderExtension' />
-   <inherits name='org.exoplatform.ide.extension.jenkins.JenkinsExtension' />
+   <inherits name="org.exoplatform.ide.Extensions" />
    
    <inherits name='org.exoplatform.ide.Views' />
 

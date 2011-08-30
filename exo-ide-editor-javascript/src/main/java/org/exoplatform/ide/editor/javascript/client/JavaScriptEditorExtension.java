@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.javascript.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -50,6 +51,13 @@ public class JavaScriptEditorExtension extends Extension
    public void initialize()
    {
       RESOURCES.css().ensureInjected();
+      
+      IDE.getInstance().addControl(new NewItemControl(
+            "File/New/New Java Script",
+            MESSAGES.controlNewJavascriptTitle(),
+            MESSAGES.controlNewJavascriptPrompt(),
+            Images.JAVA_SCRIPT,
+            MimeType.APPLICATION_JAVASCRIPT).setGroup(1));
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,

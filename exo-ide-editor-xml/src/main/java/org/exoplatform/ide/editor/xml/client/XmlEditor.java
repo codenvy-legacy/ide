@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.xml.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
@@ -50,6 +51,13 @@ public class XmlEditor extends Extension
    public void initialize()
    {
       RESOURCES.css().ensureInjected();
+      
+      IDE.getInstance().addControl(new NewItemControl(
+         "File/New/New XML",
+         CONSTANT.controlNewXmlTitle(),
+         CONSTANT.controlNewXmlPrompt(),
+         Images.XML,
+         MimeType.TEXT_XML).setGroup(1));      
       
       CodeAssistant xmlAssistant = new XmlCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml",

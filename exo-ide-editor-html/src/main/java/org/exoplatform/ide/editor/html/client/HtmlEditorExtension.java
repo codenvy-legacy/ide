@@ -21,6 +21,7 @@ package org.exoplatform.ide.editor.html.client;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
@@ -50,8 +51,14 @@ public class HtmlEditorExtension extends Extension
    @Override
    public void initialize()
    {      
-      
       RESOURCES.css().ensureInjected();
+      
+      IDE.getInstance().addControl(new NewItemControl(
+         "File/New/New HTML",
+         MESSAGES.controlNewHtmlTitle(),
+         MESSAGES.controlNewHtmlPrompt(),
+         Images.HTML,
+         MimeType.TEXT_HTML).setGroup(1));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
          Images.HTML, true, 

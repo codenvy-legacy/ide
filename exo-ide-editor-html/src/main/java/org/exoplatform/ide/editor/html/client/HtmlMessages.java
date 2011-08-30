@@ -32,4 +32,11 @@ public interface HtmlMessages extends Messages
    
    @Key("ckEditor.htmlEditor")
    String ckEditorHtmlEditor();
+   
+   @Key("control.new.html.title")
+   String controlNewHtmlTitle();
+
+   @Key("control.new.html.prompt")
+   String controlNewHtmlPrompt();   
+   
 }
