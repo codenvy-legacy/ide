@@ -361,6 +361,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs-jcr</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client-framework</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -620,7 +626,8 @@
 
       <module>exo-ide-vfs-webdav-client</module>
 
-      <!--module>exo-ide-vfs</module -->
+      <module>exo-ide-vfs</module>
+      <module>exo-ide-vfs-jcr</module>
 
       <module>exo-ide-codeassistant-framework</module>
 
