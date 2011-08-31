@@ -67,6 +67,10 @@
    </component>
    
    <component>
+     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+   </component>
+   
+   <component>
      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
    
