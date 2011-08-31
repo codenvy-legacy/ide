@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,7 +47,7 @@ public class SaveFileAsCommand extends MultipleSelectionItemsCommand implements 
 
    private boolean singleItemSelected = true;
    
-   private File activeFile;
+   private FileModel activeFile;
 
    public SaveFileAsCommand()
    {

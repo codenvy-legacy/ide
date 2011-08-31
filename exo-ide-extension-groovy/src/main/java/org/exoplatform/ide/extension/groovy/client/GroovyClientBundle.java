@@ -125,4 +125,7 @@ public interface GroovyClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/groovy/client/images/buttons/remove_Disabled.png")
    ImageResource removeButtonDisabled();
+   
+   @Source("org/exoplatform/ide/extension/groovy/public/images/module/groovy/classpath/folder.png")
+   ImageResource folder();
 }

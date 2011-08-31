@@ -92,7 +92,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
                MimeType.APPLICATION_JSP,
                "CodeMirror JSP file editor",
                "jsp",
-               Images.JSP,
+               Images.INSTANCE.jsp(),
                true,
                new CodeMirrorConfiguration().
                   setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']").
@@ -142,7 +142,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         jspCodeAssistant.setactiveFileHref(event.getFile().getHref());
+         jspCodeAssistant.setactiveFileHref(event.getFile().getId());
    }
 
 }

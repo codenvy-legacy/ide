@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.editor.netvibes.client;
 
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.core.client.GWT;
+
+import com.google.gwt.resources.client.ClientBundle;
+
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
@@ -25,9 +31,14 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  * @version $Id: Images Mar 11, 2011 3:07:44 PM evgen $
  *
  */
-public interface Images
+public interface Images extends ClientBundle
 {
+   Images INSTANCE = GWT.create(Images.class);
+   
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
    public static final String UWA_WIGET = IMAGE_URL + "uwa-widget.png";
+   
+   @Source("org/exoplatform/ide/editor/netvibes/public/images/uwa-widget.png")
+   ImageResource uwa();
 }

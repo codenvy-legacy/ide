@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -29,13 +28,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * 
@@ -51,7 +50,7 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
 
    private HandlerManager eventBus;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public DeployGroovyCommandHandler(HandlerManager eventBus)
    {
@@ -72,7 +71,7 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().deploy(activeFile.getHref(), new AsyncRequestCallback<String>()
+      GroovyService.getInstance().deploy(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override
@@ -127,7 +126,7 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().deploySandbox(activeFile.getHref(), new AsyncRequestCallback<String>()
+      GroovyService.getInstance().deploySandbox(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override

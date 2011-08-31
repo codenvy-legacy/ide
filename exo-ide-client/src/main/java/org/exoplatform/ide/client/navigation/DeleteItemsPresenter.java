@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
@@ -46,14 +48,14 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -83,12 +85,15 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       HasClickHandlers getCancelButton();
 
    }
-   
-   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileUnlockFailure();
-   
-   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileFailure();
-   
-   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.deleteFileDialogTitle();
+
+   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .deleteFileUnlockFailure();
+
+   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .deleteFileFailure();
+
+   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
+      .deleteFileDialogTitle();
 
    private HandlerManager eventBus;
 
@@ -98,7 +103,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private Item lastDeletedItem;
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    private Map<String, String> lockTokens = new HashMap<String, String>();
 
@@ -154,8 +159,10 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       display = d;
 
       String prompt =
-         selectedItems.size() == 1 ? org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteOneItem(selectedItems.get(0).getName())
-            : org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteSeveralItems(selectedItems.size());
+         selectedItems.size() == 1 ? org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+            .deleteItemsAskDeleteOneItem(selectedItems.get(0).getName())
+            : org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteSeveralItems(selectedItems
+               .size());
       display.getPromptField().setValue(prompt);
 
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -184,15 +191,18 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          return;
       }
 
-      Item item = selectedItems.get(0);
-      if (item instanceof File)
+      final Item item = selectedItems.get(0);
+      if (item instanceof FileModel)
       {
-         if (openedFiles.get(item.getHref()) != null)
+         if (openedFiles.get(item.getId()) != null)
          {
-            File file = openedFiles.get(item.getHref());
-            if (file.isContentChanged() || file.isPropertiesChanged())
+            FileModel file = openedFiles.get(item.getId());
+            //TODO
+            if (file.isContentChanged()/* || file.isPropertiesChanged()*/)
             {
-               String msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item.getName());
+               String msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item
+                     .getName());
                showDialog(file, msg);
                return;
             }
@@ -204,20 +214,20 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
           * check for new and unsaved files here
           */
 
-         String href = item.getHref();
+         String path = item.getPath();
          //HashMap<String, File> openedFiles = context.getOpenedFiles();
 
-         HashMap<String, File> copy = new HashMap<String, File>();
+         HashMap<String, FileModel> copy = new HashMap<String, FileModel>();
          for (String key : openedFiles.keySet())
          {
-            File file = openedFiles.get(key);
+            FileModel file = openedFiles.get(key);
             copy.put(key, file);
          }
 
          int files = 0;
-         for (File file : copy.values())
+         for (FileModel file : copy.values())
          {
-            if (file.getHref().startsWith(href) && !file.isNewFile() && file.isContentChanged())
+            if (file.getPath().startsWith(path) && file.isPersisted() && file.isContentChanged())
             {
                files++;
             }
@@ -233,25 +243,33 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          }
 
       }
-      if (lockTokens.containsKey(item.getHref()))
+      if (lockTokens.containsKey(item.getId()))
       {
-         VirtualFileSystem.getInstance().unlock(item, lockTokens.get(item.getHref()), new AsyncRequestCallback<Item>()
+         try
          {
+            VirtualFileSystem.getInstance().unlock((FileModel)item, lockTokens.get(item.getId()),
+               new AsyncRequestCallback<Object>()
+               {
 
-            @Override
-            protected void onSuccess(Item result)
-            {
-               eventBus.fireEvent(new ItemUnlockedEvent(result));
-               deleteItem(result);
+                  @Override
+                  protected void onSuccess(Object result)
+                  {
+                     eventBus.fireEvent(new ItemUnlockedEvent(item));
+                     deleteItem(item);
+                  }
 
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
-            }
-         });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            eventBus.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+         }
       }
       else
       {
@@ -266,54 +284,62 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
     */
    private void deleteItem(final Item item)
    {
-      VirtualFileSystem.getInstance().deleteItem(item, new AsyncRequestCallback<Item>()
+      try
       {
-
-         @Override
-         protected void onSuccess(Item result)
+         VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>()
          {
-            selectedItems.remove(0);
-            eventBus.fireEvent(new ItemDeletedEvent(item));
 
-            if (item instanceof File)
+            @Override
+            protected void onSuccess(String result)
             {
-               if (openedFiles.get(item.getHref()) != null)
-               {
-                  eventBus.fireEvent(new EditorCloseFileEvent((File)item, true));
-               }
-            }
-            else
-            {
-               //find out opened files are been in the removed folder
-               final String href = item.getHref();
+               selectedItems.remove(0);
+               eventBus.fireEvent(new ItemDeletedEvent(item));
 
-               HashMap<String, File> copy = new HashMap<String, File>();
-               for (String key : openedFiles.keySet())
+               if (item instanceof FileModel)
                {
-                  File file = openedFiles.get(key);
-                  copy.put(key, file);
-               }
-
-               for (File file : copy.values())
-               {
-                  if (file.getHref().startsWith(href) && !file.isNewFile())
+                  if (openedFiles.get(item.getId()) != null)
                   {
-                     lockTokens.remove(file.getHref());
-                     eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                     eventBus.fireEvent(new EditorCloseFileEvent((FileModel)item, true));
                   }
                }
-            }
-            lastDeletedItem = item;
-            deleteNextItem();
-         }
+               else
+               {
+                  //find out opened files are been in the removed folder
+                  final String path = item.getPath();
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+                  HashMap<String, FileModel> copy = new HashMap<String, FileModel>();
+                  for (String key : openedFiles.keySet())
+                  {
+                     FileModel file = openedFiles.get(key);
+                     copy.put(key, file);
+                  }
+
+                  for (FileModel file : copy.values())
+                  {
+                     if (file.getPath().startsWith(path) && file.isPersisted())
+                     {
+                        lockTokens.remove(file.getId());
+                        eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                     }
+                  }
+               }
+               lastDeletedItem = item;
+               deleteNextItem();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
+               IDE.getInstance().closeView(display.asView().getId());
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
+      }
    }
 
    private void showDialog(final Item item, String msg)
@@ -345,18 +371,15 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
       selectedItems.clear();
 
-      String selectedItemHref = lastDeletedItem.getHref();
-
-      if (lastDeletedItem instanceof Folder)
+      FolderModel folder;
+      if (lastDeletedItem instanceof FileModel)
       {
-         selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/"));
+         folder = ((FileModel)lastDeletedItem).getParent();
       }
-      selectedItemHref = selectedItemHref.substring(0, selectedItemHref.lastIndexOf("/") + 1);
-
-      Folder folder = new Folder(selectedItemHref);
-
+      else
+         folder = ((FolderModel)lastDeletedItem).getParent();
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
-      eventBus.fireEvent(new SelectItemEvent(folder.getHref()));
+      eventBus.fireEvent(new SelectItemEvent(folder.getId()));
    }
 
    @Override

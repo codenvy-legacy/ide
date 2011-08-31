@@ -193,6 +193,7 @@
                <value>war:/conf/ext-nodetypes-config.xml</value>
                <value>jar:/conf/organization-nodetypes.xml</value>
                <value>jar:/conf/code-assitant-nodetypes.xml</value>
+               <value>jar:/conf/vfs-node-types.xml</value>
             </values-param>
          </init-params>
       </component-plugin>
@@ -213,6 +214,7 @@
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
                <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
                <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+               <property name="vfs" value="http://exoplatform.org/vfs"/>
             </properties-param>
          </init-params>
       </component-plugin>

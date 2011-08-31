@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -30,11 +34,8 @@ import org.exoplatform.ide.client.framework.event.SaveAllFilesHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -47,13 +48,13 @@ import java.util.Map;
  * @version $
  */
 
-public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFileOpenedHandler, 
-EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFileOpenedHandler,
+   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
 
    private HandlerManager eventBus;
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
 
@@ -74,45 +75,65 @@ EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 
    protected void saveNextUnsavedFile()
    {
-      for (File file : openedFiles.values())
+      for (final FileModel file : openedFiles.values())
       {
-         if (!file.isNewFile() && file.isContentChanged())
+         if (file.isPersisted() && file.isContentChanged())
          {
-            VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
+            try
             {
-
-               @Override
-               protected void onSuccess(FileData result)
+               VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
                {
-                  if (result.getFile().isPropertiesChanged())
+
+                  @Override
+                  protected void onSuccess(FileModel result)
                   {
-                     String lockToken = lockTokens.get(result.getFile().getHref());
-                     saveFileProperties(result.getFile(), lockToken);
-                  }
-                  else
-                  {
-                     eventBus.fireEvent(new FileSavedEvent(result.getFile(), null));
+                     //TODO 
+                     //                     if (file.isPropertiesChanged())
+                     //                     {
+                     //                        String lockToken = lockTokens.get(result.getFile().getHref());
+                     //                        saveFileProperties(result.getFile(), lockToken);
+                     //                     }
+                     //                     else
+                     //                     {
+
+                     eventBus.fireEvent(new FileSavedEvent(file, null));
                      saveNextUnsavedFile();
+                     //                     }
+
                   }
-               }
-            });
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                        "Service is not deployed.<br>Resource not found."));
+                  }
+               });
+            }
+            catch (RequestException e)
+            {
+               e.printStackTrace();
+               eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+            }
+
             return;
          }
       }
 
    }
-   
-   private void saveFileProperties(File file, String lockToken)
+
+   private void saveFileProperties(FileModel file, String lockToken)
    {
-      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-      {
-         @Override
-         protected void onSuccess(Item result)
-         {
-            eventBus.fireEvent(new FileSavedEvent((File)result, null));
-            saveNextUnsavedFile();
-         }
-      });
+      //TODO
+      //      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
+      //      {
+      //         @Override
+      //         protected void onSuccess(Item result)
+      //         {
+      //            eventBus.fireEvent(new FileSavedEvent((FileModel)result, null));
+      //            saveNextUnsavedFile();
+      //         }
+      //      });
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)

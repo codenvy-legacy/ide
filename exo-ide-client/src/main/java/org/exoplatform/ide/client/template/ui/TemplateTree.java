@@ -18,17 +18,19 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -58,14 +60,14 @@ public class TemplateTree extends Tree<Template>
       if (tree.getItemCount() == 0)
       {
          String nodeName = getValue().getName();
-         String icon = "";
+         ImageResource icon;
          if (getValue().getIcon() != null)
          {
             icon = getValue().getIcon();
             //            rootNode.setAttribute("icon", getValue().getIcon());
          }
          else
-            icon = Images.FileTypes.FOLDER;
+            icon = IDEImageBundle.INSTANCE.folder();
          rootNode = new TreeItem(createItemWidget(icon, nodeName));
          rootNode.setUserObject(getValue());
          tree.addItem(rootNode);

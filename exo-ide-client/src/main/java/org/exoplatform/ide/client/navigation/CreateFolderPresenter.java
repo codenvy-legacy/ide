@@ -27,10 +27,11 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -38,12 +39,13 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.navigation.event.CreateFolderEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFolderHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +59,10 @@ import java.util.List;
 
 public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelectedHandler, ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
-      
+
       HasValue<String> getFolderNameField();
 
       HasClickHandlers getCreateButton();
@@ -71,11 +73,11 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
 
       void setFocusInNameField();
    }
-   
+
    private static final String NEW_FOLDER_NAME = IDE.IDE_LOCALIZATION_CONSTANT.newFolderName();
 
    private Display display;
-   
+
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private HandlerManager eventBus;
@@ -83,7 +85,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    public CreateFolderPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(CreateFolderEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -110,7 +112,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       });
 
       display.getFolderNameField().setValue(NEW_FOLDER_NAME);
-      
+
       display.setFocusInNameField();
 
       display.getFolderNameFiledKeyPressed().addKeyPressHandler(new KeyPressHandler()
@@ -125,22 +127,44 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       });
 
    }
-   
+
    protected void createFolder()
    {
       final String newFolderName = display.getFolderNameField().getValue();
-      String newFolderHref = selectedItems.get(0).getWorkDir() + URL.encodePathSegment(newFolderName) + "/";
-      Folder newFolder = new Folder(newFolderHref);
-      VirtualFileSystem.getInstance().createFolder(newFolder, new FolderCreateCallback()
+      final FolderModel baseFolder =
+         selectedItems.get(0) instanceof FolderModel ? (FolderModel)selectedItems.get(0) : ((FileModel)selectedItems
+            .get(0)).getParent();
+      FolderModel newFolder = new FolderModel();
+      newFolder.setName(newFolderName);
+      try
       {
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            String folder = selectedItems.get(0).getWorkDir();
-            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(folder), result));
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+         VirtualFileSystem.getInstance().createFolder(baseFolder,
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+            {
+
+               @Override
+               protected void onSuccess(FolderModel result)
+               {
+
+                  eventBus.fireEvent(new RefreshBrowserEvent(baseFolder, result));
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e,
+            "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+      }
    }
 
    /**

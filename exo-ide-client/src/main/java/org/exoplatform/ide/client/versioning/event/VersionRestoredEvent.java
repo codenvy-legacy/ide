@@ -20,8 +20,7 @@ package org.exoplatform.ide.client.versioning.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Version;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Event occurs, when version is restored.
@@ -42,18 +41,18 @@ public class VersionRestoredEvent extends GwtEvent<VersionRestoredHandler>
    /**
     * Version, to file file was restored.
     */
-   private Version version;
+   private FileModel version;
 
    /**
     * File with versions.
     */
-   private File file;
+   private FileModel file;
 
    /**
     * @param version version, to file file was restored
     * @param file files
     */
-   public VersionRestoredEvent(Version version, File file)
+   public VersionRestoredEvent(FileModel version, FileModel file)
    {
       this.version = version;
       this.file = file;
@@ -80,7 +79,7 @@ public class VersionRestoredEvent extends GwtEvent<VersionRestoredHandler>
    /**
     * @return the version
     */
-   public Version getVersion()
+   public FileModel getVersion()
    {
       return version;
    }
@@ -88,7 +87,7 @@ public class VersionRestoredEvent extends GwtEvent<VersionRestoredHandler>
    /**
     * @return the file
     */
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

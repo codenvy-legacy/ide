@@ -18,7 +18,14 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -31,19 +38,12 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for Clone Repository View.
@@ -178,7 +178,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
          return;
       }
 
-      if (workspace != null && workspace.equals(selectedItems.get(0).getHref()))
+      if (workspace != null && workspace.equals(selectedItems.get(0).getId()))
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
          return;
@@ -188,7 +188,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
       display.focusInRemoteUrlField();
-      display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
+      display.getWorkDirValue().setValue(selectedItems.get(0).getId(), true);
       display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
       display.enableCloneButton(false);
    }

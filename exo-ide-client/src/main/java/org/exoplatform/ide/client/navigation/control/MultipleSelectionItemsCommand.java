@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
@@ -27,11 +26,13 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -44,7 +45,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    protected boolean browserSelected = true;
 
-   private String entryPoint;
+   private VirtualFileSystemInfo vfsInfo;
 
    public MultipleSelectionItemsCommand(String id)
    {
@@ -65,17 +66,17 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
       List<String> hrefs = new ArrayList<String>();
       for (Item i : items)
       {
-         if (i.getHref().equals(entryPoint))
+         if (i.getId().equals(vfsInfo.getRoot().getId()))
          {
             return false;
          }
-         String p = i.getHref();
+         String p = i.getPath();
          p = p.substring(0, p.lastIndexOf("/"));
          // folders href ends with "/"
-         if (i instanceof Folder)
-         {
-            p = p.substring(0, p.lastIndexOf("/"));
-         }
+//         if (i instanceof FolderModel)
+//         {
+//            p = p.substring(0, p.lastIndexOf("/"));
+//         }
          hrefs.add(p);
 
       }
@@ -99,7 +100,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      this.entryPoint = event.getEntryPoint();
+      this.vfsInfo = event.getVfsInfo();
       if (event.getEntryPoint() != null)
       {
          setVisible(true);

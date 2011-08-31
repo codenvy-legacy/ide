@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client.util;
 
-import java.util.Collection;
-
-import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Property;
+
+import java.util.Collection;
 
 /**
  * Created by The eXo Platform SAS .
@@ -35,9 +34,9 @@ import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 public class GroovyPropertyUtil
 {
 
-   public static Property getProperty(Collection<Property> properties, QName name)
+   public static Property<?> getProperty(Collection<Property> properties, QName name)
    {
-      for (Property property : properties)
+      for (Property<?> property : properties)
       {
          if (property.getName().equals(name))
          {
@@ -48,22 +47,23 @@ public class GroovyPropertyUtil
       return null;
    }
 
-   public static String getAutoloadPropertyValue(File file)
+   public static String getAutoloadPropertyValue(FileModel file)
    {
-      for (Property property : file.getProperties())
+      for (Property<?> property : file.getProperties())
       {
-         QName propertyName = property.getName();
-         if (propertyName.equals(ItemProperty.JCR_CONTENT))
-         {
-            Collection<Property> children = property.getChildProperties();
-            for (Property child : children)
-            {
-               if (child.getName().equals(ItemProperty.EXO_AUTOLOAD))
-               {
-                  return child.getValue();
-               }
-            }
-         }
+         //TODO AutoloadProperty
+//         QName propertyName = property.getName();
+//         if (propertyName.equals(ItemProperty.JCR_CONTENT))
+//         {
+//            Collection<Property> children = property.getChildProperties();
+//            for (Property child : children)
+//            {
+//               if (child.getName().equals(ItemProperty.EXO_AUTOLOAD))
+//               {
+//                  return child.getValue();
+//               }
+//            }
+//         }
       }
 
       return null;

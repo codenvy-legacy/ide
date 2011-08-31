@@ -18,21 +18,20 @@
  */
 package org.exoplatform.ide.extension.groovy.client.controls;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Version;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadEvent;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.event.ItemPropertiesSavedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -55,7 +54,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
 
    private static final String PROMPT_UNSET = "Unset REST Service Autoload";
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public SetAutoloadCommand()
    {
@@ -85,19 +84,19 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
    {
       activeFile = event.getFile();
 
-      if (event.getFile() == null || (event.getFile() instanceof Version))
+      if (event.getFile() == null || (event.getFile().isVersion()))
       {
          hideAutoload();
          return;
       }
 
-      if (!MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType()))
+      if (!MimeType.GROOVY_SERVICE.equals(event.getFile().getMimeType()))
       {
          hideAutoload();
          return;
       }
 
-      if (event.getFile().isNewFile())
+      if (!event.getFile().isPersisted())
       {
          setVisible(true);
          setEnabled(false);
@@ -112,10 +111,10 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
     * 
     * @param file
     */
-   private void checkEnablingFor(File file)
+   private void checkEnablingFor(FileModel file)
    {
       enableAutoload();
-
+      
       String autoloadPropertyValue = GroovyPropertyUtil.getAutoloadPropertyValue(file);
       boolean isSetAutoload = false;
       if (autoloadPropertyValue != null)
@@ -168,17 +167,17 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      if (!(event.getItem() instanceof File))
+      if (!(event.getItem() instanceof FileModel))
       {
          return;
       }
 
-      if (activeFile != (File)event.getItem())
+      if (activeFile != (FileModel)event.getItem())
       {
          return;
       }
 
-      checkEnablingFor((File)event.getItem());
+      checkEnablingFor((FileModel)event.getItem());
    }
 
 }

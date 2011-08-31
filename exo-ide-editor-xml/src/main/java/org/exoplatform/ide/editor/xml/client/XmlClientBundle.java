@@ -43,4 +43,7 @@ public interface XmlClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/xml/client/images/row-selected.png")
    ImageResource itemSelected();
+   
+   @Source("org/exoplatform/ide/editor/xml/public/images/xml/xml.png")
+   ImageResource xml();
 }

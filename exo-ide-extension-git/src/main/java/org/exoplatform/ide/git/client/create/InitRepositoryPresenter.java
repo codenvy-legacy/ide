@@ -32,11 +32,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -138,19 +138,19 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    @Override
    public void onInitRepository(InitRepositoryEvent event)
    {
-      if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof Folder))
+      if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof FolderModel))
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
 
-      if (workspace != null && workspace.equals(selectedItems.get(0).getHref()))
+      if (workspace != null && workspace.equals(selectedItems.get(0).getId()))
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
          return;
       }
 
-      getWorkDir(selectedItems.get(0).getHref());
+      getWorkDir(selectedItems.get(0).getId());
    }
 
    /**
@@ -176,7 +176,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
             Display d = GWT.create(Display.class);
             IDE.getInstance().openView((View)d);
             bindDisplay(d);
-            display.getWorkDirValue().setValue(selectedItems.get(0).getHref(), true);
+            display.getWorkDirValue().setValue(selectedItems.get(0).getId(), true);
          }
       });
    }

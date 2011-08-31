@@ -18,28 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
-import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
-import org.exoplatform.ide.extension.groovy.client.classpath.Workspace;
-import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,6 +27,25 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
+import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
+import org.exoplatform.ide.extension.groovy.client.classpath.Workspace;
+import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for choosing source for class path.
@@ -107,19 +104,17 @@ public class ChooseSourcePathPresenter
     */
    private HandlerManager eventBus;
 
-   /**
-    * The REST context.
-    */
-   private String restContext;
+   
+   private FolderModel root;
 
    /**
     * @param eventBus handler manager
     * @param restContext REST context
     */
-   public ChooseSourcePathPresenter(HandlerManager eventBus, String restContext)
+   public ChooseSourcePathPresenter(HandlerManager eventBus, FolderModel root)
    {
       this.eventBus = eventBus;
-      this.restContext = restContext;
+      this.root = root;
 
       if (display == null)
       {
@@ -128,9 +123,10 @@ public class ChooseSourcePathPresenter
       }
 
       IDE.getInstance().openView(display.asView());
-      
+
       display.enableOkButtonState(false);
-      getWorkspaces();
+      display.getItemsTree().setValue(root);
+//      getWorkspaces();
    }
 
    /**
@@ -143,9 +139,9 @@ public class ChooseSourcePathPresenter
 
          public void onOpen(OpenEvent<Item> event)
          {
-            if (event.getTarget() instanceof Folder)
+            if (event.getTarget() instanceof FolderModel)
             {
-               getFolderContent((Folder)event.getTarget());
+               getFolderContent((FolderModel)event.getTarget());
             }
          }
       });
@@ -177,12 +173,11 @@ public class ChooseSourcePathPresenter
       });
    }
 
-   
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    /**
     * Perform actions on selection in the tree with items changed.
     */
@@ -211,23 +206,48 @@ public class ChooseSourcePathPresenter
     * 
     * @param folder
     */
-   private void getFolderContent(Folder folder)
+   private void getFolderContent(final FolderModel folder)
    {
-      VirtualFileSystem.getInstance().getChildren(folder, new AsyncRequestCallback<Folder>()
+      try
       {
-         
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            display.getItemsTree().setValue(result);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
-         }
-      });
+         VirtualFileSystem.getInstance().getChildren(
+            folder,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  folder.getChildren().setItems(result);
+                  for (Item i : result)
+                  {
+                     if (i.getItemType() == ItemType.FILE)
+                     {
+                        ((FileModel)i).setParent(folder);
+                     }
+                     else
+                     {
+                        ((FolderModel)i).setParent(folder);
+                     }
+                  }
+                  display.getItemsTree().setValue(folder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Parent folder not found."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -235,22 +255,22 @@ public class ChooseSourcePathPresenter
     */
    private void getWorkspaces()
    {
-      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
-      {
-         @Override
-         protected void onSuccess(List<EntryPoint> result)
-         {
-            Folder root = new Folder(null);
-            root.setChildren(new ArrayList<Item>());
-            for (EntryPoint entryPoint : result)
-            {
-               Workspace workspace = new Workspace(entryPoint.getHref());
-               workspace.setIcon(Images.ClassPath.WORKSPACE);
-               root.getChildren().add(workspace);
-            }
-            display.getItemsTree().setValue(root);
-         }
-      });
+//      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
+//      {
+//         @Override
+//         protected void onSuccess(List<EntryPoint> result)
+//         {
+//            FolderModel root = new FolderModel();
+//            root.getChildren().setItems(new ArrayList<Item>());
+//            for (EntryPoint entryPoint : result)
+//            {
+//               Workspace workspace = new Workspace(entryPoint.getHref());
+////               workspace.setIcon(Images.ClassPath.WORKSPACE);
+//               root.getChildren().getItems().add(workspace);
+//            }
+//            display.getItemsTree().setValue(root);
+//         }
+//      });
    }
 
    /**
@@ -261,8 +281,8 @@ public class ChooseSourcePathPresenter
       List<GroovyClassPathEntry> classPathEntries = new ArrayList<GroovyClassPathEntry>();
       for (Item item : display.getSelectedItems())
       {
-         String path = GroovyClassPathUtil.formPathFromHref(item.getHref(), restContext);
-         String kind = (item instanceof File) ? EnumSourceType.FILE.getValue() : EnumSourceType.DIR.getValue();
+         String path = item.getPath();//GroovyClassPathUtil.formPathFromHref(item.getHref(), restContext);
+         String kind = (item instanceof FileModel) ? EnumSourceType.FILE.getValue() : EnumSourceType.DIR.getValue();
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(kind, path);
          classPathEntries.add(groovyClassPathEntry);
       }

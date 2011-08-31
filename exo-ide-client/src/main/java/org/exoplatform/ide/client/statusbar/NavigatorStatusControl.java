@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
@@ -30,8 +28,9 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
 
 /**
  * Created by The eXo Platform SAS .
@@ -45,7 +44,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
    public static final String ID = "__navigator_status";
 
-   private String entryPoint;
+   private String rootId;
 
    public NavigatorStatusControl()
    {
@@ -67,7 +66,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (entryPoint == null)
+      if (rootId == null)
       {
          setText("&nbsp;");
          //setVisible(false);
@@ -80,28 +79,13 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       {
          Item item = event.getSelectedItems().get(0);
 
-         statusMessage = item.getHref();
-         if (item instanceof File)
+         statusMessage = item.getPath();
+         if (item instanceof FileModel)
          {
             statusMessage = statusMessage.substring(0, statusMessage.lastIndexOf("/"));
          }
 
-         String prefix = entryPoint;
-         if (prefix.endsWith("/"))
-         {
-            prefix = prefix.substring(0, prefix.length() - 1);
-         }
-
-         prefix = prefix.substring(0, prefix.lastIndexOf("/") + 1);
-         statusMessage = statusMessage.substring(prefix.length());
-         statusMessage = URL.decodePathSegment(statusMessage);
-         
-         if (statusMessage.endsWith("/"))
-         {
-            statusMessage = statusMessage.substring(0, statusMessage.length() - 1);
-         }
-
-         if (item.getHref().equals(entryPoint))
+         if (item.getId().equals(rootId))
          {
             statusMessage = tuneMessage(statusMessage, Images.FileTypes.WORKSPACE);
             //statusMessage = "<img src=\"" + Images.FileTypes.WORKSPACE + "\" style=\"width:16px; height:16px;\">" + statusMessage;
@@ -142,7 +126,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      rootId = event.getVfsInfo().getRoot().getId();
    }
 
 }

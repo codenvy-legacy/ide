@@ -358,7 +358,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       String[] filePatterns = null;
       if (!showChangesInProject && workDir != null && selectedItems != null && selectedItems.size() == 1)
       {
-         String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getHref(), workDir);
+         String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getPath(), workDir);
          if (pattern.length() > 0)
          {
             filePatterns = new String[]{pattern};

@@ -87,9 +87,9 @@ public class DeployUwaWidgetControl extends SimpleControl implements IDEControl,
          return;
       }
       //Visible if file MIME type is "application/x-uwa-widget":
-      boolean isVisible = MimeType.UWA_WIDGET.equals(event.getFile().getContentType());
+      boolean isVisible = MimeType.UWA_WIDGET.equals(event.getFile().getMimeType());
       //Enabled if file is saved:
-      boolean isEnabled = (isVisible && !event.getFile().isNewFile());
+      boolean isEnabled = (isVisible && event.getFile().isPersisted());
       setVisible(isVisible);
       setEnabled(isEnabled);
    }

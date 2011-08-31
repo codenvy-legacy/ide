@@ -33,12 +33,12 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.webdav.Property;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
@@ -66,22 +66,28 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Lock;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,9 +106,8 @@ import java.util.Map;
  * @version $Id: $
 */
 public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPointHandler, SelectItemHandler,
-   ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler,
-   ApplicationSettingsReceivedHandler, ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler,
-   RemoveItemTreeIconHandler
+   ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
+   ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
 {
 
    public interface Display extends IsView
@@ -123,23 +128,23 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       /**
        * Select item in browser tree by path.
        * 
-       * @param path item's path
+       * @param itemId item's path
        */
-      void selectItem(String path);
+      void selectItem(String itemId);
 
       /**
        * Deselect item in browser tree by path.
        * 
-       * @param path item's path
+       * @param itemId item's path
        */
-      void deselectItem(String path);
+      void deselectItem(String itemId);
 
       /**
        * Update the state of the item in the tree.
        * 
        * @param file
        */
-      void updateItemState(File file);
+      void updateItemState(FileModel file);
 
       /**
        * Set lock tokens to the items in the tree.
@@ -159,8 +164,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
    }
-   
-   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.workspaceReceiveChildrenError();
+
+   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .workspaceReceiveChildrenError();
 
    private Display display;
 
@@ -176,7 +182,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    private String itemToSelect;
 
-   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
+   private List<FolderModel> foldersToRefresh = new ArrayList<FolderModel>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -188,8 +194,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
       handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
       handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
-      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE,
-         eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this));
+      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE, eventBus.addHandler(ItemLockedEvent.TYPE, this));
       handlerRegistrations.put(SwitchEntryPointEvent.TYPE, eventBus.addHandler(SwitchEntryPointEvent.TYPE, this));
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
       handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
@@ -210,7 +215,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       {
          public void onOpen(OpenEvent<Item> event)
          {
-            onFolderOpened((Folder)event.getTarget());
+            onFolderOpened((FolderModel)event.getTarget());
          }
       });
 
@@ -258,9 +263,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       for (Item item : display.getSelectedItems())
       {
-         if (item.getHref().startsWith(folder.getHref()) && !item.getHref().equals(folder.getHref()))
+         if (item.getPath().startsWith(folder.getPath()) && !item.getId().equals(folder.getId()))
          {
-            display.deselectItem(item.getHref());
+            display.deselectItem(item.getId());
          }
       }
    }
@@ -305,7 +310,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
       if (item instanceof File)
       {
-         eventBus.fireEvent(new OpenFileEvent((File)item));
+         eventBus.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 
@@ -314,13 +319,13 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
     * 
     * @param openedFolder
     */
-   protected void onFolderOpened(Folder openedFolder)
+   protected void onFolderOpened(FolderModel openedFolder)
    {
       //Commented to fix bug with selection of new folder
       //      itemToSelect = null;
-      if (openedFolder.getChildren() != null)
+      if (!openedFolder.getChildren().getItems().isEmpty())
          return;
-      foldersToRefresh = new ArrayList<Folder>();
+      foldersToRefresh = new ArrayList<FolderModel>();
       foldersToRefresh.add(openedFolder);
       refreshNextFolder();
    }
@@ -329,14 +334,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       if (event.getItemToSelect() != null)
       {
-         itemToSelect = event.getItemToSelect().getHref();
+         itemToSelect = event.getItemToSelect().getId();
       }
       else
       {
          List<Item> selectedItems = display.getSelectedItems();
          if (selectedItems.size() > 0)
          {
-            itemToSelect = selectedItems.get(0).getHref();
+            itemToSelect = selectedItems.get(0).getId();
          }
          else
          {
@@ -350,21 +355,18 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       }
       else
       {
-         foldersToRefresh = new ArrayList<Folder>();
+         foldersToRefresh = new ArrayList<FolderModel>();
 
          if (selectedItems.size() > 0)
          {
             Item item = selectedItems.get(0);
-            if (item instanceof File)
+            if (item instanceof FileModel)
             {
-               String href = item.getHref();
-               href = href.substring(0, href.lastIndexOf("/") + 1);
-               Folder folder = new Folder(href);
-               foldersToRefresh.add(folder);
+               foldersToRefresh.add(((FileModel)item).getParent());
             }
             else
             {
-               foldersToRefresh.add((Folder)item);
+               foldersToRefresh.add((FolderModel)item);
             }
          }
       }
@@ -379,33 +381,52 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          return;
       }
 
-      VirtualFileSystem.getInstance().getChildren(foldersToRefresh.get(0), new AsyncRequestCallback<Folder>()
+      final FolderModel folder = foldersToRefresh.get(0);
+      try
       {
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            folderContentReceived(result);
-         }
+         VirtualFileSystem.getInstance().getChildren(folder,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  itemToSelect = null;
+                  foldersToRefresh.clear();
+                  exception.printStackTrace();
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+                  eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            itemToSelect = null;
-            foldersToRefresh.clear();
-            exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-         }
-      });
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  folder.getChildren().getItems().clear();
+                  folder.getChildren().getItems().addAll(result);
+                  for (Item i : result)
+                  {
+                     if (i instanceof ItemContext)
+                     {
+                        ((ItemContext)i).setParent(folder);
+                     }
+                  }
+                  folderContentReceived(folder);
+
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
-   private void folderContentReceived(Folder folder)
+   private void folderContentReceived(FolderModel folder)
    {
       eventBus.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
-      removeSystemItemsFromView(folder.getChildren());
-      Collections.sort(folder.getChildren(), comparator);
+      removeSystemItemsFromView(folder.getChildren().getItems());
+      Collections.sort(folder.getChildren().getItems(), comparator);
 
       display.getBrowserTree().setValue(folder);
 
@@ -435,7 +456,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       List<Item> itemsToRemove = new ArrayList<Item>();
       for (Item item : items)
       {
-         if (item.isSystem())
+         if (item.getName().startsWith("."))
             itemsToRemove.add(item);
       }
       items.removeAll(itemsToRemove);
@@ -448,11 +469,11 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    {
       public int compare(Item item1, Item item2)
       {
-         if (item1 instanceof Folder && item2 instanceof File)
+         if (item1 instanceof FolderModel && item2 instanceof FileModel)
          {
             return -1;
          }
-         else if (item1 instanceof File && item2 instanceof Folder)
+         else if (item1 instanceof File && item2 instanceof FolderModel)
          {
             return 1;
          }
@@ -476,32 +497,25 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
       Item item = event.getItem();
-      if (item instanceof File)
+      if (item instanceof FileModel)
       {
-         File file = (File)item;
-         Property lockOwnerProperty = file.getProperty(ItemProperty.LOCKDISCOVERY);
-         file.getProperties().remove(lockOwnerProperty);
+         FileModel file = (FileModel)item;
+         file.setLock(null);
          display.updateItemState(file);
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
-    */
-   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
+   public void onItemLocked(ItemLockedEvent event)
    {
-      if (event.getException() == null)
+
+      Item item = event.getItem();
+      if (item instanceof FileModel)
       {
-         Item item = event.getItem();
-         if (item instanceof File)
-         {
-            File file = (File)item;
-            Property lockOwnerProperty = new Property(ItemProperty.LOCKDISCOVERY);
-            lockOwnerProperty.setValue("&nbsp;");
-            file.getProperties().add(lockOwnerProperty);
-            display.updateItemState(file);
-         }
+         FileModel file = (FileModel)item;
+         file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
+         display.updateItemState(file);
       }
+
    }
 
    /**
@@ -509,7 +523,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
     * 
     * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent)
     */
-   public void onSwitchEntryPoint(SwitchEntryPointEvent event)
+   public void onSwitchEntryPoint(final SwitchEntryPointEvent event)
    {
       if (display == null)
       {
@@ -529,47 +543,55 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
-      final Folder rootFolder = new Folder(event.getEntryPoint());
-      VirtualFileSystem.getInstance().getProperties(rootFolder, new ItemPropertiesCallback()
+      //      final Folder rootFolder = new Folder(event.getEntryPoint());
+
+      try
       {
-         @Override
-         protected void onSuccess(Item result)
+         new VirtualFileSystem(event.getEntryPoint()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
-            eventBus.fireEvent(new EntryPointChangedEvent(result.getHref()));
-
-            display.asView().setViewVisible();
-
-            eventBus.fireEvent(new ViewVisibilityChangedEvent((View)display));
-
-            display.getBrowserTree().setValue(result);
-            display.selectItem(result.getHref());
-            selectedItems = display.getSelectedItems();
-
-            try
+            @Override
+            protected void onSuccess(VirtualFileSystemInfo result)
             {
-               onRefreshBrowser(new RefreshBrowserEvent());
+               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+
+               eventBus.fireEvent(new EntryPointChangedEvent(result, event.getEntryPoint()));
+
+               display.asView().setViewVisible();
+
+               eventBus.fireEvent(new ViewVisibilityChangedEvent((View)display));
+
+               display.getBrowserTree().setValue(result.getRoot());
+               display.selectItem(result.getRoot().getId());
+               selectedItems = display.getSelectedItems();
+
+               try
+               {
+                  onRefreshBrowser(new RefreshBrowserEvent());
+               }
+               catch (Exception e)
+               {
+                  e.printStackTrace();
+               }
+
             }
-            catch (Exception e)
+
+            @Override
+            protected void onFailure(Throwable exception)
             {
-               e.printStackTrace();
+               itemToSelect = null;
+               foldersToRefresh.clear();
+
+               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+               eventBus.fireEvent(new EntryPointChangedEvent(null, null));
             }
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-
-            itemToSelect = null;
-            foldersToRefresh.clear();
-
-            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-            eventBus.fireEvent(new EntryPointChangedEvent(null));
-         }
-
-      });
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**

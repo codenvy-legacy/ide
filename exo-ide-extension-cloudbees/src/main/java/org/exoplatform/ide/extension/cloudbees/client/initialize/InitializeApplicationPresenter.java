@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
@@ -43,6 +42,7 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.Iterator;
 import java.util.List;
@@ -207,7 +207,7 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
 
    private void doDeployApplication()
    {
-      final String workDir = selectedItems.get(0).getWorkDir();
+      final String workDir = selectedItems.get(0).getId();
       CloudBeesClientService.getInstance().initializeApplication(applicationId, warUrl, null, workDir,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler, null)
          {

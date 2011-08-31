@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Changed by The eXo Platform SAS        .
@@ -32,13 +32,13 @@ public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentCha
 
    public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE = new GwtEvent.Type<EditorFileContentChangedHandler>();
 
-   private File file;
+   private FileModel file;
 
    private boolean hasUndoChanges;
 
    private boolean hasRedoChanges;
 
-   public EditorFileContentChangedEvent(File file, boolean hasUndoChanges, boolean hasRedoChanges)
+   public EditorFileContentChangedEvent(FileModel file, boolean hasUndoChanges, boolean hasRedoChanges)
    {
       this.file = file;
       this.hasUndoChanges = hasUndoChanges;
@@ -60,7 +60,7 @@ public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentCha
    /**
     * @return changed item
     */
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

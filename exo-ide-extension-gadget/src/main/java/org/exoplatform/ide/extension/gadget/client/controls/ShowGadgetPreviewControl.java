@@ -69,10 +69,10 @@ public class ShowGadgetPreviewControl extends SimpleControl implements IDEContro
          return;
       }
 
-      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
+      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getMimeType()))
       {
          setVisible(true);
-         if (event.getFile().isNewFile())
+         if (!event.getFile().isPersisted())
          {
             setEnabled(false);
          }

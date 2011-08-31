@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import org.exoplatform.ide.client.Images;
+import com.google.gwt.resources.client.ImageResource;
+
+import org.exoplatform.ide.client.IDEImageBundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,27 +33,27 @@ import java.util.List;
 public class FolderTemplate extends Template
 {
    private List<Template> children;
-   
+
    public FolderTemplate()
    {
    }
-   
+
    public FolderTemplate(String name)
    {
       super(name);
    }
-   
+
    public FolderTemplate(String name, String description, String nodeName, List<Template> children)
    {
       super(name, description, nodeName);
       this.children = children;
    }
-   
+
    public FolderTemplate(String name, String description, boolean isDefault)
    {
       super(name, description, isDefault);
    }
-   
+
    /**
     * @return children on template
     */
@@ -63,18 +65,18 @@ public class FolderTemplate extends Template
       }
       return children;
    }
-   
-   public void setChildren(List<Template>children)
+
+   public void setChildren(List<Template> children)
    {
       this.children = children;
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.model.template.Template#getIcon()
     */
    @Override
-   public String getIcon()
+   public ImageResource getIcon()
    {
-      return Images.FileTypes.FOLDER;
+      return IDEImageBundle.INSTANCE.folder();
    }
 }

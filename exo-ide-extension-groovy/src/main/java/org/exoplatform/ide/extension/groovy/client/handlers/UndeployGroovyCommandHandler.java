@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -29,7 +28,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
@@ -37,6 +35,7 @@ import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSan
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * 
@@ -51,7 +50,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
 
    private HandlerManager eventBus;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public UndeployGroovyCommandHandler(HandlerManager eventBus)
    {
@@ -68,7 +67,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(activeFile.getHref(), new AsyncRequestCallback<String>()
+      GroovyService.getInstance().undeploy(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override
@@ -120,7 +119,7 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().undeploySandbox(activeFile.getHref(), new AsyncRequestCallback<String>()
+      GroovyService.getInstance().undeploySandbox(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override

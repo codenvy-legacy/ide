@@ -69,8 +69,8 @@ public class ValidateGroovyCommand extends SimpleControl implements IDEControl, 
          return;
       }
 
-      if (MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType())
-         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getContentType()))
+      if (MimeType.GROOVY_SERVICE.equals(event.getFile().getMimeType())
+         || MimeType.APPLICATION_GROOVY.equals(event.getFile().getMimeType()))
       {
          setVisible(true);
          setEnabled(true);

@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -36,7 +36,7 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
 
    public static final GwtEvent.Type<RefreshBrowserHandler> TYPE = new Type<RefreshBrowserHandler>();
 
-   private List<Folder> folders;
+   private List<FolderModel> folders;
 
    private Item itemToSelect;
 
@@ -44,20 +44,20 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
    {
    }
 
-   public RefreshBrowserEvent(Folder folder)
+   public RefreshBrowserEvent(FolderModel folder)
    {
-      folders = new ArrayList<Folder>();
+      folders = new ArrayList<FolderModel>();
       folders.add(folder);
    }   
 
-   public RefreshBrowserEvent(Folder folder, Item itemToSelect)
+   public RefreshBrowserEvent(FolderModel folder, Item itemToSelect)
    {
-      folders = new ArrayList<Folder>();
+      folders = new ArrayList<FolderModel>();
       folders.add(folder);
       this.itemToSelect = itemToSelect;
    }      
    
-   public RefreshBrowserEvent(List<Folder> folders, Item itemToSelect)
+   public RefreshBrowserEvent(List<FolderModel> folders, Item itemToSelect)
    {
       this.folders = folders;
       this.itemToSelect = itemToSelect;
@@ -69,7 +69,7 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
       handler.onRefreshBrowser(this);
    }
 
-   public List<Folder> getFolders()
+   public List<FolderModel> getFolders()
    {
       return folders;
    }

@@ -35,9 +35,11 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -52,14 +54,14 @@ import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handlers events for opening files.
@@ -83,10 +85,10 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
     * or number of attempts to get versions.
     */
    private int ignoreErrorsCount = 0;
-   
-   private File fileToOpenOnError;
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private FileModel fileToOpenOnError;
+
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    public OpenFileCommandHandler(HandlerManager eventBus)
    {
@@ -106,17 +108,17 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       ignoreErrorsCount = event.getIgnoreErrorsCount();
       selectedEditor = event.getEditor();
 
-      File file = event.getFile();
+      FileModel file = event.getFile();
       if (file != null)
       {
-         if (file.isNewFile())
+         if (!file.isPersisted())
          {
             openFile(file);
             return;
          }
 
          //TODO Check opened file!!!
-         if (openedFiles.containsKey(file.getHref()))
+         if (openedFiles.containsKey(file.getId()))
          {
             openFile(file);
             return;
@@ -124,62 +126,81 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       }
       else
       {
-         file = new File(event.getHref());
+         file = new FileModel();
+         file.setId(event.getFileId());
       }
 
       getFileProperties(file);
-      
+
    }
-   
-   private void getFileProperties(File file) {
-      VirtualFileSystem.getInstance().getProperties(file, new ItemPropertiesCallback()
+
+   private void getFileProperties(FileModel file)
+   {
+      try
       {
-         @Override
-         protected void onSuccess(Item result)
+         VirtualFileSystem.getInstance().getItem(file.getId(), new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
          {
-            File file = (File)result;
 
-            if (file.getContent() != null)
+            @Override
+            protected void onSuccess(FileModel result)
             {
-               openFile(file);
-               return;
-            }
-            getFileContent(file);
-         }
+               FileModel f = (FileModel)result;
 
-//         @Override
-//         protected void onFailure(Throwable exception)
-//         {
-//            if (fileToOpenOnError != null && ignoreErrorsCount > 0)
-//            {
-//               ignoreErrorsCount--;
-//               getFileContent(fileToOpenOnError);
-//               return;
-//            }
-//
-////            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-//            super.onFailure(exception);
-//         }
-      });      
+               if (f.getContent() != null)
+               {
+                  openFile(f);
+                  return;
+               }
+               getFileContent(f);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Parent folder not found."));
+      }
    }
 
-   private void getFileContent(File file)
+   private void getFileContent(FileModel file)
    {
       fileToOpenOnError = file;
-//      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-      VirtualFileSystem.getInstance().getContent(file, new FileCallback()
+      //      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      try
       {
+         VirtualFileSystem.getInstance().getContent(
+            new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
+            {
 
-         @Override
-         protected void onSuccess(File result)
-         {
-//            eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-            openFile(result);
-         }
-      });
+               @Override
+               protected void onSuccess(FileModel result)
+               {
+                  openFile(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Resource not found."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+      }
    }
 
-   private void openFile(File file)
+   private void openFile(FileModel file)
    {
       try
       {
@@ -188,16 +209,17 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
             Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
             if (defaultEditors != null)
             {
-               selectedEditor = defaultEditors.get(file.getContentType());
+               selectedEditor = defaultEditors.get(file.getMimeType());
             }
          }
 
-         EditorProducer producer= EditorFactory.getEditorProducer(file.getContentType(), selectedEditor);
+         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
          eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
       {
-         Dialogs.getInstance().showError(IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getContentType()));
+         Dialogs.getInstance().showError(
+            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getMimeType()));
       }
    }
 

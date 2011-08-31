@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.vfs.Item;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .

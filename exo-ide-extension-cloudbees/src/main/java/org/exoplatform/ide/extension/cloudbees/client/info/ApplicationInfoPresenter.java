@@ -31,10 +31,10 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -104,7 +104,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
    @Override
    public void onShowApplicationInfo(ApplicationInfoEvent event)
    {
-      String workDir = selectedItems.get(0).getHref();
+      String workDir = selectedItems.get(0).getId();
       showApplicationInfo(workDir);
    }
    

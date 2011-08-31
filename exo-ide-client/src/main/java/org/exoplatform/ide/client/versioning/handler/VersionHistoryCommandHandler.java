@@ -50,6 +50,7 @@ import org.exoplatform.ide.client.versioning.event.ShowVersionContentEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
 import org.exoplatform.ide.client.versioning.event.VersionRestoredHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
@@ -74,7 +75,7 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
 
    private Version version;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private List<Version> versionHistory = new ArrayList<Version>();
 
@@ -125,45 +126,46 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
       if (activeFile != null)
       {
          versionHistory.clear();
-         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
-         {
-            @Override
-            protected void onSuccess(VersionsData result)
-            {
-               if (result.getVersions() != null && result.getVersions().size() > 0)
-               {
-                  versionHistory = result.getVersions();
-                  int index = 0;
-                  if (version != null)
-                  {
-                     index = getVersionIndexInList(version.getHref());
-                     index = (index > 0) ? index : 0;
-                  }
-                  openVersion(result.getVersions().get(index));
-               }
-               else
-               {
-                  Dialogs.getInstance().showInfo(
-                     org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.versionHistoryItemHasNoVersions(result
-                        .getItem().getName()));
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
-
-               if (versionToOpenOnError != null && ignoreErrorCount > 0)
-               {
-                  ignoreErrorCount--;
-                  getVersionContent(versionToOpenOnError);
-                  return;
-               }
-
-               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
-            }
-         });
+         //TODO
+//         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
+//         {
+//            @Override
+//            protected void onSuccess(VersionsData result)
+//            {
+//               if (result.getVersions() != null && result.getVersions().size() > 0)
+//               {
+//                  versionHistory = result.getVersions();
+//                  int index = 0;
+//                  if (version != null)
+//                  {
+//                     index = getVersionIndexInList(version.getHref());
+//                     index = (index > 0) ? index : 0;
+//                  }
+//                  openVersion(result.getVersions().get(index));
+//               }
+//               else
+//               {
+//                  Dialogs.getInstance().showInfo(
+//                     org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.versionHistoryItemHasNoVersions(result
+//                        .getItem().getName()));
+//               }
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
+//
+//               if (versionToOpenOnError != null && ignoreErrorCount > 0)
+//               {
+//                  ignoreErrorCount--;
+//                  getVersionContent(versionToOpenOnError);
+//                  return;
+//               }
+//
+//               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+//            }
+//         });
       }
       else
       {
@@ -347,10 +349,11 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
-      if (version != null && event.getFile().getHref().equals(version.getItemHref()))
-      {
-         getVersionHistory();
-      }
+      //TODO
+//      if (version != null && event.getFile().getHref().equals(version.getItemHref()))
+//      {
+//         getVersionHistory();
+//      }
    }
 
    /**
@@ -359,9 +362,10 @@ public class VersionHistoryCommandHandler implements OpenVersionHandler, EditorA
    @Override
    public void onVersionRestored(VersionRestoredEvent event)
    {
-      if (version != null && event.getFile().getHref().equals(version.getItemHref()))
-      {
-         getVersionHistory();
-      }
+      //TODO
+//      if (version != null && event.getFile().getHref().equals(version.getItemHref()))
+//      {
+//         getVersionHistory();
+//      }
    }
 }

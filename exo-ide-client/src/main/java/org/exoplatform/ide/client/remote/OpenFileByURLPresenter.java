@@ -19,8 +19,16 @@
 
 package org.exoplatform.ide.client.remote;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -37,25 +45,16 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.remote.service.RemoteFileService;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for opening file by URL.
@@ -231,31 +230,31 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
          display.setOpenButtonEnabled(false);
          return;
       }
-
-      RemoteFileService.getInstance().getRemoteFile(url, new AsyncRequestCallback<File>()
-      {
-         @Override
-         protected void onSuccess(File result)
-         {
-            openFileInEditor(result);
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException se = (ServerException)exception;
-               String msg = se.isErrorMessageProvided() ? se.getLocalizedMessage() : "Status:&nbsp;" + se.getHTTPStatus() + "&nbsp;" + se.getStatusText();
-               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(msg);
-               Dialogs.getInstance().showError(message);
-            }
-            else
-            {
-               super.onFailure(exception);
-            }
-         }
-      });
+//TODO
+//      RemoteFileService.getInstance().getRemoteFile(url, new AsyncRequestCallback<File>()
+//      {
+//         @Override
+//         protected void onSuccess(File result)
+//         {
+//            openFileInEditor(result);
+//         }
+//
+//         @Override
+//         protected void onFailure(Throwable exception)
+//         {
+//            if (exception instanceof ServerException)
+//            {
+//               ServerException se = (ServerException)exception;
+//               String msg = se.isErrorMessageProvided() ? se.getLocalizedMessage() : "Status:&nbsp;" + se.getHTTPStatus() + "&nbsp;" + se.getStatusText();
+//               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(msg);
+//               Dialogs.getInstance().showError(message);
+//            }
+//            else
+//            {
+//               super.onFailure(exception);
+//            }
+//         }
+//      });
    }
 
    /**
@@ -265,47 +264,48 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     */
    private void openFileInEditor(File file)
    {
-      Item selectedItem = selectedItems.get(0);
-
-      String folder = null;
-
-      if (selectedItem instanceof Folder)
-      {
-         folder = selectedItem.getHref().substring(0, selectedItem.getHref().lastIndexOf("/"));
-      }
-      else
-      {
-         folder = selectedItem.getHref();
-      }
-
-      if (!folder.endsWith("/"))
-      {
-         folder += "/";
-      }
-
-      //String newFileURL = folder + file.getName();
-      String newFileURL = folder + URL.encodePathSegment(file.getName());
-
-      File fileToOpen = new File(newFileURL);
-      fileToOpen.setName(file.getName());
-      fileToOpen.setContentType(file.getContentType());
-      fileToOpen.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(file.getContentType()));
-      fileToOpen.setContent(file.getContent());
-      fileToOpen.setNewFile(true);
-      fileToOpen.setContentChanged(true);
-      fileToOpen.setIcon(ImageUtil.getIcon(file.getContentType()));
-
-      try
-      {
-         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getContentType());
-         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(fileToOpen, editorProducer));
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getContentType()));
-      }
+      //TODO
+//      Item selectedItem = selectedItems.get(0);
+//
+//      String folder = null;
+//
+//      if (selectedItem instanceof Folder)
+//      {
+//         folder = selectedItem.getHref().substring(0, selectedItem.getHref().lastIndexOf("/"));
+//      }
+//      else
+//      {
+//         folder = selectedItem.getHref();
+//      }
+//
+//      if (!folder.endsWith("/"))
+//      {
+//         folder += "/";
+//      }
+//
+//      //String newFileURL = folder + file.getName();
+//      String newFileURL = folder + URL.encodePathSegment(file.getName());
+//
+//      File fileToOpen = new File(newFileURL);
+//      fileToOpen.setName(file.getName());
+//      fileToOpen.setContentType(file.getContentType());
+//      fileToOpen.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(file.getContentType()));
+//      fileToOpen.setContent(file.getContent());
+//      fileToOpen.setNewFile(true);
+//      fileToOpen.setContentChanged(true);
+//      fileToOpen.setIcon(ImageUtil.getIcon(file.getContentType()));
+//
+//      try
+//      {
+//         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getContentType());
+//         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(fileToOpen, editorProducer));
+//         IDE.getInstance().closeView(display.asView().getId());
+//      }
+//      catch (EditorNotFoundException e)
+//      {
+//         Dialogs.getInstance().showError(
+//            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getContentType()));
+//      }
    }
 
    /**

@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Open new dialog window for asking new file name.
@@ -45,7 +45,7 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
 
    public static final GwtEvent.Type<SaveFileAsHandler> TYPE = new GwtEvent.Type<SaveFileAsHandler>();
 
-   private File file;
+   private FileModel file;
 
    private boolean saveOnly = false;
    
@@ -59,12 +59,12 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
    {
    }
 
-   public SaveFileAsEvent(File file)
+   public SaveFileAsEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public SaveFileAsEvent(File file, boolean saveOnly)
+   public SaveFileAsEvent(FileModel file, boolean saveOnly)
    {
       this.file = file;
       this.saveOnly = saveOnly;
@@ -78,7 +78,7 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
     * @param eventFiredOnCancel - event, which will be fired if Cancel button will be clicked 
     * (if null - window will be closed without any actions)
     */
-   public SaveFileAsEvent(File file,  SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
+   public SaveFileAsEvent(FileModel file,  SaveDialogType type, GwtEvent<?> eventFiredOnNo, GwtEvent<?> eventFiredOnCancel)
    {
       this.file = file;
       this.eventFiredOnNo = eventFiredOnNo;
@@ -103,7 +103,7 @@ public class SaveFileAsEvent extends GwtEvent<SaveFileAsHandler>
       return TYPE;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

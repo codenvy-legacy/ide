@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -26,10 +28,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineEvent;
-import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.editor.api.EditorCapability;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -67,7 +66,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
 
-      if (event.getFile() == null || event.getEditor() == null || (event.getFile() instanceof Version))
+      if (event.getFile() == null || event.getEditor() == null || (event.getFile().getVersionId() != null))
       {
          setVisible(false);
          setEnabled(false);

@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,22 +32,22 @@ public class FileOpenedEvent extends GwtEvent<FileOpenedHandler>
 
    public static final GwtEvent.Type<FileOpenedHandler> TYPE = new GwtEvent.Type<FileOpenedHandler>();
 
-   private File file;
+   private FileModel file;
 
    private String editor;
 
-   public FileOpenedEvent(File file)
+   public FileOpenedEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public FileOpenedEvent(File file, String editor)
+   public FileOpenedEvent(FileModel file, String editor)
    {
       this(file);
       this.editor = editor;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

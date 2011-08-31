@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -38,45 +39,47 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.CopyCallback;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemCopyUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedHandler, 
-ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedHandler, ItemsSelectedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationContext context;
 
-   private String folderFromPaste;
+   private FolderModel folderFromPaste;
 
-   private String folderToPaste;
+   private FolderModel folderToPaste;
 
    private int numItemToCut;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
 
@@ -100,7 +103,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
    {
       if (context.getItemsToCopy().size() != 0)
       {
-         folderToPaste = getPathToPaste();
+         folderToPaste = getFolderToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCopy().get(0));
          copyNextItem();
          numItemToCut = 0;
@@ -109,33 +112,33 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
       if (context.getItemsToCut().size() != 0)
       {
-         folderToPaste = getPathToPaste();
+         folderToPaste = getFolderToPaste();
          folderFromPaste = getPahtFromPaste(context.getItemsToCut().get(0));
          numItemToCut = context.getItemsToCut().size();
          cutNextItem();
       }
    }
 
-   private String getPathToPaste()
+   private FolderModel getFolderToPaste()
    {
-      if (selectedItems.get(0) instanceof File)
+      if (selectedItems.get(0) instanceof FileModel)
       {
-         String path = ((File)selectedItems.get(0)).getHref();
-         return path.substring(0, path.lastIndexOf("/") + 1);
+         FileModel f = (FileModel)selectedItems.get(0);
+         return f.getParent();
       }
 
-      return selectedItems.get(0).getHref();
+      return (FolderModel)selectedItems.get(0);
    }
 
-   private String getPahtFromPaste(Item item)
+   private FolderModel getPahtFromPaste(Item item)
    {
-      String path = item.getHref();
-      if (path.endsWith("/"))
+      if (item instanceof FileModel)
       {
-         path = path.substring(0, path.length() - 1);
+         FileModel f = (FileModel)item;
+         return f.getParent();
       }
 
-      return path.substring(0, path.lastIndexOf("/") + 1);
+      return (FolderModel)item;
    }
 
    /****************************************************************************************************
@@ -149,38 +152,56 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
          copyComleted();
          return;
       }
-      
-      Item item = context.getItemsToCopy().get(0);
-      
-      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
+
+      final Item item = context.getItemsToCopy().get(0);
+
+      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getPath()))
       {
          String message = IDE.ERRORS_CONSTANT.pasteItemsCantCopyToTheSameFolder();;
          Dialogs.getInstance().showError(message);
          return;
       }
 
-      String destination = folderToPaste + URL.encodePathSegment(item.getName());
-      VirtualFileSystem.getInstance().copy(item, destination, new CopyCallback()
+      String destination = folderToPaste.getId();
+      try
       {
-         @Override
-         protected void onSuccess(CopyItemData result)
-         {
-            if (context.getItemsToCopy().size() != 0)
+         VirtualFileSystem.getInstance().copy(item, destination,
+            new AsyncRequestCallback<StringBuilder>(new ItemCopyUnmarshaller(new StringBuilder()))
             {
-               context.getItemsToCopy().remove(result.getItem());
-               copyNextItem();
-            }
-         }
-      });
+
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  if (context.getItemsToCopy().size() != 0)
+                  {
+                     context.getItemsToCopy().remove(item);
+                     copyNextItem();
+                  }
+
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus
+                     .fireEvent(new ExceptionThrownEvent(exception,
+                        "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e,
+            "Service is not deployed.<br>Destination path does not exist.<br>Folder already has item with same name."));
+      }
+
    }
 
    private void copyComleted()
    {
       eventBus.fireEvent(new PasteItemsCompleteEvent());
-
-      Folder folder = new Folder(folderToPaste);
-
-      eventBus.fireEvent(new RefreshBrowserEvent(folder, folder));
+      eventBus.fireEvent(new RefreshBrowserEvent(folderToPaste, folderToPaste));
    }
 
    /****************************************************************************************************
@@ -197,15 +218,15 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
       final Item item = context.getItemsToCut().get(0);
 
-      if (item instanceof File)
+      if (item instanceof FileModel)
       {
-         File file = (File)item;
-         if (openedFiles.get(file.getHref()) != null)
+         FileModel file = (FileModel)item;
+         if (openedFiles.get(file.getId()) != null)
          {
-            final File openedFile = openedFiles.get(file.getHref());
+            final FileModel openedFile = openedFiles.get(file.getId());
             if (openedFile.isContentChanged())
             {
-               Dialogs.getInstance().ask(IDE.NAVIGATION_CONSTANT.pasteSaveFileBeforeCutAskDialogTitle(), 
+               Dialogs.getInstance().ask(IDE.NAVIGATION_CONSTANT.pasteSaveFileBeforeCutAskDialogTitle(),
                   IDE.IDE_LOCALIZATION_MESSAGES.pasteSaveFileBeforeCutAskDialogText(openedFile.getName()),
                   new BooleanValueReceivedHandler()
                   {
@@ -213,15 +234,29 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
                      {
                         if (value != null && value == true)
                         {
-                           VirtualFileSystem.getInstance().saveContent(openedFile,
-                              lockTokens.get(openedFile.getHref()), new FileContentSaveCallback()
-                              {
-                                 @Override
-                                 protected void onSuccess(FileData result)
+                           try
+                           {
+                              VirtualFileSystem.getInstance().updateContent(openedFile,
+                                 new AsyncRequestCallback<FileModel>()
                                  {
-                                    cutNextItem();
-                                 }
-                              });
+                                    @Override
+                                    protected void onSuccess(FileModel result)
+                                    {
+                                       cutNextItem();
+                                    }
+
+                                    @Override
+                                    protected void onFailure(Throwable exception)
+                                    {
+                                       eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                                    }
+                                 });
+                           }
+                           catch (RequestException e)
+                           {
+                              e.printStackTrace();
+                              eventBus.fireEvent(new ExceptionThrownEvent(e));
+                           }
                         }
                      }
                   });
@@ -231,40 +266,52 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
          }
       }
 
-      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getHref()))
+      if (folderFromPaste.equals(folderToPaste) || folderToPaste.getId().equals(item.getId()))
       {
          Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.pasteItemsCantMoveToTheSameFolder());
          return;
       }
 
       String destination = folderToPaste + URL.encodePathSegment(item.getName());
-      
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), new MoveItemCallback()
-      {
-         @Override
-         protected void onSuccess(MoveItemData result)
-         {
-            moveComplete(result.getItem(), result.getOldHref());
-            eventBus.fireEvent(new MoveCompleteEvent(result.getItem(), result.getOldHref()));
-         }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-            handleError();
-         }
-      });
+      try
+      {
+         VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getId()),
+            new AsyncRequestCallback<StringBuilder>(new ItemCopyUnmarshaller(new StringBuilder()))
+            {
+
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  //TODO
+                  moveComplete(result.toString(), item);
+                  //                  eventBus.fireEvent(new MoveCompleteEvent(result.getItem(), result.getOldHref()));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  //            super.onFailure(exception);
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  handleError();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         e.printStackTrace();
+      }
    }
 
    private void cutCompleted()
    {
       eventBus.fireEvent(new PasteItemsCompleteEvent());
 
-      List<Folder> folders = new ArrayList<Folder>();
+      List<FolderModel> folders = new ArrayList<FolderModel>();
 
-      Folder folderFrom = new Folder(folderFromPaste);
-      Folder folderTo = new Folder(folderToPaste);
+      FolderModel folderFrom = folderFromPaste;
+      FolderModel folderTo = folderToPaste;
 
       folders.add(folderFrom);
       folders.add(folderTo);
@@ -279,71 +326,101 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
    {
       if (numItemToCut > 0)
       {
-         List<Folder> folders = new ArrayList<Folder>();
+         List<FolderModel> folders = new ArrayList<FolderModel>();
 
-         Folder folderFrom = new Folder(folderFromPaste);
-         Folder folderTo = new Folder(folderToPaste);
-
-         folders.add(folderFrom);
-         folders.add(folderTo);
-         eventBus.fireEvent(new RefreshBrowserEvent(folders, folderTo));
+         folders.add(folderFromPaste);
+         folders.add(folderToPaste);
+         eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPaste));
       }
    }
 
-   private void updateOpenedFiles(String href, String sourceHref)
+//   private void updateOpenedFiles(FolderModel movedFolder, FolderModel source)
+//   {
+//      //TODO
+//      if (!href.endsWith("/"))
+//      {
+//         href += "/";
+//      }
+//      List<String> keys = new ArrayList<String>();
+//      for (String key : openedFiles.keySet())
+//      {
+//         keys.add(key);
+//      }
+//
+//      for (String key : keys)
+//      {
+//         if (key.startsWith(sourceHref))
+//         {
+//            File file = openedFiles.get(key);
+//            String fileHref = file.getHref().replace(sourceHref, href);
+//            file.setHref(fileHref);
+//
+//            openedFiles.remove(key);
+//            openedFiles.put(fileHref, file);
+//            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
+//         }
+//      }
+//   }
+
+   public void moveComplete(String newId, final Item source)
    {
-      if (!href.endsWith("/"))
-      {
-         href += "/";
-      }
-      List<String> keys = new ArrayList<String>();
-      for (String key : openedFiles.keySet())
-      {
-         keys.add(key);
-      }
-
-      for (String key : keys)
-      {
-         if (key.startsWith(sourceHref))
-         {
-            File file = openedFiles.get(key);
-            String fileHref = file.getHref().replace(sourceHref, href);
-            file.setHref(fileHref);
-
-            openedFiles.remove(key);
-            openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key),file));
-         }
-      }
-   }
-
-   public void moveComplete(Item item, String oldSourceHref)
-   {
-      numItemToCut--;
-      if (item instanceof File)
-      {
-         File file = (File)item;
-
-         if (openedFiles.containsKey(oldSourceHref))
-         {
-            File openedFile = openedFiles.get(oldSourceHref);
-            openedFile.setHref(file.getHref());
-            openedFiles.remove(oldSourceHref);
-            openedFiles.put(openedFile.getHref(), openedFile);
-
-            eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldSourceHref), file));
-         }
-      }
-      else
-      {
-         updateOpenedFiles(item.getHref(), oldSourceHref);
-      }
+//      Unmarshallable<Item> unmarshall;
+//      if (source instanceof FileModel)
+//      {
+//         unmarshall = new ItemUnmarshaller(new FileModel());
+//      }
+//      else
+//      {
+//         unmarshall = new ItemUnmarshaller(new FolderModel());
+//      }
+//
+//      try
+//      {
+//         VirtualFileSystem.getInstance().getItem(newId, new AsyncRequestCallback<Item>(unmarshall)
+//         {
+//
+//            @Override
+//            protected void onSuccess(Item result)
+//            {
+//               numItemToCut--;
+//               if (result instanceof FileModel)
+//               {
+//                  FileModel file = (FileModel)result;
+//
+//                  if (openedFiles.containsKey(source.getId()))
+//                  {
+//                     FileModel openedFile = openedFiles.get(source.getId());
+//                     openedFiles.remove(source.getId());
+//                     file.setContent(openedFile.getContent());
+//                     openedFiles.put(file.getId(), file);
+//
+//                     eventBus.fireEvent(new EditorReplaceFileEvent((FileModel)source, file));
+//                  }
+//               }
+//               else
+//               {
+//                  updateOpenedFiles((FolderModel)result, (FolderModel)source);
+//               }
+//
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+//            }
+//         });
+//      }
+//      catch (RequestException e)
+//      {
+//         e.printStackTrace();
+//         eventBus.fireEvent(new ExceptionThrownEvent(e));
+//      }
       if (context.getItemsToCut().size() != 0)
       {
-         context.getItemsToCut().remove(item);
+         context.getItemsToCut().remove(source);
          cutNextItem();
       }
-
    }
 
    public void onItemDeleted(ItemDeletedEvent event)
@@ -351,7 +428,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
       Item del = event.getItem();
       for (Item i : context.getItemsToCopy())
       {
-         if (i.getHref().equals(del.getHref()))
+         if (i.getId().equals(del.getId()))
          {
             context.getItemsToCopy().remove(i);
             break;
@@ -360,7 +437,7 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
 
       for (Item i : context.getItemsToCut())
       {
-         if (i.getHref().equals(del.getHref()))
+         if (i.getId().equals(del.getId()))
          {
             context.getItemsToCut().remove(i);
             break;
@@ -383,7 +460,6 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
       openedFiles = event.getOpenedFiles();
    }
 
-
    /**
     * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
     */
@@ -391,10 +467,10 @@ ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, Applicat
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
-               event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      
+
       lockTokens = (Map<String, String>)event.getApplicationSettings().getValueAsMap("lock-tokens");
-   }   
+   }
 
 }

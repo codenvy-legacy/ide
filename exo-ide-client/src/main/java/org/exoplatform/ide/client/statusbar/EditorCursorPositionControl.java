@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.component.TextButton.TextAlignment;
 import org.exoplatform.ide.client.edit.event.GoToLineEvent;
@@ -26,13 +29,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -89,7 +89,7 @@ public class EditorCursorPositionControl extends StatusTextControl implements ID
       }
    }
 
-   private File file;
+   private FileModel file;
 
    private Editor editor;
 

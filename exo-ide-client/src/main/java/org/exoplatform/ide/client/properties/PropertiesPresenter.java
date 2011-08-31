@@ -18,22 +18,24 @@
  */
 package org.exoplatform.ide.client.properties;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHandler;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,19 +45,19 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 
 public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemPropertiesReceivedHandler,
-   EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler
+   EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler, FileSavedHandler
 {
 
    public interface Display extends IsView
    {
 
-      void showProperties(File file);
+      void showProperties(FileModel file);
 
    }
 
    private Display display;
 
-   private File file;
+   private FileModel file;
 
    public PropertiesPresenter(HandlerManager eventBus)
    {
@@ -64,6 +66,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       eventBus.addHandler(ItemPropertiesReceivedEvent.TYPE, this);
       eventBus.addHandler(ShowPropertiesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      eventBus.addHandler(FileSavedEvent.TYPE, this);
       
       IDE.getInstance().addControl(new ShowPropertiesControl(), DockTarget.TOOLBAR, true);
    }
@@ -85,14 +88,14 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       }
    }
 
-   private void refreshProperties(File file)
+   private void refreshProperties(FileModel file)
    {
       if (this.file == null)
       {
          return;
       }
 
-      if (!file.getHref().equals(this.file.getHref()))
+      if (!file.getId().equals(this.file.getId()))
       {
          return;
       }
@@ -107,18 +110,20 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
 
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      if (event.getItem() instanceof File)
-      {
-         refreshProperties((File)event.getItem());
-      }
+      //TODO
+//      if (event.getItem() instanceof FileModel)
+//      {
+//         refreshProperties((FileModel)event.getItem());
+//      }
    }
 
    public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
    {
-      if (event.getItem() instanceof File)
-      {
-         refreshProperties((File)event.getItem());
-      }
+      //TODO
+//      if (event.getItem() instanceof File)
+//      {
+//         refreshProperties((File)event.getItem());
+//      }
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -144,6 +149,15 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
+    */
+   @Override
+   public void onFileSaved(FileSavedEvent event)
+   {
+      refreshProperties(event.getFile());
    }
 
 }

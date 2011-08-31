@@ -43,4 +43,7 @@ public interface CssBundle extends ClientBundle
    @Source("org/exoplatform/ide/editor/css/client/images/tag.png")
    ImageResource tag();
    
+   @Source("org/exoplatform/ide/editor/css/public/images/css/css.png")
+   ImageResource cssImage();
+   
 }

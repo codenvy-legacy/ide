@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.versioning.VersionContentPresenter;
 import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -59,7 +60,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
 
    private boolean versionPanelOpened = false;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    /**
     * @param id
@@ -93,7 +94,7 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      if (activeFile == null || activeFile.isNewFile())
+      if (activeFile == null || !activeFile.isPersisted())
       {
          setVisible(false);
          setEnabled(false);
@@ -159,9 +160,10 @@ public class ViewVersionHistoryControl extends SimpleControl implements IDEContr
     * @param file file to check
     * @return boolean true if versioned
     */
-   private boolean checkIsVersioned(File file)
+   private boolean checkIsVersioned(FileModel file)
    {
-      Property property = file.getProperty(ItemProperty.ISVERSIONED);
-      return (property != null && "1".equals(property.getValue()));
+      String property = file.getVersionId();
+      //TODO
+      return (property != null && "1".equals(property));
    }
 }

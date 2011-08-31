@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -29,13 +31,12 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -58,8 +59,8 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
 
    private Item selectedItem;
 
-   private String entryPoint;
-
+   private VirtualFileSystemInfo vfsInfo;
+   
    public RenameItemCommand()
    {
       super(ID);
@@ -113,7 +114,7 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
          return;
       }
 
-      if (selectedItem.getHref().equals(entryPoint))
+      if (selectedItem.getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
       }
@@ -125,7 +126,7 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      vfsInfo = event.getVfsInfo();
       if (event.getEntryPoint() != null)
       {
          setVisible(true);

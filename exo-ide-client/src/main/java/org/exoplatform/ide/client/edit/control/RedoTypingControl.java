@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -28,9 +30,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
-import org.exoplatform.ide.client.framework.vfs.Version;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -67,7 +66,8 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || (event.getFile() instanceof Version))
+      //TODO version
+      if (event.getFile() == null /*|| (event.getFile() instanceof Version)*/)
       {
          setVisible(false);
          setEnabled(false);

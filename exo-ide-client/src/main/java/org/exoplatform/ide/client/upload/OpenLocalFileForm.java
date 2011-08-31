@@ -22,7 +22,8 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -42,9 +43,9 @@ public class OpenLocalFileForm extends UploadFileForm implements OpenLocalFilePr
    
    private static final String FILE_TO_OPEN = IDE.UPLOAD_CONSTANT.fileToOpen();
    
-   public OpenLocalFileForm(HandlerManager eventBus, List<Item> selectedItems, String path, IDEConfiguration applicationConfiguration)
+   public OpenLocalFileForm(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder, IDEConfiguration applicationConfiguration)
    {
-      super(eventBus, selectedItems, path, applicationConfiguration);
+      super(eventBus, selectedItems, folder, applicationConfiguration);
    }
    
    @Override
@@ -56,9 +57,9 @@ public class OpenLocalFileForm extends UploadFileForm implements OpenLocalFilePr
    }
    
    @Override
-   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder)
    {
-      return new OpenLocalFilePresenter(eventBus, selectedItems, path);
+      return new OpenLocalFilePresenter(eventBus, selectedItems, folder);
    }
       
    @Override

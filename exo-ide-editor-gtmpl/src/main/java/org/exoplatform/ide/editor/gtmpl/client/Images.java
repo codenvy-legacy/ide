@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.editor.gtmpl.client;
 
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.core.client.GWT;
+
+import com.google.gwt.resources.client.ClientBundle;
+
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
@@ -25,9 +31,14 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  * @version $Id: Images Mar 11, 2011 11:10:10 AM evgen $
  *
  */
-public interface Images
+public interface Images extends ClientBundle
 {
- public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
+   Images INSTANCE = GWT.create(Images.class);
+
+   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
+
+   static final String GROOVY_TEMPLATE = IMAGE_URL + "gtmpl.png";
    
- static final String GROOVY_TEMPLATE = IMAGE_URL + "gtmpl.png";
+   @Source("org/exoplatform/ide/editor/gtmpl/public/images/gtmpl.png")
+   ImageResource groovyTemplate();
 }

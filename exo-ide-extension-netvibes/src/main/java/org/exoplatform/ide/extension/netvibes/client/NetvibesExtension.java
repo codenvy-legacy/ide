@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.netvibes.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -31,16 +34,14 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.netvibes.client.controls.DeployUwaWidgetControl;
 import org.exoplatform.ide.extension.netvibes.client.controls.ShowNetvibesPreviewControl;
 import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesEvent;
 import org.exoplatform.ide.extension.netvibes.client.event.PreviewNetvibesHandler;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetServiceImpl;
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.File;
 
 /**
  * Created by The eXo Platform SAS.
@@ -61,7 +62,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
    /**
     * Current opened file in editor
     */
-   private File activeFile;
+   private FileModel activeFile;
    
    private boolean previewOpened = false;
    
@@ -112,7 +113,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
          return;
      
       
-      String href = activeFile.getHref();
+      String href = activeFile.getLinkByRelation(File.REL_CONTENT).getHref();
       href = href.replace("jcr", "ide/netvibes");
       
       if (previewForm == null)

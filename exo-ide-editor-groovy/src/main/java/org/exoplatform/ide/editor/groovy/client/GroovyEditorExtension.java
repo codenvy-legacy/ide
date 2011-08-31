@@ -88,7 +88,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
       groovyCodeAssistant =
          new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.GROOVY, true,
+         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE.groovy(), true,
             new CodeMirrorConfiguration().
                setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
                setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
@@ -102,7 +102,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
 
 
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.GROOVY, true,          
+         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE.groovy(), true,          
             new CodeMirrorConfiguration().
                setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
                setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
@@ -151,7 +151,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         groovyCodeAssistant.setactiveFileHref(event.getFile().getHref());
+         groovyCodeAssistant.setactiveFileHref(event.getFile().getId());
    }
 
 }

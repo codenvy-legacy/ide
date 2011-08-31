@@ -28,10 +28,11 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -54,9 +55,9 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
     * @param selectedItems
     * @param path
     */
-   public OpenLocalFilePresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   public OpenLocalFilePresenter(HandlerManager eventBus, List<Item> selectedItems,FolderModel folder)
    {
-      super(eventBus, selectedItems, path);
+      super(eventBus, selectedItems, folder);
    }
    
    @Override
@@ -91,8 +92,8 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
       }
 
       Item item = selectedItems.get(0);
-      String href = item.getHref();
-      if (item instanceof File)
+      String href = item.getPath();
+      if (item instanceof FileModel)
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
@@ -148,12 +149,8 @@ public class OpenLocalFilePresenter extends UploadFilePresenter
       String fileName = display.getFileNameField().getValue();
 
       String mimeType = ((Display)display).getMimeType().getValue();
-      File submittedFile = new File(path + "/" + fileName);
-      submittedFile.setNewFile(true);
+      FileModel submittedFile = new FileModel(fileName, mimeType, submittedFileContent, folder);
       submittedFile.setContentChanged(true);
-      submittedFile.setContent(submittedFileContent);
-      submittedFile.setContentType(mimeType);
-      submittedFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(mimeType));
 
       eventBus.fireEvent(new OpenFileEvent(submittedFile));
    }

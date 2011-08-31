@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.editor.gadget.client;
 
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.core.client.GWT;
+
+import com.google.gwt.resources.client.ClientBundle;
+
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
@@ -25,9 +31,13 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
  * @version $Id: Images Mar 22, 2011 9:43:48 AM evgen $
  *
  */
-public interface Images
+public interface Images extends ClientBundle
 {
+   Images INSTANCE = GWT.create(Images.class);
    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
    
    public static final String GOOGLE_GADGET = IMAGE_URL +  "images-gadget/gadget.png";
+   
+   @Source("org/exoplatform/ide/editor/gadget/public/images/images-gadget/gadget.png")
+   ImageResource gadgetImage();
 }

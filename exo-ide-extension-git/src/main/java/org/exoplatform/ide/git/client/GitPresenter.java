@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.git.client;
 
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
 
 /**
  * Used as base for the most presenters, which work with Git.
@@ -84,7 +84,7 @@ public abstract class GitPresenter implements ItemsSelectedHandler
       }
 
       //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
+      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
          new AsyncRequestCallback<WorkDirResponse>()
          {
             @Override

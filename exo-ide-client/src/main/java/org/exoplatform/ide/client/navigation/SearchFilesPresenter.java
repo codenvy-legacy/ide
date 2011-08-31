@@ -18,7 +18,12 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,20 +38,15 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
 import org.exoplatform.ide.client.navigation.event.SearchFilesHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -121,62 +121,64 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private void setPath()
    {
-      String path;
-      if (selectedItems.size() == 0)
-      {
-         path = "/";
-      }
-      else
-      {
-         Item selectedItem = selectedItems.get(0);
-
-         String href = selectedItem.getHref();
-         if (selectedItem instanceof File)
-         {
-            href = href.substring(0, href.lastIndexOf("/") + 1);
-         }
-
-         path = href.substring(entryPoint.length() - 1);
-      }
-
-      display.getPathItem().setValue(path);
+    //TODO
+//      String path;
+//      if (selectedItems.size() == 0)
+//      {
+//         path = "/";
+//      }
+//      else
+//      {
+//         Item selectedItem = selectedItems.get(0);
+//
+//         String href = selectedItem.getHref();
+//         if (selectedItem instanceof File)
+//         {
+//            href = href.substring(0, href.lastIndexOf("/") + 1);
+//         }
+//
+//         path = href.substring(entryPoint.length() - 1);
+//      }
+//
+//      display.getPathItem().setValue(path);
    }
 
    private void doSearch()
    {
-      String content = display.getSearchContentItem().getValue();
-      String contentType = display.getMimeTypeItem().getValue();
-
-      Item item = selectedItems.get(0);
-
-      String path = item.getHref();
-      path = path.substring(entryPoint.length());
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/") + 1);
-      }
-
-      if (!"".equals(path) && !path.startsWith("/"))
-      {
-         path = "/" + path;
-      }
-
-      final Folder folder = new Folder(entryPoint);
-      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
-      {
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            eventBus.fireEvent(new SearchResultReceivedEvent(folder));
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
-         }
-      });
+      //TODO
+//      String content = display.getSearchContentItem().getValue();
+//      String contentType = display.getMimeTypeItem().getValue();
+//
+//      Item item = selectedItems.get(0);
+//
+//      String path = item.getHref();
+//      path = path.substring(entryPoint.length());
+//      if (item instanceof File)
+//      {
+//         path = path.substring(0, path.lastIndexOf("/") + 1);
+//      }
+//
+//      if (!"".equals(path) && !path.startsWith("/"))
+//      {
+//         path = "/" + path;
+//      }
+//
+//      final Folder folder = new Folder(entryPoint);
+//      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
+//      {
+//         @Override
+//         protected void onSuccess(Folder result)
+//         {
+//            eventBus.fireEvent(new SearchResultReceivedEvent(folder));
+//            IDE.getInstance().closeView(display.asView().getId());
+//         }
+//
+//         @Override
+//         protected void onFailure(Throwable exception)
+//         {
+//            eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+//         }
+//      });
    }
 
    private void fillMimeTypes()

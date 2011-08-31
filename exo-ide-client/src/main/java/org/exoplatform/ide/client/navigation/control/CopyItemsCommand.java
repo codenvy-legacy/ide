@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -25,11 +27,9 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS.

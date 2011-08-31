@@ -18,7 +18,17 @@
  */
 package org.exoplatform.ide.client.operation.uploadzip;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -35,21 +45,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -159,7 +160,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       }
 
       Item item = selectedItems.get(0);
-      String href = item.getHref();
+      String href = item.getPath();
       if (item instanceof File)
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
@@ -235,13 +236,15 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       IDE.getInstance().closeView(display.asView().getId());
 
       Item item = selectedItems.get(0);
-      String href = item.getHref();
-      if (item instanceof File)
+      FolderModel folder;
+      if(item instanceof FileModel)
       {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
+         folder = ((FileModel)item).getParent();
       }
-
-      Folder folder = new Folder(href);
+      else
+      {
+         folder = (FolderModel)item;
+      }
       IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder));
    }   
 

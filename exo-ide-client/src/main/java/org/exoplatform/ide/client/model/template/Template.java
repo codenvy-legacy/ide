@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import com.google.gwt.resources.client.ImageResource;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -129,6 +131,6 @@ public abstract class Template
       this.nodeName = nodeName;
    }
    
-   public abstract String getIcon();
+   public abstract ImageResource getIcon();
    
 }

@@ -28,9 +28,10 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.util.MimeTypeResolver;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,9 +72,9 @@ public class UploadFilePresenter extends UploadPresenter
     * @param selectedItems
     * @param path
     */
-   public UploadFilePresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   public UploadFilePresenter(HandlerManager eventBus, List<Item> selectedItems,FolderModel folder)
    {
-      super(eventBus, selectedItems, path);
+      super(eventBus, selectedItems, folder);
    }
 
    @Override
@@ -132,8 +133,8 @@ public class UploadFilePresenter extends UploadPresenter
       }
 
       Item item = selectedItems.get(0);
-      String href = item.getHref();
-      if (item instanceof File)
+      String href = item.getPath();
+      if (item instanceof FileModel)
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }

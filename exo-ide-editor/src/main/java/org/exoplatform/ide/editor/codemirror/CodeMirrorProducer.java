@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.resources.client.ImageResource;
 
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -43,13 +44,13 @@ public class CodeMirrorProducer extends EditorProducer
     * @param ext
     * @param isDefault
     */
-   public CodeMirrorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
+   public CodeMirrorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault)
    {
       super(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.MIME_TYPE, mimeType);
    }
    
-   public CodeMirrorProducer(String mimeType, String description, String ext, String icon, boolean isDefault, CodeMirrorConfiguration configuration)
+   public CodeMirrorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault, CodeMirrorConfiguration configuration)
    {
       this(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.CONFIGURATION, configuration);

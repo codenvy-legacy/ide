@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.edit;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -43,7 +42,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -87,7 +86,7 @@ public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLi
 
    private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public GoToLinePresenter(HandlerManager eventBus)
    {

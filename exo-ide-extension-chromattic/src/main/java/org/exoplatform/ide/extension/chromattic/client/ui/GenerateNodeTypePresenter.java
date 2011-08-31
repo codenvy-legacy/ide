@@ -30,13 +30,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.GenerateNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Presenter for generating new node type definition view.
@@ -92,7 +92,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
    /**
     * Active file in editor.
     */
-   private File activeFile;
+   private FileModel activeFile;
 
    /**
     * @param eventBus handler manager
@@ -162,7 +162,7 @@ public class GenerateNodeTypePresenter implements GenerateNodeTypeHandler, Edito
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat,
+      ChrommaticService.getInstance().generateNodeType(activeFile.getId(), nodeTypeFormat,
          new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
             @Override

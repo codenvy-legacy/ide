@@ -81,7 +81,7 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
 
       setVisible(true);
 
-      if (event.getFile().isNewFile())
+      if (!event.getFile().isPersisted())
       {
          setEnabled(false);
       }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,8 +31,6 @@ import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,9 +41,9 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    PasteItemsCompleteHandler, ItemsSelectedHandler
 {
    public static final String ID = "Edit/Paste Item(s)";
-   
+
    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsTitleControl();
-   
+
    private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
 
    private boolean pastePrepared = false;
@@ -56,7 +56,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
       setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
       setEvent(new PasteItemsEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsCommand#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -85,6 +85,7 @@ public class PasteItemsCommand extends MultipleSelectionItemsCommand implements 
    {
       if (event.getSelectedItems().size() == 1)
       {
+
          updateEnabling();
       }
       else

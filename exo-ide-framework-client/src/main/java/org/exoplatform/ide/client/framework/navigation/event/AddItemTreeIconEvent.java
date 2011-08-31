@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.resources.client.ImageResource;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.Map;
 

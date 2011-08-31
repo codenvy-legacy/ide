@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.client.debug;
 
-import java.util.List;
-
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
-
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,6 +26,16 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * This class sets hidden values to DOM which allows to do faster time passing the test.
@@ -121,7 +121,7 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
       }
       else
       {
-         editorActiveFile.getElement().setInnerText(event.getFile().getHref());
+         editorActiveFile.getElement().setInnerText(event.getFile().getPath());
       }
    }
 
@@ -141,7 +141,7 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
       }
       else
       {
-         selectedFile.getElement().setInnerText(selectedItems.get(0).getHref());
+         selectedFile.getElement().setInnerText(selectedItems.get(0).getPath());
       }
    }
 

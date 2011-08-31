@@ -29,10 +29,11 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -49,17 +50,13 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.navigation.event.RenameItemHander;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -122,11 +119,11 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private List<Item> selectedItems;
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
    
-   private Item renamedItem;
+   private FileModel renamedFile;
 
    private String sourceHref;
    
@@ -148,7 +145,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
       display.enableRenameButton(false);
 
-      itemBaseHref = selectedItems.get(0).getWorkDir();
+//      itemBaseHref = selectedItems.get(0).getWorkDir();
 
       display.getItemNameField().setValue(selectedItems.get(0).getName());
       display.getItemNameField().addValueChangeHandler(new ValueChangeHandler<String>()
@@ -188,7 +185,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
       });
 
-      File file = (File)selectedItems.get(0);
+      FileModel file = (FileModel)selectedItems.get(0);
 
       List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
       Collections.sort(mimeTypes);
@@ -197,7 +194,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
       display.setMimeTypes(valueMap);
 
-      display.setDefaultMimeType(file.getContentType());
+      display.setDefaultMimeType(file.getMimeType());
 
       display.getMimeType().addValueChangeHandler(new ValueChangeHandler<String>()
       {
@@ -206,7 +203,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
             display.enableRenameButton(wasItemPropertiesChanged());
          }
       });
-      if (openedFiles.containsKey(file.getHref()))
+      if (openedFiles.containsKey(file.getId()))
       {
          display.disableMimeTypeSelect();
          display.addLabel(CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE);
@@ -218,7 +215,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private boolean wasItemPropertiesChanged()
    {
-      File file = (File)selectedItems.get(0);
+      FileModel file = (FileModel)selectedItems.get(0);
 
       //if name is not set
       final String newName = display.getItemNameField().getValue();
@@ -237,7 +234,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       }
 
       //if file name was changed or file mime-type was changed, than return true;
-      if (!file.getName().equals(newName) || !file.getContentType().equals(newMimeType))
+      if (!file.getName().equals(newName) || !file.getMimeType().equals(newMimeType))
       {
          return true;
       }
@@ -246,131 +243,137 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    protected void rename()
    {
-      File file = (File)selectedItems.get(0);
-      final String destination = getDestination(file);
+      FileModel file = (FileModel)selectedItems.get(0);
+      final String newName = display.getItemNameField().getValue();
 
       String newMimeType = display.getMimeType().getValue();
       if (newMimeType != null && newMimeType.length() > 0)
       {
-         file.setContentType(newMimeType);
-         VirtualFileSystem.getInstance().getContent(file, new FileCallback()
-         {
-            @Override
-            protected void onSuccess(File result)
-            {
-               fileContentReceived(result);
-            }
-         });
-         return;
+         file.setMimeType(newMimeType);         
       }
-      moveItem(file, destination);
-   }
-
-   private String getDestination(Item item)
-   {
-      return itemBaseHref + URL.encodePathSegment(display.getItemNameField().getValue());
+      moveItem(file, newName, newMimeType);
    }
 
    private void completeMove()
    {
-      String href = sourceHref;
-      if (href.endsWith("/"))
-      {
-         href = href.substring(0, href.length() - 1);
-      }
-
-      href = href.substring(0, href.lastIndexOf("/") + 1);
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
+      eventBus.fireEvent(new RefreshBrowserEvent(renamedFile.getParent(), renamedFile));
 
       closeView();
    }
 
-   public void fileContentReceived(File file)
-   {
-      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
-      {
-         @Override
-         protected void onSuccess(FileData result)
-         {
-            final Item item = selectedItems.get(0);
-
-            final String destination = getDestination(item);
-
-            if (!item.getHref().equals(destination))
-            {
-               moveItem(item, destination);
-            }
-            else
-            {
-               String href = item.getHref();
-               if (href.endsWith("/"))
-               {
-                  href = href.substring(0, href.length() - 1);
-               }
-
-               href = href.substring(0, href.lastIndexOf("/") + 1);
-               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
-               closeView();
-            }
-         }
-      });
-   }
+//   public void fileContentReceived(File file)
+//   {
+//      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
+//      {
+//         @Override
+//         protected void onSuccess(FileData result)
+//         {
+//            final Item item = selectedItems.get(0);
+//
+//            final String destination = getDestination(item);
+//
+//            if (!item.getHref().equals(destination))
+//            {
+//               moveItem(item, destination);
+//            }
+//            else
+//            {
+//               String href = item.getHref();
+//               if (href.endsWith("/"))
+//               {
+//                  href = href.substring(0, href.length() - 1);
+//               }
+//
+//               href = href.substring(0, href.lastIndexOf("/") + 1);
+//               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
+//               closeView();
+//            }
+//         }
+//      });
+//   }
 
    /**
     * Mote item.
     * 
-    * @param item - the item to move (with old properties: href and name)
-    * @param destination - the location of new item (must be encoded)
+    * @param file - the file to rename (with old properties: href and name)
+    * @param newName - the new name of file
     */
-   private void moveItem(Item item, String destination)
+   private void moveItem(final FileModel file, final String newName, String newMimeType)
    {
-      MoveItemCallback moveItemCallback = new MoveItemCallback(eventBus)
+      try
       {
-         @Override
-         protected void onSuccess(MoveItemData result)
-         {
-            itemMoved(result.getItem(), result.getOldHref());
-         }
-      };
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), moveItemCallback);
+         VirtualFileSystem.getInstance().rename(file, newMimeType, newName, lockTokens.get(file.getId()), new AsyncRequestCallback<String>()
+            {
+               
+               @Override
+               protected void onSuccess(String result)
+               {
+                  itemMoved(file, result);
+               }
+               
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e,
+            "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
+      }
+
    }
 
    /**
-    * @param item - moved item
-    * @param oldItemHref - href of old item
+    * @param item - that was moved
+    * @param newFileId - id of moved file
     */
-   private void itemMoved(Item item, final String oldItemHref)
+   private void itemMoved(final FileModel item, final String newFileId)
    {
-      renamedItem = item;
-      sourceHref = oldItemHref;
+      renamedFile = item;
+      sourceHref = newFileId;
 
-      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
+      try
       {
-         @Override
-         protected void onSuccess(Item result)
+         VirtualFileSystem.getInstance().getItem(newFileId, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(new FileModel()))
          {
-            renamedItem = result;
 
-            File file = (File)result;
-
-            if (openedFiles.containsKey(oldItemHref))
+            @Override
+            protected void onSuccess(FileModel result)
             {
-               File openedFile = openedFiles.get(oldItemHref);
-               openedFile.setHref(file.getHref());
-               openedFiles.remove(oldItemHref);
-               openedFiles.put(openedFile.getHref(), file);
+               renamedFile = (FileModel)result;
 
-               eventBus.fireEvent(new EditorReplaceFileEvent(new File(oldItemHref), file));
+               FileModel file = (FileModel)result;
+               file.setContent(item.getContent());
+
+               if (openedFiles.containsKey(item.getId()))
+               {
+                  openedFiles.remove(item.getId());
+                  openedFiles.put(file.getId(), file);
+
+                  eventBus.fireEvent(new EditorReplaceFileEvent(item, file));
+               }
+
+               completeMove();
             }
 
-            if (result.getHref().equals(renamedItem.getHref()) && openedFiles.get(renamedItem.getHref()) != null)
+            @Override
+            protected void onFailure(Throwable exception)
             {
-               openedFiles.get(renamedItem.getHref()).getProperties().clear();
-               openedFiles.get(renamedItem.getHref()).getProperties().addAll(result.getProperties());
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
-            completeMove();
-         }
-      });
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
 
    }
 
@@ -385,7 +388,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          eventBus.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
          return;
       }
-      if (selectedItems.get(0) instanceof File)
+      if (selectedItems.get(0) instanceof FileModel)
          openView();
    }
 

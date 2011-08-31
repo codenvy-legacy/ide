@@ -58,4 +58,7 @@ public interface JavaScriptClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/editor/javascript/client/images/tag.png")
    ImageResource tag();
+   
+   @Source("org/exoplatform/ide/editor/javascript/public/images/javascript/javascript.gif")
+   ImageResource javaScript();
 }

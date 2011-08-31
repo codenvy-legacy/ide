@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -38,12 +37,12 @@ import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -70,7 +69,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
    /**
     * Currently active file
     */
-   private File activeFile;
+   private FileModel activeFile;
 
    /**
     * Lock tokens
@@ -132,22 +131,23 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
          return;
       }
 
-      if (activeFile.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      if (activeFile.isLocked())
       {
-         if (!lockTokens.containsKey(activeFile.getHref()))
+         if (!lockTokens.containsKey(activeFile.getId()))
          {
             setEnabled(false);
             return;
          }
       }
 
-      if (activeFile.isNewFile())
+      if (!activeFile.isPersisted())
       {
          setEnabled(false);
       }
       else
       {
-         if (activeFile.isContentChanged() || activeFile.isPropertiesChanged())
+         //TODO isContentChanged
+         if (activeFile.isContentChanged() /*|| activeFile.isPropertiesChanged()*/)
          {
             setEnabled(true);
          }
@@ -163,26 +163,27 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
     */
    public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
    {
-      if (!(event.getItem() instanceof File))
-      {
-         return;
-      }
-
-      if ((File)event.getItem() != activeFile)
-      {
-         return;
-      }
-
-      File file = (File)event.getItem();
-
-      if (file.isContentChanged())
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      //TODO
+//      if (!(event.getItem() instanceof FileModel))
+//      {
+//         return;
+//      }
+//
+//      if ((FileModel)event.getItem() != activeFile)
+//      {
+//         return;
+//      }
+//
+//      File file = (File)event.getItem();
+//
+//      if (file.isContentChanged())
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
+//         setEnabled(false);
+//      }
    }
 
    /**
@@ -190,15 +191,15 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
     */
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      if (event.getFile().getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      if (event.getFile().isLocked())
       {
-         if (!lockTokens.containsKey(event.getFile().getHref()))
+         if (!lockTokens.containsKey(event.getFile().getId()))
          {
             setEnabled(false);
             return;
          }
       }
-      if (event.getFile().isNewFile())
+      if (!event.getFile().isPersisted())
       {
          setEnabled(false);
       }
@@ -230,15 +231,15 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
       {
          return;
       }
-
-      if (event.getFile().isPropertiesChanged())
-      {
-         setEnabled(true);
-      }
-      else
-      {
+      //TODO
+//      if (event.getFile().isPropertiesChanged())
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
          setEnabled(false);
-      }
+//      }
    }
 
 }

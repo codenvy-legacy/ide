@@ -59,8 +59,7 @@ public class ShellLinkUpdater implements ItemsSelectedHandler, ConfigurationRece
          return;
       }
       
-      String path = event.getSelectedItems().get(0).getHref();
-      path = path.substring(ideConfiguration.getDefaultEntryPoint().length() - 1);
+      String path = event.getSelectedItems().get(0).getId();
       Element ae = DOM.getElementById("shell-link");
       if(ae == null) {
          return;

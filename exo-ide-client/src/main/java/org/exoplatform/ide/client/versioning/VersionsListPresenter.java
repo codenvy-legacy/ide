@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.versioning.event.OpenVersionEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionListEvent;
 import org.exoplatform.ide.client.versioning.event.ShowVersionListHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
    
    private static final String TITLE = IDE.VERSIONS_CONSTANT.viewVersionsTitle();
    
-   private File activeFile;
+   private FileModel activeFile;
 
    private HandlerManager eventBus;
 
@@ -183,32 +184,33 @@ public class VersionsListPresenter implements ShowVersionListHandler, EditorActi
    
    private void getVersionHistory()
    {
-      if (activeFile != null && !(activeFile instanceof Version))
+      //TODO
+      if (activeFile != null && activeFile.isVersion())
       {
-         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
-         {
-            @Override
-            protected void onSuccess(VersionsData result)
-            {
-               if (result.getVersions() != null && result.getVersions().size() > 0)
-               {
-                  versionHistory = result.getVersions();
-                  openView();
-               }
-               else
-               {
-                  Dialogs.getInstance().showInfo(
-                     IDE.IDE_LOCALIZATION_MESSAGES.showVersionListItemHasNoVersions(result.getItem().getName()));
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
-               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));               
-            }
-         });
+//         VirtualFileSystem.getInstance().getVersions(activeFile, new VersionsCallback()
+//         {
+//            @Override
+//            protected void onSuccess(VersionsData result)
+//            {
+//               if (result.getVersions() != null && result.getVersions().size() > 0)
+//               {
+//                  versionHistory = result.getVersions();
+//                  openView();
+//               }
+//               else
+//               {
+//                  Dialogs.getInstance().showInfo(
+//                     IDE.IDE_LOCALIZATION_MESSAGES.showVersionListItemHasNoVersions(result.getItem().getName()));
+//               }
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               eventBus.fireEvent(new ExceptionThrownEvent(RECEIVE_VERSIONS_FAILURE));
+//               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));               
+//            }
+//         });
       }
       else
       {

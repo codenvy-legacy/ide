@@ -18,25 +18,29 @@
  */
 package org.exoplatform.ide.client.properties;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 
-import org.exoplatform.gwtframework.commons.webdav.Property;
-import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.PropertyTitle;
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
+
+import org.exoplatform.gwtframework.commons.xml.QName;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Property;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -50,12 +54,12 @@ public class PropertiesView extends ViewImpl implements
 {
 
    private static final String ID = "ideFilePropertiesView";
-   
+
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.propertiesTitle();
-   
+
    private static final String NO_PROPERTIES_MSG = IDE.IDE_LOCALIZATION_CONSTANT.propertiesNoPropertiesMsg();
-   
-   private Grid propertiesGrid;   
+
+   private Grid propertiesGrid;
 
    public PropertiesView()
    {
@@ -72,79 +76,83 @@ public class PropertiesView extends ViewImpl implements
    }
 
    @Override
-   public void showProperties(File file)
+   public void showProperties(FileModel file)
    {
-      if (file.getProperties() == null || file.getProperties().size() == 0)
+      Map<String, String> properties = new HashMap<String, String>();
+      properties.put("Name", file.getName());
+      properties.put("Path", file.getPath());
+      properties.put("Mime Type", file.getMimeType());
+      properties.put("Created",
+         DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getCreationDate())));
+      properties.put("Last modified",
+         DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(file.getLastModificationDate())));
+      properties.put("Content lenght", "" + file.getLength());
+
+      if (file.getProperties() != null && !file.getProperties().isEmpty())
       {
-         propertiesGrid.resize(1, 1);
-         propertiesGrid.setText(0, 0, NO_PROPERTIES_MSG);
-         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(0, 0), "textAlign", "center");
+         properties.putAll(getVisibleProperties(file.getProperties()));
       }
-      else
+
+      propertiesGrid.resize(properties.size() + 1, 2);
+
+      Iterator<String> iterator = properties.keySet().iterator();
+      int row = 0;
+      while (iterator.hasNext())
       {
-         Map<String, String> properties = getVisibleProperties(file.getProperties());
+         String key = iterator.next();
+         String value = properties.get(key);
 
-         propertiesGrid.resize(properties.size() + 1, 2);
+         propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
+         propertiesGrid.setHTML(row, 1, value);
 
-         Iterator<String> iterator = properties.keySet().iterator();
-         int row = 0;
-         while (iterator.hasNext())
-         {
-            String key = iterator.next();
-            String value = properties.get(key);
+         //add id to get access to field's text from Selenium tests 
+         DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
 
-            propertiesGrid.setHTML(row, 0, "<b>" + key + ":&nbsp;&nbsp;</b>");
-            propertiesGrid.setHTML(row, 1, value);
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
+         DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");
+         DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "nowrap", "nowrap");
+         DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "nowrap", "nowrap");
 
-            //add id to get access to field's text from Selenium tests 
-            DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "propertyName", key);
-
-            DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "textAlign", "right");
-            DOM.setStyleAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "width", "100%");
-            DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 0), "nowrap", "nowrap");
-            DOM.setElementAttribute(propertiesGrid.getCellFormatter().getElement(row, 1), "nowrap", "nowrap");
-
-            row++;
-         }
-
-         propertiesGrid.setHTML(row, 0, "<div style=\"width:1px; height:1px;\"></div>");
-         propertiesGrid.setHTML(row, 1, "<div style=\"width:1px; height:1px;\"></div>");
-         DOM.setStyleAttribute(propertiesGrid.getRowFormatter().getElement(row), "height", "100%");
+         row++;
       }
+
+      propertiesGrid.setHTML(row, 0, "<div style=\"width:1px; height:1px;\"></div>");
+      propertiesGrid.setHTML(row, 1, "<div style=\"width:1px; height:1px;\"></div>");
+      DOM.setStyleAttribute(propertiesGrid.getRowFormatter().getElement(row), "height", "100%");
    }
 
    public Map<String, String> getVisibleProperties(Collection<Property> properties)
    {
       Map<String, String> propertiesMap = new LinkedHashMap<String, String>();
 
-      for (Property property : properties)
+      for (Property<?> property : properties)
       {
-         QName propertyName = property.getName();
+         String propertyName = property.getName();
 
-         if (ItemProperty.JCR_CONTENT.equals(propertyName))
-         {
-            for (Property p : property.getChildProperties())
-            {
-               if (!PropertyTitle.containsTitleFor(p.getName()))
-               {
-                  continue;
-               }
-
-               String title = PropertyTitle.getPropertyTitle(p.getName());
-               propertiesMap.put(title, p.getValue());
-            }
-
-         }
-         else
-         {
-            if (!PropertyTitle.containsTitleFor(propertyName))
-            {
-               continue;
-            }
-
-            String title = PropertyTitle.getPropertyTitle(propertyName);
-            propertiesMap.put(title, property.getValue());
-         }
+         //         if (ItemProperty.JCR_CONTENT.equals(propertyName))
+         //         {
+         //            for (Property p : property.getChildProperties())
+         //            {
+         //               if (!PropertyTitle.containsTitleFor(p.getName()))
+         //               {
+         //                  continue;
+         //               }
+         //
+         //               String title = PropertyTitle.getPropertyTitle(p.getName());
+         //               propertiesMap.put(title, p.getValue());
+         //            }
+         //
+         //         }
+         //         else
+         //         {
+         //            if (!PropertyTitle.containsTitleFor(propertyName))
+         //            {
+         //               continue;
+         //            }
+         //
+         //         }
+         //         String title = PropertyTitle.getPropertyTitle(propertyName);
+         propertiesMap.put(propertyName, property.getValue().get(0).toString());
       }
 
       return propertiesMap;

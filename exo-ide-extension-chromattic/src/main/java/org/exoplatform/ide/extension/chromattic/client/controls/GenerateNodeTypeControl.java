@@ -68,9 +68,9 @@ public class GenerateNodeTypeControl extends SimpleControl implements IDEControl
          return;
       }
       //Visible if file MIME type is "application/x-chromattic+groovy":
-      boolean isVisible = MimeType.CHROMATTIC_DATA_OBJECT.equals(event.getFile().getContentType());
+      boolean isVisible = MimeType.CHROMATTIC_DATA_OBJECT.equals(event.getFile().getMimeType());
       //Enabled if file is saved:
-      boolean isEnabled = (isVisible && !event.getFile().isNewFile());
+      boolean isEnabled = (isVisible && event.getFile().isPersisted());
       setVisible(isVisible);
       setEnabled(isEnabled);
    }

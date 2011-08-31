@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.editor;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.model.util.ImageUtil;
@@ -48,7 +48,7 @@ public class EditorFactory
    {
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",         
-         Images.FileTypes.TXT, true, new CodeMirrorConfiguration()));
+         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
 
       //To initialize client bundle 
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();

@@ -94,4 +94,7 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/java/client/images/groovy-tag.png")
    ImageResource groovyTagItem();
+   
+   @Source("org/exoplatform/ide/editor/java/public/images/java.png")
+   ImageResource java();
 }

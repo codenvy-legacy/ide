@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
@@ -38,19 +34,23 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent;
-import org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemMovedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemMovedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.File;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -60,13 +60,12 @@ import com.google.gwt.event.shared.HandlerManager;
 
 public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler, EditorFileClosedHandler,
    EditorActiveFileChangedHandler, ApplicationSettingsReceivedHandler, EntryPointChangedHandler,
-   EditorReplaceFileHandler, ItemLockResultReceivedHandler, ItemUnlockedHandler, ItemDeletedHandler,
-   MoveCompleteHandler
+   EditorReplaceFileHandler, ItemLockedHandler, ItemUnlockedHandler, ItemDeletedHandler, ItemMovedHandler
 {
 
    private HandlerManager eventBus;
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private ApplicationSettings applicationSettings;
 
@@ -83,10 +82,10 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
       eventBus.addHandler(EditorReplaceFileEvent.TYPE, this);
-      eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this);
+      eventBus.addHandler(ItemLockedEvent.TYPE, this);
       eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
-      eventBus.addHandler(MoveCompleteEvent.TYPE, this);
+      eventBus.addHandler(ItemMovedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -126,8 +125,8 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       {
          String fileName = openedFilesIter.next();
 
-         File file = openedFiles.get(fileName);
-         if (file.isNewFile())
+         FileModel file = openedFiles.get(fileName);
+         if (!file.isPersisted())
          {
             continue;
          }
@@ -139,12 +138,12 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }
 
-   private void storeActiveFile(File file)
+   private void storeActiveFile(FileModel file)
    {
       String activeFile = "";
       if (null != file)
       {
-         activeFile = file.getHref();
+         activeFile = file.getPath();
       }
 
       applicationSettings.setValue("active-file", activeFile, Store.COOKIES);
@@ -169,27 +168,6 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
-    */
-   public void onItemUnlocked(ItemUnlockedEvent event)
-   {
-      lockTokens.remove(event.getItem().getHref());
-      storeLockTokens();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
-    */
-   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
-   {
-      if (event.getException() == null)
-      {
-         lockTokens.put(event.getItem().getHref(), event.getLockToken().getLockToken());
-         storeLockTokens();
-      }
-   }
-
-   /**
     * Store Lock Tokens 
     */
    private void storeLockTokens()
@@ -199,55 +177,130 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent)
+    * @see org.exoplatform.ide.vfs.client.event.ItemMovedHandler#onItemMoved(org.exoplatform.ide.vfs.client.event.ItemMovedEvent)
     */
+   @Override
+   public void onItemMoved(ItemMovedEvent event)
+   {
+      //TODO
+//      if (lockTokens.containsKey(event.getSourceHref()))
+//      {
+//         String lock = lockTokens.get(event.getSourceHref());
+//         lockTokens.remove(event.getSourceHref());
+//         lockTokens.put(event.getItem().getHref(), lock);
+//         storeLockTokens();
+//      }
+//      else if (event.getItem() instanceof Folder)
+//      {
+//         String sourceHref = event.getSourceHref();
+//         List<String> keys = new ArrayList<String>();
+//         for (String k : lockTokens.keySet())
+//         {
+//            keys.add(k);
+//         }
+//
+//         for (String key : keys)
+//         {
+//            if (key.startsWith(sourceHref))
+//            {
+//               String lock = lockTokens.get(key);
+//               String name = key.substring(sourceHref.length());
+//               String path = event.getItem().getHref();
+//               if (!path.endsWith("/"))
+//               {
+//                  path += "/";
+//               }
+//               lockTokens.remove(key);
+//               lockTokens.put(path + name, lock);
+//               storeLockTokens();
+//            }
+//         }
+//      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.client.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.vfs.client.event.ItemDeletedEvent)
+    */
+   @Override
    public void onItemDeleted(ItemDeletedEvent event)
    {
       if (event.getItem() instanceof File)
       {
-         lockTokens.remove(event.getItem().getHref());
-         storeLockTokens();
+         if (lockTokens.containsKey(event.getItem().getId()))
+         {
+            lockTokens.remove(event.getItem().getId());
+            storeLockTokens();
+         }
       }
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent)
+    * @see org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent)
     */
-   public void onMoveComplete(MoveCompleteEvent event)
+   @Override
+   public void onItemUnlocked(ItemUnlockedEvent event)
    {
-      if (lockTokens.containsKey(event.getSourceHref()))
-      {
-         String lock = lockTokens.get(event.getSourceHref());
-         lockTokens.remove(event.getSourceHref());
-         lockTokens.put(event.getItem().getHref(), lock);
-         storeLockTokens();
-      }
-      else if (event.getItem() instanceof Folder)
-      {
-         String sourceHref = event.getSourceHref();
-         List<String> keys = new ArrayList<String>();
-         for (String k : lockTokens.keySet())
-         {
-            keys.add(k);
-         }
+      lockTokens.remove(event.getItem().getId());
+      storeLockTokens();
 
-         for (String key : keys)
-         {
-            if (key.startsWith(sourceHref))
-            {
-               String lock = lockTokens.get(key);
-               String name = key.substring(sourceHref.length());
-               String path = event.getItem().getHref();
-               if (!path.endsWith("/"))
-               {
-                  path += "/";
-               }
-               lockTokens.remove(key);
-               lockTokens.put(path + name, lock);
-               storeLockTokens();
-            }
-         }
-      }
    }
+
+   /**
+    * @see org.exoplatform.ide.vfs.client.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.vfs.client.event.ItemLockedEvent)
+    */
+   @Override
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      lockTokens.put(event.getItem().getId(), event.getLockToken().getLockToken());
+      storeLockTokens();
+   }
+
+   //   /**
+   //    * @see org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler#onItemDeleted(org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent)
+   //    */
+   //   public void onItemDeleted(ItemDeletedEvent event)
+   //   {
+
+   //   }
+
+   //   /**
+   //    * @see org.exoplatform.ide.client.framework.vfs.event.MoveCompleteHandler#onMoveComplete(org.exoplatform.ide.client.framework.vfs.event.MoveCompleteEvent)
+   //    */
+   //   public void onMoveComplete(MoveCompleteEvent event)
+   //   {
+   //      if (lockTokens.containsKey(event.getSourceHref()))
+   //      {
+   //         String lock = lockTokens.get(event.getSourceHref());
+   //         lockTokens.remove(event.getSourceHref());
+   //         lockTokens.put(event.getItem().getHref(), lock);
+   //         storeLockTokens();
+   //      }
+   //      else if (event.getItem() instanceof Folder)
+   //      {
+   //         String sourceHref = event.getSourceHref();
+   //         List<String> keys = new ArrayList<String>();
+   //         for (String k : lockTokens.keySet())
+   //         {
+   //            keys.add(k);
+   //         }
+   //
+   //         for (String key : keys)
+   //         {
+   //            if (key.startsWith(sourceHref))
+   //            {
+   //               String lock = lockTokens.get(key);
+   //               String name = key.substring(sourceHref.length());
+   //               String path = event.getItem().getHref();
+   //               if (!path.endsWith("/"))
+   //               {
+   //                  path += "/";
+   //               }
+   //               lockTokens.remove(key);
+   //               lockTokens.put(path + name, lock);
+   //               storeLockTokens();
+   //            }
+   //         }
+   //      }
+   //   }
 
 }

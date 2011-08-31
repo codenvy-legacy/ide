@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.LockToken;
+
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -25,7 +30,58 @@ package org.exoplatform.ide.vfs.client.event;
  * @version $
  */
 
-public class ItemLockedEvent
+public class ItemLockedEvent extends GwtEvent<ItemLockedHandler>
 {
+
+   public static final GwtEvent.Type<ItemLockedHandler> TYPE = new Type<ItemLockedHandler>();
+
+   private LockToken lockToken;
+
+   private Item item;
+
+   /**
+    * @param lockToken
+    * @param item
+    */
+   public ItemLockedEvent(Item item, LockToken lockToken)
+   {
+      super();
+      this.lockToken = lockToken;
+      this.item = item;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemLockedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ItemLockedHandler handler)
+   {
+      handler.onItemLocked(this);
+   }
+
+   /**
+    * @return the lockToken
+    */
+   public LockToken getLockToken()
+   {
+      return lockToken;
+   }
+
+   /**
+    * @return the item
+    */
+   public Item getItem()
+   {
+      return item;
+   }
 
 }

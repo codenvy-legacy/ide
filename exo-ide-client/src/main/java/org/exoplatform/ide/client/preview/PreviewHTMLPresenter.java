@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.preview;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -26,10 +28,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.File;
 
 /**
  * Created by The eXo Platform SAS .
@@ -76,7 +76,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
     */
    private Display display;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public PreviewHTMLPresenter()
    {
@@ -112,9 +112,9 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          return;
       }
 
-      if (MimeType.TEXT_HTML.equals(activeFile.getContentType()))
+      if (MimeType.TEXT_HTML.equals(activeFile.getMimeType()))
       {
-         if (activeFile.isNewFile())
+         if (!activeFile.isPersisted())
          {
             display.setPreviewAvailable(false);
             display.setMessage(PREVIEW_NOT_AVAILABLE_SAVE_FILE);
@@ -122,7 +122,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          else
          {
             display.setPreviewAvailable(true);
-            display.showPreview(activeFile.getHref());
+            display.showPreview(activeFile.getLinkByRelation(File.REL_CONTENT).getHref());
          }
       }
       else

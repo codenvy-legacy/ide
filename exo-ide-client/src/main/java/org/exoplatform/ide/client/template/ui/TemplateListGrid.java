@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
-import com.google.gwt.cell.client.ImageCell;
+import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
@@ -71,7 +72,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
     * @param template
     * @return String
     */
-   private String getItemIcon(Template template)
+   private ImageResource getItemIcon(Template template)
    {
       if (template instanceof FileTemplate)
       {
@@ -79,7 +80,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       }
       else if (template instanceof ProjectTemplate)
       {
-         return Images.FileTypes.FOLDER;
+         return IDEImageBundle.INSTANCE.folder();
       }
       
       return null;
@@ -91,12 +92,12 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    private void initColumns()
    {
       //--- icon column -----
-      ImageCell iconCell = new ImageCell();
-      Column<T, String> iconColumn = new Column<T, String>(iconCell)
+      ImageResourceCell iconCell = new ImageResourceCell();
+      Column<T, ImageResource> iconColumn = new Column<T, ImageResource>(iconCell)
       {
 
          @Override
-         public String getValue(T item)
+         public ImageResource getValue(T item)
          {
             return getItemIcon(item);
             

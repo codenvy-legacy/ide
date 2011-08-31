@@ -61,7 +61,7 @@ public class XmlEditor extends Extension
       
       CodeAssistant xmlAssistant = new XmlCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_XML, CONSTANT.xmlEditor(), "xml",
-         Images.XML, true, 
+         RESOURCES.xml(), true, 
          new CodeMirrorConfiguration().
             setGenericParsers("['parsexml.js', 'tokenize.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").
@@ -71,7 +71,7 @@ public class XmlEditor extends Extension
       ));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_XML, CONSTANT.xmlEditor(), "xml",
-         Images.XML, true, 
+         RESOURCES.xml(), true, 
          new CodeMirrorConfiguration().
             setGenericParsers("['parsexml.js', 'tokenize.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css']").

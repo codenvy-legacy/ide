@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath;
 
-import org.exoplatform.ide.client.framework.vfs.Folder;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * Bean that represents workspace.
@@ -27,15 +27,15 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
  * @version $Id: Jan 10, 2011 $
  *
  */
-public class Workspace extends Folder
+public class Workspace extends FolderModel
 {
 
    /**
     * @param path
     */
-   public Workspace(String path)
+   public Workspace(String name, FolderModel parent)
    {
-      super(path);
+      super(name, parent);
    }
 
 }

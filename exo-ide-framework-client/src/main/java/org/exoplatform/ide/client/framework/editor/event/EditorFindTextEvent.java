@@ -36,18 +36,18 @@ public class EditorFindTextEvent extends GwtEvent<EditorFindTextHandler>
 
    private boolean caseSensitive;
 
-   private String path;
+   private String id;
 
    /**
     * @param findText text to find
     * @param caseSensitive is case sensitive
-    * @param path path to file
+    * @param id of file
     */
-   public EditorFindTextEvent(String findText, boolean caseSensitive, String path)
+   public EditorFindTextEvent(String findText, boolean caseSensitive, String id)
    {
       this.findText = findText;
       this.caseSensitive = caseSensitive;
-      this.path = path;
+      this.id = id;
    }
 
    /**
@@ -87,8 +87,8 @@ public class EditorFindTextEvent extends GwtEvent<EditorFindTextHandler>
    /**
     * @return the path
     */
-   public String getPath()
+   public String getFileId()
    {
-      return path;
+      return id;
    }
 }

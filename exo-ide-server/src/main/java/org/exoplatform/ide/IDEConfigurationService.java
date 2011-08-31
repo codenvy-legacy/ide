@@ -184,8 +184,7 @@ public class IDEConfigurationService
          String href =
             uriInfo
                .getBaseUriBuilder()
-               .segment(RepositoryDiscoveryService.getWebDavConetxt(), repository.getConfiguration().getName(),
-                  entryPoint, "/").build().toString();
+               .segment(RepositoryDiscoveryService.VFS_CONTEXT, entryPoint, "/").build().toString();
          result.put("defaultEntrypoint", href);
          result.put("discoverable", discoverable);
 

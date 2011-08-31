@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.framework.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,9 +32,9 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 
    public static final GwtEvent.Type<OpenFileHandler> TYPE = new GwtEvent.Type<OpenFileHandler>();
 
-   private File file;
+   private FileModel file;
    
-   private String href;
+   private String fileId;
    
    private String editor;
    
@@ -45,43 +45,43 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
     */
    private boolean lockFile = true;
 
-   public OpenFileEvent(File file)
+   public OpenFileEvent(FileModel file)
    {
       this.file = file;
    }
    
-   public OpenFileEvent(File file, boolean lockFile)
+   public OpenFileEvent(FileModel file, boolean lockFile)
    {
       this.file = file;
       this.lockFile = lockFile;
    }
    
-   public OpenFileEvent(File file, boolean lockFile, int ignoreErrorsCount)
+   public OpenFileEvent(FileModel file, boolean lockFile, int ignoreErrorsCount)
    {
       this.file = file;
       this.lockFile = lockFile;
       this.ignoreErrorsCount = ignoreErrorsCount;
    }
    
-   public OpenFileEvent(String href)
+   public OpenFileEvent(String fileId)
    {
-      this.href = href;
+      this.fileId = fileId;
    }
 
-   public OpenFileEvent(File file, String editor)
+   public OpenFileEvent(FileModel file, String editor)
    {
       this(file);
       this.editor = editor;
    }
    
-   public OpenFileEvent(File file, String editor, boolean lockFile)
+   public OpenFileEvent(FileModel file, String editor, boolean lockFile)
    {
       this(file);
       this.editor = editor;
       this.lockFile = lockFile;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }
@@ -91,9 +91,9 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
       return editor;
    }
    
-   public String getHref()
+   public String getFileId()
    {
-      return href;
+      return fileId;
    }
    
    public boolean isLockFile()

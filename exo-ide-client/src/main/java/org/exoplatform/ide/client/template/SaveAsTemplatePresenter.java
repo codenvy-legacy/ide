@@ -36,12 +36,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Presenter for Save as Template view.
@@ -88,7 +88,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
    
    private HandlerManager eventBus;
    
-   private File activeFile;
+   private FileModel activeFile;
    
    /**
     * Flag, to indicate, were templates moved from registry to plain text file on server.
@@ -143,7 +143,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
          }
       });
 
-      display.getTypeField().setValue(activeFile.getContentType());
+      display.getTypeField().setValue(activeFile.getMimeType());
       display.disableSaveButton();
 
    }
@@ -163,7 +163,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
          description = display.getDescriptionField().getValue();
       }
       
-      templateToCreate = new FileTemplate(activeFile.getContentType(), name, description, activeFile.getContent(), null);
+      templateToCreate = new FileTemplate(activeFile.getMimeType(), name, description, activeFile.getContent(), null);
       
       TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
          new AsyncRequestCallback<FileTemplate>(eventBus)

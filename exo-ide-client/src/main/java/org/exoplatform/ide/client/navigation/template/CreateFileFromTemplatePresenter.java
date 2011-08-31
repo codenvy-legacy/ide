@@ -47,9 +47,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
@@ -57,13 +54,15 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,7 +163,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    private CreateFileFromTemplateCallback submitCallback;
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    private HandlerManager eventBus;
 
@@ -175,7 +174,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private String previousExtension;
 
-   private String baseHref;
+   private FolderModel baseFolder;
 
    private List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
 
@@ -219,10 +218,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       if (selectedItems != null && selectedItems.size() != 0)
       {
          Item item = selectedItems.get(0);
-         baseHref = item.getHref();
-         if (item instanceof File)
+         if (item instanceof FileModel)
          {
-            baseHref = baseHref.substring(0, baseHref.lastIndexOf("/") + 1);
+            baseFolder = ((FileModel)item).getParent();
+         }
+         else
+         {
+            baseFolder = (FolderModel)item;
          }
       }
    }
@@ -345,22 +347,17 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          return;
       }
 
-      if (baseHref == null)
-      {
-         baseHref = "";
-      }
-
       String contentType = selectedTemplate.getMimeType();
 
-      fileName = getDefaultNewFileName(baseHref, fileName);
+      fileName = getDefaultNewFileName(baseFolder, fileName);
 
-      final File newFile = new File(baseHref + fileName);
-      newFile.setContentType(contentType);
-      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-      newFile.setIcon(ImageUtil.getIcon(contentType));
-      newFile.setNewFile(true);
-      newFile.setContentChanged(true);
-      newFile.setContent(selectedTemplate.getContent());
+      final FileModel newFile = new FileModel(fileName, contentType, selectedTemplate.getContent(), baseFolder);
+//      newFile.setContentType(contentType);
+//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
+//      newFile.setIcon(ImageUtil.getIcon(contentType));
+//      newFile.setNewFile(true);
+//      newFile.setContentChanged(true);
+//      newFile.setContent(selectedTemplate.getContent());
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       closeView();
@@ -383,7 +380,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     * @param proposedName - proposed name for new file
     * @return {@link String}
     */
-   private String getDefaultNewFileName(String href, String proposedName)
+   private String getDefaultNewFileName(FolderModel folder, String proposedName)
    {
       if (openedFiles == null || openedFiles.isEmpty())
       {
@@ -393,10 +390,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       final String nameWithoutExt = proposedName.substring(0, proposedName.lastIndexOf("."));
       String extension = proposedName.substring(proposedName.lastIndexOf(".") + 1, proposedName.length());
       int index = 1;
-      while (openedFiles.get(href + proposedName) != null)
+      for (FileModel file : openedFiles.values())
       {
-         proposedName = nameWithoutExt + " " + index + "." + extension;
-         index++;
+         if (file.getParentId().equals(folder.getId()) && file.getName().equals(proposedName))
+         {
+            proposedName = nameWithoutExt + " " + index + "." + extension;
+            index++;
+         }
       }
 
       return proposedName;

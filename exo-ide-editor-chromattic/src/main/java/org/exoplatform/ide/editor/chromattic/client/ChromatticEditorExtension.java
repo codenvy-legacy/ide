@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.chromattic.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -54,6 +56,8 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
 {
 
    private JavaCodeAssistant groovyCodeAssistant;
+   
+   private static final Images IMAGES = GWT.create(Images.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -83,7 +87,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       groovyCodeAssistant =
          new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
       
-      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", Images.CHROMATTIC, true,
+      IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES.CHROMATTIC(), true,
          new CodeMirrorConfiguration().
             setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']").
@@ -127,7 +131,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      groovyCodeAssistant.setactiveFileHref(event.getFile().getHref());
+      groovyCodeAssistant.setactiveFileHref(event.getFile().getId());
    }
 
 }

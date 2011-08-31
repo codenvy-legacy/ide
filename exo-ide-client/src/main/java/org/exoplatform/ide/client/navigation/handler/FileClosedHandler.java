@@ -19,18 +19,18 @@
 package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,31 +60,40 @@ public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSe
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
     */
-   public void onEditorFileClosed(EditorFileClosedEvent event)
+   public void onEditorFileClosed(final EditorFileClosedEvent event)
    {
-      String lockToken = lockTokens.get(event.getFile().getHref());
-      if(event.getFile().isNewFile())
+      String lockToken = lockTokens.get(event.getFile().getId());
+      if(!event.getFile().isPersisted())
       {
          return;
       }
       
       if (lockToken != null)
       {
-         VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Item>()
+         try
          {
-            
-            @Override
-            protected void onSuccess(Item result)
+            VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>()
             {
-               eventBus.fireEvent(new ItemUnlockedEvent(result));               
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));               
-            }
-         });
+               
+               @Override
+               protected void onSuccess(Object result)
+               {
+                  eventBus.fireEvent(new ItemUnlockedEvent(event.getFile()));
+               }
+               
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));    
+               }
+            });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            eventBus.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG)); 
+         } 
+         
       }
    }
 

@@ -18,7 +18,17 @@
  */
 package org.exoplatform.ide.client.upload;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.GwtResources;
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
@@ -32,19 +42,10 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.FormFields;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.List;
 
 /**
  * Class for uploading zip file.
@@ -108,21 +109,21 @@ public class UploadForm extends IDEDialogWindow implements UploadPresenter.Uploa
    
    private HandlerManager eventBus;
 
-   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder, 
       IDEConfiguration applicationConfiguration)
    {
       super(WIDTH, HEIGHT, ID);
-      initialize(eventBus, selectedItems, path, applicationConfiguration);
+      initialize(eventBus, selectedItems, folder, applicationConfiguration);
    }
    
-   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, String path, 
+   public UploadForm(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder, 
       IDEConfiguration applicationConfiguration, int width, int height)
    {
       super(width, height, ID);
-      initialize(eventBus, selectedItems, path, applicationConfiguration);
+      initialize(eventBus, selectedItems, folder, applicationConfiguration);
    }
    
-   private void initialize(HandlerManager eventBus, List<Item> selectedItems, String path, 
+   private void initialize(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder, 
       IDEConfiguration applicationConfiguration)
    {
       this.eventBus = eventBus;
@@ -143,7 +144,7 @@ public class UploadForm extends IDEDialogWindow implements UploadPresenter.Uploa
       setWidget(mainLayout);
       show();
       UIHelper.setAsReadOnly(fileNameField.getName());
-      presenter = createPresenter(eventBus, selectedItems, path);
+      presenter = createPresenter(eventBus, selectedItems, folder);
       fileUploadInput.addFileSelectedHandler(presenter);
       presenter.bindDisplay(this);
    }
@@ -155,9 +156,9 @@ public class UploadForm extends IDEDialogWindow implements UploadPresenter.Uploa
       labelTitle = FOLDER_TO_UPLOAD;
    }
    
-   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder)
    {
-      return new UploadPresenter(eventBus, selectedItems, path);
+      return new UploadPresenter(eventBus, selectedItems, folder);
    }
 
    private void createFileUploadForm()

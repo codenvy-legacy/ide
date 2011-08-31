@@ -28,14 +28,14 @@ import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -183,10 +183,10 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
       if (selectedItems.size() == 0)
          return null;
       
-      String workDir = selectedItems.get(0).getHref();
-      if (selectedItems.get(0) instanceof File)
+      String workDir = selectedItems.get(0).getId();
+      if (selectedItems.get(0) instanceof FileModel)
       {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
+         workDir = selectedItems.get(0).getParentId();
       }
       return workDir;
    }

@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.git.client.status;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
@@ -33,19 +32,21 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
@@ -97,7 +98,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
     */
    private void getGitWorkTreeLocation(final Item item)
    {
-      GitClientService.getInstance().getWorkDir(item.getHref(), new AsyncRequestCallback<WorkDirResponse>()
+      GitClientService.getInstance().getWorkDir(item.getId(), new AsyncRequestCallback<WorkDirResponse>()
       {
 
          @Override
@@ -131,7 +132,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
       {
          //Remove last "/" from path:
          String href =
-            item.getHref().endsWith("/") ? item.getHref().substring(0, item.getHref().length() - 1) : item.getHref();
+            item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
          href = URL.decodePathSegment(href);
          //Check selected item in workspace tree is not the root of the Git repository tree:
          if (!workTree.equals(href))
@@ -186,13 +187,13 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
     * 
     * @param folder
     */
-   private void updateBrowserTreeStatus(final Folder folder)
+   private void updateBrowserTreeStatus(final FolderModel folder)
    {
-      if (folder == null || folder.getChildren() == null || folder.getChildren().size() <= 0
-         || folder.getHref() == null || folder.getHref().isEmpty())
+      if (folder == null || folder.getChildren() == null || folder.getChildren().getItems().size() <= 0
+         || folder.getId() == null || folder.getId().isEmpty())
          return;
 
-      GitClientService.getInstance().getWorkDir(folder.getHref(), new AsyncRequestCallback<WorkDirResponse>()
+      GitClientService.getInstance().getWorkDir(folder.getId(), new AsyncRequestCallback<WorkDirResponse>()
       {
          @Override
          protected void onSuccess(WorkDirResponse result)
@@ -215,7 +216,7 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
     * @param workDir working directory
     * @param folder folder to be updated
     */
-   private void getStatus(final String workDir, final Folder folder)
+   private void getStatus(final String workDir, final FolderModel folder)
    {
       GitClientService.getInstance().status(workDir, new AsyncRequestCallback<StatusResponse>()
       {
@@ -227,11 +228,11 @@ public class StatusCommandHandler implements ShowWorkTreeStatusHandler, ItemsSel
                new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
             List<Item> itemsToCheck = new ArrayList<Item>();
-            itemsToCheck.addAll(folder.getChildren());
+            itemsToCheck.addAll(folder.getChildren().getItems());
             itemsToCheck.add(folder);
             for (Item item : itemsToCheck)
             {
-               String href = URL.decodePathSegment(item.getHref());
+               String href = URL.decodePathSegment(item.getPath());
                String pattern = href.replaceFirst(workDir + "/", "");
                Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
                if (pattern.length() == 0 || "/".equals(pattern))

@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemDeletedHandler;
 import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS .

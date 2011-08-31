@@ -92,7 +92,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
                MimeType.GROOVY_TEMPLATE,
                "CodeMirror Groovy Template editor",
                "gtmpl",
-               Images.GROOVY_TEMPLATE,
+               Images.INSTANCE.groovyTemplate(),
                true,
                new CodeMirrorConfiguration().
                   setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']").
@@ -142,7 +142,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         templateCodeAssistant.setactiveFileHref(event.getFile().getHref());
+         templateCodeAssistant.setactiveFileHref(event.getFile().getId());
    }
 
 }

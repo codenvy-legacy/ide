@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,18 +34,18 @@ public class SaveFileEvent extends GwtEvent<SaveFileHandler>
 
    public static final GwtEvent.Type<SaveFileHandler> TYPE = new GwtEvent.Type<SaveFileHandler>();
 
-   private File file;
+   private FileModel file;
 
    public SaveFileEvent()
    {
    }
 
-   public SaveFileEvent(File file)
+   public SaveFileEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

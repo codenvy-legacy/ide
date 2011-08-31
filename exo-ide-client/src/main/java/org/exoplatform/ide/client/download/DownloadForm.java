@@ -18,24 +18,23 @@
  */
 package org.exoplatform.ide.client.download;
 
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.RootPanel;
+
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.navigation.event.DownloadFileEvent;
 import org.exoplatform.ide.client.navigation.event.DownloadFileHandler;
 import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderEvent;
 import org.exoplatform.ide.client.navigation.event.DownloadZippedFolderHandler;
-
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS .
@@ -73,20 +72,20 @@ public class DownloadForm implements DownloadFileHandler, DownloadZippedFolderHa
    private void downloadResource()
    {
       //Item item = context.getSelectedItems(context.getSelectedNavigationPanel()).get(0);
-      String fileName = selectedItem.getHref();
+      String fileName = selectedItem.getName();
 
-      if (fileName.endsWith("/"))
-      {
-         fileName = fileName.substring(0, fileName.length() - 1);
-      }
-      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+//      if (fileName.endsWith("/"))
+//      {
+//         fileName = fileName.substring(0, fileName.length() - 1);
+//      }
+//      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
 
-      if (!(selectedItem instanceof File))
+      if (!(selectedItem instanceof FileModel))
       {
          fileName += ".zip";
       }
 
-      String path = selectedItem.getHref();
+      String path = selectedItem.getId();
       String url = applicationConfiguration.getContext() + CONTEXT_DOWNLOAD + "/" + fileName + "?repoPath=" + path;
       String iframe =
          "<iframe src=\"" + url

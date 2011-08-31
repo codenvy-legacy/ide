@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.application.event;
 
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -33,13 +35,24 @@ public class EntryPointChangedEvent extends GwtEvent<EntryPointChangedHandler>
 
    public static final GwtEvent.Type<EntryPointChangedHandler> TYPE = new GwtEvent.Type<EntryPointChangedHandler>();
 
+   private VirtualFileSystemInfo vfsInfo;
+
    private String entryPoint;
 
-   public EntryPointChangedEvent(String entryPoint)
+   public EntryPointChangedEvent(VirtualFileSystemInfo vfsInfo, String entryPoint)
    {
+      this.vfsInfo = vfsInfo;
       this.entryPoint = entryPoint;
    }
 
+   public VirtualFileSystemInfo getVfsInfo()
+   {
+      return vfsInfo;
+   }
+
+   /**
+    * @return the entryPoint
+    */
    public String getEntryPoint()
    {
       return entryPoint;

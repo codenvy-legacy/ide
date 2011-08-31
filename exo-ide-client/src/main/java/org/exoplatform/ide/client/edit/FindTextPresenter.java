@@ -44,7 +44,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
 
@@ -102,7 +102,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    private HashMap<String, FindTextState> filesFindState;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public FindTextPresenter(HandlerManager eventBus)
    {
@@ -134,7 +134,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
          return;
       }
 
-      String path = event.getFile().getHref();
+      String path = event.getFile().getId();
       FindTextState findTextState = filesFindState.get(path);
       if (filesFindState.get(path) == null)
       {
@@ -157,7 +157,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
    @Override
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
-      filesFindState.remove(event.getFile().getHref());
+      filesFindState.remove(event.getFile().getId());
    }
 
    @Override
@@ -245,7 +245,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       }
 
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getHref();
+      String path = activeFile.getId();
       eventBus.fireEvent(new EditorFindTextEvent(findText, caseSensitive, path));
    }
 
@@ -264,7 +264,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       }
 
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getHref();
+      String path = activeFile.getId();
       eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path));
       FindTextState findTextState = new FindTextState(false, "", findText);
       changeState(findTextState);
@@ -286,8 +286,8 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       }
 
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getHref();
-      eventBus.fireEvent(new EditorReplaceAndFindTextEvent(findText, replaceText, caseSensitive, path));
+      String fileId = activeFile.getId();
+      eventBus.fireEvent(new EditorReplaceAndFindTextEvent(findText, replaceText, caseSensitive, fileId));
    }
 
    private void doReplaceAll()
@@ -305,8 +305,8 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       }
 
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getHref();
-      eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path, true));
+      String fileId = activeFile.getId();
+      eventBus.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, fileId, true));
    }
 
    private void findTextFieldKeyPressed()
@@ -342,7 +342,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       String findText = display.getFindField().getValue();
       FindTextState findTextState = new FindTextState(event.isTextFound(), resultString, findText);
       changeState(findTextState);
-      filesFindState.put(activeFile.getHref(), findTextState);
+      filesFindState.put(activeFile.getId(), findTextState);
    }
 
    private void changeState(FindTextState state)

@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.delete;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -27,13 +26,14 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for deleting application from CloudBees.
@@ -98,7 +98,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
          return;
       }
       
-      workDir = selectedItems.get(0).getHref();
+      workDir = selectedItems.get(0).getId();
    }
 
    /**

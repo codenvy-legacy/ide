@@ -31,12 +31,12 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Presenter for add changes to index view.
@@ -143,7 +143,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          return "";
       Item selectedItem = selectedItems.get(0);
 
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItem.getHref(), workDir);
+      String pattern = GitClientUtil.getFilePatternByHref(selectedItem.getPath(), workDir);
 
       //Root of the working tree:
       if (pattern.length() == 0 || "/".equals(pattern))
@@ -171,7 +171,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       if (workDir == null || selectedItems == null || selectedItems.size() <= 0)
          return;
       boolean update = display.getUpdateValue().getValue();
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getHref(), workDir);
+      String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getPath(), workDir);
       String[] filePatterns =
          (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
 

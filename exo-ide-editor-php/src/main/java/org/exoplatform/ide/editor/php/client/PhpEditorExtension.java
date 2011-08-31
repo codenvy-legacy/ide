@@ -90,15 +90,15 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
          setCanHaveSeveralMimeTypes(true);
       
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+         new CodeMirrorProducer(MimeType.APPLICATION_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(), true, phpCodeMirrorConfiguration)
       );
       
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+         new CodeMirrorProducer(MimeType.APPLICATION_X_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(), true, phpCodeMirrorConfiguration)
       );
       
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php", Images.PHP, true, phpCodeMirrorConfiguration)
+         new CodeMirrorProducer(MimeType.APPLICATION_X_HTTPD_PHP, "CodeMirror PHP editor", "php", Images.INSTANCE.php(), true, phpCodeMirrorConfiguration)
       );      
       
       PhpOutlineItemCreator phpOutlineItemCreator = new PhpOutlineItemCreator();

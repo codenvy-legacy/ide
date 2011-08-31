@@ -29,16 +29,16 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -49,15 +49,13 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.callback.MoveItemCallback;
 import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.navigation.event.RenameItemHander;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +67,8 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class RenameFolderPresenter implements RenameItemHander, ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
-EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
+public class RenameFolderPresenter implements RenameItemHander, ApplicationSettingsReceivedHandler,
+   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
 {
 
    /**
@@ -86,25 +84,25 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
       HasClickHandlers getCancelButton();
 
       HasKeyPressHandlers getNameFieldKeyPressHandler();
-      
+
       void enableRenameButton(boolean enable);
-      
+
       void focusInNameField();
 
    }
-   
+
    private HandlerManager eventBus;
 
    private Display display;
 
-   private String itemBaseHref;
+   //   private String itemBaseHref;
 
    private List<Item> selectedItems;
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
-   
+
    private Item renamedItem;
 
    private String sourceHref;
@@ -112,7 +110,7 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
    public RenameFolderPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(RenameItemEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -124,18 +122,18 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
    public void bindDisplay(Display d)
    {
       display = d;
-      
+
       display.enableRenameButton(false);
 
-      itemBaseHref = selectedItems.get(0).getHref();
-      if (selectedItems.get(0) instanceof Folder)
-      {
-         itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
-      }
-      itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
+      //      itemBaseHref = selectedItems.get(0).getHref();
+      //      if (selectedItems.get(0) instanceof FolderModel)
+      //      {
+      //         itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
+      //      }
+      //      itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
 
       display.getNameField().setValue(selectedItems.get(0).getName());
-      
+
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          public void onValueChange(ValueChangeEvent<String> event)
@@ -171,10 +169,10 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
          }
 
       });
-      
+
       display.focusInNameField();
    }
-   
+
    private boolean wasItemPropertiesChanged()
    {
       final String newName = display.getNameField().getValue();
@@ -194,86 +192,102 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
    {
       final Item item = selectedItems.get(0);
 
-      final String destination = getDestination(item);
+      final String newName = getDestination();
 
-      moveItem(item, destination);
-   }
-   
-   private String getDestination(Item item)
-   {
-      return itemBaseHref + URL.encodePathSegment(display.getNameField().getValue()) + "/";
+      moveItem(item, newName);
    }
 
-   private void updateOpenedFiles(String href, String sourceHref)
+   private String getDestination()
    {
-      if (openedFiles == null || openedFiles.isEmpty())
-         return;
-      
-      List<String> keys = new ArrayList<String>();
-      for (String key : openedFiles.keySet())
-      {
-         keys.add(key);
-      }
+      return display.getNameField().getValue();
+   }
 
-      for (String key : keys)
-      {
-         if (key.startsWith(sourceHref))
-         {
-            File file = openedFiles.get(key);
-            String fileHref = file.getHref().replace(sourceHref, href);
-            file.setHref(fileHref);
-
-            openedFiles.remove(key);
-            openedFiles.put(fileHref, file);
-            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
-         }
-      }
+   private void updateOpenedFiles(FolderModel folder, String sourceHref)
+   {
+      //TODO
+//      if (openedFiles == null || openedFiles.isEmpty())
+//         return;
+//
+//      List<String> keys = new ArrayList<String>();
+//      for (String key : openedFiles.keySet())
+//      {
+//         keys.add(key);
+//      }
+//
+//      for (String key : keys)
+//      {
+//         if (key.startsWith(sourceHref))
+//         {
+//            File file = openedFiles.get(key);
+//            String fileHref = file.getHref().replace(sourceHref, href);
+//            file.setHref(fileHref);
+//
+//            openedFiles.remove(key);
+//            openedFiles.put(fileHref, file);
+//            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
+//         }
+//      }
    }
 
    private void completeMove()
    {
-      String href = sourceHref;
-      if (href.endsWith("/"))
-      {
-         href = href.substring(0, href.length() - 1);
-      }
-
-      href = href.substring(0, href.lastIndexOf("/") + 1);
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), renamedItem));
-
+      FolderModel folder = (FolderModel)renamedItem;
+      eventBus.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
       closeView();
    }
 
-
    /**
-    * Mote item.
+    * Move item.
     * 
     * @param item - the item to move (with old properties: href and name)
-    * @param destination - the location of new item (must be encoded)
+    * @param newName - the new name of item
     */
-   private void moveItem(Item item, String destination)
+   private void moveItem(final Item item, final String newName)
    {
-      MoveItemCallback moveItemCallback = new MoveItemCallback(eventBus)
+      //      MoveItemCallback moveItemCallback = new MoveItemCallback(eventBus)
+      //      {
+      //         @Override
+      //         protected void onSuccess(MoveItemData result)
+      //         {
+      //            itemMoved(result.getItem(), result.getOldHref());
+      //         }
+      //      };
+      try
       {
-         @Override
-         protected void onSuccess(MoveItemData result)
+         VirtualFileSystem.getInstance().rename(item, null, newName, lockTokens.get(item.getId()), new AsyncRequestCallback<String>()
          {
-            itemMoved(result.getItem(), result.getOldHref());
-         }
-      };
-      VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getHref()), moveItemCallback);
+            
+            @Override
+            protected void onSuccess(String result)
+            {
+               item.setName(newName);
+               itemMoved((FolderModel)item, item.getName());
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
-   
+
    /**
-    * @param item - moved item
+    * @param folder - moved item
     * @param oldItemHref - href of old item
     */
-   private void itemMoved(Item item, final String oldItemHref)
+   private void itemMoved(FolderModel folder, final String oldItemHref)
    {
-      renamedItem = item;
+      renamedItem = folder;
       sourceHref = oldItemHref;
 
-      updateOpenedFiles(item.getHref(), oldItemHref);
+      updateOpenedFiles(folder, oldItemHref);
       completeMove();
    }
 
@@ -288,10 +302,10 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
          //throwing an exception is in RenameFilePresenter
          return;
       }
-      if (selectedItems.get(0) instanceof Folder)
+      if (selectedItems.get(0) instanceof FolderModel)
          openView();
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -305,7 +319,7 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
          eventBus.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -357,7 +371,7 @@ EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       ApplicationSettings applicationSettings = event.getApplicationSettings();
-      
+
       if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);

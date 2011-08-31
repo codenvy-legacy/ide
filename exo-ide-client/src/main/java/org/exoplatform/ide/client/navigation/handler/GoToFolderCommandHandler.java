@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.navigation.event.GoToFolderEvent;
 import org.exoplatform.ide.client.navigation.event.GoToFolderHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
 
@@ -57,7 +58,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 
    private String entryPoint;
 
-   private File activeFile;
+   private FileModel activeFile;
    
    private static final String RECEIVE_CHILDREN_FAILURE = IDE.ERRORS_CONSTANT.goToFolderReceiveChildrenFailure();
 
@@ -87,36 +88,37 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
     */
    public void onGoToFolder(GoToFolderEvent event)
    {
-      if (activeFile == null)
-      {
-         return;
-      }
-
-      String workingPath = activeFile.getHref();
-
-      String entryPoint = this.entryPoint.substring(0, this.entryPoint.lastIndexOf("/"));
-      entryPoint = entryPoint.substring(0, entryPoint.lastIndexOf("/"));
-      workingPath = workingPath.substring(entryPoint.length(), workingPath.length());
-
-      while (workingPath.startsWith("/"))
-      {
-         workingPath = workingPath.substring(1);
-      }
-
-      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
-      String[] p = workingPath.split("/");
-      pathes = new ArrayList<String>();
-      pathToOpen = entryPoint + "/" + p[0] + "/";
-      if (p.length > 1)
-      {
-         for (int i = 1; i < p.length; i++)
-         {
-            pathes.add(p[i]);
-         }
-      }
-
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
-      openNextFolder(new Folder(pathToOpen));
+      //TODO
+//      if (activeFile == null)
+//      {
+//         return;
+//      }
+//
+//      String workingPath = activeFile.getHref();
+//
+//      String entryPoint = this.entryPoint.substring(0, this.entryPoint.lastIndexOf("/"));
+//      entryPoint = entryPoint.substring(0, entryPoint.lastIndexOf("/"));
+//      workingPath = workingPath.substring(entryPoint.length(), workingPath.length());
+//
+//      while (workingPath.startsWith("/"))
+//      {
+//         workingPath = workingPath.substring(1);
+//      }
+//
+//      workingPath = workingPath.substring(0, workingPath.lastIndexOf("/"));
+//      String[] p = workingPath.split("/");
+//      pathes = new ArrayList<String>();
+//      pathToOpen = entryPoint + "/" + p[0] + "/";
+//      if (p.length > 1)
+//      {
+//         for (int i = 1; i < p.length; i++)
+//         {
+//            pathes.add(p[i]);
+//         }
+//      }
+//
+//      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+//      openNextFolder(new Folder(pathToOpen));
    }
    
    public void openNextFolder(Folder folderToOpen)
@@ -131,26 +133,27 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
          @Override
          protected void onSuccess(Folder result)
          {
-            new Timer()
-            {
-               @Override
-               public void run()
-               {
-                  if (pathes.size() > 0)
-                  {
-                     String name = pathes.get(0);
-                     pathes.remove(0);
-                     pathToOpen += name + "/";
-                     eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
-                     openNextFolder(new Folder(pathToOpen));
-                  }
-                  else
-                  {
-                     // try to select file.........
-                     eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
-                  }
-               }
-            }.schedule(100);
+            //TODO
+//            new Timer()
+//            {
+//               @Override
+//               public void run()
+//               {
+//                  if (pathes.size() > 0)
+//                  {
+//                     String name = pathes.get(0);
+//                     pathes.remove(0);
+//                     pathToOpen += name + "/";
+//                     eventBus.fireEvent(new RefreshBrowserEvent(new Folder(pathToOpen)));
+//                     openNextFolder(new Folder(pathToOpen));
+//                  }
+//                  else
+//                  {
+//                     // try to select file.........
+//                     eventBus.fireEvent(new SelectItemEvent(activeFile.getHref()));
+//                  }
+//               }
+//            }.schedule(100);
          }
          
          @Override

@@ -39,20 +39,20 @@ public class EditorReplaceAndFindTextEvent extends GwtEvent<EditorReplaceAndFind
 
    private boolean caseSensitive;
 
-   private String path;
+   private String fileId;
 
    /**
     * @param findText text to find
     * @param replaceText text to replace
     * @param caseSensitive is case sensitive
-    * @param path path to file
+    * @param fileId path to file
     */
-   public EditorReplaceAndFindTextEvent(String findText, String replaceText, boolean caseSensitive, String path)
+   public EditorReplaceAndFindTextEvent(String findText, String replaceText, boolean caseSensitive, String fileId)
    {
       this.findText = findText;
       this.replaceText = replaceText;
       this.caseSensitive = caseSensitive;
-      this.path = path;
+      this.fileId = fileId;
    }
 
    /**
@@ -100,9 +100,9 @@ public class EditorReplaceAndFindTextEvent extends GwtEvent<EditorReplaceAndFind
    /**
     * @return the path
     */
-   public String getPath()
+   public String getFileId()
    {
-      return path;
+      return fileId;
    }
    
 }

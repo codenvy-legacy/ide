@@ -71,10 +71,10 @@ public class DeployGadgetCommand extends SimpleControl implements IDEControl, Ed
 
       setVisible(true);
 
-      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getContentType()))
+      if (MimeType.GOOGLE_GADGET.equals(event.getFile().getMimeType()))
       {
          setVisible(true);
-         if (event.getFile().isNewFile())
+         if (!event.getFile().isPersisted())
          {
             setEnabled(false);
          }

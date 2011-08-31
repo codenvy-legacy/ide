@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -38,11 +37,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedHandler;
+import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.event.SearchResultReceivedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +76,7 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    private List<Item> selectedItems;
 
-   private Folder searchResult;
+   private FolderModel searchResult;
 
    public SearchResultsPresenter(HandlerManager eventBus)
    {
@@ -108,12 +108,12 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    private void refreshSearchResult()
    {
-      searchResult.setIcon(Images.FileTypes.WORKSPACE);
+//      searchResult.setIcon(Images.FileTypes.WORKSPACE);
 
-      if (searchResult.getChildren() != null && !searchResult.getChildren().isEmpty())
+      if (searchResult.getChildren() != null && !searchResult.getChildren().getItems().isEmpty())
       {
          // sort items in search result list
-         Collections.sort(searchResult.getChildren(), new Comparator<Item>()
+         Collections.sort(searchResult.getChildren().getItems(), new Comparator<Item>()
          {
             public int compare(Item item1, Item item2)
             {
@@ -122,7 +122,7 @@ ViewClosedHandler, SearchResultReceivedHandler
          });
 
          display.getSearchResultTree().setValue(searchResult);
-         display.selectItem(searchResult.getHref());
+         display.selectItem(searchResult.getId());
       }
       else
       {
@@ -188,7 +188,7 @@ ViewClosedHandler, SearchResultReceivedHandler
       Item item = selectedItems.get(0);
       if (item instanceof File)
       {
-         eventBus.fireEvent(new OpenFileEvent((File)item));
+         eventBus.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 

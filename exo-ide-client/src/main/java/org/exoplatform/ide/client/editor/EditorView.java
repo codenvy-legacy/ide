@@ -18,22 +18,6 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.editor.api.Editor;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,6 +30,23 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.Utils;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -67,7 +68,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    List<Editor> supportedEditors;
 
-   File file;
+   FileModel file;
 
    HandlerManager eventBus;
 
@@ -101,10 +102,10 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
     * @param title
     * @param supportedEditors
     */
-   public EditorView(File file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors,
+   public EditorView(FileModel file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors,
       int currentEditorIndex)
    {
-      super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(file.getIcon()));
+      super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(ImageUtil.getIcon(file.getMimeType())));
 
       if (supportedEditors == null)
          return;
@@ -339,13 +340,14 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       return null;
    }
 
-   private static String getFileTitle(File file, boolean isReadOnly)
+   private static String getFileTitle(FileModel file, boolean isReadOnly)
    {
-      boolean fileChanged = file.isContentChanged() || file.isPropertiesChanged();
+      //TODO
+      boolean fileChanged = file.isContentChanged(); //|| file.isPropertiesChanged();
 
       String fileName = Utils.unescape(fileChanged ? file.getName() + "&nbsp;*" : file.getName());
 
-      String mainHint = file.getHref();
+      String mainHint = file.getName();
 
       String readonlyImage =
          (isReadOnly)
@@ -363,12 +365,12 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       this.eventBus.fireEvent(new EditorActiveFileChangedEvent(this.file, editor));
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return this.file;
    }
 
-   public void setTitle(File file, boolean isFileReadOnly)
+   public void setTitle(FileModel file, boolean isFileReadOnly)
    {
       super.setTitle(getFileTitle(file, isFileReadOnly));
    }
@@ -453,7 +455,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       }
    }
 
-   public void setFile(File newFile)
+   public void setFile(FileModel newFile)
    {
       this.file = newFile;
    }

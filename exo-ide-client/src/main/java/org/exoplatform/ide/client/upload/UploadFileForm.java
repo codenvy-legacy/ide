@@ -32,7 +32,8 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.upload.FormFields;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -58,9 +59,9 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
 
    private ComboBoxField mimeTypesField;
 
-   public UploadFileForm(HandlerManager eventBus, List<Item> selectedItems, String path, IDEConfiguration applicationConfiguration)
+   public UploadFileForm(HandlerManager eventBus, List<Item> selectedItems,FolderModel folder, IDEConfiguration applicationConfiguration)
    {
-      super(eventBus, selectedItems, path, applicationConfiguration, 450, 230);
+      super(eventBus, selectedItems, folder, applicationConfiguration, 450, 230);
       
    }
    
@@ -73,9 +74,9 @@ public class UploadFileForm extends UploadForm implements UploadFilePresenter.Di
    }
    
    @Override
-   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   protected UploadPresenter createPresenter(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder)
    {
-      return new UploadFilePresenter(eventBus, selectedItems, path);
+      return new UploadFilePresenter(eventBus, selectedItems, folder);
    }
    
 

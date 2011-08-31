@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.model;
 
+import org.exoplatform.ide.vfs.shared.Item;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.exoplatform.ide.client.framework.vfs.Item;
 
 /**
  * Created by The eXo Platform SAS .

@@ -37,8 +37,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -53,6 +51,8 @@ import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -152,10 +152,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       Item item = selectedItems.get(0);
       String url = "";
-      if (item instanceof Folder)
-         url = item.getHref();
+      if (item instanceof FolderModel)
+         url = item.getId();
       else
-         url = item.getHref().substring(0, item.getHref().lastIndexOf("/"));
+         url = item.getParentId();
       JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
       {
          @Override
@@ -444,7 +444,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
 
       //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getHref(),
+      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
          new AsyncRequestCallback<WorkDirResponse>()
          {
             @Override
@@ -466,7 +466,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                      {
                         if (value != null && value)
                         {
-                           initRepository(selectedItems.get(0).getHref());
+                           initRepository(selectedItems.get(0).getId());
                         }
                      }
                   });

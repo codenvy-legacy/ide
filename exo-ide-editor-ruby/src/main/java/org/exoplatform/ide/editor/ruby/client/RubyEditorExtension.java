@@ -83,7 +83,7 @@ public class RubyEditorExtension extends Extension implements InitializeServices
    public void onInitializeServices(InitializeServicesEvent event)
    {
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb", Images.RUBY, true,
+         new CodeMirrorProducer(MimeType.APPLICATION_RUBY, "CodeMirror Ruby script editor", "rb", RubyClientBundle.INSTANCE.ruby(), true,
             new CodeMirrorConfiguration().
                setGenericParsers("['parseruby.js', 'tokenizeruby.js']").
                setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/rubycolors.css']").

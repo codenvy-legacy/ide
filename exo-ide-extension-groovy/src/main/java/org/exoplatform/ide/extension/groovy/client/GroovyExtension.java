@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
-import org.exoplatform.gwtframework.commons.webdav.Property;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -43,12 +44,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter;
 import org.exoplatform.ide.extension.groovy.client.controls.ConfigureBuildPathCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovyCommand;
@@ -77,14 +72,12 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServ
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
-import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -105,7 +98,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
       new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private IDEConfiguration configuration;
 
@@ -207,21 +200,22 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
     */
    public void onSetAutoload(SetAutoloadEvent event)
    {
-      Property jcrContentProperty =
-         GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
-      Property autoloadProperty =
-         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
-      autoloadProperty.setValue("" + event.isAutoload());
-
-      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
-         new ItemPropertiesCallback()
-         {
-            @Override
-            protected void onSuccess(Item result)
-            {
-               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
-            }
-         });
+      //TODO
+//      Property jcrContentProperty =
+//         GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
+//      Property autoloadProperty =
+//         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
+//      autoloadProperty.setValue("" + event.isAutoload());
+//
+//      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
+//         new ItemPropertiesCallback()
+//         {
+//            @Override
+//            protected void onSuccess(Item result)
+//            {
+//               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
+//            }
+//         });
    }
 
    /**
@@ -298,7 +292,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       //decode url before encoding all url as parameter
       //because we need to path file href as parameter,
       //that's why all characters that are not valid for a URL component have been escaped
-      String href = URL.decodePathSegment(activeFile.getHref());
+      String href = URL.decodePathSegment(activeFile.getLinkByRelation(org.exoplatform.ide.vfs.shared.File.REL_CONTENT).getHref());
       //encode file href to path it as parameter in URL
       href = URL.encodePathSegment(href);
       previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + href);

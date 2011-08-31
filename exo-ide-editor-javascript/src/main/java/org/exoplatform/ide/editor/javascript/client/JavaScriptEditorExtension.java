@@ -61,7 +61,7 @@ public class JavaScriptEditorExtension extends Extension
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT,
-         MESSAGES.javaScriptEditor(), "js", Images.JAVA_SCRIPT, true,
+         MESSAGES.javaScriptEditor(), "js", RESOURCES.javaScript(), true,
          new CodeMirrorConfiguration().
             setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
@@ -72,7 +72,7 @@ public class JavaScriptEditorExtension extends Extension
       ));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, MESSAGES.javaScriptEditor(),
-         "js", Images.JAVA_SCRIPT, true, 
+         "js",RESOURCES.javaScript(), true, 
          new CodeMirrorConfiguration().
             setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").
@@ -83,7 +83,7 @@ public class JavaScriptEditorExtension extends Extension
       ));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT,
-         MESSAGES.javaScriptEditor(), "js", Images.JAVA_SCRIPT, true,
+         MESSAGES.javaScriptEditor(), "js", RESOURCES.javaScript(), true,
          new CodeMirrorConfiguration().
             setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']").

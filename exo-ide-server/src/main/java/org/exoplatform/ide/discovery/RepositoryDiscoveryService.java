@@ -66,6 +66,8 @@ public class RepositoryDiscoveryService
    public static final String WEBDAV_SCHEME = "jcr-webdav";
 
    public static final String DEF_WS = "dev-monit";
+   
+   public static final String VFS_CONTEXT = "vfs/jcr";
 
    /** See {@link SessionProviderService} */
    private ThreadLocalSessionProviderService sessionProviderService;
@@ -116,13 +118,12 @@ public class RepositoryDiscoveryService
 
       for (RepositoryEntry repositoryEntry : repositoryService.getConfig().getRepositoryConfigurations())
       {
-         String repositoryName = repositoryEntry.getName();
          for (WorkspaceEntry workspaceEntry : repositoryEntry.getWorkspaceEntries())
          {
             String workspaceName = workspaceEntry.getName();
 
             String href =
-               uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, repositoryName, workspaceName, "/").build()
+               uriInfo.getBaseUriBuilder().segment(VFS_CONTEXT, workspaceName, "/").build()
                   .toString();
             entryPoints.add(href);
          }

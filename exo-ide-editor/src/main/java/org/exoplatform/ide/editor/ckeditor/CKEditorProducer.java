@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -44,13 +45,13 @@ public class CKEditorProducer extends EditorProducer
     * @param ext
     * @param isDefault
     */
-   public CKEditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
+   public CKEditorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault)
    {
       super(mimeType, description, ext, icon, isDefault);
       params.put(EditorParameters.MIME_TYPE, mimeType);
    }
 
-   public CKEditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault,
+   public CKEditorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault,
       CKEditorConfiguration configuration)
    {
       this(mimeType, description, ext, icon, isDefault);

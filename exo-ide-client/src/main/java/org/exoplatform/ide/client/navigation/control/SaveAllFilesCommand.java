@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
 import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -61,7 +62,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveAllControl();
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    public SaveAllFilesCommand()
    {
@@ -89,9 +90,9 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
    private void checkItemEnabling()
    {
       boolean enable = false;
-      for (File file : openedFiles.values())
+      for (FileModel file : openedFiles.values())
       {
-         if (!file.isNewFile() && file.isContentChanged())
+         if (!file.isPersisted() && file.isContentChanged())
          {
             enable = true;
             break;

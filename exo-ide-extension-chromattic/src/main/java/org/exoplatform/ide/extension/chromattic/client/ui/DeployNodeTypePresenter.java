@@ -18,7 +18,12 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,7 +34,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeEvent;
 import org.exoplatform.ide.extension.chromattic.client.event.DeployNodeTypeHandler;
 import org.exoplatform.ide.extension.chromattic.client.model.EnumAlreadyExistsBehaviour;
@@ -37,13 +41,9 @@ import org.exoplatform.ide.extension.chromattic.client.model.EnumNodeTypeFormat;
 import org.exoplatform.ide.extension.chromattic.client.model.GenerateNodeTypeResult;
 import org.exoplatform.ide.extension.chromattic.client.model.service.ChrommaticService;
 import org.exoplatform.ide.extension.chromattic.client.model.service.event.NodeTypeGenerationResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
 
 /**
  * Presenter for deploy node type view.
@@ -113,7 +113,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
    /**
     * Active file at the moment.
     */
-   private File activeFile;
+   private FileModel activeFile;
 
    public DeployNodeTypePresenter(HandlerManager eventBus)
    {
@@ -220,7 +220,7 @@ public class DeployNodeTypePresenter implements DeployNodeTypeHandler, EditorAct
       if (activeFile == null)
          return;
       EnumNodeTypeFormat nodeTypeFormat = EnumNodeTypeFormat.valueOf(display.getNodeTypeFormat().getValue());
-      ChrommaticService.getInstance().generateNodeType(activeFile.getHref(), nodeTypeFormat,
+      ChrommaticService.getInstance().generateNodeType(activeFile.getId(), nodeTypeFormat,
          new AsyncRequestCallback<GenerateNodeTypeResult>()
          {
             @Override

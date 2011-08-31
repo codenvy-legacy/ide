@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -27,10 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFormatTextEvent;
-import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.editor.api.EditorCapability;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -65,7 +64,8 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || event.getEditor() == null || (event.getFile() instanceof Version))
+      //TODO versions
+      if (event.getFile() == null || event.getEditor() == null /*|| (event.getFile() instanceof Version)*/)
       {
          setVisible(false);
          setEnabled(false);
@@ -74,7 +74,7 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
 
       if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE))
       {
-         if (MimeType.TEXT_PLAIN.equals(event.getFile().getContentType()))
+         if (MimeType.TEXT_PLAIN.equals(event.getFile().getMimeType()))
          {
             setVisible(false);
             setEnabled(false);

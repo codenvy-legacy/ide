@@ -24,10 +24,9 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobStatusUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.client.marshal.JenkinsJobUnmarshaller;
+import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 

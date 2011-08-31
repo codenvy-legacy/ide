@@ -61,7 +61,7 @@ public class HtmlEditorExtension extends Extension
          MimeType.TEXT_HTML).setGroup(1));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
-         Images.HTML, true, 
+         Images.INSTANCE.html(), true, 
          new CodeMirrorConfiguration().
             setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
@@ -74,7 +74,7 @@ public class HtmlEditorExtension extends Extension
       ));   
 
       IDE.getInstance().addEditor(new CKEditorProducer(MimeType.TEXT_HTML, MESSAGES.ckEditorHtmlEditor(), "html",
-         Images.HTML, false, new CKEditorConfiguration()));
+         Images.INSTANCE.html(), false, new CKEditorConfiguration()));
 
       
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());

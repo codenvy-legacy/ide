@@ -61,6 +61,10 @@
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
+   
+   <component>
+     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+   </component>
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>

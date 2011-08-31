@@ -362,10 +362,10 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       FileModel file = new FileModel();
       file.getLinks().put(FileModel.REL_COPY,
          new Link("/rest/vfs/mock/copy/" + Random.nextInt(), FileModel.REL_COPY, "*/*"));
-      VirtualFileSystem.getInstance().copy(file, "destination", new AsyncRequestCallback<String>()
+      VirtualFileSystem.getInstance().copy(file, "destination", new AsyncRequestCallback<StringBuilder>()
       {
          @Override
-         protected void onSuccess(String result)
+         protected void onSuccess(StringBuilder result)
          {
             finishTest();
          }
@@ -383,10 +383,10 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       FileModel file = new FileModel();
       file.getLinks().put(FileModel.REL_MOVE,
          new Link("/rest/vfs/mock/move/" + Random.nextInt(), FileModel.REL_MOVE, "*/*"));
-      VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<String>()
+      VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<StringBuilder>()
       {
          @Override
-         protected void onSuccess(String result)
+         protected void onSuccess(StringBuilder result)
          {
             finishTest();
          }

@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.editor.api.EditorProducer;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,17 +33,17 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
 
    public static final GwtEvent.Type<EditorOpenFileHandler> TYPE = new GwtEvent.Type<EditorOpenFileHandler>();
 
-   private File file;
+   private FileModel file;
 
    private EditorProducer editorProducer;
 
-   public EditorOpenFileEvent(File file, EditorProducer editorProducer)
+   public EditorOpenFileEvent(FileModel file, EditorProducer editorProducer)
    {
       this.file = file;
       this.editorProducer = editorProducer;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

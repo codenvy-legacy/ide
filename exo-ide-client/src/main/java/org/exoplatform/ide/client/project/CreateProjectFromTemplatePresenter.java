@@ -29,10 +29,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -44,13 +45,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.FolderCreateCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FileTemplateList;
 import org.exoplatform.ide.client.model.template.FolderTemplate;
@@ -58,13 +52,18 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.util.ImageUtil;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +75,8 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler,
-    ItemsSelectedHandler, ViewClosedHandler, TemplatesMigratedHandler
+public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemplateHandler, ItemsSelectedHandler,
+   ViewClosedHandler, TemplatesMigratedHandler
 {
 
    /**
@@ -150,21 +149,21 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    }
 
-   private String baseHref;
+   private FolderModel baseFolder;
 
    protected Display display;
 
    protected HandlerManager eventBus;
 
-   private List<File> fileList = new ArrayList<File>();
+   private List<FileModel> fileList = new ArrayList<FileModel>();
 
    private List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
 
-   private List<Folder> folderList = new ArrayList<Folder>();
+   private List<FolderModel> folderList = new ArrayList<FolderModel>();
 
    private int itemsCreated = 0;
 
-   private Folder projectFolder;
+   private FolderModel projectFolder;
 
    /**
     * The list of templates to display.
@@ -179,7 +178,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     * The list of templates, that selected in list of templates.
     */
    protected List<ProjectTemplate> selectedTemplates;
-   
+
    private boolean isTemplatesMigrated = false;
 
    public CreateProjectFromTemplatePresenter(HandlerManager eventBus)
@@ -292,9 +291,9 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    /**
     * @param templates - list of templates (folder and file), from which folders and files will be created
-    * @param href - href of parent folder
+    * @param parent - parent folder
     */
-   private void build(List<Template> templates, String href)
+   private void build(List<Template> templates, FolderModel parent)
    {
       if (templates == null || templates.size() == 0)
       {
@@ -307,15 +306,14 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             FolderTemplate projectTemplate = (FolderTemplate)template;
 
-            final String folderHref = href + URL.encodePathSegment(projectTemplate.getName()) + "/";
-            Folder folder = new Folder(folderHref);
+            FolderModel folder = new FolderModel(projectTemplate.getName(), parent);
             folderList.add(folder);
-            build(projectTemplate.getChildren(), folderHref);
+            build(projectTemplate.getChildren(), folder);
          }
          else if (template instanceof FileTemplate)
          {
             FileTemplate fileTemplate = (FileTemplate)template;
-            File file = createFileFromTemplate(fileTemplate, href);
+            FileModel file = createFileFromTemplate(fileTemplate, parent);
             if (file != null)
             {
                fileList.add(file);
@@ -324,7 +322,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       }
    }
 
-   private File createFileFromTemplate(FileTemplate fileTemplate, String href)
+   private FileModel createFileFromTemplate(FileTemplate fileTemplate, FolderModel parent)
    {
       for (FileTemplate fTemplate : fileTemplates)
       {
@@ -332,13 +330,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             String contentType = fTemplate.getMimeType();
 
-            File newFile = new File(href + URL.encodePathSegment(fileTemplate.getFileName()));
-            newFile.setContentType(contentType);
-            newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-            newFile.setIcon(ImageUtil.getIcon(contentType));
-            newFile.setNewFile(true);
-            newFile.setContent(fTemplate.getContent());
-
+            FileModel newFile = new FileModel(fileTemplate.getFileName(), contentType, fTemplate.getContent(), parent);
             return newFile;
          }
       }
@@ -346,16 +338,34 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       return null;
    }
 
-   private void createFolder(Folder folder)
+   private void createFolder(final FolderModel folder)
    {
-      VirtualFileSystem.getInstance().createFolder(folder, new FolderCreateCallback()
+      try
       {
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            onFolderCreated(result);
-         }
-      });
+         VirtualFileSystem.getInstance().createFolder(folder.getParent(),
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder))
+            {
+
+               @Override
+               protected void onSuccess(FolderModel result)
+               {
+                  onFolderCreated(folder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e,
+            "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+      }
    }
 
    /**
@@ -421,7 +431,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    protected void deleteTemplate(final ProjectTemplate template)
    {
       TemplateService.getInstance().deleteProjectTemplate(template.getName(),
-         new AsyncRequestCallback<String>(eventBus)
+         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>(eventBus)
          {
             @Override
             protected void onSuccess(String result)
@@ -442,25 +452,15 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
       ProjectTemplate selectedTemplate = selectedTemplates.get(0);
 
-//      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
-//      selectedTemplate.getChildren().add(classPathTemplate);
+      //      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
+      //      selectedTemplate.getChildren().add(classPathTemplate);
 
       folderList.clear();
-      build(selectedTemplate.getChildren(), baseHref + URL.encodePathSegment(projectName) + "/");
-      projectFolder = new Folder(baseHref + URL.encodePathSegment(projectName) + "/");
-//      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+      projectFolder = new FolderModel(projectName, baseFolder);
+      build(selectedTemplate.getChildren(), projectFolder);
+      //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
 
-      VirtualFileSystem.getInstance().createFolder(projectFolder, new AsyncRequestCallback<Folder>()
-      {
-         /**
-          * @param result - created folder
-          */
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            onFolderCreated(result);
-         }
-      });
+      createFolder(projectFolder);
    }
 
    /**
@@ -470,8 +470,8 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       IDE.getInstance().closeView(Display.ID);
 
-      eventBus.fireEvent(new RefreshBrowserEvent(new Folder(baseHref), projectFolder));
-      eventBus.fireEvent(new ProjectCreatedEvent(projectFolder.getHref()));
+      eventBus.fireEvent(new RefreshBrowserEvent(baseFolder, projectFolder));
+      eventBus.fireEvent(new ProjectCreatedEvent(projectFolder));
    }
 
    @Override
@@ -493,7 +493,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          }));
       }
    }
-   
+
    private void createProjectFromTemplate()
    {
       if (display == null)
@@ -502,10 +502,13 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             Item item = selectedItems.get(0);
 
-            baseHref = item.getHref();
-            if (item instanceof File)
+            if (item instanceof FileModel)
             {
-               baseHref = baseHref.substring(0, baseHref.lastIndexOf("/") + 1);
+               baseFolder = ((FileModel)item).getParent();
+            }
+            else
+            {
+               baseFolder = (FolderModel)item;
             }
          }
 
@@ -515,7 +518,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       }
    }
 
-   private void onFolderCreated(Folder folder)
+   private void onFolderCreated(FolderModel folder)
    {
       if (itemsCreated < folderList.size())
       {
@@ -530,7 +533,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          finishProjectCreation();
          return;
       }
-      
+
       saveFileContent(fileList.get(0));
    }
 
@@ -557,51 +560,68 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     */
    private void refreshTemplateList()
    {
-      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
-      {
-         @Override
-         protected void onSuccess(ProjectTemplateList result)
+      TemplateService.getInstance().getProjectTemplateList(
+         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<ProjectTemplateList>(eventBus)
          {
-            projectTemplates = result.getProjectTemplates();
-            display.getTemplateListGrid().setValue(projectTemplates);
-            if (projectTemplates != null && projectTemplates.size() > 0)
+            @Override
+            protected void onSuccess(ProjectTemplateList result)
             {
-               display.selectLastTemplate();
+               projectTemplates = result.getProjectTemplates();
+               display.getTemplateListGrid().setValue(projectTemplates);
+               if (projectTemplates != null && projectTemplates.size() > 0)
+               {
+                  display.selectLastTemplate();
+               }
+               //get all file templates to create from them files
+               TemplateService.getInstance().getFileTemplateList(
+                  new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(eventBus)
+                  {
+
+                     @Override
+                     protected void onSuccess(FileTemplateList result)
+                     {
+                        fileTemplates = result.getFileTemplates();
+
+                     }
+                  });
+
             }
-            //get all file templates to create from them files
-            TemplateService.getInstance().getFileTemplateList(new AsyncRequestCallback<FileTemplateList>(eventBus)
+         });
+   }
+
+   private void saveFileContent(FileModel file)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().createFile(projectFolder,
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
             {
 
                @Override
-               protected void onSuccess(FileTemplateList result)
+               protected void onSuccess(FileModel result)
                {
-                  fileTemplates = result.getFileTemplates();
-                  
+                  if (itemsCreated < fileList.size())
+                  {
+                     saveFileContent(fileList.get(itemsCreated));
+                     itemsCreated++;
+                     return;
+                  }
+                  itemsCreated = 0;
+
+                  finishProjectCreation();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
                }
             });
-
-         }
-      });
-   }
-
-   private void saveFileContent(File file)
-   {
-      VirtualFileSystem.getInstance().saveContent(file, null, new FileContentSaveCallback()
+      }
+      catch (RequestException e)
       {
-         @Override
-         protected void onSuccess(FileData result)
-         {
-            if (itemsCreated < fileList.size())
-            {
-               saveFileContent(fileList.get(itemsCreated));
-               itemsCreated++;
-               return;
-            }
-            itemsCreated = 0;
-
-            finishProjectCreation();
-         }
-      });
+         e.printStackTrace();
+      }
    }
 
    /**

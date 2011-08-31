@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.api;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import java.util.HashMap;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -37,9 +39,9 @@ public abstract class EditorProducer
 
    private boolean isDefault;
 
-   private String icon;
+   private ImageResource icon;
 
-   protected EditorProducer(String mimeType, String description, String ext, String icon, boolean isDefault)
+   protected EditorProducer(String mimeType, String description, String ext, ImageResource icon, boolean isDefault)
    {
       this.description = description;
       this.mimeType = mimeType;
@@ -83,7 +85,7 @@ public abstract class EditorProducer
    /**
     * @return the icon URL to image associated with current mime type
     */
-   public String getIcon()
+   public ImageResource getIcon()
    {
       return icon;
    }

@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
 import org.exoplatform.ide.extension.gadget.client.service.GadgetMetadata;
@@ -39,6 +38,8 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.File;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -51,7 +52,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
 
    private HandlerManager eventBus;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private IDEConfiguration applicationConfiguration;
 
@@ -93,7 +94,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       String container = "default";
       String domain = null;
 
-      String href = activeFile.getHref();
+      String href = activeFile.getLinkByRelation(File.REL_CONTENT).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);

@@ -30,7 +30,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
-import org.exoplatform.ide.client.framework.vfs.Version;
 
 /**
  * Created by The eXo Platform SAS .
@@ -68,7 +67,8 @@ public class UndoTypingControl extends SimpleControl implements IDEControl, Edit
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || (event.getFile() instanceof Version))
+      //TODO Version
+      if (event.getFile() == null /*|| (event.getFile() instanceof Version)*/)
       {
          setVisible(false);
          setEnabled(false);

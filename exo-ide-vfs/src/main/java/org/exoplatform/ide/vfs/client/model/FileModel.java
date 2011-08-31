@@ -41,11 +41,17 @@ import java.util.List;
 public class FileModel extends org.exoplatform.ide.vfs.shared.File implements ItemContext
 {
    private boolean persisted;
+
    private String content = null;
-   //private boolean contentChanged = false;
+
+   private boolean contentChanged = false;
+
    private HashSet<FileModel> versionHistory = new HashSet<FileModel>();
+
    private Lock lock = null;
+
    private ProjectModel project;
+
    private FolderModel parent;
 
    @SuppressWarnings("rawtypes")
@@ -107,6 +113,7 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
       locked = itemObject.get("locked").isBoolean().booleanValue();
       this.persisted = true;
+      this.contentChanged = false;
       fixMimeType();
    }
 
@@ -157,16 +164,21 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       return lock != null;
    }
 
-   //   public boolean isNewFile()
-   //   {
-   //      return newFile;
-   //   }
-   //
-   //
-   //   public void setNewFile(boolean newFile)
-   //   {
-   //      this.newFile = newFile;
-   //   }
+   /**
+    * @return the contentChanged
+    */
+   public boolean isContentChanged()
+   {
+      return contentChanged;
+   }
+
+   /**
+    * @param contentChanged the contentChanged to set
+    */
+   public void setContentChanged(boolean contentChanged)
+   {
+      this.contentChanged = contentChanged;
+   }
 
    @Override
    public ProjectModel getProject()
@@ -197,5 +209,10 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
    public boolean isPersisted()
    {
       return persisted;
+   }
+
+   public boolean isVersion()
+   {
+      return versionId == null ? false : !versionId.equals("current");
    }
 }

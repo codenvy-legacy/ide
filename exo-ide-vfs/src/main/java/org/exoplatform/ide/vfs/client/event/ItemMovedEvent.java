@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
+import org.exoplatform.ide.vfs.shared.Item;
+
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -25,7 +29,58 @@ package org.exoplatform.ide.vfs.client.event;
  * @version $
  */
 
-public class ItemMovedEvent
+public class ItemMovedEvent extends GwtEvent<ItemMovedHandler>
 {
+
+   public static final GwtEvent.Type<ItemMovedHandler> TYPE = new Type<ItemMovedHandler>();
+
+   private Item item;
+
+   private String sourceId;
+
+   /**
+    * @param item
+    * @param sourceId
+    */
+   public ItemMovedEvent(Item item, String sourceId)
+   {
+      super();
+      this.item = item;
+      this.sourceId = sourceId;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemMovedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ItemMovedHandler handler)
+   {
+      handler.onItemMoved(this);
+   }
+
+   /**
+    * @return the item
+    */
+   public Item getItem()
+   {
+      return item;
+   }
+
+   /**
+    * @return the sourceId
+    */
+   public String getSourceId()
+   {
+      return sourceId;
+   }
 
 }

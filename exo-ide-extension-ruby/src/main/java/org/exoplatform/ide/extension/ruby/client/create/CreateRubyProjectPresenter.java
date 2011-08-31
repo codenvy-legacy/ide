@@ -37,10 +37,10 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.ruby.client.RubyExtension;
 import org.exoplatform.ide.extension.ruby.client.RubyService;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -161,8 +161,8 @@ public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRuby
    {
       final String name = display.getProjectNameField().getValue();
       Item item = selectedItems.get(0);
-      String workDir = item.getHref();
-      if (item instanceof File)
+      String workDir = item.getId();
+      if (item instanceof FileModel)
       {
          workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
       }

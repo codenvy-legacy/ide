@@ -32,13 +32,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent;
-import org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -56,7 +56,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 @RolesAllowed({"administrators", "developers"})
 public class LockUnlockFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ApplicationSettingsReceivedHandler, ItemUnlockedHandler, ItemLockResultReceivedHandler
+   ApplicationSettingsReceivedHandler, ItemUnlockedHandler, ItemLockedHandler
 {
 
    //Edit/Show \\ Hide Line Numbers
@@ -70,7 +70,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    
    private Map<String, String> lockTokens;
    
-   private File activeFile;
+   private FileModel activeFile;
 
    public LockUnlockFileControl()
    {
@@ -92,7 +92,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ItemLockResultReceivedEvent.TYPE, this);
+      eventBus.addHandler(ItemLockedEvent.TYPE, this);
       eventBus.addHandler(ItemUnlockedEvent.TYPE, this);
    }
    
@@ -104,7 +104,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      File file = event.getFile();
+      FileModel file = event.getFile();
       activeFile = file;
       
       if (file == null || event.getEditor() == null)
@@ -115,7 +115,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       
       setVisible(true);
       
-      if (file.isNewFile())
+      if (!file.isPersisted())
       {
          fileLocked = false;
          update();
@@ -123,9 +123,9 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
          return;
       }
       
-      if (activeFile.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      if (activeFile.isLocked())
       {
-         if(!lockTokens.containsKey(activeFile.getHref()))
+         if(!lockTokens.containsKey(activeFile.getId()))
          {
             fileLocked = false;
             update();
@@ -136,7 +136,7 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       
       setEnabled(true);
       
-      String lockToken = lockTokens.get(file.getHref());
+      String lockToken = lockTokens.get(file.getId());
       
       if (lockToken == null)
       {
@@ -196,26 +196,6 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
       }
    }
 
-   /**
-    * Handle this event, to select button, if active file was locked.
-    * 
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedHandler#onItemLockResultReceived(org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent)
-    */
-   public void onItemLockResultReceived(ItemLockResultReceivedEvent event)
-   {
-      if (isItemActiveFile(event.getItem()))
-      {
-         if (event.getException() == null)
-         {
-            fileLocked = true;
-         }
-         else
-         {
-            fileLocked = false;
-         }
-         update();
-      }
-   }
    
    /**
     * Checks, if item is instance of file.
@@ -231,11 +211,25 @@ public class LockUnlockFileControl extends SimpleControl implements IDEControl, 
          return false;
       }
       
-      if (activeFile.getHref().equals(item.getHref()))
+      if (activeFile.getId().equals(item.getId()))
       {
          return true;
       }
       
       return false;
+   }
+
+   /**
+    * Handle this event, to select button, if active file was locked.
+    * @see org.exoplatform.ide.vfs.client.event.ItemLockedHandler#onItemLocked(org.exoplatform.ide.vfs.client.event.ItemLockedEvent)
+    */
+   @Override
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      if (isItemActiveFile(event.getItem()))
+      {
+         fileLocked = true;
+         update();
+      }
    }
 }

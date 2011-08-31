@@ -135,7 +135,8 @@ public class RestoreToVersionCommandHandler implements ShowVersionContentHandler
          @Override
          protected void onSuccess(FileData result)
          {
-            eventBus.fireEvent(new VersionRestoredEvent(activeVersion, result.getFile()));
+            //TODO
+//            eventBus.fireEvent(new VersionRestoredEvent(activeVersion, result.getFile()));
          }
       });
    }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -20,7 +21,7 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
-      
+
 <!-- 
 
 			
@@ -102,7 +103,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-javascript</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
@@ -112,7 +113,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-jsp</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-css</artifactId>
@@ -122,7 +123,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-gtmpl</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-html</artifactId>
@@ -147,18 +148,18 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-php</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-xml</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-gadget</artifactId>
       </dependency>
-      
-      
+
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-groovy</artifactId>
@@ -168,7 +169,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-java</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-jenkins</artifactId>
@@ -183,10 +184,10 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
          <exclusions>
-          <exclusion>
-            <groupId>org.hsqldb</groupId>
-             <artifactId>hsqldb</artifactId>
-          </exclusion>
+            <exclusion>
+               <groupId>org.hsqldb</groupId>
+               <artifactId>hsqldb</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -214,7 +215,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudbees</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudfoundry</artifactId>
@@ -224,7 +225,17 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-logreader</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
       
+      <dependency>
+       <groupId>org.exoplatform.ide</groupId>
+       <artifactId>exo-ide-vfs-jcr</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-ruby</artifactId>
@@ -295,7 +306,8 @@
                   <configuration>
                      <tasks>
                         <echo file="target/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
-                           buildNumber = ${buildNumber}
+                           buildNumber =
+                           ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>

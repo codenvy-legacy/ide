@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.client.application.phases;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -34,15 +35,16 @@ import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileE
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -54,7 +56,7 @@ import com.google.gwt.user.client.Timer;
 
 public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorActiveFileChangedHandler
 {
-   
+
    public static final int SCHEDULE_START = 100;
 
    private HandlerManager eventBus;
@@ -63,9 +65,9 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    private List<String> filesToLoad;
 
-   private Map<String, File> openedFiles = new LinkedHashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
-   private File fileToLoad;
+   private FileModel fileToLoad;
 
    private Map<String, String> defaultEditors;
 
@@ -86,7 +88,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
+
       new Timer()
       {
          @Override
@@ -94,7 +96,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
          {
             execute();
          }
-      }.schedule(SCHEDULE_START);      
+      }.schedule(SCHEDULE_START);
    }
 
    protected void execute()
@@ -127,45 +129,62 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
          return;
       }
 
-      String href = filesToLoad.get(0);
-      fileToLoad = new File(href);
+      String fileId = filesToLoad.get(0);
+      fileToLoad = new FileModel();
+      //      fileToLoad.setPath(href);
       filesToLoad.remove(0);
-
-      VirtualFileSystem.getInstance().getProperties(fileToLoad, new ItemPropertiesCallback()
+      try
       {
-         @Override
-         protected void onSuccess(Item result)
-         {
-            fileToLoad.setNewFile(false);
-            fileToLoad.setContentChanged(false);
-            VirtualFileSystem.getInstance().getContent(fileToLoad, new FileCallback()
+         VirtualFileSystem.getInstance().getItem(fileId,
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(fileToLoad))
             {
-               @Override
-               protected void onSuccess(File result)
-               {
-                  openedFiles.put(fileToLoad.getHref(), fileToLoad);
-                  preloadNextFile();
-               }
-               
+
                @Override
                protected void onFailure(Throwable exception)
                {
-                  super.onFailure(exception);
                   preloadNextFile();
                }
-               
+
+               @Override
+               protected void onSuccess(FileModel result)
+               {
+                  fileToLoad.setContentChanged(false);
+                  try
+                  {
+                     VirtualFileSystem.getInstance().getContent(
+                        new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(fileToLoad))
+                        {
+
+                           @Override
+                           protected void onSuccess(FileModel result)
+                           {
+                              openedFiles.put(fileToLoad.getId(), fileToLoad);
+                              preloadNextFile();
+
+                           }
+
+                           @Override
+                           protected void onFailure(Throwable exception)
+                           {
+                              eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                              preloadNextFile();
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
+                     e.printStackTrace();
+                  }
+               }
             });
-            
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            //super.onFailure(exception);
-            preloadNextFile();
-         }
-         
-      });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         e.printStackTrace();
+      }
+
    }
 
    private void openFilesInEditor()
@@ -198,11 +217,11 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       String fileURL = filesToOpen.get(0);
       filesToOpen.remove(0);
-      File file = openedFiles.get(fileURL);
+      FileModel file = openedFiles.get(fileURL);
       try
       {
-         String editorDescription = defaultEditors.get(file.getContentType());
-         EditorProducer producer = EditorFactory.getEditorProducer(file.getContentType(), editorDescription);
+         String editorDescription = defaultEditors.get(file.getMimeType());
+         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), editorDescription);
          eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
       }
       catch (EditorNotFoundException e)
@@ -215,7 +234,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    {
       if (activeFileURL != null)
       {
-         File activeFile = openedFiles.get(activeFileURL);
+         FileModel activeFile = openedFiles.get(activeFileURL);
          if (activeFile != null)
          {
             eventBus.fireEvent(new EditorChangeActiveFileEvent(activeFile));

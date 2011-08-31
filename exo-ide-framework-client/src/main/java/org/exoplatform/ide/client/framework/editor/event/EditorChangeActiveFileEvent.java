@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,14 +34,14 @@ public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFile
 
    public static final GwtEvent.Type<EditorChangeActiveFileHandler> TYPE = new GwtEvent.Type<EditorChangeActiveFileHandler>();
 
-   private File file;
+   private FileModel file;
 
-   public EditorChangeActiveFileEvent(File file)
+   public EditorChangeActiveFileEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

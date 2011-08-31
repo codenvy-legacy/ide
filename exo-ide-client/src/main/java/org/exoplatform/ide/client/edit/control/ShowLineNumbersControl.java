@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.edit.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -30,11 +32,9 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -53,7 +53,7 @@ public class ShowLineNumbersControl extends SimpleControl implements IDEControl,
 
    private static final String TITLE_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.showLineNumbersHideControl();
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private Editor activeEditor;
 

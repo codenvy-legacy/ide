@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.model.template;
 
-import org.exoplatform.ide.client.Images;
-
 import java.util.List;
 
 /**
@@ -35,7 +33,7 @@ public class ProjectTemplate extends FolderTemplate
     * The location of class path file.
     */
    private String classPathLocation;
-   
+
    /**
     * Project type (need to detect is generate classpath for project). 
     */
@@ -48,24 +46,15 @@ public class ProjectTemplate extends FolderTemplate
    {
       super(name);
    }
-   
+
    public ProjectTemplate(String name, String description, String nodeName, List<Template> templates)
    {
       super(name, description, nodeName, templates);
    }
-   
+
    public ProjectTemplate(String name, String description, boolean isDefault)
    {
       super(name, description, isDefault);
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.model.template.Template#getIcon()
-    */
-   @Override
-   public String getIcon()
-   {
-      return Images.FileTypes.FOLDER;
    }
 
    /**
@@ -83,7 +72,7 @@ public class ProjectTemplate extends FolderTemplate
    {
       this.classPathLocation = classPathLocation;
    }
-   
+
    /**
     * @return the type
     */
@@ -91,7 +80,7 @@ public class ProjectTemplate extends FolderTemplate
    {
       return type;
    }
-   
+
    /**
     * @param type the type to set
     */

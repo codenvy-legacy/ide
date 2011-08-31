@@ -354,7 +354,7 @@ ApplicationSettingsReceivedHandler, ViewClosedHandler
    {
       if (event.getSelectedItems().size() == 1)
       {
-         item = event.getSelectedItems().get(0);
+//         item = event.getSelectedItems().get(0);
       }
    }
 

@@ -59,7 +59,7 @@ public class CssEditorExtension extends Extension
          MimeType.TEXT_CSS).setGroup(1));
 
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css",
-         Images.CSS, true, 
+         RESOURCES.cssImage(), true, 
          new CodeMirrorConfiguration().
             setGenericParsers("['parsecss.js']").
             setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']").

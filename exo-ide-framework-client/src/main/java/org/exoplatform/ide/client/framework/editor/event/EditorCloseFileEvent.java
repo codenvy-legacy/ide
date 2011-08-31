@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,16 +34,16 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
 
    public static final GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
-   private File file;
+   private FileModel file;
    
    private boolean forceClosing = false;
 
-   public EditorCloseFileEvent(File file)
+   public EditorCloseFileEvent(FileModel file)
    {
       this.file = file;
    }
 
-   public EditorCloseFileEvent(File file, boolean forceClosing)
+   public EditorCloseFileEvent(FileModel file, boolean forceClosing)
    {
       this.file = file;
       this.forceClosing = forceClosing;
@@ -58,7 +58,7 @@ public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
     * Return file will be closed
     * @return
     */
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }

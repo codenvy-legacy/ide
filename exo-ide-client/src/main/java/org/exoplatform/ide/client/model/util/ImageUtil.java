@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide.client.model.util;
 
-import org.exoplatform.ide.client.Images;
+import com.google.gwt.resources.client.ImageResource;
+
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,31 +37,41 @@ import java.util.Map;
 public class ImageUtil
 {
 
-   private static HashMap<String, String> images = new HashMap<String, String>();
+   private static HashMap<String, ImageResource> images = new HashMap<String, ImageResource>();
 
    static
    {
-      images.put(null, Images.FileTypes.DEFAULT);
-   }
-   
-   public static void putIcon(String mimeType, String icon)
-   {
-      images.put(mimeType, icon);
+      images.put(null, IDEImageBundle.INSTANCE.defaultFile());
+      images.put(Folder.FOLDER_MIME_TYPE, IDEImageBundle.INSTANCE.folder());
    }
 
-   public static String getIcon(String mimeType)
-   {      
-      String icon = images.get(mimeType);
+   public static void putIcon(String mimeType, ImageResource imageResource)
+   {
+      images.put(mimeType, imageResource);
+   }
+
+   public static ImageResource getIcon(String mimeType)
+   {
+      ImageResource icon = images.get(mimeType);
       if (icon == null)
       {
-         icon = Images.FileTypes.DEFAULT;
+         icon = IDEImageBundle.INSTANCE.defaultFile();
       }
       return icon;
    }
-   
-   public static Map<String, String> getIcons()
+
+   public static Map<String, ImageResource> getIcons()
    {
       return images;
+   }
+
+   /**
+    * @param newFile
+    * @return
+    */
+   public static ImageResource getIcon(FileModel file)
+   {
+      return getIcon(file.getMimeType());
    }
 
 }

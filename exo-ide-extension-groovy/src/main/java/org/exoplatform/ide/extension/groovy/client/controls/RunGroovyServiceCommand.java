@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.controls;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.Version;
 import org.exoplatform.ide.extension.groovy.client.Images;
 import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceEvent;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -64,8 +63,8 @@ public class RunGroovyServiceCommand extends SimpleControl implements IDEControl
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getContentType())
-         || (event.getFile() instanceof Version))
+      if (event.getFile() == null || !MimeType.GROOVY_SERVICE.equals(event.getFile().getMimeType())
+         || (event.getFile().isVersion()))
       {
          setEnabled(false);
          setVisible(false);

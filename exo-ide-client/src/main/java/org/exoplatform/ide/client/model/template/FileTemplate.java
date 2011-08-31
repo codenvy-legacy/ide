@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.model.template;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.ide.client.model.util.ImageUtil;
 
 /**
@@ -118,7 +120,7 @@ public class FileTemplate extends Template
     * @see org.exoplatform.ide.client.model.template.Template#getIcon()
     */
    @Override
-   public String getIcon()
+   public ImageResource getIcon()
    {
       return ImageUtil.getIcon(getMimeType());
    }

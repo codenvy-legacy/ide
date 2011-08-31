@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.gatein.gadget.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -30,15 +32,13 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.gatein.gadget.client.controls.DeployGadgetCommand;
 import org.exoplatform.ide.extension.gatein.gadget.client.controls.UndeployGadgetCommand;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.DeployGadgetEvent;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.DeployGadgetHadndler;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEvent;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetHandler;
-
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -51,7 +51,7 @@ EditorActiveFileChangedHandler
 
    private HandlerManager eventBus;
    
-   private File activeFile;
+   private FileModel activeFile;
 
    private GateinGadgetService gateinGadgetService;
 
@@ -79,7 +79,7 @@ EditorActiveFileChangedHandler
    @Override
    public void onDeployGadget(DeployGadgetEvent event)
    {
-      gateinGadgetService.deployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
+      gateinGadgetService.deployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override
@@ -112,7 +112,7 @@ EditorActiveFileChangedHandler
    @Override
    public void onUndeployGadget(UndeployGadgetEvent event)
    {
-      gateinGadgetService.undeployGadget(activeFile.getHref(), new AsyncRequestCallback<String>()
+      gateinGadgetService.undeployGadget(activeFile.getId(), new AsyncRequestCallback<String>()
       {
          
          @Override

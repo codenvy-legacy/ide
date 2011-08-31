@@ -18,9 +18,17 @@
  */
 package org.exoplatform.ide.client.upload;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.URL;
-
-import java.util.List;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -28,20 +36,11 @@ import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.List;
 
 /**
  * Presenter for uploading file
@@ -78,15 +77,15 @@ public class UploadPresenter implements FileSelectedHandler
 
    protected UploadDisplay display;
 
-   protected String path;
+   protected FolderModel folder;
 
    protected List<Item> selectedItems;
 
-   public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, String path)
+   public UploadPresenter(HandlerManager eventBus, List<Item> selectedItems, FolderModel folder)
    {
       this.eventBus = eventBus;
       this.selectedItems = selectedItems;
-      this.path = path;
+      this.folder = folder;
    }
 
    protected void bindDisplay(UploadDisplay d)
@@ -137,8 +136,8 @@ public class UploadPresenter implements FileSelectedHandler
       }
 
       Item item = selectedItems.get(0);
-      String href = item.getHref();
-      if (item instanceof File)
+      String href = item.getPath();
+      if (item instanceof FileModel)
       {
          href = href.substring(0, href.lastIndexOf("/") + 1);
       }
@@ -215,15 +214,6 @@ public class UploadPresenter implements FileSelectedHandler
    protected void completeUpload(String response)
    {
       display.closeDisplay();
-
-      Item item = selectedItems.get(0);
-      String href = item.getHref();
-      if (item instanceof File)
-      {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
-      }
-
-      Folder folder = new Folder(href);
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
    }
 

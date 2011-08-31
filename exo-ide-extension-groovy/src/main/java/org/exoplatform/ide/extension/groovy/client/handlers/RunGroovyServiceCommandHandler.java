@@ -19,9 +19,8 @@
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -30,7 +29,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceEvent;
@@ -43,6 +41,7 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyVa
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class RunGroovyServiceCommandHandler implements RunGroovyServiceHandler, 
    private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
       new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
 
-   private File activeFile;
+   private FileModel activeFile;
 
    public RunGroovyServiceCommandHandler(HandlerManager eventBus)
    {

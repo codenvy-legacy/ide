@@ -19,27 +19,24 @@
 package org.exoplatform.ide.client.navigation.ui;
 
 import com.google.gwt.resources.client.ImageResource;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
-import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -69,8 +66,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       this.prefixId = prefixId;
    }
 
-   @Override
-   protected Widget createItemWidget(String icon, String text)
+   protected Widget createItemWidget(ImageResource icon, String text)
    {
       Grid grid = new Grid(1, 2);
       grid.setWidth("100%");
@@ -96,31 +92,28 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    /**
     * @param item
     */
-   private TreeItem getNodeByHref(String href)
+   private TreeItem getNodeById(String id)
    {
-      Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
-      String path = href.substring(rootFolder.getHref().length());
-
-      if (path.length() > 0 && path.charAt(0) == '/')
-      {
-         path = path.substring(1);
-      }
-
-      if ("".equals(path))
-      {
-         return tree.getItem(0);
-      }
-
-      String[] pathParts = path.split("/");
+      //      FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
+      //      String path = id.substring(rootFolder.getHref().length());
+      //
+      //      if (path.length() > 0 && path.charAt(0) == '/')
+      //      {
+      //         path = path.substring(1);
+      //      }
+      //
+      //      if ("".equals(path))
+      //      {
+      //         return tree.getItem(0);
+      //      }
+      //
+      //      String[] pathParts = path.split("/");
       TreeItem node = tree.getItem(0);
-      for (String pathSplit : pathParts)
+      if(((Item)node.getUserObject()).getId().equals(id))
       {
-         node = getChild(node, pathSplit);
-         if (node == null)
-         {
-            return null;
-         }
+         return node;
       }
+      node = getChild(node, id);
       return node;
    }
 
@@ -130,10 +123,10 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
     * If last part of child path (substring after last /) equals to pathSplit,
     * return tree item.
     * @param parent
-    * @param pathSplit
+    * @param id
     * @return
     */
-   private TreeItem getChild(TreeItem parent, String pathSplit)
+   private TreeItem getChild(TreeItem parent, String id)
    {
       for (int i = 0; i < parent.getChildCount(); i++)
       {
@@ -144,30 +137,15 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          }
 
          Item userObject = (Item)child.getUserObject();
-         String href = userObject.getHref();
-         
-         //crop useless part of href
-         Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
-         String path = href.substring(rootFolder.getHref().length());
-
-         if (path.length() > 0 && path.startsWith("/"))
-         {
-            path = path.substring(1);
-         }
-         if (path.length() > 0 && path.endsWith("/"))
-         {
-            path = path.substring(0, path.length() - 1);
-         }
-         
-         //get the last part of path
-         if (path.contains("/"))
-         {
-            path = path.substring(path.lastIndexOf("/") + 1);
-         }
-         
-         if (path.equals(pathSplit))
+         if (userObject.getId().equals(id))
          {
             return child;
+         }
+         if (userObject instanceof FolderModel)
+         {
+            TreeItem child2 = getChild(child, id);
+            if (child2 != null)
+               return child2;
          }
       }
 
@@ -203,26 +181,20 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    private TreeItem createTreeNode(Item item)
    {
-      String text = "";
-      if (item.getIcon() != null)
-      {
-         text = item.getIcon();
-      }
-      else
-      {
-         text = Images.FileTypes.FOLDER;
-      }
-
-      TreeItem node = new TreeItem(createItemWidget(text, getTitle(item)));
+      TreeItem node = new TreeItem(createItemWidget(ImageUtil.getIcon(item.getMimeType()), getTitle(item)));
 
       node.setUserObject(item);
-      if (item instanceof Folder)
+      if (item instanceof FolderModel)
       {
          // TODO fix this 
          node.addItem("");
       }
 
-      node.getElement().setId(prefixId + Utils.md5(item.getHref()));
+      String id = item.getId();
+      id = id.substring(1);
+      id=id.replaceAll("/", "-");
+      id=id.replaceAll(" ", "_");
+      node.getElement().setId(prefixId + id);
 
       return node;
    }
@@ -231,21 +203,21 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       String title = "";
 
-      if (locktokens == null)
+      if (locktokens == null || locktokens.isEmpty())
       {
-         return item.getName();
+         return item.getName().isEmpty() ? "/" : item.getName();
       }
 
-      if (item.getProperty(ItemProperty.LOCKDISCOVERY) != null)
+      if (item instanceof FileModel && ((FileModel)item).isLocked())
       {
-         if (!locktokens.containsKey(item.getHref()))
+         if (!locktokens.containsKey(item.getId()))
          {
             title +=
                "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-11px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
                   + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
          }
       }
-      title += item.getName();
+      title += item.getName().isEmpty() ? "/" : item.getName();
 
       return title;
    }
@@ -267,27 +239,27 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       {
          TreeItem addItem = createTreeNode(value);
          tree.addItem(addItem);
-         if (((Folder)value).getChildren() == null)
+         if (((FolderModel)value).getChildren() == null)
             return;
       }
 
-      if (((Folder)value).getChildren() == null)
+      if (((FolderModel)value).getChildren() == null)
       {
          return;
       }
 
-      Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
+      FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
 
-      String rootFolderHref = rootFolder.getHref();
-      if (!value.getHref().startsWith(rootFolderHref))
+      String rootFolderHref = rootFolder.getPath();
+      if (!value.getPath().startsWith(rootFolderHref))
       {
          return;
       }
 
-      TreeItem parent = getNodeByHref(value.getHref());
+      TreeItem parent = getNodeById(value.getId());
       try
       {
-         setItems(parent, ((Folder)value).getChildren());
+         setItems(parent, ((FolderModel)value).getChildren().getItems());
          if (tree.getSelectedItem() != null)
          {
             moveHighlight(tree.getSelectedItem());
@@ -306,7 +278,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
     */
    public void selectItem(String path)
    {
-      TreeItem item = getNodeByHref(path);
+      TreeItem item = getNodeById(path);
       if (item != null)
       {
          tree.setSelectedItem(item, true);
@@ -330,9 +302,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    /**
     * @param file
     */
-   public void updateFileState(File file)
+   public void updateFileState(FileModel file)
    {
-      TreeItem fileNode = getNodeByHref(file.getHref());
+      TreeItem fileNode = getNodeById(file.getId());
       if (fileNode == null)
       {
          return;
@@ -360,7 +332,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
     */
    public void deselectItem(String path)
    {
-      TreeItem item = getNodeByHref(path);
+      TreeItem item = getNodeById(path);
       if (item != null)
       {
          tree.setSelectedItem(item, false);
@@ -384,7 +356,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       for (Item item : itemsIcons.keySet())
       {
-         TreeItem node = getNodeByHref(item.getHref());
+         TreeItem node = getNodeById(item.getId());
          Grid grid = (Grid)node.getWidget();
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
@@ -404,7 +376,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       for (Item item : itemsIcons.keySet())
       {
-         TreeItem node = getNodeByHref(item.getHref());
+         TreeItem node = getNodeById(item.getId());
          Grid grid = (Grid)node.getWidget();
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          treeIcon.removeIcon(itemsIcons.get(item));
@@ -421,10 +393,11 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       this.id = id;
       getElement().setId(id);
    }
-   
-   public void setTreeGridId(String id) {
+
+   public void setTreeGridId(String id)
+   {
       this.id = id;
-      getElement().setId(id);      
+      getElement().setId(id);
    }
 
    public String getPrefixId()

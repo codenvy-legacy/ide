@@ -48,7 +48,7 @@ public class NetvibesEditorExtension extends Extension
          MimeType.UWA_WIDGET,
          "CodeMirror Netvibes editor",
          "html",
-         Images.UWA_WIGET,
+         Images.INSTANCE.uwa(),
          true,
          new CodeMirrorConfiguration().
             setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']").

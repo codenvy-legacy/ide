@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.rest.UrlBuilder;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -150,7 +152,8 @@ public class VirtualFileSystem
       //callback.setEventBus(eventBus);
       //callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(FolderModel.REL_CHILDREN).getHref()).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(FolderModel.REL_CHILDREN).getHref()).send(
+         callback);
 
    }
 
@@ -180,8 +183,8 @@ public class VirtualFileSystem
 
       ProjectModel newProject = callback.getPayload();
       String url =
-         parent.getLinkByRelation(FolderModel.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName() + "&type="
-            + newProject.getProjectType();
+         parent.getLinkByRelation(FolderModel.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName()
+            + "&type=" + newProject.getProjectType();
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
          .header(HTTPHeader.CONTENT_TYPE, "application/json").send(callback);
@@ -256,7 +259,7 @@ public class VirtualFileSystem
     * @param callback
     * @param loader
     */
-   public void copy(Item source, String destination, AsyncRequestCallback<String> callback) throws RequestException
+   public void copy(Item source, String destination, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url =
          source.getLinkByRelation(Item.REL_COPY).getHref() + (destination != null ? "?parentId=" + destination : "");
@@ -272,7 +275,7 @@ public class VirtualFileSystem
     * @param callback
     * @param loader
     */
-   public void move(Item source, String destination, String lockToken, AsyncRequestCallback<String> callback)
+   public void move(Item source, String destination, String lockToken, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException
    {
       String lockStr = "";
@@ -282,18 +285,57 @@ public class VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
-   public void rename(String id, String mediaType, String newname, String lockToken)
+   public void rename(Item item, String mediaType, String newname, String lockToken,
+      AsyncRequestCallback<String> callback) throws RequestException
    {
-
+      UrlBuilder urlB = new UrlBuilder(workspaceURL + "rename" + item.getId());
+      if (!item.getName().equals(newname))
+         urlB.setParameter("newname", newname);
+      if (mediaType != null)
+         urlB.setParameter("mediaType", mediaType);
+      if (item.getItemType() == ItemType.FILE && ((FileModel)item).isLocked())
+         urlB.setParameter("lockToken", lockToken);
+      //mediaType parameter may contains '+' character, URL.enconde() method not encode
+      //this char, so do it manually
+      String url = urlB.buildString().replaceAll("\\+", "%2B");
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
-   public void lock(String id)
+   /**
+    * Place lock on File item.
+    * @param file to be locked
+    * @param callback
+    * @throws RequestException
+    */
+   public void lock(FileModel file, AsyncRequestCallback<LockToken> callback) throws RequestException
    {
+      String url = file.getLinks().get("lock").getHref();
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
-   public void unlock(String id, String lockToken)
+   /**
+    * Remove lock from file.
+    * @param file to be unlocked
+    * @param lockToken lock token
+    * @param callback
+    * @throws RequestException
+    */
+   public void unlock(FileModel file, String lockToken, AsyncRequestCallback<Object> callback) throws RequestException
    {
+      String url = file.getLinks().get("unlock").getHref() + "?lockToken=" + lockToken;
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+   }
 
+   /**
+    * Get item by id.
+    * @param id id of item
+    * @param callback
+    * @throws RequestException 
+    */
+   public void getItem(String id, AsyncRequestCallback<? extends Item> callback) throws RequestException
+   {
+      String url = workspaceURL + "item" + id;
+      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
 }

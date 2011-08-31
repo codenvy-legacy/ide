@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
@@ -37,11 +37,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -63,7 +63,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
 
    private ShowDocumentationControl control;
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private ApplicationSettings settings;
 
@@ -99,7 +99,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
 
       if (activeFile != null)
       {
-         if (docs.containsKey(activeFile.getContentType()))
+         if (docs.containsKey(activeFile.getMimeType()))
          {
             if (isDocumentationOpened)
             {
@@ -132,7 +132,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       if (display == null)
       {
          display = GWT.create(Display.class);
-         display.setDocumentationURL(docs.get(activeFile.getContentType()));
+         display.setDocumentationURL(docs.get(activeFile.getMimeType()));
          IDE.getInstance().openView(display.asView());
       }
       else

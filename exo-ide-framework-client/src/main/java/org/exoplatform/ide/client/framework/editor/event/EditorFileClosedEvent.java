@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import java.util.Map;
-
-import org.exoplatform.ide.client.framework.vfs.File;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,25 +35,25 @@ public class EditorFileClosedEvent extends GwtEvent<EditorFileClosedHandler>
 
    public static final GwtEvent.Type<EditorFileClosedHandler> TYPE = new GwtEvent.Type<EditorFileClosedHandler>();
 
-   private File file;
+   private FileModel file;
 
    private String editorDescription;
 
-   private Map<String, File> openedFiles;
+   private Map<String, FileModel> openedFiles;
 
-   public EditorFileClosedEvent(File file, String editorDescription, Map<String, File> openedFiles)
+   public EditorFileClosedEvent(FileModel file, String editorDescription, Map<String, FileModel> openedFiles)
    {
       this.file = file;
       this.editorDescription = editorDescription;
       this.openedFiles = openedFiles;
    }
 
-   public File getFile()
+   public FileModel getFile()
    {
       return file;
    }
 
-   public Map<String, File> getOpenedFiles()
+   public Map<String, FileModel> getOpenedFiles()
    {
       return openedFiles;
    }

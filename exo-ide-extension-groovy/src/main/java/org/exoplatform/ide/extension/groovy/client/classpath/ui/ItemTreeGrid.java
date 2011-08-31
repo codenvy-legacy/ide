@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.user.client.DOM;
-
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.TreeItem;
 
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +46,15 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
    @Override
    public void doUpdateValue()
    {
-      TreeItem node = findTreeNode(getValue().getHref());
-      if (node != null && getValue() instanceof Folder)
+      TreeItem node = findTreeNode(getValue().getId());
+      if (node != null && getValue() instanceof FolderModel)
       {
-         fillTreeItems(node, ((Folder)getValue()).getChildren());
+         fillTreeItems(node, ((FolderModel)getValue()).getChildren().getItems());
          node.setState(true, true);
       }
       else
       {
-         fillTreeItems(((Folder)getValue()).getChildren());
+         fillTreeItems(((FolderModel)getValue()).getChildren().getItems());
       }
 
    }
@@ -61,21 +62,21 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
    /**
     * Find tree node by href.
     * 
-    * @param href
+    * @param id
     * @return {@link TreeItem}
     */
-   public TreeItem findTreeNode(String href)
+   public TreeItem findTreeNode(String id)
    {
       for (int i = 0; i < tree.getItemCount(); i++)
       {
          TreeItem child = tree.getItem(i);
          if (child.getUserObject() == null)
             continue;
-         if (href.equals(((Item)child.getUserObject()).getHref()))
+         if (id.equals(((Item)child.getUserObject()).getId()))
          {
             return child;
          }
-         TreeItem item = getChild(child, href);
+         TreeItem item = getChild(child, id);
          if (item != null)
             return item;
       }
@@ -89,18 +90,18 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
     * @param token token
     * @return {@link TreeItem}
     */
-   private TreeItem getChild(TreeItem parent, String href)
+   private TreeItem getChild(TreeItem parent, String id)
    {
       for (int i = 0; i < parent.getChildCount(); i++)
       {
          TreeItem child = parent.getChild(i);
          if (child.getUserObject() == null)
             continue;
-         if (href.equals(((Item)child.getUserObject()).getHref()))
+         if (id.equals(((Item)child.getUserObject()).getId()))
          {
             return child;
          }
-         TreeItem item = getChild(child, href);
+         TreeItem item = getChild(child, id);
          if (item != null)
             return item;
       }
@@ -125,9 +126,9 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
          TreeItem newNode = getNode(item);
          newNode.setUserObject(item);
          parentNode.addItem(newNode);
-         if (item instanceof Folder && ((Folder)item).getChildren() != null)
+         if (item instanceof FolderModel && ((FolderModel)item).getChildren() != null)
          {
-            fillTreeItems(newNode, ((Folder)item).getChildren());
+            fillTreeItems(newNode, ((FolderModel)item).getChildren().getItems());
          }
       }
    }
@@ -149,9 +150,9 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
          TreeItem newNode = getNode(item);
          newNode.setUserObject(item);
          tree.addItem(newNode);
-         if (item instanceof Folder && ((Folder)item).getChildren() != null)
+         if (item instanceof FolderModel && ((FolderModel)item).getChildren() != null)
          {
-            fillTreeItems(newNode, ((Folder)item).getChildren());
+            fillTreeItems(newNode, ((FolderModel)item).getChildren().getItems());
          }
       }
    }
@@ -164,11 +165,20 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
     */
    private TreeItem getNode(Item item)
    {
-      String icon = (item instanceof Folder && item.getIcon() == null) ? Images.ClassPath.FOLDER : item.getIcon();
+      ImageResource icon;
+      try
+      {
+         icon = (item instanceof FolderModel) ? GroovyClientBundle.INSTANCE.folder() : IDE.getInstance().getEditor(item.getMimeType()).getIcon();
+      }
+      catch (EditorNotFoundException e)
+      {
+         e.printStackTrace();
+         icon = GroovyClientBundle.INSTANCE.folder();
+      }
 
       TreeItem node = new TreeItem(createItemWidget(icon, item.getName()));
       node.setUserObject(item);
-      if (item instanceof Folder)
+      if (item instanceof FolderModel)
       {
          // TODO fix this 
          node.addItem("");

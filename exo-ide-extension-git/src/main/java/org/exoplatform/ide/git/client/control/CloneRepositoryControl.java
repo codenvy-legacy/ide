@@ -19,10 +19,10 @@
 package org.exoplatform.ide.git.client.control;
 
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * Control for cloning remote repository to local one.
@@ -52,8 +52,8 @@ public class CloneRepositoryControl extends GitControl
       }
       //Check whether folder is selected:
       boolean enabled =
-         ((event.getSelectedItems().get(0) instanceof Folder) && !isWorkspaceSelected(event.getSelectedItems().get(0)
-            .getHref()));
+         ((event.getSelectedItems().get(0) instanceof FolderModel) && !isWorkspaceSelected(event.getSelectedItems().get(0)
+            .getId()));
       setEnabled(enabled);
    }
 }

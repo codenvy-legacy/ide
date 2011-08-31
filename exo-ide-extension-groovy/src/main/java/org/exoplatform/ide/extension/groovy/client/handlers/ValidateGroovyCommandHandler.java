@@ -35,13 +35,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,9 +60,9 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    private HandlerManager eventBus;
 
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   private File activeFile;
+   private FileModel activeFile;
 
    /**
     * Is need to go to position in active file.
@@ -151,15 +151,15 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile, new AsyncRequestCallback<File>()
+      GroovyService.getInstance().validate(activeFile, new AsyncRequestCallback<FileModel>()
       {
          
          @Override
-         protected void onSuccess(File result)
+         protected void onSuccess(FileModel result)
          {
             String outputContent = "<b>" + result.getName() + "</b> validated successfully.";
             eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-            eventBus.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getHref()));
+            eventBus.fireEvent(new GroovyValidateResultReceivedEvent(result.getName(), result.getId()));
          }
          
          @Override
@@ -184,7 +184,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
                outputContent =
                   "<span title=\"Go to error\" onClick=\"window.groovyGoToErrorFunction("
                      + String.valueOf(errLineNumber) + "," + String.valueOf(errColumnNumber) + ", '"
-                     + this.getResult().getHref() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
+                     + this.getResult().getPath() + "', '" + "');\" style=\"cursor:pointer;\">" + outputContent + "</span>";
 
                eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
             }
@@ -193,7 +193,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
                eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
             GroovyValidateResultReceivedEvent event =
-               new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getHref());
+               new GroovyValidateResultReceivedEvent(this.getResult().getName(), this.getResult().getId());
             event.setException(exception);
             eventBus.fireEvent(event);
          }
@@ -212,7 +212,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void goToError(String fileHref, int lineNumber, int columnNumber)
    {
-      if (activeFile != null && fileHref.equals(activeFile.getHref()))
+      if (activeFile != null && fileHref.equals(activeFile.getId()))
       {
          eventBus.fireEvent(new EditorGoToLineEvent(lineNumber, columnNumber));
          return;

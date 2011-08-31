@@ -69,10 +69,10 @@ public class ShowNetvibesPreviewControl extends SimpleControl implements IDECont
          return;
       }
 
-      if (MimeType.UWA_WIDGET.equals(event.getFile().getContentType()))
+      if (MimeType.UWA_WIDGET.equals(event.getFile().getMimeType()))
       {
          setVisible(true);
-         if (event.getFile().isNewFile())
+         if (!event.getFile().isPersisted())
          {
             setEnabled(false);
          }

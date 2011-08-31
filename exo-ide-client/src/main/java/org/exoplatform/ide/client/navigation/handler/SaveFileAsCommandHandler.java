@@ -18,11 +18,15 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.dialogs.ValueCallback;
@@ -38,12 +42,11 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -61,11 +64,11 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    private HandlerManager eventBus;
 
-   private String sourceHref;
+   private String sourceId;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private File activeFile;
+   private FileModel activeFile;
 
    private Map<String, String> lockTokens;
 
@@ -91,7 +94,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    /**
     * File to be saved.
     */
-   private File fileToSave;   
+   private FileModel fileToSave;   
    
    public SaveFileAsCommandHandler(HandlerManager eventBus)
    {
@@ -117,7 +120,7 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
          return;
       }
 
-      File file = event.getFile() != null ? event.getFile() : activeFile;
+      FileModel file = event.getFile() != null ? event.getFile() : activeFile;
 
       eventFiredOnCancelButtonPressed = event.getEventFiredOnCancel();
       
@@ -135,8 +138,8 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
     */
    private void askForNewFileName(SaveFileAsEvent.SaveDialogType type)
    {
-      final String newFileName = fileToSave.isNewFile() ? fileToSave.getName() : PREFIX + " " + fileToSave.getName();
-      sourceHref = fileToSave.getHref();
+      final String newFileName = !fileToSave.isPersisted() ? fileToSave.getName() : PREFIX + " " + fileToSave.getName();
+//      sourceHref = fileToSave.getId();
 
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
@@ -169,6 +172,8 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       }
    };
 
+
+
    ValueDiscardCallback noButtonSelectedCallback = new ValueDiscardCallback()
    {
       @Override
@@ -181,86 +186,100 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       }
    };
 
-   private void saveFileAs(File file, String value)
+   private void saveFileAs(FileModel file, String name)
    {
-      String pathToSave = getFilePath(selectedItems.get(0)) + value;
-      File newFile = new File(pathToSave);
-      newFile.setContent(file.getContent());
-      newFile.setContentType(file.getContentType());
-      newFile.setJcrContentNodeType(file.getJcrContentNodeType());
-      newFile.setNewFile(true);
-      newFile.setContentChanged(true);
+      FolderModel folderToSave = getFilePath(selectedItems.get(0));
+      FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), folderToSave);
+      
 
-      if (!file.isNewFile())
+      if (file.isPersisted())
       {
          newFile.getProperties().addAll(file.getProperties());
-         newFile.setPropertiesChanged(true);
       }
 
-      newFile.setIcon(file.getIcon());
-
-      VirtualFileSystem.getInstance().saveContent(newFile, null, new FileContentSaveCallback()
+      try
       {
-         @Override
-         protected void onSuccess(FileData result)
+         VirtualFileSystem.getInstance().createFile(folderToSave, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
          {
-            File file = result.getFile();
 
-            if (file.isPropertiesChanged())
+            @Override
+            protected void onSuccess(FileModel result)
             {
-               saveFileProperties(file, lockTokens.get(file.getHref()));
+               eventBus.fireEvent(new FileSavedEvent(result, sourceId));
+               refreshBrowser(result.getParent());
             }
-            else
+            
+            @Override
+            protected void onFailure(Throwable exception)
             {
-               getProperties(file);
+               eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
-         }
-      });
-
-   }
-
-   private void saveFileProperties(File file, String lockToken)
-   {
-      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-      {
-         @Override
-         protected void onSuccess(Item result)
-         {
-            getProperties(result);
-         }
-      });
-   }
-
-   private String getFilePath(Item item)
-   {
-      String href = item.getHref();
-      if (item instanceof File)
-      {
-         href = href.substring(0, href.lastIndexOf("/") + 1);
+         });
       }
-      return href;
-   }
-
-   private void getProperties(Item item)
-   {
-      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
+      catch (RequestException e)
       {
-         @Override
-         protected void onSuccess(Item result)
-         {
-            File savedFile = (File)result;
-            savedFile.setNewFile(false);
-            savedFile.setContentChanged(false);
-            eventBus.fireEvent(new FileSavedEvent(savedFile, sourceHref));
-            refreshBrowser(result.getHref());
-         }
-      });
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
+//      saveContent(newFile, null, new FileContentSaveCallback()
+//      {
+//         @Override
+//         protected void onSuccess(FileData result)
+//         {
+//            File file = result.getFile();
+//            
+//            if (file.isPropertiesChanged())
+//            {
+//               saveFileProperties(file, lockTokens.get(file.getHref()));
+//            }
+//            else
+//            {
+//               getProperties(file);
+//            }            
+//         }
+//      });
+
    }
 
-   private void refreshBrowser(String hrefFolder)
+   //   private void saveFileProperties(FileModel file, String lockToken)
+   //   {
+   //      VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
+   //      {
+   //         @Override
+   //         protected void onSuccess(Item result)
+   //         {
+   //            getProperties(result);
+   //         }
+   //      });
+   //   }
+
+   private FolderModel getFilePath(Item item)
    {
-      hrefFolder = hrefFolder.substring(0, hrefFolder.lastIndexOf("/")) + "/";
-      Folder folder = new Folder(hrefFolder);
+
+      if (item instanceof FileModel)
+      {
+         return ((FileModel)item).getParent();
+      }
+      return (FolderModel)item;
+   }
+
+//   private void getProperties(Item item)
+//   {
+//      VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
+//      {
+//         @Override
+//         protected void onSuccess(Item result)
+//         {
+//            File savedFile = (File)result;
+//            savedFile.setNewFile(false);
+//            savedFile.setContentChanged(false);
+//           
+//         }
+//      });
+//   }
+
+   private void refreshBrowser(FolderModel folder)
+   {
       eventBus.fireEvent(new RefreshBrowserEvent(folder));
    }
 

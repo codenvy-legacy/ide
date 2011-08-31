@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
+import org.exoplatform.ide.vfs.shared.Item;
+
+import com.google.gwt.event.shared.GwtEvent;
+
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -25,7 +29,46 @@ package org.exoplatform.ide.vfs.client.event;
  * @version $
  */
 
-public class ItemDeletedEvent
+public class ItemDeletedEvent extends GwtEvent<ItemDeletedHandler>
 {
+
+   public static final GwtEvent.Type<ItemDeletedHandler> TYPE = new Type<ItemDeletedHandler>();
+
+   private Item item;
+
+   /**
+    * @param item
+    */
+   public ItemDeletedEvent(Item item)
+   {
+      super();
+      this.item = item;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ItemDeletedHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ItemDeletedHandler handler)
+   {
+      handler.onItemDeleted(this);
+   }
+
+   /**
+    * @return the item
+    */
+   public Item getItem()
+   {
+      return item;
+   }
 
 }

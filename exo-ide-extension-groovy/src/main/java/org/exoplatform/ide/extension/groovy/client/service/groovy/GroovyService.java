@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.groovy.client.service.groovy;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
@@ -56,7 +56,7 @@ public abstract class GroovyService
     * @param fileContent - file content
     * @param groovyCallback - callback to handler response from server
     */
-   public abstract void validate(File file, AsyncRequestCallback<File> callback);
+   public abstract void validate(FileModel file, AsyncRequestCallback<FileModel> callback);
    
    /**
     * Deploy Groovy script.

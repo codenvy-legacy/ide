@@ -92,6 +92,12 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/actions/defaults_Disabled.png")
    ImageResource defaultsDisabled();
+   
+   @Source("org/exoplatform/ide/public/images/filetype/folder_closed.png")
+   ImageResource folder();
+   
+   @Source("org/exoplatform/ide/public/images/filetype/default.png")
+   ImageResource defaultFile();
 
    /*
     * BROWSER
@@ -458,5 +464,8 @@ public interface IDEImageBundle extends ClientBundle
    
    @Source("bundled-images/welcome/samples.png")
    ImageResource welcomeSamples();
+   
+   @Source("org/exoplatform/ide/public/images/filetype/txt.png")
+   ImageResource textFile();
 
 }

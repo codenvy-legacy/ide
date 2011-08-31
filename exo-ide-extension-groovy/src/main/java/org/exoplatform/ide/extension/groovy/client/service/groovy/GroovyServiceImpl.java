@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.extension.groovy.client.service.groovy;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.gwt.http.client.URL;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
@@ -36,10 +35,10 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassP
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.JarListUnmarshaller;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.RestServiceOutputUnmarshaller;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestBuilder.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -149,14 +148,14 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#validate(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyValidateCallback)
     */
    @Override
-   public void validate(File file, AsyncRequestCallback<File> callback)
+   public void validate(FileModel file, AsyncRequestCallback<FileModel> callback)
    {
       String url = restServiceContext + SERVICE_PATH + VALIDATE;
 
       callback.setResult(file);
       callback.setEventBus(eventBus);
       
-      final String location = URL.decodePathSegment(file.getHref());
+      final String location = URL.decodePathSegment(file.getId());
 
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy")
          .header(HTTPHeader.LOCATION, location).data(file.getContent()).send(callback);

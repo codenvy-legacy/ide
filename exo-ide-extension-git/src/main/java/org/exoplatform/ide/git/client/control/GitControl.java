@@ -61,7 +61,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          setEnabled(false);
          return;
       }
-      setEnabled(!isWorkspaceSelected(event.getSelectedItems().get(0).getHref()));
+      setEnabled(!isWorkspaceSelected(event.getSelectedItems().get(0).getId()));
    }
 
    protected boolean isWorkspaceSelected(String href)

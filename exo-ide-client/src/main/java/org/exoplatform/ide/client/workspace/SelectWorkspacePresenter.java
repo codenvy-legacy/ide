@@ -46,14 +46,12 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileContentSaveCallback;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -147,7 +145,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    /**
     * Map of opened files, is needs for verifying for opened files in current working workspace and asking user for save them.
     */
-   private Map<String, File> openedFiles = new HashMap<String, File>();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    /*
     * Remove this map and use SaveFileEvent instead calling of VirtualFileSystem.getInstance().saveContent(...) method.
@@ -403,7 +401,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       }
 
       String href = openedFiles.keySet().iterator().next();
-      final File file = openedFiles.get(href);
+      final FileModel file = openedFiles.get(href);
 
       if (file.isContentChanged())
       {
@@ -423,23 +421,24 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
                if (value)
                {
-                  if (file.isNewFile())
+                  if (!file.isPersisted())
                   {
                      eventBus
                         .fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
                   }
                   else
                   {
-                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
-                        new FileContentSaveCallback()
-                        {
-                           @Override
-                           protected void onSuccess(FileData result)
-                           {
-                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
-                              closeNextFile();
-                           }
-                        });
+                     //TODO
+//                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
+//                        new FileContentSaveCallback()
+//                        {
+//                           @Override
+//                           protected void onSuccess(FileData result)
+//                           {
+//                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
+//                              closeNextFile();
+//                           }
+//                        });
                   }
                }
                else

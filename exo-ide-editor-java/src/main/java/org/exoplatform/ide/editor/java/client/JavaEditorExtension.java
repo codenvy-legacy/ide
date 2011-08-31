@@ -89,7 +89,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             + "/ide/code-assistant/java/class-doc?fqn="), this);
 
       IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", Images.JAVA, true,
+         new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", JavaClientBundle.INSTANCE.java(), true,
             new CodeMirrorConfiguration().
                setGenericParsers("['parsejava.js', 'tokenizejava.js']").
                setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").
@@ -135,7 +135,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (event.getFile() != null)
-         javaCodeAssistant.setactiveFileHref(event.getFile().getHref());
+         javaCodeAssistant.setactiveFileHref(event.getFile().getId());
    }
 
 }

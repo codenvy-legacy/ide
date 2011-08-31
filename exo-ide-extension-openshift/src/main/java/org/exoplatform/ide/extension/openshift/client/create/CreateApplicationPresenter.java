@@ -40,8 +40,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -49,6 +47,8 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -197,12 +197,12 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      if (selectedItems == null || selectedItems.size() == 0 || !(selectedItems.get(0) instanceof Folder))
+      if (selectedItems == null || selectedItems.size() == 0 || !(selectedItems.get(0) instanceof FolderModel))
       {
          Dialogs.getInstance().showInfo(OpenShiftExtension.LOCALIZATION_CONSTANT.selectFolder());
          return;
       }
-      workDir = selectedItems.get(0).getHref();
+      workDir = selectedItems.get(0).getId();
 
       OpenShiftClientService.getInstance().getApplicationTypes(new AsyncRequestCallback<List<String>>()
       {
