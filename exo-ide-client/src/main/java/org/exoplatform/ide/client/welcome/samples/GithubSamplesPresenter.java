@@ -39,12 +39,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.vfs.Item;
 import org.exoplatform.ide.client.model.github.GithubService;
 import org.exoplatform.ide.client.model.github.Repository;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -164,7 +163,7 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
    
    private void closeRepository(Repository repo)
    {
-      String workDir = selectedItems.get(0).getHref();
+      String workDir = selectedItems.get(0).getId();
       String remoteUri = repo.getUrl();
       if (!remoteUri.endsWith(".git"))
       {
