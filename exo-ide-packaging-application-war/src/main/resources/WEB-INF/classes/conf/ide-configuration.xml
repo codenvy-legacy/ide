@@ -63,6 +63,9 @@
      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
   </component>
     
+   <component>
+     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+   </component>
     
   <component>
      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
