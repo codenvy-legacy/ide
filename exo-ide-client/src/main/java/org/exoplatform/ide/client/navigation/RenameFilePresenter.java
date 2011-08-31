@@ -55,6 +55,7 @@ import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.navigation.event.RenameItemHander;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -101,36 +102,32 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       void enableRenameButton(boolean enable);
 
       void addLabel(String text);
-      
+
       void focusInNameField();
 
    }
 
    private static final String CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE = IDE.ERRORS_CONSTANT
       .renameItemCantRenameMimeTypeToOpenedFile();
-   
+
    private static final String SELECT_ITEM_TO_RENAME = "";
 
    private HandlerManager eventBus;
 
    private Display display;
 
-   private String itemBaseHref;
-
    private List<Item> selectedItems;
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private Map<String, String> lockTokens;
-   
+
    private FileModel renamedFile;
 
-   private String sourceHref;
-   
    public RenameFilePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(RenameItemEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -145,7 +142,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
       display.enableRenameButton(false);
 
-//      itemBaseHref = selectedItems.get(0).getWorkDir();
+      //      itemBaseHref = selectedItems.get(0).getWorkDir();
 
       display.getItemNameField().setValue(selectedItems.get(0).getName());
       display.getItemNameField().addValueChangeHandler(new ValueChangeHandler<String>()
@@ -208,7 +205,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          display.disableMimeTypeSelect();
          display.addLabel(CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE);
       }
-      
+
       display.focusInNameField();
 
    }
@@ -249,7 +246,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       String newMimeType = display.getMimeType().getValue();
       if (newMimeType != null && newMimeType.length() > 0)
       {
-         file.setMimeType(newMimeType);         
+         file.setMimeType(newMimeType);
       }
       moveItem(file, newName, newMimeType);
    }
@@ -261,36 +258,36 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       closeView();
    }
 
-//   public void fileContentReceived(File file)
-//   {
-//      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
-//      {
-//         @Override
-//         protected void onSuccess(FileData result)
-//         {
-//            final Item item = selectedItems.get(0);
-//
-//            final String destination = getDestination(item);
-//
-//            if (!item.getHref().equals(destination))
-//            {
-//               moveItem(item, destination);
-//            }
-//            else
-//            {
-//               String href = item.getHref();
-//               if (href.endsWith("/"))
-//               {
-//                  href = href.substring(0, href.length() - 1);
-//               }
-//
-//               href = href.substring(0, href.lastIndexOf("/") + 1);
-//               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
-//               closeView();
-//            }
-//         }
-//      });
-//   }
+   //   public void fileContentReceived(File file)
+   //   {
+   //      VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()), new FileContentSaveCallback()
+   //      {
+   //         @Override
+   //         protected void onSuccess(FileData result)
+   //         {
+   //            final Item item = selectedItems.get(0);
+   //
+   //            final String destination = getDestination(item);
+   //
+   //            if (!item.getHref().equals(destination))
+   //            {
+   //               moveItem(item, destination);
+   //            }
+   //            else
+   //            {
+   //               String href = item.getHref();
+   //               if (href.endsWith("/"))
+   //               {
+   //                  href = href.substring(0, href.length() - 1);
+   //               }
+   //
+   //               href = href.substring(0, href.lastIndexOf("/") + 1);
+   //               eventBus.fireEvent(new RefreshBrowserEvent(new Folder(href), item));
+   //               closeView();
+   //            }
+   //         }
+   //      });
+   //   }
 
    /**
     * Mote item.
@@ -302,21 +299,23 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       try
       {
-         VirtualFileSystem.getInstance().rename(file, newMimeType, newName, lockTokens.get(file.getId()), new AsyncRequestCallback<String>()
+         VirtualFileSystem.getInstance().rename(file, newMimeType, newName, lockTokens.get(file.getId()),
+            new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
             {
-               
+
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(StringBuilder result)
                {
-                  itemMoved(file, result);
+                  itemMoved(file, result.toString());
                }
-               
+
                @Override
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
+                  eventBus
+                     .fireEvent(new ExceptionThrownEvent(exception,
+                        "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
                }
             });
       }
@@ -331,43 +330,40 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    /**
     * @param item - that was moved
-    * @param newFileId - id of moved file
+    * @param newFileLocation - location of moved file
     */
-   private void itemMoved(final FileModel item, final String newFileId)
+   private void itemMoved(final FileModel item, final String newFileLocation)
    {
-      renamedFile = item;
-      sourceHref = newFileId;
-
       try
       {
-         VirtualFileSystem.getInstance().getItem(newFileId, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(new FileModel()))
-         {
-
-            @Override
-            protected void onSuccess(FileModel result)
+         VirtualFileSystem.getInstance().getItemByLocation(newFileLocation,
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(new FileModel()))
             {
-               renamedFile = (FileModel)result;
 
-               FileModel file = (FileModel)result;
-               file.setContent(item.getContent());
-
-               if (openedFiles.containsKey(item.getId()))
+               @Override
+               protected void onSuccess(FileModel result)
                {
-                  openedFiles.remove(item.getId());
-                  openedFiles.put(file.getId(), file);
+                  renamedFile = (FileModel)result;
+                  result.setParent(item.getParent());
+                  FileModel file = (FileModel)result;
+                  if (openedFiles.containsKey(item.getId()))
+                  {
+                     file.setContent(openedFiles.get(item.getId()).getContent());
+                     openedFiles.remove(item.getId());
+                     openedFiles.put(file.getId(), file);
 
-                  eventBus.fireEvent(new EditorReplaceFileEvent(item, file));
+                     eventBus.fireEvent(new EditorReplaceFileEvent(item, file));
+                  }
+
+                  completeMove();
                }
 
-               completeMove();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -417,7 +413,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       ApplicationSettings applicationSettings = event.getApplicationSettings();
-      
+
       if (applicationSettings.getValueAsMap("lock-tokens") == null)
       {
          applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
@@ -434,7 +430,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       openedFiles = event.getOpenedFiles();
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -448,7 +444,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          eventBus.fireEvent(new ExceptionThrownEvent("Display RenameFile must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());

@@ -52,6 +52,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
 import org.exoplatform.ide.client.navigation.event.RenameItemHander;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -254,11 +255,11 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       //      };
       try
       {
-         VirtualFileSystem.getInstance().rename(item, null, newName, lockTokens.get(item.getId()), new AsyncRequestCallback<String>()
+         VirtualFileSystem.getInstance().rename(item, null, newName, lockTokens.get(item.getId()), new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
          {
             
             @Override
-            protected void onSuccess(String result)
+            protected void onSuccess(StringBuilder result)
             {
                item.setName(newName);
                itemMoved((FolderModel)item, item.getName());

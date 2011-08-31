@@ -594,13 +594,12 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       {
          e.printStackTrace();
       }
-
+      eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
       oldFileEditorView.setContent(newFile.getContent());
 
       updateTabTitle(newFile);
       oldFileEditorView.setFile(newFile);
-
-      eventBus.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
+      
    }
 
    /**

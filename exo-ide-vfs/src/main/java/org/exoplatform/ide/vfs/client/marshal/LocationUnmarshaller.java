@@ -25,10 +25,10 @@ import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 30, 2011 evgen $
+ * @version $Id:  Aug 26, 2011 evgen $
  *
  */
-public class ItemMoveUnmarshaller implements Unmarshallable<StringBuilder>
+public class LocationUnmarshaller implements Unmarshallable<StringBuilder>
 {
 
    private StringBuilder location;
@@ -36,7 +36,7 @@ public class ItemMoveUnmarshaller implements Unmarshallable<StringBuilder>
    /**
     * @param location
     */
-   public ItemMoveUnmarshaller(StringBuilder location)
+   public LocationUnmarshaller(StringBuilder location)
    {
       super();
       this.location = location;

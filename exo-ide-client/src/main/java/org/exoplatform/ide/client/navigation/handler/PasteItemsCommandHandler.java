@@ -24,7 +24,6 @@ import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -32,7 +31,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -46,9 +44,7 @@ import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemCopyUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -166,7 +162,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       try
       {
          VirtualFileSystem.getInstance().copy(item, destination,
-            new AsyncRequestCallback<StringBuilder>(new ItemCopyUnmarshaller(new StringBuilder()))
+            new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
             {
 
                @Override
@@ -277,7 +273,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       try
       {
          VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getId()),
-            new AsyncRequestCallback<StringBuilder>(new ItemCopyUnmarshaller(new StringBuilder()))
+            new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
             {
 
                @Override

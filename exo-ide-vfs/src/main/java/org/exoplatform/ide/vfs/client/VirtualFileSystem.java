@@ -286,7 +286,7 @@ public class VirtualFileSystem
    }
 
    public void rename(Item item, String mediaType, String newname, String lockToken,
-      AsyncRequestCallback<String> callback) throws RequestException
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       UrlBuilder urlB = new UrlBuilder(workspaceURL + "rename" + item.getId());
       if (!item.getName().equals(newname))
@@ -336,6 +336,17 @@ public class VirtualFileSystem
    {
       String url = workspaceURL + "item" + id;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+   }
+   
+   /**
+    * Get item by location(href).
+    * @param location of item
+    * @param callback
+    * @throws RequestException 
+    */
+   public void getItemByLocation(String location, AsyncRequestCallback<? extends Item> callback) throws RequestException
+   {
+      AsyncRequest.build(RequestBuilder.GET, location).send(callback);
    }
 
 }
