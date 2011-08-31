@@ -150,6 +150,18 @@
    <replace-with class="org.exoplatform.ide.client.project.CreateProjectTemplateView">
       <when-type-is class="org.exoplatform.ide.client.project.CreateProjectTemplatePresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.welcome.ui.WelcomeView">
+      <when-type-is class="org.exoplatform.ide.client.welcome.WelcomePresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.welcome.samples.ui.GithubSamplesView">
+      <when-type-is class="org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypeView">
       <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter.Display" />

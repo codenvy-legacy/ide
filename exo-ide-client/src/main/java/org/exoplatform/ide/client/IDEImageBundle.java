@@ -449,5 +449,14 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/panel/minimize.png")
    ImageResource restore();
+   
+   /*
+    * Welcome images
+    */
+   @Source("bundled-images/welcome/tutorial.png")
+   ImageResource welcomeTutorial();
+   
+   @Source("bundled-images/welcome/samples.png")
+   ImageResource welcomeSamples();
 
 }

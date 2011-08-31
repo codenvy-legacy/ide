@@ -145,7 +145,10 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
                      protected void onSuccess(String result)
                      {
                         eventBus.fireEvent(new TemplatesMigratedEvent());
-                        callback.onTemplatesMigrated();
+                        if (callback != null)
+                        {
+                           callback.onTemplatesMigrated();
+                        }
                      }
                   });
                }
@@ -174,6 +177,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       FileTemplate ft1 = new FileTemplate(MimeType.APPLICATION_XML, "abc", "hello", "some content", null);
       final FileTemplate ft2 = new FileTemplate(MimeType.APPLICATION_XML, "bcd", "second", "lalala", null);
       final ProjectTemplate pt1 = new ProjectTemplate("hh1");
+      pt1.setDescription("sample project");
       pt1.getChildren().add(new FileTemplate("abc", "hello"));
       FolderTemplate fot1 = new FolderTemplate("ddd");
       pt1.getChildren().add(fot1);

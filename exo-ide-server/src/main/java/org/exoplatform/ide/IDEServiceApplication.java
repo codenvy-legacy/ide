@@ -27,6 +27,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.download.DownloadContentService;
+import org.exoplatform.ide.github.GithubService;
 import org.exoplatform.ide.remote.RemoteFileService;
 import org.exoplatform.ide.remote.RemoteFileServiceExceptionMapper;
 import org.exoplatform.ide.template.TemplatesRestService;
@@ -75,6 +76,7 @@ public class IDEServiceApplication extends Application
       
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
+      classes.add(GithubService.class);
    }
 
    /**

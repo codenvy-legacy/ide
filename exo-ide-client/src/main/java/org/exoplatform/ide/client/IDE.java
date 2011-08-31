@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
@@ -28,7 +31,6 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
-import org.exoplatform.ide.client.debug.DebugModule;
 import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
@@ -62,10 +64,10 @@ import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
+import org.exoplatform.ide.client.welcome.WelcomeOpenEvent;
+import org.exoplatform.ide.client.welcome.WelcomePresenter;
+import org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .
@@ -157,9 +159,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new PreviewHTMLPresenter();
       new DocumentationPresenter(EVENT_BUS);
       new OutputPresenter(EVENT_BUS);
+      new GithubSamplesPresenter(EVENT_BUS);
 
       new PreferencesModule(EVENT_BUS);
       new HotKeyManagementModule(EVENT_BUS);
+      
+      //TODO
+      //Will be uncommented, when Select location feature (for import sample applications) will be implemented
+//      new WelcomePresenter(EVENT_BUS);
+//      EVENT_BUS.fireEvent(new WelcomeOpenEvent(true));
       
       //initialize extensions
       for (Extension ext : extensions)

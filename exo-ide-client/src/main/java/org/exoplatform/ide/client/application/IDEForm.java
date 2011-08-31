@@ -121,8 +121,8 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
       Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
       navigationPanel.acceptType("navigation");
 
-      Panel informationPane = perspective.addPanel("information", Direction.EAST, 200);
-      informationPane.acceptType("information");
+      Panel informationPanel = perspective.addPanel("information", Direction.EAST, 200);
+      informationPanel.acceptType("information");
 
       Panel operationPanel = perspective.addPanel("operation", Direction.SOUTH, 150);
       operationPanel.acceptType("operation");
