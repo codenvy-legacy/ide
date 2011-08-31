@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
+
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,9 +78,9 @@ public abstract class CloudfoundryAuthenticator
          JsonValue jsonValue;
          try
          {
-            JsonDefaultHandler handler = new JsonDefaultHandler();
-            new JsonParserImpl().parse(input, handler);
-            jsonValue = handler.getJsonObject();
+            JsonParser jsonParser = new  JsonParser();
+            jsonParser.parse(input);
+            jsonValue = jsonParser.getJsonObject();
          }
          finally
          {

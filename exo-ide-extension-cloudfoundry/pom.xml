@@ -18,10 +18,10 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
       </dependency>
-      <dependency>
+      <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
@@ -68,6 +68,22 @@
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
+      
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+         <scope>test</scope>
+      </dependency>
+    
    </dependencies>
    <build>
       <resources>

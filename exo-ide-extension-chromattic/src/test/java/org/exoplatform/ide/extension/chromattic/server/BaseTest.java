@@ -18,14 +18,10 @@
  */
 package org.exoplatform.ide.extension.chromattic.server;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.jcr.Node;
-import javax.jcr.ValueFactory;
-import javax.jcr.Workspace;
-
+import org.everrest.core.RequestHandler;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.impl.ProviderBinder;
+import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -36,10 +32,16 @@ import org.exoplatform.services.jcr.impl.dataflow.serialization.ReaderSpoolFileH
 import org.exoplatform.services.jcr.impl.util.io.FileCleaner;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.junit.Before;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+
+import javax.jcr.Node;
+import javax.jcr.ValueFactory;
+import javax.jcr.Workspace;
 
 /**
  * Created by The eXo Platform SAS.
@@ -89,11 +91,14 @@ public abstract class BaseTest
    @Before
    public void setUp() throws Exception
    {
-      String containerConf = BaseTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
-
-      StandaloneContainer.addConfigurationURL(containerConf);
-
+      String conf = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
+      StandaloneContainer.addConfigurationURL(conf);
       container = StandaloneContainer.getInstance();
+      // reset set of providers for each test 
+      Constructor<ProviderBinder> c = ProviderBinder.class.getDeclaredConstructor();
+      c.setAccessible(true);
+      ProviderBinder.setInstance(c.newInstance());
+      
 
       if (System.getProperty("java.security.auth.login.config") == null)
          System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
@@ -114,7 +119,6 @@ public abstract class BaseTest
       resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-
    }
 
 //   @After

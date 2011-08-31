@@ -18,16 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
 import groovy.servlet.ServletBinding;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import groovy.text.TemplateEngine;
+
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +58,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $Id: $
 */
 @Path("/ide/gtmpl")
-public class GroovyTemplateService implements ResourceContainer
+public class GroovyTemplateService
 {
 
    /** See {@link RepositoryService}. */

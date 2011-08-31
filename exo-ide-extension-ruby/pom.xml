@@ -29,10 +29,10 @@
          <groupId>javax.annotation</groupId>
          <artifactId>jsr250-api</artifactId>
       </dependency>
-      <dependency>
+      <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
-      </dependency>
+      </dependency-->
        <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
@@ -53,47 +53,11 @@
            </exclusion>
          </exclusions>
       </dependency>
-       <dependency>
+       <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.testframework</artifactId>
          <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.webdav</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.testframework</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-         <scope>test</scope>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
@@ -112,6 +76,21 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+         <scope>test</scope>
       </dependency>
 
       <!-- CLIENT SIDE -->

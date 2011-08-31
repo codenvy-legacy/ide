@@ -20,20 +20,20 @@ package org.exoplatform.ide.extension.groovy.server;
 
 import java.io.ByteArrayInputStream;
 
-import junit.framework.TestCase;
-
+import org.everrest.core.impl.provider.json.JsonException;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPathEntry;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 28, 2010 $
  *
  */
-public class ClassPathUsageTest extends TestCase
+public class ClassPathUsageTest 
 {
    private static String REPOSITORY_NAME = "repository";
    
@@ -49,52 +49,56 @@ public class ClassPathUsageTest extends TestCase
          + "{\"kind\": \"filee\",\"path\": \"dev-monit#/test2/\"},"
          + "{\"kind\": \"dir\",\"path\": \"dev-monit#/test3/\"}" + "]}";
 
-   public void testClassPathFileCorrect() throws JsonException
+   @Test
+   public void classPathFileCorrect() throws JsonException
    {
       GroovyClassPath classPath =
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(correctClassPathFile.getBytes()));
-      assertEquals(classPath.getEntries().length, 2);
+      Assert.assertEquals(classPath.getEntries().length, 2);
       GroovyClassPathEntry entry = classPath.getEntries()[0];
-      assertEquals(entry.getKind(), "file");
-      assertEquals(entry.getPath(), "dev-monit#/Test.groovy");
+      Assert.assertEquals(entry.getKind(), "file");
+      Assert.assertEquals(entry.getPath(), "dev-monit#/Test.groovy");
       entry = classPath.getEntries()[1];
-      assertEquals(entry.getKind(), "dir");
-      assertEquals(entry.getPath(), "/dev-monit#/test/");
+      Assert.assertEquals(entry.getKind(), "dir");
+      Assert.assertEquals(entry.getPath(), "/dev-monit#/test/");
 
       DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      assertEquals(dependentResources.getFileSources().size(), 1);
-      assertEquals(dependentResources.getFolderSources().size(), 1);
+      Assert.assertEquals(dependentResources.getFileSources().size(), 1);
+      Assert.assertEquals(dependentResources.getFolderSources().size(), 1);
    }
 
-   public void testClassPathFileWrongType() throws JsonException
+   @Test
+   public void classPathFileWrongType() throws JsonException
    {
       GroovyClassPath classPath =
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(wrongTypeClassPathFile.getBytes()));
-      assertEquals(classPath.getEntries().length, 4);
+      Assert.assertEquals(classPath.getEntries().length, 4);
 
       DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      assertEquals(dependentResources.getFileSources().size(), 1);
-      assertEquals(dependentResources.getFileSources().get(0), "jcr://repository/dev-monit#/Test.groovy");
+      Assert.assertEquals(dependentResources.getFileSources().size(), 1);
+      Assert.assertEquals(dependentResources.getFileSources().get(0), "jcr://repository/dev-monit#/Test.groovy");
 
-      assertEquals(dependentResources.getFolderSources().size(), 1);
-      assertEquals(dependentResources.getFolderSources().get(0), "jcr://repository/dev-monit#/test3/");
+      Assert.assertEquals(dependentResources.getFolderSources().size(), 1);
+      Assert.assertEquals(dependentResources.getFolderSources().get(0), "jcr://repository/dev-monit#/test3/");
    }
 
-   public void testClassPathFileEmptyEntries() throws JsonException
+   @Test
+   public void classPathFileEmptyEntries() throws JsonException
    {
       GroovyClassPath classPath =
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream(emptyEntriesClassPathFile.getBytes()));
-      assertEquals(classPath.getEntries().length, 0);
+      Assert.assertEquals(classPath.getEntries().length, 0);
 
       DependentResources dependentResources = new DependentResources(REPOSITORY_NAME, classPath);
-      assertEquals(dependentResources.getFileSources().size(), 0);
-      assertEquals(dependentResources.getFolderSources().size(), 0);
+      Assert.assertEquals(dependentResources.getFileSources().size(), 0);
+      Assert.assertEquals(dependentResources.getFolderSources().size(), 0);
    }
    
-   public void testEmptyClassPathFile() throws JsonException
+   @Test
+   public void emptyClassPathFile() throws JsonException
    {
       GroovyClassPath classPath =
          GroovyScriptServiceUtil.json2ClassPath(new ByteArrayInputStream("".getBytes()));
-      assertNull(classPath);
+      Assert.assertNull(classPath);
    }
 }

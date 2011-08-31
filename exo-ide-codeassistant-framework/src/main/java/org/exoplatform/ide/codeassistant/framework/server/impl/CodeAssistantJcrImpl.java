@@ -30,7 +30,10 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.common.http.HTTPStatus;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
@@ -47,13 +50,6 @@ import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -101,10 +97,9 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
-            JsonParser jsonParser = new JsonParserImpl();
-            JsonHandler jsonHandler = new JsonDefaultHandler();
-            jsonParser.parse(node.getProperty("jcr:data").getStream(), jsonHandler);
-            JsonValue jsonValue = jsonHandler.getJsonObject();
+            JsonParser jsonParser = new JsonParser();
+            jsonParser.parse(node.getProperty("jcr:data").getStream());
+            JsonValue jsonValue = jsonParser.getJsonObject();
             TypeInfo typeInfo = ObjectBuilder.createObject(TypeInfo.class, jsonValue);
             return typeInfo;
          }
@@ -116,20 +111,20 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (JsonException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new CodeAssistantException(500, e.getMessage());
       }
 
    }
@@ -153,7 +148,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
                   new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassInfo(fqn,
                      dependentResources);
                if (classInfo == null)
-                  throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Class info for " + fqn + " not found");
+                  throw new CodeAssistantException(404, "Class info for " + fqn + " not found");
                return classInfo;
             }
 
@@ -163,25 +158,25 @@ public class CodeAssistantJcrImpl implements CodeAssistant
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new CodeAssistantException(500, e.getMessage());
       }
       catch (URISyntaxException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new CodeAssistantException(500, e.getMessage());
       }
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       return null;
    }
@@ -216,14 +211,14 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
 
    }
@@ -258,25 +253,25 @@ public class CodeAssistantJcrImpl implements CodeAssistant
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new CodeAssistantException(400, e.getMessage());
       }
       catch (URISyntaxException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new CodeAssistantException(400, e.getMessage());
       }
       catch (RepositoryException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
    }
 
@@ -295,7 +290,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
       }
       else if (!"className".equals(where) && !"fqn".equals(where))
       {
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, "\"where\" parameter must be className or fqn");
+         throw new CodeAssistantException(400, "\"where\" parameter must be className or fqn");
       }
       String sql = "SELECT * FROM exoide:classDescription WHERE exoide:" + where + " LIKE '" + prefix + "%'";
       try
@@ -318,14 +313,14 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
 
       return types;
@@ -361,26 +356,26 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (MalformedURLException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new CodeAssistantException(400, e.getMessage());
       }
       catch (URISyntaxException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new CodeAssistantException(400, e.getMessage());
       }
 
       return groovyClass;
@@ -421,14 +416,14 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
    }
 
@@ -448,7 +443,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
 
          String doc = new String();
          if (nodes.getSize() == 0)
-            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, "Not found");
+            throw new CodeAssistantException(404, "Not found");
          while (nodes.hasNext())
          {
             Node node = (Node)nodes.next();
@@ -463,14 +458,14 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         throw new CodeAssistantException(404, e.getMessage());
       }
    }
 

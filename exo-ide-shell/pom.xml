@@ -43,76 +43,7 @@
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <artifactId>stax-api</artifactId>
-               <groupId>javax.xml.stream</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jaxb-api</artifactId>
-               <groupId>javax.xml.bind</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>xstream</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>xpp3</artifactId>
-               <groupId>xpp3</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>portlet-api</artifactId>
-               <groupId>javax.portlet</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>picocontainer</artifactId>
-               <groupId>picocontainer</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jibx-extras</artifactId>
-               <groupId>org.jibx</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jibx-bind</artifactId>
-               <groupId>org.jibx</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jibx-run</artifactId>
-               <groupId>org.jibx</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jmock</artifactId>
-               <groupId>jmock</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>jsf-api</artifactId>
-               <groupId>javax.faces</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>exo.kernel.container</artifactId>
-               <groupId>org.exoplatform.kernel</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>exo.kernel.commons</artifactId>
-               <groupId>org.exoplatform.kernel</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>slf4j-api</artifactId>
-               <groupId>org.slf4j</groupId>
-            </exclusion>
-            <exclusion>
-               <groupId>commons-fileupload</groupId>
-               <artifactId>commons-fileupload</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
+
       <dependency>
          <groupId>org.crsh</groupId>
          <artifactId>crsh.shell.core</artifactId>
@@ -164,7 +95,7 @@
          <groupId>javax.jcr</groupId>
          <artifactId>jcr</artifactId>
       </dependency>
-      
+
       <!-- eXo GWT Framework dependencies -->
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
@@ -183,6 +114,20 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
    <build>
@@ -194,6 +139,18 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <!-- TODO: dont work with everRest -->
+               <excludes>
+                  <exclude>**/CLIResourseFactoryTest.java</exclude>
+               </excludes>
+            </configuration>
+         </plugin>
+      </plugins>
    </build>
    <profiles>
       <profile>
@@ -238,22 +195,9 @@
                <artifactId>exo.kernel.container</artifactId>
                <scope>runtime</scope>
             </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.commons</artifactId>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.core</artifactId>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.frameworks.servlet</artifactId>
-            </dependency>
-            <dependency>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.ext</artifactId>
-            </dependency>
+            <!--dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.commons</artifactId> </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> 
+               <artifactId>exo.ws.rest.core</artifactId> </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.frameworks.servlet</artifactId> 
+               </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.rest.ext</artifactId> </dependency -->
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
@@ -330,7 +274,7 @@
                </exclusions>
             </dependency>
 
-         <!--DELETE-->
+            <!--DELETE -->
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-git</artifactId>

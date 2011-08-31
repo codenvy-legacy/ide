@@ -21,6 +21,15 @@ package org.exoplatform.ide.extension.ssh.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.ResourceLauncher;
+import org.everrest.test.mock.MockHttpServletRequest;
+import org.everrest.test.mock.MockPrincipal;
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -29,19 +38,14 @@ import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
-import org.exoplatform.services.test.mock.MockHttpServletRequest;
-import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -60,7 +64,7 @@ import javax.ws.rs.core.SecurityContext;
  * @version $Id: $
  * 
  */
-public class KeyServiceTest extends BaseTest
+public class KeyServiceTest 
 {
 
    private static String WORKSPACE = "dev-monit";
@@ -74,6 +78,27 @@ public class KeyServiceTest extends BaseTest
    private RepositoryService repositoryService;
 
    private MultivaluedMap<String, String> headers;
+   
+   protected static StandaloneContainer container;
+
+   public static ResourceLauncher launcher;
+
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      String containerConf = KeyServiceTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
+
+      StandaloneContainer.addConfigurationURL(containerConf);
+
+      container = StandaloneContainer.getInstance();
+
+      if (System.getProperty("java.security.auth.login.config") == null)
+         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
+            .getResource("login.conf").toString());
+
+      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
+      launcher = new ResourceLauncher(handler);
+   }
 
    @Before
    public void prepare() throws Exception

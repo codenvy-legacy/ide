@@ -16,16 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.discovery;
+package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.BaseTest;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.exoplatform.ide.discovery.EntryPoint;
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.junit.Test;
 
 import java.util.List;
 
@@ -36,13 +35,13 @@ import javax.ws.rs.core.MultivaluedMap;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestRepositoryDiscoveryService extends BaseTest
+public class RepositoryDiscoveryServiceTest extends BaseTest
 {
    private RepositoryService repositoryService;
    
    private String repoName;
    
-   @Override
+   
    public void setUp() throws Exception
    {
       super.setUp();
@@ -53,7 +52,8 @@ public class TestRepositoryDiscoveryService extends BaseTest
       
    }
    
-   @Test
+   
+   
    public void testDefaultEntryPoint() throws Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -61,7 +61,7 @@ public class TestRepositoryDiscoveryService extends BaseTest
       ContainerResponse cres =
          launcher.service("GET", "/ide/discovery/defaultEntrypoint", "", headers, null, null, null);
       
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
       assertTrue(cres.getEntity() instanceof String);
       String defaultEntryPoint = (String)cres.getEntity();
@@ -69,7 +69,8 @@ public class TestRepositoryDiscoveryService extends BaseTest
       assertEquals(RepositoryDiscoveryService.getWebDavConetxt() + "/" + repoName + "/dev-monit/", defaultEntryPoint);
    }
    
-   @Test
+   
+   
    public void testEntryPoints() throws Exception
    {
       EnvironmentContext ctx = new EnvironmentContext();
@@ -78,7 +79,7 @@ public class TestRepositoryDiscoveryService extends BaseTest
       ContainerResponse cres =
          launcher.service("GET", "/ide/discovery/entrypoints", "", headers, null, null, ctx);
       
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
       assertTrue(cres.getEntity() instanceof List<?>);
       List<?>entryPoints = (List<?>)cres.getEntity();

@@ -18,15 +18,13 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.JsonWriter;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.JsonWriterImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.StringReader;
 import java.io.Writer;
@@ -107,16 +105,16 @@ class JsonHelper
       {
          JsonValue json;
          if (instance.getClass().isArray())
-            json = new JsonGeneratorImpl().createJsonArray(instance);
+            json = new JsonGenerator().createJsonArray(instance);
          else if (instance instanceof Collection)
-            json = new JsonGeneratorImpl().createJsonArray((Collection<?>)instance);
+            json = new JsonGenerator().createJsonArray((Collection<?>)instance);
          else if (instance instanceof Map)
-            json = new JsonGeneratorImpl().createJsonObjectFromMap((Map<String, ?>)instance);
+            json = new JsonGenerator().createJsonObjectFromMap((Map<String, ?>)instance);
          else
-            json = new JsonGeneratorImpl().createJsonObject(instance);
+            json = new JsonGenerator().createJsonObject(instance);
 
          Writer w = new FastStrWriter();
-         json.writeTo(new JsonWriterImpl(w));
+         json.writeTo(new JsonWriter(w));
          return w.toString();
       }
       catch (JsonException jsone)
@@ -193,9 +191,9 @@ class JsonHelper
    {
       try
       {
-         JsonHandler jsonHandler = new JsonDefaultHandler();
-         new JsonParserImpl().parse(new StringReader(json), jsonHandler);
-         JsonValue jsonValue = jsonHandler.getJsonObject();
+         JsonParser jsonParser = new JsonParser();
+         jsonParser.parse(new StringReader(json));
+         JsonValue jsonValue = jsonParser.getJsonObject();
          return jsonValue;
       }
       catch (JsonException jsone)

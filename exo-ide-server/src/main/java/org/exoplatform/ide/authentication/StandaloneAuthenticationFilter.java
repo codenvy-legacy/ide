@@ -30,8 +30,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.exoplatform.common.http.HTTPStatus;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -55,7 +53,7 @@ public class StandaloneAuthenticationFilter implements Filter
       if (principal == null || principal.getName() == null)
       {
          HttpServletResponse httpResponse = (HttpServletResponse)response;
-         httpResponse.setStatus(HTTPStatus.UNAUTHORIZED);
+         httpResponse.setStatus(401);
          return;
       }
 

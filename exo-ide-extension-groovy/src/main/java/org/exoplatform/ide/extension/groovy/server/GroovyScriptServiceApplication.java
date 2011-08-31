@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import org.everrest.core.impl.ResourceBinderImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
@@ -42,29 +43,8 @@ public class GroovyScriptServiceApplication extends Application
 
    public GroovyScriptServiceApplication(ThreadLocalSessionProviderService sessionProvider, RepositoryService repositoryService)
    {
-//      if (initParams != null)
-//      {
-//         GroovyAutocompletionConfig config =
-//            (GroovyAutocompletionConfig)initParams.getObjectParam("autocompletion.configuration").getObject();
-//
-//         if (config.getJarEntries() != null)
-//         {
-//            objects.add(new ClassInfoStrorage(sessionProvider, repositoryService, config.getWsName(), config
-//               .getJarEntries(), config.isRunInThread()));
-//         }
-//
-//         if (config.getJarsDocs() != null)
-//         {
-//            objects.add(new DocStorage(config.getWsName(), repositoryService, sessionProvider, config.getJarsDocs(),
-//               config.isRunInThread()));
-//         }
-//
-////         objects.add(new RestCodeAssistantGroovy(config.getWsName(), repositoryService, sessionProvider));
-//
-//      }
       classes.add(GroovyTemplateService.class);
       classes.add(RestCodeAssistantGroovy.class);
-
    }
 
    public Set<Class<?>> getClasses()

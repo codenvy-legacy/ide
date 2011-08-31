@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.upload;
+package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MockHttpServletRequest;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -30,14 +30,9 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,10 +50,10 @@ import javax.ws.rs.core.MultivaluedMap;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestLoopbackContentService extends BaseTest
+public class LoopbackContentServiceTest extends BaseTest
 {
 
-   private static Log log = ExoLogger.getLogger(TestLoopbackContentService.class);
+   private static Log log = ExoLogger.getLogger(LoopbackContentServiceTest.class);
 
    private static String WORKSPACE = "dev-monit";
 
@@ -76,7 +71,6 @@ public class TestLoopbackContentService extends BaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-
       credentials = new CredentialsImpl("root", "exo".toCharArray());
 
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
@@ -95,7 +89,7 @@ public class TestLoopbackContentService extends BaseTest
       
    }
    
-   @Test
+   
    public void testUploadFile() throws Exception
    {
       session.save();
@@ -131,7 +125,7 @@ public class TestLoopbackContentService extends BaseTest
       ContainerResponse response = launcher.service("POST", "/ide/loopbackcontent", "http://localhost", headers,
             data, null, ctx);
       
-      assertEquals(HTTPStatus.OK, response.getStatus());
+      assertEquals(200, response.getStatus());
       assertTrue(response.getEntity() instanceof String);
       
       String text = (String)response.getEntity();
@@ -142,8 +136,8 @@ public class TestLoopbackContentService extends BaseTest
       session.refresh(false);
    }
    
-   @After
-   protected void tearDown() throws Exception
+   
+   public void tearDown() throws Exception
    {
 
       if (session != null)
@@ -168,14 +162,14 @@ public class TestLoopbackContentService extends BaseTest
          }
          catch (Exception e)
          {
-            log.error("tearDown() ERROR " + getClass().getName() + "." + getName() + " " + e, e);
+            log.error("tearDown() ERROR " + getClass().getName() + " " + e, e);
          }
          finally
          {
             session.logout();
          }
       }
-      super.tearDown();
+      
    }
 
 }

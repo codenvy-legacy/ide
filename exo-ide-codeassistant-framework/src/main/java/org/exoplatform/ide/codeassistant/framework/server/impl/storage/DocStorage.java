@@ -39,7 +39,6 @@ import org.codehaus.groovy.groovydoc.GroovyClassDoc;
 import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
 import org.codehaus.groovy.groovydoc.GroovyParameter;
 import org.codehaus.groovy.groovydoc.GroovyRootDoc;
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig;
 import org.exoplatform.ide.codeassistant.framework.server.api.JarEntry;
@@ -207,14 +206,14 @@ public class DocStorage implements Startable
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new SaveDocException(400, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO:need fix status code
-         throw new SaveDocException(HTTPStatus.BAD_REQUEST, e.getMessage());
+         throw new SaveDocException(400, e.getMessage());
       }
    }
 

@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.utils;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.InputStream;
 
@@ -61,10 +58,10 @@ public class GroovyScriptServiceUtil
     */
    public static GroovyClassPath json2ClassPath(InputStream stream) throws JsonException
    {
-      JsonParser jsonParser = new JsonParserImpl();
-      JsonHandler jsonHandler = new JsonDefaultHandler();
-      jsonParser.parse(stream, jsonHandler);
-      JsonValue jsonValue = jsonHandler.getJsonObject();
+      //TODO check it works:
+      JsonParser jsonParser = new JsonParser();
+      jsonParser.parse(stream);
+      JsonValue jsonValue = jsonParser.getJsonObject();
       GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
       return classPath;
    }

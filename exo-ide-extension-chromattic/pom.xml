@@ -45,23 +45,6 @@
       </dependency>
 
       <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <scope>compile</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.xml.stream</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-
-      <dependency>
          <groupId>org.hsqldb</groupId>
          <artifactId>hsqldb</artifactId>
          <scope>test</scope>
@@ -81,6 +64,14 @@
             <exclusion>
                <groupId> org.exoplatform.ws</groupId>
                <artifactId>exo.ws.testframework</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId> org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId> org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.tool</groupId>
@@ -110,10 +101,6 @@
       </dependency>
 
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-codeassistant-framework</artifactId>
-      </dependency>
-      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
@@ -133,22 +120,59 @@
          <artifactId>exo.core.component.security.core</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
       </dependency>
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-groovy</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
          <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-framework</artifactId>
       </dependency>
    </dependencies>
 

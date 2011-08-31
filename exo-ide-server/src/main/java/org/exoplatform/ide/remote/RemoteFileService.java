@@ -30,12 +30,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.NVPair;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
+import org.everrest.http.client.NVPair;
+import org.everrest.http.client.ProtocolNotSuppException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -96,7 +95,7 @@ public class RemoteFileService
          {
             log.debug(e.getMessage(), e);
          }
-         throw new RemoteFileServiceException(HTTPStatus.NOT_FOUND, "Invalid URL.");
+         throw new RemoteFileServiceException(404, "Invalid URL.");
       }
       catch (ProtocolNotSuppException e)
       {
@@ -104,7 +103,7 @@ public class RemoteFileService
          {
             log.debug(e.getMessage(), e);
          }
-         throw new RemoteFileServiceException(HTTPStatus.INTERNAL_ERROR, "Protocol not supported.");
+         throw new RemoteFileServiceException(500, "Protocol not supported.");
       }
       catch (IOException e)
       {
@@ -112,7 +111,7 @@ public class RemoteFileService
          {
             log.debug(e.getMessage(), e);
          }
-         throw new RemoteFileServiceException(HTTPStatus.INTERNAL_ERROR, "Transfering file error.");
+         throw new RemoteFileServiceException(500, "Transfering file error.");
       }
       catch (ModuleException e)
       {
@@ -120,7 +119,7 @@ public class RemoteFileService
          {
             log.debug(e.getMessage(), e);
          }
-         throw new RemoteFileServiceException(HTTPStatus.INTERNAL_ERROR, "Transfering file error.");
+         throw new RemoteFileServiceException(500, "Transfering file error.");
       }
    }
 

@@ -18,23 +18,22 @@
  */
 package org.exoplatform.ide.shell.server;
 
+import org.everrest.core.ComponentLifecycleScope;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonHandler;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
+import org.everrest.core.method.MethodParameter;
+import org.everrest.core.resource.AbstractResourceDescriptor;
+import org.everrest.core.resource.ResourceMethodDescriptor;
+import org.everrest.core.resource.ResourceMethodMap;
+import org.everrest.core.resource.SubResourceLocatorDescriptor;
+import org.everrest.core.resource.SubResourceLocatorMap;
+import org.everrest.core.resource.SubResourceMethodDescriptor;
+import org.everrest.core.resource.SubResourceMethodMap;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
-import org.exoplatform.services.rest.ComponentLifecycleScope;
-import org.exoplatform.services.rest.impl.resource.AbstractResourceDescriptorImpl;
-import org.exoplatform.services.rest.method.MethodParameter;
-import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
-import org.exoplatform.services.rest.resource.ResourceMethodDescriptor;
-import org.exoplatform.services.rest.resource.ResourceMethodMap;
-import org.exoplatform.services.rest.resource.SubResourceLocatorDescriptor;
-import org.exoplatform.services.rest.resource.SubResourceLocatorMap;
-import org.exoplatform.services.rest.resource.SubResourceMethodDescriptor;
-import org.exoplatform.services.rest.resource.SubResourceMethodMap;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -98,10 +97,10 @@ public class CLIResourceFactory
          try
          {
             reader = new FileReader(file);
-            JsonHandler handler = new JsonDefaultHandler();
-            new JsonParserImpl().parse(reader, handler);
+            JsonParser jsonParser = new JsonParser();
+            jsonParser.parse(reader);
             CLIResource[] cliMapping =
-               (CLIResource[])ObjectBuilder.createArray(CLIResource[].class, handler.getJsonObject());
+               (CLIResource[])ObjectBuilder.createArray(CLIResource[].class, jsonParser.getJsonObject());
 
             if (cliMapping != null && cliMapping.length > 0)
             {

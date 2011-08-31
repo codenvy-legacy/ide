@@ -20,6 +20,11 @@ package org.exoplatform.ide.extension.netvibes.server;
 
 import junit.framework.TestCase;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -31,11 +36,6 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.junit.After;

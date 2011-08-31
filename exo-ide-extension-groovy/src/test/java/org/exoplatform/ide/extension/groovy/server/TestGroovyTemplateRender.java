@@ -18,19 +18,19 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.common.http.HTTPStatus;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.test.mock.MockHttpServletRequest;
+import org.everrest.test.mock.MockHttpServletResponse;
+import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.test.mock.MockHttpServletRequest;
-import org.exoplatform.services.test.mock.MockHttpServletResponse;
-import org.exoplatform.services.test.mock.MockPrincipal;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -102,8 +102,8 @@ public class TestGroovyTemplateRender extends Base
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("POST", "/ide/gtmpl/render-source", "", headers, GTMPL.getBytes(), null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertTrue(cres.getEntity().toString().contains("Hello root"));
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
    }
    
    @Test
@@ -118,7 +118,7 @@ public class TestGroovyTemplateRender extends Base
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
       ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?url=/jcr/db1/ws/testRoot/script", "", headers, GTMPL.getBytes(), null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
-      assertTrue(cres.getEntity().toString().contains("Hello root"));
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
    }
 }

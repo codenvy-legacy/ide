@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import org.exoplatform.services.rest.ApplicationContext;
-import org.exoplatform.services.rest.Filter;
-import org.exoplatform.services.rest.impl.ApplicationContextImpl;
-import org.exoplatform.services.rest.method.MethodInvokerFilter;
-import org.exoplatform.services.rest.resource.GenericMethodResource;
+
+import org.everrest.core.ApplicationContext;
+import org.everrest.core.Filter;
+import org.everrest.core.impl.ApplicationContextImpl;
+import org.everrest.core.method.MethodInvokerFilter;
+import org.everrest.core.resource.GenericMethodResource;
 
 import java.security.Principal;
 

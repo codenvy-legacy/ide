@@ -36,7 +36,8 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
 
-import org.exoplatform.common.http.HTTPStatus;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.framework.server.api.GroovyAutocompletionConfig;
 import org.exoplatform.ide.codeassistant.framework.server.api.JarEntry;
@@ -50,8 +51,6 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.picocontainer.Startable;
 
 /**
@@ -225,7 +224,7 @@ public class ClassInfoStorage implements Startable
          if (LOG.isDebugEnabled())
             e.printStackTrace();
          //TODO: need think about status
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (IOException e)
       {
@@ -233,7 +232,7 @@ public class ClassInfoStorage implements Startable
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (IncompatibleClassChangeError e)
       {
@@ -241,7 +240,7 @@ public class ClassInfoStorage implements Startable
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new SaveClassInfoException(500, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
@@ -249,7 +248,7 @@ public class ClassInfoStorage implements Startable
 
          if (LOG.isDebugEnabled())
             e.printStackTrace();
-         throw new SaveClassInfoException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new SaveClassInfoException(500, e.getMessage());
       }
    }
 
@@ -289,7 +288,7 @@ public class ClassInfoStorage implements Startable
       {
          child = child.addNode(clazz, "nt:file");
          child = child.addNode("jcr:content", "exoide:classDescription");
-         JsonGeneratorImpl jsonGenerator = new JsonGeneratorImpl();
+         JsonGenerator jsonGenerator = new JsonGenerator();
          child.setProperty("jcr:data", jsonGenerator.createJsonObject(cd).toString());
          child.setProperty("jcr:lastModified", Calendar.getInstance());
          child.setProperty("jcr:mimeType", "text/plain");

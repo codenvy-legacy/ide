@@ -23,10 +23,10 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
-      <dependency>
+      <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.commons</artifactId>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>

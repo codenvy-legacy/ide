@@ -66,7 +66,7 @@ public class IDEServiceApplication extends Application
 
       objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,
          discoverable, workspace, config));
-      objects.add(new TemplatesRestService(repositoryService, sessionProviderService, workspace, templateConfig));
+      objects.add(new TemplatesRestService(repositoryService, workspace, templateConfig));
 
       classes.add(LoopbackContentService.class);
       classes.add(DownloadContentService.class);

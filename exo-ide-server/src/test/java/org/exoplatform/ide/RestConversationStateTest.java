@@ -16,23 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.conversationstate;
+package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.test.mock.MockPrincipal;
+import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
-import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,7 +43,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestRestConversationState extends BaseTest
+public class RestConversationStateTest extends BaseTest
 {
    
    private SecurityContext securityContext;
@@ -66,7 +64,7 @@ public class TestRestConversationState extends BaseTest
       ConversationState.setCurrent(s);
    }
    
-   @Test
+   
    public void testWhoami() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -77,7 +75,7 @@ public class TestRestConversationState extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
       assertTrue(cres.getEntity() instanceof IdeUser);
       IdeUser user = (IdeUser)cres.getEntity();

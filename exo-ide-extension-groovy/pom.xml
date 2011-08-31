@@ -14,6 +14,16 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-framework</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -23,20 +33,20 @@
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
-          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
             <exclusion>
                <artifactId>sjsxp</artifactId>
                <groupId>com.sun.xml.stream</groupId>
@@ -47,29 +57,31 @@
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.ext</artifactId>
          <exclusions>
-           <exclusion>
-             <groupId>org.exoplatform.tool</groupId>
-             <artifactId>exo.tool.framework.junit</artifactId>
-           </exclusion>
-           <exclusion>
-             <groupId>com.experlog</groupId>
-             <artifactId>xapool</artifactId>
-           </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <!-- <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion> -->
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>com.experlog</groupId>
+               <artifactId>xapool</artifactId>
+            </exclusion>
          </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.frameworks.json</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.testframework</artifactId>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.core</groupId>
@@ -78,6 +90,22 @@
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.script.groovy</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+      </dependency>
+       <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-groovy</artifactId>
       </dependency>
       <dependency>
          <groupId>javax.annotation</groupId>
@@ -109,10 +137,6 @@
          <artifactId>groovy-all</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-      </dependency>
-      <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>
@@ -125,18 +149,18 @@
          <artifactId>servlet-api</artifactId>
          <scope>runtime</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
@@ -148,6 +172,10 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
          <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
       </dependency>
    </dependencies>
    <build>

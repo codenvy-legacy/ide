@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.upload;
+package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MockHttpServletRequest;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -30,14 +30,8 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,11 +49,11 @@ import javax.ws.rs.core.MultivaluedMap;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class TestUploadService extends BaseTest
+public class UploadServiceTest extends BaseTest
 {
    private static final String WS_URL = "http://localhost/jcr/db1/dev-monit/";
 
-   private static Log log = ExoLogger.getLogger(TestUploadService.class);
+   private static Log log = ExoLogger.getLogger(UploadServiceTest.class);
 
    private static String WORKSPACE = "dev-monit";
 
@@ -73,7 +67,7 @@ public class TestUploadService extends BaseTest
 
    private MultivaluedMap<String, String> headers;
 
-   @Before
+   
    public void setUp() throws Exception
    {
       super.setUp();
@@ -96,7 +90,7 @@ public class TestUploadService extends BaseTest
 
    }
 
-   @Test
+   
    public void testUploadFile() throws Exception
    {
       session.save();
@@ -122,12 +116,12 @@ public class TestUploadService extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(HTTPStatus.CREATED, response.getStatus());
+      assertEquals(201, response.getStatus());
 
       session.refresh(false);
    }
 
-   @Test
+   
    public void testUploadFileCantFindFileError() throws Exception
    {
       session.save();
@@ -151,7 +145,7 @@ public class TestUploadService extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
+      assertEquals(500, response.getStatus());
 
       assertTrue(response.getEntity() instanceof String);
 
@@ -160,7 +154,7 @@ public class TestUploadService extends BaseTest
       session.refresh(false);
    }
 
-   @Test
+   
    public void testUploadFileIncorrectPathError() throws Exception
    {
       session.save();
@@ -186,14 +180,14 @@ public class TestUploadService extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
+      assertEquals(500, response.getStatus());
       assertTrue(response.getEntity() instanceof String);
       assertEquals("<error>Invalid path, where to upload file</error>", (String)response.getEntity());
 
       session.refresh(false);
    }
 
-   @Test
+   
    public void testUploadFileInternalError() throws Exception
    {
       session.save();
@@ -223,7 +217,7 @@ public class TestUploadService extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(HTTPStatus.INTERNAL_ERROR, response.getStatus());
+      assertEquals(500, response.getStatus());
 
       session.refresh(false);
    }
@@ -242,8 +236,8 @@ public class TestUploadService extends BaseTest
       return source;
    }
 
-   @After
-   protected void tearDown() throws Exception
+   
+   public void tearDown() throws Exception
    {
 
       if (session != null)
@@ -268,14 +262,13 @@ public class TestUploadService extends BaseTest
          }
          catch (Exception e)
          {
-            log.error("tearDown() ERROR " + getClass().getName() + "." + getName() + " " + e, e);
+            log.error("tearDown() ERROR " + getClass().getName() + " " + e, e);
          }
          finally
          {
             session.logout();
          }
       }
-      super.tearDown();
    }
 
 }

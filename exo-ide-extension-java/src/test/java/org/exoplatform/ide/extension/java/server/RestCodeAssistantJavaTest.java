@@ -22,10 +22,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -54,6 +54,7 @@ public class RestCodeAssistantJavaTest extends Base
          launcher.service("GET",
             "/ide/code-assistant/java/class-description?fqn=" + BigDecimal.class.getCanonicalName(), "", null, null,
             null, null);
+      System.out.println("RestCodeAssistantJavaTest.testGetClassByFqn()" + cres.getEntity().toString());
       assertEquals(HTTPStatus.OK, cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
 

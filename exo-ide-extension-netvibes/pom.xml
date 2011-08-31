@@ -90,15 +90,6 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.commons</artifactId>
-      </dependency>
-      <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>
@@ -126,6 +117,21 @@
          <artifactId>hsqldb</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+         <scope>test</scope>
+      </dependency>
+      
       <!-- 
       Dependencies for client side
        -->

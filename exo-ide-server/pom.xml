@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   
+
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
-   
+
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-server</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Server</name>
-   
+
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -33,8 +33,8 @@
          <artifactId>exo.jcr.component.core</artifactId>
          <exclusions>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -47,8 +47,24 @@
                <artifactId>servlet-api</artifactId>
             </exclusion>
             <exclusion>
-              <groupId>org.exoplatform.tool</groupId>
-              <artifactId>exo.tool.framework.junit</artifactId>
+               <groupId>org.exoplatform.tool</groupId>
+               <artifactId>exo.tool.framework.junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -59,6 +75,14 @@
             <exclusion>
                <groupId>javax.servlet</groupId>
                <artifactId>servlet-api</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -74,6 +98,10 @@
                <groupId>javax.servlet</groupId>
                <artifactId>servlet-api</artifactId>
             </exclusion>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
             <exclusion>
                <groupId>xstream</groupId>
                <artifactId>xstream</artifactId>
@@ -86,19 +114,18 @@
                <groupId>org.wikbook</groupId>
                <artifactId>wikbook.docbkxstyle</artifactId>
             </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <scope>compile</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
+      <!-- dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.rest.core</artifactId> <scope>compile</scope> <exclusions> <exclusion> 
+         <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> </exclusion> </exclusions> </dependency -->
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
@@ -126,27 +153,6 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.testframework</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.frameworks.servlet</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
@@ -208,10 +214,30 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-      <!--dependency>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-vfs</artifactId>
-   </dependency-->
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-httpclient</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <!--dependency> <groupId>org.exoplatform.ide</groupId> <artifactId>exo-ide-vfs</artifactId> </dependency -->
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-groovy</artifactId>
+      </dependency>
    </dependencies>
    <build>
       <resources>
@@ -227,5 +253,6 @@
       </resources>
       <sourceDirectory>src/main/java</sourceDirectory>
       <outputDirectory>target/classes</outputDirectory>
+
    </build>
 </project>

@@ -30,7 +30,7 @@
             <property name="log4j.rootLogger" value="INFO, stdout, file" />
 
             <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
-            <property name="log4j.appender.stdout.threshold" value="INFO" />
+            <property name="log4j.appender.stdout.threshold" value="DEBUG" />
 
             <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
@@ -42,14 +42,51 @@
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
             <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
-            <property name="log4j.category.jcr.ext.RestRepositoryService" value="DEBUG" />
-
-            <property name="log4j.logger.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
-            <property name="log4j.logger.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
-
-
+            
+            <property name="log4j.category.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
+            <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
+            <!-- property name="log4j.category.exo" value="DEBUG" />
+            <property name="log4j.category.org.exoplatform" value="DEBUG" /-->
          </properties-param>
       </init-params>
+   </component>
+
+
+   <component>
+      <type>org.everrest.exoplatform.EverrestInitializer</type>
+   </component>
+   <component>
+      <key>org.everrest.core.ResourceBinder</key>
+      <type>org.everrest.core.impl.ResourceBinderImpl</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ProvidersRegistry</type>
+   </component>
+
+   <component>
+      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+   </component>
+
+
+   <component>
+      <key>org.everrest.core.RequestHandler</key>
+      <type>org.everrest.exoplatform.ExoRequestHandler</type>
+      <init-params>
+         <value-param>
+            <name>org.everrest.http.method.override</name>
+            <value>true</value>
+         </value-param>
+      </init-params>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.StartableApplication</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
+   </component>
+   
+   <component>
+   <type>org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter</type>
    </component>
 
    <component>
@@ -196,12 +233,13 @@
       </init-params>
    </component>
 
-   <component>
-      <type>org.exoplatform.services.jcr.ext.repository.RestRepositoryService</type>
-   </component>
+  <!--  <component>
+      <type>org.exoplatform.ide.groovy.GroovyResourcePublisher</type>
+   </component> -->
 
    <component>
-      <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher</type>
+      <key>org.everrest.groovy.GroovyClassLoaderProvider</key>
+      <type>org.exoplatform.ide.groovy.JcrGroovyClassLoaderProvider</type>
    </component>
 
    <component>
@@ -241,104 +279,6 @@
       <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
-   </component>
-
-
-   <component>
-      <type>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</type>
-      <component-plugins>
-         <component-plugin>
-            <name>addActions</name>
-            <set-method>addPlugin</set-method>
-            <type>org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin</type>
-            <description>add actions plugin</description>
-            <init-params>
-               <object-param>
-                  <name>actions</name>
-                  <object type="org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin$ActionsConfig">
-                     <field name="actions">
-                        <collection type="java.util.ArrayList">
-                           <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
-                                 <field name="eventTypes">
-                                    <string>addProperty,changeProperty</string>
-                                 </field>
-                                 <field name="path">
-                                    <string>/MetaDataActionTest/testAddContent</string>
-                                 </field>
-                                 <field name="isDeep">
-                                    <boolean>true</boolean>
-                                 </field>
-                                 <field name="nodeTypes">
-                                    <string>nt:resource</string>
-                                 </field>
-                                 <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.metadata.AddMetadataAction</string>
-                                 </field>
-                              </object>
-                           </value>
-                           <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
-                                 <field name="eventTypes">
-                                    <string>addNode</string>
-                                 </field>
-                                 <field name="path">
-                                    <string>/MetaDataActionTest/testSetMetaData</string>
-                                 </field>
-                                 <field name="isDeep">
-                                    <boolean>false</boolean>
-                                 </field>
-                                 <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.metadata.SetDCMetadataAction</string>
-                                 </field>
-                              </object>
-                           </value>
-                           <value>
-                              <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
-                                 <field name="eventTypes">
-                                    <string>addNode</string>
-                                 </field>
-                                 <field name="path">
-                                    <string>/test</string>
-                                 </field>
-                                 <field name="isDeep">
-                                    <boolean>true</boolean>
-                                 </field>
-                                 <field name="actionClassName">
-                                    <string>org.exoplatform.services.jcr.ext.owner.AddOwneableAction</string>
-                                 </field>
-                              </object>
-                           </value>
-                        </collection>
-                     </field>
-                  </object>
-               </object-param>
-            </init-params>
-         </component-plugin>
-      </component-plugins>
-   </component>
-
-
-
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>
-      <component-plugin>
-         <name>add groovy repo</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScriptAddRepoPlugin</type>
-         <init-params>
-            <properties-param>
-               <name>repo1</name>
-               <property name="repository" value="db1" />
-               <property name="workspace" value="ws" />
-               <property name="path" value="/repo" />
-            </properties-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
-
    <external-component-plugins>
       <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
@@ -366,59 +306,6 @@
                <property name="username" value="sa" />
                <property name="password" value="" />
             </properties-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
-
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>method.access.filter</name>
-               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.entity.provider</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rest.ext.HierarchicalPropertyEntityProvider</name>
-               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.request.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rs.request.method-override-filter</name>
-               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>method.developer.access.filter</name>
-               <value>org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter</value>
-            </value-param>
          </init-params>
       </component-plugin>
    </external-component-plugins>

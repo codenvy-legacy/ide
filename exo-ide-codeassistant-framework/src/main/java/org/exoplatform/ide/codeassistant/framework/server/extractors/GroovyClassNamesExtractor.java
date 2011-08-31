@@ -32,8 +32,13 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
+import org.everrest.groovy.ExtendedGroovyClassLoader;
+import org.everrest.groovy.GroovyClassLoaderProvider;
+import org.everrest.groovy.SourceFile;
+import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.impl.JcrGroovyClassLoaderProvider;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -42,12 +47,10 @@ import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
-import org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyClassLoaderProvider;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
-import org.exoplatform.services.rest.ext.groovy.ExtendedGroovyClassLoader;
-import org.exoplatform.services.rest.ext.groovy.GroovyClassLoaderProvider;
-import org.exoplatform.services.rest.ext.groovy.SourceFile;
-import org.exoplatform.services.rest.ext.groovy.SourceFolder;
+
+
+
 
 /**
  * Extracting meta information from given Groovy classes (methods & constructors) to the 
@@ -63,7 +66,7 @@ public class GroovyClassNamesExtractor
 
    private final ThreadLocalSessionProviderService sessionProviderService;
 
-   private GroovyClassLoaderProvider classLoaderProvider;
+   private JcrGroovyClassLoaderProvider classLoaderProvider;
 
    private ExtendedGroovyClassLoader classLoader;
 

@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
+
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -66,16 +65,16 @@ class CloudfoundryCredentials
 
    static CloudfoundryCredentials readFrom(Reader in) throws IOException
    {
-      JsonHandler h = new JsonDefaultHandler();
+      JsonParser jsonParser = new JsonParser();
       try
       {
-         new JsonParserImpl().parse(in, h);
+         jsonParser.parse(in);
       }
       catch (JsonException e)
       {
          throw new RuntimeException(e.getMessage(), e);
       }
-      JsonValue jsonValue = h.getJsonObject();
+      JsonValue jsonValue = jsonParser.getJsonObject();
       String api = jsonValue.getKeys().next();
       String token = jsonValue.getElement(api).getStringValue();
       return new CloudfoundryCredentials(api, token);

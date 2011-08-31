@@ -18,13 +18,12 @@
  */
 package org.exoplatform.cloudshell.server;
 
-import junit.framework.TestCase;
-
+import org.everrest.core.ComponentLifecycleScope;
+import org.everrest.core.impl.RuntimeDelegateImpl;
+import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
 import org.exoplatform.ide.shell.server.CLIResourceFactory;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
-import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
-import org.exoplatform.services.rest.impl.resource.AbstractResourceDescriptorImpl;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,6 +41,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.RuntimeDelegate;
+
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -95,7 +96,7 @@ public class CLIResourseFactoryTest extends TestCase
    public void test1() throws Exception
    {
       RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
-      AbstractResourceDescriptorImpl resource = new AbstractResourceDescriptorImpl(Resource1.class);
+      AbstractResourceDescriptorImpl resource = new AbstractResourceDescriptorImpl(Resource1.class,ComponentLifecycleScope.PER_REQUEST);
       CLIResourceFactory cliResourceFactory = new CLIResourceFactory();
       Set<CLIResource> cliResources = cliResourceFactory.getCLIResources(resource);
 

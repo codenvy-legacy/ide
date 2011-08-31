@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.ResourceLauncher;
+import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -29,13 +34,8 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.test.mock.MockPrincipal;
 import org.junit.Before;
 
 import java.util.HashSet;
@@ -116,6 +116,7 @@ public class Base
       binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
       resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
+      System.out.println("Base.setUp()" + handler);
       launcher = new ResourceLauncher(handler);
       sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);

@@ -16,10 +16,10 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
       </dependency>
-      <dependency>
+      <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.frameworks.json</artifactId>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>

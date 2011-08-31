@@ -18,26 +18,14 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFactory;
-import javax.jcr.ValueFormatException;
-import javax.jcr.Workspace;
-
 import junit.framework.TestCase;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.ResourceLauncher;
+import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.dataflow.PersistentDataManager;
@@ -50,17 +38,21 @@ import org.exoplatform.services.jcr.impl.dataflow.serialization.ReaderSpoolFileH
 import org.exoplatform.services.jcr.impl.util.io.FileCleaner;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.test.mock.MockPrincipal;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.junit.After;
 import org.junit.Before;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.ValueFactory;
+import javax.jcr.Workspace;
 
 /**
  * Created by The eXo Platform SAS.
@@ -68,7 +60,7 @@ import org.junit.Before;
  * @version $Id: $
 */
 
-public class Base extends TestCase
+public class Base 
 {
    public static final String WS_NAME = "ws";
 
@@ -152,7 +144,7 @@ public class Base extends TestCase
    }
 
    @After
-   protected void tearDown() throws Exception
+   public void tearDown() throws Exception
    {
       
       if (session != null)
@@ -187,7 +179,6 @@ public class Base extends TestCase
          }
       }
 
-      super.tearDown();
       // log.info("tearDown() END " + getClass().getName() + "." + getName());
    }
 

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.authentication;
 
 import org.apache.commons.codec.binary.Base64;
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
@@ -68,7 +67,7 @@ public class BasicAuthFilter implements Filter
       if (auth == null)
       {
          HttpServletResponse httpResponse = (HttpServletResponse)response;
-         httpResponse.setStatus(HTTPStatus.UNAUTHORIZED);
+         httpResponse.setStatus(401);
          httpResponse.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"exo-domain\"");
          return;
       }
@@ -111,7 +110,6 @@ public class BasicAuthFilter implements Filter
          String userId = authenticator.validateUser(credentials);
 
          Identity identity = authenticator.createIdentity(userId);
-         
 
          IdentityRegistry ir = (IdentityRegistry)container.getComponentInstanceOfType(IdentityRegistry.class);
          if (ir == null)
@@ -128,7 +126,7 @@ public class BasicAuthFilter implements Filter
       catch (LoginException e)
       {
          HttpServletResponse httpResponse = (HttpServletResponse)response;
-         httpResponse.setStatus(HTTPStatus.UNAUTHORIZED);
+         httpResponse.setStatus(401);
          httpResponse.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"exo-domain\"");
          return;
       }

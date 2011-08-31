@@ -341,7 +341,7 @@
                <artifactId>exo.kernel.container</artifactId>
                <scope>runtime</scope>
             </dependency>
-            <dependency>
+            <!--dependency>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.commons</artifactId>
                <scope>runtime</scope>
@@ -360,7 +360,7 @@
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.ext</artifactId>
                <scope>runtime</scope>
-            </dependency>
+            </dependency-->
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.ext</artifactId>

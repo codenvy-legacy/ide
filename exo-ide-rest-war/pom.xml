@@ -11,11 +11,11 @@
    <packaging>war</packaging>
    <name>eXo IDE :: REST Web Application</name>
    <dependencies>
-      <dependency>
+      <!--dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.core</artifactId>
          <scope>provided</scope>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.framework.web</artifactId>

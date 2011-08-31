@@ -42,7 +42,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -202,7 +201,7 @@ public class DownloadContentService
       String href = uriInfo.getBaseUriBuilder().segment(WEBDAV_CONTEXT, "/").build().toString();
       if (!repoPath.startsWith(href))
       {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(repoPath).build();
+         return Response.status(404).entity(repoPath).build();
       }
       repoPath = repoPath.substring(href.length());
       if (repoPath.startsWith("/"))
@@ -230,7 +229,7 @@ public class DownloadContentService
       catch (PathNotFoundException exc)
       {
          log.error("NoSuchWorkspaceException " + exc.getMessage(), exc);
-         return Response.status(HTTPStatus.NOT_FOUND).entity(exc.getMessage()).build();
+         return Response.status(404).entity(exc.getMessage()).build();
       }
       catch (Exception exc)
       {

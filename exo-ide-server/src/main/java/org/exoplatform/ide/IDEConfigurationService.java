@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
+import org.everrest.core.impl.provider.json.ArrayValue;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -34,13 +38,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
-import org.exoplatform.ws.frameworks.json.value.impl.ArrayValue;
-import org.exoplatform.ws.frameworks.json.value.impl.ObjectValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -211,7 +208,7 @@ public class IDEConfigurationService
       }
       catch (Exception e)
       {
-         throw new WebApplicationException(e, HTTPStatus.NOT_FOUND);
+         throw new WebApplicationException(e, 404);
       }
    }
 
@@ -237,11 +234,9 @@ public class IDEConfigurationService
       String userConfiguration = readSettings();
       final Map<String, Object> userSettings = new HashMap<String, Object>();
 
-      final JsonParserImpl jsonParser = new JsonParserImpl();
-      final JsonHandler jsonHandler = new JsonDefaultHandler();
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(userConfiguration.getBytes())),
-         jsonHandler);
-      JsonValue jsonValue = jsonHandler.getJsonObject();
+      final JsonParser jsonParser = new JsonParser();
+      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(userConfiguration.getBytes())));
+      JsonValue jsonValue = jsonParser.getJsonObject();
 
       Iterator<String> iterator = jsonValue.getKeys();
       while (iterator.hasNext())

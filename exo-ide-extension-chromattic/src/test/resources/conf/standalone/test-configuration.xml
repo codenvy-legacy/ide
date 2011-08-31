@@ -64,6 +64,40 @@
          </properties-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.everrest.exoplatform.EverrestInitializer</type>
+   </component>
+   <component>
+      <key>org.everrest.core.ResourceBinder</key>
+      <type>org.everrest.core.impl.ResourceBinderImpl</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ProvidersRegistry</type>
+   </component>
+
+   <component>
+      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+   </component>
+
+
+   <component>
+      <key>org.everrest.core.RequestHandler</key>
+      <type>org.everrest.exoplatform.ExoRequestHandler</type>
+      <init-params>
+         <value-param>
+            <name>org.everrest.http.method.override</name>
+            <value>true</value>
+         </value-param>
+      </init-params>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.StartableApplication</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
+   </component>
+   
 
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>
@@ -110,11 +144,6 @@
 
 
    <component>
-      <type>org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher</type>
-   </component>
-
-
-   <component>
       <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
    </component>
 
@@ -155,26 +184,15 @@
   </component>
   
   <component>
-     <type>org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler</type>
+     <type>org.exoplatform.ide.groovy.JcrGroovyCompiler</type>
   </component>
    
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader</target-component>
-      <component-plugin>
-         <name>add groovy repo</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.jcr.ext.script.groovy.GroovyScriptAddRepoPlugin</type>
-         <init-params>
-            <properties-param>
-               <name>repo1</name>
-               <property name="repository" value="db1" />
-               <property name="workspace" value="ws" />
-               <property name="path" value="/repo" />
-            </properties-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
-
+    <component>
+      <key>org.everrest.groovy.GroovyClassLoaderProvider</key>
+      <type>org.exoplatform.ide.groovy.JcrGroovyClassLoaderProvider</type>
+   </component>
+   
+  
    <external-component-plugins>
       <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
@@ -206,46 +224,6 @@
       </component-plugin>
    </external-component-plugins>
 
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>method.access.filter</name>
-               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.entity.provider</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rest.ext.HierarchicalPropertyEntityProvider</name>
-               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.request.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rs.request.method-override-filter</name>
-               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
+ 
 </configuration>
 

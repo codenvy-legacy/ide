@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.upload;
+package org.exoplatform.ide;
 
-import org.exoplatform.ide.BaseTest;
+import org.everrest.exoplatform.servlet.EverrestExoContextListener;
 import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -26,9 +26,6 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -58,10 +55,10 @@ import javax.jcr.version.VersionException;
  * @version $Id: Dec 16, 2010 $
  *
  */
-public class TestZipUtils extends BaseTest
+public class ZipUtilsTest extends BaseTest
 {
    
-   private static Log log = ExoLogger.getLogger(TestZipUtils.class);
+   private static Log log = ExoLogger.getLogger(ZipUtilsTest.class);
 
    private static String WORKSPACE = "dev-monit";
 
@@ -73,7 +70,6 @@ public class TestZipUtils extends BaseTest
 
    private RepositoryService repositoryService;
    
-   @Before
    public void setUp() throws Exception
    {
       super.setUp();
@@ -87,7 +83,7 @@ public class TestZipUtils extends BaseTest
       
    }
    
-   @Test
+   
    public void testUnzippingToRootFolder() throws Exception
    {
       Node rootNode = session.getRootNode();
@@ -107,7 +103,7 @@ public class TestZipUtils extends BaseTest
       assertEquals("nt:file", rootNode.getNode("settings.xml").getPrimaryNodeType().getName());
    }
    
-   @Test
+   
    public void testUnzippingToNotRootFolder() throws Exception
    {
       final String folderNodeName = "test-folder";
@@ -132,7 +128,7 @@ public class TestZipUtils extends BaseTest
       assertEquals("nt:file", folderNode.getNode("settings.xml").getPrimaryNodeType().getName());
    }
    
-   @Test
+   
    public void testTryToUnzipNotArchiveFile() throws AccessDeniedException, ItemExistsException, 
    ConstraintViolationException, InvalidItemStateException, VersionException, LockException, 
    NoSuchNodeTypeException, RepositoryException, IOException
@@ -158,7 +154,7 @@ public class TestZipUtils extends BaseTest
       
    }
    
-   @Test
+   
    public void testZippingFolder() throws RepositoryException, IOException
    {
       Node rootNode = session.getRootNode();
@@ -229,8 +225,8 @@ public class TestZipUtils extends BaseTest
    
    
    
-   @After
-   protected void tearDown() throws Exception
+   
+   public void tearDown() throws Exception
    {
       if (session != null)
       {
@@ -254,14 +250,14 @@ public class TestZipUtils extends BaseTest
          }
          catch (Exception e)
          {
-            log.error("tearDown() ERROR " + getClass().getName() + "." + getName() + " " + e, e);
+            log.error("tearDown() ERROR " + getClass().getName() + " " + e, e);
          }
          finally
          {
             session.logout();
          }
       }
-      super.tearDown();
+      
    }
 
 }

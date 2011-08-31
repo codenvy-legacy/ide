@@ -18,6 +18,31 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
+import org.everrest.core.ObjectFactory;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.ResourcePublicationException;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.impl.ResourceBinderImpl;
+import org.everrest.core.resource.AbstractResourceDescriptor;
+import org.everrest.groovy.ResourceId;
+import org.exoplatform.container.configuration.ConfigurationManager;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
+import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
+import org.exoplatform.ide.groovy.GroovyResourcePublisher;
+import org.exoplatform.ide.groovy.GroovyScript2RestLoader;
+import org.exoplatform.ide.groovy.NodeScriptKey;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
+import org.exoplatform.services.jcr.ext.registry.RegistryService;
+import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.script.groovy.GroovyScriptInstantiator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -45,31 +70,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.container.configuration.ConfigurationManager;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
-import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
-import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.registry.RegistryService;
-import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
-import org.exoplatform.services.jcr.ext.script.groovy.GroovyScript2RestLoader;
-import org.exoplatform.services.jcr.ext.script.groovy.NodeScriptKey;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.ObjectFactory;
-import org.exoplatform.services.rest.ext.groovy.GroovyJaxrsPublisher;
-import org.exoplatform.services.rest.ext.groovy.ResourceId;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.impl.ResourcePublicationException;
-import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
-import org.exoplatform.services.script.groovy.GroovyScriptInstantiator;
 
 /**
  * Created by The eXo Platform SAS .
@@ -105,8 +105,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
    public GroovyScriptService(ResourceBinder binder, GroovyScriptInstantiator groovyScriptInstantiator,
       RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      ConfigurationManager configurationManager, RegistryService registryService, GroovyJaxrsPublisher groovyPublisher,
-      Handler jcrUrlHandler, InitParams params)
+      ConfigurationManager configurationManager, RegistryService registryService,
+      GroovyResourcePublisher groovyPublisher, Handler jcrUrlHandler, InitParams params)
    {
       super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
          registryService, groovyPublisher, jcrUrlHandler, params);
@@ -287,7 +287,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (jcrLocation == null)
       {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
+         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
             .build();
       }
       //Get dependent resources from classpath file if exist:
@@ -319,7 +319,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
       if (jcrLocation == null)
       {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
+         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
             .build();
       }
 
@@ -341,7 +341,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
       if (jcrLocation == null)
       {
-         return Response.status(HTTPStatus.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
+         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
             .build();
       }
       String userId = null;
@@ -365,7 +365,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                repositoryService.getRepository(jcrLocation[0]));
          Node script = ((Node)ses.getItem("/" + jcrLocation[2])).getNode("jcr:content");
          ResourceId key = new NodeScriptKey(jcrLocation[0], jcrLocation[1], script);
-
          ObjectFactory<AbstractResourceDescriptor> resource = groovyPublisher.getResource(key);
          if (resource != null)
          {
@@ -391,7 +390,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                properties = new MultivaluedMapImpl();
             }
             properties.putSingle(DEVELOPER_ID, userId);
-            properties.putSingle(ResourceBinder.RESOURCE_EXPIRED,
+            properties.putSingle(ResourceBinderImpl.RESOURCE_EXPIRED,
                Long.toString(System.currentTimeMillis() + resourceLiveTime));
 
             //Get dependent resources from classpath file if exist:
@@ -466,9 +465,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       {
          System.out.println("Exception > " + e.getMessage());
          e.printStackTrace();
-         return createErrorResponse(e, HTTPStatus.INTERNAL_ERROR);
+         return createErrorResponse(e, Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
       }
-
    }
 
 }

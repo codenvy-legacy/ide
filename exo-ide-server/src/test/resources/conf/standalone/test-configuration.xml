@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the 
-   Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY 
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received 
-   a copy of the GNU Lesser General Public License along with this software; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, 
-   or see the FSF site: http://www.fsf.org. -->
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
+   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
+   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
@@ -44,48 +44,41 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService
-		</type>
+      <type>org.everrest.exoplatform.EverrestInitializer</type>
+   </component>
+   <component>
+      <type>org.everrest.core.impl.ResourceBinderImpl</type>
+   </component>
+   <component>
+      <type>org.everrest.exoplatform.ProvidersRegistry</type>
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
+      <type>org.everrest.exoplatform.StartableApplication</type>
    </component>
 
    <component>
-      <!-- <key>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</key> -->
+      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
+   </component>
 
-      <!--type>org.exoplatform.ide.vfs.webdav.WebDavVirtualFileSystemService</type -->
-      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
+   <component>
+      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
+   </component>
+
+   <component>
+      <key>org.everrest.core.RequestHandler</key>
+      <type>org.everrest.exoplatform.ExoRequestHandler</type>
       <init-params>
          <value-param>
-            <name>auto-mix-lockable</name>
-            <value>false</value>
+            <name>org.everrest.http.method.override</name>
+            <value>true</value>
          </value-param>
-
-         <value-param>
-            <name>def-folder-node-type</name>
-            <value>nt:folder</value>
-         </value-param>
-
-         <value-param>
-            <name>def-file-node-type</name>
-            <value>nt:file</value>
-         </value-param>
-
-         <value-param>
-            <name>def-file-mimetype</name>
-            <value>text/plain</value>
-         </value-param>
-
-         <value-param>
-            <name>update-policy</name>
-            <value>create-version</value>
-         </value-param>
-
-         <!--value-param> <name>cache-control</name> <value>text/xml,text/html:max-age=1800;text/*:max-age=777;image/png,image/jpg:max-age=3600;*/*:no-cache;image/*:max-age=555</value> 
-            </value-param -->
       </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService
+      </type>
    </component>
 
    <component>
@@ -98,14 +91,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService
-		</type>
+      <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
    </component>
 
    <component>
       <key>org.exoplatform.services.security.Authenticator</key>
       <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl
-		</type>
+      </type>
    </component>
 
    <component>
@@ -127,10 +119,8 @@
    </component>
 
    <component>
-      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration
-		</key>
-      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl
-		</type>
+      <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
+      <type>org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationImpl</type>
       <init-params>
          <value-param>
             <name>conf-path</name>
@@ -185,63 +175,5 @@
       </component-plugin>
    </external-component-plugins>
 
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>method.access.filter</name>
-               <value>org.exoplatform.services.rest.ext.method.filter.MethodAccessFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.entity.provider</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rest.ext.HierarchicalPropertyEntityProvider</name>
-               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-      <component-plugin>
-         <name>ws.rs.request.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rs.request.method-override-filter</name>
-               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
 
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.jcr.ext.registry.RegistryService</target-component>
-      <component-plugin>
-         <name>appConfig</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.jcr.ext.registry.RegistryInitializationEntryPlugin</type>
-         <init-params>
-            <value-param>
-               <name>IDE</name>
-               <value>
-   <![CDATA[<IDE><configuration>{"context" : "/rest/private", "publicContext" : "/rest","gadgetServer" : "/eXoGadgetServer/gadgets/"}</configuration></IDE>]]>
-               </value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>   
-   
 </configuration>

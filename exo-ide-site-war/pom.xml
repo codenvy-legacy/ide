@@ -13,7 +13,7 @@
 	<name>eXo IDE :: Site Web Application</name>
 	
 	<dependencies>
-		<dependency>
+		<!--dependency>
 			<groupId>org.exoplatform.ws</groupId>
 			<artifactId>exo.ws.rest.core</artifactId>
 			<scope>provided</scope>
@@ -22,7 +22,7 @@
 			<groupId>org.exoplatform.jcr</groupId>
 			<artifactId>exo.jcr.framework.web</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>org.exoplatform.core</groupId>
 			<artifactId>exo.core.component.security.core</artifactId>

@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.chromattic.server;
 
-import java.util.Calendar;
-
-import javax.jcr.Node;
-
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.services.rest.impl.ContainerResponse;
+import org.everrest.core.impl.ContainerResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Calendar;
+
+import javax.jcr.Node;
+import javax.ws.rs.core.Response;
 
 /**
  * 
@@ -86,7 +86,7 @@ public class TestDataObjectService extends BaseTest
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
             null, null);
-      Assert.assertEquals(HTTPStatus.OK, cres.getStatus());
+      Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       String s = (String)cres.getEntity();
       System.out.println("Generated node types " + s);
     }
@@ -98,7 +98,7 @@ public class TestDataObjectService extends BaseTest
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=EXO", "", null, null,
             null, null);
-      Assert.assertEquals(HTTPStatus.INTERNAL_ERROR, cres.getStatus());
+      Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), cres.getStatus());
       String s = (String)cres.getEntity();
       System.out.println("Generated node types " + s);
     }
@@ -109,7 +109,7 @@ public class TestDataObjectService extends BaseTest
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?nodeTypeFormat=EXO", "", null, null,
             null, null);
-      Assert.assertEquals(HTTPStatus.INTERNAL_ERROR, cres.getStatus());
+      Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), cres.getStatus());
       String s = (String)cres.getEntity();
       System.out.println("Generated node types " + s);
     }
@@ -121,7 +121,7 @@ public class TestDataObjectService extends BaseTest
          launcher.service("POST",
             "/ide/chromattic/generate-nodetype-definition?do-location=" + location + "&nodeTypeFormat=CND", "", null, null,
             null, null);
-      Assert.assertEquals(HTTPStatus.OK, cres.getStatus());
+      Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       String s = (String)cres.getEntity();
       System.out.println("Generated node types " + s);
     }
@@ -133,7 +133,7 @@ public class TestDataObjectService extends BaseTest
          launcher.service("POST",
             "/ide/chromattic/register-nodetype/EXO/4", "", null, ntd.getBytes(),
             null, null);
-      Assert.assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+      Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), cres.getStatus());
     
     }
    

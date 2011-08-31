@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.extension.ssh.server;
 
-import org.exoplatform.services.rest.ApplicationContext;
-import org.exoplatform.services.rest.impl.ApplicationContextImpl;
-import org.exoplatform.services.rest.impl.provider.JsonEntityProvider;
+import org.everrest.core.ApplicationContext;
+import org.everrest.core.impl.ApplicationContextImpl;
+import org.everrest.core.impl.provider.JsonEntityProvider;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,7 +41,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
-public class JsonpEntityProvider extends JsonEntityProvider
+public class JsonpEntityProvider extends JsonEntityProvider<Object>
 {
    private static final String CALLBACK = "callback";
 

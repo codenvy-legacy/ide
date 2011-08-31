@@ -44,7 +44,6 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.tika.sax.SecureContentHandler;
-import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -113,7 +112,7 @@ public class UploadService
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
+         throw new UploadServiceException(500, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
       }
 
       FileItem fileItem = requestItems.get(FormFields.FILE);
@@ -128,7 +127,7 @@ public class UploadService
 
          if (location == null)
          {
-            throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN
+            throw new UploadServiceException(500, ERROR_OPEN
                + "Invalid path, where to upload file" + ERROR_CLOSE);
          }
          
@@ -143,7 +142,7 @@ public class UploadService
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
 
       return Response.ok().type(MediaType.TEXT_HTML).build();
@@ -159,7 +158,7 @@ public class UploadService
 
       if (requestItems.get(FormFields.FILE) == null)
       {
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
+         throw new UploadServiceException(500, ERROR_OPEN + "Can't find input file" + ERROR_CLOSE);
       }
 
       try
@@ -204,33 +203,33 @@ public class UploadService
             jcrContentNodeType);
          session.save();
 
-         return Response.status(HTTPStatus.CREATED).type(MediaType.TEXT_HTML).build();
+         return Response.status(201).type(MediaType.TEXT_HTML).build();
 
       }
       catch (PathNotFoundException e)
       {
          log.error(e.getMessage(), e);
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
       catch (RepositoryException e)
       {
          log.error(e.getMessage(), e);
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
       catch (RepositoryConfigurationException e)
       {
          log.error(e.getMessage(), e);
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
       catch (UnsupportedEncodingException e)
       {
          log.error(e.getMessage(), e);
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
       catch (IOException e)
       {
          log.error(e.getMessage(), e);
-         throw new UploadServiceException(HTTPStatus.INTERNAL_ERROR, e.getMessage());
+         throw new UploadServiceException(500, e.getMessage());
       }
 
    }

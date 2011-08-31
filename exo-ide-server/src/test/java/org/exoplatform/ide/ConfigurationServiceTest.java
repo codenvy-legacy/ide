@@ -18,7 +18,11 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.common.http.HTTPStatus;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EnvironmentContext;
+import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.commons.utils.IOUtil;
 import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -26,17 +30,12 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.EnvironmentContext;
-import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
-import org.exoplatform.services.rest.tools.DummySecurityContext;
 import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
-import org.exoplatform.services.test.mock.MockPrincipal;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -45,6 +44,8 @@ import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
+
+
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -91,7 +92,8 @@ public class ConfigurationServiceTest extends BaseTest
 
    }
 
-   @SuppressWarnings("unchecked")
+   
+   
    public void testAppConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -102,14 +104,18 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
 
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertTrue(entity.containsKey("configuration"));
+      assertTrue(entity.containsKey("defaultEntrypoint"));
+      assertTrue(entity.containsKey("user"));
+      assertTrue(entity.containsKey("discoverable"));
+      assertTrue(entity.containsKey("userSettings"));
    }
 
-   @SuppressWarnings("unchecked")
+   
+   
    public void testWhoami() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -120,7 +126,7 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
       assertTrue(entity.containsKey("user"));
@@ -132,7 +138,7 @@ public class ConfigurationServiceTest extends BaseTest
       assertEquals(2, user.getRoles().size());
    }
 
-   @SuppressWarnings("unchecked")
+   
    public void testEntryPoint() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -143,14 +149,15 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
 
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
       assertTrue(entity.containsKey("defaultEntrypoint"));
       assertTrue(entity.containsKey("discoverable"));
    }
-
+   
+   
    public void testSetConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -162,9 +169,10 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+      assertEquals(204, cres.getStatus());
    }
 
+   
    public void testGetConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -174,12 +182,12 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres = launcher.service("GET", "/ide/configuration", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
 
       assertNotNull(cres.getEntity());
    }
    
-   @SuppressWarnings("unchecked")
+   
    public void testUserConfiguration() throws Exception
    {
       
@@ -193,17 +201,19 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(HTTPStatus.NO_CONTENT, cres.getStatus());
+      assertEquals(204, cres.getStatus());
       
       cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
+      @SuppressWarnings("unchecked")
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
       assertNotNull(entity.get("userSettings"));
    }
    
    @SuppressWarnings("unchecked")
+   
    public void testGetExistingUserSettings() throws Exception
    {
       
@@ -216,7 +226,7 @@ public class ConfigurationServiceTest extends BaseTest
       
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(HTTPStatus.OK, cres.getStatus());
+      assertEquals(200, cres.getStatus());
       assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
       assertNotNull(entity.get("userSettings"));

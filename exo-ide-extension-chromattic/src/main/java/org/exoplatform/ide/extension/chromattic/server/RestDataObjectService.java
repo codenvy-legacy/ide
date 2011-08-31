@@ -19,11 +19,13 @@
 package org.exoplatform.ide.extension.chromattic.server;
 
 import org.chromattic.dataobject.CompilationSource;
-import org.chromattic.dataobject.DataObjectCompiler;
 import org.chromattic.dataobject.DataObjectService;
 import org.chromattic.dataobject.NodeTypeFormat;
+import org.everrest.groovy.SourceFile;
+import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.groovy.JcrGroovyCompiler;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -31,10 +33,7 @@ import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.resource.NodeRepresentationService;
 import org.exoplatform.services.jcr.ext.resource.UnifiedNodeReference;
-import org.exoplatform.services.jcr.ext.script.groovy.JcrGroovyCompiler;
 import org.exoplatform.services.jcr.impl.core.nodetype.NodeTypeManagerImpl;
-import org.exoplatform.services.rest.ext.groovy.SourceFile;
-import org.exoplatform.services.rest.ext.groovy.SourceFolder;
 
 import java.io.IOException;
 import java.io.InputStream;

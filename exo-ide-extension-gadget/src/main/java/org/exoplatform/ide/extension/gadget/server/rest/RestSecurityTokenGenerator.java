@@ -16,13 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
+package org.exoplatform.ide.extension.gadget.server.rest;
 
 import org.apache.shindig.common.crypto.BlobCrypterException;
 import org.exoplatform.ide.extension.gadget.server.shindig.KeyCreator;
+import org.exoplatform.ide.extension.gadget.server.shindig.oauth.SecurityTokenGenerator;
+import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenRequest;
+import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenResponse;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
 
 import java.io.IOException;
 
@@ -39,7 +41,7 @@ import javax.ws.rs.core.MediaType;
  * @version $Id: $
 */
 @Path("/services/shindig/securitytoken")
-public class RestSecurityTokenGenerator implements ResourceContainer
+public class RestSecurityTokenGenerator 
 {
    /**
      * Class logger.

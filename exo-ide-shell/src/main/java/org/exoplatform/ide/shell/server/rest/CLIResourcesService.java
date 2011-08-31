@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.shell.server.rest;
 
+import org.everrest.core.ObjectFactory;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.resource.AbstractResourceDescriptor;
 import org.exoplatform.ide.shell.server.CLIResourceFactory;
 import org.exoplatform.ide.shell.shared.CLIResource;
-import org.exoplatform.services.rest.ObjectFactory;
-import org.exoplatform.services.rest.impl.ResourceBinder;
-import org.exoplatform.services.rest.resource.AbstractResourceDescriptor;
 
 import java.io.IOException;
 import java.util.HashSet;
