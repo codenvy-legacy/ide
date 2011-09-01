@@ -41,13 +41,12 @@ public interface CodeAssistant
     * Returns the Class object associated with the class or interface with the given string name.
     * (Search in project)
     * 
-    * @param baseUri
     * @param fqn the Full Qualified Name
     * @param location of file
     * @return {@link TypeInfo}
     * @throws CodeAssistantException
     */
-   TypeInfo getClassByFQNFromProject(String baseUri, String fqn, String location) throws CodeAssistantException;
+   TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException;
 
    /**
     * Returns the Class object associated with the class or interface with the given string name.
@@ -62,13 +61,12 @@ public interface CodeAssistant
     * Returns the Class object associated with the class or interface with the given string name.
     * (Search in project)
     * 
-    * @param baseUri 
     * @param className
     * @param location of file
     * @return {@link ShortTypeInfo}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> findFQNsByClassNameInProject(String baseUri, String className, String location)
+   List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
       throws CodeAssistantException;
 
    /**
@@ -116,7 +114,7 @@ public interface CodeAssistant
     * @param prefix the string for matching FQNs
     * @param where the string that indicate where find (must be "className" or "fqn")
     */
-   List<ShortTypeInfo> findFQNsByPrefixInProject(String baseUri, String prefix, String location) throws CodeAssistantException;
+   List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location) throws CodeAssistantException;
 
    /**
     * Find all classes or annotations or interfaces

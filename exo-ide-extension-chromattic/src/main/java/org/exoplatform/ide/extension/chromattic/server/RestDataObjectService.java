@@ -25,6 +25,7 @@ import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.groovy.JcrGroovyCompiler;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -42,7 +43,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -84,30 +84,27 @@ public class RestDataObjectService
     * @return
     * @throws IOException
     * @throws URISyntaxException
+    * @throws RepositoryException 
     */
    @POST
    @Path("/generate-nodetype-definition")
    public String getNodeTypeDefinition(@Context UriInfo uriInfo, @QueryParam("do-location") String location,
-      @QueryParam("nodeTypeFormat") NodeTypeFormat format) throws PathNotFoundException, IOException,
-      URISyntaxException
+      @QueryParam("nodeTypeFormat") NodeTypeFormat format) throws IOException,
+      URISyntaxException, RepositoryException
    {
       if (location == null)
          throw new IllegalArgumentException("You must specify location of the source script.");
       
-      String[] jcrLocation = parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
+      location = location.startsWith("/") ? location.substring(1) : location;
       
-      if (jcrLocation == null)
-         throw new PathNotFoundException("Location of script " + location + " not found. ");
-
-      String repository = jcrLocation[0];
-      String workspace = jcrLocation[1];
-      String path = "/" + jcrLocation[2];
+      //TODO
+      String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
+      String workspace = RepositoryDiscoveryService.getEntryPoint();
 
       CompilationSource compilationSource = null;
       SourceFolder[] sources = null;
       DependentResources dependencyResources =
-         GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
-            repositoryService, sessionProviderService);
+         GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
       if (dependencyResources != null && dependencyResources.getFolderSources().size() > 0)
       {
          //TODO only first one dir is taken at the moment
@@ -121,11 +118,11 @@ public class RestDataObjectService
       }
       else
       {
-         compilationSource = new CompilationSource(repository, workspace, path);
+         compilationSource = new CompilationSource(repository, workspace, location);
       }
 
       SourceFile[] sourceFile =
-         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, workspace, path)).getURL())};
+         new SourceFile[]{new SourceFile((new UnifiedNodeReference(repository, workspace, location)).getURL())};
 
       List<String> nodeReferences = new ArrayList<String>();
       URL[] urls = compiler.getDependencies(sources, sourceFile);

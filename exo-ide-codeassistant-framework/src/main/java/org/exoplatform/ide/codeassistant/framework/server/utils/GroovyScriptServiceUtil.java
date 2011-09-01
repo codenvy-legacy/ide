@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.utils;
 
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -33,6 +34,8 @@ import java.io.InputStream;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.LoginException;
+import javax.jcr.NoSuchWorkspaceException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -75,6 +78,7 @@ public class GroovyScriptServiceUtil
     * @return array of {@link String}, where elements contain repository name, workspace name and 
     * the path to JCR node that contains file
     */
+   @Deprecated
    public static String[] parseJcrLocation(String baseUri, String location)
    {
       baseUri += WEBDAV_CONTEXT;
@@ -93,25 +97,16 @@ public class GroovyScriptServiceUtil
 
    /**
     * @param repositoryService repository service
-    * @param sessionProviderService session provider service
-    * @param repoName repository's name
-    * @param repoPath path to file in repository
-    * @return {@link Session} created JCR session
+    * @return
+    * @throws LoginException
+    * @throws NoSuchWorkspaceException
     * @throws RepositoryException
-    * @throws RepositoryConfigurationException
     */
-   public static Session getSession(RepositoryService repositoryService, SessionProviderService sessionProviderService,
-      String repoName, String repoPath) throws RepositoryException, RepositoryConfigurationException
+   public static Session getSession(RepositoryService repositoryService) throws LoginException,
+      NoSuchWorkspaceException, RepositoryException
    {
-      ManageableRepository repo = repositoryService.getRepository(repoName);
-      SessionProvider sp = sessionProviderService.getSessionProvider(null);
-      if (sp == null)
-         throw new RepositoryException("SessionProvider is not properly set. Make the application calls"
-            + "SessionProviderService.setSessionProvider(..) somewhere before ("
-            + "for instance in Servlet Filter for WEB application)");
-
-      String workspace = repoPath.split("/")[0];
-      return sp.getSession(workspace, repo);
+      ManageableRepository repository = repositoryService.getCurrentRepository();
+      return repository.login(RepositoryDiscoveryService.getEntryPoint());
    }
 
    /**
@@ -154,20 +149,16 @@ public class GroovyScriptServiceUtil
     * Get content of existed groovy class path file.
     * 
     * @param location script location
-    * @param baseUri base URI
     * @return {@link InputStream} the content of proper groovy class path file
     */
-   protected static InputStream getClassPathContent(String location, String baseUri,
-      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
+   protected static InputStream getClassPathContent(String location, RepositoryService repositoryService)
    {
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
+      location = (location.startsWith("/")) ? location.substring(1) : location;
       try
       {
-         Session session =
-            GroovyScriptServiceUtil.getSession(repositoryService, sessionProviderService, jcrLocation[0],
-               jcrLocation[1] + "/" + jcrLocation[2]);
+         Session session = GroovyScriptServiceUtil.getSession(repositoryService);
          Node rootNode = session.getRootNode();
-         Node scriptNode = rootNode.getNode(jcrLocation[2]);
+         Node scriptNode = rootNode.getNode(location);
          Node classpathNode = findClassPathNode(scriptNode.getParent());
          if (classpathNode != null)
          {
@@ -178,10 +169,6 @@ public class GroovyScriptServiceUtil
       {
          return null;
       }
-      catch (RepositoryConfigurationException e)
-      {
-         return null;
-      }
       return null;
    }
 
@@ -189,15 +176,12 @@ public class GroovyScriptServiceUtil
     * Get dependent resources of the script from classpath file.
     * 
     * @param scriptLocation location of script, which uses classpath file
-    * @param baseUri base URI
     * @return {@link DependentResources} dependent resources
     */
-   public static DependentResources getDependentResource(String scriptLocation, String baseUri,
-      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService)
+   public static DependentResources getDependentResource(String scriptLocation, RepositoryService repositoryService)
    {
       //Get content of groovy class path file:
-      InputStream classPathFileContent =
-         getClassPathContent(scriptLocation, baseUri, repositoryService, sessionProviderService);
+      InputStream classPathFileContent = getClassPathContent(scriptLocation, repositoryService);
 
       if (classPathFileContent != null)
       {

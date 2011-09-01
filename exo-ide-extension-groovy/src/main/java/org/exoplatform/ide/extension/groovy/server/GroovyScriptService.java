@@ -30,12 +30,12 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
 import org.exoplatform.ide.groovy.GroovyResourcePublisher;
 import org.exoplatform.ide.groovy.GroovyScript2RestLoader;
 import org.exoplatform.ide.groovy.NodeScriptKey;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
@@ -136,9 +136,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       String name =
          (location != null && location.length() > 0) ? location.substring(location.lastIndexOf("/") + 1) : "";
       //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources =
-         GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
-            repositoryService, sessionProviderService);
+      DependentResources dependentResources = GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
       if (dependentResources != null)
       {
          return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
@@ -161,26 +159,24 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    @GET
    @Path("/classpath-location")
    @Produces("text/plain")
-   public String getClassPathLocation(@Context UriInfo uriInfo, @HeaderParam("location") String location)
+   public String getClassPathLocation(@HeaderParam("location") String location)
    {
-      String baseUri = uriInfo.getBaseUri().toASCIIString();
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(baseUri, location);
+      location = location.startsWith("/") ? location.substring(1) : location;
       try
       {
-         Session session =
-            GroovyScriptServiceUtil.getSession(repositoryService, sessionProviderService, jcrLocation[0],
-               jcrLocation[1] + "/" + jcrLocation[2]);
+         Session session = GroovyScriptServiceUtil.getSession(repositoryService);
          Node rootNode = session.getRootNode();
-         Node node = rootNode.getNode(jcrLocation[2]);
+         Node node = rootNode.getNode(location);
          Node classpathNode = findClassPathNode(node);
          if (classpathNode != null)
          {
             //Form the available href of the classpath file:
-            String classpathLocation =
-               baseUri + GroovyScriptServiceUtil.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
-            classpathLocation +=
-               (classpathNode.getPath().startsWith("/")) ? classpathNode.getPath() : "/" + classpathNode.getPath();
-            return classpathLocation;
+            //TODO
+            /* String classpathLocation =
+                baseUri + GroovyScriptServiceUtil.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
+             classpathLocation +=
+                (classpathNode.getPath().startsWith("/")) ? classpathNode.getPath() : "/" + classpathNode.getPath();*/
+            return classpathNode.getPath();
          }
          else
          {
@@ -188,10 +184,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          }
       }
       catch (RepositoryException e)
-      {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
-      }
-      catch (RepositoryConfigurationException e)
       {
          throw new WebApplicationException(e, createErrorResponse(e, 500));
       }
@@ -243,14 +235,15 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param security security context
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws RepositoryException 
     */
    @POST
    @Path("/deploy-sandbox")
    @RolesAllowed({"developers"})
-   public Response deployInSandbox(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      @Context SecurityContext security, MultivaluedMap<String, String> properties)
+   public Response deployInSandbox(@HeaderParam("location") String location, @Context SecurityContext security,
+      MultivaluedMap<String, String> properties)
    {
-      return sandboxLoader(uriInfo, location, true, security, properties);
+      return sandboxLoader(location, true, security, properties);
    }
 
    /**
@@ -263,10 +256,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
    @POST
    @Path("/undeploy-sandbox")
    @RolesAllowed({"developers"})
-   public Response undeployFromSandox(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      @Context SecurityContext security, MultivaluedMap<String, String> properties)
+   public Response undeployFromSandox(@HeaderParam("location") String location, @Context SecurityContext security,
+      MultivaluedMap<String, String> properties)
    {
-      return sandboxLoader(uriInfo, location, false, security, properties);
+      return sandboxLoader(location, false, security, properties);
    }
 
    /**
@@ -276,30 +269,28 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param location location of groovy script to be deployed
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws RepositoryException 
     * @throws IOException 
     */
    @POST
    @Path("/deploy")
    @RolesAllowed({"administrators"})
    public Response deploy(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      MultivaluedMap<String, String> properties)
+      MultivaluedMap<String, String> properties) throws RepositoryException
    {
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
-      if (jcrLocation == null)
-      {
-         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
-            .build();
-      }
+      location = location.startsWith("/") ? location.substring(1) : location;
       //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources =
-         GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
-            repositoryService, sessionProviderService);
+      DependentResources dependentResources = GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
+      //TODO method of getting current repository and workspace
+      String repositoryName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      String workspaceName = RepositoryDiscoveryService.getEntryPoint();
+
       if (dependentResources != null)
       {
-         return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+         return super.load(repositoryName, workspaceName, location, true, dependentResources.getFolderSources(),
             dependentResources.getFileSources(), properties);
       }
-      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
+      return super.load(repositoryName, workspaceName, location, true, Collections.<String> emptyList(),
          Collections.<String> emptyList(), properties);
    }
 
@@ -308,42 +299,35 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param location location of groovy script
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws RepositoryException 
     */
    @POST
    @Path("/undeploy")
    @RolesAllowed({"administrators"})
    public Response undeploy(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      MultivaluedMap<String, String> properties)
+      MultivaluedMap<String, String> properties) throws RepositoryException
    {
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
+      location = location.startsWith("/") ? location.substring(1) : location;
+      //TODO method of getting current repository and workspace
+      String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
+      String workspace = RepositoryDiscoveryService.getEntryPoint();
 
-      if (jcrLocation == null)
-      {
-         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
-            .build();
-      }
-
-      return super.load(jcrLocation[0], jcrLocation[1], jcrLocation[2], false, Collections.<String> emptyList(),
+      return super.load(repository, workspace, location, false, Collections.<String> emptyList(),
          Collections.<String> emptyList(), properties);
    }
 
    /**
-    * @param uriInfo URI information
     * @param location location of groovy script
     * @param state if true - deploy, false - undeploy
     * @param security security context
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws RepositoryException 
     */
-   private Response sandboxLoader(UriInfo uriInfo, String location, boolean state, SecurityContext security,
+   private Response sandboxLoader(String location, boolean state, SecurityContext security,
       MultivaluedMap<String, String> properties)
    {
-      String[] jcrLocation = GroovyScriptServiceUtil.parseJcrLocation(uriInfo.getBaseUri().toASCIIString(), location);
-      if (jcrLocation == null)
-      {
-         return Response.status(Response.Status.NOT_FOUND).entity(location + " not found. ").type(MediaType.TEXT_PLAIN)
-            .build();
-      }
+      location = location.startsWith("/") ? location.substring(1) : location;
       String userId = null;
       Principal principal = security.getUserPrincipal();
       if (principal != null)
@@ -360,11 +344,12 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       Session ses = null;
       try
       {
-         ses =
-            sessionProviderService.getSessionProvider(null).getSession(jcrLocation[1],
-               repositoryService.getRepository(jcrLocation[0]));
-         Node script = ((Node)ses.getItem("/" + jcrLocation[2])).getNode("jcr:content");
-         ResourceId key = new NodeScriptKey(jcrLocation[0], jcrLocation[1], script);
+         //TODO method of getting current repository and workspace
+         String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
+         String workspace = RepositoryDiscoveryService.getEntryPoint();
+         ses = repositoryService.getCurrentRepository().login(workspace);
+         Node script = ((Node)ses.getItem("/" + location)).getNode("jcr:content");
+         ResourceId key = new NodeScriptKey(repository, workspace, script);
          ObjectFactory<AbstractResourceDescriptor> resource = groovyPublisher.getResource(key);
          if (resource != null)
          {
@@ -378,9 +363,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          }
          else if (!state)
          {
-            return Response
-               .status(Response.Status.BAD_REQUEST)
-               .entity("Can't remove resource " + jcrLocation[2] + ", not bound or has wrong mapping to the resource. ")
+            return Response.status(Response.Status.BAD_REQUEST)
+               .entity("Can't remove resource " + location + ", not bound or has wrong mapping to the resource. ")
                .type(MediaType.TEXT_PLAIN).build();
          }
          if (state)
@@ -394,16 +378,18 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                Long.toString(System.currentTimeMillis() + resourceLiveTime));
 
             //Get dependent resources from classpath file if exist:
-            DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
-                  repositoryService, sessionProviderService);
+            //TODO 
+            /*   DependentResources dependentResources =
+                  GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
+                     repositoryService, sessionProviderService);*/
+            DependentResources dependentResources = null;
             if (dependentResources != null)
             {
-               return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, dependentResources.getFolderSources(),
+               return load(repository, workspace, location, true, dependentResources.getFolderSources(),
                   dependentResources.getFileSources(), properties);
             }
 
-            return load(jcrLocation[0], jcrLocation[1], jcrLocation[2], true, Collections.<String> emptyList(),
+            return load(repository, workspace, location, true, Collections.<String> emptyList(),
                Collections.<String> emptyList(), properties);
             //  groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
@@ -412,7 +398,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
       catch (PathNotFoundException e)
       {
-         String msg = "Path " + jcrLocation[2] + " does not exists";
+         String msg = "Path " + location + " does not exists";
          LOG.error(msg);
          return Response.status(Response.Status.NOT_FOUND).entity(msg).type(MediaType.TEXT_PLAIN).build();
       }

@@ -83,7 +83,7 @@ public class RestCodeAssistantGroovy
       TypeInfo info = codeAssistantStorage.getClassByFQN(fqn);
       if (info == null)
       {
-         info = codeAssistantStorage.getClassByFQNFromProject(uriInfo.getBaseUri().toASCIIString(), fqn, location);
+         info = codeAssistantStorage.getClassByFQNFromProject(fqn, location);
          if (info != null)
             return info;
       }
@@ -91,7 +91,7 @@ public class RestCodeAssistantGroovy
       {
          return info;
       }
-      
+
       if (LOG.isDebugEnabled())
          LOG.error("Class info for " + fqn + " not found");
       return null;
@@ -129,8 +129,7 @@ public class RestCodeAssistantGroovy
    {
       List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByClassName(className);
 
-      info.addAll(codeAssistantStorage.findFQNsByClassNameInProject(uriInfo.getBaseUri().toASCIIString(), className,
-         location));
+      info.addAll(codeAssistantStorage.findFQNsByClassNameInProject(className, location));
 
       return info;
 
@@ -163,11 +162,11 @@ public class RestCodeAssistantGroovy
       @QueryParam("where") String where, @HeaderParam("location") String location) throws CodeAssistantException
    {
       List<ShortTypeInfo> info = codeAssistantStorage.findFQNsByPrefix(prefix, where);
-      
+
       if ("className".equals(where))
       {
-         List<ShortTypeInfo> projectInfo =codeAssistantStorage.findFQNsByPrefixInProject(uriInfo.getBaseUri().toASCIIString(), prefix, location);
-         if(projectInfo != null)
+         List<ShortTypeInfo> projectInfo = codeAssistantStorage.findFQNsByPrefixInProject(prefix, location);
+         if (projectInfo != null)
             info.addAll(projectInfo);
       }
       return info;

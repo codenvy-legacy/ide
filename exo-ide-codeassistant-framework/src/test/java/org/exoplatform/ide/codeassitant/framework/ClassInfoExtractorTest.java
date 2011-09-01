@@ -50,10 +50,6 @@ public class ClassInfoExtractorTest extends TestCase
       assertEquals(A.class.getCanonicalName(), cd.getQualifiedName());
       assertEquals(A.class.getSimpleName(), cd.getName());
       
-      
-      
-      
-      
       Method[] c = Collections.class.getMethods();
       for (int i = 0; i < c.length; i++)
       {

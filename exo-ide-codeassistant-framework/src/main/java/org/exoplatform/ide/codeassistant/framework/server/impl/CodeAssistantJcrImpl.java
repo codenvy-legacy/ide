@@ -18,23 +18,10 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.impl;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryResult;
-
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
@@ -50,6 +37,18 @@ import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -133,15 +132,14 @@ public class CodeAssistantJcrImpl implements CodeAssistant
     * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#getClassByFQNFromProject(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public TypeInfo getClassByFQNFromProject(String baseUri, String fqn, String location) throws CodeAssistantException
+   public TypeInfo getClassByFQNFromProject(String fqn, String location) throws CodeAssistantException
    {
       try
       {
          if (location != null)
          {
             DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, baseUri, repositoryService,
-                  sessionProviderService);
+               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
             if (dependentResources != null)
             {
                TypeInfo classInfo =
@@ -227,7 +225,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
     * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByClassNameInProject(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> findFQNsByClassNameInProject(String baseUri, String className, String location)
+   public List<ShortTypeInfo> findFQNsByClassNameInProject(String className, String location)
       throws CodeAssistantException
    {
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
@@ -236,15 +234,12 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          if (location != null && !location.isEmpty())
          {
             DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, baseUri, repositoryService,
-                  sessionProviderService);
+               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
             if (dependentResources != null)
             {
-
                types =
                   new GroovyClassNamesExtractor(repositoryService, sessionProviderService).getClassNames(className,
                      dependentResources);
-
             }
          }
          return types;
@@ -330,7 +325,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
     * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findFQNsByPrefix(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public List<ShortTypeInfo> findFQNsByPrefixInProject(String baseUri, String prefix, String location)
+   public List<ShortTypeInfo> findFQNsByPrefixInProject(String prefix, String location)
       throws CodeAssistantException
    {
       List<ShortTypeInfo> groovyClass = null;
@@ -340,8 +335,7 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          {
 
             DependentResources dependentResources =
-               GroovyScriptServiceUtil.getDependentResource(location, baseUri, repositoryService,
-                  sessionProviderService);
+               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
             if (dependentResources != null)
             {
                groovyClass =

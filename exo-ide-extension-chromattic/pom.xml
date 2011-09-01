@@ -90,10 +90,6 @@
          </exclusions>
       </dependency>
 
-
-
-
-
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
