@@ -86,41 +86,49 @@ public class RestServicesDiscoveryTest extends BaseTest
    public void testRestServicesDiscovery() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
+
+      //run resservicediscovery 
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       waitForElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]");
+      //check discovery form
       assertTrue(selenium().isElementPresent("//div[@view-id=\"ideResrServicesDiscoveryView\"]"));
       assertTrue(selenium().isElementPresent("exoRestServicesDiscoveryOkButton"));
-      
-      openNode(Utils.md5old("/aa"));
-      waitForElementPresent(Utils.md5old("/aa/testService11/"));
-      openNode(Utils.md5old("/aa/testService11/"));
-      waitForElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
+      //open node "ide"
+      openNode(Utils.md5old("/ide"));
+      //wait node
+      waitForElementPresent(Utils.md5old("/ide/application"));
+      //open next node
+      openNode(Utils.md5old("/ide/application"));
+      //wait
+      waitForElementPresent(Utils.md5old("/ide/application/java/"));
+      //open next node
+      openNode(Utils.md5old("/ide/application/java/"));
+      waitForElementPresent("//div[@id=" + "'" + Utils.md5old("/ide/application/java/") + "'" + "]"
+         + "//td/div[text()=\"OPTIONS\"]");
+      //click on "Options" node
+      selenium().clickAt(
+         "//div[@id=" + "'" + Utils.md5old("/ide/application/java/") + "'" + "]" + "//td/div[text()=\"OPTIONS\"]",
+         "0,0");
 
-      openNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
-      waitForElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
-      assertTrue(selenium().isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST"));
-      assertTrue(selenium().isElementPresent(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":GET"));
-
-      selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}"));
-
-      assertFalse(selenium().isVisible("ideRestServiceDiscoveryParameters"));
-      assertFalse(selenium().isVisible("ideResponseType"));
-      assertFalse(selenium().isVisible("ideRequestType"));
-
-      selectNode(Utils.md5old("/aa/testService11/Inner/{pathParam}") + ":POST");
-
-      assertEquals("application/xml", selenium().getValue("ideRequestType"));
-
-      assertEquals("*/*", selenium().getValue("ideResponseType"));
-
-      selectNode(Utils.md5old("/aa/testService11/") + ":OPTIONS");
-
-      assertEquals("n/a", selenium().getValue("ideRequestType"));
-
-      assertEquals("application/vnd.sun.wadl+xml", selenium().getValue("ideResponseType"));
+      //check elements on opened form 
+      validateFormAftrerOpenNode();
 
       selenium().click("exoRestServicesDiscoveryOkButton");
 
+   }
+
+   private void validateFormAftrerOpenNode() throws Exception
+   {
+
+      //last element waiting and check values of elements of the form
+      waitForElementPresent("//input[@name=\"ideResponseType\"]");
+      assertEquals("Path", selenium().getText("//span[text()=\"Path\"]"));
+      assertEquals("Request media type", selenium().getText("//span[text()=\"Request media type\"]"));
+      assertEquals("Response media type", selenium().getText("//span[text()=\"Response media type\"]"));
+
+      assertEquals("/ide/application/java/", selenium().getValue("//input[@name=\"ideMethodPathField\"]"));
+      assertEquals("n/a", selenium().getValue("//input[@name=\"ideRequestType\"]"));
+      assertEquals("application/vnd.sun.wadl+xml", selenium().getValue("//input[@name=\"ideResponseType\"]"));
    }
 
    private void openNode(String id)
