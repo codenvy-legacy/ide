@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide;
 
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
+import org.exoplatform.services.jcr.RepositoryService;
+
+import javax.jcr.RepositoryException;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -48,16 +53,31 @@ public class FSLocation
     * 
     * @param uriInfo UriInfo
     */
+   @Deprecated
    public String getLocalPath(UriInfo uriInfo)
    {
-      String baseUrl = uriInfo.getBaseUri().toString();
-      baseUrl += "/jcr/"; // assume we are use eXo webdav only.
+      return getLocalPath();
+   }
+   
+   public String getLocalPath()
+   {
+      RepositoryService repositoryService = (RepositoryService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      String repoName;
+      try
+      {
+         repoName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      }
+      catch (RepositoryException e)
+      {
+         e.printStackTrace();
+         repoName="repository";
+      }
       String localPath = getRootPath();
       if (localPath == null)
          throw new IllegalStateException("Root path may not be null. ");
       if (!localPath.endsWith("/"))
          localPath += "/"; // unix like path only!
-      localPath += url.substring(baseUrl.length());
+      localPath += repoName + "/" + RepositoryDiscoveryService.getEntryPoint() + url;
       return localPath;
    }
 

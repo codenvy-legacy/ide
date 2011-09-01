@@ -72,7 +72,7 @@ public class RepositoryDiscoveryService
    /** See {@link SessionProviderService} */
    private ThreadLocalSessionProviderService sessionProviderService;
 
-   private String entryPoint;
+   private static String entryPoint;
 
    private boolean discoverable;
 
@@ -91,14 +91,14 @@ public class RepositoryDiscoveryService
    private RepositoryService repositoryService;
 
    public RepositoryDiscoveryService(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService, String entryPoint, boolean discoverable)
+      ThreadLocalSessionProviderService sessionProviderService, String defEntryPoint, boolean discoverable)
    {
       this.repositoryService = repositoryService;
 
-      if (entryPoint != null)
-         this.entryPoint = entryPoint;
+      if (defEntryPoint != null)
+         entryPoint = defEntryPoint;
       else
-         this.entryPoint = DEF_WS;
+         entryPoint = DEF_WS;
 
       this.sessionProviderService = sessionProviderService;
       this.discoverable = discoverable;
@@ -349,6 +349,11 @@ public class RepositoryDiscoveryService
    protected Response createErrorResponse(Throwable t, int status)
    {
       return Response.status(status).entity(t.getMessage()).type("text/plain").build();
+   }
+   
+   public static String getEntryPoint()
+   {
+      return entryPoint;
    }
 
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
@@ -25,8 +26,11 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.LoginException;
+import javax.jcr.NoSuchWorkspaceException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.ws.rs.DELETE;
@@ -61,7 +65,8 @@ public class GitRepoService
     * Name of the Git's work folder.
     */
    public static final String GIT = ".git";
-
+   
+   
    /**
     * Repository service.
     */
@@ -80,30 +85,16 @@ public class GitRepoService
    @Produces(MediaType.TEXT_PLAIN)
    public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
    {
-      String baseUri = uriInfo.getBaseUri().toASCIIString();
-
-      String[] jcrLocation = parseJcrLocation(baseUri, location);
       try
       {
-         Session session = getSession(jcrLocation[0], jcrLocation[1]);
-         Node rootNode = session.getRootNode();
-         Node node;
-         if (jcrLocation[2] == null || jcrLocation[2].length() <= 0)
-         {
-            node = rootNode;
-         }
-         else
-         {
-            node = rootNode.getNode(jcrLocation[2]);
-         }
-
+         
+         Node node = getNodeByPath(location);
          //Find node, where ".git" is stored:
          Node gitNode = findGitNode(node);
          if (gitNode != null)
          {
             //Form the available href of the ".git" directory:
-            String gitWorkDir = baseUri + WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
-            gitWorkDir += (gitNode.getPath().startsWith("/")) ? gitNode.getPath() : "/" + gitNode.getPath();
+            String gitWorkDir = (gitNode.getPath().startsWith("/")) ? gitNode.getPath() : "/" + gitNode.getPath();
             return gitWorkDir;
          }
          else
@@ -113,19 +104,15 @@ public class GitRepoService
       }
       catch (RepositoryException e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
+         throw new WebApplicationException(e, 500);
       }
       catch (GitWorkDirNotFoundException e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 404));
+         throw new WebApplicationException(e,404);
       }
       catch (Exception e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 404));
+         throw new WebApplicationException(e,404);
       }
    }
 
@@ -134,29 +121,16 @@ public class GitRepoService
    @Produces(MediaType.TEXT_PLAIN)
    public void deleteWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
    {
-      String baseUri = uriInfo.getBaseUri().toASCIIString();
-
-      String[] jcrLocation = parseJcrLocation(baseUri, location);
       try
       {
-         Session session = getSession(jcrLocation[0], jcrLocation[1]);
-         Node rootNode = session.getRootNode();
-         Node node;
-         if (jcrLocation[2] == null || jcrLocation[2].length() <= 0)
-         {
-            node = rootNode;
-         }
-         else
-         {
-            node = rootNode.getNode(jcrLocation[2]);
-         }
-
+         Node node = getNodeByPath(location);
+      
          //Find node, where ".git" is stored:
          Node gitNode = findGitNode(node);
          if (gitNode != null)
          {
             gitNode.remove();
-            session.save();
+            node.getSession().save();
          }
          else
          {
@@ -165,19 +139,15 @@ public class GitRepoService
       }
       catch (RepositoryException e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
-      }
-      catch (RepositoryConfigurationException e)
-      {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
+         throw new WebApplicationException(e, 500);
       }
       catch (GitWorkDirNotFoundException e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 404));
+         throw new WebApplicationException(e, 404);
       }
       catch (Exception e)
       {
-         throw new WebApplicationException(e, createErrorResponse(e, 404));
+         throw new WebApplicationException(e, 404);
       }
    }
 
@@ -216,6 +186,16 @@ public class GitRepoService
          return null;
       }
    }
+   
+   
+   private Node getNodeByPath(String path) throws PathNotFoundException, RepositoryException
+   {
+      if (path.startsWith("/"))
+         path = path.replaceFirst("/", "");
+      Session session = getSession();
+      Node node = session.getRootNode().getNode(path);
+      return node;
+   }
 
    /**
     * Parse JCR path to retrieve repository name, 
@@ -226,6 +206,7 @@ public class GitRepoService
     * @return array of {@link String}, where elements contain repository name, workspace name and 
     * the path to JCR node that contains file
     */
+   @Deprecated
    public static String[] parseJcrLocation(String baseUri, String location)
    {
       baseUri += WEBDAV_CONTEXT;
@@ -248,23 +229,15 @@ public class GitRepoService
     * @param repoName repository name
     * @param workspace workspace name
     * @return {@link Session} user's session to access repository 
+    * @throws RepositoryException 
+    * @throws NoSuchWorkspaceException 
+    * @throws LoginException 
     * @throws Exception
     */
-   public Session getSession(String repoName, String workspace) throws Exception
+   public Session getSession() throws LoginException, NoSuchWorkspaceException, RepositoryException 
    {
-      ManageableRepository repository = repositoryService.getRepository(repoName);
-      return repository.login(workspace);
+      ManageableRepository repository = repositoryService.getCurrentRepository();
+      return repository.login(RepositoryDiscoveryService.getEntryPoint());
    }
 
-   /**
-    * Create response to send with error message.
-    * 
-    * @param t thrown exception
-    * @param status http status
-    * @return {@link Response} response with error
-    */
-   protected Response createErrorResponse(Throwable t, int status)
-   {
-      return Response.status(status).entity(t.getMessage()).type("text/plain").build();
-   }
 }
