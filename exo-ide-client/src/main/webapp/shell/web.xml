@@ -21,10 +21,6 @@
 -->
 <web-app>
    <display-name>IDE</display-name>
-   <listener>
-      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
-      </listener-class>
-   </listener>
 
    <context-param>
       <param-name>guice-modules</param-name>
@@ -40,6 +36,15 @@
 
    <listener>
       <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
+   </listener>
+   
+   <context-param>
+      <param-name>everrest.exoplatform.standalone.config</param-name>
+      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+   </context-param>
+   
+   <listener>
+      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
    </listener>
 
 
@@ -64,19 +69,7 @@
       <filter-class>org.exoplatform.ide.extension.gadget.server.filter.MakeRequestHeaderFilter</filter-class>
    </filter>   
 
-   <filter>
-      <filter-name>RestEncodingFilter</filter-name>
-      <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
-      <init-param>
-         <param-name>REQUEST_ENCODING</param-name>
-         <param-value>UTF-8</param-value>
-      </init-param>
-   </filter>
-
-   <filter-mapping>
-      <filter-name>RestEncodingFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
+  
 
 <filter-mapping>
     <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -98,13 +91,6 @@
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
 
-
-   <servlet>
-      <servlet-name>RestServer</servlet-name>
-      <description>eXo - Platform REST Server</description>
-      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
-      <load-on-startup>4</load-on-startup>
-   </servlet>
 
    <!-- Render a Gadget -->
    <servlet>
@@ -192,6 +178,12 @@
       <servlet-name>sampleOAuth</servlet-name>
       <servlet-class>org.apache.shindig.social.sample.oauth.SampleOAuthServlet</servlet-class>
    </servlet>
+   
+   
+   <servlet>
+      <servlet-name>EverrestServlet</servlet-name>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+   </servlet>
 
    <servlet-mapping>
       <servlet-name>js</servlet-name>
@@ -252,15 +244,17 @@
       <servlet-name>sampleOAuth</servlet-name>
       <url-pattern>/oauth/*</url-pattern>
    </servlet-mapping>
-
+   
    <servlet-mapping>
-      <servlet-name>RestServer</servlet-name>
+      <servlet-name>EverrestServlet</servlet-name>
       <url-pattern>/rest/*</url-pattern>
    </servlet-mapping>
-
-   <servlet-mapping>
-      <servlet-name>RestServer</servlet-name>
+   
+    <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
+   
+
 
 </web-app>
