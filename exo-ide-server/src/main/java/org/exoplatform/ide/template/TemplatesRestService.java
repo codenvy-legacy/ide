@@ -27,6 +27,8 @@ import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.FolderTemplate;
 import org.exoplatform.ide.ProjectTemplate;
 import org.exoplatform.ide.Template;
+import org.exoplatform.ide.helper.JsonHelper;
+import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -110,7 +112,7 @@ public class TemplatesRestService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/list")
-   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException, JsonException
+   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException, ParsingResponseException
    {
       return getProjectTemplates();
    }
@@ -119,12 +121,10 @@ public class TemplatesRestService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/add")
-   public void addFileTemplate(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   public void addFileTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
    {
-      //parse string body to get template name from json string
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())));
-      JsonValue newTemplateJsonValue = jsonParser.getJsonObject();
-      String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
+      JsonValue fileTemplateJsonValue = JsonHelper.parseJson(body);
+      String newTemplateName = fileTemplateJsonValue.getElement("name").getStringValue();
       //check if such template already exists
       for (FileTemplate fileTemplate : getFileTemplates())
       {
@@ -136,21 +136,10 @@ public class TemplatesRestService
       
       //add new file template to existing templates in file
       String templateContent = readTemplates(FILE_TEMPLATE);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
-      if (jsonValue.getElement("templates") != null)
-      {
-         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
-         jsonTemplateArray.addElement(newTemplateJsonValue);
-      }
-      else
-      {
-         ArrayValue jsonTemplateArray = new ArrayValue();
-         jsonValue.addElement("templates", jsonTemplateArray);
-         jsonTemplateArray.addElement(newTemplateJsonValue);
-      }
+      JsonValue templatesJsonValue = JsonHelper.parseJson(templateContent);
+      addTemplateToArray(templatesJsonValue, fileTemplateJsonValue);
       
-      writeTemplates(FILE_TEMPLATE, jsonValue.toString());
+      writeTemplates(FILE_TEMPLATE, templatesJsonValue.toString());
 
    }
    
@@ -160,27 +149,23 @@ public class TemplatesRestService
     * In order to avoid data loss, this method doesn't check, is file templates are
     * existed already. It only adds all file templates to file.
     * @param body
-    * @throws JsonException
     * @throws IOException
     * @throws URISyntaxException
     * @throws TemplateServiceException
+    * @throws ParsingResponseException 
     */
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/add/list")
-   public void addFileTemplateList(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   public void addFileTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
    {
-      //parse string body to get template name from json string
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())));
-      JsonValue newTemplateJsonValue = jsonParser.getJsonObject();
-      
+      JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
       
       //get array value of existing templates
       String templateContent = readTemplates(FILE_TEMPLATE);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = null;
       if (jsonValue.getElement("templates") != null)
       {
@@ -206,7 +191,7 @@ public class TemplatesRestService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/list")
-   public List<FileTemplate> getFileTemplateList() throws URISyntaxException, IOException, JsonException
+   public List<FileTemplate> getFileTemplateList() throws URISyntaxException, IOException, ParsingResponseException
    {
       return getFileTemplates();
    }
@@ -214,7 +199,7 @@ public class TemplatesRestService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/get")
-   public FileTemplate getFileTemplateByName(@QueryParam("name") String name) throws URISyntaxException, IOException, JsonException
+   public FileTemplate getFileTemplateByName(@QueryParam("name") String name) throws URISyntaxException, IOException, ParsingResponseException
    {
       return findFileTemplate(name);
    }
@@ -223,7 +208,7 @@ public class TemplatesRestService
    @POST
    public void deleteFileTemplate( 
       @QueryParam("name") String template 
-   ) throws IOException, URISyntaxException, JsonException
+   ) throws IOException, URISyntaxException, IllegalStateException, ParsingResponseException
    {
       deleteTemplate(template, FILE_TEMPLATE);
    }
@@ -232,7 +217,7 @@ public class TemplatesRestService
    @POST
    public void deleteProjectTemplate( 
       @QueryParam("name") String template 
-   ) throws IOException, URISyntaxException, JsonException
+   ) throws IOException, URISyntaxException, IllegalStateException, ParsingResponseException
    {
       deleteTemplate(template, PROJECT_TEMPLATE);
    }
@@ -241,11 +226,9 @@ public class TemplatesRestService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/add")
-   public void addProjectTemplate(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   public void addProjectTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
    {
-      //parse string body to get template name from json string
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())));
-      JsonValue newTemplateJsonValue = jsonParser.getJsonObject();
+      JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
       //check if such template already exists
       for (ProjectTemplate projectTemplate : getProjectTemplateList())
@@ -258,19 +241,8 @@ public class TemplatesRestService
       
       //add new file template to existing templates in file
       String templateContent = readTemplates(PROJECT_TEMPLATE);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
-      if (jsonValue.getElement("templates") != null)
-      {
-         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
-         jsonTemplateArray.addElement(newTemplateJsonValue);
-      }
-      else
-      {
-         ArrayValue jsonTemplateArray = new ArrayValue();
-         jsonValue.addElement("templates", jsonTemplateArray);
-         jsonTemplateArray.addElement(newTemplateJsonValue);
-      }
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
+      addTemplateToArray(jsonValue, newTemplateJsonValue);
       
       writeTemplates(PROJECT_TEMPLATE, jsonValue.toString());
    }
@@ -281,27 +253,23 @@ public class TemplatesRestService
     * In order to avoid data loss, this method doesn't check, is file templates are
     * existed already. It only adds all file templates to file.
     * @param body
-    * @throws JsonException
     * @throws IOException
     * @throws URISyntaxException
     * @throws TemplateServiceException
+    * @throws ParsingResponseException 
     */
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/add/list")
-   public void addProjectTemplateList(String body) throws JsonException, IOException, URISyntaxException, TemplateServiceException
+   public void addProjectTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
    {
-      //parse string body to get template name from json string
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(body.getBytes())));
-      JsonValue newTemplateJsonValue = jsonParser.getJsonObject();
-      
+      JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
       
       //get array value of existing templates
       String templateContent = readTemplates(PROJECT_TEMPLATE);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = null;
       if (jsonValue.getElement("templates") != null)
       {
@@ -332,11 +300,11 @@ public class TemplatesRestService
     * @param templateName - the name of template
     * @param fileTemplateName - the name of file (file templates and project templates are stored in different files)
     * @throws IOException
-    * @throws JsonException
     * @throws IllegalStateException
+    * @throws ParsingResponseException 
     */
-   private void deleteTemplate(String templateName, String fileTemplateName) throws IOException, JsonException,
-      IllegalStateException
+   private void deleteTemplate(String templateName, String fileTemplateName) throws IOException,
+      IllegalStateException, ParsingResponseException
    {
       if (templateName == null)
       {
@@ -345,8 +313,7 @@ public class TemplatesRestService
 
       //get the existing templates
       String templateContent = readTemplates(fileTemplateName);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplates = new ArrayValue();
       //iterate existed templates and copy to new array those, which will not be deleted.
       if (jsonValue.getElement("templates") != null)
@@ -381,13 +348,11 @@ public class TemplatesRestService
       writeTemplates(fileTemplateName, templatesObjValue.toString());
    }
    
-   private FileTemplate findFileTemplate(String name) throws IOException, JsonException
+   private FileTemplate findFileTemplate(String name) throws IOException, ParsingResponseException
    {
       //get the existing templates
       String templateContent = getTemplateFileContent(FILE_TEMPLATE_FILE);
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
       Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
       
@@ -403,12 +368,11 @@ public class TemplatesRestService
       return null;
    }
    
-   private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, JsonException
+   private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
       String templateContent = readTemplates(PROJECT_TEMPLATE);
       List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       if (jsonValue.getElement("templates") == null)
          return projectTemplateList;
       
@@ -424,13 +388,12 @@ public class TemplatesRestService
       return projectTemplateList;
    }
    
-   private List<FileTemplate> getFileTemplates() throws URISyntaxException, IOException, JsonException
+   private List<FileTemplate> getFileTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
       String templateContent = readTemplates(FILE_TEMPLATE);
       List<FileTemplate> fileTemplateList = new ArrayList<FileTemplate>();
 
-      jsonParser.parse(new InputStreamReader(new ByteArrayInputStream(templateContent.getBytes())));
-      JsonValue jsonValue = jsonParser.getJsonObject();
+      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       if (jsonValue.getElement("templates") == null)
          return fileTemplateList;
       
@@ -557,7 +520,6 @@ public class TemplatesRestService
          ManageableRepository repository = repositoryService.getCurrentRepository();
          checkConfigNode(repository);
          session = repository.login(workspace);
-//         String user = session.getUserID();
          String templatesSettingsPath = config;
 
          javax.jcr.Node userSettings;
@@ -587,12 +549,6 @@ public class TemplatesRestService
          contentNode.setProperty("jcr:mimeType", "text/plain");
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
          contentNode.setProperty("jcr:data", data);
-//         // Make file accessible for current user only.
-//         if (!fileNode.isNodeType("exo:privilegeable"))
-//            fileNode.addMixin("exo:privilegeable");
-//         fileNode.clearACL();
-//         fileNode.setPermission(user, PermissionType.ALL);
-//         fileNode.removePermission(IdentityConstants.ANY);
 
          session.save();
       }
@@ -619,7 +575,6 @@ public class TemplatesRestService
       if (_workspace == null)
       {
          _workspace = repository.getConfiguration().getDefaultWorkspaceName();
-         System.out.println(">>>>>>>..workspace: " + _workspace);
       }
 
       Session sys = null;
@@ -653,7 +608,6 @@ public class TemplatesRestService
          ManageableRepository repository = repositoryService.getCurrentRepository();
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
-//         String user = session.getUserID();
          String tokenPath = config + "/" + templateType;
 
          Item item = null;
@@ -703,6 +657,28 @@ public class TemplatesRestService
       {
          if (session != null)
             session.logout();
+      }
+   }
+   
+   /**
+    * Add template to "templates" element of <code>templatesJsonValue</code>.
+    * <p/>
+    * If <code>templatesJsonValue</code> doesn't contain "templates" element, than create it.
+    * @param templatesJsonValue
+    * @param template
+    */
+   private void addTemplateToArray(JsonValue templatesJsonValue, JsonValue template)
+   {
+      if (templatesJsonValue.getElement("templates") != null)
+      {
+         ArrayValue jsonTemplateArray = (ArrayValue)templatesJsonValue.getElement("templates");
+         jsonTemplateArray.addElement(template);
+      }
+      else
+      {
+         ArrayValue jsonTemplateArray = new ArrayValue();
+         templatesJsonValue.addElement("templates", jsonTemplateArray);
+         jsonTemplateArray.addElement(template);
       }
    }
 
