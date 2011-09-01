@@ -7,6 +7,8 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+
+      
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
@@ -127,10 +129,10 @@
       <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
    </component>
 
-
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.RestSecurityTokenGenerator</type>
    </component>
+   
 
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>

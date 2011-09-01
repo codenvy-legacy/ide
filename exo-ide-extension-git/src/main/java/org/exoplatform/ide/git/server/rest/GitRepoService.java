@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.server.rest;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 
 import javax.jcr.AccessDeniedException;
@@ -41,7 +40,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
