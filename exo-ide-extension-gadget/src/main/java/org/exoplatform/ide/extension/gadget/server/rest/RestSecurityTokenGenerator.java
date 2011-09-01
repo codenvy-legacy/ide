@@ -40,7 +40,7 @@ import javax.ws.rs.core.MediaType;
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-@Path("/services/shindig/securitytoken")
+@Path("/ide/shindig/securitytoken")
 public class RestSecurityTokenGenerator 
 {
    /**

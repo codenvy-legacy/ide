@@ -54,6 +54,10 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
@@ -63,9 +67,6 @@
      <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
   </component>
     
-   <component>
-     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
-   </component>
     
   <component>
      <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
@@ -212,12 +213,19 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+   <type>org.exoplatform.ide.groovy.JcrGroovyCompiler</type>
+   </component>
+   
+    <component>
+      <type>org.exoplatform.ide.groovy.JcrGroovyClassLoaderProvider</type>
+   </component>
+   
 
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.shindig.oauth.RestSecurityTokenGenerator</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.RestSecurityTokenGenerator</type>
    </component>
-
-   
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>

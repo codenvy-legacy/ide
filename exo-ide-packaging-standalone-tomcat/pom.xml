@@ -79,6 +79,26 @@
                <groupId>javax.servlet</groupId>
                <artifactId>servlet-api</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.portlet</groupId>
+               <artifactId>portlet-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.ow2.spec.ee</groupId>
+               <artifactId>ow2-jta-1.1-spec</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.faces</groupId>
+               <artifactId>jsf-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -109,7 +129,7 @@
       <dependency>
          <groupId>org.crsh</groupId>
          <artifactId>crsh.shell.core</artifactId>
-         <version>${crash.version}</version>  
+         <version>${crash.version}</version>
       </dependency>
       <dependency>
          <groupId>org.crsh</groupId>
@@ -120,8 +140,95 @@
                <groupId>org.bouncycastle</groupId>
                <artifactId>bcprov-jdk15</artifactId>
             </exclusion>
-         </exclusions> 
+         </exclusions>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-gadget</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-groovy</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-java</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-jenkins</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-netvibes</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-chromattic</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.hsqldb</groupId>
+               <artifactId>hsqldb</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-git</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-ssh</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-heroku</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-openshift</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudbees</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-logreader</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs-jcr</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-ruby</artifactId>
+      </dependency>
+
 
       <!--GIT Server -->
       <dependency>
@@ -144,6 +251,121 @@
          <groupId>com.jcraft</groupId>
          <artifactId>jsch</artifactId>
          <version>0.1.44-1</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.codehaus.woodstox</groupId>
+               <artifactId>wstx-asl</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.xml.stream</groupId>
+               <artifactId>stax-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.portlet</groupId>
+               <artifactId>portlet-api</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.ow2.spec.ee</groupId>
+               <artifactId>ow2-jta-1.1-spec</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>javax.faces</groupId>
+               <artifactId>jsf-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>exo.jcr.component.webdav</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.core</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.frameworks.json</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ws</groupId>
+               <artifactId>exo.ws.rest.ext</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.rest.ext</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.gatein.shindig</groupId>
+         <artifactId>shindig-common</artifactId>
+         <version>${shindig.version}</version>
+         <scope>runtime</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>xstream</groupId>
+               <artifactId>xstream</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.gatein.shindig</groupId>
+         <artifactId>shindig-features</artifactId>
+         <version>${shindig.version}</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.gatein.shindig</groupId>
+         <artifactId>shindig-gadgets</artifactId>
+         <version>${shindig.version}</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.gatein.shindig</groupId>
+         <artifactId>shindig-social-api</artifactId>
+         <version>${shindig.version}</version>
+         <scope>runtime</scope>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.hsqldb</groupId>
+         <artifactId>hsqldb</artifactId>
       </dependency>
 
    </dependencies>
@@ -448,7 +670,11 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar">
+                           <patternset>
+                              <exclude name="**/*.jar" />
+                           </patternset>
+                        </unwar>
                         <copy todir="${project.build.directory}/packager-conf/unwar" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/ide-war-demo">
                               <exclude name="**/conf/*-mysql.xml" />
@@ -623,11 +849,9 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/exo-jcr-config.xml"
-                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/exo-jcr-config.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
                                  overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/web.xml"                
-                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/web.xml"
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/web.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/web.xml"
                                  overwrite="true" />
                               <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
                                  tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"

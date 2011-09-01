@@ -21,17 +21,14 @@
       <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
    <listener>
-      <listener-class>
-         org.crsh.plugin.WebPluginLifeCycle
-      </listener-class>
+      <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
    </listener>
 
    <servlet>
-      <servlet-name>RestServer</servlet-name>
-      <description>eXo - Platform REST Server</description>
-      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
-      <load-on-startup>4</load-on-startup>
+      <servlet-name>EverrestServlet</servlet-name>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
+
 
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -44,7 +41,7 @@
    </filter-mapping>
 
    <servlet-mapping>
-      <servlet-name>RestServer</servlet-name>
+      <servlet-name>EverrestServlet</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
 

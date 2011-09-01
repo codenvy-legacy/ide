@@ -85,7 +85,7 @@ public class GadgetServiceImpl extends GadgetService
       callback.setEventBus(eventBus);
       callback.setPayload(unmarshal);
 
-      String url = restServiceContext + "/services/shindig/securitytoken/createToken";
+      String url = restServiceContext + "/ide/shindig/securitytoken/createToken";
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
          .data(marshaler).send(callback);
    }

@@ -21,7 +21,23 @@
          <artifactId>exo-ide-editor</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs-jcr</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-framework-client</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-vfs-webdav-client</artifactId>
+        </dependency>
    </dependencies>
    <build>
       <resources>
