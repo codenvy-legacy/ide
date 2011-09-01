@@ -61,10 +61,10 @@
                <groupId>org.exoplatform.tool</groupId>
                <artifactId>exo.tool.framework.junit</artifactId>
             </exclusion>
-            <!-- <exclusion>
+            <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.core</artifactId>
-            </exclusion> -->
+            </exclusion>
             <exclusion>
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.commons</artifactId>
@@ -99,7 +99,7 @@
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
       </dependency>
-       <dependency>
+      <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
       </dependency>
@@ -175,8 +175,14 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
-      </dependency>
+         <artifactId>exo-ide-server</artifactId><!--
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.jcr</groupId>
+               <artifactId>exo.jcr.component.webdav</artifactId>
+            </exclusion>
+         </exclusions>
+      --></dependency>
    </dependencies>
    <build>
 

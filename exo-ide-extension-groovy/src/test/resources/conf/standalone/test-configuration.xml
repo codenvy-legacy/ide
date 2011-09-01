@@ -41,11 +41,11 @@
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
 
-            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ -->
+            <!-- property name="log4j.category.ext.BackupScheduler" value="DEBUG"/> <property name="log4j.category.ext.BackupManagerImpl" value="DEBUG"/ --><!--
             
             <property name="log4j.category.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" />
             <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
-            <!-- property name="log4j.category.exo" value="DEBUG" />
+            --><!-- property name="log4j.category.exo" value="DEBUG" />
             <property name="log4j.category.org.exoplatform" value="DEBUG" /-->
          </properties-param>
       </init-params>

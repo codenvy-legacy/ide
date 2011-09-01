@@ -22,9 +22,6 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
 import org.exoplatform.ide.codeassistant.framework.server.extractors.TypeInfoExtractor;
@@ -197,8 +194,6 @@ public class CodeAssitantTest extends Base
       ContainerResponse cres =
          launcher.service("GET", "/ide/code-assistant/find-by-prefix/" + name + "?where=className", "", headers, null,
             null, null);
-      System.out.println("CodeAssitantTest.testFindRestServiceClassByPartName()" + cres.getEntity().toString());
-      
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       //      assertTrue(cres.getEntity().getClass().isArray());
       @SuppressWarnings("unchecked")

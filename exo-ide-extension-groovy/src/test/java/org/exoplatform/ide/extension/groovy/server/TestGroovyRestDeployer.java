@@ -110,7 +110,6 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
-   @Ignore //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
    public void undeployNotAdmin() throws Exception
    {
       Assert.assertEquals(resourceNumber, binder.getSize());
@@ -153,7 +152,6 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
-   @Ignore //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
    public void deployNotAdmin() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -177,14 +175,14 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres =
-         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       Assert.assertEquals(204, cres.getStatus());
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
    }
 
    @Test
-   @Ignore //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
+   @Ignore
+   //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
    public void deploySandboxAndUserAccess() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -192,8 +190,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, devSecurityContext);
-      ContainerResponse cres =
-         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       Assert.assertEquals(204, cres.getStatus());
       Assert.assertEquals(resourceNumber + 1, binder.getSize());
       cres = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
@@ -206,7 +203,6 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
-   @Ignore //TODO: how to add org.exoplatform.ide.extension.groovy.server.DevelopmentResourceMethodFilter in eXo env
    public void deploySandboxNotDev() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -214,8 +210,7 @@ public class TestGroovyRestDeployer extends Base
       headers.putSingle("location", GroovyScriptServiceUtil.WEBDAV_CONTEXT + "db1/ws/testRoot/script");
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres =
-         launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("POST", "/ide/groovy/deploy-sandbox", "", headers, null, null, ctx);
       Assert.assertEquals(403, cres.getStatus());
       Assert.assertEquals(resourceNumber, binder.getSize());
    }
