@@ -52,6 +52,11 @@
          <scope>test</scope>
       </dependency>
       <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
          <groupId>org.codehaus.groovy</groupId>
          <artifactId>groovy-all</artifactId>
       </dependency>
@@ -72,7 +77,8 @@
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
       </dependency>
-      --><dependency>
+      -->
+      <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-groovy</artifactId>
       </dependency>
