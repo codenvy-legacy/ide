@@ -525,7 +525,6 @@ public class Editor extends AbstractTestModule
    {
       selectIFrameWithEditor(tabIndex);
       AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.EDITOR_BODY_LOCATOR, text);
-
       IDE().selectMainFrame();
    }
 

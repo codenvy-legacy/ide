@@ -111,6 +111,9 @@ public class UploadingZippedFolderTest extends BaseTest
 
       IDE.WORKSPACE.selectItem(WS_URL +  folder + "/");
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      
+      //add timeout for reading content from folder (fix for cloud-IDE-assembly)
+      IDE.WORKSPACE.waitForItem(WS_URL + folder + "/" + projectFolder + "/");
       IDE.NAVIGATION.assertItemVisible(WS_URL + folder + "/" + projectFolder + "/");
 
       IDE.WORKSPACE.selectItem(WS_URL + testFolder + "/");

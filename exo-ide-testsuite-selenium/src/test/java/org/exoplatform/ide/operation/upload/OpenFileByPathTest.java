@@ -104,7 +104,7 @@ public class OpenFileByPathTest extends BaseTest
       fileUrl = getSelectedItemUrl();
 
       // switch on to second workspace
-      IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME_2);
+     // IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME_2);
 
       // call Open File By Path form
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_FILE_BY_PATH);
@@ -164,7 +164,7 @@ public class OpenFileByPathTest extends BaseTest
       IDE.EDITOR.closeFile(0);
 
       // return to initial workspace
-      IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME);
+    //  IDE.SELECT_WORKSPACE.changeWorkspace(WS_NAME);
    }
 
    /**

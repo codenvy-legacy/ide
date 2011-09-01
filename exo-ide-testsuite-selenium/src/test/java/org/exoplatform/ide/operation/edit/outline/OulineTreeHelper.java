@@ -266,6 +266,7 @@ public class OulineTreeHelper extends BaseTest
     */
    private void checkOutlineItemFromOutlinePanel(Integer itemRowNumber, String itemLabel, int fileLineNumber) throws Exception
    {
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);

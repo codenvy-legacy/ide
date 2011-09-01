@@ -106,8 +106,10 @@ public class RubyAutoCompletionTest extends BaseTest
 
       goToLine(32);
 
+      
       IDE.EDITOR.typeTextIntoEditor(0, "M");
-
+      //this method fix problem of returning cursor in codeeditor before character "M"
+      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, 35);
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.checkElementPresent("MDA");

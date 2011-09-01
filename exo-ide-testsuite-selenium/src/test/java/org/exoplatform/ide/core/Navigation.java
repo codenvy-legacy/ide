@@ -186,6 +186,8 @@ public class Navigation extends AbstractTestModule
     */
    public void assertItemVisible(String itemHref) throws Exception
    {
+      //add timeout for reading content from folder (fix for cloud-IDE-assembly)
+      IDE().WORKSPACE.waitForItem(itemHref);
       String id = getItemId(itemHref);
       assertTrue(selenium().isElementPresent(id));
       assertTrue(selenium().isVisible(id));

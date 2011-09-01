@@ -200,6 +200,8 @@ public class RESTServiceOutputTest extends BaseTest
 
    private void checkFields(String path, String method, String request, String response)
    {
+      
+      System.out.print("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+IDE.REST_SERVICE.getPathFieldValue()+"\n");
       assertEquals(path, IDE.REST_SERVICE.getPathFieldValue());
       assertEquals(method, IDE.REST_SERVICE.getMethodFieldValue());
       assertEquals(request, IDE.REST_SERVICE.getRequestMediaTypeFieldValue());

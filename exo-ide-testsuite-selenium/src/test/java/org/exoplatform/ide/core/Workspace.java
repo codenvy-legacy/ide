@@ -40,8 +40,9 @@ public class Workspace extends AbstractTestModule
     */
    public void selectItem(String itemHref) throws Exception
    {
+      waitForItem(itemHref);
       selenium().clickAt(getItemId(itemHref), "0");
-     // waitForElementTextEquals("debug-navigation-selected-file", itemHref);
+
    }
 
    /**
@@ -57,6 +58,7 @@ public class Workspace extends AbstractTestModule
 
    public void waitForRootItem() throws Exception
    {
+
       waitForElementPresent(getItemId(IDE().getWorkspaceURL()));
    }
 
@@ -69,9 +71,12 @@ public class Workspace extends AbstractTestModule
    {
       return TREE_PREFIX_ID + Utils.md5(href);
    }
-   
+
    public void doubleClickOnFolder(String folderURL) throws Exception
    {
+      
+      //add timeout for reading content from folder (fix for cloud-IDE-assembly)
+      IDE().WORKSPACE.waitForItem(folderURL);
       String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";
 
       selenium().mouseDown(locator);
@@ -84,6 +89,8 @@ public class Workspace extends AbstractTestModule
 
    public void doubleClickOnFile(String fileURL) throws Exception
    {
+      //add timeout for reading content from folder (fix for cloud-IDE-assembly)
+      IDE().WORKSPACE.waitForItem(fileURL);
       String locator = "//div[@id='" + getItemId(fileURL) + "']/div/table/tbody/tr/td[2]";
 
       selenium().mouseDown(locator);
@@ -93,7 +100,7 @@ public class Workspace extends AbstractTestModule
       selenium().doubleClick(locator);
       IDE().EDITOR.waitEditorFileOpened();
    }
-   
+
    public void doubleClickOnFileFromSearchTab(String fileURL) throws Exception
    {
       IDE().NAVIGATION.selectItemInSearchTree(fileURL);
@@ -107,7 +114,7 @@ public class Workspace extends AbstractTestModule
       selenium().doubleClick(locator);
       IDE().EDITOR.waitEditorFileOpened();
    }
-   
+
    /**
     * Click open icon of folder in navigation tree.
     * If folder is closed, it will be opened,
@@ -124,8 +131,8 @@ public class Workspace extends AbstractTestModule
 
       selenium().clickAt(locator, "0");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }   
-   
+   }
+
    /**
     * Wait for item present in workspace tree
     * @param itemHref Href of the item
@@ -135,7 +142,7 @@ public class Workspace extends AbstractTestModule
    {
       waitForElementPresent(getItemId(itemHref));
    }
-   
+
    /**
     * Wait for item not present in workspace tree
     * @param itemHref Href of the item

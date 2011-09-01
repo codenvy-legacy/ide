@@ -66,8 +66,10 @@ public class HighlightCKEditorTest extends BaseTest {
 
 		IDE.PERSPECTIVE.checkViewIsActive("ideWorkspaceView");
 
+		IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
 		IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
 
+		IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/" + FILE_NAME);
 		IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/" + FILE_NAME);
 		IDE.WORKSPACE.doubleClickOnFile(URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.clickDesignButton();

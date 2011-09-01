@@ -76,6 +76,8 @@ public class UploadingGoogleGadgetTest extends BaseTest
       
       IDE.UPLOAD.open(MenuCommands.File.UPLOAD_FILE, FILE_PATH, MimeType.GOOGLE_GADGET);
       
+    //add timeout for reading content from folder (fix for cloud-IDE-assembly)
+      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME + "/" + FILE_NAME);
       
