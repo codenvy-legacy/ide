@@ -170,13 +170,9 @@ public class GroovyScriptService extends GroovyScript2RestLoader
          Node classpathNode = findClassPathNode(node);
          if (classpathNode != null)
          {
-            //Form the available href of the classpath file:
-            //TODO
-            /* String classpathLocation =
-                baseUri + GroovyScriptServiceUtil.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
-             classpathLocation +=
-                (classpathNode.getPath().startsWith("/")) ? classpathNode.getPath() : "/" + classpathNode.getPath();*/
-            return classpathNode.getPath();
+            String classpathLocation =
+               classpathNode.getPath().startsWith("/") ? classpathNode.getPath() : "/" + classpathNode.getPath();
+            return classpathLocation;
          }
          else
          {
@@ -378,11 +374,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                Long.toString(System.currentTimeMillis() + resourceLiveTime));
 
             //Get dependent resources from classpath file if exist:
-            //TODO 
-            /*   DependentResources dependentResources =
-                  GroovyScriptServiceUtil.getDependentResource(location, uriInfo.getBaseUri().toASCIIString(),
-                     repositoryService, sessionProviderService);*/
-            DependentResources dependentResources = null;
+            DependentResources dependentResources =
+               GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
             if (dependentResources != null)
             {
                return load(repository, workspace, location, true, dependentResources.getFolderSources(),
