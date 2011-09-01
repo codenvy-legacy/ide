@@ -41,8 +41,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.github.GithubService;
 import org.exoplatform.ide.client.model.github.Repository;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -169,6 +167,7 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
       {
          remoteUri += ".git";
       }
+/*
       GitClientService.getInstance().cloneRepository(workDir, remoteUri, null, new AsyncRequestCallback<String>()
       {
 
@@ -188,6 +187,7 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
+      */
    }
    
    private void openView()
