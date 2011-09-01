@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class ClasspathProject extends AbstractTestModule
 {
 
-   private static final String CLASSPATH_VIEW_ID = "ideConfigureBuildPathForm";
+   private static final String CLASSPATH_VIEW_ID = "//div[@view-id='ideConfigureBuildPathForm']";
 
    private static final String LIST_GRID_ID = "ideClassPathEntryListGrid";
 
