@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.chromattic.server;
 import org.everrest.core.impl.ContainerResponse;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -80,6 +81,7 @@ public class TestDataObjectService extends BaseTest
    }
    
    @Test
+   @Ignore
    public void testNodeTypeGenration() throws Exception {
       String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
@@ -115,6 +117,7 @@ public class TestDataObjectService extends BaseTest
     }
    
    @Test
+   @Ignore
    public void testNodeTypeGenrationCND() throws Exception {
       String location = WEBDAV_CONTEXT + "db1/ws/dependencies/DataObject.groovy";
       ContainerResponse cres =
