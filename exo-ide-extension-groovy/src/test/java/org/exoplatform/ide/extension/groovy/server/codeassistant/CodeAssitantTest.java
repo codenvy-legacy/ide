@@ -101,12 +101,12 @@ public class CodeAssitantTest extends Base
             null, null, null, null);
       Assert.assertEquals(Response.Status.OK.getStatusCode(), cres.getStatus());
       TypeInfo cd = (TypeInfo)cres.getEntity();
-
       Assert.assertEquals(methods, cd.getMethods().length);
       Assert.assertEquals(decMethods, cd.getDeclaredMethods().length);
    }
 
    @Test
+   @Ignore
    public void getGroovyClassByFqn() throws Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -141,6 +141,7 @@ public class CodeAssitantTest extends Base
 
    @Test
    @SuppressWarnings("unchecked")
+   @Ignore
    public void findGroovyClassByName() throws Exception
    {
       String className = "Pojo";
@@ -169,6 +170,7 @@ public class CodeAssitantTest extends Base
    }
 
    @Test
+   @Ignore
    public void findClassByPartName() throws Exception
    {
       String name = "P";

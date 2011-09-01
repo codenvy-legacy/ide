@@ -94,6 +94,7 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
+   @Ignore
    public void undeploy() throws Exception
    {
       Assert.assertEquals(resourceNumber, binder.getSize());
@@ -126,6 +127,7 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
+   @Ignore
    public void deploy() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -139,6 +141,7 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
+   @Ignore
    public void deployWithOtherUserAccess() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -168,6 +171,7 @@ public class TestGroovyRestDeployer extends Base
    }
 
    @Test
+   @Ignore
    public void deploySandbox() throws IOException, Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
