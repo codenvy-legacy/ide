@@ -27,22 +27,19 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.github.GithubService;
 import org.exoplatform.ide.client.model.github.Repository;
+import org.exoplatform.ide.client.welcome.selectlocation.SelectLocationEvent;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,15 +54,15 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
    
    public interface Display extends IsView
    {
-      HasClickHandlers getImportButton();
+      HasClickHandlers getNextButton();
       
-      HasClickHandlers getCloseButton();
+      HasClickHandlers getCancelButton();
       
       ListGridItem<Repository> getSamplesListGrid();
       
       List<Repository> getSelectedItems();
       
-      void enableImportButton(boolean enable);
+      void enableNextButton(boolean enable);
    }
    
    private HandlerManager eventBus;
@@ -82,24 +79,26 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
    {
       this.eventBus = eventBus;
       
-      eventBus.addHandler(GithubSamplesShowEvent.TYPE, this);
+      eventBus.addHandler(ShowGithubSamplesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
    
    private void bindDisplay()
    {
-      display.getImportButton().addClickHandler(new ClickHandler()
+      display.getNextButton().addClickHandler(new ClickHandler()
       {
          
          @Override
          public void onClick(ClickEvent event)
          {
-            closeRepository(selectedRepos.get(0));
+            eventBus.fireEvent(new SelectLocationEvent());
+            closeView();
+//            closeRepository(selectedRepos.get(0));
          }
       });
       
-      display.getCloseButton().addClickHandler(new ClickHandler()
+      display.getCancelButton().addClickHandler(new ClickHandler()
       {
          
          @Override
@@ -117,17 +116,17 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
             selectedRepos = display.getSelectedItems();
             if (selectedRepos == null || selectedRepos.isEmpty())
             {
-               display.enableImportButton(false);
+               display.enableNextButton(false);
             }
             else
             {
-               display.enableImportButton(true);
+               display.enableNextButton(true);
             }
          }
       });
       
       display.getSamplesListGrid().setValue(sampleRepos);
-      display.enableImportButton(false);
+      display.enableNextButton(false);
    }
 
    /**
@@ -143,23 +142,27 @@ public class GithubSamplesPresenter implements GithubSamplesShowHandler, ViewClo
    }
    
    /**
-    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.welcome.samples.GithubSamplesShowEvent)
+    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.welcome.samples.ShowGithubSamplesEvent)
     */
    @Override
-   public void onShowSamples(GithubSamplesShowEvent event)
+   public void onShowSamples(ShowGithubSamplesEvent event)
    {
-      GithubService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>()
-      {
-         @Override
-         protected void onSuccess(List<Repository> result)
-         {
-            sampleRepos = result;
-            openView();
-         }
-      });
+      sampleRepos = new ArrayList<Repository>();
+      sampleRepos.add(new Repository("Sample Project", "ddd", "url"));
+      sampleRepos.add(new Repository("Hello world", "ddd", "url"));
+      openView();
+//      GithubService.getInstance().getRepositoriesList(new AsyncRequestCallback<List<Repository>>()
+//      {
+//         @Override
+//         protected void onSuccess(List<Repository> result)
+//         {
+//            sampleRepos = result;
+//            openView();
+//         }
+//      });
    }
    
-   private void closeRepository(Repository repo)
+   private void cloneRepository(Repository repo)
    {
       String workDir = selectedItems.get(0).getId();
       String remoteUri = repo.getUrl();

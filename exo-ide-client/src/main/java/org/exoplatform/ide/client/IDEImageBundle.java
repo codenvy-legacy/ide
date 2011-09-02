@@ -60,6 +60,21 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource yesDisabled();
    
    /*
+    * Navigation buttons
+    */
+   @Source("bundled-images/welcome/next.png")
+   ImageResource next();
+   
+   @Source("bundled-images/welcome/next_Disabled.png")
+   ImageResource nextDisabled();
+   
+   @Source("bundled-images/welcome/back.png")
+   ImageResource back();
+   
+   @Source("bundled-images/welcome/back_Disabled.png")
+   ImageResource backDisabled();
+   
+   /*
     * Actions
     */
    

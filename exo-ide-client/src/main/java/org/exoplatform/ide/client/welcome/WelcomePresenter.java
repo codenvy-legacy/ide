@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.welcome.samples.GithubSamplesShowEvent;
+import org.exoplatform.ide.client.welcome.samples.ShowGithubSamplesEvent;
 
 /**
  * Presenter for welcome view.
@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.welcome.samples.GithubSamplesShowEvent;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
  */
-public class WelcomePresenter implements WelcomeOpenHandler, ViewClosedHandler
+public class WelcomePresenter implements OpenWelcomeHandler, ViewClosedHandler
 {
    
    public interface Display extends IsView
@@ -53,7 +53,7 @@ public class WelcomePresenter implements WelcomeOpenHandler, ViewClosedHandler
    {
       this.eventBus = eventBus;
       
-      eventBus.addHandler(WelcomeOpenEvent.TYPE, this);
+      eventBus.addHandler(OpenWelcomeEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -64,16 +64,16 @@ public class WelcomePresenter implements WelcomeOpenHandler, ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new GithubSamplesShowEvent());
+            eventBus.fireEvent(new ShowGithubSamplesEvent());
          }
       });
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.WelcomeOpenHandler#onWelcomeOpen(org.exoplatform.ide.client.welcome.WelcomeOpenEvent)
+    * @see org.exoplatform.ide.client.welcome.OpenWelcomeHandler#onOpenWelcome(org.exoplatform.ide.client.welcome.OpenWelcomeEvent)
     */
    @Override
-   public void onWelcomeOpen(WelcomeOpenEvent event)
+   public void onOpenWelcome(OpenWelcomeEvent event)
    {
       if (event.isShow() && display == null)
       {

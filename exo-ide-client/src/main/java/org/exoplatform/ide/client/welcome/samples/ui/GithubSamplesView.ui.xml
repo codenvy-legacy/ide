@@ -7,6 +7,15 @@
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
    <ui:with field="welcomeLocale" type="org.exoplatform.ide.client.messages.IdeWelcomeLocalizationConstant"></ui:with>
    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+   
+   <ui:style>
+      .table
+      {
+         width:100%;
+         height:100%;
+         border-collapse: collapse;
+      }
+   </ui:style>
 
    <f:VPanel>
       <f:Border margin="10">
@@ -15,14 +24,32 @@
          </g:ScrollPanel>
       </f:Border>
       
-      <g:FlowPanel height="5px"></g:FlowPanel>
-
-      <g:HorizontalPanel height="30px" horizontalAlignment="center" verticalAlignment="ALIGN_MIDDLE">
-         <f:ImageButton ui:field="importButton" width="100" height="22" text="{welcomeLocale.importButton}" imageResource="{resource.ok}"
-            disabledImageResource="{resource.okDisabled}"></f:ImageButton>
-         <f:ImageButton ui:field="closeButton" width="100" height="22" text="{locale.closeButton}" imageResource="{resource.cancel}"
-            disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-      </g:HorizontalPanel>
+      <g:HTMLPanel height="30px">
+         
+         <table class="{style.table}">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:60px;">
+                  <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" 
+                     buttonId="ideImportSamplesCloseButtonId"></f:ImageButton>
+               </td>
+               
+               <td><div style="width:100%; height:1px;"></div></td>
+               
+               <td style="width:100px">
+                  <f:ImageButton ui:field="nextButton" text="Next" width="90" height="22" 
+                     imageResource="{resource.next}"
+                     disabledImageResource="{resource.nextDisabled}" 
+                     buttonId="ideImportSamplesNextButtonId"></f:ImageButton>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+         </table>
+         
+      </g:HTMLPanel>
       
       <g:FlowPanel height="10px"></g:FlowPanel>
    </f:VPanel>

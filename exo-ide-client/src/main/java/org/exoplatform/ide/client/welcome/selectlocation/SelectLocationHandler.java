@@ -16,16 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.welcome.samples;
+package org.exoplatform.ide.client.welcome.selectlocation;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link SelectLocationEvent}.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowHandler.java Aug 30, 2011 12:07:21 PM vereshchaka $
+ * @version $Id: SelectLocationHandler.java Aug 31, 2011 12:03:07 PM vereshchaka $
  *
  */
-public interface GithubSamplesShowHandler extends EventHandler
+public interface SelectLocationHandler extends EventHandler
 {
-   void onShowSamples(ShowGithubSamplesEvent event);
+   void onSelectLocation(SelectLocationEvent event);
 }

@@ -56,20 +56,20 @@ public class GithubSamplesView extends ViewImpl implements GithubSamplesPresente
    {
    }
    
-   @UiField
-   SamplesListGrid samplesListGrid;
-   
-   @UiField
-   ImageButton importButton;
-   
-   @UiField
-   ImageButton closeButton;
-   
    /**
     * UIBinder instance
     */
    private static GithubSamplesViewUiBinder uiBinder = GWT.create(GithubSamplesViewUiBinder.class);
-
+   
+   @UiField
+   SamplesListGrid samplesListGrid;
+   
+   @UiField
+   ImageButton nextButton;
+   
+   @UiField
+   ImageButton cancelButton;
+   
    public GithubSamplesView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
@@ -77,30 +77,30 @@ public class GithubSamplesView extends ViewImpl implements GithubSamplesPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#getImportButton()
+    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#getNextButton()
     */
    @Override
-   public HasClickHandlers getImportButton()
+   public HasClickHandlers getNextButton()
    {
-      return importButton;
+      return nextButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#getCloseButton()
+    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#getCancelButton()
     */
    @Override
-   public HasClickHandlers getCloseButton()
+   public HasClickHandlers getCancelButton()
    {
-      return closeButton;
+      return cancelButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#enableImportButton(boolean)
+    * @see org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display#enableNextButton(boolean)
     */
    @Override
-   public void enableImportButton(boolean enable)
+   public void enableNextButton(boolean enable)
    {
-      importButton.setEnabled(enable);
+      nextButton.setEnabled(enable);
    }
 
    /**

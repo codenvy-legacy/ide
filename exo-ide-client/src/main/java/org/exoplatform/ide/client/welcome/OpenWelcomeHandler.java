@@ -16,36 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.welcome.samples;
+package org.exoplatform.ide.client.welcome;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
+ * @version $Id: WelcomeOpenHandler.java Aug 25, 2011 1:11:38 PM vereshchaka $
  *
  */
-public class GithubSamplesShowEvent extends GwtEvent<GithubSamplesShowHandler>
+public interface OpenWelcomeHandler extends EventHandler
 {
-   public static final GwtEvent.Type<GithubSamplesShowHandler> TYPE = new GwtEvent.Type<GithubSamplesShowHandler>();
-   
-   public GithubSamplesShowEvent()
-   {
-   }
-
-   @Override
-   protected void dispatch(GithubSamplesShowHandler handler)
-   {
-      handler.onShowSamples(this);
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GithubSamplesShowHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onOpenWelcome(OpenWelcomeEvent event);
 }

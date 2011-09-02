@@ -158,6 +158,9 @@
    <replace-with class="org.exoplatform.ide.client.welcome.samples.ui.GithubSamplesView">
       <when-type-is class="org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter.Display" />
    </replace-with>
+   <replace-with class="org.exoplatform.ide.client.welcome.selectlocation.ui.SelectLocationView">
+      <when-type-is class="org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display" />
+   </replace-with>
    
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
       <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />

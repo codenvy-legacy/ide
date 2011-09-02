@@ -16,47 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.welcome;
+package org.exoplatform.ide.client.welcome.samples;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: WelcomeViewOpen.java Aug 25, 2011 1:11:16 PM vereshchaka $
+ * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
  *
  */
-public class WelcomeOpenEvent extends GwtEvent<WelcomeOpenHandler>
+public class ShowGithubSamplesEvent extends GwtEvent<GithubSamplesShowHandler>
 {
-   public static final GwtEvent.Type<WelcomeOpenHandler> TYPE = new GwtEvent.Type<WelcomeOpenHandler>();
+   public static final GwtEvent.Type<GithubSamplesShowHandler> TYPE = new GwtEvent.Type<GithubSamplesShowHandler>();
    
-   private boolean isShow;
-
-   public WelcomeOpenEvent(boolean isShow)
+   public ShowGithubSamplesEvent()
    {
-      this.isShow = isShow;
    }
 
    @Override
-   protected void dispatch(WelcomeOpenHandler handler)
+   protected void dispatch(GithubSamplesShowHandler handler)
    {
-      handler.onWelcomeOpen(this);
+      handler.onShowSamples(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WelcomeOpenHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<GithubSamplesShowHandler> getAssociatedType()
    {
       return TYPE;
-   }
-   
-   /**
-    * @return the isShow
-    */
-   public boolean isShow()
-   {
-      return isShow;
    }
 
 }
