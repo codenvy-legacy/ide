@@ -893,7 +893,7 @@ public abstract class BaseTest
       //elements are appears in SLEEP tile.
       //Thats why, wait for WAIT_PERIOD for root element
       //of navigation tree.
-      IDE.WORKSPACE.waitForItem(WS_URL);
+      IDE.WORKSPACE.waitForRootItem();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }

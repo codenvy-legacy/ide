@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.browse;
 
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
 
 /**
@@ -79,7 +80,11 @@ public class ExploringWorkspacePanelTest extends BaseTest
       
       IDE.NAVIGATION.createFolder(FOLDER_1);
       IDE.NAVIGATION.createFolder(FOLDER_1_1);
+    //wait for correct selecting folder (fix for cloud-ide assembly)
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.selectItem(FOLDER_1_URL);
+      
+      
       IDE.NAVIGATION.createFolder(FOLDER_1_2);
 
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);

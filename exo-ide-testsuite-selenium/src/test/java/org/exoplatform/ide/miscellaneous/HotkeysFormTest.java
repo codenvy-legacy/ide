@@ -250,7 +250,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
 
       //click "New TEXT File" row
       selectRow(Commands.NEW_TEXT_FILE);
-      
+
       //Double set focus to TEXT_FIELD_LOCATOR to test work :(
       selenium().focus(TEXT_FIELD_LOCATOR);
       Thread.sleep(TestConstants.SLEEP_SHORT);
@@ -265,7 +265,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       bot.keyPress(KeyEvent.VK_SHIFT);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_N);
       bot.keyRelease(KeyEvent.VK_SHIFT);
-      
+
       checkMessage(ERROR_MESSAGE_STYLE, "First key should be Ctrl or Alt", true);
 
       //press Y
@@ -338,6 +338,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       selenium().controlKeyUp();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //check text in text field
+      Thread.sleep(2000);
       assertEquals("Ctrl+D", getTextFromTextField());
       //check message
       checkMessage(ERROR_MESSAGE_STYLE, "Such hotkey already bound to another command", true);
@@ -363,7 +364,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
       checkSaveButtonEnabled(true);
 
       //Try to bind the same hotkeys
-//      selectRow(Commands.NEW_CSS_FILE);
+      //      selectRow(Commands.NEW_CSS_FILE);
       //press Ctrl+P
       selenium().controlKeyDown();
       selenium().keyDown("//", "P");

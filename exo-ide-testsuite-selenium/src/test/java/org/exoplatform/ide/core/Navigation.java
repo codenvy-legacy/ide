@@ -198,7 +198,9 @@ public class Navigation extends AbstractTestModule
     */
    public void assertItemNotVisible(String itemHref) throws Exception
    {
+     
       String id = getItemId(itemHref);
+     waitForElementNotPresent(id);
       if (selenium().isElementPresent(id))
       {
          assertFalse(selenium().isVisible(id));

@@ -93,8 +93,55 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
    @Test
    public void testDefaultHotkeys() throws Exception
    {
-
+      //restore default hotkeys after  HotkeysInCodeMirrorTest
       IDE.WORKSPACE.waitForRootItem();
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      selectRow("Find-Replace...");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "F");
+      selenium().keyUp("//", "F");
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
+      selectRow("Save");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "S");
+      selenium().keyUp("//", "S");
+      selenium().controlKeyUp();
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
+      selectRow("Delete Current Line");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "D");
+      selenium().keyUp("//", "D");
+      selenium().controlKeyUp();
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
+      selectRow("Go to Line...");
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "L");
+      selenium().keyUp("//", "L");
+      selenium().controlKeyUp();
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+
+      selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+      clickButton(SAVE_BUTTON_LOCATOR);
+      checkNoCustomizeHotkeyDialogWindow();
+
       //----- 1 ------------
       //Press Ctrl+N
       //TODO 1 step not work, shold be fix call template form; see issue 729
@@ -113,11 +160,12 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //press Ctrl+S
       IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
       //check, that Save As dialog window appeared
+      Thread.sleep(1000);
       SaveFileUtils.checkSaveAsDialog(true);
       //close
       //selenium().click(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
       IDE.ASK_FOR_VALUE_DIALOG.clickCancelButton();
-      
+
       //waitForElementNotPresent(Locators.AskForValue.ASK_FOR_VALUE_CANCEL_BUTTON_LOCATOR);
       IDE.ASK_FOR_VALUE_DIALOG.waitForAskDialogNotPresent();
    }
@@ -133,7 +181,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       refresh();
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      
+
       //----- 1 ------------
       //Open several tabs (open existed documents and create some new)
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
@@ -232,16 +280,16 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
-//      IDE.EDITOR.closeTabIgnoringChanges(3);
-//      Thread.sleep(TestConstants.SLEEP);
+      //      IDE.EDITOR.closeTabIgnoringChanges(3);
+      //      Thread.sleep(TestConstants.SLEEP);
 
       //close all tabs
-//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-//      IDE.EDITOR.closeTabIgnoringChanges(0);
-//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-//      IDE.EDITOR.closeTabIgnoringChanges(0);
-//      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-//      IDE.EDITOR.closeTabIgnoringChanges(0);
+      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //      IDE.EDITOR.closeTabIgnoringChanges(0);
+      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //      IDE.EDITOR.closeTabIgnoringChanges(0);
+      //      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
+      //      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    /**
@@ -347,11 +395,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       clickButton(SAVE_BUTTON_LOCATOR);
       checkNoCustomizeHotkeyDialogWindow();
 
-      
       //close
       //closeHotkeysWindow();
-      
-      
 
    }
 
