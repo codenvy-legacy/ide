@@ -230,7 +230,7 @@ public class CutFolderTest extends BaseTest
    private void checkItemsOnWebDav() throws Exception
    {
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 1").getStatusCode());
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + "folder 1/folder 2").getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + "folder 1/folder 2").getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2").getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2").getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + "folder 2/folder 2/file.groovy").getStatusCode());

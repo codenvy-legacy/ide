@@ -20,7 +20,7 @@ package org.exoplatform.ide.operation.browse.locks;
 
 import static org.junit.Assert.assertFalse;
 
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;

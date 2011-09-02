@@ -28,10 +28,10 @@ import static org.junit.Assert.fail;
 
 import com.thoughtworks.selenium.Selenium;
 
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
+import org.everrest.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.utils.InternetExplorerUtil;
 import org.exoplatform.ide.utils.TextUtil;
 import org.exoplatform.ide.utils.WebKitUtil;

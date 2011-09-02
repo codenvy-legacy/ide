@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;

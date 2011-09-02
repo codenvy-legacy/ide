@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.ModuleException;
+import org.everrest.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.UUID;
 
-import org.exoplatform.common.http.HTTPStatus;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -146,9 +146,9 @@ public class CutFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1)
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1)
          .getStatusCode());
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.selectItem(WS_URL + FILE_NAME_1);

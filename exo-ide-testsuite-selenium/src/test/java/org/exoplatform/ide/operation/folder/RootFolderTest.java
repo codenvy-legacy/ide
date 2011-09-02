@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.folder;
 
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;

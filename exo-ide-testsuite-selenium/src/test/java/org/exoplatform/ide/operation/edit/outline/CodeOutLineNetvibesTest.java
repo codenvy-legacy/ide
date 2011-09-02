@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;

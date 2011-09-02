@@ -20,8 +20,8 @@ package org.exoplatform.ide.paas.openshift;
 
 import java.net.URL;
 
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;

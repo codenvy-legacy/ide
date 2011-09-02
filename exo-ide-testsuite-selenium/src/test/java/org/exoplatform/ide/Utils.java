@@ -24,12 +24,12 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.exoplatform.common.http.client.CookieModule;
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.NVPair;
-import org.exoplatform.common.http.client.ProtocolNotSuppException;
+import org.everrest.http.client.CookieModule;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
+import org.everrest.http.client.NVPair;
+import org.everrest.http.client.ProtocolNotSuppException;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 

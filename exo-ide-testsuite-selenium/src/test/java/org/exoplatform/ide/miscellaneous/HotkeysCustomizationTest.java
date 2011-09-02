@@ -20,7 +20,7 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
@@ -280,8 +280,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
       //press Alt+N
       selenium().altKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
+      selenium().keyDown("//", "E");
+      selenium().keyUp("//", "E");
       selenium().altKeyUp();
 
       //click Bind button
@@ -299,8 +299,8 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       Thread.sleep(TestConstants.SLEEP);
 
       selenium().altKeyDown();
-      selenium().keyDown("//", "N");
-      selenium().keyUp("//", "N");
+      selenium().keyDown("//", "E");
+      selenium().keyUp("//", "E");
       selenium().altKeyUp();
       Thread.sleep(TestConstants.SLEEP);
 
@@ -329,10 +329,29 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //Select "Create File From Template" and check Alt+N is bind to it
       selectRow(Commands.CREATE_FILE_FROM_TEMPLATE);
-      assertEquals("Alt+N", getTextFromBindColumn(Commands.CREATE_FILE_FROM_TEMPLATE));
+      Thread.sleep(TestConstants.SLEEP);
+      assertEquals("Alt+E", getTextFromBindColumn(Commands.CREATE_FILE_FROM_TEMPLATE));
 
+      //restore default values
+      //on create from template value
+      selenium().controlKeyDown();
+      selenium().keyDown("//", "N");
+      selenium().keyUp("//", "N");
+      selenium().controlKeyUp();
+      clickButton(BIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+      selectRow(Commands.NEW_HTML_FILE);
+      Thread.sleep(TestConstants.SLEEP);
+      clickButton(UNBIND_BUTTON_LOCATOR);
+      Thread.sleep(TestConstants.SLEEP);
+      clickButton(SAVE_BUTTON_LOCATOR);
+      checkNoCustomizeHotkeyDialogWindow();
+
+      
       //close
-      closeHotkeysWindow();
+      //closeHotkeysWindow();
+      
+      
 
    }
 

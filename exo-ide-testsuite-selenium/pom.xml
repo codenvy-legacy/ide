@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
 
    <groupId>org.exoplatform.ide</groupId>
@@ -78,6 +78,11 @@
          <artifactId>selenium-grid-tools</artifactId>
          <version>1.0.5</version>
       </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-httpclient</artifactId>
+      </dependency>
+      
    </dependencies>
 
    <build>
@@ -144,6 +149,10 @@
                            <skip>false</skip>
                            <excludes>
                               <exclude>**/*TestSuite.java</exclude>
+                              <exclude>**/*RESTServiceSandboxTest.java</exclude>
+                              <exclude>**/*CloudHerokuTest.java</exclude>
+                              <exclude>**/*StoreOpenedFilesHistoryTest.java</exclude>
+                              <exclude>**/*WorkspaceTest.java</exclude>
                            </excludes>
                         </configuration>
                      </execution>

@@ -25,10 +25,10 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
-import org.exoplatform.common.http.client.NVPair;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
+import org.everrest.http.client.NVPair;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 
 import java.io.File;

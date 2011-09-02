@@ -20,9 +20,9 @@ package org.exoplatform.ide.project.classpath;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
+
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -123,7 +123,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       /*
        * 0. Check, there is no .groovyclasspath file in workspace directory
        */
-      assertEquals(HTTPStatus.NOT_FOUND, VirtualFileSystemUtils.get(WORKSPACE_URL + ".groovyclasspath").getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WORKSPACE_URL + ".groovyclasspath").getStatusCode());
 
       /*
        * 1. Try to configure classpath for simple folder

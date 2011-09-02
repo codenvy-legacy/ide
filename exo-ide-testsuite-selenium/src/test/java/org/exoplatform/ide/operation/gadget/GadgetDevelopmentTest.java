@@ -21,8 +21,8 @@ package org.exoplatform.ide.operation.gadget;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.common.http.client.ModuleException;
+
+import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -85,7 +85,7 @@ public class GadgetDevelopmentTest extends BaseTest
       //Click on "Save As" button and save file "Test Gadget File" with default name.
       saveAsUsingToolbarButton(FILE_NAME_FULL);
 
-      assertEquals(HTTPStatus.OK, VirtualFileSystemUtils.get(URL + FILE_NAME_FULL).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(URL + FILE_NAME_FULL).getStatusCode());
 
       IDE.EDITOR.closeFile(0);
 

@@ -22,9 +22,9 @@ import com.thoughtworks.selenium.grid.configuration.EnvironmentConfiguration;
 import com.thoughtworks.selenium.grid.hub.HubRegistry;
 import com.thoughtworks.selenium.grid.hub.HubServer;
 
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
-import org.exoplatform.common.http.client.ModuleException;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
+import org.everrest.http.client.ModuleException;
 
 import java.io.IOException;
 import java.net.URL;

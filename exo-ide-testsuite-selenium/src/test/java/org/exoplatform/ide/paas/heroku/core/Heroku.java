@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.paas.heroku.core;
 
-import org.exoplatform.common.http.client.HTTPConnection;
-import org.exoplatform.common.http.client.HTTPResponse;
+import org.everrest.http.client.HTTPConnection;
+import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.Utils;
