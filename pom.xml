@@ -321,7 +321,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-</artifactId>
+            <artifactId>exo-ide-extension-samples</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -689,6 +689,7 @@
       <module>exo-ide-extension-cloudfoundry</module>
       <module>exo-ide-extension-jenkins</module>
       <module>exo-ide-extension-ruby</module>
+      <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>            
 
       <module>exo-ide-docs</module>

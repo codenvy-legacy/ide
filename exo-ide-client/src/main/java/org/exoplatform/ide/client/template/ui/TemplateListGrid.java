@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 
 /**
  * Created by The eXo Platform SAS .

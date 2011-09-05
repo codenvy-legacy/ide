@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.HotKeyManagerImpl;
 import org.exoplatform.ide.client.model.discovery.DiscoveryServiceImpl;
-import org.exoplatform.ide.client.model.github.GithubServiceImpl;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
@@ -91,7 +90,6 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       applicationConfiguration = event.getApplicationConfiguration();
       new DiscoveryServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
       new HotKeyManagerImpl(eventBus, controls, applicationSettings);
-      new GithubServiceImpl(eventBus, applicationConfiguration.getContext(), IDELoader.getInstance());
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

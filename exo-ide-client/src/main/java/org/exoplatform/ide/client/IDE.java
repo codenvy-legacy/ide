@@ -64,10 +64,6 @@ import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
-import org.exoplatform.ide.client.welcome.OpenWelcomeEvent;
-import org.exoplatform.ide.client.welcome.WelcomePresenter;
-import org.exoplatform.ide.client.welcome.samples.GithubSamplesPresenter;
-import org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 /**
@@ -163,13 +159,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new PreferencesModule(EVENT_BUS);
       new HotKeyManagementModule(EVENT_BUS);
-      
-      //TODO
-      //Will be uncommented, when Select location feature (for import sample applications) will be implemented
-      new WelcomePresenter(EVENT_BUS);
-      new GithubSamplesPresenter(EVENT_BUS);
-      new SelectLocationPresenter(EVENT_BUS);
-      EVENT_BUS.fireEvent(new OpenWelcomeEvent(true));
       
       //initialize extensions
       for (Extension ext : extensions)

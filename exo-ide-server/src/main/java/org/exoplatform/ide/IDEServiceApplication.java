@@ -18,16 +18,10 @@
  */
 package org.exoplatform.ide;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.download.DownloadContentService;
-import org.exoplatform.ide.github.GithubService;
 import org.exoplatform.ide.remote.RemoteFileService;
 import org.exoplatform.ide.remote.RemoteFileServiceExceptionMapper;
 import org.exoplatform.ide.template.TemplatesRestService;
@@ -37,6 +31,11 @@ import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.registry.RegistryService;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
@@ -76,7 +75,6 @@ public class IDEServiceApplication extends Application
       
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
-      classes.add(GithubService.class);
    }
 
    /**

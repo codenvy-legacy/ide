@@ -88,6 +88,20 @@
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.samples.server.Github</type>
+      <init-params>
+         <value-param>
+            <name>github-user</name>
+            <value>overeshchaka</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.maven.TaskService</type>

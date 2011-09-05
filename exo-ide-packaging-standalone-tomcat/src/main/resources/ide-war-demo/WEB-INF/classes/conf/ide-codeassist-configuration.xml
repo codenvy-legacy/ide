@@ -43,7 +43,7 @@
                            </field>
                         </object>
                      </value>
-                     <value>
+                     <!--value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>
@@ -75,7 +75,7 @@
                               </string>
                            </field>
                         </object>
-                     </value>
+                     </value-->
                   </collection>
                </field>
             </object>
@@ -114,7 +114,7 @@
                            </field>
                         </object>
                      </value>
-                     <value>
+                     <!--value>
                         <object type="org.exoplatform.ide.codeassistant.framework.server.api.JarEntry">
                            <field name="jarPath">
                               <string>
@@ -144,7 +144,7 @@
                               </string>
                            </field>
                         </object>
-                     </value>
+                     </value-->
                   </collection>
                </field>
             </object>

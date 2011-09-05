@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.model.template;
 
 import com.google.gwt.resources.client.ImageResource;
 
-import org.exoplatform.ide.client.model.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
