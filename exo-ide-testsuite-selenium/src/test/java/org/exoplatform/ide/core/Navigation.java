@@ -200,7 +200,6 @@ public class Navigation extends AbstractTestModule
    {
      
       String id = getItemId(itemHref);
-     waitForElementNotPresent(id);
       if (selenium().isElementPresent(id))
       {
          assertFalse(selenium().isVisible(id));
