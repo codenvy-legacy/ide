@@ -45,8 +45,8 @@ public class MockApplication extends Application
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(MockHerokuService.class);
-//      classes.add(MockExpressService.class);
-//      classes.add(MockGitRepoService.class);
+//    classes.add(MockExpressService.class);
+//    classes.add(MockGitRepoService.class);
       classes.add(MockCloudbeesService.class);
       classes.add(MockJenkinsService.class);
       singletons = new HashSet<Object>(1);
