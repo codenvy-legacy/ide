@@ -45,6 +45,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -107,6 +109,8 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
       
       void focusInFolderNameField();
    }
+   
+   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
    
    private HandlerManager eventBus;
    
@@ -403,14 +407,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Select parent folder"));
+         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
          return;
       }
       
       final String newFolderName = display.getFolderNameField().getValue();
       if (newFolderName == null || newFolderName.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Enter folder name"));
+         eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorFolderNameEmpty()));
          return;
       }
       final FolderModel baseFolder = (FolderModel)selectedItems.get(0);
@@ -433,17 +437,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
-                     "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
-
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, lb.selectLocationErrorCantCreateFolder()));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e,
-            "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
+         eventBus.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
       }
    }
    

@@ -69,7 +69,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new SelectLocationPresenter(eventBus);
       new ShowSamplesPresenter(eventBus);
       
-//      eventBus.fireEvent(new OpenStartPageEvent());
+      eventBus.fireEvent(new OpenStartPageEvent());
    }
 
 }

@@ -37,7 +37,7 @@
                <td><div style="width:100%; height:1px;"></div></td>
                
                <td style="width:100px">
-                  <f:ImageButton ui:field="nextButton" text="Next" width="90" height="22" 
+                  <f:ImageButton ui:field="nextButton" text="{locale.nextButton}" width="90" height="22" 
                      imageResource="{resource.next}"
                      disabledImageResource="{resource.nextDisabled}" 
                      buttonId="ideImportSamplesNextButtonId"></f:ImageButton>

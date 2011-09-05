@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -39,7 +40,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    
    private static final String ID = "WelcomeViewId";
    
-   private static final String TITLE = "Welcome";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeTitle();
    
    private static StartPageViewUiBinder uiBinder = GWT.create(StartPageViewUiBinder.class);
 

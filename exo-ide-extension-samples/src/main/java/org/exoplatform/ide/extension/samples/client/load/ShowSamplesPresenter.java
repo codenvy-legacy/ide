@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.location.SelectLocationEvent;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -66,6 +68,8 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       
       void enableNextButton(boolean enable);
    }
+   
+   private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
    
    private HandlerManager eventBus;
    
@@ -96,7 +100,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          {
             if (selectedRepos == null || selectedRepos.isEmpty())
             {
-               Dialogs.getInstance().showError("Select Repo");
+               Dialogs.getInstance().showError(lb.showSamplesErorSelectRepository());
                return;
             }
             eventBus.fireEvent(new SelectLocationEvent(selectedRepos.get(0)));
@@ -176,7 +180,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("GithubSamples View must be null"));
+         eventBus.fireEvent(new ExceptionThrownEvent("Show Samples View must be null"));
       }
    }
    

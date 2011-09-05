@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    
    private static final String ID = "GithubSamplesView";
    
-   private static final String TITLE = "Load Samples";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.showSamplesTitle();
    
    private static final int HEIGHT = 345;
 

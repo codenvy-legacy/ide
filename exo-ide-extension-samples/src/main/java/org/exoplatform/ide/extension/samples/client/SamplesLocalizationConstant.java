@@ -44,6 +44,15 @@ public interface SamplesLocalizationConstant extends Constants
    @Key("button.create")
    String createButton();
    
+   @Key("button.next")
+   String nextButton();
+   
+   @Key("button.back")
+   String backButton();
+   
+   @Key("button.finish")
+   String finishButton();
+   
    /*
     * WelcomeView
     */
@@ -61,5 +70,41 @@ public interface SamplesLocalizationConstant extends Constants
    
    @Key("welcome.sample.text")
    String sampleText();
+   
+   @Key("welcome.title")
+   String welcomeTitle();
+   
+   /*
+    * SelectLocationView
+    */
+   @Key("location.title")
+   String selectLocationTitle();
+   
+   @Key("location.error.folderNameEmpty")
+   String selectLocationErrorFolderNameEmpty();
+   
+   @Key("location.error.parentFolderNotSelected")
+   String selectLocationErrorParentFolderNotSelected();
+   
+   @Key("location.error.cantCreateFolder")
+   String selectLocationErrorCantCreateFolder();
+   
+   /*
+    * SamplesListGrid
+    */
+   @Key("samplesListGrid.column.name")
+   String samplesListListColumnName();
+   
+   /*
+    * ShowSamplesView
+    */
+   @Key("showSamples.title")
+   String showSamplesTitle();
+   
+   /*
+    * ShowSamplesPresenter
+    */
+   @Key("showSamples.error.selectRepo")
+   String showSamplesErorSelectRepository();
 
 }

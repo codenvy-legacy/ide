@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
 {
    private static final String ID = "SelectLocationView";
    
-   private static final String TITLE = "Select Location";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.selectLocationTitle();
    
    private static final int HEIGHT = 345;
 

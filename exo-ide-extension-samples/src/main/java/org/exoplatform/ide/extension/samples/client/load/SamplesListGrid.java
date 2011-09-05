@@ -23,6 +23,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 /**
@@ -34,7 +35,7 @@ public class SamplesListGrid extends ListGrid<Repository>
 {
    private static final String ID = "ideGithubSamplesGrid";
    
-   private static final String REPOSITORY_HEADER = "Name";
+   private static final String REPOSITORY_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListListColumnName();
    
    public SamplesListGrid()
    {
