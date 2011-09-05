@@ -95,6 +95,9 @@ public class UsingKeyboardTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_LEFT);
       IDE.WORKSPACE.waitForRootItem();
+      
+      //wait for appear attribute "Notvisible" in DOM (fix for cloud-ide assembly)
+      Thread.sleep(1000);
       IDE.NAVIGATION.assertItemNotVisible(WS_URL + TEST_FOLDER + "/" + TEST_SUBFOLDER + "/");
 
       // test java.awt.event.KeyEvent.VK_RIGHT,java.awt.event.KeyEvent.VK_DOWNT      

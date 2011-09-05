@@ -88,6 +88,7 @@ public class ItemOrderingTest extends BaseTest
 
    private void checkItemOrderingInNavigationPanel() throws Exception
    {
+
       IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/");
       assertEquals(UPPERCASE_TEST_FOLDER_1, IDE.NAVIGATION.getRowTitle(2));
 
@@ -98,13 +99,13 @@ public class ItemOrderingTest extends BaseTest
       assertEquals(TEST_FOLDER_1_2, IDE.NAVIGATION.getRowTitle(4));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FILE_1);
-      assertEquals(UPPERCASE_TEST_FILE_1, IDE.NAVIGATION.getRowTitle(5));
+      assertEquals(UPPERCASE_TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + UPPERCASE_TEST_FILE_1)));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, IDE.NAVIGATION.getRowTitle(6));
+      assertEquals(TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FILE_1)));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, IDE.NAVIGATION.getRowTitle(7));
+      assertEquals(TEST_FILE_1_2, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FILE_1_2)));
    }
 
    private void checkItemOrderngInSearchResultPanel() throws Exception
