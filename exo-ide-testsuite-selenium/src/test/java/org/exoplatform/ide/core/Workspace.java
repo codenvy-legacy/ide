@@ -52,6 +52,10 @@ public class Workspace extends AbstractTestModule
     */
    public void selectRootItem() throws Exception
    {
+      //wait for appear root folder (fix foc cloud-ide assembly)
+      waitForRootItem();
+      //wait for select root folder (fix foc cloud-ide assembly)
+      Thread.sleep(TestConstants.ANIMATION_PERIOD * 60);
       selectItem(IDE().getWorkspaceURL());
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
@@ -74,7 +78,7 @@ public class Workspace extends AbstractTestModule
 
    public void doubleClickOnFolder(String folderURL) throws Exception
    {
-      
+
       //add timeout for reading content from folder (fix for cloud-IDE-assembly)
       IDE().WORKSPACE.waitForItem(folderURL);
       String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";
