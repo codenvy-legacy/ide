@@ -18,9 +18,19 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.FindClassesUnmarshaller;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
 
 /**
  * Implementation of {@link CodeAssistantService}
@@ -36,12 +46,14 @@ public class JavaCodeAssistantService extends CodeAssistantService
 
    private static JavaCodeAssistantService instance;
    
+	private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-by-project/";
+   
    public JavaCodeAssistantService(HandlerManager eventBus, String restServiceContext, Loader loader)
    {
       super(eventBus, restServiceContext, loader, "/ide/code-assistant/java/find?class=", // FIND_URL
          "/ide/code-assistant/java/class-description?fqn=", //GET_CLASS_URL
          "/ide/code-assistant/java/find-by-prefix/", //  FIND_CLASS_BY_PREFIX
-         "/ide/code-assistant/java/find-by-type/" //FIND_TYPE
+         "/ide/code-assistant/java/find-by-type/"
       );
       instance = this;
    }
@@ -51,4 +63,27 @@ public class JavaCodeAssistantService extends CodeAssistantService
       return instance;
    }
 
+   /**
+    * Find all classes from project with file.
+    *   
+    * @param fileRelPath for who autocompletion called (Need for find classpath)
+    * @param callback - the callback which client has to implement
+    */
+   public void findClassesByProject(String fileRelPath, AsyncRequestCallback<List<Token>> callback)
+   {
+      if (fileRelPath != null)
+      {
+         String url = restServiceContext + FIND_BY_PROJECT;
+   
+         List<Token> classes = new ArrayList<Token>();
+         callback.setResult(classes);
+   
+         FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
+   
+         callback.setEventBus(eventBus);
+         callback.setPayload(unmarshaller);
+            AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, fileRelPath).send(callback);
+      }
+   }
+   
 }

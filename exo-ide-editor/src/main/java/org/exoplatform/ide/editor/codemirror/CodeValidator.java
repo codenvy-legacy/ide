@@ -28,8 +28,8 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a> 
+ * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a> 
  * @version $Id: CodeValidator Feb 9, 2011 5:48:28 PM $
  *
  */
@@ -165,4 +165,5 @@ public abstract class CodeValidator
          }
       }
    }
+
 }

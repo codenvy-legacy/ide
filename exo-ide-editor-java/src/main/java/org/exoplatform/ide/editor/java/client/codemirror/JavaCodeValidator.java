@@ -25,12 +25,17 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.CodeLine.CodeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
+import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
 
 /**
@@ -40,9 +45,50 @@ import org.exoplatform.ide.editor.codemirror.CodeValidator;
  */
 public class JavaCodeValidator extends CodeValidator
 {  
-   
+  
    static int lastImportStatementLineNumber = 0;  
+
+   List<Token> classesFromProject;
    
+   JavaCodeAssistantService service;
+   
+   JavaCodeAssistantErrorHandler errorHandler;
+   
+   public JavaCodeValidator(JavaCodeAssistantService service, JavaCodeAssistantErrorHandler errorHandler)
+   {
+      this.service = service;
+      this.errorHandler = errorHandler;
+   }
+   
+   public JavaCodeValidator()
+   {
+   }
+
+   /**
+    * Find all classes in project by using rest service with url "find-by-project" for file with relPath
+    */
+   public void loadClassesFromProject(String fileRelPath)
+   {
+      if (service != null && errorHandler != null)
+      {
+         service.findClassesByProject(fileRelPath, new AsyncRequestCallback<List<Token>>()
+         {
+            @Override
+            protected void onSuccess(List<Token> result)
+            {
+               classesFromProject = result;
+            }
+   
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               errorHandler.handleError(exception);
+            }
+         });
+      }
+   }
+
    /**
     * Short default java types like "int"...
    */
@@ -153,13 +199,21 @@ public class JavaCodeValidator extends CodeValidator
          
          else 
          {  
+            String foundFqn;
+            
             // verifying if this type is from import statements
-            String foundImport = findImport(javaType, importStatementBlock);
-            if (foundImport != null)
+            if ((foundFqn = findImport(javaType, importStatementBlock)) != null)
             {
-               currentToken.setFqn(foundImport);
-               
+               currentToken.setFqn(foundFqn);
             }
+            
+            // verifying if this type is from import statements 
+            if (classesFromProject != null 
+                   && (foundFqn = findClassesFromProject(javaType, classesFromProject)) != null)
+            {
+               currentToken.setFqn(foundFqn);
+            }
+            
             else
             {
                // verifying if this short java type like "int" and stay "fqn = null" for such token
@@ -205,6 +259,28 @@ public class JavaCodeValidator extends CodeValidator
       }
 
       return javaTypeErrorList;
+   }
+
+   /**
+    * Go through classesFromProject and looking for token with name = javaType
+    * @param javaType
+    * @param classesFromProject
+    * @return FQN of token with name = javaType from classesFromProject  
+    */
+   private String findClassesFromProject(String javaType, List<Token> classesFromProject)
+   {
+      Iterator<Token> iterator = classesFromProject.iterator();
+      while (iterator.hasNext())
+      {
+         Token token = iterator.next();
+         
+         if (javaType.equals(token.getName()))
+         {
+            return token.getProperty(TokenProperties.FQN).toString();
+         }
+      }
+      
+      return null;
    }
 
    /**
