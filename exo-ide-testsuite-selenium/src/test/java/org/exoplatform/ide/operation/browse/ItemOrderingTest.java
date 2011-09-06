@@ -32,7 +32,7 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS.
- *	
+ * 
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id:   ${date} ${time}
  *
@@ -90,13 +90,13 @@ public class ItemOrderingTest extends BaseTest
    {
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/");
-      assertEquals(UPPERCASE_TEST_FOLDER_1, IDE.NAVIGATION.getRowTitle(2));
+      assertEquals(UPPERCASE_TEST_FOLDER_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + UPPERCASE_TEST_FOLDER_1 + "/")));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1 + "/");
-      assertEquals(TEST_FOLDER_1, IDE.NAVIGATION.getRowTitle(3));
+      assertEquals(TEST_FOLDER_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FOLDER_1 + "/")));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER_1_2 + "/");
-      assertEquals(TEST_FOLDER_1_2, IDE.NAVIGATION.getRowTitle(4));
+      assertEquals(TEST_FOLDER_1_2, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + TEST_FOLDER_1_2 + "/")));
 
       IDE.NAVIGATION.assertItemVisible(WS_URL + UPPERCASE_TEST_FILE_1);
       assertEquals(UPPERCASE_TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemId(WS_URL + UPPERCASE_TEST_FILE_1)));
@@ -114,10 +114,10 @@ public class ItemOrderingTest extends BaseTest
       assertEquals(UPPERCASE_TEST_FILE_1, IDE.NAVIGATION.getRowTitleInSearchTree(2));
 
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1);
-      assertEquals(TEST_FILE_1, IDE.NAVIGATION.getRowTitleInSearchTree(3));
+      assertEquals(TEST_FILE_1, selenium().getText(IDE.NAVIGATION.getItemIdSearch(WS_URL + TEST_FILE_1)));
 
       IDE.NAVIGATION.assertItemVisibleInSearchTree(WS_URL + TEST_FILE_1_2);
-      assertEquals(TEST_FILE_1_2, IDE.NAVIGATION.getRowTitleInSearchTree(4));
+      assertEquals(TEST_FILE_1_2, selenium().getText(IDE.NAVIGATION.getItemIdSearch(WS_URL + TEST_FILE_1_2)));
    }
 
    @AfterClass
