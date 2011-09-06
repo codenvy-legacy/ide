@@ -47,11 +47,11 @@ public class ViewVersionListTest extends BaseTest
 
    private final static String FILE_2 = "Test file2";
 
-   private String version1Text = "one-";
+   private String version1Text = "one*";
 
-   private String version2Text = "two-";
+   private String version2Text = "two*";
 
-   private String version3Text = "three-";
+   private String version3Text = "three*";
 
    private String version4Text = "four";
 
@@ -100,6 +100,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
       IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+    
       //Open new file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
@@ -113,6 +114,7 @@ public class ViewVersionListTest extends BaseTest
       IDE.VERSIONS.checkViewVersionHistoryButtonState(false);
       //Edit and save file
       IDE.EDITOR.typeTextIntoEditor(0, version1Text);
+      Thread.sleep(10000);
       saveCurrentFile();
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.VIEW_VERSION_HISTORY, true);
       IDE.VERSIONS.checkViewVersionHistoryButtonPresent(true);
