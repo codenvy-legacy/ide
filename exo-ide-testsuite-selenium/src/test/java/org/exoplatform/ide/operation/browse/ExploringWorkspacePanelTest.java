@@ -35,37 +35,42 @@ public class ExploringWorkspacePanelTest extends BaseTest
     * 
     */
    private static final String FOLDER_2_2 = "folder-2-2";
+
    /**
     * 
     */
    private static final String FOLDER_2_1 = "folder-2-1";
+
    /**
     * 
     */
    private static final String FOLDER_2 = "folder-2";
+
    /**
     * 
     */
    private static final String FOLDER_1_2 = "folder-1-2";
+
    /**
     * 
     */
    private static final String FOLDER_1_1 = "folder-1-1";
+
    /**
     * 
     */
    private static final String FOLDER_1 = "folder-1";
-   
-   private static final String FOLDER_1_URL = WS_URL +  "folder-1" + "/";
- 
-   private static final String FOLDER_1_2_URL = FOLDER_1_URL +  "folder-1-2" + "/";
-   
+
+   private static final String FOLDER_1_URL = WS_URL + "folder-1" + "/";
+
+   private static final String FOLDER_1_2_URL = FOLDER_1_URL + "folder-1-2" + "/";
+
    private static final String FOLDER_1_1_URL = FOLDER_1_URL + "folder-1-1" + "/";
-   
-   private static final String FOLDER_2_URL =  WS_URL + "folder-2" + "/";
-   
-   private static final String FOLDER_2_2_URL = FOLDER_2_URL +  "folder-2-2" + "/";
-   
+
+   private static final String FOLDER_2_URL = WS_URL + "folder-2" + "/";
+
+   private static final String FOLDER_2_2_URL = FOLDER_2_URL + "folder-2-2" + "/";
+
    private static final String FOLDER_2_1_URL = FOLDER_2_URL + "folder-2-1" + "/";
 
    /**
@@ -77,14 +82,14 @@ public class ExploringWorkspacePanelTest extends BaseTest
    public void testExplodeCollapseFolder() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      
+
       IDE.NAVIGATION.createFolder(FOLDER_1);
       IDE.NAVIGATION.createFolder(FOLDER_1_1);
-    //wait for correct selecting folder (fix for cloud-ide assembly)
+
+      //wait for correct selecting folder (fix for cloud-ide assembly)
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.selectItem(FOLDER_1_URL);
-      
-      
+
       IDE.NAVIGATION.createFolder(FOLDER_1_2);
 
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
@@ -94,8 +99,13 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.WORKSPACE.selectRootItem();
       IDE.NAVIGATION.createFolder(FOLDER_2);
       IDE.NAVIGATION.createFolder(FOLDER_2_1);
+      
+      //wait for correct selecting folder (fix for cloud-ide assembly)
+      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
       IDE.WORKSPACE.selectItem(FOLDER_2_URL);
+
       IDE.NAVIGATION.createFolder(FOLDER_2_2);
+
       //Sub folders of folder "folder-1" are hidden
       IDE.NAVIGATION.assertItemVisible(FOLDER_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_1_1_URL);
@@ -113,7 +123,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       //Sub folders of folder "folder-2" are hidden
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
-      
+
       //Open "folder-1"
       IDE.WORKSPACE.clickOpenIconOfFolder(FOLDER_1_URL);
 
@@ -144,7 +154,7 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.NAVIGATION.assertItemVisible(FOLDER_2_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_1_URL);
       IDE.NAVIGATION.assertItemNotVisible(FOLDER_2_2_URL);
-      
+
       IDE.WORKSPACE.selectItem(FOLDER_1_URL);
       IDE.NAVIGATION.deleteSelectedItems();
       IDE.WORKSPACE.selectItem(FOLDER_2_URL);
