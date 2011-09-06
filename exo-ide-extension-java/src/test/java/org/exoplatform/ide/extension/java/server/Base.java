@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.ValueFactory;
+import javax.jcr.Workspace;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.tools.DummySecurityContext;
@@ -38,13 +45,6 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.junit.Before;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jcr.Node;
-import javax.jcr.ValueFactory;
-import javax.jcr.Workspace;
-
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -56,6 +56,8 @@ public class Base
 {
 
    public static final String WS_NAME = "ws";
+   
+   public static final String REPO_NAME = "db1";
 
    protected SessionImpl session;
 
@@ -130,6 +132,7 @@ public class Base
       Set<String> devRoles = new HashSet<String>();
       devRoles.add("developers");
       adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
-
    }
+   
+
 }

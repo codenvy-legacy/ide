@@ -18,18 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.utils;
 
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-
 import java.io.InputStream;
 
 import javax.jcr.AccessDeniedException;
@@ -40,6 +28,15 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -52,6 +49,8 @@ public class GroovyScriptServiceUtil
 
    public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
+   static final String JAVA_SOURCE_ROOT_PREFIX = "/src/main/java";
+   
    /**
     * Unmarshal classpath object in JSON format to Java bean {@link GroovyClassPath}.
     * 
@@ -216,4 +215,96 @@ public class GroovyScriptServiceUtil
       }
       return null;
    }
+
+   /**
+    * Return word until first point like "ClassName" on file name "ClassName.java"
+    * @param fileName
+    * @return
+    */
+   public static String getClassNameOnFileName(String fileName)
+   {
+      if (fileName != null)
+         return fileName.substring(0, fileName.indexOf("."));
+         
+      return null;
+   }
+   
+   /**
+    * Return possible FQN like "org.exoplatform.example.ClassName" on file path "/org/exoplatform/example/ClassName.java"
+    * @param fileName
+    * @return
+    */
+   public static String getFQNByFilePath(String filePath)
+   {
+      if (filePath != null)
+      {
+         String fqn = filePath;
+         
+         // remove "[...]" from path like "[3]" from path "org/exoplatform[3]/example/ClassName.java"
+         fqn = fqn.replaceAll("\\[.*\\]", "");
+         
+         // looking for java source folder root like "/src/main/java" to remove unnecessary path prefix like "/My Project/src/main/java" in path "/My Project/src/main/java/com/example/"
+         if (fqn.matches(".*" + JAVA_SOURCE_ROOT_PREFIX + ".*"))
+         {
+            fqn = fqn.replaceAll(".*" + JAVA_SOURCE_ROOT_PREFIX, "");
+         }
+         
+         // remove file extension from path like ".java" from path "org/exoplatform/example/ClassName.java"
+         if (fqn.matches(".*[.][^/]*$"))
+            fqn = fqn.substring(0, fqn.lastIndexOf("."));
+         
+         // remove symbol "/" at the start of string
+         if (fqn.indexOf("/") == 0)
+            fqn = fqn.substring(1);
+         
+         // replace "/" on "."
+         fqn = fqn.replaceAll("/", ".");
+         
+         return fqn;
+      }
+         
+      return null;
+   }
+   
+
+   /**
+    * Return possible file parent folder path like "org/exoplatform/example" on file path "/org/exoplatform/example/ClassName.java", or return file path as it if there is no any "/" in file path. 
+    * @param fileRelPath
+    * @return
+    */
+   public static String getParentFolderPath(String fileRelPath)
+   {
+      if (fileRelPath != null)
+      {
+         if (fileRelPath.indexOf("/") != -1)
+         {
+            String parentFolderPath = fileRelPath.substring(0, fileRelPath.lastIndexOf("/"));
+
+            // remove started "/"
+            if (parentFolderPath.indexOf("/") == 0)
+            {
+               parentFolderPath = parentFolderPath.substring(1);
+            }
+            
+            return parentFolderPath;
+         }
+         else
+         {
+            return fileRelPath;
+         }
+
+      }
+      return null;
+   }
+
+   /**
+    * Looking for java source folder root like "/src/main/java" as part of location.
+    * @param location
+    * @return
+    */
+   public static boolean checkPathIntoTheProjectSourceFolder(String location)
+   {
+      return location.matches(".*" + JAVA_SOURCE_ROOT_PREFIX + ".*");
+   }
+   
 }

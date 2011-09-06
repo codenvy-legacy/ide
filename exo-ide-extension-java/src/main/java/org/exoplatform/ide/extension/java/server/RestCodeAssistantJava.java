@@ -18,13 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -36,6 +31,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
+import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
+import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. 
@@ -167,4 +171,32 @@ public class RestCodeAssistantJava
       return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
          + codeAssistantStorage.getClassDoc(fqn) + "</body></html>";
    }
+   
+   /**
+    * Find all classes in project
+    * @param uriInfo
+    * @param location
+    * @return set of FQNs matched to project at file location 
+    * @throws CodeAssistantException
+    */
+   @GET
+   @Path("/find-by-project")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<ShortTypeInfo> findClassesByProject(@Context UriInfo uriInfo,
+      @HeaderParam("location") String location) throws CodeAssistantException
+   {
+      List<ShortTypeInfo> classNames = null;
+      try
+      {
+         classNames = codeAssistantStorage.findClassesByProject(uriInfo.getBaseUri().toASCIIString(), URLDecoder.decode(location,"UTF-8"));
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         e.printStackTrace();
+         throw new CodeAssistantException(HTTPStatus.BAD_REQUEST, e.getMessage());
+      }
+
+      return classNames;
+   }
+   
 }

@@ -84,7 +84,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
 
       templateCodeAssistant =
          new GroovyTemplateCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration()
-            .getContext() + "/ide/code-assistant/class-doc?fqn="), this);
+            .getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
 
       IDE.getInstance()
          .addEditor(

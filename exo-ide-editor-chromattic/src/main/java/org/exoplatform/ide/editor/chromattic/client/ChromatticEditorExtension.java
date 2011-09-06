@@ -85,7 +85,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       else
       service = GroovyCodeAssistantService.get();
       groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
       
       IDE.getInstance().addEditor(new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "groovy", IMAGES.CHROMATTIC(), true,
          new CodeMirrorConfiguration().

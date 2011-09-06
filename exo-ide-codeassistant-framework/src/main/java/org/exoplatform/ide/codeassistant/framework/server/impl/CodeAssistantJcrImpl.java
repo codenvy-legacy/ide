@@ -18,10 +18,23 @@
  */
 package org.exoplatform.ide.codeassistant.framework.server.impl;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
+
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
 import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
@@ -37,18 +50,6 @@ import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryResult;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -461,6 +462,73 @@ public class CodeAssistantJcrImpl implements CodeAssistant
          //TODO:need fix status code
          throw new CodeAssistantException(404, e.getMessage());
       }
+   }
+
+   /**
+    * @throws CodeAssistantException 
+    * @see org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant#findClassesByProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   public List<ShortTypeInfo> findClassesByProject(String baseUri, String fileRelPath) throws CodeAssistantException
+   {
+      List<ShortTypeInfo> classes = new ArrayList<ShortTypeInfo>();
+      List<String> classNames = new ArrayList<String>();
+      
+      if (GroovyScriptServiceUtil.checkPathIntoTheProjectSourceFolder(fileRelPath))
+      {
+         try
+         {
+            Session session = GroovyScriptServiceUtil.getSession(repositoryService);
+            
+            Node rootNode = session.getRootNode();
+   
+            NodeIterator nodeIterator = null;
+            
+            // return classes only if file exists at location        
+            if (rootNode.hasNode(GroovyScriptServiceUtil.getParentFolderPath(fileRelPath)))
+            {
+               nodeIterator = rootNode.getNode(GroovyScriptServiceUtil.getParentFolderPath(fileRelPath)).getNodes("*.java");
+            }
+            else
+            {
+               return classes;
+            }
+    
+            if (nodeIterator != null)
+            {
+               while (nodeIterator.hasNext())
+               {
+                  Node childNode = nodeIterator.nextNode();
+                  
+                  // pass node of file with the same path as received location header
+                  if (fileRelPath.endsWith(childNode.getPath()))
+                     continue;
+               
+                  // pass classes with the same name in the same folder
+                  if (classNames.contains(GroovyScriptServiceUtil.getClassNameOnFileName(childNode.getName())))
+                     continue;
+                  
+                  classes.add(new ShortTypeInfo(
+                     (int)0L, 
+                     GroovyScriptServiceUtil.getClassNameOnFileName(childNode.getName()), 
+                     GroovyScriptServiceUtil.getFQNByFilePath(childNode.getPath()), 
+                     "CLASS"
+                  ));
+                  
+                  classNames.add(GroovyScriptServiceUtil.getClassNameOnFileName(childNode.getName()));
+               }
+            }
+         }
+         catch (RepositoryException e)
+         {
+            if (LOG.isDebugEnabled())
+               e.printStackTrace();
+            //TODO:need fix status code
+            throw new CodeAssistantException(HTTPStatus.NOT_FOUND, e.getMessage());
+         }
+      }
+      
+      return classes;
    }
 
 }
