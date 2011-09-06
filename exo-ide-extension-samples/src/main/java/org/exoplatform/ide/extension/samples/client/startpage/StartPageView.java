@@ -62,7 +62,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    
    public StartPageView()
    {
-      super(ID, "information", TITLE);
+      super(ID, "editor", TITLE);
       add(uiBinder.createAndBindUi(this));
    }
 

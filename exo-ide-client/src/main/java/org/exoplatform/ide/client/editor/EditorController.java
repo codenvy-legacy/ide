@@ -703,6 +703,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       if (event.getView().getType().equals("editor"))
       {
+         if (!(event.getView() instanceof EditorView))
+         {
+            return;
+         }
          eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
       }
    }
@@ -715,6 +719,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       if (event.getView().getType().equals("editor") && event.getView().isViewVisible())
       {
+         if (!(event.getView() instanceof EditorView))
+         {
+            return;
+         }
          final EditorView editorView = (EditorView)event.getView();
          activeFile = editorView.getFile();
          Timer timer = new Timer()
@@ -758,6 +766,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       if (event.getView().getType().equals("editor"))
       {
+         if (!(event.getView() instanceof EditorView))
+         {
+            return;
+         }
          event.cancelClosing();
          eventBus.fireEvent(new EditorCloseFileEvent(((EditorView)event.getView()).getFile()));
       }
