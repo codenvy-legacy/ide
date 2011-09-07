@@ -86,7 +86,7 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
         service = GroovyCodeAssistantService.get();
       
       groovyCodeAssistant =
-         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/class-doc?fqn="), this);
+         new GroovyCodeAssistant(service, new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn="), this);
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE.groovy(), true,
             new CodeMirrorConfiguration().
