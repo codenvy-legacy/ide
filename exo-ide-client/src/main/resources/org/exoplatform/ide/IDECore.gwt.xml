@@ -34,13 +34,9 @@
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
 
    <!-- Initialise Virtual File System -->
-   <inherits name='org.exoplatform.ide.client.module.IDEVirtualFileSystem' />
+   <inherits name="org.exoplatform.ide.vfs.VFS" />
    
    <inherits name='org.exoplatform.ide.Views' />
-
-   <!-- 
-   <inherits name="org.exoplatform.ide.Extensions" />   
-    -->
 
    <!-- Specify the application specific style sheet. -->
    <stylesheet src="IDE.css" />

@@ -22,13 +22,8 @@
 	<inherits name='com.google.gwt.user.User' />
 
 	<inherits name="org.exoplatform.ide.IDECore" />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
+   	<inherits name="org.exoplatform.ide.IDEExtensions" />
 
-<!-- 
-   <inherits name='com.google.gwt.user.RemoteService' />
-   <inherits name="com.google.gwt.jsonp.Jsonp" />
- -->
-   
    <entry-point class='org.exoplatform.ide.client.IDEApplication' />
    <source path="client" excludes="IDEGadget.java" />
 </module>

@@ -237,7 +237,6 @@
 		         <artifactId>exo-ide-editor-gadget</artifactId>
 		      </dependency>
          
-         
 		      <dependency>
 		         <groupId>org.exoplatform.ide</groupId>
 		         <artifactId>exo-ide-extension-groovy</artifactId>
@@ -304,23 +303,21 @@
 		         <artifactId>exo-ide-extension-logreader</artifactId>
 		      </dependency>
 		      
-      <dependency>
-         <groupId>org.exoplatform.log-reader</groupId>
-         <artifactId>log-reader-service</artifactId>
-         <version>1.0-M2</version>
-      </dependency>
-		      
+		      <dependency>
+		         <groupId>org.exoplatform.log-reader</groupId>
+		         <artifactId>log-reader-service</artifactId>
+		         <version>1.0-M2</version>
+		      </dependency>
 		      
 		      <dependency>
 		         <groupId>org.exoplatform.ide</groupId>
 		         <artifactId>exo-ide-extension-ruby</artifactId>
 		      </dependency>
          
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-samples</artifactId>
-      </dependency>
-         
+		      <dependency>
+		         <groupId>org.exoplatform.ide</groupId>
+		         <artifactId>exo-ide-extension-samples</artifactId>
+		      </dependency>
          
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
