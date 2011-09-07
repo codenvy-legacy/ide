@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+   
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
+   
+   <modelVersion>4.0.0</modelVersion>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-packaging-application-war</artifactId>
    <packaging>war</packaging>
@@ -25,115 +27,13 @@
          <scope>test</scope>
       </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-client</artifactId>
-      </dependency>
-
-<!-- 
-			EDITOR EXTENSIONS
- -->
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-gadget</artifactId>
-		         <exclusions>
-		            <exclusion>
-		               <groupId>xstream</groupId>
-		               <artifactId>xstream</artifactId>
-		            </exclusion>
-		         </exclusions>
-		      </dependency>  
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-groovy</artifactId>
-		      </dependency>		      
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-gtmpl</artifactId>
-		      </dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-chromattic</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-netvibes</artifactId>
-		      </dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-jsp</artifactId>
-		      </dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-ruby</artifactId>
-		      </dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-php</artifactId>
-		      </dependency>
-
-<!-- 
-			EXTENSIONS
- -->
-
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-gadget</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-groovy</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-netvibes</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-cloudbees</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-      </dependency>
-
 	<dependency>
-		<groupId>org.exoplatform.ide</groupId>
-		<artifactId>exo-ide-extension-heroku</artifactId>
+		<groupId>org.exoplatform</groupId>
+		<artifactId>user-service</artifactId>
+		<version>1.0-Alpha01</version>
 	</dependency>
 
-	<dependency>
-		<groupId>org.exoplatform.ide</groupId>
-		<artifactId>exo-ide-extension-openshift</artifactId>
-	</dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-ruby</artifactId>
-		      </dependency>
-
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-logreader</artifactId>
-		      </dependency>		            
+<!-- IDE SERVER -->
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -145,6 +45,13 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
          <scope>runtime</scope>
+      </dependency>
+      
+<!-- IDE CLIENT -->      
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-client</artifactId>
       </dependency>
 
       <dependency>
@@ -173,14 +80,21 @@
       </dependency>
    </dependencies>
    
+			<properties>
+				<ide.module.to.compile>org.exoplatform.ide.IDESingle</ide.module.to.compile>
+				<ide.packaging.web.xml>src/main/resources/ide/WEB-INF/web.xml</ide.packaging.web.xml>
+				<ide.packaging.meta.inf>src/main/resources/default/META-INF</ide.packaging.meta.inf>
+				<ide.packaging.web.inf>src/main/resources/ide/WEB-INF</ide.packaging.web.inf>
+			</properties>
+
    <build>
    
       <resources>
          <resource>
             <directory>src/main/resources</directory>
             <excludes>
-               <exclude>**/META-INF/*</exclude>
-               <exclude>**/WEB-INF/*</exclude>
+               <exclude>**/WEB-INF/**</exclude>
+               <exclude>**/META-INF/**</exclude>
             </excludes>
          </resource>
       </resources>
@@ -230,7 +144,23 @@
                      <goal>run</goal>
                   </goals>
                </execution>
-            
+                           
+               <execution>
+                  <id>copy-application-html</id>
+                  <phase>process-resources</phase>
+                  <configuration>
+                     <tasks>
+                     <!-- 
+						<copy file="src/main/resources/org/exoplatform/ide/public/Application.html" tofile="${project.build.directory}/${project.artifactId}-${project.version}/Application.html" overwrite="true" />
+                      -->
+						<copy file="src/main/resources/org/exoplatform/ide/public/Application.html" tofile="${project.build.directory}/share/Application.html" overwrite="true" />
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+
                <execution>
                   <id>buildnumber</id>
                   <goals>
@@ -294,8 +224,8 @@
             <artifactId>gwt-maven-plugin</artifactId>
             <version>${gwt.maven.plugin.version}</version>
             <configuration>
-               <module>org.exoplatform.ide.Application</module>
-               <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
+               <module>${ide.module.to.compile}</module>
+               <runTarget>${ide.module.to.compile}/IDEApplication.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
             </configuration>
@@ -313,25 +243,26 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <configuration>
-               <webXml>src/main/resources/default/WEB-INF/web.xml</webXml>
+               <webXml>${ide.packaging.web.xml}</webXml>
                <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
-               <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
-                  **/classes/default/**,**/classes/ide/**,
-                  **/Commons.css,
+               <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
                   **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
                   **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
-                  **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar,**/xstream-1.0.2.jar
+                  **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar
                   </packagingExcludes>
                <webResources>
                   <resource>
-                     <directory>src/main/resources/default/META-INF</directory>
+                     <directory>${ide.packaging.meta.inf}</directory>
                      <targetPath>META-INF</targetPath>
                   </resource>
                   <resource>
-                     <directory>src/main/resources/default/WEB-INF</directory>
+                     <directory>${ide.packaging.web.inf}</directory>
                      <targetPath>WEB-INF</targetPath>
+					 <excludes>
+                		<exclude>**/WEB-INF/**</exclude>
+              		</excludes>                     
                   </resource>
                </webResources>
             </configuration>
@@ -353,4 +284,5 @@
       <sourceDirectory>target/share</sourceDirectory>
       <!-- outputDirectory>target/war/classes</outputDirectory -->
    </build>
+   
 </project>

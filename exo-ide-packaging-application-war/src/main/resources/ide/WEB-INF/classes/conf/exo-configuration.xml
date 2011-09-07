@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
     Copyright (C) 2010 eXo Platform SAS.
@@ -18,13 +19,17 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<module rename-to="IDE">
-   <inherits name='com.google.gwt.user.User' />
-   
-	<inherits name="org.exoplatform.ide.IDECore" />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <inherits name="com.google.gwt.gadgets.Gadgets" />
-   <script src="applicationInitializer.js" />
-   <entry-point class='org.exoplatform.ide.client.IDEGadget' />
-</module>
+  <import>core-configuration.xml</import>
+  
+  <import>organization-configuration.xml</import>
+  
+  <!-- 
+  <import>codeassist-configuration.xml</import>
+   -->
+  
+  <import>ide-extensions-configuration.xml</import>
+
+</configuration>

@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
@@ -65,6 +62,9 @@ import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 
 /**
  * Created by The eXo Platform SAS .

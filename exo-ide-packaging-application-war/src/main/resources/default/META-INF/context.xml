@@ -18,13 +18,14 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<module rename-to="IDE">
-   <inherits name='com.google.gwt.user.User' />
-   
-	<inherits name="org.exoplatform.ide.IDECore" />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
+<Context path="/IDE-application" docBase="IDE-application" reloadable="true" crossContext="false">
 
-   <inherits name="com.google.gwt.gadgets.Gadgets" />
-   <script src="applicationInitializer.js" />
-   <entry-point class='org.exoplatform.ide.client.IDEGadget' />
-</module>
+  <Logger className='org.apache.catalina.logger.SystemOutLogger'
+            prefix='localhost_portal_log.' suffix='.txt' timestamp='true'/>
+    <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
+    <Realm className='org.apache.catalina.realm.JAASRealm'
+           appName='exo-domain'
+           userClassNames="org.exoplatform.services.security.jaas.UserPrincipal"
+           roleClassNames="org.exoplatform.services.security.jaas.RolePrincipal"
+           debug='0' cache='false'/>
+</Context>

@@ -19,12 +19,9 @@
 
 -->
 <module rename-to="IDE">
-   <inherits name='com.google.gwt.user.User' />
-   
+	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.exoplatform.ide.IDECore" />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
-
-   <inherits name="com.google.gwt.gadgets.Gadgets" />
-   <script src="applicationInitializer.js" />
-   <entry-point class='org.exoplatform.ide.client.IDEGadget' />
+	
+   <entry-point class='org.exoplatform.ide.client.IDEApplication' />
+   <source path="client" excludes="IDEGadget.java" />
 </module>
