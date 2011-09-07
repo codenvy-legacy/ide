@@ -104,36 +104,41 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-chromattic</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudbees</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudfoundry</artifactId>
       </dependency>
 
-	<dependency>
-		<groupId>org.exoplatform.ide</groupId>
-		<artifactId>exo-ide-extension-heroku</artifactId>
-	</dependency>
+      <dependency>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-extension-heroku</artifactId>
+      </dependency>
 
-	<dependency>
-		<groupId>org.exoplatform.ide</groupId>
-		<artifactId>exo-ide-extension-openshift</artifactId>
-	</dependency>
+      <dependency>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-extension-openshift</artifactId>
+      </dependency>
 
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-ruby</artifactId>
-		      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-ruby</artifactId>
+      </dependency>
 
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-logreader</artifactId>
-		      </dependency>		            
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-logreader</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-samples</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
