@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.application.event.EntryPointChangedH
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -144,7 +145,8 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
-         eventBus.fireEvent(new SwitchEntryPointEvent(entryPoint));
+         EntryPoint point = new EntryPoint(entryPoint, entryPoint);
+         eventBus.fireEvent(new SwitchEntryPointEvent(point));
       }
       else
       {

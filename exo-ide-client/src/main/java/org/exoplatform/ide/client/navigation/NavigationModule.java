@@ -307,7 +307,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      entryPoint = event.getEntryPoint().getHref();
    }
 
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)

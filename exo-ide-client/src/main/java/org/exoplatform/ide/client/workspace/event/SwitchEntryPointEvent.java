@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.workspace.event;
 
+import org.exoplatform.ide.client.framework.discovery.EntryPoint;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -32,14 +34,14 @@ public class SwitchEntryPointEvent extends GwtEvent<SwitchEntryPointHandler>
 
    public static final GwtEvent.Type<SwitchEntryPointHandler> TYPE = new GwtEvent.Type<SwitchEntryPointHandler>();
 
-   private String entryPoint;
+   private EntryPoint entryPoint;
 
-   public SwitchEntryPointEvent(String entryPoint)
+   public SwitchEntryPointEvent(EntryPoint entryPoint)
    {
       this.entryPoint = entryPoint;
    }
 
-   public String getEntryPoint()
+   public EntryPoint getEntryPoint()
    {
       return entryPoint;
    }

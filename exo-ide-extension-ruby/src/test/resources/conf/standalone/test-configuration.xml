@@ -90,6 +90,41 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.IDEServiceApplication</type>
+      <init-params>
+         <value-param>
+            <name>defaultEntryPoint</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>discoverable</name>
+            <value>true</value>
+         </value-param>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>template-config</name>
+            <value>/ide-home/templates</value>
+         </value-param>
+      </init-params>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+      <init-params>
+         <properties-param>
+            <name>locations</name>
+         </properties-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>

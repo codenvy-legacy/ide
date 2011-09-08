@@ -147,10 +147,9 @@ public class RubyAppServiceTest
    public void testCreate() throws Exception
    {
       ContainerResponse cres =
-         launcher.service("POST", "/ide/application/ruby/create?name=myRuby&workdir=rest/repository/dev-monit", "",
+         launcher.service("POST", "/ide/application/ruby/create?name=myRuby&workdir=/", "",
             null, null, null, null);
 
-      System.out.println(cres.getStatus());
       assertEquals(HTTPStatus.OK, cres.getStatus());
 
       File app = new File("target/git/repository/dev-monit/myRuby");

@@ -24,7 +24,9 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
+import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -78,7 +80,7 @@ public class IDEConfigurationService
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
    private RepositoryService repositoryService;
-
+   
    private String entryPoint;
 
    private boolean discoverable;
@@ -109,7 +111,8 @@ public class IDEConfigurationService
             this.config += "/";
       }
    }
-
+   
+  
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
@@ -133,6 +136,8 @@ public class IDEConfigurationService
          String href = uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).path(entryPoint).build().toString();
          result.put("defaultEntrypoint", href);
          result.put("discoverable", discoverable);
+         result.put("vfsId", entryPoint);
+         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).build().toString());
          return result;
       }
       catch (Exception e)

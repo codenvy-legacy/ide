@@ -130,7 +130,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    /**
     * Current Workspace, used by IDE
     */
-   private String workingWorkspace;
+   private EntryPoint workingWorkspace;
 
    /**
     * Selected Workspace in Workspace List Grid
@@ -187,7 +187,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
 
-      workingWorkspace = applicationSettings.getValueAsString("entry-point");
+      workingWorkspace = (EntryPoint)applicationSettings.getValueAsObject("entry-point");
    }
 
    /**
@@ -459,16 +459,16 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
     */
    private void storeCurrentWorkspaceToConfiguration()
    {
-      applicationSettings.setValue("entry-point", selectedWorkspace.getHref(), Store.COOKIES);
+      applicationSettings.setValue("entry-point", selectedWorkspace, Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       /*
        * Handle of ApplicationSettingsSaved Event and switch current workspace.
        */
       if (display != null)
       {
-         workingWorkspace = selectedWorkspace.getHref();
+         workingWorkspace = selectedWorkspace;
          IDE.getInstance().closeView(Display.ID);
-         eventBus.fireEvent(new SwitchEntryPointEvent(selectedWorkspace.getHref()));
+         eventBus.fireEvent(new SwitchEntryPointEvent(selectedWorkspace));
       }
    }
 

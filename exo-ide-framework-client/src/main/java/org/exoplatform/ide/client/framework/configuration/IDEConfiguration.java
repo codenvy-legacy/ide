@@ -31,6 +31,7 @@ public class IDEConfiguration
 
    private String registryURL;
 
+   @Deprecated
    private String defaultEntryPoint;
 
    private String context;
@@ -46,6 +47,11 @@ public class IDEConfiguration
    private String gadgetServer;
    
    private int httpsPort = 0;
+   
+   private String vfsId;
+   
+   private String vfsBaseUrl;
+   
    
    public IDEConfiguration()
    {
@@ -66,11 +72,13 @@ public class IDEConfiguration
       this.registryURL = registryURL;
    }
 
+   @Deprecated
    public String getDefaultEntryPoint()
    {
       return defaultEntryPoint;
    }
 
+   @Deprecated
    public void setDefaultEntryPoint(String defaultEntryPoint)
    {
       this.defaultEntryPoint = defaultEntryPoint;
@@ -144,6 +152,26 @@ public class IDEConfiguration
    public void setHttpsPort(int httpsPort)
    {
       this.httpsPort = httpsPort;
+   }
+   
+   public String getVfsBaseUrl()
+   {
+      return vfsBaseUrl;
+   }
+   
+   public void setVfsBaseUrl(String vfsBaseUrl)
+   {
+      this.vfsBaseUrl = vfsBaseUrl;
+   }
+   
+   public String getVfsId()
+   {
+      return vfsId;
+   }
+   
+   public void setVfsId(String vfsId)
+   {
+      this.vfsId = vfsId;
    }
    
 }

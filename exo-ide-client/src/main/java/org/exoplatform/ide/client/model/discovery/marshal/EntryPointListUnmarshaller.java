@@ -57,8 +57,9 @@ public class EntryPointListUnmarshaller implements Unmarshallable
          if (obj.containsKey("href"))
            entryPoint.setHref(obj.get("href").isString().stringValue());    
          if (obj.containsKey("workspace"))
-           entryPoint.setHref(obj.get("workspace").isString().stringValue()); 
+           entryPoint.setWorkspace(obj.get("workspace").isString().stringValue()); 
          
+         entryPointList.add(entryPoint);
       }
    }
    

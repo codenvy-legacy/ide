@@ -21,6 +21,9 @@ package org.exoplatform.ide;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.commons.utils.IOUtil;
@@ -40,6 +43,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Map;
@@ -106,10 +110,20 @@ public class ConfigurationServiceTest extends BaseTest
 
       Assert.assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
+      
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      JsonValue jv = JsonGenerator.createJsonObject(entity);
+      JsonWriter jsonWriter = new JsonWriter(out);
+      jv.writeTo(jsonWriter);
+      jsonWriter.flush();
+      jsonWriter.close();
+           
       Assert.assertTrue(entity.containsKey("defaultEntrypoint"));
       Assert.assertTrue(entity.containsKey("user"));
       Assert.assertTrue(entity.containsKey("discoverable"));
       Assert.assertTrue(entity.containsKey("userSettings"));
+      Assert.assertTrue(entity.containsKey("vfsId"));
+      Assert.assertTrue(entity.containsKey("vfsBaseUrl"));
    }
 
    

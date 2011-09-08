@@ -6,7 +6,6 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
 
@@ -139,7 +138,6 @@
                </execution>
             </executions>
          </plugin>
-
       </plugins>
    </build>
    

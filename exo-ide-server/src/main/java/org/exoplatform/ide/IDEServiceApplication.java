@@ -28,6 +28,7 @@ import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
+import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 
 import java.util.HashSet;

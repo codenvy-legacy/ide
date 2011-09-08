@@ -44,23 +44,24 @@ public class FSLocation
       return url;
    }
 
-   /**
-    * Determine local directory local path.
-    * 
-    * @param uriInfo UriInfo
-    */
+   @Deprecated
    public String getLocalPath(UriInfo uriInfo)
    {
-      String baseUrl = uriInfo.getBaseUri().toString();
-      baseUrl += "/jcr/"; // assume we are use eXo webdav only.
+      return getLocalPath();
+   }
+   
+   public String getLocalPath()
+   {
+      
       String localPath = getRootPath();
       if (localPath == null)
          throw new IllegalStateException("Root path may not be null. ");
       if (!localPath.endsWith("/"))
          localPath += "/"; // unix like path only!
-      localPath += url.substring(baseUrl.length());
+      localPath += "repository/dev-monit" + url;
       return localPath;
    }
+
 
    protected String getRootPath()
    {

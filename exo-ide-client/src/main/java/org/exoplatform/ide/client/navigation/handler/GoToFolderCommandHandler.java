@@ -74,7 +74,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      entryPoint = event.getEntryPoint().getHref();
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

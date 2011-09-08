@@ -235,7 +235,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
    @Override
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      entryPoint = event.getEntryPoint().getHref();
    }
 
 }

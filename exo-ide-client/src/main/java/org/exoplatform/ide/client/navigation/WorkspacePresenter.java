@@ -547,7 +547,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
       try
       {
-         new VirtualFileSystem(event.getEntryPoint()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+         new VirtualFileSystem(event.getEntryPoint().getHref()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
 

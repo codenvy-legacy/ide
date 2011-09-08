@@ -99,7 +99,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
 
    public void onEntryPointChanged(EntryPointChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      entryPoint = event.getEntryPoint().getHref();
       updateEnabling();
    }
 

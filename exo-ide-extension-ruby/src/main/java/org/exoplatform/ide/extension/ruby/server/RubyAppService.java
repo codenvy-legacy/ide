@@ -52,7 +52,7 @@ public class RubyAppService
    public Response createApp(@QueryParam("workdir") FSLocation baseDir, @QueryParam("name") String name,
       @Context UriInfo uriInfo)
    {
-      File dir = new File(baseDir.getLocalPath(uriInfo));
+      File dir = new File(baseDir.getLocalPath());
       try
       {
          if (dir.exists())

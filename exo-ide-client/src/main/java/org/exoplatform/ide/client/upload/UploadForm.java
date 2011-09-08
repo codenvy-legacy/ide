@@ -54,6 +54,8 @@ import java.util.List;
  * @version $Id: Dec 10, 2010 $
  *
  */
+//TODO: avoid use deprecated classes
+@SuppressWarnings("deprecation")
 public class UploadForm extends IDEDialogWindow implements UploadPresenter.UploadDisplay
 {
 

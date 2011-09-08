@@ -143,6 +143,10 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+   </component>
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
