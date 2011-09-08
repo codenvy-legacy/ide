@@ -21,12 +21,8 @@
 -->
 <web-app>
    <display-name>IDE</display-name>
-   <listener>
-      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
-      </listener-class>
-   </listener>
-
-  <context-param>
+   
+   <context-param>
    <param-name>guice-modules</param-name>
    <param-value>
       org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeModule:
@@ -37,11 +33,34 @@
       org.exoplatform.ide.extension.gadget.server.shindig.ExoIdeGuiceModule
     </param-value>
    </context-param>
+   
+   <context-param>
+      <param-name>everrest.exoplatform.standalone.config</param-name>
+      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+   </context-param>
+   
+   <listener>
+      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
+   </listener>
+   <servlet>
+      <servlet-name>EverrestServlet</servlet-name>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
+   
+    <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
 
    <listener>
-      <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
-   </listener>
-   <filter>
+    <listener-class>org.apache.shindig.common.servlet.GuiceServletContextListener</listener-class>
+  </listener>
+
+    <filter>
     <filter-name>SetCurrentIdentityFilter</filter-name>
     <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
   </filter>
@@ -51,47 +70,51 @@
       <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
 
-   <filter>
+   <!-- filter>
       <filter-name>RestEncodingFilter</filter-name>
       <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
       <init-param>
          <param-name>REQUEST_ENCODING</param-name>
          <param-value>UTF-8</param-value>
       </init-param>
-   </filter>
-   
-    <filter>
+   </filter-->
+
+   <filter>
       <filter-name>MakeRequestHeaderFilter</filter-name>
       <filter-class>org.exoplatform.ide.extension.gadget.server.filter.MakeRequestHeaderFilter</filter-class>
-   </filter>  
+   </filter>
 
-   <filter-mapping>
-      <filter-name>RestEncodingFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
-
-   <filter-mapping>
+   <filter>
+      <filter-name>StandaloneAuthenticationFilter</filter-name>
+      <filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
+   </filter>
+   
+  <filter-mapping>
     <filter-name>SetCurrentIdentityFilter</filter-name>
     <url-pattern>/rest/*</url-pattern>
-  </filter-mapping> 
+  </filter-mapping>
+
+   <filter-mapping>
+      <filter-name>StandaloneAuthenticationFilter</filter-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </filter-mapping> 
 
    <filter-mapping>
       <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
-   
+
    <filter-mapping>
       <filter-name>MakeRequestHeaderFilter</filter-name>
       <url-pattern>/gadgets/makeRequest</url-pattern>
    </filter-mapping>
 
-
-   <servlet>
+   <!-- servlet>
       <servlet-name>RestServer</servlet-name>
       <description>eXo - Platform REST Server</description>
       <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
       <load-on-startup>4</load-on-startup>
-   </servlet>
+   </servlet-->
 
    <!-- Render a Gadget -->
    <servlet>
@@ -180,6 +203,18 @@
       <servlet-class>org.apache.shindig.social.sample.oauth.SampleOAuthServlet</servlet-class>
    </servlet>
 
+   <servlet>
+      <servlet-name>remoteLoggerServiceImpl</servlet-name>
+      <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>remoteLoggerServiceImpl</servlet-name>
+      <url-pattern>/IDE/gwt-log</url-pattern>
+   </servlet-mapping>
+
+
+
    <servlet-mapping>
       <servlet-name>js</servlet-name>
       <url-pattern>/gadgets/js/*</url-pattern>
@@ -240,7 +275,7 @@
       <url-pattern>/oauth/*</url-pattern>
    </servlet-mapping>
 
-   <servlet-mapping>
+   <!--servlet-mapping>
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/rest/*</url-pattern>
    </servlet-mapping>
@@ -248,15 +283,19 @@
    <servlet-mapping>
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
-   </servlet-mapping>
+   </servlet-mapping-->
+
+
+  <session-config>
+  <session-timeout>30</session-timeout>
+</session-config>
 
 
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>IDE</web-resource-name>
       <url-pattern>/rest/private/*</url-pattern>
-      <http-method>POST</http-method>
-      <http-method>GET</http-method>
+      <url-pattern>/Application.html</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>users</role-name>
@@ -264,7 +303,7 @@
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
-  </security-constraint>
+  </security-constraint> 
 
   <login-config>
     <auth-method>BASIC</auth-method>
@@ -275,5 +314,6 @@
     <description>the user role</description>
     <role-name>users</role-name>
   </security-role>
+
 
 </web-app>
