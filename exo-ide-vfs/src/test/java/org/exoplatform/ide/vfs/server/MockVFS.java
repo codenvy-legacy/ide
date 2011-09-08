@@ -215,7 +215,7 @@ public class MockVFS implements VirtualFileSystem
       try
       {
          VirtualFileSystemInfo info =
-            new VirtualFileSystemInfo(true, true, "ANONIM", "ANY", Collections.<String> emptyList(),
+            new VirtualFileSystemInfo("mock", true, true, "ANONIM", "ANY", Collections.<String> emptyList(),
                ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, createUrlTemplates(), new Folder());
          return info;
       }

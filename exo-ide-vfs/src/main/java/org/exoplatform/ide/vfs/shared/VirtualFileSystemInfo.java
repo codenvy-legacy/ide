@@ -207,6 +207,8 @@ public class VirtualFileSystemInfo
    private QueryCapability queryCapability;
 
    private Folder root;
+   
+   private final String id;
 
    /**
     * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
@@ -221,7 +223,7 @@ public class VirtualFileSystemInfo
     */
    private Map<String, Link> urlTemplates;
 
-   public VirtualFileSystemInfo(boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
+   public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
       String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
       QueryCapability queryCapability, Map<String, Link> urlTemplates, Folder root)
    {
@@ -234,12 +236,18 @@ public class VirtualFileSystemInfo
       this.queryCapability = queryCapability;
       this.urlTemplates = urlTemplates;
       this.root = root;
+      this.id = id;
    }
 
    public VirtualFileSystemInfo()
    {
-      this(false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
+      this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
          QueryCapability.NONE, null, null);
+   }
+   
+   public String getId()
+   {
+      return id;
    }
 
    public boolean isVersioningSupported()

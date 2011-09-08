@@ -70,7 +70,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       links.put(FolderModel.REL_CREATE_FILE, link);
 
       info =
-         new VirtualFileSystemInfo(true, true, "ANONIM", "ANY", Collections.EMPTY_LIST, ACLCapability.MANAGE,
+         new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", Collections.EMPTY_LIST, ACLCapability.MANAGE,
             QueryCapability.BOTHCOMBINED, links, new FolderModel());
 
       new VirtualFileSystem("/", info);

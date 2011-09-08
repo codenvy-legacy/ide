@@ -287,9 +287,8 @@ public abstract class JSONDeserializer<O>
                new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
                   (Map<String, Link>)links);
 
-            //System.out.println("ROOT folder "+rootFolder);
-
             return new VirtualFileSystemInfo(
+               STRING_DESERIALIZER.toObject(jsonObject.get("id")),
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")), //
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")), //
                STRING_DESERIALIZER.toObject(jsonObject.get("anonymousPrincipal")), //
