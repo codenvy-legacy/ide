@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.model.discovery;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Window;
-
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.ide.client.AbstractGwtTest;
 import org.exoplatform.ide.client.Const;
@@ -29,6 +26,9 @@ import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 import java.util.List;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -88,14 +88,13 @@ public class GwtTestDiscoveryService extends AbstractGwtTest
             assertEquals(2, entryPoints.size());
             for (EntryPoint entryPoint : entryPoints)
             {
-               assertEquals(Scheme.WEBDAV, entryPoint.getScheme());
                if (entryPoint.getHref().endsWith("production/"))
                {
-                  assertEquals(entryPoint1, entryPoint.getHref());
+                  assertEquals(entryPoint1, entryPoint);
                }
                else
                {
-                  assertEquals(entryPoint2, entryPoint.getHref());
+                  assertEquals(entryPoint2, entryPoint);
                }
             }
             finishTest();

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.discovery;
 
-import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,23 +26,65 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $
  */
 
-public class EntryPoint extends JavaScriptObject
+public class EntryPoint 
 {
-
-   protected EntryPoint()
+   private String href;
+   
+   private String workspace;
+   
+   /**
+    * 
+    */
+   public EntryPoint()
    {
    }
 
-   public final native String getScheme() /*-{
-        return this.scheme;
-     }-*/;
+   /**
+    * @param href
+    * @param workspace
+    */
+   public EntryPoint(String href, String workspace)
+   {
+      this.href = href;
+      this.workspace = workspace;
+   }
 
-   public final native String getHref() /*-{
-        return this.href;
-     }-*/;
+   
+   /**
+    * @return the href
+    */
+   public String getHref()
+   {
+      return href;
+   }
 
-   public static final native EntryPoint build(String json) /*-{
-        return eval('(' + json + ')');
-     }-*/;
+   /**
+    * @param href the href to set
+    */
+   public void setHref(String href)
+   {
+      this.href = href;
+   }
 
+   /**
+    * @return the workspace
+    */
+   public String getWorkspace()
+   {
+      return workspace;
+   }
+
+   /**
+    * @param workspace the workspace to set
+    */
+   public void setWorkspace(String workspace)
+   {
+      this.workspace = workspace;
+   }
+   
+   
+
+   
+
+   
 }

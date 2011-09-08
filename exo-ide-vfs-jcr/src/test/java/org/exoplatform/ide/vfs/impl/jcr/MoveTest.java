@@ -198,8 +198,13 @@ public class MoveTest extends JcrFileSystemTest
          .append("?") //
          .append("parentId=") //
          .append(moveTestDestinationNode.getPath()).toString();
+      
+      
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(201, response.getStatus());
+      
+      System.out.println("MoveTest.testMoveFolder()" + folderPath + " :: " + moveTestDestinationNode.getPath());
+      
       String expectedPath = moveTestDestinationNode.getPath() + "/" + folderNode.getName();
       String expectedLocation = SERVICE_URI + "item" + expectedPath;
       String location = response.getHttpHeaders().getFirst("Location").toString();

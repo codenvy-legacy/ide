@@ -32,6 +32,10 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,20 +71,19 @@ public class UploadServiceTest extends BaseTest
 
    private MultivaluedMap<String, String> headers;
 
-   
+
+   @Before
    public void setUp() throws Exception
    {
       super.setUp();
-
       credentials = new CredentialsImpl("root", "exo".toCharArray());
-
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       session = (SessionImpl)repository.login(credentials, WORKSPACE);
 
       SessionProviderService sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      assertNotNull(sessionProviderService);
+      Assert.assertNotNull(sessionProviderService);
 
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
@@ -91,7 +94,7 @@ public class UploadServiceTest extends BaseTest
    }
 
    
-   public void testUploadFile() throws Exception
+   public void uploadFile() throws Exception
    {
       session.save();
 
@@ -116,13 +119,13 @@ public class UploadServiceTest extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(201, response.getStatus());
+      Assert.assertEquals(201, response.getStatus());
 
       session.refresh(false);
    }
 
-   
-   public void testUploadFileCantFindFileError() throws Exception
+   @Test
+   public void uploadFileCantFindFileError() throws Exception
    {
       session.save();
 
@@ -145,17 +148,17 @@ public class UploadServiceTest extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(500, response.getStatus());
+      Assert.assertEquals(500, response.getStatus());
 
-      assertTrue(response.getEntity() instanceof String);
+      Assert.assertTrue(response.getEntity() instanceof String);
 
-      assertEquals("<error>Can't find input file</error>", (String)response.getEntity());
+      Assert.assertEquals("<error>Can't find input file</error>", (String)response.getEntity());
 
       session.refresh(false);
    }
 
-   
-   public void testUploadFileIncorrectPathError() throws Exception
+   @Test
+   public void uploadFileIncorrectPathError() throws Exception
    {
       session.save();
 
@@ -180,15 +183,15 @@ public class UploadServiceTest extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(500, response.getStatus());
-      assertTrue(response.getEntity() instanceof String);
-      assertEquals("<error>Invalid path, where to upload file</error>", (String)response.getEntity());
+      Assert.assertEquals(500, response.getStatus());
+      Assert.assertTrue(response.getEntity() instanceof String);
+      Assert.assertEquals("<error>Invalid path, where to upload file</error>", (String)response.getEntity());
 
       session.refresh(false);
    }
 
-   
-   public void testUploadFileInternalError() throws Exception
+   @Test
+   public void uploadFileInternalError() throws Exception
    {
       session.save();
 
@@ -217,7 +220,7 @@ public class UploadServiceTest extends BaseTest
       ContainerResponse response =
          launcher.service("POST", "/ide/upload", "http://localhost", headers, data, null, ctx);
 
-      assertEquals(500, response.getStatus());
+      Assert.assertEquals(500, response.getStatus());
 
       session.refresh(false);
    }
@@ -236,7 +239,7 @@ public class UploadServiceTest extends BaseTest
       return source;
    }
 
-   
+   @After
    public void tearDown() throws Exception
    {
 

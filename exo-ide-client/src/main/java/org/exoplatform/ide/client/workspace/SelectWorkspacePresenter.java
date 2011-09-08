@@ -110,7 +110,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       void setSelectedItem(EntryPoint item);
 
    }
-   
+
    private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
       .workspaceCloseAllFilesDialogTitle();
 
@@ -161,7 +161,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    public SelectWorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       IDE.getInstance().addControl(new SelectWorkspaceControl(), DockTarget.NONE, false);
 
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
@@ -293,13 +293,10 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       for (int i = 0; i < workspaceList.size(); i++)
       {
          EntryPoint entryPoint = workspaceList.get(i);
-         if (entryPoint.getScheme().equals(Scheme.WEBDAV))
+         workspaces.add(entryPoint);
+         if (entryPoint.getHref().equals(workingWorkspace))
          {
-            workspaces.add(entryPoint);
-            if (entryPoint.getHref().equals(workingWorkspace))
-            {
-               selectedWorkspace = entryPoint;
-            }
+            selectedWorkspace = entryPoint;
          }
       }
 
@@ -361,26 +358,25 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    {
       if (openedFiles.size() != 0)
       {
-         Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT,
-            new BooleanValueReceivedHandler()
+         Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT, new BooleanValueReceivedHandler()
+         {
+            public void booleanValueReceived(Boolean value)
             {
-               public void booleanValueReceived(Boolean value)
+               if (value == null)
                {
-                  if (value == null)
-                  {
-                     return;
-                  }
-                  if (value)
-                  {
-                     closeNextFile();
-                  }
-                  else
-                  {
-                     IDE.getInstance().closeView(Display.ID);
-                  }
+                  return;
                }
+               if (value)
+               {
+                  closeNextFile();
+               }
+               else
+               {
+                  IDE.getInstance().closeView(Display.ID);
+               }
+            }
 
-            });
+         });
          return;
       }
       else
@@ -429,16 +425,16 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
                   else
                   {
                      //TODO
-//                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
-//                        new FileContentSaveCallback()
-//                        {
-//                           @Override
-//                           protected void onSuccess(FileData result)
-//                           {
-//                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
-//                              closeNextFile();
-//                           }
-//                        });
+                     //                     VirtualFileSystem.getInstance().saveContent(file, lockTokens.get(file.getHref()),
+                     //                        new FileContentSaveCallback()
+                     //                        {
+                     //                           @Override
+                     //                           protected void onSuccess(FileData result)
+                     //                           {
+                     //                              eventBus.fireEvent(new EditorCloseFileEvent(result.getFile(), true));
+                     //                              closeNextFile();
+                     //                           }
+                     //                        });
                   }
                }
                else

@@ -24,23 +24,16 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
+import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
-import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -69,7 +62,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -84,56 +76,27 @@ public class IDEConfigurationService
 {
 
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
-   
-   private static final String EXO_APPLICATIONS = "exo:applications";
-
-   private static final String APP_NAME = "IDE";
-
-   private static final String CONFIGURATION = "configuration";
 
    private RepositoryService repositoryService;
 
    private String entryPoint;
 
    private boolean discoverable;
-   
+
    private String workspace;
-   
+
    private String config = "/ide-home/users/";
-
-   // To disable cache control.
-   private static final CacheControl noCache;
-
-   static
-   {
-      noCache = new CacheControl();
-      noCache.setNoCache(true);
-      noCache.setNoStore(true);
-   }
-
-   /**
-    * See {@link RegistryService}.
-    */
-   private RegistryService registryService;
-
-   /**
-    * See {@link ThreadLocalSessionProviderService}.
-    */
-   private ThreadLocalSessionProviderService sessionProviderService;
 
    /**
     * @param repositoryService
     * @param entryPoint
     * @param discoverable
     */
-   public IDEConfigurationService(RepositoryService repositoryService, RegistryService registryService,
-      ThreadLocalSessionProviderService sessionProviderService, String entryPoint, boolean discoverable,
+   public IDEConfigurationService(RepositoryService repositoryService, String entryPoint, boolean discoverable,
       String workspace, String config)
    {
       super();
       this.repositoryService = repositoryService;
-      this.registryService = registryService;
-      this.sessionProviderService = sessionProviderService;
       this.entryPoint = entryPoint;
       this.discoverable = discoverable;
       this.workspace = workspace;
@@ -156,14 +119,6 @@ public class IDEConfigurationService
       try
       {
          Map<String, Object> result = new HashMap<String, Object>();
-         Document appSettings = getRegistryEntryDocument(EXO_APPLICATIONS + "/" + APP_NAME + "/" + CONFIGURATION);
-         if (appSettings != null)
-         {
-            NodeList configurations = appSettings.getElementsByTagName(CONFIGURATION);
-            Node item = configurations.item(0);
-            result.put(CONFIGURATION, item.getFirstChild().getNodeValue());
-         }
-
          ConversationState curentState = ConversationState.getCurrent();
          if (curentState != null)
          {
@@ -175,16 +130,9 @@ public class IDEConfigurationService
             final Map<String, Object> userSettings = getUserSettings();
             result.put("userSettings", userSettings);
          }
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         if (repository == null)
-            repository = repositoryService.getDefaultRepository();
-         String href =
-            uriInfo
-               .getBaseUriBuilder()
-               .segment(RepositoryDiscoveryService.VFS_CONTEXT, entryPoint, "/").build().toString();
+         String href = uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).path(entryPoint).build().toString();
          result.put("defaultEntrypoint", href);
          result.put("discoverable", discoverable);
-
          return result;
       }
       catch (Exception e)
@@ -218,18 +166,18 @@ public class IDEConfigurationService
    public void setConfiguration(String body) throws IOException
    {
       writeSettings(body);
-      
+
    }
-   
+
    //------Implementation---------
-   
+
    /**
     * Get user setting as Map.
     * @return map of user settings
     * @throws JsonException
     * @throws IOException
     */
-   public Map<String, Object> getUserSettings() throws JsonException, IOException 
+   public Map<String, Object> getUserSettings() throws JsonException, IOException
    {
       String userConfiguration = readSettings();
       final Map<String, Object> userSettings = new HashMap<String, Object>();
@@ -270,37 +218,7 @@ public class IDEConfigurationService
       }
       return userSettings;
    }
-   
-   private Document getRegistryEntryDocument(String path)
-   {
-      SessionProvider sessionProvider = sessionProviderService.getSessionProvider(null);
-      try
-      {
-         RegistryEntry entry;
-         entry = registryService.getEntry(sessionProvider, normalizePath(path));
-         return entry.getDocument();
-      }
-      catch (PathNotFoundException e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         return null;
-      }
-      catch (Exception e)
-      {
-         if (LOG.isDebugEnabled())
-            e.printStackTrace();
-         return null;
-      }
-   }
 
-   private static String normalizePath(String path)
-   {
-      if (path.endsWith("/"))
-         return path.substring(0, path.length() - 1);
-      return path;
-   }
-   
    protected void writeSettings(String data) throws IOException
    {
       Session session = null;
@@ -358,7 +276,7 @@ public class IDEConfigurationService
             session.logout();
       }
    }
-   
+
    private void checkConfigNode(ManageableRepository repository) throws RepositoryException
    {
       String _workspace = workspace;
@@ -382,7 +300,7 @@ public class IDEConfigurationService
             sys.logout();
       }
    }
-   
+
    protected String readSettings() throws IOException
    {
       Session session = null;
@@ -409,7 +327,7 @@ public class IDEConfigurationService
          }
 
          Property property = ((javax.jcr.Node)item).getNode("jcr:content").getProperty("jcr:data");
-         
+
          InputStream input = property.getStream();
          if (input == null)
          {

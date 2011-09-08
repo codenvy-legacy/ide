@@ -30,7 +30,9 @@ import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +66,7 @@ public class RestConversationStateTest extends BaseTest
       ConversationState.setCurrent(s);
    }
    
-   
+   @Test
    public void testWhoami() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
@@ -75,13 +77,13 @@ public class RestConversationStateTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
-      assertTrue(cres.getEntity() instanceof IdeUser);
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
+      Assert.assertTrue(cres.getEntity() instanceof IdeUser);
       IdeUser user = (IdeUser)cres.getEntity();
-      assertEquals("root", user.getUserId());
-      assertTrue(user.getRoles().contains("users"));
-      assertTrue(user.getRoles().contains("administrators"));
-      assertEquals(2, user.getRoles().size());
+      Assert.assertEquals("root", user.getUserId());
+      Assert.assertTrue(user.getRoles().contains("users"));
+      Assert.assertTrue(user.getRoles().contains("administrators"));
+      Assert.assertEquals(2, user.getRoles().size());
    }
 }

@@ -29,8 +29,6 @@ import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.registry.RegistryService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,8 +49,7 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(RepositoryService repositoryService, RegistryService registryService,
-      ThreadLocalSessionProviderService sessionProviderService, InitParams initParams)
+   public IDEServiceApplication(RepositoryService repositoryService, InitParams initParams)
    {
       String entryPoint = Utils.readValueParam(initParams, "defaultEntryPoint");
       boolean discoverable = Boolean.parseBoolean(Utils.readValueParam(initParams, "discoverable"));
@@ -60,11 +57,11 @@ public class IDEServiceApplication extends Application
       String config = Utils.readValueParam(initParams, "config");
       String templateConfig = Utils.readValueParam(initParams, "template-config");
 
-      objects.add(new RepositoryDiscoveryService(repositoryService, sessionProviderService, entryPoint, discoverable));
+      //objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
+      objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
 
-      objects.add(new IDEConfigurationService(repositoryService, registryService, sessionProviderService, entryPoint,
-         discoverable, workspace, config));
+      objects.add(new IDEConfigurationService(repositoryService, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(repositoryService, workspace, templateConfig));
 
       classes.add(LoopbackContentService.class);

@@ -36,6 +36,9 @@ import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -61,6 +64,7 @@ public class ConfigurationServiceTest extends BaseTest
 
    private SecurityContext securityContext;
 
+   @Before
    public void setUp() throws Exception
    {
       super.setUp();
@@ -84,17 +88,11 @@ public class ConfigurationServiceTest extends BaseTest
       id.setRoles(roles);
       ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
-
-//      RegistryService regService = (RegistryService)container.getComponentInstanceOfType(RegistryService.class);
-//      RegistryEntry entry =
-//         RegistryEntry.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.xml"));
-//      regService.updateEntry(sessionProvider, RegistryService.EXO_USERS + "/root/IDE", entry);
-
    }
 
    
-   
-   public void testAppConfiguration() throws Exception
+   @Test
+   public void appConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
@@ -104,19 +102,19 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
+      Assert.assertEquals(200, cres.getStatus());
 
-      assertNotNull(cres.getEntity());
+      Assert.assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertTrue(entity.containsKey("defaultEntrypoint"));
-      assertTrue(entity.containsKey("user"));
-      assertTrue(entity.containsKey("discoverable"));
-      assertTrue(entity.containsKey("userSettings"));
+      Assert.assertTrue(entity.containsKey("defaultEntrypoint"));
+      Assert.assertTrue(entity.containsKey("user"));
+      Assert.assertTrue(entity.containsKey("discoverable"));
+      Assert.assertTrue(entity.containsKey("userSettings"));
    }
 
    
-   
-   public void testWhoami() throws Exception
+   @Test
+   public void whoami() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
@@ -126,20 +124,21 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
+      @SuppressWarnings("unchecked")
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertTrue(entity.containsKey("user"));
-      assertTrue(entity.get("user") instanceof IdeUser);
+      Assert.assertTrue(entity.containsKey("user"));
+      Assert.assertTrue(entity.get("user") instanceof IdeUser);
       IdeUser user = (IdeUser)entity.get("user");
-      assertEquals("root", user.getUserId());
-      assertTrue(user.getRoles().contains("users"));
-      assertTrue(user.getRoles().contains("administrators"));
-      assertEquals(2, user.getRoles().size());
+      Assert.assertEquals("root", user.getUserId());
+      Assert.assertTrue(user.getRoles().contains("users"));
+      Assert.assertTrue(user.getRoles().contains("administrators"));
+      Assert.assertEquals(2, user.getRoles().size());
    }
 
-   
-   public void testEntryPoint() throws Exception
+   @Test
+   public void entryPoint() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
@@ -149,16 +148,17 @@ public class ConfigurationServiceTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
+      Assert.assertEquals(200, cres.getStatus());
 
-      assertNotNull(cres.getEntity());
+      Assert.assertNotNull(cres.getEntity());
+      @SuppressWarnings("unchecked")
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertTrue(entity.containsKey("defaultEntrypoint"));
-      assertTrue(entity.containsKey("discoverable"));
+      Assert.assertTrue(entity.containsKey("defaultEntrypoint"));
+      Assert.assertTrue(entity.containsKey("discoverable"));
    }
    
-   
-   public void testSetConfiguration() throws Exception
+   @Test
+   public void setConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
@@ -169,11 +169,11 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(204, cres.getStatus());
+      Assert.assertEquals(204, cres.getStatus());
    }
 
    
-   public void testGetConfiguration() throws Exception
+   public void getConfiguration() throws Exception
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
@@ -182,13 +182,13 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres = launcher.service("GET", "/ide/configuration", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
+      Assert.assertEquals(200, cres.getStatus());
 
-      assertNotNull(cres.getEntity());
+      Assert.assertNotNull(cres.getEntity());
    }
    
-   
-   public void testUserConfiguration() throws Exception
+   @Test
+   public void userConfiguration() throws Exception
    {
       
       Set<String> userRoles = new HashSet<String>();
@@ -201,20 +201,20 @@ public class ConfigurationServiceTest extends BaseTest
       InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("userSettings.js");
       ContainerResponse cres =
          launcher.service("PUT", "/ide/configuration", "", headers, IOUtil.getStreamContentAsBytes(stream), null, ctx);
-      assertEquals(204, cres.getStatus());
+      Assert.assertEquals(204, cres.getStatus());
       
       cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
       @SuppressWarnings("unchecked")
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertNotNull(entity.get("userSettings"));
+      Assert.assertNotNull(entity.get("userSettings"));
    }
    
    @SuppressWarnings("unchecked")
-   
-   public void testGetExistingUserSettings() throws Exception
+   @Test
+   public void getExistingUserSettings() throws Exception
    {
       
       Set<String> userRoles = new HashSet<String>();
@@ -226,14 +226,14 @@ public class ConfigurationServiceTest extends BaseTest
       
       ContainerResponse cres =
          launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
       Map<String, Object> entity = (Map<String, Object>)cres.getEntity();
-      assertNotNull(entity.get("userSettings"));
+      Assert.assertNotNull(entity.get("userSettings"));
       Map<String, Object> userSettingsMap = (Map<String, Object>)entity.get("userSettings");
-      assertNotNull(userSettingsMap.get("hotkeys"));
-      assertNotNull(userSettingsMap.get("toolbar-items"));
-      assertNotNull(userSettingsMap.get("default-editors"));
+      Assert.assertNotNull(userSettingsMap.get("hotkeys"));
+      Assert.assertNotNull(userSettingsMap.get("toolbar-items"));
+      Assert.assertNotNull(userSettingsMap.get("default-editors"));
    }
 
 }

@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONValue;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 
 import java.util.List;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 /**
  * Created by The eXo Platform SAS .
@@ -48,13 +49,16 @@ public class EntryPointListUnmarshaller implements Unmarshallable
 
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      JavaScriptObject json = build(response.getText());
-      JSONArray jsonArray = new JSONArray(json);
-      
+      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
       for (int i = 0; i < jsonArray.size(); i++)
       {
-         JSONValue value = jsonArray.get(i);
-         entryPointList.add(EntryPoint.build(value.toString()));
+         JSONObject obj = jsonArray.get(i).isObject();
+         EntryPoint entryPoint = new EntryPoint();
+         if (obj.containsKey("href"))
+           entryPoint.setHref(obj.get("href").isString().stringValue());    
+         if (obj.containsKey("workspace"))
+           entryPoint.setHref(obj.get("workspace").isString().stringValue()); 
+         
       }
    }
    

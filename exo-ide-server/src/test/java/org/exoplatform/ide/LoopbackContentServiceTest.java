@@ -32,7 +32,10 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -72,14 +75,12 @@ public class LoopbackContentServiceTest extends BaseTest
    {
       super.setUp();
       credentials = new CredentialsImpl("root", "exo".toCharArray());
-
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      
       SessionProviderService sessionProviderService =
          (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      assertNotNull(sessionProviderService);
+      Assert.assertNotNull(sessionProviderService);
       
       sessionProviderService
          .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
@@ -89,13 +90,11 @@ public class LoopbackContentServiceTest extends BaseTest
       
    }
    
-   
-   public void testUploadFile() throws Exception
+   @Test
+   public void uploadFile() throws Exception
    {
       session.save();
-
       EnvironmentContext ctx = new EnvironmentContext();
-
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
       
@@ -125,18 +124,14 @@ public class LoopbackContentServiceTest extends BaseTest
       ContainerResponse response = launcher.service("POST", "/ide/loopbackcontent", "http://localhost", headers,
             data, null, ctx);
       
-      assertEquals(200, response.getStatus());
-      assertTrue(response.getEntity() instanceof String);
-      
+      Assert.assertEquals(200, response.getStatus());
+      Assert.assertTrue(response.getEntity() instanceof String);
       String text = (String)response.getEntity();
-      
-      assertEquals("<filecontent>test+file+content%0A</filecontent>", text);
-      
-      
+      Assert.assertEquals("<filecontent>test+file+content%0A</filecontent>", text);
       session.refresh(false);
    }
    
-   
+   @After
    public void tearDown() throws Exception
    {
 

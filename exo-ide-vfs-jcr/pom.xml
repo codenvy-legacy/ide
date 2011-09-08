@@ -6,16 +6,10 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M4-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-vfs-jcr</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: vfs :: JCR</name>
    <dependencies>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
-         <version>1.2.0-M4-SNAPSHOT</version>
-      </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
@@ -54,6 +48,18 @@
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.jcr</groupId>
+         <artifactId>jcr</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.security.core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
    </dependencies>
 </project>

@@ -21,11 +21,11 @@ package org.exoplatform.ide;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.exoplatform.ide.discovery.EntryPoint;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -37,41 +37,33 @@ import javax.ws.rs.core.MultivaluedMap;
 */
 public class RepositoryDiscoveryServiceTest extends BaseTest
 {
-   private RepositoryService repositoryService;
-   
-   private String repoName;
-   
-   
+
+   @Before
    public void setUp() throws Exception
    {
       super.setUp();
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-      ManageableRepository repository = repositoryService.getDefaultRepository();
-      repoName = repository.getConfiguration().getName();
-      repositoryService.setCurrentRepositoryName(repoName);
-      
    }
    
-   
-   
-   public void testDefaultEntryPoint() throws Exception
+   @Test
+   public void getDefaultEntryPoint() throws Exception
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       
       ContainerResponse cres =
          launcher.service("GET", "/ide/discovery/defaultEntrypoint", "", headers, null, null, null);
       
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
-      assertTrue(cres.getEntity() instanceof String);
-      String defaultEntryPoint = (String)cres.getEntity();
-      System.out.println("TestRepositoryDiscoveryService.testDefaultEntryPoint()" + defaultEntryPoint);
-      assertEquals(RepositoryDiscoveryService.getWebDavConetxt() + "/" + repoName + "/dev-monit/", defaultEntryPoint);
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
+      Assert.assertTrue(cres.getEntity() instanceof HashMap<?, ?>);
+      @SuppressWarnings("unchecked")
+      HashMap<String, String> map = (HashMap<String, String>)cres.getEntity();
+      Assert.assertTrue(map.get("workspace").equals("dev-monit"));
+      Assert.assertTrue(map.get("href").equals("vfs/jcr/dev-monit"));
    }
    
    
-   
-   public void testEntryPoints() throws Exception
+   @Test
+   public void getEntryPoints() throws Exception
    {
       EnvironmentContext ctx = new EnvironmentContext();
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -79,14 +71,18 @@ public class RepositoryDiscoveryServiceTest extends BaseTest
       ContainerResponse cres =
          launcher.service("GET", "/ide/discovery/entrypoints", "", headers, null, null, ctx);
       
-      assertEquals(200, cres.getStatus());
-      assertNotNull(cres.getEntity());
-      assertTrue(cres.getEntity() instanceof List<?>);
+      Assert.assertEquals(200, cres.getStatus());
+      Assert.assertNotNull(cres.getEntity());
+      Assert.assertTrue(cres.getEntity() instanceof List<?>);
       List<?>entryPoints = (List<?>)cres.getEntity();
-      assertEquals(2, entryPoints.size());
+      Assert.assertEquals(2, entryPoints.size());
       for (Object obj : entryPoints)
       {
-         assertTrue(obj instanceof EntryPoint);
+         Assert.assertTrue(obj instanceof HashMap<?, ?>);
+         @SuppressWarnings("unchecked")
+         HashMap<String, String> map = (HashMap<String, String>)obj;
+         Assert.assertTrue(map.get("workspace").equals("dev-monit") || map.get("workspace").equals("ws2"));
+         Assert.assertTrue(map.get("href").equals("vfs/jcr/dev-monit") || map.get("href").equals("vfs/jcr/ws2"));
       }
    }
 }

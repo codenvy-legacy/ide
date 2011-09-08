@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide;
 
-import org.everrest.exoplatform.servlet.EverrestExoContextListener;
 import org.exoplatform.ide.zip.ZipUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -26,6 +25,9 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.SessionImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,38 +71,37 @@ public class ZipUtilsTest extends BaseTest
    private CredentialsImpl credentials;
 
    private RepositoryService repositoryService;
-   
+
+   @Before
    public void setUp() throws Exception
    {
       super.setUp();
-
       credentials = new CredentialsImpl("root", "exo".toCharArray());
-
       repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       repository = (RepositoryImpl)repositoryService.getDefaultRepository();
       session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      assertNotNull(session);
+      Assert.assertNotNull(session);
       
    }
    
-   
-   public void testUnzippingToRootFolder() throws Exception
+   @Test
+   public void unzippingToRootFolder() throws Exception
    {
       Node rootNode = session.getRootNode();
       
       InputStream inputStream = new FileInputStream("src/test/resources/sample.zip");
       
       ZipUtils.unzip(session, inputStream, null);
-      assertTrue(rootNode.hasNode("sample.txt"));
-      assertTrue(rootNode.hasNode("test"));
-      assertTrue(rootNode.hasNode("test/exo"));
-      assertTrue(rootNode.hasNode("test/mine.xml"));
-      assertTrue(rootNode.hasNode("settings.xml"));
-      assertEquals("nt:folder", rootNode.getNode("test").getPrimaryNodeType().getName());
-      assertEquals("nt:folder", rootNode.getNode("test/exo").getPrimaryNodeType().getName());
-      assertEquals("nt:file", rootNode.getNode("sample.txt").getPrimaryNodeType().getName());
-      assertEquals("nt:file", rootNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
-      assertEquals("nt:file", rootNode.getNode("settings.xml").getPrimaryNodeType().getName());
+      Assert.assertTrue(rootNode.hasNode("sample.txt"));
+      Assert.assertTrue(rootNode.hasNode("test"));
+      Assert.assertTrue(rootNode.hasNode("test/exo"));
+      Assert.assertTrue(rootNode.hasNode("test/mine.xml"));
+      Assert.assertTrue(rootNode.hasNode("settings.xml"));
+      Assert.assertEquals("nt:folder", rootNode.getNode("test").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:folder", rootNode.getNode("test/exo").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", rootNode.getNode("sample.txt").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", rootNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", rootNode.getNode("settings.xml").getPrimaryNodeType().getName());
    }
    
    
@@ -116,16 +117,16 @@ public class ZipUtilsTest extends BaseTest
       InputStream inputStream = new FileInputStream("src/test/resources/sample.zip");
       
       ZipUtils.unzip(session, inputStream, folderNodeName);
-      assertTrue(folderNode.hasNode("sample.txt"));
-      assertTrue(folderNode.hasNode("test"));
-      assertTrue(folderNode.hasNode("test/exo"));
-      assertTrue(folderNode.hasNode("test/mine.xml"));
-      assertTrue(folderNode.hasNode("settings.xml"));
-      assertEquals("nt:folder", folderNode.getNode("test").getPrimaryNodeType().getName());
-      assertEquals("nt:folder", folderNode.getNode("test/exo").getPrimaryNodeType().getName());
-      assertEquals("nt:file", folderNode.getNode("sample.txt").getPrimaryNodeType().getName());
-      assertEquals("nt:file", folderNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
-      assertEquals("nt:file", folderNode.getNode("settings.xml").getPrimaryNodeType().getName());
+      Assert.assertTrue(folderNode.hasNode("sample.txt"));
+      Assert.assertTrue(folderNode.hasNode("test"));
+      Assert.assertTrue(folderNode.hasNode("test/exo"));
+      Assert.assertTrue(folderNode.hasNode("test/mine.xml"));
+      Assert.assertTrue(folderNode.hasNode("settings.xml"));
+      Assert.assertEquals("nt:folder", folderNode.getNode("test").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:folder", folderNode.getNode("test/exo").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", folderNode.getNode("sample.txt").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", folderNode.getNode("test/mine.xml").getPrimaryNodeType().getName());
+      Assert.assertEquals("nt:file", folderNode.getNode("settings.xml").getPrimaryNodeType().getName());
    }
    
    
@@ -140,13 +141,13 @@ public class ZipUtilsTest extends BaseTest
       }
       catch (FileNotFoundException e)
       {
-         fail("Couldn't find input file");
+         Assert.fail("Couldn't find input file");
       }
       
       try
       {
          ZipUtils.unzip(session, inputStream, null);
-         fail("Must throws IllegalArgumentException");
+         Assert.fail("Must throws IllegalArgumentException");
       }
       catch (IllegalArgumentException e) 
       {
@@ -185,7 +186,7 @@ public class ZipUtilsTest extends BaseTest
 
       zipentry = zin.getNextEntry();
       if (zipentry == null)
-         fail("Zip archive is empty");
+         Assert.fail("Zip archive is empty");
       
       List<String> items = new ArrayList<String>();
       
@@ -195,12 +196,12 @@ public class ZipUtilsTest extends BaseTest
          if (zipentry.isDirectory())
          {
             items.add(entryName);
-            assertEquals("test/", entryName);
+            Assert.assertEquals("test/", entryName);
          }
          else
          {
             items.add(entryName);
-            assertEquals("test/file.txt", entryName);
+            Assert.assertEquals("test/file.txt", entryName);
             
             int bytesRead;
             ByteArrayOutputStream outS = new ByteArrayOutputStream();
@@ -212,7 +213,7 @@ public class ZipUtilsTest extends BaseTest
             String data = outS.toString();
             outS.close();
 
-            assertEquals("sample data", data);
+            Assert.assertEquals("sample data", data);
          }
          zin.closeEntry();
          zipentry = zin.getNextEntry();
@@ -220,7 +221,7 @@ public class ZipUtilsTest extends BaseTest
       }//while
       zin.close();
       
-      assertEquals(2, items.size());
+      Assert.assertEquals(2, items.size());
    }
    
    

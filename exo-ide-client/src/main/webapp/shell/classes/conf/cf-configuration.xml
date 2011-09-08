@@ -244,7 +244,7 @@
                <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
                <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
-               <property name="exoide" value="http://exoplatform.org/ide/1.1.x/" />
+               <property name="exoide" value="http://exoplatform.org/ide/1.2.x/" />
                <property name="vfs" value="http://exoplatform.org/vfs"/>
             </properties-param>
          </init-params>

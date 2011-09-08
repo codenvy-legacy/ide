@@ -22,21 +22,18 @@ import org.everrest.core.RequestHandler;
 import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
 
-import junit.framework.TestCase;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public abstract class BaseTest  extends TestCase
+public abstract class BaseTest 
 {
 
    protected StandaloneContainer container;
 
    public ResourceLauncher launcher;
 
-   
    public void setUp() throws Exception
    {
       String containerConf = BaseTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
