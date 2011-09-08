@@ -707,5 +707,8 @@
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
       
+      <module>exo-ide-bare-packaging-application-war</module>
+      <module>exo-ide-bare-packaging-standalone-tomcat</module>
+      
    </modules>
 </project>
