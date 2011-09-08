@@ -21,8 +21,8 @@ package org.exoplatform.ide.git.client.control;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  *
  */
 public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   EntryPointChangedHandler
+   VfsChangedHandler
 {
    /**
     * Current workspace's href.
@@ -76,17 +76,17 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
       setVisible(true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint();
+      this.workspace = event.getEntryPoint().getHref();
       if (event.getEntryPoint() != null)
       {
          setVisible(true);

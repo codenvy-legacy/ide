@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -46,7 +46,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 @RolesAllowed({"administrators", "developers"})
 public class RenameItemCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ItemDeletedHandler,
-   ViewVisibilityChangedHandler, EntryPointChangedHandler
+   ViewVisibilityChangedHandler, VfsChangedHandler
 {
 
    private static final String ID = "File/Rename...";
@@ -79,7 +79,7 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ItemDeletedEvent.TYPE, this);
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -124,7 +124,7 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
       }
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
       if (event.getEntryPoint() != null)

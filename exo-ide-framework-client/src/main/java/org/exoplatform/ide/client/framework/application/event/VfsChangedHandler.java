@@ -26,9 +26,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: $
  */
 
-public interface EntryPointChangedHandler extends EventHandler
+public interface VfsChangedHandler extends EventHandler
 {
    
-   void onEntryPointChanged(EntryPointChangedEvent event);
+   void onVfsChanged(VfsChangedEvent event);
 
 }

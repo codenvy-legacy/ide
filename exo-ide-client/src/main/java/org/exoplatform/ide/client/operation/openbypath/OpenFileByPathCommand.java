@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 import com.google.gwt.event.shared.HandlerManager;
@@ -34,7 +34,7 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
 */
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileByPathCommand extends SimpleControl implements IDEControl, EntryPointChangedHandler
+public class OpenFileByPathCommand extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    private final static String ID = "File/Open File By Path...";
@@ -54,10 +54,10 @@ public class OpenFileByPathCommand extends SimpleControl implements IDEControl, 
 
    public void initialize(HandlerManager eventBus)
    {
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }   
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getEntryPoint() != null)
       {

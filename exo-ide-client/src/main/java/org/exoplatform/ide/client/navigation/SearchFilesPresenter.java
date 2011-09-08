@@ -28,8 +28,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -54,7 +54,7 @@ import java.util.List;
  *
  */
 public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler,
-   EntryPointChangedHandler
+   VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -91,7 +91,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       this.entryPoint = entryPoint;
 
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
       eventBus.addHandler(SearchFilesEvent.TYPE, this);
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -233,7 +233,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
    }
 
    @Override
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       entryPoint = event.getEntryPoint().getHref();
    }

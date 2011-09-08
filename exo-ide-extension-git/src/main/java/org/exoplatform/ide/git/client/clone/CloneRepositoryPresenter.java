@@ -29,8 +29,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -52,7 +52,7 @@ import java.util.List;
  * @version $Id:  Mar 22, 2011 4:31:12 PM anya $
  *
  */
-public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepositoryHandler, EntryPointChangedHandler
+public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepositoryHandler, VfsChangedHandler
 {
    public interface Display extends IsView
    {
@@ -126,7 +126,7 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
 
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CloneRepositoryEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -234,12 +234,12 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler#onEntryPointChanged(org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent)
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint();
+      this.workspace = event.getEntryPoint().getHref();
    }
 
 }

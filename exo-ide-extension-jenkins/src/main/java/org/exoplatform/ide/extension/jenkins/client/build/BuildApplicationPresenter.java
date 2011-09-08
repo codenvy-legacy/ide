@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -65,7 +65,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, ViewClosedHandler, EntryPointChangedHandler
+   UserInfoReceivedHandler, ViewClosedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -114,7 +114,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(EntryPointChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -534,9 +534,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    @Override
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint();
+      entryPoint = event.getEntryPoint().getHref();
    }
 
 }

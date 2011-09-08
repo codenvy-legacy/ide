@@ -25,8 +25,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -55,7 +55,7 @@ import com.google.gwt.event.shared.HandlerManager;
 @RolesAllowed({"administrators", "developers"})
 public class SaveAllFilesCommand extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
    FileContentSavedHandler, EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   EntryPointChangedHandler, FileSavedHandler
+   VfsChangedHandler, FileSavedHandler
 {
 
    public static final String ID = "File/Save All";
@@ -84,7 +84,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    private void checkItemEnabling()
@@ -133,7 +133,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
       openedFiles = event.getOpenedFiles();
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getEntryPoint() != null)
       {

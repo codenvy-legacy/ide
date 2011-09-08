@@ -24,8 +24,8 @@ import com.google.gwt.user.client.Timer;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -47,7 +47,7 @@ import java.util.ArrayList;
  */
 
 public class GoToFolderCommandHandler implements GoToFolderHandler, 
-   EntryPointChangedHandler, EditorActiveFileChangedHandler
+   VfsChangedHandler, EditorActiveFileChangedHandler
 {
 
    private HandlerManager eventBus;
@@ -66,13 +66,13 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    {
       this.eventBus = eventBus;
 
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       eventBus.addHandler(GoToFolderEvent.TYPE, this);
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       entryPoint = event.getEntryPoint().getHref();
    }

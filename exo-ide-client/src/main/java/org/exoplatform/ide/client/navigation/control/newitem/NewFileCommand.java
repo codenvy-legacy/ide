@@ -20,8 +20,8 @@ package org.exoplatform.ide.client.navigation.control.newitem;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
@@ -37,7 +37,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 @RolesAllowed({"administrators", "developers"})
 public class NewFileCommand extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
-   EntryPointChangedHandler
+   VfsChangedHandler
 {
 
    protected boolean browserSelected = true;
@@ -71,7 +71,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
 
       updateEnabling();
    }
@@ -97,7 +97,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
       }
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       entryPoint = event.getEntryPoint().getHref();
       updateEnabling();

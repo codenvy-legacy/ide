@@ -42,7 +42,7 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -556,7 +556,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             {
                eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
 
-               eventBus.fireEvent(new EntryPointChangedEvent(result, event.getEntryPoint()));
+               eventBus.fireEvent(new VfsChangedEvent(result, event.getEntryPoint()));
 
                display.asView().setViewVisible();
 
@@ -584,7 +584,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
                foldersToRefresh.clear();
 
                eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-               eventBus.fireEvent(new EntryPointChangedEvent(null, null));
+               eventBus.fireEvent(new VfsChangedEvent(null, null));
             }
          });
       }

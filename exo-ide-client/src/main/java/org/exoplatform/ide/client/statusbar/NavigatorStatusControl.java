@@ -23,8 +23,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -39,7 +39,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NavigatorStatusControl extends StatusTextControl implements IDEControl, ItemsSelectedHandler, EntryPointChangedHandler
+public class NavigatorStatusControl extends StatusTextControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
 {
 
    public static final String ID = "__navigator_status";
@@ -61,7 +61,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
    
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -124,7 +124,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       return table;
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       rootId = event.getVfsInfo().getRoot().getId();
    }

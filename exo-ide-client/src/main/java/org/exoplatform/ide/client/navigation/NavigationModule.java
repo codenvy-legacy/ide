@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -111,7 +111,7 @@ import java.util.Map;
  *
  */
 public class NavigationModule implements UploadFileHandler, CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler,
-   EntryPointChangedHandler, ConfigurationReceivedSuccessfullyHandler, InitializeServicesHandler,
+   VfsChangedHandler, ConfigurationReceivedSuccessfullyHandler, InitializeServicesHandler,
    EditorFileClosedHandler, EditorFileOpenedHandler
 {
    private HandlerManager eventBus;
@@ -181,7 +181,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
 
       eventBus.addHandler(UploadFileEvent.TYPE, this);
@@ -305,7 +305,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       selectedItems = event.getSelectedItems();
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       entryPoint = event.getEntryPoint().getHref();
    }

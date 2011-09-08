@@ -24,8 +24,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.navigation.event.GoToFolderEvent;
  */
 @RolesAllowed({"administrators", "developers"})
 public class GoToFolderControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   EntryPointChangedHandler
+   VfsChangedHandler
 {
 
    private static final String ID = "View/Go to Folder";
@@ -62,7 +62,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
    
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -76,7 +76,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
       setEnabled(true);
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       if (event.getEntryPoint() != null)
       {

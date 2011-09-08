@@ -31,16 +31,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: $
  */
 
-public class EntryPointChangedEvent extends GwtEvent<EntryPointChangedHandler>
+public class VfsChangedEvent extends GwtEvent<VfsChangedHandler>
 {
 
-   public static final GwtEvent.Type<EntryPointChangedHandler> TYPE = new GwtEvent.Type<EntryPointChangedHandler>();
+   public static final GwtEvent.Type<VfsChangedHandler> TYPE = new GwtEvent.Type<VfsChangedHandler>();
 
    private VirtualFileSystemInfo vfsInfo;
 
    private EntryPoint entryPoint;
 
-   public EntryPointChangedEvent(VirtualFileSystemInfo vfsInfo, EntryPoint entryPoint)
+   public VfsChangedEvent(VirtualFileSystemInfo vfsInfo, EntryPoint entryPoint)
    {
       this.vfsInfo = vfsInfo;
       this.entryPoint = entryPoint;
@@ -60,13 +60,13 @@ public class EntryPointChangedEvent extends GwtEvent<EntryPointChangedHandler>
    }
 
    @Override
-   protected void dispatch(EntryPointChangedHandler handler)
+   protected void dispatch(VfsChangedHandler handler)
    {
-      handler.onEntryPointChanged(this);
+      handler.onVfsChanged(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EntryPointChangedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<VfsChangedHandler> getAssociatedType()
    {
       return TYPE;
    }

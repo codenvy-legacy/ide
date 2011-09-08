@@ -21,8 +21,8 @@ package org.exoplatform.ide.client.navigation.control;
 import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
@@ -40,7 +40,7 @@ import java.util.List;
  * @version $Id: $
 */
 public abstract class MultipleSelectionItemsCommand extends SimpleControl implements IDEControl,
-   EntryPointChangedHandler, ViewVisibilityChangedHandler
+   VfsChangedHandler, ViewVisibilityChangedHandler
 {
 
    protected boolean browserSelected = true;
@@ -58,7 +58,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
    public void initialize(HandlerManager eventBus)
    {
       eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public boolean isItemsInSameFolder(List<Item> items)
@@ -98,7 +98,7 @@ public abstract class MultipleSelectionItemsCommand extends SimpleControl implem
 
    protected abstract void updateEnabling();
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       this.vfsInfo = event.getVfsInfo();
       if (event.getEntryPoint() != null)
