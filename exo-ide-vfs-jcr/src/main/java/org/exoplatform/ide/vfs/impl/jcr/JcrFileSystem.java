@@ -354,7 +354,7 @@ public class JcrFileSystem implements VirtualFileSystem
             ses.logout();
          }
          vfsInfo =
-            new VirtualFileSystemInfo(true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
+            new VirtualFileSystemInfo(this.workspaceName, true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
                QueryCapability.BOTHCOMBINED, createUrlTemplates(), root);
       }
