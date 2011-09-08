@@ -21,11 +21,31 @@
 -->
 <web-app>
    <display-name>IDE</display-name>
+   
+   <context-param>
+      <param-name>everrest.exoplatform.standalone.config</param-name>
+      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+   </context-param>
+      
    <listener>
-      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener
-      </listener-class>
+      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
    </listener>
 
+   <servlet>
+      <servlet-name>EverrestServlet</servlet-name>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
+   
+    <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
+      <url-pattern>/rest/private/*</url-pattern>
+   </servlet-mapping>
+   
    <filter>
     <filter-name>SetCurrentIdentityFilter</filter-name>
     <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
@@ -36,6 +56,7 @@
       <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
    </filter>
 
+<!-- 
    <filter>
       <filter-name>RestEncodingFilter</filter-name>
       <filter-class>org.exoplatform.services.rest.servlet.RestEncodingFilter</filter-class>
@@ -49,6 +70,7 @@
       <filter-name>RestEncodingFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
+    -->
 
    <filter-mapping>
     <filter-name>SetCurrentIdentityFilter</filter-name>
@@ -60,6 +82,7 @@
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
 
+<!-- 
    <servlet>
       <servlet-name>RestServer</servlet-name>
       <description>eXo - Platform REST Server</description>
@@ -76,6 +99,11 @@
       <servlet-name>RestServer</servlet-name>
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
+    -->
+
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>    
 
   <security-constraint>
     <web-resource-collection>

@@ -27,12 +27,6 @@
          <scope>test</scope>
       </dependency>
 
-	<dependency>
-		<groupId>org.exoplatform</groupId>
-		<artifactId>user-service</artifactId>
-		<version>1.0-Alpha01</version>
-	</dependency>
-
 <!-- IDE SERVER -->
 
       <dependency>
@@ -53,7 +47,27 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-client</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
 
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+      </dependency>      
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-test</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-httpclient</artifactId>
+      </dependency>      
+      
       <dependency>
          <groupId>javax.inject</groupId>
          <artifactId>javax.inject</artifactId>
@@ -79,13 +93,6 @@
          <scope>runtime</scope>
       </dependency>
    </dependencies>
-   
-			<properties>
-				<ide.module.to.compile>org.exoplatform.ide.IDESingle</ide.module.to.compile>
-				<ide.packaging.web.xml>src/main/resources/ide/WEB-INF/web.xml</ide.packaging.web.xml>
-				<ide.packaging.meta.inf>src/main/resources/default/META-INF</ide.packaging.meta.inf>
-				<ide.packaging.web.inf>src/main/resources/ide/WEB-INF</ide.packaging.web.inf>
-			</properties>
 
    <build>
    
@@ -93,14 +100,18 @@
          <resource>
             <directory>src/main/resources</directory>
             <excludes>
+            	<exclude>**/*</exclude>
+            <!-- 
                <exclude>**/WEB-INF/**</exclude>
                <exclude>**/META-INF/**</exclude>
+                -->
             </excludes>
          </resource>
       </resources>
       
       <plugins>
-      
+
+<!--       
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -108,6 +119,7 @@
                <skipTests>true</skipTests>
             </configuration>
          </plugin>
+ -->
       
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
@@ -129,31 +141,38 @@
       
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-dependencies</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>org.exoplatform.ide</groupId>
+                           <artifactId>exo-ide-client</artifactId>
+                           <type>jar</type>
+                        </artifactItem>
+                     </artifactItems>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin> 
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
             
                <execution>
-                  <id>unwar-ide</id>
+                  <id>Unwar eXo IDE Client JAR</id>
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
                         <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
-                     </tasks>
-                  </configuration>
-                  <goals>
-                     <goal>run</goal>
-                  </goals>
-               </execution>
-                           
-               <execution>
-                  <id>copy-application-html</id>
-                  <phase>process-resources</phase>
-                  <configuration>
-                     <tasks>
-                     <!-- 
-						<copy file="src/main/resources/org/exoplatform/ide/public/Application.html" tofile="${project.build.directory}/${project.artifactId}-${project.version}/Application.html" overwrite="true" />
-                      -->
-						<copy file="src/main/resources/org/exoplatform/ide/public/Application.html" tofile="${project.build.directory}/share/Application.html" overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -185,6 +204,8 @@
                         <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
                            <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
                         </move>
+						<echo>Rewriting Application.html</echo>
+						<copy file="src/main/resources/org/exoplatform/ide/public/Application.html" tofile="${project.build.directory}/${project.artifactId}-${project.version}/Application.html" overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -192,29 +213,19 @@
                   </goals>
                </execution>
                
-            </executions>
-         </plugin>
-         
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
                <execution>
-                  <id>copy-dependencies</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>copy</goal>
-                  </goals>
+                  <id>Rename ${project.artifactId}-${project.version}.war to IDE.war</id>
+                  <phase>install</phase>
                   <configuration>
-                     <artifactItems>
-                        <artifactItem>
-                           <groupId>org.exoplatform.ide</groupId>
-                           <artifactId>exo-ide-client</artifactId>
-                           <type>jar</type>
-                        </artifactItem>
-                     </artifactItems>
+                     <tasks>
+                        <move file="${project.build.directory}/${project.artifactId}-${project.version}.war" tofile="${project.build.directory}/IDE.war" />
+                     </tasks>
                   </configuration>
-               </execution>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>               
+               
             </executions>
          </plugin>
          
@@ -224,8 +235,8 @@
             <artifactId>gwt-maven-plugin</artifactId>
             <version>${gwt.maven.plugin.version}</version>
             <configuration>
-               <module>${ide.module.to.compile}</module>
-               <runTarget>${ide.module.to.compile}/IDEApplication.html</runTarget>
+               <module>org.exoplatform.ide.IDEBare</module>
+               <runTarget>org.exoplatform.ide.IDEBare/Application.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
             </configuration>
@@ -243,9 +254,10 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <configuration>
-               <webXml>${ide.packaging.web.xml}</webXml>
+               <webXml>src/main/resources/WEB-INF/web.xml</webXml>
                <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
                <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/Commons.css,
+                 **/Gadget.html,**/Shell.html,**/showcase-mockup.html,
                   **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
                   **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
@@ -254,15 +266,17 @@
                   </packagingExcludes>
                <webResources>
                   <resource>
-                     <directory>${ide.packaging.meta.inf}</directory>
+                     <directory>src/main/resources/META-INF</directory>
                      <targetPath>META-INF</targetPath>
                   </resource>
                   <resource>
-                     <directory>${ide.packaging.web.inf}</directory>
+                     <directory>src/main/resources/WEB-INF</directory>
                      <targetPath>WEB-INF</targetPath>
-					 <excludes>
-                		<exclude>**/WEB-INF/**</exclude>
-              		</excludes>                     
+<!--
+                     <excludes>
+                         <exclude>**/WEB-INF/**</exclude>
+                     </excludes>                     
+-->
                   </resource>
                </webResources>
             </configuration>
