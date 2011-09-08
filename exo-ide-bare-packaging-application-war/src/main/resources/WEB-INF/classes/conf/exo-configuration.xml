@@ -22,14 +22,16 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-  <import>core-configuration.xml</import>
-  
+  <import>ide-configuration.xml</import>
   <import>organization-configuration.xml</import>
-  
-  <!-- 
-  <import>codeassist-configuration.xml</import>
-   -->
-  
-  <import>ide-extensions-configuration.xml</import>
 
+   <remove-configuration>org.exoplatform.services.rest.impl.ApplicationRegistry</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.StartableApplication</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.ProvidersRegistry</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.RequestHandlerImpl</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.RequestDispatcher</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.ResourceBinder</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.impl.provider.JAXBContextResolver</remove-configuration>
+   <remove-configuration>org.exoplatform.services.rest.ext.service.RestServicesListApplication</remove-configuration>
+       
 </configuration>

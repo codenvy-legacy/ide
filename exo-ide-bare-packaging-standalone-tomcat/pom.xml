@@ -121,13 +121,8 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                     	
-                        <unwar src="${project.build.directory}/packager-conf/war/exo-ide-bare-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/IDE.unpacked" />
-						<copy file="${basedir}/src/main/resources/ide/Application.html" tofile="${project.build.directory}/packager-conf/IDE.unpacked/Application.html" overwrite="true" />
-
-                        <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
-                           <fileset dir="${project.build.directory}/packager-conf/IDE.unpacked" />
-                        </war>
+						<copy  file="${project.build.directory}/packager-conf/war/exo-ide-bare-packaging-application-war-${project.version}.war"
+									tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true" />
 
                         <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
                            <fileset dir="${basedir}/src/main/resources/tomcat" />

@@ -8,8 +8,6 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-
-
    <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
@@ -44,8 +42,6 @@
    <component>
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
-
-
 
 <!-- 
    <component>
@@ -82,22 +78,7 @@
       <key>org.exoplatform.services.jcr.RepositoryService</key>
       <type>org.exoplatform.services.jcr.impl.RepositoryServiceImpl</type>
    </component>
-
-<!-- 
-   <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
-      <init-params>
-         <properties-param>
-            <name>locations</name>
-         </properties-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
-   </component>
- -->
-
+   
    <component>
       <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
       <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
@@ -126,51 +107,15 @@
          </value-param>
       </init-params>
    </component>
-   
-   <!-- 
-   <component>
-      <type>org.exoplatform.users.UserServiceApplication</type>
-   </component>   
-    -->
 
-<!-- 
    <component>
-      <type>org.exoplatform.services.jcr.webdav.WebDavServiceImpl</type>
-      <init-params>
-         <value-param>
-            <name>auto-mix-lockable</name>
-            <value>false</value>
-         </value-param>
-         <value-param>
-            <name>def-folder-node-type</name>
-            <value>nt:folder</value>
-         </value-param>
-         <value-param>
-            <name>def-file-node-type</name>
-            <value>nt:file</value>
-         </value-param>
-         <value-param>
-            <name>def-file-mimetype</name>
-            <value>text/plain</value>
-         </value-param>
-         <value-param>
-            <name>update-policy</name>
-            <value>create-version</value>
-         </value-param>
-      </init-params>
+     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
    </component>
-    -->
 
    <component>
       <type>org.exoplatform.services.jcr.ext.resource.jcr.Handler</type>
    </component>
 
-<!-- 
-   <component>
-      <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
-   </component>
- -->
-   
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -209,6 +154,7 @@
                <description>Node types configuration file</description>
                <value>war:/conf/nodetypes-configuration.xml</value>
                <value>jar:/conf/organization-nodetypes.xml</value>
+               <value>jar:/conf/vfs-node-types.xml</value>
             </values-param>
          </init-params>
       </component-plugin>
@@ -234,7 +180,7 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-
+   
    <external-component-plugins>
       <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
       <component-plugin>
@@ -265,50 +211,5 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-   
-   <remove-configuration>org.exoplatform.services.rest.impl.ApplicationRegistry</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.StartableApplication</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.ProvidersRegistry</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.RequestHandlerImpl</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.RequestDispatcher</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.ResourceBinder</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.impl.provider.JAXBContextResolver</remove-configuration>
-   <remove-configuration>org.exoplatform.services.rest.ext.service.RestServicesListApplication</remove-configuration>
-   
-
-<!-- 
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.RequestHandlerImpl</target-component>
-      <component-plugin>
-         <name>ws.rs.method.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.method.MethodInvokerFilterComponentPlugin</type>
-      </component-plugin>
-
-      <component-plugin>
-         <name>ws.rs.entity.provider</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.EntityProviderComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rest.ext.HierarchicalPropertyEntityProvider</name>
-               <value>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-
-      <component-plugin>
-         <name>ws.rs.request.filter</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.RequestFilterComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>ws.rs.request.method-override-filter</name>
-               <value>org.exoplatform.services.rest.ext.filter.MethodOverrideFilter</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
-    -->
    
 </configuration>

@@ -133,7 +133,7 @@
                                  <string>root</string>
                               </field>
                               <field name="password">
-                                 <string>WBTTeam</string>
+                                 <string>root</string>
                               </field>
                               <field name="firstName">
                                  <string>Root</string>
