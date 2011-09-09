@@ -62,6 +62,7 @@ import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
@@ -259,6 +260,5 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       return OutlineItemCreatorFactory.getOutlineItemCreator(mimeType);
    }
-
 
 }

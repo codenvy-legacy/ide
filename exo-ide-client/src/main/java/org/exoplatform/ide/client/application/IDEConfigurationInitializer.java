@@ -27,9 +27,9 @@ import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.application.phases.RestoreOpenedFilesPhase;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.EntryPointChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
@@ -57,7 +57,7 @@ import java.util.List;
  * @version $Id: May 25, 2011 evgen $
  *
  */
-public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, EntryPointChangedHandler
+public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
 {
    private final HandlerManager eventBus;
 
@@ -78,7 +78,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       this.controls = controls;
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      handler = eventBus.addHandler(EntryPointChangedEvent.TYPE, this);
+      handler = eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void loadConfiguration()
@@ -154,7 +154,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       }
    }
 
-   public void onEntryPointChanged(EntryPointChangedEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
       //      removeHandlers();
       if (handler != null)
@@ -225,5 +225,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       eventBus.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
          .getRegisteredControls()));
    }
+
 
 }
