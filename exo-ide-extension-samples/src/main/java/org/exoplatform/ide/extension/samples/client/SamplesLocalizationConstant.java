@@ -74,6 +74,12 @@ public interface SamplesLocalizationConstant extends Constants
    @Key("welcome.title")
    String welcomeTitle();
    
+   @Key("welcome.project.title")
+   String projectTitle();
+   
+   @Key("welcome.project.text")
+   String projectText();
+   
    /*
     * SelectLocationView
     */

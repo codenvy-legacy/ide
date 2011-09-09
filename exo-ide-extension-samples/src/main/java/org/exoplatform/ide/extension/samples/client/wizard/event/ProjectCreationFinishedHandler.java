@@ -16,37 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.wizard.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Event to show list of repositories with sample projects on GitHub.
+ * Handler for {@link ProjectCreationFinishedEvent}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
+ * @version $Id: ProjectCreationFinishedHandler.java Sep 9, 2011 11:10:54 AM vereshchaka $
  */
-public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
+public interface ProjectCreationFinishedHandler extends EventHandler
 {
-   public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
    
-   public ShowSamplesEvent()
-   {
-   }
-
-   @Override
-   protected void dispatch(ShowSamplesHandler handler)
-   {
-      handler.onShowSamples(this);
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowSamplesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onProjectCreationFinished(ProjectCreationFinishedEvent event);
 
 }

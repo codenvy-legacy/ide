@@ -16,68 +16,68 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.wizard.deployment;
+
+import com.google.gwt.user.client.ui.HasValue;
+
+import com.google.gwt.event.dom.client.HasClickHandlers;
+
+import com.google.gwt.uibinder.client.UiField;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.shared.Repository;
-
-import java.util.List;
 
 /**
+ * View to show Wizard for Java project creation.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesView.java Aug 30, 2011 12:13:08 PM vereshchaka $
- *
+ * @version $Id: SourceWizardView.java Sep 7, 2011 2:59:09 PM vereshchaka $
  */
-public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Display
+public class WizardDeploymentStepView extends ViewImpl implements WizardDeploymentStepPresenter.Display 
 {
+   private static final String ID = "WizardProjectDeploymentView";
    
-   private static final String ID = "GithubSamplesView";
-   
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.showSamplesTitle();
+   private static final String TITLE = "Wizard for Java Project";
    
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 450;
    
-   /**
-    * 
-    */
-   interface GithubSamplesViewUiBinder extends UiBinder<Widget, ShowSamplesView>
+   interface SourceWizardViewUiBinder extends UiBinder<Widget, WizardDeploymentStepView>
    {
    }
    
    /**
     * UIBinder instance
     */
-   private static GithubSamplesViewUiBinder uiBinder = GWT.create(GithubSamplesViewUiBinder.class);
+   private static SourceWizardViewUiBinder uiBinder = GWT.create(SourceWizardViewUiBinder.class);
    
    @UiField
-   SamplesListGrid samplesListGrid;
+   SelectItem selectPaasField;
+   
+   @UiField
+   ImageButton cancelButton;
    
    @UiField
    ImageButton nextButton;
    
    @UiField
-   ImageButton cancelButton;
+   ImageButton backButton;
    
-   public ShowSamplesView()
+   public WizardDeploymentStepView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display#getNextButton()
     */
    @Override
    public HasClickHandlers getNextButton()
@@ -86,7 +86,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -95,29 +95,30 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display#getSelectSourceField()
     */
    @Override
-   public void enableNextButton(boolean enable)
+   public HasValue<String> getSelectPaasField()
    {
-      nextButton.setEnabled(enable);
+      return selectPaasField;
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSamplesListGridAlt()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getBackButton()
     */
    @Override
-   public ListGridItem<Repository> getSamplesListGrid()
+   public HasClickHandlers getBackButton()
    {
-      return samplesListGrid;
+      return backButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSelectedItems()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setPaasValueMap(java.lang.String[])
     */
    @Override
-   public List<Repository> getSelectedItems()
+   public void setPaasValueMap(String[] values)
    {
-      return samplesListGrid.getSelectedItems();
+      selectPaasField.setValueMap(values);
    }
+
 }

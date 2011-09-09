@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.startpage;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -60,6 +62,11 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    @UiField
    Image samplesImage;
    
+   @UiField
+   Button projectLink;
+   
+   FlowPanel flowPanel;
+   
    public StartPageView()
    {
       super(ID, "editor", TITLE);
@@ -73,6 +80,15 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    public HasClickHandlers getSamplesLink()
    {
       return samplesLink;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getProjectLink()
+    */
+   @Override
+   public HasClickHandlers getProjectLink()
+   {
+      return projectLink;
    }
 
 }

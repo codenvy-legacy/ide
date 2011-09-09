@@ -1,0 +1,134 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.load">
+
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .table
+      {
+      width:100%;
+      height:100%;
+      border-collapse: collapse;
+      }
+      
+      .label-title
+      {
+         font-size: medium;
+         font-weight: bold;
+      }
+      
+      .label-description
+      {
+         font-style: italic;
+      }
+      
+      .top-box
+      {
+         background-color: #fefdee;
+      }
+      
+      .label-value
+      {
+         font-weight: bold;
+      }
+   </ui:style>
+
+   <f:VPanel>
+      <f:Border margin="10" height="100px">
+         <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%" height="50px" stylePrimaryName="{style.top-box}">
+            <g:Label text="Finish" styleName="{style.label-title}"></g:Label>
+            <g:Label text="You are about to create Java project:" styleName="{style.label-description}"></g:Label>
+         </g:VerticalPanel>
+      </f:Border>
+      
+      <g:HTMLPanel height="30px">
+         
+         <table class="{style.table}">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="Name" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:Label ui:field="nameLabel" width="90px" styleName="{style.label-value}"></f:Label>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="Type" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:Label ui:field="typeLabel" width="90px" styleName="{style.label-value}"></f:Label>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+         </table>
+         
+      </g:HTMLPanel>
+      
+      <g:HTMLPanel>
+         <table class="{style.table}">
+            <tr>
+               <td style="width:10px;">
+                  <div style="width:10px; height:100%;"></div>
+               </td>
+            </tr>
+         </table>
+      </g:HTMLPanel>
+      
+      <!-- Buttons -->
+      <g:HTMLPanel height="30px">
+         
+         <table class="{style.table}">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" 
+                     buttonId="ideWizardDeploymentCancelButtonId"></f:ImageButton>
+               </td>
+               
+               <td style="width:100%;"><div style="width:100%; height:1px;"></div></td>
+               
+               <td style="width:90px; height:22px">
+                  <f:ImageButton ui:field="backButton" width="90" height="22" text="{locale.backButton}" 
+                     imageResource="{resource.back}"
+                     disabledImageResource="{resource.backDisabled}" 
+                     buttonId="ideWizardDeploymentBackButtonId"></f:ImageButton>
+               </td>
+               
+               <td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
+               
+               <td style="width:90px">
+                  <f:ImageButton ui:field="finishButton" text="{locale.finishButton}" width="90" height="22" imageResource="{resource.ok}"
+                     disabledImageResource="{resource.okDisabled}" buttonId="ideWizardFinishButtonId"></f:ImageButton>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+         </table>
+         
+      </g:HTMLPanel>
+
+      <g:FlowPanel height="10px"></g:FlowPanel>
+   </f:VPanel>
+</ui:UiBinder> 

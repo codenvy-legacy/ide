@@ -31,22 +31,51 @@
    <f:VPanel>
 
       <f:Border margin="1">
-         <g:HTMLPanel>
-            <table style="width:100%; height:100%; margin-top:10px;" border="0" cellpadding="0">
+         <g:FlowPanel>
+         <!-- About IDE -->
+             <g:HorizontalPanel verticalAlignment="middle" height="auto" width="500px">        
+                           <g:Image resource="{resource.ideLogo}"></g:Image>
+                        <g:Label text="{locale.aboutIde}" styleName="{style.text-block}"></g:Label>
+                     </g:HorizontalPanel>
+                     <!-- Tutorial link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image ui:field="docImage" resource="{resource.welcomeTutorial}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Anchor ui:field="docLink" text="{locale.tutorialTitle}" target="_blank"
+                                 href="https://wiki-int.exoplatform.org/display/exoproducts/eXo+IDE+User+Manual"></g:Anchor>
+                              <g:Label text="{locale.tutorialText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                        <!-- Samples link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.sampleText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     <!-- Projects link -->
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image resource="{resource.welcomeProject}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="projectLink" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.projectText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+         </g:FlowPanel>
+         <!--g:HTMLPanel>
+            <table style="margin-top:10px;" border="0" cellpadding="0">
                <tr style="height:50px;">
                   <td colspan="2" style="width:20%; height:50px; vertical-align: middle;">
                      <div style="width:10px; height:1px;"></div>
                   </td>
                   <td colspan="2" style="height:50px; vertical-align: middle;">
-                  <!-- About IDE -->
-                     <!--g:HorizontalPanel spacing="3" horizontalAlignment="left" width="500px" height="50px"-->
                      <div style="max-width: 450px; margin: 5 auto;">
                         <div style="float:left">
                            <g:Image resource="{resource.ideLogo}"></g:Image>
                         </div>
                         <g:Label text="{locale.aboutIde}" styleName="{style.text-block}"></g:Label>
                      </div>
-                     <!--/g:HorizontalPanel-->
                   </td>
                   <td colspan="2" style="width:20%; height:50px; vertical-align: middle;">
                      <div style="width:10px; height:1px;"></div>
@@ -56,8 +85,7 @@
                   <td colspan="2" style="width:20%; height:auto; vertical-align: middle;">
                   </td>
                   <td colspan="2" style="height:auto; vertical-align: middle;">
-                  <!-- Tutorial link -->
-                     <div style="max-width: 200px; margin: 5 auto;">
+                     <div style="max-width: 230px; margin: 5 auto;">
                         <g:HorizontalPanel verticalAlignment="middle" height="auto">
                            <g:Image ui:field="docImage" resource="{resource.welcomeTutorial}"></g:Image>
                            <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
@@ -75,13 +103,29 @@
                   <td colspan="2" style="width:20%; height:auto; vertical-align: middle;">
                   </td>
                   <td colspan="2" style="height:auto; vertical-align: middle;">
-                  <!-- Samples link -->
-                     <div style="max-width: 200px; margin: 5 auto;">
+                     <div style="max-width: 230px; margin: 5 auto;">
                         <g:HorizontalPanel verticalAlignment="middle" height="auto">
                            <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"></g:Image>
                            <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
                               <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
                               <g:Label text="{locale.sampleText}"></g:Label>
+                           </g:VerticalPanel>
+                        </g:HorizontalPanel>
+                     </div>
+                  </td>
+                  <td colspan="2" style="width:20%; height:auto; vertical-align: middle;">
+                  </td>
+               </tr>
+               <tr style="height:50px;">
+                  <td colspan="2" style="width:20%; height:auto; vertical-align: middle;">
+                  </td>
+                  <td colspan="2" style="height:auto; vertical-align: middle;">
+                     <div style="max-width: 230px; margin: 5 auto;">
+                        <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                           <g:Image resource="{resource.welcomeProject}"></g:Image>
+                           <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                              <g:Button ui:field="projectLink" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.projectText}"></g:Label>
                            </g:VerticalPanel>
                         </g:HorizontalPanel>
                      </div>
@@ -101,7 +145,7 @@
                   </td>
                </tr>
             </table>
-         </g:HTMLPanel>
+         </g:HTMLPanel-->
       </f:Border>
 
    </f:VPanel>

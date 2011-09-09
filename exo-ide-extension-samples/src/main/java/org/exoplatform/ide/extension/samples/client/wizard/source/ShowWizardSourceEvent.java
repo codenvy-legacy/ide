@@ -16,37 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.wizard.source;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event to show list of repositories with sample projects on GitHub.
+ * Event, to call Wizard for creation Java project.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesShowEvent.java Aug 30, 2011 12:07:32 PM vereshchaka $
+ * @version $Id: ShowWizardEvent.java Sep 7, 2011 3:29:39 PM vereshchaka $
  */
-public class ShowSamplesEvent extends GwtEvent<ShowSamplesHandler>
+public class ShowWizardSourceEvent extends GwtEvent<ShowWizardSourceHandler>
 {
-   public static final GwtEvent.Type<ShowSamplesHandler> TYPE = new GwtEvent.Type<ShowSamplesHandler>();
    
-   public ShowSamplesEvent()
-   {
-   }
-
-   @Override
-   protected void dispatch(ShowSamplesHandler handler)
-   {
-      handler.onShowSamples(this);
-   }
+   public static final GwtEvent.Type<ShowWizardSourceHandler> TYPE = new GwtEvent.Type<ShowWizardSourceHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowSamplesHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowWizardSourceHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowWizardSourceHandler handler)
+   {
+      handler.onShowWizard(this);
    }
 
 }

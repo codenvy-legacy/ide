@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.load;
+package org.exoplatform.ide.extension.samples.client.wizard.finish;
+
+import com.google.gwt.user.client.ui.HasValue;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -24,69 +26,68 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.shared.Repository;
-
-import java.util.List;
 
 /**
+ * View to show Wizard for Java project creation.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubSamplesView.java Aug 30, 2011 12:13:08 PM vereshchaka $
- *
+ * @version $Id: SourceWizardView.java Sep 7, 2011 2:59:09 PM vereshchaka $
  */
-public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Display
+public class WizardFinishStepView extends ViewImpl implements WizardFinishStepPresenter.Display 
 {
+   private static final String ID = "WizardProjectFinishView";
    
-   private static final String ID = "GithubSamplesView";
-   
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.showSamplesTitle();
+   private static final String TITLE = "Wizard for Java Project";
    
    private static final int HEIGHT = 345;
 
    private static final int WIDTH = 450;
    
-   /**
-    * 
-    */
-   interface GithubSamplesViewUiBinder extends UiBinder<Widget, ShowSamplesView>
+   interface SourceWizardViewUiBinder extends UiBinder<Widget, WizardFinishStepView>
    {
    }
    
    /**
     * UIBinder instance
     */
-   private static GithubSamplesViewUiBinder uiBinder = GWT.create(GithubSamplesViewUiBinder.class);
-   
-   @UiField
-   SamplesListGrid samplesListGrid;
-   
-   @UiField
-   ImageButton nextButton;
+   private static SourceWizardViewUiBinder uiBinder = GWT.create(SourceWizardViewUiBinder.class);
    
    @UiField
    ImageButton cancelButton;
    
-   public ShowSamplesView()
+   @UiField
+   ImageButton finishButton;
+   
+   @UiField
+   ImageButton backButton;
+   
+   @UiField
+   Label nameLabel;
+   
+   @UiField
+   Label typeLabel;
+   
+   public WizardFinishStepView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display#getNextButton()
     */
    @Override
-   public HasClickHandlers getNextButton()
+   public HasClickHandlers getFinishButton()
    {
-      return nextButton;
+      return finishButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -95,29 +96,30 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display#getBackButton()
     */
    @Override
-   public void enableNextButton(boolean enable)
+   public HasClickHandlers getBackButton()
    {
-      nextButton.setEnabled(enable);
+      return backButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSamplesListGridAlt()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display#getNameLabel()
     */
    @Override
-   public ListGridItem<Repository> getSamplesListGrid()
+   public HasValue<String> getNameLabel()
    {
-      return samplesListGrid;
+      return nameLabel;
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getSelectedItems()
+    * @see org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display#getTypeLable()
     */
    @Override
-   public List<Repository> getSelectedItems()
+   public HasValue<String> getTypeLable()
    {
-      return samplesListGrid.getSelectedItems();
+      return typeLabel;
    }
+
 }

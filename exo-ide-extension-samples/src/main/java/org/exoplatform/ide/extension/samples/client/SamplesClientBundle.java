@@ -77,5 +77,8 @@ public interface SamplesClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/samples/images/eXo-IDE-Logo.png")
    ImageResource ideLogo();
+   
+   @Source("org/exoplatform/ide/extension/samples/images/project.png")
+   ImageResource welcomeProject();
 
 }

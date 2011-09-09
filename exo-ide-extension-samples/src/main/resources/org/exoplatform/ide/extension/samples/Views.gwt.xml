@@ -31,4 +31,20 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display" />
+   </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display" />
+   </replace-with>
 </module>

@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent;
 
 /**
  * Presenter for welcome view.
@@ -44,6 +45,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
    public interface Display extends IsView
    {
       HasClickHandlers getSamplesLink();
+      
+      HasClickHandlers getProjectLink();
    }
    
    private HandlerManager eventBus;
@@ -66,6 +69,15 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          public void onClick(ClickEvent event)
          {
             eventBus.fireEvent(new ShowSamplesEvent());
+         }
+      });
+      
+      display.getProjectLink().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            eventBus.fireEvent(new ShowWizardSourceEvent());
          }
       });
    }
