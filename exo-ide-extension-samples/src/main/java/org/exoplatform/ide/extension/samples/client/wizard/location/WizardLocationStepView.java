@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.location;
+package org.exoplatform.ide.extension.samples.client.wizard.location;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -32,14 +32,14 @@ import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepView;
+import org.exoplatform.ide.extension.samples.client.location.SelectLocationView;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
 /**
  * TODO: this view duplicates some functionality from
- * {@link WizardLocationStepView}.
+ * {@link SelectLocationView}.
  * In future this must be fix.
  * 
  * View, that displays tree with folders to select location
@@ -48,9 +48,9 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SelectLocationView.java Aug 31, 2011 12:38:35 PM vereshchaka $
  */
-public class SelectLocationView extends ViewImpl implements SelectLocationPresenter.Display
+public class WizardLocationStepView extends ViewImpl implements WizardLocationStepPresenter.Display
 {
-   private static final String ID = "SelectLocationView";
+   private static final String ID = "WizardLocationView";
    
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.selectLocationTitle();
    
@@ -58,7 +58,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
 
    private static final int WIDTH = 450;
    
-   interface SelectLocationViewUiBinder extends UiBinder<Widget, SelectLocationView>
+   interface SelectLocationViewUiBinder extends UiBinder<Widget, WizardLocationStepView>
    {
    }
    
@@ -80,12 +80,12 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    ImageButton cancelButton;
    
    @UiField
-   ImageButton finishButton;
+   ImageButton nextButton;
    
    @UiField
    ImageButton backButton;
    
-   public SelectLocationView()
+   public WizardLocationStepView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
@@ -93,7 +93,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getNavigationTree()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getNavigationTree()
     */
    @Override
    public TreeGridItem<Item> getNavigationTree()
@@ -102,7 +102,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getFolderNameField()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getFolderNameField()
     */
    @Override
    public HasValue<String> getFolderNameField()
@@ -111,7 +111,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getNewFolderButton()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getNewFolderButton()
     */
    @Override
    public HasClickHandlers getNewFolderButton()
@@ -120,7 +120,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -129,16 +129,16 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getNextButton()
     */
    @Override
-   public HasClickHandlers getFinishButton()
+   public HasClickHandlers getNextButton()
    {
-      return finishButton;
+      return nextButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getSelectedItems()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getSelectedItems()
     */
    @Override
    public List<Item> getSelectedItems()
@@ -147,7 +147,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#selectItem(java.lang.String)
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#selectItem(java.lang.String)
     */
    @Override
    public void selectItem(String itemId)
@@ -156,16 +156,16 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#enableNextButton(boolean)
     */
    @Override
-   public void enableFinishButton(boolean enable)
+   public void enableNextButton(boolean enable)
    {
-      finishButton.setEnabled(enable);
+      nextButton.setEnabled(enable);
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#getBackButton()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#getBackButton()
     */
    @Override
    public HasClickHandlers getBackButton()
@@ -174,7 +174,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#focusInFolderNameField()
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#focusInFolderNameField()
     */
    @Override
    public void focusInFolderNameField()
@@ -183,7 +183,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationPresenter.Display#enableNewFolderButton(boolean)
+    * @see org.exoplatform.ide.client.WizardLocationStepPresenter.selectlocation.SelectLocationPresenter.Display#enableNewFolderButton(boolean)
     */
    @Override
    public void enableNewFolderButton(boolean enable)

@@ -132,7 +132,7 @@ ProjectCreationFinishedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardDefinitionStepEvent());
+            eventBus.fireEvent(new ShowWizardDefinitionStepEvent(null));
             closeView();
          }
       });

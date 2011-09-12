@@ -111,6 +111,6 @@ public interface SamplesLocalizationConstant extends Constants
     * ShowSamplesPresenter
     */
    @Key("showSamples.error.selectRepo")
-   String showSamplesErorSelectRepository();
+   String showSamplesErrorSelectRepository();
 
 }

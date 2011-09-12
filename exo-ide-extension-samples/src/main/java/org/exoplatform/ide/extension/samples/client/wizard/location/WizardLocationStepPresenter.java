@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.location;
+package org.exoplatform.ide.extension.samples.client.wizard.location;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,21 +37,19 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter;
-import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter;
+import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -65,17 +63,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 
  * TODO: this presenter duplicates some functionality from
- * {@link WizardLocationStepPresenter}.
+ * {@link SelectLocationPresenter}.
  * In future this must be fix.
  * 
  * Presenter to show navigation tree, where user will be able to select location
  * for importing sample application.
+ * Used in Wizard for creation java projects.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SelectLocationPresenter.java Aug 31, 2011 12:03:46 PM vereshchaka $
+ * @version $Id: WizardLocationStepPresenter.java Sep 12, 2011 12:09:31 PM vereshchaka $
+ *
  */
-public class SelectLocationPresenter implements SelectLocationHandler, ViewClosedHandler, VfsChangedHandler
+public class WizardLocationStepPresenter implements ShowWizardLocationStepHandler, ViewClosedHandler, 
+VfsChangedHandler, ProjectCreationFinishedHandler
 {
    public interface Display extends IsView
    {
@@ -104,11 +106,11 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
       
       HasClickHandlers getCancelButton();
       
-      HasClickHandlers getFinishButton();
+      HasClickHandlers getNextButton();
       
       HasClickHandlers getBackButton();
       
-      void enableFinishButton(boolean enable);
+      void enableNextButton(boolean enable);
       
       void enableNewFolderButton(boolean enable);
       
@@ -131,23 +133,20 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    private List<Item> selectedItems = new ArrayList<Item>();
    
    /**
-    * The if of root folder.
+    * The id of root folder.
     */
    private String rootId;
    
-   /**
-    * Repository, that was selected on previous step.
-    * In this step it will be cloned.
-    */
-   private Repository repository;
+   private ProjectProperties projectProperties = new ProjectProperties();
    
-   public SelectLocationPresenter(HandlerManager eventBus)
+   public WizardLocationStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       
-      eventBus.addHandler(SelectLocationEvent.TYPE, this);
+      eventBus.addHandler(ShowWizardLocationStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
+      eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -169,24 +168,25 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             if (selectedItems == null || selectedItems.isEmpty())
             {
                display.enableNewFolderButton(false);
-               display.enableFinishButton(false);
+               display.enableNextButton(false);
             }
             else
             {
                display.focusInFolderNameField();
-               display.enableFinishButton(!selectedItems.get(0).getId().equals(rootId));
+               display.enableNextButton(!selectedItems.get(0).getId().equals(rootId));
                final String folderName = display.getFolderNameField().getValue();
                display.enableNewFolderButton(folderName != null && !folderName.isEmpty());
             }
          }
       });
 
-      display.getFinishButton().addClickHandler(new ClickHandler()
+      display.getNextButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            cloneRepository(repository);
+            projectProperties.setParenFolder((FolderModel)selectedItems.get(0));
+            eventBus.fireEvent(new ShowWizardDefinitionStepEvent(projectProperties));
             closeView();
          }
       });
@@ -196,6 +196,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          @Override
          public void onClick(ClickEvent event)
          {
+            eventBus.fireEvent(new ProjectCreationFinishedEvent(true));
             closeView();
          }
       });
@@ -242,12 +243,11 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    }
 
    /**
-    * @see org.exoplatform.ide.client.welcome.selectlocation.SelectLocationHandler#onSelectLocation(org.exoplatform.ide.client.welcome.selectlocation.SelectLocationEvent)
+    * @see org.exoplatform.ide.client.ShowWizardLocationStepHandler.selectlocation.SelectLocationHandler#onSelectLocation(org.exoplatform.ide.client.ShowWizardLocationStepEvent.selectlocation.SelectLocationEvent)
     */
    @Override
-   public void onSelectLocation(SelectLocationEvent event)
+   public void onSelectLocation(ShowWizardLocationStepEvent event)
    {
-      repository = event.getRepository();
       openView();
    }
 
@@ -452,58 +452,16 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          eventBus.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
       }
    }
-   
-   private void cloneRepository(Repository repo)
-   {
-      String workDir = selectedItems.get(0).getId();
-      String remoteUri = repo.getUrl();
-      if (!remoteUri.endsWith(".git"))
-      {
-         remoteUri += ".git";
-      }
 
-      GitClientService.getInstance().cloneRepository(workDir, remoteUri, null,
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
-            {
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-               FolderModel folder = (FolderModel)selectedItems.get(0);
-               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                     : GitExtension.MESSAGES.cloneFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
-   }
-   
    /**
-    * Work up to the root folder to create a list of folder to refresh.
-    * Need to refresh all folders, that were created during "Select Location"
-    * step, but not displayed in main navigation tree.
-    * 
-    * @param folder - the parent folder of your project
-    * @return
+    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
     */
-   private ArrayList<FolderModel> getFoldersToRefresh(FolderModel folder)
+   @Override
+   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
    {
-      ArrayList<FolderModel> folders = new ArrayList<FolderModel>();
-      folders.add(0, folder);
-      FolderModel parent = folder.getParent();
-      while (parent != null)
-      {
-         folders.add(0, parent);
-         parent = parent.getParent();
-      }
-      return folders;
+      //clear project properties, when wizard is closed
+      //(creation finished or canceled)
+      projectProperties = new ProjectProperties();
    }
-
+   
 }

@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.finish;
 
-import com.google.gwt.user.client.Random;
-
-import com.google.gwt.http.client.RequestException;
-
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -46,17 +43,13 @@ import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreation
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -175,6 +168,21 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       openView();
    }
    
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    */
+   @Override
+   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
+   {
+      projectProperties = null;
+   }
+   
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }
+   
    private void openView()
    {
       if (display == null)
@@ -195,21 +203,12 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
-    */
-   @Override
-   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
-   {
-      projectProperties = null;
-   }
    
    private void finishProjectCreation()
    {
       try
       {
-         FolderModel parent = (FolderModel)selectedItems.get(0);
+         final FolderModel parent = projectProperties.getParenFolder();
          ProjectModel newProject = new ProjectModel(projectProperties.getName(), parent, "test-proj", 
             Collections.EMPTY_LIST);
          VirtualFileSystem.getInstance().createProject(parent, new AsyncRequestCallback<ProjectModel>(
@@ -220,14 +219,16 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
             protected void onSuccess(ProjectModel result)
             {
                eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
+               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
                closeView();
-               System.out.println(".onSuccess()");
             }
             
             @Override
             protected void onFailure(Throwable exception)
             {
-               System.out.println(".onFailure()");
+               exception.printStackTrace();
+               eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  "Can't create project"));
             }
          });
       }
@@ -240,20 +241,25 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       
    }
    
-   private FolderModel getFilePath(Item item)
+   /**
+    * Work up to the root folder to create a list of folder to refresh.
+    * Need to refresh all folders, that were created during "Select Location"
+    * step, but not displayed in main navigation tree.
+    * 
+    * @param folder - the parent folder of your project
+    * @return
+    */
+   private ArrayList<FolderModel> getFoldersToRefresh(FolderModel folder)
    {
-
-      if (item instanceof FileModel)
+      ArrayList<FolderModel> folders = new ArrayList<FolderModel>();
+      folders.add(0, folder);
+      FolderModel parent = folder.getParent();
+      while (parent != null)
       {
-         return ((FileModel)item).getParent();
+         folders.add(0, parent);
+         parent = parent.getParent();
       }
-      return (FolderModel)item;
+      return folders;
    }
    
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
-
 }

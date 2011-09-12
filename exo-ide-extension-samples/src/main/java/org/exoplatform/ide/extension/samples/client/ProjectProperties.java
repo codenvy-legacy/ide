@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+
 /**
  * Storage for project properties.
  * TODO: Remove this class, when project notion will be created.
@@ -46,6 +48,8 @@ public class ProjectProperties
    String type;
    
    String paas;
+   
+   FolderModel parenFolder;
    
    public ProjectProperties()
    {
@@ -102,6 +106,22 @@ public class ProjectProperties
    public void setPaas(String paas)
    {
       this.paas = paas;
+   }
+   
+   /**
+    * @param parenFolder the parenFolder to set
+    */
+   public void setParenFolder(FolderModel parenFolder)
+   {
+      this.parenFolder = parenFolder;
+   }
+   
+   /**
+    * @return the parenFolder
+    */
+   public FolderModel getParenFolder()
+   {
+      return parenFolder;
    }
 
 }

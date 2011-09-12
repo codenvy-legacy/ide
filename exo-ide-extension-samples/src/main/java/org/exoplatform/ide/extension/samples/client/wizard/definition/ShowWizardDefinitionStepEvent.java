@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.definition;
 
+import org.exoplatform.ide.extension.samples.client.ProjectProperties;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -29,9 +31,11 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ShowWizardDefinitionStepEvent extends GwtEvent<ShowWizardDefinitionStepHandler>
 {
+   private ProjectProperties projectProperties;
    
-   public ShowWizardDefinitionStepEvent()
+   public ShowWizardDefinitionStepEvent(ProjectProperties projectProperties)
    {
+      this.projectProperties = projectProperties;
    }
    
    public static final GwtEvent.Type<ShowWizardDefinitionStepHandler> TYPE = new GwtEvent.Type<ShowWizardDefinitionStepHandler>();
@@ -52,6 +56,14 @@ public class ShowWizardDefinitionStepEvent extends GwtEvent<ShowWizardDefinition
    protected void dispatch(ShowWizardDefinitionStepHandler handler)
    {
       handler.onShowWizard(this);
+   }
+   
+   /**
+    * @return the projectProperties
+    */
+   public ProjectProperties getProjectProperties()
+   {
+      return projectProperties;
    }
 
 }

@@ -178,6 +178,10 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
    @Override
    public void onShowWizard(ShowWizardDefinitionStepEvent event)
    {
+      if (event.getProjectProperties() != null)
+      {
+         projectProperties = event.getProjectProperties();
+      }
       openView();
    }
    

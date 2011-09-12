@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLocationStepEvent;
 
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewC
          {
             if (SOURCE_SCRATCH.equals(display.getSelectSourceField().getValue()))
             {
-               eventBus.fireEvent(new ShowWizardDefinitionStepEvent());
+               eventBus.fireEvent(new ShowWizardLocationStepEvent());
             }
             else if (SOURCE_IMPORT.equals(display.getSelectSourceField().getValue()))
             {

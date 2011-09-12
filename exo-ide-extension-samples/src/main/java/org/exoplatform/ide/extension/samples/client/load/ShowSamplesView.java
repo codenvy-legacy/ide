@@ -77,7 +77,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.client.ShowSamplesPresenter.samples.GithubSamplesPresenter.Display#getNextButton()
     */
    @Override
    public HasClickHandlers getNextButton()

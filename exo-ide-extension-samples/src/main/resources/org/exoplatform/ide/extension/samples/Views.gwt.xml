@@ -36,6 +36,10 @@
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter.Display" />
+   </replace-with>
+   
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display" />
    </replace-with>

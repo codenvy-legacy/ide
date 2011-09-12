@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter
 import org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter;
+import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter;
 import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter;
 
 /**
@@ -74,6 +75,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new ShowSamplesPresenter(eventBus);
       
       new WizardSourceStepPresenter(eventBus);
+      new WizardLocationStepPresenter(eventBus);
       new WizardDefinitionStepPresenter(eventBus);
       new WizardDeploymentStepPresenter(eventBus);
       new WizardFinishStepPresenter(eventBus);

@@ -100,7 +100,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
          {
             if (selectedRepos == null || selectedRepos.isEmpty())
             {
-               Dialogs.getInstance().showError(lb.showSamplesErorSelectRepository());
+               Dialogs.getInstance().showError(lb.showSamplesErrorSelectRepository());
                return;
             }
             eventBus.fireEvent(new SelectLocationEvent(selectedRepos.get(0)));
