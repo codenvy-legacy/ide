@@ -21,10 +21,9 @@ package org.exoplatform.ide.client.remote.service;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
 /**
@@ -55,24 +54,9 @@ public class RemoteFileService
    }
 
    /**
-    * Context of server-side service.
-    */
-   private static final String REMOTE_FILE_SERVICE_CONTEXT = "/ide/remotefile/content";
-
-   /**
-    * Event Bus instance.
-    */
-   private HandlerManager eventBus;
-
-   /**
     * Loader instance.
     */
    private Loader loader;
-
-   /**
-    * Context of the Rest Service.
-    */
-   private String restServiceContext;
 
    /**
     * Creates a new instance of RemoteFileService.
@@ -81,13 +65,10 @@ public class RemoteFileService
     * @param loader Loader
     * @param restServiceContext context of the Rest service
     */
-   public RemoteFileService(HandlerManager eventBus, Loader loader, String restServiceContext)
+   public RemoteFileService(Loader loader)
    {
       instance = this;
-
-      this.eventBus = eventBus;
       this.loader = loader;
-      this.restServiceContext = restServiceContext;
    }
 
    /**
@@ -96,21 +77,13 @@ public class RemoteFileService
     * @param url file's url
     * @param callback callback to handle results
     */
-   public void getRemoteFile(String url, AsyncRequestCallback<File> callback)
+   public void getRemoteFileContent(FileModel file, String url, AsyncRequestCallback<FileModel> callback)
    {
-      String requestURL = restServiceContext + REMOTE_FILE_SERVICE_CONTEXT + "?url=" + url;
-
-      File file = new File(url);
-
-      RemoteFileContentUnmarshaller unmarshaller = new RemoteFileContentUnmarshaller(file);
-
       callback.setResult(file);
-      callback.setEventBus(eventBus);
+      callback.setResult(file);
+      Unmarshallable unmarshaller = new RemoteFileContentUnmarshaller(file);
       callback.setPayload(unmarshaller);
-
-      loader.setMessage("Loading remote file...");
-
-      AsyncRequest.build(RequestBuilder.GET, requestURL, loader).header(HTTPHeader.CONNECTION, "close").send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

@@ -140,7 +140,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
       {
          VirtualFileSystem.getInstance().getItem(file.getId(), new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
          {
-
             @Override
             protected void onSuccess(FileModel result)
             {
@@ -178,7 +177,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
          VirtualFileSystem.getInstance().getContent(
             new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(file))
             {
-
                @Override
                protected void onSuccess(FileModel result)
                {

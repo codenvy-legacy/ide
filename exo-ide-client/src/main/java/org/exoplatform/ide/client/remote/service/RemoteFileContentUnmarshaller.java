@@ -19,9 +19,8 @@
 package org.exoplatform.ide.client.remote.service;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.vfs.File;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.http.client.Response;
 
@@ -39,14 +38,14 @@ public class RemoteFileContentUnmarshaller implements Unmarshallable
    /**
     * File
     */
-   private File file;
+   private FileModel file;
 
    /**
     * Crates new instance of this unmarshaller.
     * 
     * @param file
     */
-   public RemoteFileContentUnmarshaller(File file)
+   public RemoteFileContentUnmarshaller(FileModel file)
    {
       this.file = file;
    }
@@ -57,13 +56,12 @@ public class RemoteFileContentUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      String contentType = response.getHeader(HTTPHeader.CONTENT_TYPE);
+      String contentType = response.getHeader("Content-Type");
       if (contentType.indexOf("charset=") >= 0)
       {
          contentType = contentType.substring(0, contentType.indexOf(";"));
       }
-      file.setContentType(contentType);
-
+      file.setMimeType(contentType);
       file.setContent(response.getText());
    }
 

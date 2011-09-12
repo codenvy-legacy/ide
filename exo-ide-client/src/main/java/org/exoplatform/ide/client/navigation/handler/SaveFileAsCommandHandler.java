@@ -189,7 +189,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    {
       FolderModel folderToSave = getFilePath(selectedItems.get(0));
       FileModel newFile = new FileModel(name, file.getMimeType(), file.getContent(), folderToSave);
-      
 
       if (file.isPersisted())
       {
@@ -200,7 +199,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       {
          VirtualFileSystem.getInstance().createFile(folderToSave, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
          {
-
             @Override
             protected void onSuccess(FileModel result)
             {

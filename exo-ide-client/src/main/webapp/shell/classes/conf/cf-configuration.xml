@@ -77,6 +77,10 @@
    </component>
    
    <component>
+   	<type>org.everrest.proxy.ProxyService</type>
+   </component>
+   
+   <component>
       <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
       <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>
    </component>

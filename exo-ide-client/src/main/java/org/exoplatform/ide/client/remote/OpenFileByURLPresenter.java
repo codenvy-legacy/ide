@@ -19,6 +19,30 @@
 
 package org.exoplatform.ide.client.remote;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.remote.service.RemoteFileService;
+import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,23 +52,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.remote.service.RemoteFileService;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter for opening file by URL.
@@ -123,7 +130,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new RemoteFileService(IDE.EVENT_BUS, event.getLoader(), event.getApplicationConfiguration().getContext());
+      new RemoteFileService(event.getLoader());
    }
 
    /**
@@ -195,7 +202,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
          public void onValueChange(ValueChangeEvent<String> event)
          {
             String url = display.getURLField().getValue().trim();
-            if (url == null || url.trim().isEmpty())
+            if (url == null || url.trim().isEmpty() || !url.startsWith("http://"))
             {
                display.setOpenButtonEnabled(false);
             }
@@ -214,37 +221,52 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     */
    private void doOpenFile()
    {
-      String url = display.getURLField().getValue().trim();
-      if (url == null || url.isEmpty())
+      final String url = display.getURLField().getValue().trim();
+      if (url == null || url.isEmpty() || !url.startsWith("http://"))
       {
          display.setOpenButtonEnabled(false);
          return;
       }
-//TODO
-//      RemoteFileService.getInstance().getRemoteFile(url, new AsyncRequestCallback<File>()
-//      {
-//         @Override
-//         protected void onSuccess(File result)
-//         {
-//            openFileInEditor(result);
-//         }
-//
-//         @Override
-//         protected void onFailure(Throwable exception)
-//         {
-//            if (exception instanceof ServerException)
-//            {
-//               ServerException se = (ServerException)exception;
-//               String msg = se.isErrorMessageProvided() ? se.getLocalizedMessage() : "Status:&nbsp;" + se.getHTTPStatus() + "&nbsp;" + se.getStatusText();
-//               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(msg);
-//               Dialogs.getInstance().showError(message);
-//            }
-//            else
-//            {
-//               super.onFailure(exception);
-//            }
-//         }
-//      });
+
+      String fileName = url;
+      if (fileName.endsWith("/"))
+      {
+         fileName = fileName.substring(0, fileName.length() - 1);
+      }
+
+      fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+
+      FileModel file = new FileModel();
+      file.setName(fileName);
+      file.setId(fileName);
+
+      RemoteFileService.getInstance().getRemoteFileContent(file, url, new AsyncRequestCallback<FileModel>()
+      {
+         @Override
+         protected void onSuccess(FileModel result)
+         {
+            openFileInEditor(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            if (exception instanceof ServerException)
+            {
+               ServerException se = (ServerException)exception;
+               String msg =
+                  se.isErrorMessageProvided() ? se.getLocalizedMessage() : "Status:&nbsp;" + se.getHTTPStatus()
+                     + "&nbsp;" + se.getStatusText();
+               String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByURLErrorMessage(msg);
+               Dialogs.getInstance().showError(message);
+            }
+            else
+            {
+               super.onFailure(exception);
+            }
+         }
+      });
+
    }
 
    /**
@@ -252,50 +274,19 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     * 
     * @param file file to be opened in editor.
     */
-   private void openFileInEditor(File file)
+   private void openFileInEditor(FileModel file)
    {
-      //TODO
-//      Item selectedItem = selectedItems.get(0);
-//
-//      String folder = null;
-//
-//      if (selectedItem instanceof Folder)
-//      {
-//         folder = selectedItem.getHref().substring(0, selectedItem.getHref().lastIndexOf("/"));
-//      }
-//      else
-//      {
-//         folder = selectedItem.getHref();
-//      }
-//
-//      if (!folder.endsWith("/"))
-//      {
-//         folder += "/";
-//      }
-//
-//      //String newFileURL = folder + file.getName();
-//      String newFileURL = folder + URL.encodePathSegment(file.getName());
-//
-//      File fileToOpen = new File(newFileURL);
-//      fileToOpen.setName(file.getName());
-//      fileToOpen.setContentType(file.getContentType());
-//      fileToOpen.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(file.getContentType()));
-//      fileToOpen.setContent(file.getContent());
-//      fileToOpen.setNewFile(true);
-//      fileToOpen.setContentChanged(true);
-//      fileToOpen.setIcon(ImageUtil.getIcon(file.getContentType()));
-//
-//      try
-//      {
-//         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getContentType());
-//         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(fileToOpen, editorProducer));
-//         IDE.getInstance().closeView(display.asView().getId());
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         Dialogs.getInstance().showError(
-//            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getContentType()));
-//      }
+      try
+      {
+         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
+         IDE.EVENT_BUS.fireEvent(new EditorOpenFileEvent(file, editorProducer));
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (EditorNotFoundException e)
+      {
+         Dialogs.getInstance().showError(
+            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getMimeType()));
+      }
    }
 
    /**
