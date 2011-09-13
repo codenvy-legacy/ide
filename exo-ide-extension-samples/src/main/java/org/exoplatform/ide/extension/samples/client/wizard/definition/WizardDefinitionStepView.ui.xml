@@ -7,56 +7,21 @@
    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
-   <ui:style>
-      .table
-      {
-         width:100%;
-         height:100%;
-         border-collapse: collapse;
-      }
-      
-      .label-title
-      {
-         font-size: medium;
-         font-weight: bold;
-         vertical-align: middle;
-         padding-left: 10px;
-      }
-      
-      .label-description
-      {
-         font-style: italic;
-         vertical-align: middle;
-         padding-left: 10px;
-      }
-      
-      .top-box
-      {
-         background-color: #eef6ff;
-         vertical-align: middle;
-      }
-      
-      .line
-      {
-         background-color: #a6abaf;
-      }
-   </ui:style>
-
    <f:VPanel>
       <g:VerticalPanel spacing="3" horizontalAlignment="left" verticalAlignment="middle"
-               width="100%" height="60px" stylePrimaryName="{style.top-box}">
-         <g:Label text="{locale.wizardDefinitionTitle}" styleName="{style.label-title}"></g:Label>
-         <g:Label text="{locale.wizardDefinitionText}" styleName="{style.label-description}"></g:Label>
+               width="100%" height="60px" stylePrimaryName="{resource.css.topBox}">
+         <g:Label text="{locale.wizardDefinitionTitle}" styleName="{resource.css.labelTitle}"></g:Label>
+         <g:Label text="{locale.wizardDefinitionText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
       
-      <g:FlowPanel height="1px" width="100%" styleName="{style.line}"></g:FlowPanel>
+      <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
       
       <g:FlowPanel height="30px"></g:FlowPanel>
 
       <!-- panel to select source of project -->
       <g:HTMLPanel height="30px">
          
-         <table class="{style.table}">
+         <table class="{resource.css.table}">
             <tr>
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
                
@@ -95,7 +60,7 @@
       </g:HTMLPanel>
       
       <g:HTMLPanel>
-         <table class="{style.table}">
+         <table class="{resource.css.table}">
             <tr>
                <td style="width:10px;">
                   <div style="width:10px; height:100%;"></div>
@@ -107,7 +72,7 @@
       <!-- Buttons -->
       <g:HTMLPanel height="30px">
          
-         <table class="{style.table}">
+         <table class="{resource.css.table}">
             <tr>
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
                

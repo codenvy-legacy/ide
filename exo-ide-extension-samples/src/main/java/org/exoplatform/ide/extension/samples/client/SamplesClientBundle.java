@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -32,6 +33,12 @@ import com.google.gwt.resources.client.ImageResource;
 public interface SamplesClientBundle extends ClientBundle
 {
    SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle> create(SamplesClientBundle.class);
+   
+   /**
+    * Css resources for project wizard.
+    */
+   @Source("org/exoplatform/ide/extension/samples/client/wizard.css")
+   Style css();
    
    /*
     * Buttons
@@ -80,5 +87,22 @@ public interface SamplesClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/samples/images/project.png")
    ImageResource welcomeProject();
+   
+   public interface Style extends CssResource
+   {
+      String table();
+      
+      String itemsTree();
+      
+      String labelTitle();
+      
+      String labelDescription();
+      
+      String topBox();
+      
+      String line();
+      
+      String labelValue();
+   }
 
 }

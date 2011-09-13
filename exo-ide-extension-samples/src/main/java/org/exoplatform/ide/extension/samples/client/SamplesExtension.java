@@ -67,6 +67,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    @Override
    public void initialize()
    {
+      SamplesClientBundle.INSTANCE.css().ensureInjected();
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
