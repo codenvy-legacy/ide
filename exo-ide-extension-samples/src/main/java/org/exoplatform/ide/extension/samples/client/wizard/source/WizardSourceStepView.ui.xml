@@ -10,35 +10,47 @@
    <ui:style>
       .table
       {
-      width:100%;
-      height:100%;
-      border-collapse: collapse;
+         width:100%;
+         height:100%;
+         border-collapse: collapse;
       }
       
       .label-title
       {
          font-size: medium;
          font-weight: bold;
+         vertical-align: middle;
+         padding-left: 10px;
       }
       
       .label-description
       {
          font-style: italic;
+         vertical-align: middle;
+         padding-left: 10px;
       }
       
       .top-box
       {
-         background-color: #fefdee;
+         background-color: #eef6ff;
+         vertical-align: middle;
+      }
+      
+      .line
+      {
+         background-color: #a6abaf;
       }
    </ui:style>
 
    <f:VPanel>
-      <f:Border margin="10" height="100px">
-         <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%" height="50px" stylePrimaryName="{style.top-box}">
-            <g:Label text="Source" styleName="{style.label-title}"></g:Label>
-            <g:Label text="Create new project or import sample from GitHub" styleName="{style.label-description}"></g:Label>
-         </g:VerticalPanel>
-      </f:Border>
+      <g:VerticalPanel spacing="3" horizontalAlignment="left" verticalAlignment="middle"
+               width="100%" height="60px" stylePrimaryName="{style.top-box}">
+         <g:Label text="{locale.wizardSourceTitle}" styleName="{style.label-title}"></g:Label>
+         <g:Label text="{locale.wizardSourceText}" styleName="{style.label-description}"></g:Label>
+      </g:VerticalPanel>
+      <g:FlowPanel height="1px" width="100%" styleName="{style.line}"></g:FlowPanel>
+      
+      <g:FlowPanel height="30px"></g:FlowPanel>
 
       <!-- panel to select source of project -->
       <g:HTMLPanel height="30px">
@@ -48,7 +60,7 @@
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
                
                <td style="width:90px;">
-                  <g:Label text="Source" width="90px"></g:Label>
+                  <g:Label text="{locale.wizardSourceLable}" width="90px"></g:Label>
                </td>
                
                <td><div style="width:1px; height:1px;"></div></td>

@@ -19,9 +19,11 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -46,6 +48,34 @@ public abstract class SamplesClientService
       instance = this;
    }
    
+   /**
+    * Get the list of available public repositories from GitHub
+    * with sample applications.
+    * 
+    * @param callback the callback client has to implement
+    */
    public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback);
+   
+   /************ CloudBees operations ************/
+   
+   /**
+    * Initialize application.
+    * 
+    * @param appId
+    * @param warFile
+    * @param message
+    * @param callback
+    */
+   public abstract void createCloudBeesApplication(String appId, String warFile, String message, String workDir,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+   
+   /**
+    * Get the domains.
+    * 
+    * @param callback - callback that client has to implement
+    */
+   public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback);
+   
+   public abstract void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback);
    
 }

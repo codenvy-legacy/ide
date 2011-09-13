@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
@@ -72,6 +74,8 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       
       HasValue<String> getTypeLable();
    }
+   
+   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
    
    private HandlerManager eventBus;
    
@@ -124,12 +128,12 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
          {
             if (projectProperties == null)
             {
-               Dialogs.getInstance().showError("Project Properties are null. Information can't be save");
+               Dialogs.getInstance().showError(lb.wizardFinishErrorProjectPropertiesAreNull());
                return;
             }
             if (!(selectedItems.get(0) instanceof FolderModel))
             {
-               Dialogs.getInstance().showError("Select Folder to create project");
+               Dialogs.getInstance().showError(lb.wizardFinishErrorNoFolderSelected());
                return;
             }
             finishProjectCreation();
@@ -227,8 +231,7 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
             protected void onFailure(Throwable exception)
             {
                exception.printStackTrace();
-               eventBus.fireEvent(new ExceptionThrownEvent(exception,
-                  "Can't create project"));
+               eventBus.fireEvent(new ExceptionThrownEvent(exception, lb.wizardFinishErrorCantCreateProject()));
             }
          });
       }

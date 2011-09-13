@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.source;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.google.gwt.uibinder.client.UiField;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-
-import java.util.List;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
  * View to show Wizard for Java project creation.
@@ -45,7 +41,7 @@ public class WizardSourceStepView extends ViewImpl implements WizardSourceStepPr
 {
    private static final String ID = "WizardProjectSourceView";
    
-   private static final String TITLE = "Wizard for Java Project";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.wizardSourceDialogTitle();
    
    private static final int HEIGHT = 345;
 

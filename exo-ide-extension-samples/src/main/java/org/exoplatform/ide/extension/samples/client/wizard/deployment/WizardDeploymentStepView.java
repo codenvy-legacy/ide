@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
  * View to show Wizard for Java project creation.
@@ -43,7 +44,7 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
 {
    private static final String ID = "WizardProjectDeploymentView";
    
-   private static final String TITLE = "Wizard for Java Project";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.wizardDeploymentDialogTitle();
    
    private static final int HEIGHT = 345;
 

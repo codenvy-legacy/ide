@@ -33,6 +33,8 @@ import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
  * View to show Wizard for Java project creation.
@@ -44,7 +46,7 @@ public class WizardDefinitionStepView extends ViewImpl implements WizardDefiniti
 {
    private static final String ID = "WizardProjectDefinitionView";
    
-   private static final String TITLE = "Wizard for Java Project";
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.wizardDefinitionDialogTitle();
    
    private static final int HEIGHT = 345;
 

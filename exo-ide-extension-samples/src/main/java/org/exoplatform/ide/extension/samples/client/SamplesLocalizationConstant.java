@@ -112,5 +112,123 @@ public interface SamplesLocalizationConstant extends Constants
     */
    @Key("showSamples.error.selectRepo")
    String showSamplesErrorSelectRepository();
+   
+   /*
+    * WizardDefinitionStepView
+    */
+   @Key("wizard.definition.dialog.title")
+   String wizardDefinitionDialogTitle();
+   
+   @Key("wizard.definition.title")
+   String wizardDefinitionTitle();
+   
+   @Key("wizard.definition.text")
+   String wizardDefinitionText();
+   
+   @Key("wizard.definition.name")
+   String wizardDefinitionName();
+   
+   @Key("wizard.definition.type")
+   String wizardDefinitionType();
+   
+   /*
+    * WizardDeploymentStepView
+    */
+   @Key("wizard.deployment.dialog.title")
+   String wizardDeploymentDialogTitle();
+   
+   @Key("wizard.deployment.title")
+   String wizardDeploymentTitle();
+   
+   @Key("wizard.deployment.text")
+   String wizardDeploymentText();
+   
+   @Key("wizard.deployment.paas")
+   String wizardDeploymentPaas();
+   
+   /*
+    * WizardFinishStepView
+    */
+   @Key("wizard.finish.dialog.title")
+   String wizardFinishDialogTitle();
+   
+   @Key("wizard.finish.title")
+   String wizardFinishTitle();
+   
+   @Key("wizard.finish.text")
+   String wizardFinishText();
+   
+   @Key("wizard.finish.name")
+   String wizardFinishName();
+   
+   @Key("wizard.finish.type")
+   String wizardFinishType();
+   
+   @Key("wizard.finish.error.projectPropertiesAreNull")
+   String wizardFinishErrorProjectPropertiesAreNull();
+   
+   @Key("wizard.finish.error.noFolderSelected")
+   String wizardFinishErrorNoFolderSelected();
+   
+   @Key("wizard.finish.error.cantCreateProject")
+   String wizardFinishErrorCantCreateProject();
+   
+   /*
+    * WizardLocationStepView
+    */
+   @Key("wizard.location.newFolder")
+   String wizardLocationNewFolder();
+   
+   /*
+    * WizardSourceStepView
+    */
+   @Key("wizard.source.dialog.title")
+   String wizardSourceDialogTitle();
+   
+   @Key("wizard.source.title")
+   String wizardSourceTitle();
+   
+   @Key("wizard.source.text")
+   String wizardSourceText();
+   
+   @Key("wizard.source.source")
+   String wizardSourceLable();
+   
+   /*
+    * WizardLocationStepView
+    */
+   @Key("wizard.location.title")
+   String wizardLocationTitle();
+   
+   @Key("wizard.location.text")
+   String wizardLocationText();
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
 }
