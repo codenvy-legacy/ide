@@ -50,6 +50,7 @@ import org.exoplatform.ide.extension.samples.client.location.SelectLocationPrese
 import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
+import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -206,7 +207,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowSamplesEvent());
+            eventBus.fireEvent(new ShowWizardSourceEvent());
             closeView();
          }
       });
