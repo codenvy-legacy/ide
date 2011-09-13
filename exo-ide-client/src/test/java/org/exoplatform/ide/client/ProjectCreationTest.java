@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import static org.easymock.EasyMock.createStrictMock;
-
-import org.easymock.internal.MockInvocationHandler;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
