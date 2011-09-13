@@ -59,7 +59,12 @@ import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
+import org.exoplatform.ide.client.project.CreateProjectForm;
+import org.exoplatform.ide.client.project.CreateProjectPresenter;
+import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
+import org.exoplatform.ide.client.project.event.CreateProjectEvent;
+import org.exoplatform.ide.client.project.event.CreateProjectHandler;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -160,6 +165,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new PreferencesModule(EVENT_BUS);
       new HotKeyManagementModule(EVENT_BUS);
+      
+      EVENT_BUS.addHandler(CreateProjectEvent.TYPE, new CreateProjectHandler()
+      {
+         @Override
+         public void onCreateProject(CreateProjectEvent event)
+         {
+            new CreateProjectPresenter(EVENT_BUS, VirtualFileSystem.getInstance(), (Display)GWT.create(CreateProjectPresenter.Display.class), context.getSelectedItems());
+         }
+      });
       
       //initialize extensions
       for (Extension ext : extensions)

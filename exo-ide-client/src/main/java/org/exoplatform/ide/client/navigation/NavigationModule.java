@@ -303,6 +303,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      context.setSelectedItem(event.getSelectedItems());
    }
 
    public void onVfsChanged(VfsChangedEvent event)

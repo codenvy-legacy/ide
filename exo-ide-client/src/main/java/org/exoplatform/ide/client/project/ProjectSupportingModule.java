@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
+import org.exoplatform.ide.client.project.control.NewProjectControl;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -64,8 +66,9 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    public ProjectSupportingModule(HandlerManager eventBus) {
       this.eventBus = eventBus;
       
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));      
+      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
+      IDE.getInstance().addControl(new CreateProjectTemplateControl());      
+      IDE.getInstance().addControl(new NewProjectControl());
       
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       
@@ -73,6 +76,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       
       new CreateProjectFromTemplatePresenter(eventBus);
       new CreateProjectTemplatePresenter(eventBus);
+    
    }
    
    /**

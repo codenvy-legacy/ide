@@ -171,4 +171,8 @@
       <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.client.project.CreateProjectForm">
+      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectPresenter.Display"/>
+   </replace-with>
+   
 </module>

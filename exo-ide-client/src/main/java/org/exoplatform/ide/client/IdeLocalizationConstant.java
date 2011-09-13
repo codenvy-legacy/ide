@@ -96,6 +96,15 @@ public interface IdeLocalizationConstant extends Constants
    @DefaultStringValue("New folder")
    @Key("newFolderName")
    String newFolderName();
+   
+   @DefaultStringValue("Project Name")
+   @Key("projectName")
+   String projectName();
+   
+   @DefaultStringValue("Project Type")
+   @Key("projectType")
+   String projectType();
+
 
    /*
     * DocumentationView

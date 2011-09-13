@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -43,7 +44,7 @@ public abstract class IDE
    protected static List<Extension> extensions = new ArrayList<Extension>();
 
    private static IDE instance;
-
+   
    protected IDE()
    {
       instance = this;

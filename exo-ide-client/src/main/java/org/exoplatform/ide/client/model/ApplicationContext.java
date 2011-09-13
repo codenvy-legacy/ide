@@ -33,6 +33,9 @@ import java.util.List;
 public class ApplicationContext
 {
 
+   
+   private List<Item> selectedItems;
+   
    /**
     * Uses for storing items to need copy
     */
@@ -51,6 +54,26 @@ public class ApplicationContext
    public List<Item> getItemsToCut()
    {
       return itemsToCut;
+   }
+   
+   /**
+    * Return selected item in browser tree. Can be used throw all application. 
+    * 
+    * @return
+    */
+   public List<Item> getSelectedItems()
+   {
+      return selectedItems;
+   }
+   
+   /**
+    * Store selected item in browser tree in real time. 
+    * 
+    * @param selectedItem
+    */
+   public void setSelectedItem(List<Item> selectedItem)
+   {
+      this.selectedItems = selectedItem;
    }
 
 }

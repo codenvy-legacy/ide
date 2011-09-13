@@ -23,6 +23,7 @@ import com.google.gwt.resources.client.ImageResource;
 import org.exoplatform.ide.client.framework.ui.IconImageBundle;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class ImageUtil
    {
       images.put(null, IconImageBundle.INSTANCE.defaultFile());
       images.put(Folder.FOLDER_MIME_TYPE, IconImageBundle.INSTANCE.folder());
+      images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.project());
    }
 
    public static void putIcon(String mimeType, ImageResource imageResource)
