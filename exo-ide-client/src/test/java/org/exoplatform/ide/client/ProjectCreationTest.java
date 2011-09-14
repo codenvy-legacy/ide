@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client;
 
+import org.easymock.EasyMock;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -26,9 +27,11 @@ import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.D
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.project.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
+import org.exoplatform.ide.client.project.CreateProjectPresenter.ErrorMessage;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -48,6 +51,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -60,17 +64,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ProjectCreationTest extends TestCase
 {
-   private CreateProjectPresenter presenter;
    
    private MockVirtualFileSystem vfs = new MockVirtualFileSystem("dev-monit");
    
    private HandlerManager eventBus;
    
-   private CreateProjectPresenter.Display mockDisplay;
+   private CreateProjectPresenter.Display display;
    
    private String projectName;
    
    private String error;
+   
    
    public void setError(String error)
    {
@@ -87,7 +91,12 @@ public class ProjectCreationTest extends TestCase
    protected void setUp() {
       new MockIde();
       eventBus = IDE.getInstance().EVENT_BUS;
-      mockDisplay = new MockDisplay();
+      GWTMockUtilities.disarm(); 
+//      IsView view = EasyMock.createStrictMock(IsView.class);
+//      mockDisplay = EasyMock.createStrictMock(Display.class);
+//      EasyMock.replay(view,mockDisplay);
+      
+      display = new MockDisplay();
       eventBus.addHandler(ExceptionThrownEvent.TYPE, new MockExceptionThrownHandler());
    }
    
@@ -96,8 +105,9 @@ public class ProjectCreationTest extends TestCase
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
-      presenter = new CreateProjectPresenter(eventBus, vfs, mockDisplay, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName("test");
+      presenter.setErrorMessage(new MockErrorMessages());
       List<String> list = new ArrayList<String>();
       list.add("Java Project");
       presenter.setProjectTypes(list);
@@ -111,13 +121,13 @@ public class ProjectCreationTest extends TestCase
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
       selectedItems.add(new FolderModel());
-      presenter = new CreateProjectPresenter(eventBus, vfs, mockDisplay, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName("test");
+      presenter.setErrorMessage(new MockErrorMessages());
       List<String> list = new ArrayList<String>();
       list.add("Java Project");
       presenter.setProjectTypes(list);
       presenter.doCreateProject();
-      Thread.sleep(10);
       assertNotNull(getError());
    }
    
@@ -125,13 +135,13 @@ public class ProjectCreationTest extends TestCase
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
-      presenter = new CreateProjectPresenter(eventBus, vfs, mockDisplay, selectedItems);
+      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName(null);
+      presenter.setErrorMessage(new MockErrorMessages());
       List<String> list = new ArrayList<String>();
       list.add("Java Project");
       presenter.setProjectTypes(list);
       presenter.doCreateProject();
-      Thread.sleep(100);
       assertNotNull(getError());
    }
    
@@ -155,13 +165,31 @@ public class ProjectCreationTest extends TestCase
    {
       super.tearDown();
       eventBus = null;
+      GWTMockUtilities.restore();
    }
    
    
    //Mock Classes
    //TODO: need improve for use easymock framework.
    
+   private class MockErrorMessages implements ErrorMessage
+   {
+
+      @Override
+      public String cantCreateProjectIfMultiselectionParent()
+      {
+         return "Can't create project you must select only one parent folder";
+      }
+
+      @Override
+      public String cantCreateProjectIfProjectNameNotSet()
+      {
+         return "Project name can't be empty or null";
+      }
+      
+   }
    
+  
    private class MockExceptionThrownHandler implements ExceptionThrownHandler
    {
 

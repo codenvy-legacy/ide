@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -33,11 +34,13 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,6 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
 */
 public class CreateProjectPresenter
 {
+   
    private final HandlerManager eventBus;
 
    private final Display display;
@@ -55,6 +59,19 @@ public class CreateProjectPresenter
    private final List<Item> selectedItems;
 
    private final VirtualFileSystem vfs;
+   
+   public interface ErrorMessage extends Constants
+   {
+      @Key("project.cantCreateProjectIfMultiselectionParent")
+      @DefaultStringValue("Can't create project you must select only one parent folder")
+      String cantCreateProjectIfMultiselectionParent();
+      
+      @Key("project.cantCreateProjectIfProjectNameNotSet")
+      @DefaultStringValue("Project name can't be empty or null")
+      String cantCreateProjectIfProjectNameNotSet();
+   }
+   
+   
 
    public interface Display extends IsView
    {
@@ -73,6 +90,8 @@ public class CreateProjectPresenter
       Widget asWidget();
 
    }
+   
+   private ErrorMessage errorMessage = GWT.create(ErrorMessage.class);
 
    public CreateProjectPresenter(HandlerManager eventBus, VirtualFileSystem vfs, Display display,
       final List<Item> selectedItems)
@@ -118,18 +137,18 @@ public class CreateProjectPresenter
 
       if (selectedItems.size() > 1)
       {
-         IDE.EVENT_BUS
-            .fireEvent(new ExceptionThrownEvent("Can't create project you must select only one parent folder"));
+         eventBus
+            .fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfMultiselectionParent()));
          return;
       }
       if (selectedItems.get(0).getItemType() == ItemType.FILE)
       {
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
+         eventBus.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
          return;
       }
       ProjectModel model = new ProjectModel();
       if (display.getProjectName().getValue() == null || display.getProjectName().getValue().length() == 0)
-         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Project nqame can't be empty or null"));
+         eventBus.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
       model.setName(display.getProjectName().getValue());
       model.setProjectType(display.getProjectType().getValue());
       model.setParent((FolderModel)selectedItems.get(0));
@@ -142,14 +161,13 @@ public class CreateProjectPresenter
             @Override
             protected void onSuccess(ProjectModel result)
             {
-               System.out.println("NewProjectControl.createDialogBox()" + result.getParent());
-               IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(result.getParent()));
+               eventBus.fireEvent(new RefreshBrowserEvent(result.getParent()));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception,
+               eventBus.fireEvent(new ExceptionThrownEvent(exception,
                   "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
             }
 
@@ -161,14 +179,34 @@ public class CreateProjectPresenter
       }
    }
    
+   /**
+    * Set default project name ("NewProject").
+    * 
+    * @param name
+    */
    public void setProjectName(String name)
    {
       display.setProjectName(name);
    }
    
+   /**
+    * Set available types of project
+    * 
+    * @param types
+    */
    public void setProjectTypes(List<String> types)
    {
       display.setProjectType(types);
+   }
+   
+   /**
+    * Replace instance of Error Messages. Technically it need for with pure JUnit.  
+    * 
+    * @param errorMessage
+    */
+   public void setErrorMessage(ErrorMessage errorMessage)
+   {
+      this.errorMessage = errorMessage;
    }
 
 

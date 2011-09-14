@@ -244,11 +244,4 @@ public interface IdeErrorsLocalizationConstant extends Constants
    @Key("configuration.receivedJsonValueNotAnObject")
    String configurationReceivedJsonValueNotAnObject();
    
-   @Key("project.cantCreateProjectIfMultiselectionParent")
-   @DefaultStringValue("Can't create project you must select only one parent folder")
-   String cantCreateProjectIfMultiselectionParent();
-   
-   @Key("project.cantCreateProjectIfProjectNameNotSet")
-   @DefaultStringValue("Project name can't be empty or null")
-   String cantCreateProjectIfProjectNameNotSet();
 }
