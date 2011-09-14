@@ -152,7 +152,7 @@ public class PerspectiveImpl extends Layer implements Perspective
       addLayer(modalWindowsLayer);
 
       new GWTDialogs(modalWindowsLayer);
-      IDEDialogWindow.setIdeDialogWindowsRootPanel(modalWindowsLayer);
+      //IDEDialogWindow.setIdeDialogWindowsRootPanel(modalWindowsLayer);
    }
 
    /**

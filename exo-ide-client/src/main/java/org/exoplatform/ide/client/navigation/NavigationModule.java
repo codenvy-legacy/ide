@@ -76,6 +76,7 @@ import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
+import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
@@ -155,7 +156,9 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
 
       new UploadZipPresenter();
 
-      eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
+      //eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
+      
+      new OpenLocalFilePresenter();
 
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();

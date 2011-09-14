@@ -174,5 +174,9 @@
    <replace-with class="org.exoplatform.ide.client.project.CreateProjectForm">
       <when-type-is class="org.exoplatform.ide.client.project.CreateProjectPresenter.Display"/>
    </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">
+      <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display" />
+   </replace-with>
    
 </module>

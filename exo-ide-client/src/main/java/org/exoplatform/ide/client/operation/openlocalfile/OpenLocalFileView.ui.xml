@@ -1,0 +1,100 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:up="urn:import:org.exoplatform.ide.client.framework.ui.upload"
+	>
+
+	<ui:style>
+		.absolute
+		{
+			position:absolute;
+			left:0px;
+			top:0px;
+		}
+		
+		.defaultCursor
+		{
+			cursor: default;
+		}
+		
+		.labels
+		{
+		    cursor: default;
+		    font-family: Verdana,Bitstream Vera Sans,sans-serif;
+		    font-size: 11px;
+		    font-style: normal;
+		    font-weight: normal;			
+		}
+			
+	</ui:style>
+	
+	<c:Border margin="5" borderColor="transparent">
+		<c:VPanel>
+			<c:Panel></c:Panel>
+			
+			<c:HPanel height="100px">
+				<c:Panel width="40px"></c:Panel>
+				
+			  	<g:HTMLPanel>
+					<table style="width:100%; height:100%;" border="0" cellpadding="0">
+					  
+					  <tr style="height:20px;">
+					    	<td colspan="2" style="height:20px; vertical-align: middle;" class="{style.labels}">
+								File to open:
+					    	</td>
+					  </tr>
+					  
+					  <tr style="height:24px;">
+							<td>
+								<c:TextField showTitle="false" textItemHeight="22" width="100%" ui:field="fileNameField" textFieldId="ideUploadFormFilenameField" readOnly="true"></c:TextField>
+					  		</td>
+					  	
+					  		<td style="width:80px;">
+								<g:AbsolutePanel width="80px" height="22px">
+									<c:ImageButton width="80px" height="22px" text="Browse" addStyleNames="{style.absolute}"></c:ImageButton>
+
+									<g:FormPanel addStyleNames="{style.absolute}" ui:field="uploadForm">
+										<g:HorizontalPanel ui:field="postFieldsPanel">
+											<up:FileUploadInput ui:field="fileUploadInput" width="80px" height="22px" transparent="true" addStyleNames="{style.defaultCursor}"></up:FileUploadInput>
+										</g:HorizontalPanel>
+									</g:FormPanel>
+									
+								</g:AbsolutePanel>
+					  		</td>
+					  </tr>
+					  
+					  <tr style="height:20px;">
+					    	<td colspan="2" style="height:20px; vertical-align: middle;" class="{style.labels}">
+					    		Mime Type:
+					    	</td>
+					  </tr>
+					  
+					  <tr style="height:24px;">
+					  		<td colspan="2">
+					  			<c:ComboBoxField ui:field="mimeTypesField" name="ideUploadFormMimeTypeField" pickListHeight="100" showTitle="false" width="100%"></c:ComboBoxField>					  			
+					  		</td>
+					  </tr>					  
+					  
+					</table>
+			  	</g:HTMLPanel>
+				<c:Panel width="40px"></c:Panel>
+			</c:HPanel>
+			
+			<g:HorizontalPanel spacing="10" height="60px">
+				<g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
+					<c:ImageButton ui:field="openButton" text="Open" imageName="upload" buttonId="ideUploadFormUploadButton"></c:ImageButton>
+				</g:cell>
+				
+				<g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
+					<c:ImageButton ui:field="cancelButton" text="Cancel" imageName="cancel" buttonId="ideUploadFormCloseButton"></c:ImageButton>
+				</g:cell>
+			</g:HorizontalPanel>		
+						
+			<c:Panel></c:Panel>
+		</c:VPanel>
+	</c:Border>
+	
+</ui:UiBinder>
+ 
