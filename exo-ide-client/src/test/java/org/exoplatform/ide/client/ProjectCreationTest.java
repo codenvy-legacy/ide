@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
 import org.exoplatform.ide.client.project.CreateProjectPresenter.ErrorMessage;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -116,7 +117,7 @@ public class ProjectCreationTest extends TestCase
    }
    
    
-   public void testCreateProjectFail() throws InterruptedException
+   public void testCreateProjectFailifSelectToFolder() throws InterruptedException
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
@@ -131,10 +132,24 @@ public class ProjectCreationTest extends TestCase
       assertNotNull(getError());
    }
    
-   public void testCreateProjectFail2() throws InterruptedException
+   public void testCreateProjectFailEmptyProjectName() throws InterruptedException
    {
       List<Item> selectedItems = new ArrayList<Item>();
       selectedItems.add(new FolderModel());
+      CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
+      presenter.setProjectName(null);
+      presenter.setErrorMessage(new MockErrorMessages());
+      List<String> list = new ArrayList<String>();
+      list.add("Java Project");
+      presenter.setProjectTypes(list);
+      presenter.doCreateProject();
+      assertNotNull(getError());
+   }
+   
+   public void testCreateProjectFailIfParenIfFile() throws InterruptedException
+   {
+      List<Item> selectedItems = new ArrayList<Item>();
+      selectedItems.add(new FileModel());
       CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName(null);
       presenter.setErrorMessage(new MockErrorMessages());
