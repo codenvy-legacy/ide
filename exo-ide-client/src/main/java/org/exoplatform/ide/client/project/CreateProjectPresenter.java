@@ -67,7 +67,7 @@ public class CreateProjectPresenter
       String cantCreateProjectIfMultiselectionParent();
       
       @Key("project.cantCreateProjectIfProjectNameNotSet")
-      @DefaultStringValue("Project name can't be empty or null")
+      //@DefaultStringValue("Project name can't be empty or null")
       String cantCreateProjectIfProjectNameNotSet();
    }
    
@@ -146,9 +146,13 @@ public class CreateProjectPresenter
          eventBus.fireEvent(new ExceptionThrownEvent("Can't create project you must select as parent folder"));
          return;
       }
-      ProjectModel model = new ProjectModel();
       if (display.getProjectName().getValue() == null || display.getProjectName().getValue().length() == 0)
+      {
          eventBus.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
+         return;
+      }
+      ProjectModel model = new ProjectModel();
+      
       model.setName(display.getProjectName().getValue());
       model.setProjectType(display.getProjectType().getValue());
       model.setParent((FolderModel)selectedItems.get(0));
