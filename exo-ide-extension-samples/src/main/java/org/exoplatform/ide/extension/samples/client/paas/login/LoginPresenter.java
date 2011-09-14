@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 
 /**
  * Presenter for login view.
@@ -184,6 +185,26 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       final String email = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
 
+      SamplesClientService.getInstance().loginToCloudBees(email, password, new AsyncRequestCallback<String>()
+      {
+         @Override
+         protected void onSuccess(String result)
+         {
+            eventBus.fireEvent(new OutputEvent("Logged in to CloudBees", Type.INFO));
+            if (loggedIn != null)
+            {
+               loggedIn.onLoggedIn();
+            }
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            eventBus.fireEvent(new OutputEvent("Login to CloudBees failed", Type.INFO));
+            super.onFailure(exception);
+         }
+      });
       //TODO: login to needed paas
 //      CloudBeesClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
 //      {

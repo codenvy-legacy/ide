@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
+import org.exoplatform.ide.extension.samples.client.paas.cloudbees.InitializeApplicationEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
@@ -210,6 +211,9 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
    
    private void finishProjectCreation()
    {
+//      eventBus.fireEvent(new InitializeApplicationEvent());
+//      closeView();
+      
       try
       {
          final FolderModel parent = projectProperties.getParenFolder();
@@ -224,6 +228,7 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
             {
                eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
                eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
+               eventBus.fireEvent(new InitializeApplicationEvent());
                closeView();
             }
             
