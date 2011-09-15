@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.Utils;
 
@@ -73,7 +74,12 @@ public class Workspace extends AbstractTestModule
     */
    public String getItemId(String href) throws Exception
    {
-      return TREE_PREFIX_ID + Utils.md5(href);
+      String itemId = href.substring(BaseTest.WS_URL.length());
+      if (itemId.endsWith("/"))
+         itemId = itemId.substring(0, itemId.length() - 1);
+      itemId = itemId.replaceAll("/", "-");
+      itemId = itemId.replaceAll(" ", "_");
+      return TREE_PREFIX_ID + itemId;
    }
 
    public void doubleClickOnFolder(String folderURL) throws Exception
