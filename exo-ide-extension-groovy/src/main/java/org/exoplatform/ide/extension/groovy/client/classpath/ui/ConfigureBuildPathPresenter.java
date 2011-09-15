@@ -335,7 +335,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    {
       try
       {
-         VirtualFileSystem.getInstance().getItem(file.getId(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Item.REL_SELF).getHref(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
          {
             
             @Override
