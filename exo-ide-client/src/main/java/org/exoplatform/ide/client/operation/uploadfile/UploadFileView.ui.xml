@@ -5,6 +5,7 @@
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	xmlns:up="urn:import:org.exoplatform.ide.client.framework.ui.upload"
 	>
+
 	<ui:with field="ideUploadLocale" type="org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant"></ui:with>
 	<ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
 
@@ -69,7 +70,7 @@
 					  
 					  <tr style="height:20px;">
 					    	<td colspan="2" style="height:20px; vertical-align: middle;" class="{style.labels}">
-					    		<c:Label text="{ideUploadLocale.uploadFileMimeType}"></c:Label>
+					    		<g:Label text="{ideUploadLocale.uploadFileMimeType}"></g:Label>
 					    	</td>
 					  </tr>
 					  
@@ -86,7 +87,7 @@
 			
 			<g:HorizontalPanel spacing="10" height="60px">
 				<g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
-					<c:ImageButton ui:field="openButton" text="{ideUploadLocale.openButton}" imageName="upload" buttonId="ideUploadFormUploadButton"></c:ImageButton>
+					<c:ImageButton ui:field="openButton" text="{ideUploadLocale.uploadButton}" imageName="upload" buttonId="ideUploadFormUploadButton"></c:ImageButton>
 				</g:cell>
 				
 				<g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">

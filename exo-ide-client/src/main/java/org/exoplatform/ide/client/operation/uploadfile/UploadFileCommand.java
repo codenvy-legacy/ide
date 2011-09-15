@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.upload;
+package org.exoplatform.ide.client.operation.uploadfile;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -63,7 +63,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
       setPrompt(TITLE);
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      setEvent(new UploadFileEvent(UploadFileEvent.UploadType.FILE));
+      setEvent(new UploadFileEvent());
    }
 
    /**

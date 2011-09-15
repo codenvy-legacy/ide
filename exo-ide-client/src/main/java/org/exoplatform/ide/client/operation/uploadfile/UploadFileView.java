@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.operation.openlocalfile;
+package org.exoplatform.ide.client.operation.uploadfile;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -48,21 +48,20 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class OpenLocalFileView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display
+public class UploadFileView extends ViewImpl implements org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
 {
-
+   
    public static final int WIDTH = 500;
 
    public static final int HEIGHT = 220;
 
-   private static final String ID = "ideOpenLocalFile";
+   private static final String ID = "ideUploadForm";
 
-   private static final String TITLE = IDE.UPLOAD_CONSTANT.openLocalFileTitle();
+   private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();   
 
-   private static OpenLocalFileViewUiBinder uiBinder = GWT.create(OpenLocalFileViewUiBinder.class);
+   private static UploadFileViewUiBinder uiBinder = GWT.create(UploadFileViewUiBinder.class);
 
-   interface OpenLocalFileViewUiBinder extends UiBinder<Widget, OpenLocalFileView>
+   interface UploadFileViewUiBinder extends UiBinder<Widget, UploadFileView>
    {
    }
 
@@ -84,7 +83,7 @@ public class OpenLocalFileView extends ViewImpl implements
    @UiField
    ComboBoxField mimeTypesField;
 
-   public OpenLocalFileView()
+   public UploadFileView()
    {
       super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
@@ -164,6 +163,6 @@ public class OpenLocalFileView extends ViewImpl implements
    public HasFileSelectedHandler getFileUploadInput()
    {
       return fileUploadInput;
-   }
+   }   
 
 }

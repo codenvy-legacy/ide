@@ -18,16 +18,19 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
@@ -40,7 +43,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.control.CopyItemsCommand;
 import org.exoplatform.ide.client.navigation.control.CutItemsCommand;
@@ -77,17 +79,11 @@ import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePres
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
+import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
-import org.exoplatform.ide.client.upload.OpenLocalFileCommand;
-import org.exoplatform.ide.client.upload.OpenLocalFileForm;
-import org.exoplatform.ide.client.upload.UploadFileCommand;
-import org.exoplatform.ide.client.upload.UploadFileEvent;
-import org.exoplatform.ide.client.upload.UploadFileForm;
-import org.exoplatform.ide.client.upload.UploadFileHandler;
-import org.exoplatform.ide.client.upload.UploadForm;
 import org.exoplatform.ide.client.versioning.VersionsListPresenter;
 import org.exoplatform.ide.client.versioning.control.RestoreToVersionControl;
 import org.exoplatform.ide.client.versioning.control.ViewNextVersionControl;
@@ -98,28 +94,22 @@ import org.exoplatform.ide.client.versioning.handler.RestoreToVersionCommandHand
 import org.exoplatform.ide.client.versioning.handler.VersionHistoryCommandHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class NavigationModule implements UploadFileHandler, CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler,
-   VfsChangedHandler, ConfigurationReceivedSuccessfullyHandler, InitializeServicesHandler,
+public class NavigationModule implements CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler,
+   VfsChangedHandler, InitializeServicesHandler,
    EditorFileClosedHandler, EditorFileOpenedHandler
 {
    private HandlerManager eventBus;
 
    private ApplicationContext context;
-
-   private IDEConfiguration applicationConfiguration;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -152,14 +142,10 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new UploadFileCommand()));
-
-      new UploadZipPresenter();
-
-      //eventBus.fireEvent(new RegisterControlEvent(new OpenLocalFileCommand()));
       
+      new UploadFilePresenter();
+      new UploadZipPresenter();
       new OpenLocalFilePresenter();
-
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();
 
@@ -185,9 +171,7 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
 
-      eventBus.addHandler(UploadFileEvent.TYPE, this);
       eventBus.addHandler(CopyItemsEvent.TYPE, this);
       eventBus.addHandler(CutItemsEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -224,55 +208,9 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      //      new WebDavVirtualFileSystem(eventBus, event.getLoader(), ImageUtil.getIcons(), event
-      //         .getApplicationConfiguration().getContext());
       new VirtualFileSystem(event.getApplicationConfiguration().getDefaultEntryPoint());
-
    }
 
-   public void onUploadFile(UploadFileEvent event)
-   {
-      FolderModel folder = null;
-
-      if (selectedItems == null || selectedItems.size() == 0)
-      {
-         if (UploadFileEvent.UploadType.FILE.equals(event.getUploadType())
-            || UploadFileEvent.UploadType.FOLDER.equals(event.getUploadType()))
-         {
-            Dialogs.getInstance().showInfo(IDE.ERRORS_CONSTANT.navigationUploadNoTargetSelected());
-            return;
-         }
-      }
-      else
-      {
-         Item item = selectedItems.get(0);
-
-         if (item instanceof FileModel)
-         {
-            folder = ((FileModel)item).getParent();
-         }
-         else
-         {
-            folder = (FolderModel)item;
-         }
-      }
-
-      //      eventBus.fireEvent(new ClearFocusEvent());
-      ClearFocusForm.getInstance().clearFocus();
-
-      if (UploadFileEvent.UploadType.OPEN_FILE.equals(event.getUploadType()))
-      {
-         new OpenLocalFileForm(eventBus, selectedItems, folder, applicationConfiguration);
-      }
-      else if (UploadFileEvent.UploadType.FILE.equals(event.getUploadType()))
-      {
-         new UploadFileForm(eventBus, selectedItems, folder, applicationConfiguration);
-      }
-      else if (UploadFileEvent.UploadType.FOLDER.equals(event.getUploadType()))
-      {
-         new UploadForm(eventBus, selectedItems, folder, applicationConfiguration);
-      }
-   }
 
    public void onCopyItems(CopyItemsEvent event)
    {
@@ -312,11 +250,6 @@ public class NavigationModule implements UploadFileHandler, CopyItemsHandler, Cu
    public void onVfsChanged(VfsChangedEvent event)
    {
       entryPoint = event.getEntryPoint().getHref();
-   }
-
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      applicationConfiguration = event.getConfiguration();
    }
 
    /**

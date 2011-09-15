@@ -179,4 +179,8 @@
       <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.client.operation.uploadfile.UploadFileView">
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display" />
+   </replace-with>
+
 </module>

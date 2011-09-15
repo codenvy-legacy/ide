@@ -17,19 +17,22 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.operation.openlocalfile;
+package org.exoplatform.ide.client.operation.uploadfile;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.tools.ant.taskdefs.Sleep;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -40,6 +43,7 @@ import org.exoplatform.ide.client.framework.vfs.NodeTypeUtil;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -47,6 +51,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -61,9 +66,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
-public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedHandler,
-   ConfigurationReceivedSuccessfullyHandler
+public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler
 {
 
    public interface Display extends IsView
@@ -94,29 +97,47 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
    }
 
    private Display display;
-
+   
    private IDEConfiguration configuration;
 
    private String file_name;
 
-   private String file_mimeType;
+   private String file_mimeType;   
+   
+   private List<Item> selectedItems = new ArrayList<Item>();
 
-   public OpenLocalFilePresenter()
+   public UploadFilePresenter()
    {
-      IDE.EVENT_BUS.addHandler(OpenLocalFileEvent.TYPE, this);
+      IDE.getInstance().addControl(new UploadFileCommand());
+      IDE.EVENT_BUS.addHandler(UploadFileEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      IDE.getInstance().addControl(new OpenLocalFileCommand());
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-
+   
    @Override
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       configuration = event.getConfiguration();
    }
+   
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      selectedItems = event.getSelectedItems();
+   }   
 
    @Override
-   public void onOpenLocalFile(OpenLocalFileEvent event)
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   @Override
+   public void onUploadFile(UploadFileEvent event)
    {
       if (display != null)
       {
@@ -144,7 +165,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          @Override
          public void onClick(ClickEvent event)
          {
-            doOpenLocalFile();
+            doUploadFile();
          }
       });
 
@@ -171,10 +192,9 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          {
             submitComplete(event.getResults());
          }
-      });
-
+      });      
    }
-
+   
    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
    {
       @Override
@@ -214,7 +234,7 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          }
       }
    };
-
+   
    ValueChangeHandler<String> mimeTypeChangedHandler = new ValueChangeHandler<String>()
    {
       @Override
@@ -230,17 +250,8 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          }
       }
    };
-
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   private void doOpenLocalFile()
+   
+   private void doUploadFile()
    {
       String mimeType = display.getMimeTypeField().getValue();
 
@@ -257,10 +268,20 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
       }
 
-      display.setHiddenFields("", mimeType, "", contentNodeType);
-      display.getUploadForm().submit();
-   }
+      Item item = selectedItems.get(0);
+      String href = item.getPath();
+      if (item instanceof FileModel)
+      {
+         href = href.substring(0, href.lastIndexOf("/") + 1);
+      }
+      href += URL.encodePathSegment(fileName);
 
+      
+      
+      display.setHiddenFields(href, mimeType, "", contentNodeType);
+      display.getUploadForm().submit();
+   }   
+   
    protected void submit(SubmitEvent event)
    {
       IDELoader.getInstance().show();
@@ -278,6 +299,11 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
       }
       completeUpload(uploadServiceResponse);
    }
+   
+   protected String errorMessage()
+   {
+      return IDE.ERRORS_CONSTANT.uploadFileUploadingFailure();
+   }   
 
    /**
     * Check response is Ok.
@@ -307,64 +333,29 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
       }
       else
       {
-         return IDE.ERRORS_CONSTANT.openLocalFileOpeningFailure();
+         return errorMessage();
       }
    }
-
+   
    protected boolean gotError(String uploadServiceResponse, boolean matches)
    {
-      boolean getFileContent =
-         uploadServiceResponse.matches("^<FILECONTENT>(.*)</FILECONTENT>$")
-            || uploadServiceResponse.matches("^<filecontent>(.*)</filecontent>$");
-
-      return uploadServiceResponse == null || (uploadServiceResponse.length() > 0 && !getFileContent) || matches;
+      return uploadServiceResponse == null || uploadServiceResponse.length() > 0 || matches;
    }
-
+   
    protected void completeUpload(String response)
    {
-      //@param response is checked in parent method, so we sure that it is not null,
-      //* and data is enclose in tag <filecontent></filecontent> (or <FILECONTENT></FILECONTENT>)
-
-      // extract uploaded file content from response
-      final String submittedFileContent = extractRecievedContent(response);
-      if (submittedFileContent == null)
-      {
-         final String errMsg =
-            IDE.IDE_LOCALIZATION_MESSAGES.openLocalFileOpeningFailure(display.getFileNameField().getValue());
-         Dialogs.getInstance().showError(errMsg);
-         // error - displaying behind the window
-         return;
-      }
-
       IDE.getInstance().closeView(display.asView().getId());
-      openFile(submittedFileContent);
-   }
+      
+      if (selectedItems.get(0) instanceof FileModel) {
+         IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(((FileModel)selectedItems.get(0)).getParent()));
+      } else if (selectedItems.get(0) instanceof FolderModel) {
+         IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent((FolderModel)selectedItems.get(0)));
+      }
+      
+//      eventBus.fireEvent(new RefreshBrowserEvent(folder));
+//      eventBus.fireEvent(new RefreshBrowserEvent(baseFolder, result));
+      
+   }   
 
-   /**
-    * Extract uploaded file content from upload service response.
-    * File content is included in tag <filecontent>
-    * 
-    * @param uploadServiceResponse response from server
-    * @return extracted content of submitted file.
-    */
-   private String extractRecievedContent(String uploadServiceResponse)
-   {
-      String content = uploadServiceResponse.substring("<filecontent>".length());
-      content = content.substring(0, content.length() - "</filecontent>".length());
-
-      return Utils.urlDecode_decode(content); // to unescape end of lines
-   }
-
-   /**
-    * Open new file in editor with known content.
-    * 
-    * @param submittedFileContent content of new file
-    */
-   private void openFile(String submittedFileContent)
-   {
-      FileModel submittedFile = new FileModel(file_name, file_mimeType, submittedFileContent, new FolderModel());
-      submittedFile.setContentChanged(true);
-      IDE.EVENT_BUS.fireEvent(new OpenFileEvent(submittedFile));
-   }
 
 }
