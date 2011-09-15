@@ -277,6 +277,11 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
          e.printStackTrace();
          eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
+      catch (Exception e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         e.printStackTrace();
+      }
    }
 
    /**

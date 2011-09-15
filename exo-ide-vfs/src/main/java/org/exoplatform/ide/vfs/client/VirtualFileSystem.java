@@ -21,7 +21,6 @@ package org.exoplatform.ide.vfs.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.UrlBuilder;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
@@ -71,11 +70,7 @@ public class VirtualFileSystem
     */
    public VirtualFileSystem(String workspaceURL)
    {
-      instance = this;
-
-      this.workspaceURL = workspaceURL;
-
-      this.info = new VirtualFileSystemInfo();
+      this(workspaceURL, null);
    }
 
    VirtualFileSystem(String workspaceURL, VirtualFileSystemInfo info)
@@ -259,7 +254,8 @@ public class VirtualFileSystem
     * @param callback
     * @param loader
     */
-   public void copy(Item source, String destination, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void copy(Item source, String destination, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
    {
       String url =
          source.getLinkByRelation(Item.REL_COPY).getHref() + (destination != null ? "?parentId=" + destination : "");
@@ -286,19 +282,9 @@ public class VirtualFileSystem
    }
 
    public void rename(Item item, String mediaType, String newname, String lockToken,
-      AsyncRequestCallback<StringBuilder> callback) throws RequestException
+      AsyncRequestCallback<StringBuilder> callback) throws Exception
    {
-      UrlBuilder urlB = new UrlBuilder(workspaceURL + "rename" + item.getId());
-      if (!item.getName().equals(newname))
-         urlB.setParameter("newname", newname);
-      if (mediaType != null)
-         urlB.setParameter("mediaType", mediaType);
-      if (item.getItemType() == ItemType.FILE && ((FileModel)item).isLocked())
-         urlB.setParameter("lockToken", lockToken);
-      //mediaType parameter may contains '+' character, URL.enconde() method not encode
-      //this char, so do it manually
-      String url = urlB.buildString().replaceAll("\\+", "%2B");
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      throw new Exception("Method \"rename\" is not implemented");
    }
 
    /**
@@ -327,24 +313,13 @@ public class VirtualFileSystem
    }
 
    /**
-    * Get item by id.
-    * @param id id of item
-    * @param callback
-    * @throws RequestException 
-    */
-   public void getItem(String id, AsyncRequestCallback<? extends Item> callback) throws RequestException
-   {
-      String url = workspaceURL + "item" + id;
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-   }
-   
-   /**
     * Get item by location(href).
     * @param location of item
     * @param callback
     * @throws RequestException 
     */
-   public void getItemByLocation(String location, AsyncRequestCallback<? extends Item> callback) throws RequestException
+   public void getItemByLocation(String location, AsyncRequestCallback<? extends Item> callback)
+      throws RequestException
    {
       AsyncRequest.build(RequestBuilder.GET, location).send(callback);
    }

@@ -131,9 +131,9 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
        */
       if (applicationSettings.getValueAsString("entry-point") == null)
       {
-         if (applicationConfiguration.getDefaultEntryPoint() != null)
+         if (applicationConfiguration.getVfsBaseUrl()!= null)
          {
-            String defaultEntryPoint = applicationConfiguration.getDefaultEntryPoint();
+            String defaultEntryPoint = applicationConfiguration.getVfsBaseUrl();
             if (!defaultEntryPoint.endsWith("/"))
             {
                defaultEntryPoint += "/";

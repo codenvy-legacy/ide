@@ -325,6 +325,11 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          eventBus.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
+      catch (Exception e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         e.printStackTrace();
+      }
 
    }
 

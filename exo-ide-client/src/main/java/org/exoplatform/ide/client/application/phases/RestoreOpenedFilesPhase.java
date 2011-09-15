@@ -135,7 +135,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       filesToLoad.remove(0);
       try
       {
-         VirtualFileSystem.getInstance().getItem(fileId,
+         VirtualFileSystem.getInstance().getItemByLocation(fileId,
             new AsyncRequestCallback<FileModel>(new FileUnmarshaller(fileToLoad))
             {
 

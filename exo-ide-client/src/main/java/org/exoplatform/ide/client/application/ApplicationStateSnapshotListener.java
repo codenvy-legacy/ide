@@ -46,6 +46,7 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
             continue;
          }
 
-         files.add(fileName);
+         files.add(file.getLinkByRelation(Item.REL_SELF).getHref());
       }
 
       applicationSettings.setValue("opened-files", files, Store.COOKIES);

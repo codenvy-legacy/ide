@@ -59,6 +59,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,28 +139,30 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    {
       try
       {
-         VirtualFileSystem.getInstance().getItem(file.getId(), new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
-         {
-            @Override
-            protected void onSuccess(FileModel result)
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Item.REL_SELF).getHref(),
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
             {
-               FileModel f = (FileModel)result;
-
-               if (f.getContent() != null)
+               @Override
+               protected void onSuccess(FileModel result)
                {
-                  openFile(f);
-                  return;
-               }
-               getFileContent(f);
-            }
+                  FileModel f = (FileModel)result;
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               exception.printStackTrace();
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Parent folder not found."));
-            }
-         });
+                  if (f.getContent() != null)
+                  {
+                     openFile(f);
+                     return;
+                  }
+                  getFileContent(f);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Parent folder not found."));
+               }
+            });
       }
       catch (RequestException e)
       {
