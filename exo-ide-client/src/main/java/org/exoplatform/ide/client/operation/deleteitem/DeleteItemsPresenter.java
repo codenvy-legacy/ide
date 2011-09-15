@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
-
-import com.google.gwt.http.client.RequestException;
+package org.exoplatform.ide.client.operation.deleteitem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -48,8 +47,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.navigation.event.DeleteItemEvent;
-import org.exoplatform.ide.client.navigation.event.DeleteItemHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
@@ -62,6 +59,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -95,8 +93,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
       .deleteFileDialogTitle();
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<Item> selectedItems = new ArrayList<Item>();
@@ -107,16 +103,16 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    private Map<String, String> lockTokens = new HashMap<String, String>();
 
-   public DeleteItemsPresenter(HandlerManager eventBus)
+   public DeleteItemsPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(DeleteItemEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.getInstance().addControl(new DeleteItemCommand(), DockTarget.TOOLBAR, false);
+      
+      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(DeleteItemEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -254,21 +250,21 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                   @Override
                   protected void onSuccess(Object result)
                   {
-                     eventBus.fireEvent(new ItemUnlockedEvent(item));
+                     IDE.EVENT_BUS.fireEvent(new ItemUnlockedEvent(item));
                      deleteItem(item);
                   }
 
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     eventBus.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                     IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
                   }
                });
          }
          catch (RequestException e)
          {
             e.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
          }
       }
       else
@@ -293,13 +289,13 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             protected void onSuccess(String result)
             {
                selectedItems.remove(0);
-               eventBus.fireEvent(new ItemDeletedEvent(item));
+               IDE.EVENT_BUS.fireEvent(new ItemDeletedEvent(item));
 
                if (item instanceof FileModel)
                {
                   if (openedFiles.get(item.getId()) != null)
                   {
-                     eventBus.fireEvent(new EditorCloseFileEvent((FileModel)item, true));
+                     IDE.EVENT_BUS.fireEvent(new EditorCloseFileEvent((FileModel)item, true));
                   }
                }
                else
@@ -319,7 +315,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                      if (file.getPath().startsWith(path) && file.isPersisted())
                      {
                         lockTokens.remove(file.getId());
-                        eventBus.fireEvent(new EditorCloseFileEvent(file, true));
+                        IDE.EVENT_BUS.fireEvent(new EditorCloseFileEvent(file, true));
                      }
                   }
                }
@@ -330,7 +326,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
+               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, DELETE_FILE_FAILURE_MESSAGE));
                IDE.getInstance().closeView(display.asView().getId());
             }
          });
@@ -338,7 +334,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, DELETE_FILE_FAILURE_MESSAGE));
       }
    }
 
@@ -378,8 +374,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       }
       else
          folder = ((FolderModel)lastDeletedItem).getParent();
-      eventBus.fireEvent(new RefreshBrowserEvent(folder));
-      eventBus.fireEvent(new SelectItemEvent(folder.getId()));
+      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder));
+      IDE.EVENT_BUS.fireEvent(new SelectItemEvent(folder.getId()));
    }
 
    @Override

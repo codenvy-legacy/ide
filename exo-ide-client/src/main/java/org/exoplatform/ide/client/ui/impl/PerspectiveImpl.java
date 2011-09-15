@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.client.ui.impl;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
-import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
 import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.HasViews;
@@ -51,10 +50,10 @@ import org.exoplatform.ide.client.ui.impl.panel.RestorePanelHandler;
 import org.exoplatform.ide.client.ui.impl.panel.ShowPanelEvent;
 import org.exoplatform.ide.client.ui.impl.panel.ShowPanelHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .

@@ -31,9 +31,6 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
@@ -46,7 +43,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.model.ApplicationContext;
 import org.exoplatform.ide.client.navigation.control.CopyItemsCommand;
 import org.exoplatform.ide.client.navigation.control.CutItemsCommand;
-import org.exoplatform.ide.client.navigation.control.DeleteItemCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadFileCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand;
 import org.exoplatform.ide.client.navigation.control.GoToFolderControl;
@@ -59,7 +55,6 @@ import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
 import org.exoplatform.ide.client.navigation.control.SearchFilesCommand;
 import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
-import org.exoplatform.ide.client.navigation.control.newitem.CreateFolderControl;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
@@ -76,6 +71,8 @@ import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
+import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
@@ -103,9 +100,8 @@ import com.google.gwt.event.shared.HandlerManager;
  * @version $Id: $
  *
  */
-public class NavigationModule implements CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler,
-   VfsChangedHandler, InitializeServicesHandler,
-   EditorFileClosedHandler, EditorFileOpenedHandler
+public class NavigationModule implements CopyItemsHandler, CutItemsHandler, ItemsSelectedHandler, VfsChangedHandler,
+   InitializeServicesHandler, EditorFileClosedHandler, EditorFileOpenedHandler
 {
    private HandlerManager eventBus;
 
@@ -128,7 +124,9 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup()));
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
       eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
+
+      //eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
+      new CreateFolderPresenter();
 
       eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
@@ -142,7 +140,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
       eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
-      
+
       new UploadFilePresenter();
       new UploadZipPresenter();
       new OpenLocalFilePresenter();
@@ -159,7 +157,10 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
+      
+      //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
+      new DeleteItemsPresenter();
+      
       eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), DockTarget.TOOLBAR));
       eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
@@ -195,9 +196,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new WorkspacePresenter(eventBus);
       new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
-      new DeleteItemsPresenter(eventBus);
 
-      new CreateFolderPresenter(eventBus);
       new SaveAsTemplatePresenter(eventBus);
       new VersionsListPresenter(eventBus);
       new RenameFilePresenter(eventBus);
@@ -210,7 +209,6 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
    {
       new VirtualFileSystem(event.getApplicationConfiguration().getDefaultEntryPoint());
    }
-
 
    public void onCopyItems(CopyItemsEvent event)
    {

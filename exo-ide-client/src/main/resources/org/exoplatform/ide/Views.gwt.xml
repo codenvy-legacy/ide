@@ -19,8 +19,8 @@
       </any>
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.CreateFolderView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.CreateFolderPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
+      <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
@@ -39,8 +39,8 @@
       <when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.DeleteItemView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.DeleteItemsPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemView">
+      <when-type-is class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.geturl.GetItemURLView">
