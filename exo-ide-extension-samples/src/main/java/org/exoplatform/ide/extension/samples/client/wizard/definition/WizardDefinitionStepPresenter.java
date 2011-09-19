@@ -130,6 +130,7 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          public void onValueChange(ValueChangeEvent<String> event)
          {
             final String name = display.getNameField().getValue();
+            projectProperties.setName(name);
             if (name == null || name.isEmpty())
             {
                display.enableNextButton(false);
@@ -138,6 +139,15 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
             {
                display.enableNextButton(true);
             }
+         }
+      });
+      
+      display.getSelectTypeField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            projectProperties.setType(display.getSelectTypeField().getValue());
          }
       });
       
