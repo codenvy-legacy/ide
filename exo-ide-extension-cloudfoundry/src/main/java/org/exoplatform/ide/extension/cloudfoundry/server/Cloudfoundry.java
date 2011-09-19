@@ -232,8 +232,8 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
          throw new IllegalStateException("Application name required. ");
-      if (url == null || url.isEmpty())
-         throw new IllegalStateException("Application URL required. ");
+      /*if (url == null || url.isEmpty())
+         throw new IllegalStateException("Application URL required. ");*/
       if (workDir == null && war == null)
          throw new IllegalArgumentException("Working directory or location to WAR file required. ");
       if (server == null || server.isEmpty())
@@ -258,6 +258,8 @@ public class Cloudfoundry
          return "http://api." + m.group(4);
       return null;
    }*/
+
+   private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
    private CloudfoundryApplication createApplication(Credential credential, String app,
       String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir, URL war)
@@ -304,6 +306,12 @@ public class Cloudfoundry
          // Check memory capacity.
          if (!nostart)
             checkAvailableMemory(instances, memory, limits, usage);
+
+         if (appUrl == null || appUrl.isEmpty())
+         {
+            Matcher m = suggestUrlPattern.matcher(credential.target);
+            appUrl = app + m.group(4);
+         }
 
          String json =
             postJson(credential.target + "/apps", credential.token,
