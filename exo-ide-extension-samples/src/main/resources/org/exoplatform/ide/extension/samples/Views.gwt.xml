@@ -52,11 +52,8 @@
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.extension.samples.client.paas.cloudbees.InitializeApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.cloudbees.InitializeApplicationPresenter.Display" />
-   </replace-with>
-   
    <replace-with class="org.exoplatform.ide.extension.samples.client.paas.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display" />
    </replace-with>
+   
 </module>

@@ -35,3 +35,31 @@
 .labelValue {
 	font-weight: bold;
 }
+
+.labelSubtitle {
+	font-weight: bold;
+	font-align: center;
+}
+
+.cloudfoundryTable {
+	width: 100%;
+	height: 30px;
+	border-collapse: collapse;
+}
+
+.cloudbeesTable {
+	width: 100%;
+	height: 60px;
+	border-collapse: collapse;
+}
+
+.visibleTable {
+	display: block;
+}
+
+.hiddenTable {
+	display: none;
+}
+
+.loginLable {
+}

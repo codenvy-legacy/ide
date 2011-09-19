@@ -26,10 +26,12 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
  * View for log in OpenShift.
@@ -40,11 +42,11 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  */
 public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
-   private static final String ID = "ideLoginView";
+   private static final String ID = "ideSamplesLoginView";
 
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 190;
+   private static final int HEIGHT = 200;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -53,6 +55,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
+   
+   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.loginViewTitle();
 
    /**
    * UI binder for this view.
@@ -87,10 +91,12 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @UiField
    ImageButton cancelButton;
    
+   @UiField
+   Label loginLabel;
+   
    public LoginView()
    {
-      //TODO:
-      super(ID, ViewType.MODAL, "loginViewTitle", null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);
@@ -153,5 +159,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public void focusInEmailField()
    {
       emailField.focusInItem();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display#getLoginLabel()
+    */
+   @Override
+   public HasValue<String> getLoginLabel()
+   {
+      return loginLabel;
    }
 }

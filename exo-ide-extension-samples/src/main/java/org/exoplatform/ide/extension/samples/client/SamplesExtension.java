@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter;
-import org.exoplatform.ide.extension.samples.client.paas.cloudbees.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
@@ -38,7 +37,7 @@ import org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocati
 import org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter;
 
 /**
- * Samples extention for IDE.
+ * Samples extension for IDE.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesExtension.java Sep 2, 2011 12:34:36 PM vereshchaka $
@@ -83,7 +82,6 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new WizardDeploymentStepPresenter(eventBus);
       new WizardFinishStepPresenter(eventBus);
       
-      new InitializeApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);
       
       eventBus.fireEvent(new OpenStartPageEvent());

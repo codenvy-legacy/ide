@@ -20,9 +20,12 @@ package org.exoplatform.ide.extension.samples.client;
 
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Storage for project properties.
- * TODO: Remove this class, when project notion will be created.
+ * TODO: Remove this class, when project notion on client will be created.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectProperties.java Sep 8, 2011 6:17:11 PM vereshchaka $
@@ -38,18 +41,36 @@ public class ProjectProperties
    
    public interface Paas
    {
+      public static final String NONE = "None";
+      
       public static final String CLOUDFOUNDRY = "CloudFoundry";
       
       public static final String CLOUDBEES = "CloudBees";
    }
    
-   String name;
+   private String name;
    
-   String type;
+   private String type;
    
-   String paas;
+   private String paas;
    
-   FolderModel parenFolder;
+   private FolderModel parenFolder;
+   
+   /**
+    * Can contain variable properties:
+    * If project will be deploy to CloudFoundry, than:
+    * <ul>
+    * <li><code>name</code> - the name to deploy to CloudFoundry</li>
+    * <li><code>url</code> - the url to deploy to CloudFoundry</li>
+    * </ul>
+    * <p/>
+    * If project will be deploy to CloudBees, than:
+    * <ul>
+    * <li><code>domain</code> - the domain</li>
+    * <li><code>name</code> - the name of application</li>
+    * </ul>
+    */
+   private Map<String, String> properties = new HashMap<String, String>();
    
    public ProjectProperties()
    {
@@ -122,6 +143,26 @@ public class ProjectProperties
    public FolderModel getParenFolder()
    {
       return parenFolder;
+   }
+   
+   /**
+    * Contains variable properties:
+    * If project will be deploy to CloudFoundry, than:
+    * <ul>
+    * <li><code>cf-name</code> - the name to deploy to CloudFoundry</li>
+    * <li><code>url</code> - the url to deploy to CloudFoundry</li>
+    * </ul>
+    * <p/>
+    * If project will be deploy to CloudBees, than:
+    * <ul>
+    * <li><code>domain</code> - the domain</li>
+    * <li><code>cb-name</code> - the name of application</li>
+    * </ul>
+    * @return the properties
+    */
+   public Map<String, String> getProperties()
+   {
+      return properties;
    }
 
 }

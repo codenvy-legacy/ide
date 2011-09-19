@@ -72,6 +72,9 @@ public class WizardFinishStepView extends ViewImpl implements WizardFinishStepPr
    @UiField
    Label typeLabel;
    
+   @UiField
+   Label deploymentLabel;
+   
    public WizardFinishStepView()
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
@@ -118,9 +121,18 @@ public class WizardFinishStepView extends ViewImpl implements WizardFinishStepPr
     * @see org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display#getTypeLable()
     */
    @Override
-   public HasValue<String> getTypeLable()
+   public HasValue<String> getTypeLabel()
    {
       return typeLabel;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display#getPaasLabel()
+    */
+   @Override
+   public HasValue<String> getPaasLabel()
+   {
+      return deploymentLabel;
    }
 
 }

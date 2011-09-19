@@ -103,6 +103,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private String entryPoint;
 
    private boolean buildInProgress = false;
+   
+   /**
+    * The id of folder, which contains project to build.
+    * If id is null, than get the id of selected folder.
+    */
+   private String folderId;
 
    /**
     * @param eventBus
@@ -131,6 +137,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          Dialogs.getInstance().showError(message);
          return;
       }
+      
+      //the id of folder to build can be received from event.
+      //In other case, it will be got from selected items.
+      folderId = event.getFolderId();
 
       getWorkDir();
    }
@@ -150,12 +160,19 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void beforeBuild()
    {
-      Item item = selectedItems.get(0);
       String url = "";
-      if (item instanceof FolderModel)
-         url = item.getId();
+      if (folderId != null)
+      {
+         url = folderId;
+      }
       else
-         url = item.getParentId();
+      {
+         Item item = selectedItems.get(0);
+         if (item instanceof FolderModel)
+            url = item.getId();
+         else
+            url = item.getParentId();
+      }
       JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
       {
          @Override
@@ -437,14 +454,24 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    @Override
    public void getWorkDir()
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
+      //the id of folder, that is the start point to get the workDir.
+      final String startDirId;
+      if (folderId != null)
+      {
+         startDirId = folderId;
+      }
+      else if (selectedItems != null && selectedItems.size() > 0)
+      {
+         startDirId = selectedItems.get(0).getId();
+      }
+      else
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return;
       }
 
       //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
+      GitClientService.getInstance().getWorkDir(startDirId,
          new AsyncRequestCallback<WorkDirResponse>()
          {
             @Override
@@ -466,7 +493,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                      {
                         if (value != null && value)
                         {
-                           initRepository(selectedItems.get(0).getId());
+                           initRepository(startDirId);
                         }
                      }
                   });

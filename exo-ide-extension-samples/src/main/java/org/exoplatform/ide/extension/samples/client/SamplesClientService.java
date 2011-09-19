@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.samples.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
@@ -35,6 +37,11 @@ import java.util.Map;
  */
 public abstract class SamplesClientService
 {
+   public enum Paas
+   {
+      CLOUDBEES,
+      CLOUDFOUNDRY;
+   }
    
    private static SamplesClientService instance;
    
@@ -77,5 +84,35 @@ public abstract class SamplesClientService
    public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback);
    
    public abstract void loginToCloudBees(String email, String password, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Login to paas.
+    * @param paas <code>cloudbees</code> or <code>cloudfoundry</code> - where to login
+    * @param email email to login
+    * @param password password
+    * @param callback callback that client has to implement
+    */
+   public abstract void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback);
+   
+   /**
+    * Validates <code>create</code> CloudFoundry action before building project.
+    * @param appName the name of application (if create - than required, if update - <code>null</code>)
+    * @param workDir the work dir of application
+    * @param callback callback, that client has to implement to handle response from server.
+    */
+   public abstract void validateCloudfoundryAction(String appName, String workDir, 
+      CloudFoundryAsyncRequestCallback<String> callback);
+   
+   /**
+    * Create application on CloudFoundry.
+    * 
+    * @param name - application name. This parameter is mandatory.
+    * @param url - application URL.
+    * @param workDir - directory that contains source code of java web application
+    * @param war - URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+    * @param callback - callback, that client has to implement to receive response
+    */
+   public abstract void createCloudFoundryApplication(String name, String url, String workDir, String war,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
    
 }

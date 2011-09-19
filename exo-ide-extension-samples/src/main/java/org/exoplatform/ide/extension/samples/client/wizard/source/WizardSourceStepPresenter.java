@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.source;
 
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -33,10 +32,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLocationStepEvent;
-
-import java.util.List;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.

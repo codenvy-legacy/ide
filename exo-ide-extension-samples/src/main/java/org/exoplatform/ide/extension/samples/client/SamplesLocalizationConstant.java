@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 
 /**
  * Interface to represent the constants contained in resource bundle:
@@ -30,7 +30,7 @@ import com.google.gwt.i18n.client.Constants;
  * @version $Id: IdeSamplesLocalizationConstant.java Aug 25, 2011 5:57:11 PM vereshchaka $
  *
  */
-public interface SamplesLocalizationConstant extends Constants
+public interface SamplesLocalizationConstant extends Messages
 {
    /*
     * Buttons
@@ -52,6 +52,9 @@ public interface SamplesLocalizationConstant extends Constants
    
    @Key("button.finish")
    String finishButton();
+   
+   @Key("button.login")
+   String loginButton();
    
    /*
     * WelcomeView
@@ -146,6 +149,12 @@ public interface SamplesLocalizationConstant extends Constants
    @Key("wizard.deployment.paas")
    String wizardDeploymentPaas();
    
+   @Key("wizard.deployment.paas.settings")
+   String paasDeploySettings();
+   
+   @Key("wizard.deployment.cloudfoundry.url")
+   String cloudFoundryAppUrlField();
+   
    /*
     * WizardFinishStepView
     */
@@ -172,6 +181,18 @@ public interface SamplesLocalizationConstant extends Constants
    
    @Key("wizard.finish.error.cantCreateProject")
    String wizardFinishErrorCantCreateProject();
+   
+   @Key("wizard.finish.deployment")
+   String wizardFinishDeployment();
+   
+   @Key("wizard.finish.deployment.none")
+   String wizardFinishDeploymentNone();
+   
+   @Key("wizard.finish.deployment.cloudbees")
+   String wizardFinishDeploymentCloudBees();
+   
+   @Key("wizard.finish.deployment.cloudfoundry")
+   String wizardFinishDeploymentCloudFoundry();
    
    /*
     * WizardLocationStepView
@@ -203,32 +224,70 @@ public interface SamplesLocalizationConstant extends Constants
    @Key("wizard.location.text")
    String wizardLocationText();
    
+   /*
+    * CreateApplicationPresenter
+    */
+   @Key("cloudfoundry.application.created")
+   String cloudFoundryDeploySuccess(String name);
    
+   @Key("cloudfoundry.application.startedNoUrls")
+   String cloudFoundryApplicationStartedWithNoUrls();
    
+   @Key("cloudfoundry.application.appStarted.uris")
+   String cloudFoundryApplicationStartedOnUrls(String name, String uris);
    
+   @Key("cloudfoundry.application.nameField")
+   String cloudFoundryAppNameField();
    
+   @Key("cloudfoundry.application.deploy.title")
+   String cloudFoundryDeployTitle();
    
+   @Key("cloudfoundry.application.deploy.text")
+   String cloudFoundryDeployText();
    
+   @Key("cloudfoundry.application.deploy.failure")
+   String cloudFoundryDeployFailure();
    
+   /*
+    * CloudBees
+    */
+   @Key("cloudbees.label.domain")
+   String cloudBeesDomainLabel();
    
+   @Key("cloudbees.label.name")
+   String cloudBeesNameLabel();
    
+   @Key("cloudbees.label.id")
+   String cloudBeesIdLabel();
    
+   @Key("cloudbees.deploy.success")
+   String cloudBessDeploySuccess();
    
+   @Key("cloudbees.deploy.application.info")
+   String cloudBeesDeployApplicationInfo();
    
+   @Key("cloudbees.deploy.failure")
+   String cloudBeesDeployFailure();
    
+   /*
+    * Login
+    */
+   @Key("login.title")
+   String loginViewTitle();
    
+   @Key("login.label")
+   String loginViewLabel(String paas);
    
+   @Key("login.field.email")
+   String loginViewEmailField();
    
+   @Key("login.field.password")
+   String loginViewPasswordField();
    
+   @Key("login.success")
+   String loginSuccess(String paas);
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
+   @Key("login.fail")
+   String loginFail(String paas);
 
 }

@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.samples.client;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -28,6 +29,9 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApplicationUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.CredentailsMarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
@@ -47,7 +51,6 @@ import java.util.Map;
  */
 public class SamplesClientServiceImpl extends SamplesClientService
 {
-
    private static final String BASE_URL = "/ide/github";
 
    private static final String LIST = BASE_URL + "/list";
@@ -59,6 +62,14 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String CLOUDBEES_CREATE = "/ide/cloudbees/apps/create";
    
    private static final String CLOUDBEES_LOGIN = "/ide/cloudbees/login";
+   
+   /** CloudFoundry **/
+   
+   private static final String CLOUDFOUNDRY_LOGIN = "/ide/cloudfoundry/login";
+   
+   private static final String VALIDATE_ACTION = "/ide/cloudfoundry/apps/validate-action";
+   
+   private static final String CLOUDFOUNDRY_CREATE = "/ide/cloudfoundry/apps/create";
 
    
    /**
@@ -166,5 +177,83 @@ public class SamplesClientServiceImpl extends SamplesClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void login(Paas paas, String email, String password, AsyncRequestCallback<String> callback)
+   {
+      String url = restServiceContext;
+      
+      if (Paas.CLOUDBEES == paas)
+      {
+         url += CLOUDBEES_LOGIN;
+      }
+      else if (Paas.CLOUDFOUNDRY == paas)
+      {
+         url += CLOUDFOUNDRY_LOGIN;
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("Unknown PaaS: " + paas + ". Can't login."));
+         return;
+      }
+
+      HashMap<String, String> credentials = new HashMap<String, String>();
+      credentials.put("email", email);
+      credentials.put("password", password);
+      CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
+
+      callback.setEventBus(eventBus);
+
+      AsyncRequest.build(RequestBuilder.POST, url, loader).data(marshaller)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#validateCloudfoundryAction(java.lang.String, java.lang.String, boolean, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void validateCloudfoundryAction(String appName, String workDir, 
+      CloudFoundryAsyncRequestCallback<String> callback)
+   {
+      final String postUrl = restServiceContext + VALIDATE_ACTION;
+
+      String params = "action=create";
+      params += (appName == null) ? "" : "&name=" + appName;
+      params += (workDir == null) ? "" : "&workdir=" + workDir;
+
+      callback.setEventBus(eventBus);
+
+      AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(java.lang.String, boolean, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void createCloudFoundryApplication(String name, String url, String workDir, String war,
+      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   {
+      final String requestUrl = restServiceContext + CLOUDFOUNDRY_CREATE;
+
+      callback.setEventBus(eventBus);
+
+      CloudfoundryApplication cloudfoundryApplication = new CloudfoundryApplication();
+
+      CloudfoundryApplicationUnmarshaller unmarshaller =
+         new CloudfoundryApplicationUnmarshaller(cloudfoundryApplication);
+      callback.setPayload(unmarshaller);
+      callback.setResult(cloudfoundryApplication);
+
+      String params = "name=" + name;
+      params += "&workdir=" + workDir;
+      params += (war != null) ? "&war=" + war : "";
+      params += (url != null) ? "&url=" + url : "";
+
+      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
 
 }

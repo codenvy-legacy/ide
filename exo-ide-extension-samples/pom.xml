@@ -30,6 +30,10 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-jenkins</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
       </dependency>
       <dependency>

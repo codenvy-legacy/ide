@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.paas.login;
 
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -37,9 +39,15 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    
    private LoggedInHandler loggedIn;
    
-   public LoginEvent(LoggedInHandler loggedIn)
+   /**
+    * Paas you want to login.
+    */
+   private SamplesClientService.Paas paas;
+   
+   public LoginEvent(SamplesClientService.Paas paas, LoggedInHandler loggedIn)
    {
       this.loggedIn = loggedIn;
+      this.paas = paas;
    }
    
    public LoggedInHandler getLoggedIn()
@@ -63,6 +71,14 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    protected void dispatch(LoginHandler handler)
    {
       handler.onLogin(this);
+   }
+   
+   /**
+    * @return the paas
+    */
+   public SamplesClientService.Paas getPaas()
+   {
+      return paas;
    }
 
 }

@@ -35,6 +35,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientService;
+import org.exoplatform.ide.extension.samples.client.SamplesExtension;
+import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 
 /**
  * Presenter for login view.
@@ -75,6 +77,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasValue}
        */
       HasValue<String> getPasswordField();
+      
+      /**
+       * Get label, that displays, where to login
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<String> getLoginLabel();
 
       /**
        * Change the enable state of the login button.
@@ -87,13 +96,25 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * Give focus to login field.
        */
       void focusInEmailField();
+      
+      /**
+       * @param title 
+       */
+      void setTitle(String title);
    }
+   
+   private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
 
    private Display display;
 
    private HandlerManager eventBus;
    
    private LoggedInHandler loggedIn;
+   
+   /**
+    * PaaS you want to login.
+    */
+   private SamplesClientService.Paas paas;
    
    public LoginPresenter(HandlerManager eventBus)
    {
@@ -167,6 +188,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    public void onLogin(LoginEvent event)
    {
       loggedIn = event.getLoggedIn();
+      paas = event.getPaas();
       if (display == null)
       {
          Display display = GWT.create(Display.class);
@@ -174,6 +196,14 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          IDE.getInstance().openView(display.asView());
          display.enableLoginButton(false);
          display.focusInEmailField();
+         if (paas == SamplesClientService.Paas.CLOUDBEES)
+         {
+            display.getLoginLabel().setValue(lb.loginViewLabel("CloudBees"));
+         }
+         else
+         {
+            display.getLoginLabel().setValue(lb.loginViewLabel("CloudFoundry"));
+         }
       }
    }
 
@@ -185,12 +215,19 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       final String email = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
 
-      SamplesClientService.getInstance().loginToCloudBees(email, password, new AsyncRequestCallback<String>()
+      SamplesClientService.getInstance().login(paas, email, password, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
          {
-            eventBus.fireEvent(new OutputEvent("Logged in to CloudBees", Type.INFO));
+            if (paas == SamplesClientService.Paas.CLOUDBEES)
+            {
+               eventBus.fireEvent(new OutputEvent(lb.loginSuccess("CloudBees"), Type.INFO));
+            }
+            else
+            {
+               eventBus.fireEvent(new OutputEvent(lb.loginSuccess("CloudFoundry"), Type.INFO));
+            }
             if (loggedIn != null)
             {
                loggedIn.onLoggedIn();
@@ -201,37 +238,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new OutputEvent("Login to CloudBees failed", Type.INFO));
+            if (paas == SamplesClientService.Paas.CLOUDBEES)
+            {
+               eventBus.fireEvent(new OutputEvent(lb.loginFail("CloudBees"), Type.INFO));
+            }
+            else
+            {
+               eventBus.fireEvent(new OutputEvent(lb.loginFail("CloudFoundry"), Type.INFO));
+            }
             super.onFailure(exception);
          }
       });
-      //TODO: login to needed paas
-//      CloudBeesClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
-//      {
-//         /**
-//          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
-//          */
-//         @Override
-//         protected void onSuccess(String result)
-//         {
-//            eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
-//            if (loggedIn != null)
-//            {
-//               loggedIn.onLoggedIn();
-//            }
-//            IDE.getInstance().closeView(display.asView().getId());
-//         }
-//
-//         /**
-//          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-//          */
-//         @Override
-//         protected void onFailure(Throwable exception)
-//         {
-//            eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.loginFailed(), Type.INFO));
-//            super.onFailure(exception);
-//         }
-//      });
    }
 
    /**

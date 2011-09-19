@@ -18,24 +18,24 @@
  */
 package org.exoplatform.ide.extension.samples.client.wizard.deployment;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.google.gwt.uibinder.client.UiField;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
- * View to show Wizard for Java project creation.
+ * View to select PaaS in Wizard for Java project creation.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SourceWizardView.java Sep 7, 2011 2:59:09 PM vereshchaka $
@@ -70,6 +70,24 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    
    @UiField
    ImageButton backButton;
+   
+   @UiField
+   HTMLPanel paasPanel;
+   
+   @UiField
+   TextField cloudFoundryNameField;
+   
+   @UiField
+   TextField cloudFoundryUrlField;
+   
+   @UiField
+   SelectItem selectDomainField;
+   
+   @UiField
+   TextField cloudBeesNameField;
+   
+   @UiField
+   TextField cloudBeesIdField;
    
    public WizardDeploymentStepView()
    {
@@ -117,9 +135,108 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
     * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setPaasValueMap(java.lang.String[])
     */
    @Override
-   public void setPaasValueMap(String[] values)
+   public void setPaasValueMap(String[] values, String selected)
    {
-      selectPaasField.setValueMap(values);
+      selectPaasField.setValueMap(values, selected);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setVisibleCloudBeesPanel(boolean)
+    */
+   @Override
+   public void setVisibleCloudBeesPanel(boolean visible)
+   {
+      if (visible)
+      {
+         paasPanel.getElementById("cloudBeesTable").removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         paasPanel.getElementById("cloudBeesTable").addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+      }
+      else
+      {
+         paasPanel.getElementById("cloudBeesTable").removeClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+         paasPanel.getElementById("cloudBeesTable").addClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setVisibleCloudFoundryPanel(boolean)
+    */
+   @Override
+   public void setVisibleCloudFoundryPanel(boolean visible)
+   {
+      if (visible)
+      {
+         paasPanel.getElementById("cloudFoundryTable").removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         paasPanel.getElementById("cloudFoundryTable").addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+      }
+      else
+      {
+         paasPanel.getElementById("cloudFoundryTable").removeClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+         paasPanel.getElementById("cloudFoundryTable").addClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getSelectCloudBeesDomainField()
+    */
+   @Override
+   public HasValue<String> getSelectCloudBeesDomainField()
+   {
+      return selectDomainField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getCloudFoundryNameField()
+    */
+   @Override
+   public HasValue<String> getCloudFoundryNameField()
+   {
+      return cloudFoundryNameField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getCloudFoundryUrlField()
+    */
+   @Override
+   public HasValue<String> getCloudFoundryUrlField()
+   {
+      return cloudFoundryUrlField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getCloudBeesNameField()
+    */
+   @Override
+   public HasValue<String> getCloudBeesNameField()
+   {
+      return cloudBeesNameField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setCloudBeesDomainsValueMap(java.lang.String[])
+    */
+   @Override
+   public void setCloudBeesDomainsValueMap(String[] values)
+   {
+      selectDomainField.setValueMap(values);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getCloudBeesIdField()
+    */
+   @Override
+   public HasValue<String> getCloudBeesIdField()
+   {
+      return cloudBeesIdField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#enableNextButton(boolean)
+    */
+   @Override
+   public void enableNextButton(boolean enable)
+   {
+      nextButton.setEnabled(enable);
    }
 
 }

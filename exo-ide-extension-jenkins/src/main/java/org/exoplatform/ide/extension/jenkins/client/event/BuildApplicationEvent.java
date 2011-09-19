@@ -27,6 +27,16 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
 {
+   private String folderId;
+   
+   public BuildApplicationEvent(String folderId)
+   {
+      this.folderId = folderId;
+   }
+   
+   public BuildApplicationEvent()
+   {
+   }
    
    public static final GwtEvent.Type<BuildApplicationHandler> TYPE = new Type<BuildApplicationHandler>();
 
@@ -46,6 +56,15 @@ public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
    protected void dispatch(BuildApplicationHandler handler)
    {
       handler.onBuildApplication(this);
+   }
+   
+   /**
+    * Get the id of folder, which contains project to build.
+    * @return the folder
+    */
+   public String getFolderId()
+   {
+      return folderId;
    }
 
 }

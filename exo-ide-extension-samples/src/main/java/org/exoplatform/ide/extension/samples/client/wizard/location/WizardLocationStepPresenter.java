@@ -132,11 +132,6 @@ VfsChangedHandler, ProjectCreationFinishedHandler
    
    private List<Item> selectedItems = new ArrayList<Item>();
    
-   /**
-    * The id of root folder.
-    */
-   private String rootId;
-   
    private ProjectProperties projectProperties = new ProjectProperties();
    
    public WizardLocationStepPresenter(HandlerManager eventBus)
@@ -173,7 +168,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             else
             {
                display.focusInFolderNameField();
-               display.enableNextButton(!selectedItems.get(0).getId().equals(rootId));
+               display.enableNextButton(true);
                final String folderName = display.getFolderNameField().getValue();
                display.enableNewFolderButton(folderName != null && !folderName.isEmpty());
             }
@@ -368,7 +363,6 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
-               rootId = result.getRoot().getId();
                display.getNavigationTree().setValue(result.getRoot());
                foldersToRefresh.add(new FolderModel(result.getRoot()));
                refreshNextFolder(result.getRoot().getId());

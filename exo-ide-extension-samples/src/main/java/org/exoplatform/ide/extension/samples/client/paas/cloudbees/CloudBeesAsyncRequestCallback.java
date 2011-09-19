@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginEvent;
 
@@ -68,7 +69,7 @@ public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallb
          if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()  && serverException.getMessage() != null
                   && exceptionMsg.contains("AuthFailure"))
          {
-            eventbus.fireEvent(new LoginEvent(loggedIn));
+            eventbus.fireEvent(new LoginEvent(SamplesClientService.Paas.CLOUDBEES, loggedIn));
             return;
          }
       }

@@ -103,6 +103,18 @@ public interface SamplesClientBundle extends ClientBundle
       String line();
       
       String labelValue();
+      
+      String labelSubtitle();
+      
+      String cloudfoundryTable();
+      
+      String cloudbeesTable();
+      
+      String visibleTable();
+      
+      String hiddenTable();
+      
+      String loginLable();
    }
 
 }

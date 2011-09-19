@@ -31,28 +31,36 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.paas.cloudbees.InitializeApplicationEvent;
+import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
+import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -61,7 +69,7 @@ import java.util.List;
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
 public class WizardFinishStepPresenter implements ShowWizardFinishStepHandler, ViewClosedHandler, 
-ProjectCreationFinishedHandler, ItemsSelectedHandler
+ApplicationBuiltHandler
 {
    public interface Display extends IsView
    {
@@ -73,7 +81,9 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       
       HasValue<String> getNameLabel();
       
-      HasValue<String> getTypeLable();
+      HasValue<String> getTypeLabel();
+      
+      HasValue<String> getPaasLabel();
    }
    
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
@@ -88,7 +98,15 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
     */
    private ProjectProperties projectProperties;
    
-   private List<Item> selectedItems = new ArrayList<Item>();
+   /**
+    * The URL to war file of built application.
+    */
+   private String warUrl;
+   
+   /**
+    * The id of project folder.
+    */
+   private String workDirId;
    
    public WizardFinishStepPresenter(HandlerManager eventBus)
    {
@@ -96,8 +114,7 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       
       eventBus.addHandler(ShowWizardFinishStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
    }
    
    private void bindDisplay()
@@ -132,11 +149,6 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
                Dialogs.getInstance().showError(lb.wizardFinishErrorProjectPropertiesAreNull());
                return;
             }
-            if (!(selectedItems.get(0) instanceof FolderModel))
-            {
-               Dialogs.getInstance().showError(lb.wizardFinishErrorNoFolderSelected());
-               return;
-            }
             finishProjectCreation();
          }
       });
@@ -144,7 +156,19 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       if (projectProperties != null)
       {
          display.getNameLabel().setValue(projectProperties.getName());
-         display.getTypeLable().setValue(projectProperties.getType());
+         display.getTypeLabel().setValue(projectProperties.getType());
+         if (ProjectProperties.Paas.CLOUDBEES.equals(projectProperties.getPaas()))
+         {
+            display.getPaasLabel().setValue(lb.wizardFinishDeploymentCloudBees());
+         }
+         else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(projectProperties.getPaas()))
+         {
+            display.getPaasLabel().setValue(lb.wizardFinishDeploymentCloudFoundry());
+         }
+         else
+         {
+            display.getPaasLabel().setValue(lb.wizardFinishDeploymentNone());
+         }
       }
    }
 
@@ -170,22 +194,26 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
       {
          projectProperties = event.getProjectProperties();
       }
+      else
+      {
+         Dialogs.getInstance().showError("Project properties are null. Fix the error");
+         return;
+      }
       openView();
    }
    
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
     */
    @Override
-   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
+   public void onApplicationBuilt(ApplicationBuiltEvent event)
    {
-      projectProperties = null;
-   }
-   
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
+      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getJobStatus().getArtifactUrl() != null)
+      {
+         warUrl = event.getJobStatus().getArtifactUrl();
+         deployApplication();
+      }
    }
    
    private void openView()
@@ -211,13 +239,10 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
    
    private void finishProjectCreation()
    {
-//      eventBus.fireEvent(new InitializeApplicationEvent());
-//      closeView();
-      
       try
       {
          final FolderModel parent = projectProperties.getParenFolder();
-         ProjectModel newProject = new ProjectModel(projectProperties.getName(), parent, "test-proj", 
+         ProjectModel newProject = new ProjectModel(projectProperties.getName(), parent, projectProperties.getType(), 
             Collections.EMPTY_LIST);
          VirtualFileSystem.getInstance().createProject(parent, new AsyncRequestCallback<ProjectModel>(
                   new ProjectUnmarshaller(newProject))
@@ -226,9 +251,13 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
             @Override
             protected void onSuccess(ProjectModel result)
             {
-               eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
+               if (!ProjectProperties.Paas.NONE.equals(projectProperties.getPaas()))
+               {
+                  workDirId = result.getId();
+                  buildApplication(result.getId());
+               }
                eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
-               eventBus.fireEvent(new InitializeApplicationEvent());
+               eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
                closeView();
             }
             
@@ -268,6 +297,139 @@ ProjectCreationFinishedHandler, ItemsSelectedHandler
          parent = parent.getParent();
       }
       return folders;
+   }
+   
+   private LoggedInHandler deployToCloudBeesLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         deployToCloudBees();
+      }
+   };
+   
+   private void deployToCloudBees()
+   {
+      final String applicationId =
+         projectProperties.getProperties().get("cf-name") + "/" + projectProperties.getProperties().get("domain");
+      
+      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, warUrl, null, workDirId,
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployToCloudBeesLoggedInHandler)
+         {
+            @Override
+            protected void onSuccess(final Map<String, String> deployResult)
+            {
+               String output = lb.cloudBessDeploySuccess() + "<br>";
+               output += lb.cloudBeesDeployApplicationInfo() + "<br>";
+
+               Iterator<Entry<String, String>> it = deployResult.entrySet().iterator();
+               while (it.hasNext())
+               {
+                  Entry<String, String> entry = (Entry<String, String>)it.next();
+                  output += entry.getKey() + " : " + entry.getValue() + "<br>";
+               }
+               eventBus.fireEvent(new OutputEvent(output, Type.INFO));
+               projectProperties = null;
+            }
+
+            /**
+             * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new OutputEvent(lb.cloudBeesDeployFailure(), Type.INFO));
+               projectProperties = null;
+               super.onFailure(exception);
+            }
+
+         });
+   }
+   
+   private LoggedInHandler deployToCloudFoundryLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         deployToCloudBees();
+      }
+   };
+   
+   private void deployToCloudFoundry()
+   {
+      String name = projectProperties.getProperties().get("cf-name");
+      String url = projectProperties.getProperties().get("url");
+      SamplesClientService.getInstance().createCloudFoundryApplication(name, url, workDirId, warUrl,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, deployToCloudFoundryLoggedInHandler)
+         {
+            @Override
+            protected void onSuccess(CloudfoundryApplication result)
+            {
+               String msg = lb.cloudFoundryDeploySuccess(result.getName());
+               if ("STARTED".equals(result.getState()))
+               {
+                  if (result.getUris().isEmpty())
+                  {
+                     msg += "<br>" + lb.cloudFoundryApplicationStartedWithNoUrls();
+                  }
+                  else
+                  {
+                     msg +=
+                        "<br>" + lb.cloudFoundryApplicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                  }
+               }
+               eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+               projectProperties = null;
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               eventBus.fireEvent(new OutputEvent(lb.cloudFoundryDeployFailure(), Type.INFO));
+               projectProperties = null;
+               super.onFailure(exception);
+            }
+         });
+   }
+   
+   private void buildApplication(String folderId)
+   {
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildApplicationEvent(folderId));
+   }
+
+   /**
+    * Deploty application to the paas, that was selected in previous step.
+    */
+   private void deployApplication()
+   {
+      if (ProjectProperties.Paas.CLOUDBEES.equals(projectProperties.getPaas()))
+      {
+         deployToCloudBees();
+      }
+      else if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(projectProperties.getPaas()))
+      {
+         deployToCloudFoundry();
+      }
+   }
+   
+   private String getAppUrlsAsString(CloudfoundryApplication application)
+   {
+      String appUris = "";
+      for (String uri : application.getUris())
+      {
+         if (!uri.startsWith("http"))
+         {
+            uri = "http://" + uri;
+         }
+         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
+      }
+      if (!appUris.isEmpty())
+      {
+         //crop unnecessary symbols
+         appUris = appUris.substring(2);
+      }
+      return appUris;
    }
    
 }

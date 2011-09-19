@@ -42,14 +42,106 @@
          
       </g:HTMLPanel>
       
-      <g:HTMLPanel>
+      <g:FlowPanel height="10px"></g:FlowPanel>
+      
+      <g:HTMLPanel ui:field="paasPanel">
+         
+         <!-- CloudFoudry deployment form: show only when CloudFoundry selected from list -->
+         <table class="{resource.css.cloudfoundryTable}" id="cloudFoundryTable">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudFoundryAppNameField}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:TextField ui:field="cloudFoundryNameField" width="100%" height="22px" showTitle="false"></f:TextField>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+            
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudFoundryAppUrlField}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:TextField ui:field="cloudFoundryUrlField" width="100%" height="22px" showTitle="false"></f:TextField>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+         </table>
+         
+         <!-- CloudBees deployment form: show only when CloudBees selected from list -->
+         <table class="{resource.css.cloudbeesTable}" id="cloudBeesTable">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudBeesDomainLabel}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:SelectItem ui:field="selectDomainField" width="100%" height="22px"></f:SelectItem>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+            </tr>
+            
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudBeesNameLabel}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:TextField ui:field="cloudBeesNameField" width="100%" height="22px"></f:TextField>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+            </tr>
+            
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudBeesIdLabel}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:TextField ui:field="cloudBeesIdField" width="100%" height="22px" enabled="false"></f:TextField>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+            </tr>
+         </table>
+         
          <table class="{resource.css.table}">
             <tr>
                <td style="width:10px;">
-                  <div style="width:10px; height:100%;"></div>
+                  <div id="divStretch" style="width:10px; height:100%;"></div>
                </td>
             </tr>
-         </table>
+         </table> 
+         
       </g:HTMLPanel>
       
       <!-- Buttons -->

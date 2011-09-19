@@ -34,10 +34,16 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
+import org.exoplatform.ide.extension.samples.client.SamplesClientService;
+import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.finish.ShowWizardFinishStepEvent;
+
+import java.util.List;
 
 /**
  * Presenter for Step3 (Deployment) of Wizard for creation Java Project.
@@ -59,7 +65,25 @@ ProjectCreationFinishedHandler
       
       HasValue<String> getSelectPaasField();
       
-      void setPaasValueMap(String[] values);
+      HasValue<String> getSelectCloudBeesDomainField();
+      
+      HasValue<String> getCloudFoundryNameField();
+      
+      HasValue<String> getCloudFoundryUrlField();
+      
+      HasValue<String> getCloudBeesNameField();
+      
+      HasValue<String> getCloudBeesIdField();
+      
+      void setPaasValueMap(String[] values, String selected);
+      
+      void setVisibleCloudBeesPanel(boolean visible);
+      
+      void setVisibleCloudFoundryPanel(boolean visible);
+      
+      void setCloudBeesDomainsValueMap(String[] values);
+      
+      void enableNextButton(boolean enable);
    }
    
    private static final String[] PAAS;
@@ -74,20 +98,12 @@ ProjectCreationFinishedHandler
     */
    private ProjectProperties projectProperties;
    
-   /**
-    * If new project created, than must be null.
-    * If button Next is clicked, than
-    * variable must store the selected PaaS
-    * and display it, when Back button will be clicked
-    * to return to this View.
-    */
-   private String selectedPaaS;
-   
    static
    {
-      PAAS = new String[2];
-      PAAS[0] = ProjectProperties.Paas.CLOUDFOUNDRY;
-      PAAS[1] = ProjectProperties.Paas.CLOUDBEES;
+      PAAS = new String[3];
+      PAAS[0] = ProjectProperties.Paas.NONE;
+      PAAS[1] = ProjectProperties.Paas.CLOUDFOUNDRY;
+      PAAS[2] = ProjectProperties.Paas.CLOUDBEES;
    }
    
    public WizardDeploymentStepPresenter(HandlerManager eventBus)
@@ -116,12 +132,13 @@ ProjectCreationFinishedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            selectedPaaS = display.getSelectPaasField().getValue();
-            if (projectProperties == null)
+            //if one of field are changed, the new value must be saved in projectProperties.
+            //That's why, when Nex button is clicked, the actual state are send to next step.
+            if (projectProperties.getPaas().equals(ProjectProperties.Paas.CLOUDFOUNDRY))
             {
-               projectProperties = new ProjectProperties();
+               validateCloudFoundryParams();
+               return;
             }
-            projectProperties.setPaas(selectedPaaS);
             eventBus.fireEvent(new ShowWizardFinishStepEvent(projectProperties));
             closeView();
          }
@@ -142,15 +159,115 @@ ProjectCreationFinishedHandler
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            selectedPaaS = display.getSelectPaasField().getValue();
+            final String selectedPaaS = display.getSelectPaasField().getValue();
+            projectProperties.setPaas(selectedPaaS);
+            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(selectedPaaS))
+            {
+               display.setVisibleCloudBeesPanel(false);
+               display.setVisibleCloudFoundryPanel(true);
+               fillCloudFoundryFields();
+            }
+            else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
+            {
+               display.setVisibleCloudFoundryPanel(false);
+               display.setVisibleCloudBeesPanel(true);
+               getListOfCloudBeesDomains();
+            }
+            else
+            {
+               display.setVisibleCloudFoundryPanel(false);
+               display.setVisibleCloudBeesPanel(false);
+               display.enableNextButton(true);
+            }
          }
       });
       
-      display.setPaasValueMap(PAAS);
-      
-      if (selectedPaaS != null)
+      display.getCloudBeesNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-         display.getSelectPaasField().setValue(selectedPaaS);
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
+            {
+               String name = display.getCloudBeesNameField().getValue();
+               String cloudBeesId = name + "/" + display.getSelectCloudBeesDomainField().getValue();
+               display.getCloudBeesIdField().setValue(cloudBeesId);
+               display.enableNextButton(name != null && !name.isEmpty());
+               projectProperties.getProperties().put("cb-name", name);
+            }
+         }
+      });
+      
+      display.getSelectCloudBeesDomainField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (ProjectProperties.Paas.CLOUDBEES.equals(display.getSelectPaasField().getValue()))
+            {
+               String name = display.getCloudBeesNameField().getValue();
+               String cloudBeesId = name + "/" + display.getSelectCloudBeesDomainField().getValue();
+               display.getCloudBeesIdField().setValue(cloudBeesId);
+               projectProperties.getProperties().put("domain", display.getSelectCloudBeesDomainField().getValue());
+            }
+         }
+      });
+      
+      display.getCloudFoundryNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
+            {
+               String name = display.getCloudFoundryNameField().getValue();
+               String url = display.getCloudFoundryUrlField().getValue();
+               if (name == null || name.isEmpty() || url == null || url.isEmpty())
+               {
+                  display.enableNextButton(false);
+               }
+               else
+               {
+                  display.enableNextButton(true);
+               }
+               projectProperties.getProperties().put("cf-name", name);
+            }
+         }
+      });
+      
+      display.getCloudFoundryUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
+            {
+               String name = display.getCloudFoundryNameField().getValue();
+               String url = display.getCloudFoundryUrlField().getValue();
+               if (name == null || name.isEmpty() || url == null || url.isEmpty())
+               {
+                  display.enableNextButton(false);
+               }
+               else
+               {
+                  display.enableNextButton(true);
+               }
+               projectProperties.getProperties().put("url", url);
+            }
+         }
+      });
+      
+      //fill PaaS fields if projectProperties have saved PaaS
+      if (projectProperties.getPaas() == null)
+      {
+         display.setPaasValueMap(PAAS, PAAS[0]);
+      }
+      else
+      {
+         //note: event will be send, that value was selected in PaaS select item.
+         //That's why, added before handler will handle the event
+         //and fill necessary fields
+         display.setPaasValueMap(PAAS, projectProperties.getPaas());
       }
       
    }
@@ -176,9 +293,23 @@ ProjectCreationFinishedHandler
       if (event.getProjectProperties() != null)
       {
          //update project properties, if new values are received
+         //from previous step
          projectProperties = event.getProjectProperties();
+         
+         //if no project properties are received, than
+         //the saved will be used.
+         //If Back button was pressed, then project properties are null
       }
       openView();
+   }
+   
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    */
+   @Override
+   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
+   {
+      projectProperties = null;
    }
    
    private void openView()
@@ -203,13 +334,117 @@ ProjectCreationFinishedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    * Fill cloudfoundry name and domain fields with values, that user
+    * entered before (they are stored in Map in projectProperties variable).
+    * <p/>
+    * If no values are stored, than get the deploy name from the name of project
+    * and leave url field empty.
     */
-   @Override
-   public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
+   private void fillCloudFoundryFields()
    {
-      projectProperties = null;
-      selectedPaaS = null;
+      String name = projectProperties.getProperties().get("cf-name");
+      if (name == null)
+      {
+         name = projectProperties.getName();
+         projectProperties.getProperties().put("cf-name", name);
+      }
+      final String url =
+         projectProperties.getProperties().get("url") != null ? projectProperties.getProperties().get("url") : "";
+      
+      display.getCloudFoundryNameField().setValue(name);
+      display.getCloudFoundryUrlField().setValue(url);
+      
+      if (name == null || name.isEmpty() || url == null || url.isEmpty())
+      {
+         display.enableNextButton(false);
+      }
+      else
+      {
+         display.enableNextButton(true);
+      }
+   }
+   
+   /**
+    * Fill cloudbees name and domain fields with values, that user
+    * entered before (they are stored in Map in projectProperties variable).
+    * <p/>
+    * If no values are stored, than get the deploy name from the name of project
+    * and do nothing with domain field.
+    */
+   private void fillCloudBeesFields()
+   {
+      final String deployName =
+         projectProperties.getProperties().get("cb-name") != null ? projectProperties.getProperties().get("cb-name")
+            : projectProperties.getName();
+      display.getCloudBeesNameField().setValue(deployName);
+      
+      if (projectProperties.getProperties().get("domain") != null)
+      {
+         display.getSelectCloudBeesDomainField().setValue(projectProperties.getProperties().get("domain"));
+      }
+      
+      String id = deployName + "/" + display.getSelectCloudBeesDomainField().getValue();
+      display.getCloudBeesIdField().setValue(id);
+      
+      display.enableNextButton(deployName != null && !deployName.isEmpty());
+   }
+   
+   /**
+    * Get the list of domains of CloudBees from server.
+    * <p/>
+    * Put the received values to domains select field.
+    * <p/>
+    * Fill other fields, if we have values (may be user entered them before)
+    */
+   private void getListOfCloudBeesDomains()
+   {
+      SamplesClientService.getInstance().getDomains(
+         new CloudBeesAsyncRequestCallback<List<String>>(eventBus, domainsLoggedInHandler)
+         {
+            @Override
+            protected void onSuccess(List<String> result)
+            {
+               String[] domains = new String[result.size()];
+               result.toArray(domains);
+               display.setCloudBeesDomainsValueMap(domains);
+               fillCloudBeesFields();
+            }
+         });
+   }
+   
+   private LoggedInHandler domainsLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         getListOfCloudBeesDomains();
+      }
+   };
+   
+   private LoggedInHandler validationLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         validateCloudFoundryParams();
+      }
+   };
+   
+   /**
+    * Call the server validation of CloudFoundry params (name of application).
+    */
+   private void validateCloudFoundryParams()
+   {
+      SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("cf-name"), 
+         null, new CloudFoundryAsyncRequestCallback<String>(eventBus, validationLoggedInHandler)
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               eventBus.fireEvent(new ShowWizardFinishStepEvent(projectProperties));
+               closeView();               
+            }
+         });
    }
 
 }

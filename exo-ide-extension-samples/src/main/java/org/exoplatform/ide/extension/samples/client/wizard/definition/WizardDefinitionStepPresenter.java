@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLocationStepEvent;
 
 /**
  * Presenter for Step2 (Definition) of Wizard for creation Java Project.
@@ -107,10 +107,6 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          @Override
          public void onClick(ClickEvent event)
          {
-            if (projectProperties == null)
-            {
-               projectProperties = new ProjectProperties();
-            }
             projectProperties.setName(display.getNameField().getValue());
             projectProperties.setType(display.getSelectTypeField().getValue());
             eventBus.fireEvent(new ShowWizardDeploymentStepEvent(projectProperties));
@@ -123,7 +119,7 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardSourceEvent());
+            eventBus.fireEvent(new ShowWizardLocationStepEvent());
             closeView();
          }
       });
@@ -152,11 +148,14 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
       {
          display.getNameField().setValue(projectProperties.getName());
          display.getSelectTypeField().setValue(projectProperties.getType());
-         display.enableNextButton(true);
+      }
+      if (display.getNameField().getClass() == null || display.getNameField().getValue().isEmpty())
+      {
+         display.enableNextButton(false);
       }
       else
       {
-         display.enableNextButton(false);
+         display.enableNextButton(true);
       }
    }
 
@@ -180,7 +179,13 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
    {
       if (event.getProjectProperties() != null)
       {
+         //update project properties, if new values are received
+         //from previous step
          projectProperties = event.getProjectProperties();
+         
+         //if no project properties are received, than
+         //the saved will be used.
+         //If Back button was pressed, then project properties are null
       }
       openView();
    }
