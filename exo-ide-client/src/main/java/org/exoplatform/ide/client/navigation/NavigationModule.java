@@ -31,9 +31,8 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -120,26 +119,26 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
 
       NewFilePopupMenuControl newFilePopupMenuControl = new NewFilePopupMenuControl();
 
-      eventBus.fireEvent(new RegisterControlEvent(newFilePopupMenuControl, DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new NewFileCommandMenuGroup()));
+      IDE.getInstance().addControl(newFilePopupMenuControl, Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new NewFileCommandMenuGroup());
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectFromTemplateControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new CreateFileFromTemplateControl()));
+      IDE.getInstance().addControl(new CreateFileFromTemplateControl());
 
       //eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       new CreateFolderPresenter();
 
-      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
+      IDE.getInstance().addControl(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
          .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
-         MimeType.TEXT_PLAIN).setGroup(1)));
+         MimeType.TEXT_PLAIN).setGroup(1));
 
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
 
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionHistoryControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewVersionListControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewPreviousVersionControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new ViewNextVersionControl(), DockTarget.TOOLBAR, true));
-      eventBus.fireEvent(new RegisterControlEvent(new RestoreToVersionControl(), DockTarget.TOOLBAR, true));
+      IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR, true);
 
       new UploadFilePresenter();
       new UploadZipPresenter();
@@ -147,27 +146,27 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();
 
-      eventBus.fireEvent(new RegisterControlEvent(new DownloadFileCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new DownloadZippedFolderCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveAllFilesCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new SaveFileAsTemplateCommand()));
-      eventBus.fireEvent(new RegisterControlEvent(new CutItemsCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new CopyItemsCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new PasteItemsCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new RenameItemCommand()));
+      IDE.getInstance().addControl(new DownloadFileCommand());
+      IDE.getInstance().addControl(new DownloadZippedFolderCommand());
+      IDE.getInstance().addControl(new SaveFileCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new SaveFileAsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new SaveAllFilesCommand());
+      IDE.getInstance().addControl(new SaveFileAsTemplateCommand());
+      IDE.getInstance().addControl(new CutItemsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new CopyItemsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new PasteItemsCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new RenameItemCommand());
       
       //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
       new DeleteItemsPresenter();
       
-      eventBus.fireEvent(new RegisterControlEvent(new SearchFilesCommand(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new RefreshBrowserControl(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new GoToFolderControl()));
+      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new GoToFolderControl());
 
       new GetItemURLPresenter();
 
-      eventBus.fireEvent(new RegisterControlEvent(new NavigatorStatusControl(), DockTarget.STATUSBAR));
+      IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR, false);
       //eventBus.fireEvent(new RegisterControlEvent(new CreateProjectTemplateControl()));
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);

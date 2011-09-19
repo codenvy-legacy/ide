@@ -16,18 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.event;
+package org.exoplatform.ide.client.framework.control;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
-*/
-public interface PreviewWadlOutputHandler extends EventHandler
+ */
+
+public interface RegisterControlHandler extends EventHandler
 {
 
-   void onPreviewWadlOutput(PreviewWadlOutputEvent event);
-
+   void onRegisterControl(RegisterControlEvent event);
+   
 }

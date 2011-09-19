@@ -24,7 +24,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -35,7 +34,6 @@ import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpParser;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
@@ -55,11 +53,6 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
       TextResource getSource();
    }
 
-   /**
-    * Localizable constants and messages
-    */
-   private final Messages messages = GWT.create(Messages.class);
-
    public final static DefaultContent DEFAULT_CONTENT = GWT.create(DefaultContent.class);
    
    /**
@@ -71,12 +64,10 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", Images.PHP,
-            MimeType.APPLICATION_PHP).setGroup(2), DockTarget.NONE, false);
+         new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", Images.PHP,MimeType.APPLICATION_PHP).setGroup(2));
       
       PhpClientBundle.INSTANCE.css().ensureInjected();
    }
-
 
    public void onInitializeServices(InitializeServicesEvent event)
    {

@@ -16,23 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.control.event;
 
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.control;
 
 /**
- * Handler for {@link AddControlsFormatterEvent} event.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Jan 18, 2011 2:29:16 PM anya $
- *
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public interface AddControlsFormatterHandler extends EventHandler
+
+public enum Docking
 {
-   /**
-    * Perform actions, when new controls formatter is registered.
-    * 
-    * @param event
-    */
-   void onAddControlsFormatter(AddControlsFormatterEvent event);
+   
+   TOOLBAR, STATUSBAR, NONE
+
 }

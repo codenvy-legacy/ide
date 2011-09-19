@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.event;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,7 +30,9 @@ public class PreviewWadlOutputEvent extends GwtEvent<PreviewWadlOutputHandler>
 
    public static final GwtEvent.Type<PreviewWadlOutputHandler> TYPE = new GwtEvent.Type<PreviewWadlOutputHandler>();
 
-   //need for undeploy script if GroovyServiceOutputPreviewForm canceled 
+   /*
+    * Undeploy script when LaunchRestServiceView was closed.
+    */
    private boolean undeployOnCansel = false;
 
    public PreviewWadlOutputEvent()

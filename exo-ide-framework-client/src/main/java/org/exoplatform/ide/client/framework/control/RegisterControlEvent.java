@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.control.event;
+package org.exoplatform.ide.client.framework.control;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 
@@ -28,20 +28,15 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: $
  */
 
+@Deprecated
 public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
 {
-
-   public enum DockTarget {
-
-      TOOLBAR, STATUSBAR, NONE
-
-   }
 
    public static final GwtEvent.Type<RegisterControlHandler> TYPE = new GwtEvent.Type<RegisterControlHandler>();
 
    private Control control;
 
-   private DockTarget dockTarget = DockTarget.NONE;
+   private Docking docking = Docking.NONE;
 
    private boolean rightDocking = false;
 
@@ -50,16 +45,16 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
       this.control = control;
    }
 
-   public RegisterControlEvent(Control control, DockTarget dockTarget)
+   public RegisterControlEvent(Control control, Docking docking)
    {
       this.control = control;
-      this.dockTarget = dockTarget;
+      this.docking = docking;
    }
 
-   public RegisterControlEvent(Control control, DockTarget dockTarget, boolean rightDocking)
+   public RegisterControlEvent(Control control, Docking docking, boolean rightDocking)
    {
       this.control = control;
-      this.dockTarget = dockTarget;
+      this.docking = docking;
       this.rightDocking = rightDocking;
    }
 
@@ -68,9 +63,9 @@ public class RegisterControlEvent extends GwtEvent<RegisterControlHandler>
       return control;
    }
 
-   public DockTarget getDockTarget()
+   public Docking getDocking()
    {
-      return dockTarget;
+      return docking;
    }
 
    public boolean isRightDocking()

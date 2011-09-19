@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.extension.netvibes.client;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * Image bundle with resources for autocomplete form 
@@ -39,32 +37,32 @@ public interface NetvibesClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/netvibes/bundle/netvibes.css")
    public NetvibesCss css();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/method-item.png")
    ImageResource methodItem();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/function-item.png")
    ImageResource functionItem();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/property-item.png")
    ImageResource propertyItem();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/var-item.png")
    ImageResource varItem();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/keyword.png")
    ImageResource keyword();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/template.png")
    ImageResource template();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/autocomplete-images/class.gif")
    ImageResource classItem();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/preview.png")
    ImageResource preview();
-   
+
    @Source("org/exoplatform/ide/extension/netvibes/bundle/preview_Disabled.png")
    ImageResource previewDisabled();
-   
+
 }

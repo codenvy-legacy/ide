@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.ruby.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ruby.client.control.CreateRoRProjectControl;
 import org.exoplatform.ide.extension.ruby.client.create.CreateRubyProjectPresenter;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -47,7 +46,7 @@ public class RubyExtension extends Extension implements InitializeServicesHandle
    public void initialize()
    {
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.getInstance().addControl(new CreateRoRProjectControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new CreateRoRProjectControl());
       new CreateRubyProjectPresenter(IDE.EVENT_BUS);
    }
 

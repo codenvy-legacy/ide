@@ -18,20 +18,15 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -49,7 +44,6 @@ import org.exoplatform.ide.extension.groovy.client.controls.ConfigureBuildPathCo
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovyCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.DeployGroovySandboxCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.PreviewGroovyTemplateControl;
-import org.exoplatform.ide.extension.groovy.client.controls.PreviewWadlOutputCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.RunGroovyServiceCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.SetAutoloadCommand;
 import org.exoplatform.ide.extension.groovy.client.controls.UndeployGroovyCommand;
@@ -57,8 +51,6 @@ import org.exoplatform.ide.extension.groovy.client.controls.UndeployGroovySandbo
 import org.exoplatform.ide.extension.groovy.client.controls.ValidateGroovyCommand;
 import org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateEvent;
 import org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateHandler;
-import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
-import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputHandler;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadEvent;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.DeployGroovyCommandHandler;
@@ -66,18 +58,21 @@ import org.exoplatform.ide.extension.groovy.client.handlers.RunGroovyServiceComm
 import org.exoplatform.ide.extension.groovy.client.handlers.UndeployGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter;
+import org.exoplatform.ide.extension.groovy.client.launch_service.LaunchRestServicePresenter;
+import org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent;
+import org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
-import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
-import org.exoplatform.ide.extension.groovy.client.ui.GroovyServiceOutputPreviewForm;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -86,7 +81,7 @@ import java.util.Map;
  */
 
 public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
-   PreviewWadlOutputHandler, InitializeServicesHandler, ApplicationSettingsReceivedHandler,
+   InitializeServicesHandler, ApplicationSettingsReceivedHandler,
    EditorActiveFileChangedHandler, PreviewGroovyTemplateHandler, ViewClosedHandler
 {
 
@@ -123,20 +118,24 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       this.eventBus = IDE.EVENT_BUS;
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(InitializeServicesEvent.TYPE, this));
 
-      IDE.getInstance().addControl(new SetAutoloadCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new ConfigureBuildPathCommand(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ValidateGroovyCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployGroovyCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGroovyCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new RunGroovyServiceCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(eventBus), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new PreviewWadlOutputCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new SetAutoloadCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ConfigureBuildPathCommand());
+      IDE.getInstance().addControl(new ValidateGroovyCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGroovyCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGroovyCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new RunGroovyServiceCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
+      
+      new LaunchRestServicePresenter();
+      
+      IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), Docking.TOOLBAR, true);
 
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(SetAutoloadEvent.TYPE, this));
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
+      
+      //handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
+      
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
@@ -147,7 +146,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       new DeployGroovyCommandHandler(eventBus);
       new UndeployGroovyCommandHandler(eventBus);
       new ConfigureBuildPathPresenter(eventBus);
-      new AvailableDependenciesPresenter(eventBus);
+      new AvailableDependenciesPresenter();
 
       GroovyClientBundle.INSTANCE.css().ensureInjected();
    }
@@ -218,40 +217,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
 //         });
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
-   {
-      undeployOnCancel = event.isUndeployOnCansel();
-      String content = activeFile.getContent();
-      int indStart = content.indexOf("\"");
-      int indEnd = content.indexOf("\"", indStart + 1);
-      String path = content.substring(indStart + 1, indEnd);
-      if (!path.startsWith("/"))
-      {
-         path = "/" + path;
-      }
 
-      String url = configuration.getContext() + path;
-      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
-      {
-         
-         @Override
-         protected void onSuccess(WadlApplication result)
-         {
-            new GroovyServiceOutputPreviewForm(eventBus, result, undeployOnCancel);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            ExceptionThrownEvent exc = new ExceptionThrownEvent(exception, "Service is not deployed.");
-            exc.setException(exception);
-            eventBus.fireEvent(exc);
-         }
-      });
-   }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {

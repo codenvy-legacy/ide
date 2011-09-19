@@ -25,14 +25,14 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap;
+import org.exoplatform.ide.client.framework.control.AddControlsFormatterEvent;
+import org.exoplatform.ide.client.framework.control.AddControlsFormatterHandler;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
+import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
-import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterHandler;
-import org.exoplatform.ide.client.framework.control.event.ControlsUpdatedEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlHandler;
+import org.exoplatform.ide.client.framework.control.RegisterControlEvent;
+import org.exoplatform.ide.client.framework.control.RegisterControlHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -93,17 +93,17 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       
       registeredControls.add(event.getControl());
 
-      if (event.getDockTarget() == RegisterControlEvent.DockTarget.TOOLBAR)
+      if (event.getDocking()  == Docking.TOOLBAR)
       {
          addControl(event.getControl(), toolbarDefaultControls, event.isRightDocking());
       }
-      else if (event.getDockTarget() == RegisterControlEvent.DockTarget.STATUSBAR)
+      else if (event.getDocking() == Docking.STATUSBAR)
       {
          addControl(event.getControl(), statusBarControls, event.isRightDocking());
       }
    }
    
-   public void addControl(Control<?> control, DockTarget dockTarget, boolean  rightDocking)
+   public void addControl(Control<?> control, Docking docking, boolean  rightDocking)
    {
       if (!(control instanceof IDEControl))
       {
@@ -113,7 +113,7 @@ public class ControlsRegistration implements RegisterControlHandler, AddControls
       
       registeredControls.add(control);
       
-      switch (dockTarget)
+      switch (docking)
       {
          case TOOLBAR :
             addControl(control, toolbarDefaultControls, rightDocking);

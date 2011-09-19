@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.client.preview;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -30,6 +28,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .
@@ -84,7 +84,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new PreviewHTMLControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new PreviewHTMLControl(), Docking.TOOLBAR, true);
    }
 
    /**

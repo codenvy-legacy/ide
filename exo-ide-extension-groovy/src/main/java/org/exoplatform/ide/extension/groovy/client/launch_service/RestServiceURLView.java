@@ -16,18 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.ui;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.groovy.client.Images;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -40,7 +39,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id:   ${date} ${time}
  *
  */
-public class GetRestServiceURLForm extends IDEDialogWindow
+public class RestServiceURLView extends ViewImpl implements
+   org.exoplatform.ide.extension.groovy.client.launch_service.RestServiceURLPresenter.Display
 {
 
    private static final int WIDTH = 500;
@@ -61,37 +61,22 @@ public class GetRestServiceURLForm extends IDEDialogWindow
 
    private VerticalPanel mainLayout;
 
-   public GetRestServiceURLForm(HandlerManager eventBus, String url)
+   public RestServiceURLView()
    {
-      super(WIDTH, HEIGHT, ID);
-
-      setTitle(TITLE);
+      super(ID, "modal", TITLE, ImageFactory.getImage("url"), WIDTH, HEIGHT);
 
       mainLayout = new VerticalPanel();
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
-      
-      createFieldForm(url);
+
+      createFieldForm();
       createButtons();
 
       add(mainLayout);
-      show();
-
-      new Timer()
-      {
-
-         @Override
-         public void run()
-         {
-            urlField.selectValue();
-         }
-
-      }.schedule(500);
-
    }
 
-   private void createFieldForm(String url)
+   private void createFieldForm()
    {
       DynamicForm paramsForm = new DynamicForm();
       paramsForm.setWidth(450);
@@ -107,7 +92,6 @@ public class GetRestServiceURLForm extends IDEDialogWindow
 
       mainLayout.add(paramsForm);
       mainLayout.setCellVerticalAlignment(paramsForm, VerticalPanel.ALIGN_MIDDLE);
-      urlField.setValue(url);
    }
 
    private void createButtons()
@@ -125,13 +109,27 @@ public class GetRestServiceURLForm extends IDEDialogWindow
       buttonsLayout.add(okButton);
 
       mainLayout.add(buttonsLayout);
-
-      okButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            destroy();
-         }
-      });
    }
+
+   @Override
+   public void setURL(String url)
+   {
+      urlField.setValue(url);
+
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            urlField.selectValue();
+         }
+      }.schedule(500);
+   }
+
+   @Override
+   public HasClickHandlers getOkButton()
+   {
+      return okButton;
+   }
+   
 }

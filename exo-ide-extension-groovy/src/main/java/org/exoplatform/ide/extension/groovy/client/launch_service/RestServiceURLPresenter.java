@@ -16,47 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.debug;
+
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
+public class RestServiceURLPresenter
 {
-   
+
    public interface Display extends IsView
    {
-      
+
+      void setURL(String url);
+
       HasClickHandlers getOkButton();
-      
-      void updateImageList();
-      
+
    }
-   
+
    private Display display;
-   
-   public ShowImagesPresenter(HandlerManager eventBus) {
-      IDE.getInstance().addControl(new ShowImagesControl());      
-      eventBus.addHandler(ShowImagesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-   }
-   
-   private void bindDisplay() {
+
+   public RestServiceURLPresenter(String url)
+   {
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      display.setURL(url);
+
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -65,28 +63,6 @@ public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-     
-      display.updateImageList();
-   }
-
-   @Override
-   public void onShowImages(ShowImagesEvent event)
-   {
-      if (display != null) {
-         return;
-      }
-      
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-   }
-
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display) {
-         display = null;
-      }
    }
 
 }

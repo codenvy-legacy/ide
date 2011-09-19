@@ -34,8 +34,8 @@ import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.control.event.AddControlsFormatterEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.AddControlsFormatterEvent;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
@@ -59,7 +59,6 @@ import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
-import org.exoplatform.ide.client.project.CreateProjectForm;
 import org.exoplatform.ide.client.project.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
@@ -210,9 +209,9 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
     * @see org.exoplatform.ide.client.framework.module.IDE#addControl(org.exoplatform.gwtframework.ui.client.command.Control, org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget, boolean)
     */
    @Override
-   public void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking)
+   public void addControl(Control<?> control, Docking docking, boolean rightDocking)
    {
-      controlsRegistration.addControl(control, dockTarget, rightDocking);
+      controlsRegistration.addControl(control, docking, rightDocking);
    }
 
    /**
@@ -221,7 +220,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    @Override
    public void addControl(Control<?> control)
    {
-      controlsRegistration.addControl(control, DockTarget.NONE, false);
+      controlsRegistration.addControl(control, Docking.NONE, false);
    }   
    
    /**

@@ -18,14 +18,12 @@
  */
 package org.exoplatform.ide.extension.gatein.gadget.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -39,6 +37,8 @@ import org.exoplatform.ide.extension.gatein.gadget.client.event.DeployGadgetHadn
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEvent;
 import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -62,8 +62,8 @@ EditorActiveFileChangedHandler
    public void initialize()
    {
       this.eventBus = IDE.EVENT_BUS;
-      IDE.getInstance().addControl(new DeployGadgetCommand(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new UndeployGadgetCommand(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployGadgetCommand(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new UndeployGadgetCommand(), Docking.TOOLBAR, true);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
    }
 

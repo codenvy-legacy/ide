@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -58,7 +58,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -105,7 +104,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
    public DeleteItemsPresenter()
    {
-      IDE.getInstance().addControl(new DeleteItemCommand(), DockTarget.TOOLBAR, false);
+      IDE.getInstance().addControl(new DeleteItemCommand(), Docking.TOOLBAR, false);
       
       IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);

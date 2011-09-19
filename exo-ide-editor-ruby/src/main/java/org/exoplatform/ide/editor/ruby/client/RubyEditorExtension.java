@@ -24,7 +24,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -73,12 +72,10 @@ public class RubyEditorExtension extends Extension implements InitializeServices
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Ruby File", "Ruby File", "Create Ruby File", Images.RUBY,
-            MimeType.APPLICATION_RUBY).setGroup(2), DockTarget.NONE, false);
+         new NewItemControl("File/New/New Ruby File", "Ruby File", "Create Ruby File", Images.RUBY, MimeType.APPLICATION_RUBY).setGroup(2));
       
       RubyClientBundle.INSTANCE.css().ensureInjected();
    }
-
 
    public void onInitializeServices(InitializeServicesEvent event)
    {

@@ -24,7 +24,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -64,8 +63,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", Images.JSP, MimeType.APPLICATION_JSP).setGroup(2),
-         DockTarget.NONE, false);
+         new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", Images.JSP, MimeType.APPLICATION_JSP).setGroup(2));
    }
 
    /**

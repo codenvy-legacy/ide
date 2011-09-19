@@ -18,20 +18,11 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
@@ -57,7 +48,16 @@ import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Presenter for Outline Panel.
@@ -153,7 +153,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       eventBus.addHandler(EditorCursorActivityEvent.TYPE, this);      
       eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new ShowOutlineControl(), DockTarget.TOOLBAR, false);
+      IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR, false);
    }
 
    @Override

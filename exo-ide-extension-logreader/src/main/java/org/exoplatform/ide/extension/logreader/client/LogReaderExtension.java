@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.logreader.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.logreader.client.control.LogReaderControl;
 import org.exoplatform.ide.extension.logreader.client.model.LogReaderService;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * IDE Extension for log reader feature.
@@ -45,7 +44,7 @@ public class LogReaderExtension extends Extension implements InitializeServicesH
    public void initialize()
    {
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.getInstance().addControl(new LogReaderControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new LogReaderControl());
       new LogReaderPresenter();
    }
    /**

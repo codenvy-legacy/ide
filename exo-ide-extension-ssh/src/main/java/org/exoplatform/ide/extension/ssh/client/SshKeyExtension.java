@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.ssh.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerControl;
@@ -30,6 +27,8 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresente
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyHandler;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,7 +46,7 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new SshKeyManagerControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new SshKeyManagerControl());
       new SshKeyManagerPresenter();
       IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ShowPublicSshKeyEvent.TYPE, this);

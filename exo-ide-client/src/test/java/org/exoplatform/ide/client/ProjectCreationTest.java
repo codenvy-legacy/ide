@@ -18,16 +18,19 @@
  */
 package org.exoplatform.ide.client;
 
-import org.easymock.EasyMock;
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.TestCase;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.project.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
@@ -39,11 +42,6 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -359,7 +357,7 @@ public class ProjectCreationTest extends TestCase
    {
       
       @Override
-      public void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking)
+      public void addControl(Control<?> control, Docking docking, boolean rightDocking)
       {
       }
 

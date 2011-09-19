@@ -23,7 +23,6 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.everrest.core.impl.ResourceBinderImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 

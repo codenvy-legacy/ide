@@ -16,22 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.ui;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import java.util.LinkedHashMap;
 
-import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
-import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.groovy.client.Images;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -44,8 +42,9 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class GroovyServiceOutputPreviewForm extends IDEDialogWindow implements GroovyServiceOutputPreviewPresenter.Display
+public class LaunchRestServiceView extends ViewImpl implements LaunchRestServicePresenter.Display
 {
+   
    private static final int WIDTH = 530;
 
    private static final int HEIGHT = 400;
@@ -92,8 +91,6 @@ public class GroovyServiceOutputPreviewForm extends IDEDialogWindow implements G
 
    private ImageButton cancelButton;
 
-   private GroovyServiceOutputPreviewPresenter presenter;
-
    private VerticalPanel vLayout;
 
    private ComboBoxField pathField;
@@ -111,27 +108,19 @@ public class GroovyServiceOutputPreviewForm extends IDEDialogWindow implements G
    private TextAreaItem requestbody;
 
    private TabPanel parametersTabSet;
-
-   public GroovyServiceOutputPreviewForm(HandlerManager eventBus, WadlApplication wadlApplication,
-      boolean undeloyOnCansel)
-   {
-      super(WIDTH, HEIGHT, ID);
-      setTitle(TITLE);
+   
+   public LaunchRestServiceView() {
+      super(ID, "modal", TITLE, new Image(Images.Controls.OUTPUT), WIDTH, HEIGHT);
 
       vLayout = new VerticalPanel();
       vLayout.setWidth("100%");
       vLayout.setHeight("100%");
       vLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-      setWidget(vLayout);
-
+      add(vLayout);
+      
       createParamsForm();
       createButtonsForm();
-
-      show();
-
-      presenter = new GroovyServiceOutputPreviewPresenter(eventBus, wadlApplication, undeloyOnCansel);
-      presenter.bindDisplay(this);
+      
       parametersTabSet.selectTab(0);
    }
 
@@ -251,21 +240,6 @@ public class GroovyServiceOutputPreviewForm extends IDEDialogWindow implements G
       vLayout.add(buttonsLayout);
    }
 
-   public void closeForm()
-   {
-      destroy();
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.window.Window#destroy()
-    */
-   @Override
-   public void destroy()
-   {
-      presenter.destroy();
-      super.destroy();
-   }
-
    public HasClickHandlers getCancelButton()
    {
       return cancelButton;
@@ -382,7 +356,7 @@ public class GroovyServiceOutputPreviewForm extends IDEDialogWindow implements G
    }
 
    /**
-    * @see org.exoplatform.ide.client.groovy.GroovyServiceOutputPreviewPresenter.Display#setPathFieldValue(java.lang.String)
+    * @see org.exoplatform.ide.client.LaunchRestServicePresenter.GroovyServiceOutputPreviewPresenter.Display#setPathFieldValue(java.lang.String)
     */
    public void setPathFieldValue(String value)
    {

@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide.editor.chromattic.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -45,6 +42,8 @@ import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -69,7 +68,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object",
-            Images.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT).setGroup(2), DockTarget.NONE, false);
+            Images.CHROMATTIC, MimeType.CHROMATTIC_DATA_OBJECT).setGroup(2));
    }
 
    /**

@@ -23,14 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -116,7 +114,7 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
     */
    public OpenFileByURLPresenter()
    {
-      IDE.getInstance().addControl(new OpenFileByURLControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new OpenFileByURLControl());
 
       IDE.EVENT_BUS.addHandler(OpenFileByURLEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);

@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationInfoControl;
@@ -34,6 +30,9 @@ import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPr
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * CloudBees extention for IDE.
@@ -69,10 +68,10 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new CloudBeesControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new InitializeApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ApplicationInfoControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new CloudBeesControl());
+      IDE.getInstance().addControl(new InitializeApplicationControl());
+      IDE.getInstance().addControl(new ApplicationInfoControl());
+      IDE.getInstance().addControl(new DeleteApplicationControl());
       
       new InitializeApplicationPresenter(eventBus);
       new LoginPresenter(eventBus);

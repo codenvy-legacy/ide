@@ -26,14 +26,13 @@ import java.util.List;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
 import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -41,7 +40,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -101,11 +99,11 @@ public class AvailableDependenciesPresenter implements ShowAvailableDependencies
     * 
     * @param eventBus
     */
-   public AvailableDependenciesPresenter(HandlerManager eventBus)
+   public AvailableDependenciesPresenter()
    {
-      eventBus.fireEvent(new RegisterControlEvent(new ShowAvailableDependenciesControl()));
-      eventBus.addHandler(ShowAvailableDependenciesEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.getInstance().addControl(new ShowAvailableDependenciesControl());
+      IDE.EVENT_BUS.addHandler(ShowAvailableDependenciesEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**

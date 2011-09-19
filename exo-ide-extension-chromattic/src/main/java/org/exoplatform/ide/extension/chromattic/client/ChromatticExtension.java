@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.chromattic.client;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.chromattic.client.controls.DeployNodeTypeControl;
@@ -58,8 +58,8 @@ public class ChromatticExtension extends Extension implements InitializeServices
    {
       this.eventBus = IDE.EVENT_BUS;
 
-      IDE.getInstance().addControl(new GenerateNodeTypeControl(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new DeployNodeTypeControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new GenerateNodeTypeControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployNodeTypeControl(), Docking.TOOLBAR, true);
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       

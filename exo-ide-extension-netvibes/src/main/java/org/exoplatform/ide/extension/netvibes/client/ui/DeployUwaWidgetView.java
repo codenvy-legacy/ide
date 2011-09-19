@@ -27,11 +27,10 @@ import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.ide.client.framework.ui.IDEDialogWindow;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.netvibes.client.Images;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -46,7 +45,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: Nov 29, 2010 $
  *
  */
-public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWidgetPresenter.Display
+public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPresenter.Display
 {
 
    public static final int WIDTH = 460;
@@ -59,7 +58,7 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
 
    private static final String ID = "ideDeployUwaWidgetForm";
 
-   private final String TITLE = "Deploy UWA Widget to Netvibes Ecosystem";
+   private static final String TITLE = "Deploy UWA Widget to Netvibes Ecosystem";
 
    //IDs for Selenium tests:
 
@@ -160,12 +159,9 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
    /**
     * @param eventBus 
     */
-   public DeployUwaWidgetForm(HandlerManager eventBus)
+   public DeployUwaWidgetView()
    {
-      super(WIDTH, HEIGHT, ID);
-      //TODO setCanDragResize(true);
-
-      setTitle(TITLE);
+      super(ID, "modal", TITLE, new Image(Images.Controls.DEPLOY_WIDGET), WIDTH, HEIGHT);
 
       //Main layout of the dialog window:
       VerticalPanel mainLayout = new VerticalPanel();
@@ -189,8 +185,7 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
       //Create and layout with buttons
       mainLayout.add(createButtonsLayout());
 
-      setWidget(mainLayout);
-      show();
+      add(mainLayout);
    }
 
    protected Label createTitle(String title)
@@ -405,14 +400,6 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
    }
 
    /**
-    * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#closeForm()
-    */
-   public void closeForm()
-   {
-      destroy();
-   }
-
-   /**
     * @see org.exoplatform.ide.client.module.netvibes.ui.DeployUwaWidgetPresenter.Display#getDeployButton()
     */
    public HasClickHandlers getDeployButton()
@@ -459,9 +446,8 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
    {
       if (isShow)
       {
-         setWidth(460);
-         setHeight(180);
-         center();
+         setWidth(460 + "px");
+         setHeight(180 + "px");
       }
       mainInfoLayout.setVisible(isShow);
    }
@@ -473,8 +459,8 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
    {
       if (isShow)
       {
-         setHeight(410);
-         setWidth(375);
+         setHeight(410 + "px");
+         setWidth(375 + "px");
       }
       detailsLayout.setVisible(isShow);
    }
@@ -486,8 +472,8 @@ public class DeployUwaWidgetForm extends IDEDialogWindow implements DeployUwaWid
    {
       if (isShow)
       {
-         setWidth(460);
-         setHeight(260);
+         setWidth(460 + "px");
+         setHeight(260 + "px");
       }
       privacyLayout.setVisible(isShow);
    }

@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.edit;
 
-import com.google.gwt.event.shared.HandlerManager;
-
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.edit.control.FindTextControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
@@ -30,8 +29,7 @@ import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
@@ -40,6 +38,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsSa
 import org.exoplatform.ide.client.framework.settings.event.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.statusbar.EditorCursorPositionControl;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -56,18 +56,18 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
    {
       this.eventBus = eventBus;
 
-      eventBus.fireEvent(new RegisterControlEvent(new UndoTypingControl(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new RedoTypingControl(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new FormatSourceControl(), DockTarget.TOOLBAR));
+      
+      IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR, false);
 
-      eventBus.fireEvent(new RegisterControlEvent(new FindTextControl(), DockTarget.TOOLBAR));
-      eventBus.fireEvent(new RegisterControlEvent(new ShowLineNumbersControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new DeleteCurrentLineControl()));
-      eventBus.fireEvent(new RegisterControlEvent(new GoToLineControl()));
+      IDE.getInstance().addControl(new FindTextControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new ShowLineNumbersControl());
+      IDE.getInstance().addControl(new DeleteCurrentLineControl());
+      IDE.getInstance().addControl(new GoToLineControl());
 
-      eventBus.fireEvent(new RegisterControlEvent(new EditorCursorPositionControl(), DockTarget.STATUSBAR, true));
-
-      eventBus.fireEvent(new RegisterControlEvent(new LockUnlockFileControl(), DockTarget.TOOLBAR));
+      IDE.getInstance().addControl(new EditorCursorPositionControl(), Docking.STATUSBAR, true);
+      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR, false);
 
       eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 

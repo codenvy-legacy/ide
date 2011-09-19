@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateApplicationControl;
@@ -42,6 +38,9 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommand
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * OpenShift extenstion to be added to IDE.
@@ -73,14 +72,14 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
-      IDE.getInstance().addControl(new OpenShiftControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CreateDomainControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new PreviewApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowUserInfoControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new UpdatePublicKeyControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new OpenShiftControl());
+      IDE.getInstance().addControl(new CreateDomainControl());
+      IDE.getInstance().addControl(new CreateApplicationControl());
+      IDE.getInstance().addControl(new DeleteApplicationControl());
+      IDE.getInstance().addControl(new ShowApplicationInfoControl());
+      IDE.getInstance().addControl(new PreviewApplicationControl());
+      IDE.getInstance().addControl(new ShowUserInfoControl());
+      IDE.getInstance().addControl(new UpdatePublicKeyControl());
       
       new OpenShiftExceptionsHandler(eventBus);
       

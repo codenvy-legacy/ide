@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.netvibes.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -42,6 +39,9 @@ import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidget
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS.
@@ -77,15 +77,15 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
       this.eventBus = IDE.EVENT_BUS;
 
   
-      IDE.getInstance().addControl(new DeployUwaWidgetControl(), DockTarget.TOOLBAR, true);
-      IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new DeployUwaWidgetControl(), Docking.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowNetvibesPreviewControl(), Docking.TOOLBAR, true);
 
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(PreviewNetvibesEvent.TYPE, this);
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
-      new DeployUwaWidgetPresenter(eventBus);
+      new DeployUwaWidgetPresenter();
 
       NetvibesClientBundle.INSTANCE.css().ensureInjected();
 

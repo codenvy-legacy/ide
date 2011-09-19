@@ -18,14 +18,11 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent;
-import org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -40,6 +37,9 @@ import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

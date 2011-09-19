@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -27,8 +27,9 @@ import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TreeItem;
 
 /**
  * Tree grid to display structure of repositories for
@@ -176,7 +177,7 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
          icon = GroovyClientBundle.INSTANCE.folder();
       }
 
-      TreeItem node = new TreeItem(createItemWidget(icon, item.getName()));
+      TreeItem node = new TreeItem(createTreeNodeWidget(new Image(icon), item.getName()));
       node.setUserObject(item);
       if (item instanceof FolderModel)
       {

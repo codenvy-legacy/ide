@@ -186,14 +186,13 @@ public class OutlineTreeGrid extends org.exoplatform.gwtframework.ui.client.comp
     * @see org.exoplatform.gwtframework.ui.client.component.Tree#createItemWidget(java.lang.String, java.lang.String)
     */
    @Override
-   protected Widget createItemWidget(String icon, String text)
+   protected Widget createTreeNodeWidget(Image icon, String text)
    {
       Grid grid = new Grid(1, 2);
       grid.setWidth("100%");
 
-      Image i = new Image(icon);
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+      icon.setHeight("16px");
+      grid.setWidget(0, 0, icon);
       Label l = new Label();
       l.getElement().setInnerHTML(text);
       l.setWordWrap(false);

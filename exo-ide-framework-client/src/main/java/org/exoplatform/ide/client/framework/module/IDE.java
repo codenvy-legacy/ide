@@ -22,12 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -66,10 +65,10 @@ public abstract class IDE
    /**
     * Add control to main menu/tool bar or status bar
     * @param control
-    * @param dockTarget where control dock(toolbar/statusbar) 
+    * @param docking where control dock(toolbar/statusbar) 
     * @param rightDocking control pleased right on toolbar
     */
-   public abstract void addControl(Control<?> control, DockTarget dockTarget, boolean rightDocking);
+   public abstract void addControl(Control<?> control, Docking docking, boolean rightDocking);
 
    /**
     * Add control to main menu

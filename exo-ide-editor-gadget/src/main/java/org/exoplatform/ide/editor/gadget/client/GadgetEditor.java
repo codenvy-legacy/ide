@@ -20,7 +20,6 @@ package org.exoplatform.ide.editor.gadget.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
@@ -70,7 +69,7 @@ public class GadgetEditor extends Extension
       IDE.getInstance().addEditor(producer);
 
       IDE.getInstance().addControl(new NewItemControl("File/New/New Google Gadget", "Google Gadget",
-         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroup(1), DockTarget.NONE, false);
+         "Create New Google Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroup(1));
       
       IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
    }

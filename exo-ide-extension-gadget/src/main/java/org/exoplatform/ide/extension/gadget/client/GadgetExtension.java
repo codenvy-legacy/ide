@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.gadget.client;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.gadget.client.controls.ShowGadgetPreviewControl;
@@ -45,7 +45,7 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
    public void initialize()
    {
       this.eventBus = IDE.EVENT_BUS;
-      IDE.getInstance().addControl(new ShowGadgetPreviewControl(), DockTarget.TOOLBAR,true);
+      IDE.getInstance().addControl(new ShowGadgetPreviewControl(),  Docking.TOOLBAR, true);
       new GadgetPluginEventHandler(eventBus);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
    }

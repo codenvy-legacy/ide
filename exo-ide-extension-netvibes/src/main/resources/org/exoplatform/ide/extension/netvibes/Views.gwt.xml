@@ -19,20 +19,10 @@
 
 -->
 <module>
-   <!-- Inherit the core Web Toolkit stuff.                        -->
    <inherits name='com.google.gwt.user.User' />
-
-   <!-- Inherit the default GWT style sheet.  You can change       -->
-   <!-- the theme of your GWT application by uncommenting          -->
-   <!-- any one of the following lines.                            -->
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name='com.google.gwt.json.JSON' />
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    
-   <inherits name='org.exoplatform.ide.extension.netvibes.Views' />
-
-   <source path="client" />
-   <entry-point class='org.exoplatform.ide.extension.netvibes.client.NetvibesExtension' />
+   <replace-with class="org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetView">
+      <when-type-is class="org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter.Display" />
+   </replace-with>
    
 </module>

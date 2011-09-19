@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.ui;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,18 +35,30 @@ import org.exoplatform.gwtframework.commons.wadl.ParamStyle;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.commons.wadl.WadlApplication;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.service.RestServiceOutput;
 import org.exoplatform.ide.extension.groovy.client.service.SimpleParameterEntry;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
+import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlService;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -54,12 +66,11 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class GroovyServiceOutputPreviewPresenter
+public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, EditorActiveFileChangedHandler, ConfigurationReceivedSuccessfullyHandler, ViewClosedHandler
 {
-   public interface Display
+   
+   public interface Display extends IsView
    {
-
-      void closeForm();
 
       HasClickHandlers getShowUrlButton();
 
@@ -112,8 +123,6 @@ public class GroovyServiceOutputPreviewPresenter
 
    private static final String PATH_REGEX = "[^/]+";
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private WadlApplication wadlApplication;
@@ -139,19 +148,92 @@ public class GroovyServiceOutputPreviewPresenter
    private String currentResponseMediaType;
 
    private boolean undeployOnCancel;
+   
+   private FileModel activeFile;
+   
+   private IDEConfiguration configuration;
 
-   public GroovyServiceOutputPreviewPresenter(HandlerManager eventBus, WadlApplication wadlApplication, boolean undeloyOnCansel)
-   {
-      this.eventBus = eventBus;
-      this.wadlApplication = wadlApplication;
-      this.undeployOnCancel = undeloyOnCansel;
+   /**
+    * 
+    */
+   public LaunchRestServicePresenter() {
+      IDE.getInstance().addControl(new LaunchRestServiceCommand(), Docking.TOOLBAR, true);
       
+      IDE.EVENT_BUS.addHandler(PreviewWadlOutputEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
 
-   public void bindDisplay(Display d)
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent)
+    */
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
-      display = d;
+      configuration = event.getConfiguration();
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      activeFile = event.getFile();
+   }
+   
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
+   }   
+   
+   /**
+    * @see org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent)
+    */
+   @Override
+   public void onPreviewWadlOutput(PreviewWadlOutputEvent event)
+   {
+      if (display != null) {
+         return;
+      }
+      
+      undeployOnCancel = event.isUndeployOnCansel();
+      String content = activeFile.getContent();
+      int indStart = content.indexOf("\"");
+      int indEnd = content.indexOf("\"", indStart + 1);
+      String path = content.substring(indStart + 1, indEnd);
+      if (!path.startsWith("/"))
+      {
+         path = "/" + path;
+      }
+
+      String url = configuration.getContext() + path;
+      WadlService.getInstance().getWadl(url, new AsyncRequestCallback<WadlApplication>()
+      {
+         @Override
+         protected void onSuccess(WadlApplication result)
+         {
+            wadlApplication = result;
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+         }
+         
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            ExceptionThrownEvent exc = new ExceptionThrownEvent(exception, "Service is not deployed.");
+            exc.setException(exception);
+            IDE.EVENT_BUS.fireEvent(exc);
+         }
+      });
+   }
+
+   public void bindDisplay()
+   {
       display.getShowUrlButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -161,7 +243,8 @@ public class GroovyServiceOutputPreviewPresenter
             {
                url += display.getPathField().getValue();
             }
-            new GetRestServiceURLForm(eventBus, url);
+            
+            new RestServiceURLPresenter(url);
          }
       });
 
@@ -171,15 +254,15 @@ public class GroovyServiceOutputPreviewPresenter
          {
             if(undeployOnCancel)
             {
-               eventBus.fireEvent(new UndeployGroovyScriptSandboxEvent());
+               IDE.EVENT_BUS.fireEvent(new UndeployGroovyScriptSandboxEvent());
             }
-            display.closeForm();
+            
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
       display.getSendRequestButton().addClickHandler(new ClickHandler()
       {
-
          public void onClick(ClickEvent event)
          {
             if (!pathExists(display.getPathField().getValue()))
@@ -447,11 +530,10 @@ public class GroovyServiceOutputPreviewPresenter
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
             display.getRequestBody().getValue(), new AsyncRequestCallback<RestServiceOutput>()
             {
-
                @Override
                protected void onSuccess(RestServiceOutput result)
                {
-                  eventBus.fireEvent(new RestServiceOutputReceivedEvent(result));
+                  IDE.EVENT_BUS.fireEvent(new RestServiceOutputReceivedEvent(result));
                }
 
                @Override
@@ -461,15 +543,15 @@ public class GroovyServiceOutputPreviewPresenter
                   {
                      RestServiceOutputReceivedEvent event = new RestServiceOutputReceivedEvent(this.getResult());
                      event.setException(exception);
-                     eventBus.fireEvent(event);
+                     IDE.EVENT_BUS.fireEvent(event);
+                     return;
                   }
-                  else
-                  {
-                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  }
+                  
+                  super.onFailure(exception);
                }
             });
-         display.closeForm();
+
+         IDE.getInstance().closeView(display.asView().getId());
       }
       catch (IllegalArgumentException e)
       {
@@ -522,10 +604,6 @@ public class GroovyServiceOutputPreviewPresenter
          }
       }
       return query;
-   }
-
-   public void destroy()
-   {
    }
 
    /**
@@ -891,4 +969,16 @@ public class GroovyServiceOutputPreviewPresenter
       }
       return false;
    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

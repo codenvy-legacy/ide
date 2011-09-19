@@ -24,7 +24,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -65,7 +64,7 @@ public class GtmplEditorExtension extends Extension implements InitializeService
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Template", "Template", "Create Template", Images.GROOVY_TEMPLATE,
-            MimeType.GROOVY_TEMPLATE).setGroup(2), DockTarget.NONE, false);
+            MimeType.GROOVY_TEMPLATE).setGroup(2));
    }
 
    /**

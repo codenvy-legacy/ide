@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
 import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.EntryPoint;
@@ -46,7 +45,6 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.discovery.Scheme;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
@@ -162,7 +160,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    {
       this.eventBus = eventBus;
 
-      IDE.getInstance().addControl(new SelectWorkspaceControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new SelectWorkspaceControl());
 
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(EditorFileClosedEvent.TYPE, this);

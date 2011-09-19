@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.java.client;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.java.client.control.CreateJavaProjectControl;
@@ -64,8 +63,8 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
+      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
       new CreateJavaProjectPresenter(eventBus);
    }
 

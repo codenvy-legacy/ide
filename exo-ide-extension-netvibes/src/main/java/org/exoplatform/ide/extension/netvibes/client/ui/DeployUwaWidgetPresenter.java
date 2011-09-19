@@ -24,8 +24,12 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetEvent;
 import org.exoplatform.ide.extension.netvibes.client.event.DeployUwaWidgetHandler;
 import org.exoplatform.ide.extension.netvibes.client.model.Categories;
@@ -35,12 +39,12 @@ import org.exoplatform.ide.extension.netvibes.client.model.Regions;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidgetService;
 import org.exoplatform.ide.extension.netvibes.client.service.deploy.callback.WidgetDeployCallback;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -49,14 +53,11 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id: Nov 29, 2010 $
  *
  */
-public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
+public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler, ViewClosedHandler
 {
-   interface Display
+
+   public interface Display extends IsView 
    {
-      /**
-       * Close view.
-       */
-      void closeForm();
 
       /**
        * @return {@link HasClickHandlers} deploy button
@@ -212,11 +213,6 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    }
 
    /**
-    * Event bus.
-    */
-   public HandlerManager eventBus;
-
-   /**
     * Display.
     */
    private Display display;
@@ -234,24 +230,22 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
    /**
     * @param eventBus 
     */
-   public DeployUwaWidgetPresenter(HandlerManager eventBus)
+   public DeployUwaWidgetPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(DeployUwaWidgetEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(DeployUwaWidgetEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    /**
     * @param d 
     */
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            display.closeForm();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -396,12 +390,27 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
          && display.getWigdetTitle().getValue().length() > 0 && display.getDescription().getValue().length() > 0 && isValidDetailsFields());
    }
 
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display) {
+         display = null;
+      }
+   }   
+   
    /**
     * @see org.exoplatform.ide.client.module.netvibes.event.DeployUwaWidgetHandler#onDeployUwaWidget(org.exoplatform.ide.client.module.netvibes.event.DeployUwaWidgetEvent)
     */
    public void onDeployUwaWidget(DeployUwaWidgetEvent event)
    {
-      bindDisplay(new DeployUwaWidgetForm(eventBus));
+      if (display != null) {
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+      
       currentStep = 1;
       display.displayMainInfo(true);
       display.updateDeployButtonState(false, false);
@@ -569,20 +578,20 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
             @Override
             protected void onSuccess(WidgetDeployData result)
             {
-               display.closeForm();
+               IDE.getInstance().closeView(display.asView().getId());
 
                OutputMessage.Type responseType =
                   result.getDeployResult().isSuccess() ? OutputMessage.Type.INFO : OutputMessage.Type.ERROR;
                String message =
                   result.getDeployResult().isSuccess() ? "<b>" + result.getDeployWidget().getUrl() + "</b>"
                      + " deployed successfully." : result.getDeployResult().getMessage();
-               eventBus.fireEvent(new OutputEvent(message, responseType));
+               IDE.EVENT_BUS.fireEvent(new OutputEvent(message, responseType));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
+               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Can't deploy widget"));
             }
          });
    }
@@ -615,4 +624,5 @@ public class DeployUwaWidgetPresenter implements DeployUwaWidgetHandler
       }
       return null;
    }
+
 }

@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -40,8 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -83,7 +82,7 @@ public class DocumentationPresenter implements EditorActiveFileChangedHandler, S
       eventBus.addHandler(RegisterDocumentationEvent.TYPE, this);
 
       control = new ShowDocumentationControl();
-      eventBus.fireEvent(new RegisterControlEvent(control, DockTarget.TOOLBAR));
+      IDE.getInstance().addControl(control, Docking.TOOLBAR, false);
    }
 
    /**

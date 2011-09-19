@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
@@ -60,6 +56,9 @@ import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * Git extension to be added to IDE application.
  * 
@@ -84,24 +83,24 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls:
-      IDE.getInstance().addControl(new InitRepositoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CloneRepositoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new DeleteRepositoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new AddFilesControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ResetFilesControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ResetToCommitControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RemoveFilesControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CommitControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new BranchesControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new MergeControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new PushToRemoteControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new FetchControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new PullControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RemoteControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RemotesControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new InitRepositoryControl());
+      IDE.getInstance().addControl(new CloneRepositoryControl());
+      IDE.getInstance().addControl(new DeleteRepositoryControl());
+      IDE.getInstance().addControl(new AddFilesControl());
+      IDE.getInstance().addControl(new ResetFilesControl());
+      IDE.getInstance().addControl(new ResetToCommitControl());
+      IDE.getInstance().addControl(new RemoveFilesControl());
+      IDE.getInstance().addControl(new CommitControl());
+      IDE.getInstance().addControl(new BranchesControl());
+      IDE.getInstance().addControl(new MergeControl());
+      IDE.getInstance().addControl(new PushToRemoteControl());
+      IDE.getInstance().addControl(new FetchControl());
+      IDE.getInstance().addControl(new PullControl());
+      IDE.getInstance().addControl(new RemoteControl());
+      IDE.getInstance().addControl(new RemotesControl());
 
-      IDE.getInstance().addControl(new ShowHistoryControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowStatusControl(), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new ShowHistoryControl());
+      IDE.getInstance().addControl(new ShowStatusControl());
 
       //Create presenters:
       new CloneRepositoryPresenter(eventBus);

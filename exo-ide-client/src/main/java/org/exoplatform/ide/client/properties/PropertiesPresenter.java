@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.client.properties;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -36,6 +33,9 @@ import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesReceivedHand
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.ItemPropertiesSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -68,7 +68,7 @@ public class PropertiesPresenter implements ItemPropertiesSavedHandler, ItemProp
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(FileSavedEvent.TYPE, this);
       
-      IDE.getInstance().addControl(new ShowPropertiesControl(), DockTarget.TOOLBAR, true);
+      IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR, true);
    }
 
    @Override

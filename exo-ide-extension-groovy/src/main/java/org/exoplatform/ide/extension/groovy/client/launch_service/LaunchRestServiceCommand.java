@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.controls;
-
-import com.google.gwt.event.shared.HandlerManager;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -27,7 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
-import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -35,11 +34,11 @@ import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
  * @version $Id: $
 */
 @RolesAllowed({"administrators"})
-public class PreviewWadlOutputCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class LaunchRestServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
    private static final String ID = "Run/Launch REST Service";
 
-   public PreviewWadlOutputCommand()
+   public LaunchRestServiceCommand()
    {
       super(ID);
       setTitle("Launch REST Service...");

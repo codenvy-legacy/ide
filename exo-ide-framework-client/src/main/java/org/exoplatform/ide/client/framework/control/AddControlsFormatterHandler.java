@@ -16,31 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.hotkeys;
+package org.exoplatform.ide.client.framework.control;
 
-import org.exoplatform.ide.client.IDE;
-
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * Handler for {@link AddControlsFormatterEvent} event.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Jan 18, 2011 2:29:16 PM anya $
+ *
  */
-
-public class HotKeyManagementModule
+public interface AddControlsFormatterHandler extends EventHandler
 {
-
-   private HandlerManager eventBus;
-
-   public HotKeyManagementModule(HandlerManager eventBus)
-   {
-      this.eventBus = eventBus;
-
-      IDE.getInstance().addControl(new CustomizeHotKeysControl());
-
-      new CustomizeHotKeysPresenter(eventBus);
-   }
-
+   /**
+    * Perform actions, when new controls formatter is registered.
+    * 
+    * @param event
+    */
+   void onAddControlsFormatter(AddControlsFormatterEvent event);
 }

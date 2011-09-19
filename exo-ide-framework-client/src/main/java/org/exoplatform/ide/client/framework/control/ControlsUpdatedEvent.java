@@ -16,47 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.configuration.event;
+package org.exoplatform.ide.client.framework.control;
 
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.command.Control;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Called after success configuration loading.
- * 
- * Created by The eXo Platform SAS .
- * 
+ * Created by The eXo Platform SAS.
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version $Id: $
  */
 
-public class ConfigurationReceivedSuccessfullyEvent extends GwtEvent<ConfigurationReceivedSuccessfullyHandler>
+public class ControlsUpdatedEvent extends GwtEvent<ControlsUpdatedHandler>
 {
 
-   public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE =
-      new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
+   public static final GwtEvent.Type<ControlsUpdatedHandler> TYPE = new GwtEvent.Type<ControlsUpdatedHandler>();
 
-   private IDEConfiguration configuration;
+   private List<Control> controls;
 
-   public ConfigurationReceivedSuccessfullyEvent(IDEConfiguration configuration)
+   public ControlsUpdatedEvent(List<Control> controls)
    {
-      this.configuration = configuration;
+      this.controls = controls;
    }
 
-   public IDEConfiguration getConfiguration()
+   public List<Control> getControls()
    {
-      return configuration;
-   }
-
-   @Override
-   protected void dispatch(ConfigurationReceivedSuccessfullyHandler handler)
-   {
-      handler.onConfigurationReceivedSuccessfully(this);
+      return controls;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> getAssociatedType()
+   protected void dispatch(ControlsUpdatedHandler handler)
+   {
+      handler.onControlsUpdated(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ControlsUpdatedHandler> getAssociatedType()
    {
       return TYPE;
    }

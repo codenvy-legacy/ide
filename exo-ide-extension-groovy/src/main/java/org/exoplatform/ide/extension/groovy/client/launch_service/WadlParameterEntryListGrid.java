@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.groovy.client.ui;
+package org.exoplatform.ide.extension.groovy.client.launch_service;
 
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 */
 public class WadlParameterEntryListGrid extends ListGrid<WadlParameterEntry>
 {
+   
    private static final String SEND = "Send";
 
    private static final String NAME = "Name";

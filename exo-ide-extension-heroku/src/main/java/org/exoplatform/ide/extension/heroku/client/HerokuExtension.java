@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.event.RegisterControlEvent.DockTarget;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
@@ -43,6 +39,9 @@ import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -81,15 +80,15 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
 
       //Add controls
-      IDE.getInstance().addControl(new HerokuControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new CreateApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new DeleteApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RenameApplicationControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ChangeApplicationStackConrol(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new ShowApplicationInfoControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new RakeControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new AddKeyControl(), DockTarget.NONE, false);
-      IDE.getInstance().addControl(new SwitchAccountControl(eventBus), DockTarget.NONE, false);
+      IDE.getInstance().addControl(new HerokuControl());
+      IDE.getInstance().addControl(new CreateApplicationControl());
+      IDE.getInstance().addControl(new DeleteApplicationControl());
+      IDE.getInstance().addControl(new RenameApplicationControl());
+      IDE.getInstance().addControl(new ChangeApplicationStackConrol());
+      IDE.getInstance().addControl(new ShowApplicationInfoControl());
+      IDE.getInstance().addControl(new RakeControl());
+      IDE.getInstance().addControl(new AddKeyControl());
+      IDE.getInstance().addControl(new SwitchAccountControl(eventBus));
       //IDE.getInstance().addControl(new ClearKeysControl(), DockTarget.NONE, false);
 
       //Add presenters

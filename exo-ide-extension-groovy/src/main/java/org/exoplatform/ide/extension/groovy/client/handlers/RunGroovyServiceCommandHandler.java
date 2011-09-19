@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.handlers;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
@@ -30,11 +29,11 @@ import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
-import org.exoplatform.ide.extension.groovy.client.event.PreviewWadlOutputEvent;
 import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceEvent;
 import org.exoplatform.ide.extension.groovy.client.event.RunGroovyServiceHandler;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
+import org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
@@ -43,8 +42,9 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServ
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .

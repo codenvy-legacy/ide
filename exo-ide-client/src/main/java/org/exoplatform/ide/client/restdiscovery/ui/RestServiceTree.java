@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TreeItem;
 
 /**
@@ -135,7 +136,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
 
    private TreeItem getServiceNode(RestService rs, String icon)
    {
-      TreeItem node = new TreeItem(createItemWidget(icon, rs.getPath()));
+      TreeItem node = new TreeItem(createTreeNodeWidget(new Image(icon), rs.getPath()));
       node.setUserObject(rs);
       node.getElement().setId(Utils.md5(rs.getFullPath()));
       return node;
@@ -161,7 +162,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
                   title = title.substring(rs.getFullPath().length());
             }
 
-            TreeItem newNode = new TreeItem(createItemWidget(Images.RestService.RESOURCE, title));
+            TreeItem newNode = new TreeItem(createTreeNodeWidget(new Image(Images.RestService.RESOURCE), title));
             newNode.setUserObject(r);
             newNode.getElement().setId(Utils.md5(r.getPath()));
             parentNode.addItem(newNode);
@@ -189,7 +190,7 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
             {
                m.setHref(((RestService)re).getFullPath());
             }
-            TreeItem newNode = new TreeItem(createItemWidget(Images.RestService.METHOD, m.getName()));
+            TreeItem newNode = new TreeItem(createTreeNodeWidget(new Image(Images.RestService.METHOD), m.getName()));
             newNode.setUserObject(m);
             newNode.getElement().setId(Utils.md5(m.getHref()) + ":" + m.getName());
             parentNode.addItem(newNode);
