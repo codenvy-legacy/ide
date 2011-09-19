@@ -236,18 +236,20 @@ public class Cloudfoundry
          throw new IllegalStateException("Application URL required. ");
       if (workDir == null && war == null)
          throw new IllegalArgumentException("Working directory or location to WAR file required. ");
-      if (server == null || server.isEmpty()) {
-         server = getServer(url);
+      if (server == null || server.isEmpty())
+      {
+         /*server = getServer(url);
          if (server == null || server.isEmpty())
             throw new IllegalArgumentException(
-               "Location of Cloud Foundry server not specified and cannot be detected from application's URL. ");
+               "Location of Cloud Foundry server not specified and cannot be detected from application's URL. ");*/
+         throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
       }
       // Check is specified or determined server is really Cloud Foundry server. 
       systemInfo(server);
       return createApplication(getCredential(server), app, framework, url, instances, memory, nostart, workDir, war);
    }
 
-   private static final Pattern applicationUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)\\.(.*)");
+   /*private static final Pattern applicationUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)\\.(.*)");
 
    private static final String getServer(String appUrl)
    {
@@ -255,7 +257,7 @@ public class Cloudfoundry
       if (m.matches())
          return "http://api." + m.group(4);
       return null;
-   }
+   }*/
 
    private CloudfoundryApplication createApplication(Credential credential, String app,
       String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir, URL war)
