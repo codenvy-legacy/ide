@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -33,11 +34,11 @@ import java.io.Reader;
  */
 public class DefaultCloudfoundryAuthenticator extends CloudfoundryAuthenticator
 {
-   protected CloudfoundryCredentials readCredentials() throws IOException
+   public CloudfoundryCredentials readCredentials() throws IOException
    {
       File credentialsFile = new File(getUserHome(), ".vmc_token");
       if (!credentialsFile.exists())
-         return null;
+         return new CloudfoundryCredentials(); // empty credentials
       Reader credentialsReader = new FileReader(credentialsFile);
       try
       {
@@ -49,7 +50,7 @@ public class DefaultCloudfoundryAuthenticator extends CloudfoundryAuthenticator
       }
    }
 
-   protected void writeCredentials(CloudfoundryCredentials credentials) throws IOException
+   public void writeCredentials(CloudfoundryCredentials credentials) throws IOException
    {
       File credentialsFile = new File(getUserHome(), ".vmc_token");
       FileWriter credetialsWriter = new FileWriter(credentialsFile);
@@ -64,11 +65,46 @@ public class DefaultCloudfoundryAuthenticator extends CloudfoundryAuthenticator
       }
    }
 
-   protected void removeCredentials()
+   public String readTarget() throws IOException
    {
-      File credentialsFile = new File(getUserHome(), ".vmc_token");
-      if (!credentialsFile.delete())
-         throw new RuntimeException("Cannot delete credentials. ");
+      String target = null;
+      File targetFile = new File(getUserHome(), ".vmc_target");
+      if (targetFile.exists())
+      {
+         BufferedReader r = null;
+         try
+         {
+            r = new BufferedReader(new FileReader(targetFile));
+            target = r.readLine();
+         }
+         finally
+         {
+            if (r != null)
+               r.close();
+         }
+      }
+      if (target == null || target.isEmpty())
+         return defaultTarget;
+      return target;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#writeTarget(java.lang.String)
+    */
+   @Override
+   public void writeTarget(String target) throws IOException
+   {
+      File targetFile = new File(getUserHome(), ".vmc_target");
+      FileWriter targetWriter = new FileWriter(targetFile);
+      try
+      {
+         targetWriter.write(target);
+         targetWriter.flush();
+      }
+      finally
+      {
+         targetWriter.close();
+      }
    }
 
    private File getUserHome()

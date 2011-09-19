@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.DigestInputStream;
@@ -364,9 +365,46 @@ class FilesHelper
       fileList(path, tmp, GROOVY_FILE_FILTER);
       if (tmp.size() > 0)
          return "grails";
-      
+
       tmp.clear();
 
       return null;
+   }
+
+   static String readFile(File file) throws IOException
+   {
+      String line = null;
+      if (file.exists())
+      {
+         BufferedReader r = null;
+         try
+         {
+            r = new BufferedReader(new FileReader(file));
+            line = r.readLine();
+         }
+         finally
+         {
+            if (r != null)
+               r.close();
+         }
+      }
+      return line;
+   }
+
+   static void writeFile(File file, String data) throws IOException
+   {
+      FileWriter w = null;
+      try
+      {
+         w = new FileWriter(file);
+         w.write(data);
+         w.write('\n');
+         w.flush();
+      }
+      finally
+      {
+         if (w != null)
+            w.close();
+      }
    }
 }

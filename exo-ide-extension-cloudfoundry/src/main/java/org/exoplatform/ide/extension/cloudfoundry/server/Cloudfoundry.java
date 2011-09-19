@@ -23,8 +23,8 @@ import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Stats;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryError;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -34,14 +34,11 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ide.git.server.GitHelper;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,6 +49,7 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,6 +66,17 @@ import java.util.regex.Pattern;
  */
 public class Cloudfoundry
 {
+   private static final class Credential
+   {
+      Credential(String target, String token)
+      {
+         this.target = target;
+         this.token = token;
+      }
+      String target;
+      String token;
+   }
+   
    // TODO get list of supported frameworks from Cloud Foundry server.
    public static final Map<String, Framework> FRAMEWORKS;
    static
@@ -88,52 +97,81 @@ public class Cloudfoundry
       this.authenticator = authenticator;
    }
 
+   public void setTarget(String server) throws IOException, CloudfoundryException
+   {
+      authenticator.writeTarget(server);
+   }
+
+   public String getTarget() throws IOException, CloudfoundryException
+   {
+      return authenticator.readTarget();
+   }
+
+   public Collection<String> getTargets() throws IOException, CloudfoundryException
+   {
+      return authenticator.readCredentials().getTargets();
+   }
+
    /**
     * Log in with specified email/password. If login is successful then authentication token from cloudfoundry.com saved
     * locally and used instead email/password in all next requests.
     * 
+    * @param server location of Cloud Foundry instance for login, e.g. http://api.cloudfoundry.com
     * @param email email address that used when create account at cloudfoundry.com
     * @param password password
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void login(String email, String password) throws CloudfoundryException, IOException, ParsingResponseException
+   public void login(String server, String email, String password) throws CloudfoundryException, IOException,
+      ParsingResponseException
    {
-      authenticator.login(email, password);
+      if (server == null)
+         server = detectServer(null);
+      authenticator.login(server, email, password);
    }
 
    /**
-    * Remove locally saved authentication token. Need use {@link #login(String, String)} again.
+    * Remove locally saved authentication token. Need use {@link #login(String, String, String)} again.
+    * 
+    * @param server location of Cloud Foundry instance for logout, e.g. http://api.cloudfoundry.com
+    * @throws IOException id any i/o errors occurs
     */
-   public void logout()
+   public void logout(String server) throws IOException, CloudfoundryException
    {
-      authenticator.logout();
+      authenticator.logout(server);
    }
 
    /**
     * Get current account status (available and used resources, owner email, cloud controller description, etc)
     * 
+    * @param server location of Cloud Foundry instance to get info, e.g. http://api.cloudfoundry.com. If not specified
+    *           then try determine server. If can't determine server from user context then use default server location,
+    *           see {@link CloudfoundryAuthenticator#defaultTarget}
     * @return account info
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public SystemInfo systemInfo() throws CloudfoundryException, IOException, ParsingResponseException
+   public SystemInfo systemInfo(String server) throws CloudfoundryException, IOException, ParsingResponseException
    {
-      return systemInfo(getCredentials());
+      if (server == null || server.isEmpty())
+         server = detectServer(null);
+      return systemInfo(getCredential(server));
    }
 
-   private SystemInfo systemInfo(CloudfoundryCredentials credentials) throws CloudfoundryException, IOException,
+   private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credentials.getTarget() + "/info", credentials.getToken(), 200),
-         SystemInfo.class, null);
+      return JsonHelper.fromJson(getJson(credential.target + "/info", credential.token, 200), SystemInfo.class, null);
    }
 
    /**
     * Get info about application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application configuration or
+    *           user context then use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name to get info about. If <code>null</code> then try to determine application name. To be
     *           able determine application name <code>workDir</code> must not be <code>null</code> at least. If name not
     *           specified and cannot be determined IllegalStateException thrown
@@ -144,8 +182,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryApplication applicationInfo(String app, File workDir) throws CloudfoundryException, IOException,
-      ParsingResponseException
+   public CloudfoundryApplication applicationInfo(String server, String app, File workDir)
+      throws CloudfoundryException, IOException, ParsingResponseException
    {
       if (app == null || app.isEmpty())
       {
@@ -154,19 +192,25 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      return applicationInfo(getCredentials(), app);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      return applicationInfo(getCredential(server), app);
    }
 
-   private CloudfoundryApplication applicationInfo(CloudfoundryCredentials credentials, String app)
+   private CloudfoundryApplication applicationInfo(Credential credential, String app)
       throws CloudfoundryException, IOException, ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), 200),
+      return JsonHelper.fromJson(getJson(credential.target + "/apps/" + app, credential.token, 200),
          CloudfoundryApplication.class, null);
    }
 
    /**
     * Create new application.
     * 
+    * @param server location of Cloud Foundry instance where application must be created, e.g.
+    *           http://api.cloudfoundry.com. If not specified then try determine server. If can't determine server from
+    *           user context ({@link CloudfoundryAuthenticator#readTarget()) then use default server location, see
+    *           {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. This parameter is mandatory.
     * @param framework type of framework (optional). If <code>null</code> then try determine type of framework by
     *           discovering content of <code>workDir</code>
@@ -182,30 +226,50 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryApplication createApplication(String app, String framework, String url, int instances,
-      int memory, boolean nostart, File workDir, URL war) throws CloudfoundryException, IOException,
+   public CloudfoundryApplication createApplication(String server, String app, String framework, String url,
+      int instances, int memory, boolean nostart, File workDir, URL war) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
       if (app == null || app.isEmpty())
          throw new IllegalStateException("Application name required. ");
+      if (url == null || url.isEmpty())
+         throw new IllegalStateException("Application URL required. ");
       if (workDir == null && war == null)
          throw new IllegalArgumentException("Working directory or location to WAR file required. ");
-      return createApplication(getCredentials(), app, framework, url, instances, memory, nostart, workDir, war);
+      if (server == null || server.isEmpty()) {
+         server = getServer(url);
+         if (server == null || server.isEmpty())
+            throw new IllegalArgumentException(
+               "Location of Cloud Foundry server not specified and cannot be detected from application's URL. ");
+      }
+      // Check is specified or determined server is really Cloud Foundry server. 
+      systemInfo(server);
+      return createApplication(getCredential(server), app, framework, url, instances, memory, nostart, workDir, war);
    }
 
-   private CloudfoundryApplication createApplication(CloudfoundryCredentials credentials, String app,
+   private static final Pattern applicationUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)\\.(.*)");
+
+   private static final String getServer(String appUrl)
+   {
+      Matcher m = applicationUrlPattern.matcher(appUrl);
+      if (m.matches())
+         return "http://api." + m.group(4);
+      return null;
+   }
+
+   private CloudfoundryApplication createApplication(Credential credential, String app,
       String frameworkName, String appUrl, int instances, int memory, boolean nostart, File workDir, URL war)
       throws CloudfoundryException, IOException, ParsingResponseException
    {
       // Assume war-file may be located remotely, e.g. if use Jenkins to produce file for us.
       // Check number of applications.
-      SystemInfo systemInfo = systemInfo(credentials);
+      SystemInfo systemInfo = systemInfo(credential);
       SystemResources limits = systemInfo.getLimits();
       SystemResources usage = systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
 
-      checkApplicationName(credentials, app);
+      checkApplicationName(credential, app);
 
       CloudfoundryApplication appInfo;
       File warFile = null;
@@ -227,9 +291,6 @@ public class Cloudfoundry
 
          Framework cfg = getFramework(frameworkName);
 
-         if (appUrl == null)
-            appUrl = app + ".cloudfoundry.com";
-
          if (instances <= 0)
             instances = 1;
 
@@ -243,23 +304,25 @@ public class Cloudfoundry
             checkAvailableMemory(instances, memory, limits, usage);
 
          String json =
-            postJson(credentials.getTarget() + "/apps", credentials.getToken(),
+            postJson(credential.target + "/apps", credential.token,
                JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, framework)), 302);
          CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
          appInfo =
-            JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credentials.getToken(), null, 200),
+            JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credential.token, null, 200),
                CloudfoundryApplication.class, null);
 
          if (("spring".equals(cfg.getType()) || "spring".equals(cfg.getType())) && warFile != null)
-            uploadApplication(credentials, app, warFile);
+            uploadApplication(credential, app, warFile);
          else
-            uploadApplication(credentials, app, workDir);
+            uploadApplication(credential, app, workDir);
 
-         if (workDir != null)
+         if (workDir != null) {
             writeApplicationName(workDir, app);
+            writeServerName(workDir, credential.target);
+         }
 
          if (!nostart)
-            appInfo = startApplication(credentials, app, false);
+            appInfo = startApplication(credential, app, false);
       }
       finally
       {
@@ -272,6 +335,9 @@ public class Cloudfoundry
    /**
     * Start application if it not started yet.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -284,7 +350,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryApplication startApplication(String app, File workDir) throws IOException,
+   public CloudfoundryApplication startApplication(String server, String app, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -294,18 +360,20 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      return startApplication(getCredentials(), app, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      return startApplication(getCredential(server), app, true);
    }
 
-   private CloudfoundryApplication startApplication(CloudfoundryCredentials credentials, String app,
-      boolean failIfStarted) throws IOException, ParsingResponseException, CloudfoundryException
+   private CloudfoundryApplication startApplication(Credential credential, String app, boolean failIfStarted)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       // Do nothing if application already started.
       if (!"STARTED".equals(appInfo.getState()))
       {
          appInfo.setState("STARTED"); // Update application state.
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          // Check is application started.
          final int attempt = 3;
          boolean started = false;
@@ -318,7 +386,7 @@ public class Cloudfoundry
             catch (InterruptedException ignored)
             {
             }
-            appInfo = applicationInfo(credentials, app);
+            appInfo = applicationInfo(credential, app);
             started = "STARTED".equals(appInfo.getState());
          }
          if (!started)
@@ -335,6 +403,9 @@ public class Cloudfoundry
    /**
     * Stop application if it not stopped yet.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -344,7 +415,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void stopApplication(String app, File workDir) throws IOException, ParsingResponseException,
+   public void stopApplication(String server, String app, File workDir) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -354,18 +425,20 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      stopApplication(getCredentials(), app, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      stopApplication(getCredential(server), app, true);
    }
 
-   private void stopApplication(CloudfoundryCredentials credentials, String app, boolean failIfStopped)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void stopApplication(Credential credential, String app, boolean failIfStopped) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       // Do nothing if application already stopped.
       if (!"STOPPED".equals(appInfo.getState()))
       {
          appInfo.setState("STOPPED"); // Update application state.
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
       }
       else if (failIfStopped)
       {
@@ -376,6 +449,9 @@ public class Cloudfoundry
    /**
     * Restart application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -388,7 +464,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryApplication restartApplication(String app, File workDir) throws IOException,
+   public CloudfoundryApplication restartApplication(String server, String app, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -398,19 +474,24 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      return restartApplication(getCredentials(), app);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      return restartApplication(getCredential(server), app);
    }
 
-   private CloudfoundryApplication restartApplication(CloudfoundryCredentials credentials, String app)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private CloudfoundryApplication restartApplication(Credential credential, String app) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      stopApplication(credentials, app, false);
-      return startApplication(credentials, app, false);
+      stopApplication(credential, app, false);
+      return startApplication(credential, app, false);
    }
 
    /**
     * Rename application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -421,7 +502,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void renameApplication(String app, String newname, File workDir) throws IOException,
+   public void renameApplication(String server, String app, String newname, File workDir) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       // XXX NOTE : Rename does not work AT THE MOMENT even from command line tool (vmc) provided by Cloud Foundry.
@@ -433,24 +514,27 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-
       if (newname == null || newname.isEmpty())
          throw new IllegalArgumentException("New application name may not be null or empty. ");
-
-      renameApplication(getCredentials(), app, newname);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      renameApplication(getCredential(server), app, newname);
    }
 
-   private void renameApplication(CloudfoundryCredentials credentials, String app, String newname) throws IOException,
+   private void renameApplication(Credential credential, String app, String newname) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       appInfo.setName(newname);
-      putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+      putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
    }
 
    /**
     * Update application. Upload all files that has changes to cloud controller.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -461,8 +545,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void updateApplication(String app, File workDir, URL war) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void updateApplication(String server, String app, File workDir, URL war) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (workDir == null && war == null)
          throw new IllegalArgumentException("Working directory or location to WAR file required. ");
@@ -474,13 +558,15 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      updateApplication(getCredentials(), app, workDir, war);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      updateApplication(getCredential(server), app, workDir, war);
    }
 
-   private void updateApplication(CloudfoundryCredentials credentials, String app, File workDir, URL war)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void updateApplication(Credential credential, String app, File workDir, URL war) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
 
       File warFile = null;
       try
@@ -488,11 +574,11 @@ public class Cloudfoundry
          if (war != null)
          {
             warFile = downloadWarFile(app, war);
-            uploadApplication(credentials, app, warFile);
+            uploadApplication(credential, app, warFile);
          }
          else
          {
-            uploadApplication(credentials, app, workDir);
+            uploadApplication(credential, app, workDir);
          }
       }
       finally
@@ -502,7 +588,7 @@ public class Cloudfoundry
       }
 
       if ("STARTED".equals(appInfo.getState()))
-         restartApplication(credentials, app);
+         restartApplication(credential, app);
    }
 
    /**
@@ -510,6 +596,9 @@ public class Cloudfoundry
     * method adds new URL for application. If parameter <code>url</code> is <i>my-app2.cloudfoundry.com</i> the
     * application may be accessed with URLs: <i>my-app.cloudfoundry.com</i> and <i>my-app2.cloudfoundry.com</i> .
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -520,8 +609,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void mapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void mapUrl(String server, String app, File workDir, String url) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (url == null)
          throw new IllegalArgumentException("URL for mapping required. ");
@@ -533,13 +622,15 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      mapUrl(getCredentials(), app, url);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      mapUrl(getCredential(server), app, url);
    }
 
-   private void mapUrl(CloudfoundryCredentials credentials, String app, String url) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void mapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
          url = url.substring(7);
@@ -560,12 +651,15 @@ public class Cloudfoundry
       }
       // If have something to update then do that.
       if (updated)
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
    }
 
    /**
     * Unregister the application from the <code>url</code>.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -576,8 +670,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void unmapUrl(String app, File workDir, String url) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void unmapUrl(String server, String app, File workDir, String url) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (url == null)
          throw new IllegalArgumentException("URL for unmapping required. ");
@@ -589,13 +683,15 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      unmapUrl(getCredentials(), app, url);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      unmapUrl(getCredential(server), app, url);
    }
 
-   private void unmapUrl(CloudfoundryCredentials credentials, String app, String url) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void unmapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
          url = url.substring(7);
@@ -603,12 +699,15 @@ public class Cloudfoundry
          url = url.substring(8);
       List<String> uris = appInfo.getUris();
       if (uris != null && uris.size() > 0 && uris.remove(url))
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
    }
 
    /**
     * Update amount of memory allocated for application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -620,7 +719,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void mem(String app, File workDir, int memory) throws IOException, ParsingResponseException,
+   public void mem(String server, String app, File workDir, int memory) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
       if (memory < 0)
@@ -633,17 +732,19 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      mem(getCredentials(), app, memory, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      mem(getCredential(server), app, memory, true);
    }
 
-   private void mem(CloudfoundryCredentials credentials, String app, int memory, boolean restart) throws IOException,
+   private void mem(Credential credential, String app, int memory, boolean restart) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       int currentMem = appInfo.getResources().getMemory();
       if (memory != currentMem)
       {
-         SystemInfo systemInfo = systemInfo(credentials);
+         SystemInfo systemInfo = systemInfo(credential);
          SystemResources limits = systemInfo.getLimits();
          SystemResources usage = systemInfo.getUsage();
          if (limits != null && usage != null //
@@ -657,15 +758,18 @@ public class Cloudfoundry
                + "M required. ");
          }
          appInfo.getResources().setMemory(memory);
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
    /**
     * Update number of instances of application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name to scale application instances up or down. If <code>null</code> then try to determine
     *           application name. To be able determine application name <code>workDir</code> must not be
     *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
@@ -681,8 +785,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void instances(String app, File workDir, String expression) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void instances(String server, String app, File workDir, String expression) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -691,14 +795,16 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      instances(getCredentials(), app, expression, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      instances(getCredential(server), app, expression, true);
    }
 
    /** Instance update expression pattern. */
    private static final Pattern INSTANCE_UPDATE_EXPR = Pattern.compile("([+-])?(\\d+)");
 
-   private void instances(CloudfoundryCredentials credentials, String app, String expression, boolean restart)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void instances(Credential credential, String app, String expression, boolean restart) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       Matcher m = INSTANCE_UPDATE_EXPR.matcher(expression);
       if (!m.matches())
@@ -707,7 +813,7 @@ public class Cloudfoundry
       String sign = m.group(1);
       String val = m.group(2);
 
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       int currentInst = appInfo.getInstances();
       int newInst = sign == null //
          ? Integer.parseInt(expression) //
@@ -720,15 +826,18 @@ public class Cloudfoundry
       if (currentInst != newInst)
       {
          appInfo.setInstances(newInst);
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
    /**
     * Delete application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -739,7 +848,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void deleteApplication(String app, File workDir, boolean deleteServices) throws IOException,
+   public void deleteApplication(String server, String app, File workDir, boolean deleteServices) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -749,14 +858,16 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      deleteApplication(getCredentials(), app, deleteServices, workDir);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      deleteApplication(getCredential(server), app, deleteServices, workDir);
    }
 
-   private void deleteApplication(CloudfoundryCredentials credentials, String app, boolean deleteServices, File workDir)
+   private void deleteApplication(Credential credential, String app, boolean deleteServices, File workDir)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
-      deleteJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), 200);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
+      deleteJson(credential.target + "/apps/" + app, credential.token, 200);
       File appnameFile = new File(workDir, ".cloudfoundry-application");
       if (appnameFile.exists())
          appnameFile.delete();
@@ -766,7 +877,7 @@ public class Cloudfoundry
          if (services != null && services.size() > 0)
          {
             for (int i = 0; i < services.size(); i++)
-               deleteService(credentials, services.get(i));
+               deleteService(credential, services.get(i));
          }
       }
    }
@@ -774,6 +885,9 @@ public class Cloudfoundry
    /**
     * Get application statistics.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -785,8 +899,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public Map<String, CloudfoundryApplicationStatistics> applicationStats(String app, File workDir) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   public Map<String, CloudfoundryApplicationStatistics> applicationStats(String server, String app, File workDir)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -795,16 +909,18 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-      return applicationStats(getCredentials(), app);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      return applicationStats(getCredential(server), app);
    }
 
    @SuppressWarnings({"serial", "rawtypes", "unchecked"})
-   private Map<String, CloudfoundryApplicationStatistics> applicationStats(CloudfoundryCredentials credentials,
-      String app) throws IOException, ParsingResponseException, CloudfoundryException
+   private Map<String, CloudfoundryApplicationStatistics> applicationStats(Credential credential, String app)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       Map cloudStats =
-         JsonHelper.fromJson(getJson(credentials.getTarget() + "/apps/" + app + "/stats", credentials.getToken(), 200),
-            Map.class, new HashMap<String, Stats>()
+         JsonHelper.fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
+            new HashMap<String, Stats>()
             {
             }.getClass().getGenericSuperclass());
       if (cloudStats != null && cloudStats.size() > 0)
@@ -842,48 +958,69 @@ public class Cloudfoundry
       return Collections.emptyMap();
    }
 
-   public CloudfoundryApplication[] listApplications() throws IOException, ParsingResponseException,
+   /**
+    * Get list of applications of current user.
+    * 
+    * @param server location of Cloud Foundry instance to get applications, e.g. http://api.cloudfoundry.com. If not
+    *           specified then try determine server. If can't determine server from user context then use default server
+    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
+    * @return list of applications
+    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws IOException id any i/o errors occurs
+    */
+   public CloudfoundryApplication[] listApplications(String server) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
-      CloudfoundryCredentials credentials = getCredentials();
-      return JsonHelper.fromJson(getJson(credentials.getTarget() + "/apps", credentials.getToken(), 200),
+      if (server == null || server.isEmpty())
+         server = detectServer(null);
+      Credential credential = getCredential(server);
+      return JsonHelper.fromJson(getJson(credential.target + "/apps", credential.token, 200),
          CloudfoundryApplication[].class, null);
    }
 
    /**
     * Get services available and already in use.
     * 
+    * @param server location of Cloud Foundry instance to get services, e.g. http://api.cloudfoundry.com. If not
+    *           specified then try determine server. If can't determine server from user context then use default server
+    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @return info about available and used services
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryServices services() throws IOException, ParsingResponseException, CloudfoundryException
+   public CloudfoundryServices services(String server) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
-      CloudfoundryCredentials credentials = getCredentials();
+      if (server == null || server.isEmpty())
+         server = detectServer(null);
+      Credential credential = getCredential(server);
       CloudfoundryServices services =
-         new CloudfoundryServices(systemServices(credentials), provisionedServices(credentials));
+         new CloudfoundryServices(systemServices(credential), provisionedServices(credential));
       return services;
    }
 
-   private SystemService[] systemServices(CloudfoundryCredentials credentials) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private SystemService[] systemServices(Credential credential) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       // Hard for parsing JSON for system services :( , so need do some manually job.
-      return JsonHelper.parseSystemServices(getJson(credentials.getTarget() + "/info/services", credentials.getToken(),
-         200));
+      return JsonHelper.parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
    }
 
-   private ProvisionedService[] provisionedServices(CloudfoundryCredentials credentials) throws IOException,
+   private ProvisionedService[] provisionedServices(Credential credential) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      return JsonHelper.fromJson(getJson(credentials.getTarget() + "/services", credentials.getToken(), 200),
+      return JsonHelper.fromJson(getJson(credential.target + "/services", credential.token, 200),
          ProvisionedService[].class, null);
    }
 
    /**
     * Create new service.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param service type of service to create. Should be one from system service, see {@link #services()}, e.g.
     *           <i>mysql</i> or <i>mongodb</i>
     * @param name name for new service (optional). If not specified that random name generated
@@ -896,25 +1033,25 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public ProvisionedService createService(String service, String name, String app, File workDir) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   public ProvisionedService createService(String server, String service, String name, String app, File workDir)
+      throws IOException, ParsingResponseException, CloudfoundryException
    {
       if (service == null || service.isEmpty())
          throw new IllegalArgumentException("Service type required. ");
-
       // If application name is null and working directory null or application
       // name cannot be determined in some reasons then not bind new service
       // to any application.
       if (app == null || app.isEmpty())
          app = detectApplicationName(workDir);
-
-      return createService(getCredentials(), service, name, app);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      return createService(getCredential(server), service, name, app);
    }
 
-   private ProvisionedService createService(CloudfoundryCredentials credentials, String service, String name, String app)
+   private ProvisionedService createService(Credential credential, String service, String name, String app)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
-      SystemService[] available = systemServices(credentials);
+      SystemService[] available = systemServices(credential);
       SystemService target = null;
       for (int i = 0; i < available.length && target == null; i++)
       {
@@ -933,13 +1070,13 @@ public class Cloudfoundry
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
-      postJson(credentials.getTarget() + "/services", credentials.getToken(), JsonHelper.toJson(req), 200);
+      postJson(credential.target + "/services", credential.token, JsonHelper.toJson(req), 200);
 
       // Be sure service available.
-      ProvisionedService res = findService(credentials, name);
+      ProvisionedService res = findService(credential, name);
 
       if (app != null)
-         bindService(credentials, name, app, true);
+         bindService(credential, name, app, true);
 
       return res;
    }
@@ -947,28 +1084,37 @@ public class Cloudfoundry
    /**
     * Delete provisioned service.
     * 
+    * @param server location of Cloud Foundry instance to delete service, e.g. http://api.cloudfoundry.com. If not
+    *           specified then try determine server. If can't determine server from user context then use default server
+    *           location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param name name of service to delete
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void deleteService(String name) throws IOException, ParsingResponseException, CloudfoundryException
+   public void deleteService(String server, String name) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       if (name == null || name.isEmpty())
          throw new IllegalArgumentException("Service name required. ");
-      deleteService(getCredentials(), name);
+      if (server == null || server.isEmpty())
+         server = detectServer(null);
+      deleteService(getCredential(server), name);
    }
 
-   private void deleteService(CloudfoundryCredentials credentials, String name) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void deleteService(Credential credential, String name) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
-      findService(credentials, name);
-      deleteJson(credentials.getTarget() + "/services/" + name, credentials.getToken(), 200);
+      findService(credential, name);
+      deleteJson(credential.target + "/services/" + name, credential.token, 200);
    }
 
    /**
     * Bind provisioned service to application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param name provisioned service name
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
@@ -979,8 +1125,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void bindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void bindService(String server, String name, String app, File workDir) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -989,18 +1135,18 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-
       if (name == null || name.isEmpty())
          throw new IllegalArgumentException("Service name required. ");
-
-      bindService(getCredentials(), name, app, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      bindService(getCredential(server), name, app, true);
    }
 
-   private void bindService(CloudfoundryCredentials credentials, String name, String app, boolean restart)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void bindService(Credential credential, String name, String app, boolean restart) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
-      findService(credentials, name);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
+      findService(credential, name);
       boolean updated = false;
       List<String> services = appInfo.getServices();
       if (services == null)
@@ -1016,15 +1162,18 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
    /**
     * Unbind provisioned service to application.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param name provisioned service name
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
@@ -1035,8 +1184,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void unbindService(String name, String app, File workDir) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void unbindService(String server, String name, String app, File workDir) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -1045,30 +1194,33 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-
       if (name == null || name.isEmpty())
          throw new IllegalArgumentException("Service name required. ");
-
-      unbindService(getCredentials(), name, app, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      unbindService(getCredential(server), name, app, true);
    }
 
-   private void unbindService(CloudfoundryCredentials credentials, String name, String app, boolean restart)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void unbindService(Credential credential, String name, String app, boolean restart) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
-      findService(credentials, name);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
+      findService(credential, name);
       List<String> services = appInfo.getServices();
       if (services != null && services.size() > 0 && services.remove(name))
       {
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
    /**
     * Add new environment variable. One key may have multiple values.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -1080,7 +1232,7 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void environmentAdd(String app, File workDir, String key, String val) throws IOException,
+   public void environmentAdd(String server, String app, File workDir, String key, String val) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
@@ -1090,17 +1242,17 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-
       if (key == null || key.isEmpty())
          throw new IllegalArgumentException("Key-value pair required. ");
-
-      environmentAdd(getCredentials(), app, key, val, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      environmentAdd(getCredential(server), app, key, val, true);
    }
 
-   private void environmentAdd(CloudfoundryCredentials credentials, String app, String key, String val, boolean restart)
+   private void environmentAdd(Credential credential, String app, String key, String val, boolean restart)
       throws IOException, ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       String kv = key + "=" + (val == null ? "" : val);
@@ -1117,15 +1269,18 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
    /**
     * Delete environment variable. <b>NOTE</b> If more then one values assigned to the key than remove first one only.
     * 
+    * @param server location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
+    *           not specified then try determine server. If can't determine server from application or user context then
+    *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
     *           cannot be determined IllegalStateException thrown
@@ -1136,8 +1291,8 @@ public class Cloudfoundry
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
     */
-   public void environmentDelete(String app, File workDir, String key) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void environmentDelete(String server, String app, File workDir, String key) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
       if (app == null || app.isEmpty())
       {
@@ -1146,17 +1301,17 @@ public class Cloudfoundry
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
-
       if (key == null || key.isEmpty())
          throw new IllegalArgumentException("Key required. ");
-
-      environmentDelete(getCredentials(), app, key, true);
+      if (server == null || server.isEmpty())
+         server = detectServer(workDir);
+      environmentDelete(getCredential(server), app, key, true);
    }
 
-   private void environmentDelete(CloudfoundryCredentials credentials, String app, String key, boolean restart)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void environmentDelete(Credential credential, String app, String key, boolean restart) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      CloudfoundryApplication appInfo = applicationInfo(credentials, app);
+      CloudfoundryApplication appInfo = applicationInfo(credential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       if (env != null && env.size() > 0)
@@ -1174,14 +1329,15 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credentials.getTarget() + "/apps/" + app, credentials.getToken(), JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
-            restartApplication(credentials, app);
+            restartApplication(credential, app);
       }
    }
 
-   public void validateAction(String action, String app, String frameworkName, String url, int instances, int memory,
-      boolean nostart, File workDir) throws CloudfoundryException, ParsingResponseException, IOException
+   public void validateAction(String server, String action, String app, String frameworkName, String url,
+      int instances, int memory, boolean nostart, File workDir) throws CloudfoundryException, ParsingResponseException,
+      IOException
    {
       if ("create".equals(action))
       {
@@ -1195,15 +1351,17 @@ public class Cloudfoundry
             throw new CloudfoundryException(400, "Working directory already contains Cloud Foundry application. ",
                "text/plain");
          }
-         CloudfoundryCredentials credentials = getCredentials();
+         if (server == null || server.isEmpty())
+            server = detectServer(workDir);
+         Credential credential = getCredential(server);
 
-         SystemInfo systemInfo = systemInfo(credentials);
+         SystemInfo systemInfo = systemInfo(credential);
          SystemResources limits = systemInfo.getLimits();
          SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
 
-         checkApplicationName(credentials, app);
+         checkApplicationName(credential, app);
 
          Framework cfg = null;
          if (frameworkName != null)
@@ -1225,8 +1383,10 @@ public class Cloudfoundry
          if (name == null || name.isEmpty())
             throw new IllegalStateException(
                "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
+         if (server == null || server.isEmpty())
+            server = detectServer(workDir);
          // Throw exception if application not found.
-         applicationInfo(getCredentials(), name);
+         applicationInfo(getCredential(server), name);
       }
       else
       {
@@ -1255,12 +1415,12 @@ public class Cloudfoundry
             + "M required. ");
    }
 
-   private void checkApplicationName(CloudfoundryCredentials credentials, String app) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
+      CloudfoundryException
    {
       try
       {
-         applicationInfo(credentials, app);
+         applicationInfo(credential, app);
          throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
       }
       catch (CloudfoundryException e)
@@ -1295,10 +1455,10 @@ public class Cloudfoundry
       return cfg;
    }
 
-   private ProvisionedService findService(CloudfoundryCredentials credentials, String name) throws IOException,
+   private ProvisionedService findService(Credential credential, String name) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      ProvisionedService[] services = provisionedServices(credentials);
+      ProvisionedService[] services = provisionedServices(credential);
       for (int i = 0; i < services.length; i++)
       {
          if (name.equals(services[i].getName()))
@@ -1307,60 +1467,49 @@ public class Cloudfoundry
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
    }
 
-   private CloudfoundryCredentials getCredentials() throws CloudfoundryException, IOException
+   private Credential getCredential(String server) throws CloudfoundryException, IOException
    {
       CloudfoundryCredentials credentials = authenticator.readCredentials();
-      if (credentials == null)
+      String token = credentials.getToken(server);
+      if (token == null)
          throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
-      return credentials;
+      return new Credential(server, token);
    }
 
    private void writeApplicationName(File workDir, String name) throws IOException
    {
-      String filename = ".cloudfoundry-application";
-      File idfile = new File(workDir, filename);
-      FileWriter w = null;
-      try
-      {
-         w = new FileWriter(idfile);
-         w.write(name);
-         w.write('\n');
-         w.flush();
-      }
-      finally
-      {
-         if (w != null)
-            w.close();
-      }
+      final String filename = ".cloudfoundry-application";
+      File file = new File(workDir, filename);
+      FilesHelper.writeFile(file, name);
       GitHelper.addToGitIgnore(workDir, filename);
    }
 
    private String detectApplicationName(File workDir) throws IOException
    {
-      String name = null;
       if (workDir != null)
-      {
-         String filename = ".cloudfoundry-application";
-         File idfile = new File(workDir, filename);
-         if (idfile.exists())
-         {
-            BufferedReader r = null;
-            try
-            {
-               r = new BufferedReader(new FileReader(idfile));
-               name = r.readLine();
-            }
-            finally
-            {
-               if (r != null)
-                  r.close();
-            }
-         }
-      }
-      return name;
+         return FilesHelper.readFile(new File(workDir, ".cloudfoundry-application"));
+      return null;
    }
 
-   private void uploadApplication(CloudfoundryCredentials credentials, String app, File path) throws IOException,
+   private void writeServerName(File workDir, String server) throws IOException
+   {
+      final String filename = ".vmc_target";
+      File file = new File(workDir, filename);
+      FilesHelper.writeFile(file, server);
+      GitHelper.addToGitIgnore(workDir, filename);
+   }
+
+   private String detectServer(File workDir) throws IOException
+   {
+      String server = null;
+      if (workDir != null)
+         server = FilesHelper.readFile(new File(workDir, ".vmc_target"));
+      if (server == null)
+         return authenticator.readTarget();
+      return server;
+   }
+   
+   private void uploadApplication(Credential credential, String app, File path) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
       File zip = null;
@@ -1413,8 +1562,8 @@ public class Cloudfoundry
 
             resources =
                JsonHelper.fromJson(
-                  postJson(credentials.getTarget() + "/resources", credentials.getToken(),
-                     JsonHelper.toJson(fingerprints), 200), ApplicationFile[].class, null);
+                  postJson(credential.target + "/resources", credential.token, JsonHelper.toJson(fingerprints), 200),
+                  ApplicationFile[].class, null);
 
             String uploadDirPath = uploadDir.getAbsolutePath() + "/";
 
@@ -1440,10 +1589,10 @@ public class Cloudfoundry
             resources = new ApplicationFile[0];
 
          // Upload application data.
-         http = (HttpURLConnection)new URL(credentials.getTarget() + "/apps/" + app + "/application").openConnection();
+         http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Authorization", credentials.getToken());
+         http.setRequestProperty("Authorization", credential.token);
          http.setRequestProperty("Accept", "*/*");
          final String boundary = "----------" + System.currentTimeMillis();
          http.setRequestProperty("Content-type", "multipart/form-data; boundary=" + boundary);

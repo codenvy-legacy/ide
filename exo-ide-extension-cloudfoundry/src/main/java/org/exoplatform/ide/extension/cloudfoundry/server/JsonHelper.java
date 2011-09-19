@@ -105,13 +105,13 @@ class JsonHelper
       {
          JsonValue json;
          if (instance.getClass().isArray())
-            json = new JsonGenerator().createJsonArray(instance);
+            json = JsonGenerator.createJsonArray(instance);
          else if (instance instanceof Collection)
-            json = new JsonGenerator().createJsonArray((Collection<?>)instance);
+            json = JsonGenerator.createJsonArray((Collection<?>)instance);
          else if (instance instanceof Map)
-            json = new JsonGenerator().createJsonObjectFromMap((Map<String, ?>)instance);
+            json = JsonGenerator.createJsonObjectFromMap((Map<String, ?>)instance);
          else
-            json = new JsonGenerator().createJsonObject(instance);
+            json = JsonGenerator.createJsonObject(instance);
 
          Writer w = new FastStrWriter();
          json.writeTo(new JsonWriter(w));

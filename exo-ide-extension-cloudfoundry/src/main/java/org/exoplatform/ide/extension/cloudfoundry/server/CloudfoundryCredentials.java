@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -26,6 +25,11 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -33,33 +37,47 @@ import java.io.Writer;
  */
 class CloudfoundryCredentials
 {
-   private final String token;
-   private final String target;
+   private final Map<String, String> tokens = new HashMap<String, String>();
 
-   public CloudfoundryCredentials(String target, String token)
+   CloudfoundryCredentials()
    {
-      this.target = target;
-      this.token = token;
    }
 
-   public String getTarget()
+   Collection<String> getTargets()
    {
-      return target;
+      return Collections.unmodifiableSet(tokens.keySet());
    }
 
-   public String getToken()
+   String getToken(String target)
    {
-      return token;
+      return tokens.get(target);
    }
 
-   public void writeTo(Writer out) throws IOException
+   void addToken(String target, String token)
+   {
+      tokens.put(target, token);
+   }
+
+   boolean removeToken(String target)
+   {
+      return tokens.remove(target) != null;
+   }
+
+   void writeTo(Writer out) throws IOException
    {
       StringBuilder body = new StringBuilder();
-      body.append('{') //
-         .append('"').append(target).append('"') //
-         .append(':') //
-         .append('"').append(token).append('"') //
-         .append('}');
+      body.append('{'); //
+      for (Map.Entry<String, String> e : tokens.entrySet())
+      {
+         body.append('"') //
+            .append(e.getKey()) //
+            .append('"') //
+            .append(':') //
+            .append('"') //
+            .append(e.getValue()) //
+            .append('"');
+      }
+      body.append('}');
       out.write(body.toString());
    }
 
@@ -75,8 +93,13 @@ class CloudfoundryCredentials
          throw new RuntimeException(e.getMessage(), e);
       }
       JsonValue jsonValue = jsonParser.getJsonObject();
-      String api = jsonValue.getKeys().next();
-      String token = jsonValue.getElement(api).getStringValue();
-      return new CloudfoundryCredentials(api, token);
+      Iterator<String> targets = jsonValue.getKeys();
+      CloudfoundryCredentials credentials = new CloudfoundryCredentials();
+      while (targets.hasNext())
+      {
+         String cur = targets.next();
+         credentials.addToken(cur, jsonValue.getElement(cur).getStringValue());
+      }
+      return credentials;
    }
 }

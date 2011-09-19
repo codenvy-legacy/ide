@@ -29,6 +29,7 @@ import org.exoplatform.services.security.IdentityConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.Calendar;
 
@@ -84,7 +85,61 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
     * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#readCredentials()
     */
    @Override
-   protected CloudfoundryCredentials readCredentials() throws IOException
+   public CloudfoundryCredentials readCredentials() throws IOException
+   {
+      String str = readFile("vmc_token");
+      if (str == null)
+         return new CloudfoundryCredentials(); // empty credentials
+      BufferedReader r = null;
+      CloudfoundryCredentials credentials;
+      try
+      {
+         r = new BufferedReader(new StringReader(str));
+         credentials = CloudfoundryCredentials.readFrom(r);
+      }
+      finally
+      {
+         if (r != null)
+            r.close();
+      }
+      return credentials;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#writeCredentials(org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials)
+    */
+   @Override
+   public void writeCredentials(CloudfoundryCredentials credentials) throws IOException
+   {
+      Writer w = new JsonHelper.FastStrWriter();
+      credentials.writeTo(w);
+      writeFile("vmc_token", w.toString());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#readTarget()
+    */
+   @Override
+   public String readTarget() throws IOException
+   {
+      String target = readFile("vmc_target");
+      if (target == null || target.isEmpty())
+         return defaultTarget;
+      return target;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#writeTarget(java.lang.String)
+    */
+   @Override
+   public void writeTarget(String target) throws IOException
+   {
+      writeFile("vmc_target", target);
+   }
+
+   //
+   
+   private String readFile(String file) throws IOException
    {
       Session session = null;
       try
@@ -93,7 +148,7 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
          // Login with current identity. ConversationState.getCurrent(). 
          session = repository.login(workspace);
          String user = session.getUserID();
-         String tokenPath = config + user + "/cloud_foundry/vmc_token";
+         String tokenPath = config + user + "/cloud_foundry/" + file;
 
          Item item = null;
          try
@@ -108,18 +163,20 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
             return null;
 
          Property property = ((Node)item).getNode("jcr:content").getProperty("jcr:data");
-         BufferedReader r = new BufferedReader(new InputStreamReader(property.getStream()));
-         CloudfoundryCredentials credentials;
+         BufferedReader r = null;
+         String line = null;
          try
          {
-            credentials = CloudfoundryCredentials.readFrom(r);
+            r = new BufferedReader(new InputStreamReader(property.getStream()));
+            line = r.readLine();
          }
          finally
          {
-            r.close();
+            if (r != null)
+               r.close();
          }
 
-         return credentials;
+         return line;
       }
       catch (RepositoryException re)
       {
@@ -132,12 +189,7 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator
-    *      #writeCredentials(org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials)
-    */
-   @Override
-   protected void writeCredentials(CloudfoundryCredentials credentials) throws IOException
+   private void writeFile(String fileName, String data) throws IOException
    {
       Session session = null;
       try
@@ -163,20 +215,18 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
          Node contentNode;
          try
          {
-            fileNode = (ExtendedNode)cloudFoundry.getNode("vmc_token");
+            fileNode = (ExtendedNode)cloudFoundry.getNode(fileName);
             contentNode = fileNode.getNode("jcr:content");
          }
          catch (PathNotFoundException pnfe)
          {
-            fileNode = (ExtendedNode)cloudFoundry.addNode("vmc_token", "nt:file");
+            fileNode = (ExtendedNode)cloudFoundry.addNode(fileName, "nt:file");
             contentNode = fileNode.addNode("jcr:content", "nt:resource");
          }
 
          contentNode.setProperty("jcr:mimeType", "text/plain");
          contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-         Writer w = new JsonHelper.FastStrWriter();
-         credentials.writeTo(w);
-         contentNode.setProperty("jcr:data", w.toString());
+         contentNode.setProperty("jcr:data", data);
          // Make file accessible for current user only.
          if (!fileNode.isNodeType("exo:privilegeable"))
             fileNode.addMixin("exo:privilegeable");
@@ -218,37 +268,6 @@ public class JcrCloudfoundryAuthenticator extends CloudfoundryAuthenticator
       {
          if (sys != null)
             sys.logout();
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator#removeCredentials()
-    */
-   @Override
-   protected void removeCredentials()
-   {
-      Session session = null;
-      try
-      {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         session = repository.login(workspace);
-         String user = session.getUserID();
-         String tokenPath = config + user + "/cloud_foundry/vmc_token";
-         Item item = session.getItem(tokenPath);
-         item.remove();
-         session.save();
-      }
-      catch (PathNotFoundException pnfe)
-      {
-      }
-      catch (RepositoryException re)
-      {
-         throw new RuntimeException(re.getMessage(), re);
-      }
-      finally
-      {
-         if (session != null)
-            session.logout();
       }
    }
 }

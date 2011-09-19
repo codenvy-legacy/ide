@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -35,25 +34,27 @@ import java.net.URL;
  */
 public abstract class CloudfoundryAuthenticator
 {
+   protected static final String defaultTarget = "http://api.cloudfoundry.com";
+   
    /**
     * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
     * should be used by {@link #authenticate(HttpURLConnection)} instead of username/password for any request to
     * cloudfoundry service.
     * 
+    * @param target location of Cloud Foundry REST API, e.g. http://api.cloudfoundry.com
     * @param email email address that used when signup to cloudfoundry.com
     * @param password password
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException if any i/o errors occurs
     */
-   public final void login(String email, String password) throws CloudfoundryException, IOException,
+   public final void login(String target, String email, String password) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
       HttpURLConnection http = null;
-      final String targetUrl = "http://api.cloudfoundry.com";
       try
       {
-         URL url = new URL(targetUrl + "/users/" + email + "/tokens");
+         URL url = new URL(target + "/users/" + email + "/tokens");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
          http.setRequestProperty("Accept", "application/json, */*");
@@ -78,7 +79,7 @@ public abstract class CloudfoundryAuthenticator
          JsonValue jsonValue;
          try
          {
-            JsonParser jsonParser = new  JsonParser();
+            JsonParser jsonParser = new JsonParser();
             jsonParser.parse(input);
             jsonValue = jsonParser.getJsonObject();
          }
@@ -87,7 +88,9 @@ public abstract class CloudfoundryAuthenticator
             input.close();
          }
 
-         writeCredentials(new CloudfoundryCredentials(targetUrl, jsonValue.getElement("token").getStringValue()));
+         CloudfoundryCredentials credentials = readCredentials();
+         credentials.addToken(target, jsonValue.getElement("token").getStringValue());
+         writeCredentials(credentials);
       }
       catch (JsonException jsone)
       {
@@ -102,18 +105,24 @@ public abstract class CloudfoundryAuthenticator
    }
 
    /**
-    * Remove local saved credentials.
+    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work with
+    * remote server.
     * 
-    * @see #login(String, String)
+    * @param target location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
+    * @see #login(String, String, String)
     */
-   public final void logout()
+   public final void logout(String target) throws IOException
    {
-      removeCredentials();
+      CloudfoundryCredentials credentials = readCredentials();
+      if (credentials.removeToken(target))
+         writeCredentials(credentials);
    }
 
-   protected abstract CloudfoundryCredentials readCredentials() throws IOException;
+   public abstract String readTarget() throws IOException;
 
-   protected abstract void writeCredentials(CloudfoundryCredentials credentials) throws IOException;
+   public abstract void writeTarget(String target) throws IOException;
 
-   protected abstract void removeCredentials();
+   public abstract CloudfoundryCredentials readCredentials() throws IOException;
+
+   public abstract void writeCredentials(CloudfoundryCredentials credentials) throws IOException;
 }

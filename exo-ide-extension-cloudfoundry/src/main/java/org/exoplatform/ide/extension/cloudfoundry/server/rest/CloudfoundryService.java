@@ -73,22 +73,23 @@ public class CloudfoundryService
    public void login(Map<String, String> credentials) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      cloudfoundry.login(credentials.get("email"), credentials.get("password"));
+      cloudfoundry.login(credentials.get("server"), credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
    @POST
-   public void logout()
+   public void logout(@QueryParam("server") String server) throws IOException, CloudfoundryException
    {
-      cloudfoundry.logout();
+      cloudfoundry.logout(server);
    }
 
    @Path("info/system")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public SystemInfo systemInfo() throws CloudfoundryException, IOException, ParsingResponseException
+   public SystemInfo systemInfo(@QueryParam("server") String server) throws CloudfoundryException, IOException,
+      ParsingResponseException
    {
-      return cloudfoundry.systemInfo();
+      return cloudfoundry.systemInfo(server);
    }
 
    @Path("info/frameworks")
@@ -103,18 +104,21 @@ public class CloudfoundryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryApplication applicationInfo( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws CloudfoundryException, IOException, ParsingResponseException
    {
-      return cloudfoundry.applicationInfo(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return cloudfoundry
+         .applicationInfo(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryApplication createApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("type") String framework, //
       @QueryParam("url") String url, //
@@ -126,7 +130,7 @@ public class CloudfoundryService
       @Context UriInfo uriInfo //
    ) throws CloudfoundryException, IOException, ParsingResponseException
    {
-      return cloudfoundry.createApplication(app, framework, url, instances, memory, nostart, workDir != null
+      return cloudfoundry.createApplication(server, app, framework, url, instances, memory, nostart, workDir != null
          ? new File(workDir.getLocalPath(uriInfo)) : null, war);
    }
 
@@ -134,112 +138,125 @@ public class CloudfoundryService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryApplication startApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.startApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return cloudfoundry.startApplication(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo))
+         : null);
    }
 
    @Path("apps/stop")
    @POST
    public void stopApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.stopApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.stopApplication(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("apps/restart")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryApplication restartApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.restartApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return cloudfoundry.restartApplication(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo))
+         : null);
    }
 
    /*@Path("apps/rename")
    @POST
    public void renameApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("newname") String newname, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.renameApplication(app, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.renameApplication(server, app, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }*/
 
    @Path("apps/update")
    @POST
    public void updateApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.updateApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, war);
+      cloudfoundry
+         .updateApplication(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, war);
    }
 
    @Path("apps/map")
    @POST
    public void mapUrl( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("url") String url, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.mapUrl(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, url);
+      cloudfoundry.mapUrl(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, url);
    }
 
    @Path("apps/unmap")
    @POST
    public void unmapUrl( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("url") String url, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.unmapUrl(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, url);
+      cloudfoundry.unmapUrl(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, url);
    }
 
    @Path("apps/mem")
    @POST
    public void mem( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("mem") int mem, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.mem(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, mem);
+      cloudfoundry.mem(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, mem);
    }
 
    @Path("apps/instances")
    @POST
    public void instances( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("expr") String expression, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.instances(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, expression);
+      cloudfoundry.instances(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, expression);
    }
 
    @Path("apps/env/add")
    @POST
    public void environmentAdd( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("key") String key, //
@@ -247,31 +264,35 @@ public class CloudfoundryService
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.environmentAdd(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, key, value);
+      cloudfoundry.environmentAdd(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, key,
+         value);
    }
 
    @Path("apps/env/delete")
    @POST
    public void environmentDelete( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("key") String key, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.environmentDelete(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, key);
+      cloudfoundry
+         .environmentDelete(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, key);
    }
 
    @Path("apps/delete")
    @POST
    public void deleteApplication( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("delete-services") boolean deleteServices, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.deleteApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null,
+      cloudfoundry.deleteApplication(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null,
          deleteServices);
    }
 
@@ -279,35 +300,39 @@ public class CloudfoundryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, CloudfoundryApplicationStatistics> applicationStats( //
+      @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.applicationStats(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return cloudfoundry.applicationStats(server, app, workDir != null ? new File(workDir.getLocalPath(uriInfo))
+         : null);
    }
 
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryApplication[] listApplications() throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public CloudfoundryApplication[] listApplications(@QueryParam("server") String server) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.listApplications();
+      return cloudfoundry.listApplications(server);
    }
 
    @Path("services")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudfoundryServices services() throws IOException, ParsingResponseException, CloudfoundryException
+   public CloudfoundryServices services(@QueryParam("server") String server) throws IOException,
+      ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.services();
+      return cloudfoundry.services(server);
    }
 
    @Path("services/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public ProvisionedService createService( //
+      @QueryParam("server") String server, //
       @QueryParam("type") String service, //
       @QueryParam("name") String name, //
       @QueryParam("app") String app, //
@@ -315,43 +340,48 @@ public class CloudfoundryService
       @Context UriInfo uriInfo //
    ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      return cloudfoundry.createService(service, name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo))
-         : null);
+      return cloudfoundry.createService(server, service, name, app,
+         workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("services/delete/{name}")
    @POST
-   public void deleteService(@PathParam("name") String name) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public void deleteService( //
+      @QueryParam("server") String server, //
+      @PathParam("name") String name //
+   ) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.deleteService(name);
+      cloudfoundry.deleteService(server, name);
    }
 
    @Path("services/bind/{name}")
    @POST
    public void bindService( //
+      @QueryParam("server") String server, //
       @PathParam("name") String name, //
       @QueryParam("app") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.bindService(name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.bindService(server, name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("services/unbind/{name}")
    @POST
    public void unbindService( //
+      @QueryParam("server") String server, //
       @PathParam("name") String name, //
       @QueryParam("app") String app, //
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.unbindService(name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.unbindService(server, name, app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
 
    @Path("apps/validate-action")
    @POST
    public void validateAction( //
+      @QueryParam("server") String server, //
       @QueryParam("action") String action, //
       @QueryParam("name") String app, //
       @QueryParam("type") String framework, //
@@ -362,7 +392,30 @@ public class CloudfoundryService
       @QueryParam("workdir") FSLocation workDir, //
       @Context UriInfo uriInfo) throws IOException, ParsingResponseException, CloudfoundryException
    {
-      cloudfoundry.validateAction(action, app, framework, url, instances, memory, nostart, workDir != null ? new File(
-         workDir.getLocalPath(uriInfo)) : null);
+      cloudfoundry.validateAction(server, action, app, framework, url, instances, memory, nostart, workDir != null
+         ? new File(workDir.getLocalPath(uriInfo)) : null);
+   }
+
+   @Path("target")
+   @POST
+   public void target(@QueryParam("target") String target) throws IOException, CloudfoundryException
+   {
+      cloudfoundry.setTarget(target);
+   }
+
+   @Path("target")
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   public String target() throws IOException, CloudfoundryException
+   {
+      return cloudfoundry.getTarget();
+   }
+
+   @Path("target/all")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Collection<String> targets() throws IOException, CloudfoundryException
+   {
+      return cloudfoundry.getTargets();
    }
 }
