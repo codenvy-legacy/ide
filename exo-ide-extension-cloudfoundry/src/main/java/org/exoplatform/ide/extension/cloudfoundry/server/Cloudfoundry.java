@@ -873,6 +873,9 @@ public class Cloudfoundry
       File appnameFile = new File(workDir, ".cloudfoundry-application");
       if (appnameFile.exists())
          appnameFile.delete();
+      File serverFile = new File(workDir, ".vmc_target");
+      if (serverFile.exists())
+         serverFile.delete();
       if (deleteServices)
       {
          List<String> services = appInfo.getServices();
