@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
@@ -36,10 +39,7 @@ import org.exoplatform.ide.extension.gadget.client.service.TokenRequest;
 import org.exoplatform.ide.extension.gadget.client.service.TokenResponse;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.File;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
+import org.exoplatform.ide.vfs.shared.Link;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -94,7 +94,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
       String container = "default";
       String domain = null;
 
-      String href = activeFile.getLinkByRelation(File.REL_CONTENT).getHref();
+      String href = activeFile.getLinkByRelation(Link.REL_CONTENT).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
 
       TokenRequest tokenRequest = new TokenRequest(href, owner, viewer, moduleId, container, domain);
