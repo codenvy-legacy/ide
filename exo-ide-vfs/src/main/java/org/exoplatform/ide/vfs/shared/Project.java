@@ -27,7 +27,7 @@ import java.util.Map;
 public class Project extends Folder
 {
    public static String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
-   /*public static String PROJECT_MIME_TYPE = "text/directory";*/
+
    protected String projectType;
 
    @SuppressWarnings("rawtypes")

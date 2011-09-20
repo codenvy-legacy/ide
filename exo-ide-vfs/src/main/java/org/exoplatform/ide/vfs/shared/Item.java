@@ -32,14 +32,6 @@ import java.util.Set;
  */
 public abstract class Item
 {
-   public static String REL_ACL = "acl";
-   public static String REL_SELF = "self";
-   public static String REL_CURRENT = "current";
-   public static String REL_SEARCH = "search";
-   public static String REL_COPY = "copy";
-   public static String REL_MOVE = "move";
-   public static String REL_DELETE = "delete";
-
    /** Id of object. */
    protected String id;
 
@@ -265,7 +257,7 @@ public abstract class Item
     */
    public Link getLinkByRelation(String rel)
    {
-      return links.get(rel);
+      return getLinks().get(rel);
    }
 
    /**

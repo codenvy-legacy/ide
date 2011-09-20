@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -147,7 +148,7 @@ public class VirtualFileSystem
       //callback.setEventBus(eventBus);
       //callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(FolderModel.REL_CHILDREN).getHref()).send(
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref()).send(
          callback);
 
    }
@@ -162,7 +163,7 @@ public class VirtualFileSystem
    {
 
       String name = callback.getPayload().getName();
-      String url = parent.getLinkByRelation(FolderModel.REL_CREATE_FOLDER).getHref() + "?name=" + name;
+      String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref() + "?name=" + name;
 
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
@@ -178,7 +179,7 @@ public class VirtualFileSystem
 
       ProjectModel newProject = callback.getPayload();
       String url =
-         parent.getLinkByRelation(FolderModel.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName()
+         parent.getLinkByRelation(Link.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName()
             + "&type=" + newProject.getProjectType();
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
@@ -195,7 +196,7 @@ public class VirtualFileSystem
    {
 
       FileModel newFile = callback.getPayload();
-      String url = parent.getLinkByRelation(FolderModel.REL_CREATE_FILE).getHref() + "?name=" + newFile.getName();
+      String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref() + "?name=" + newFile.getName();
 
       AsyncRequest.build(RequestBuilder.POST, url).data(newFile.getContent())
          .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
@@ -208,7 +209,7 @@ public class VirtualFileSystem
     */
    public void getContent(AsyncRequestCallback<FileModel> callback) throws RequestException
    {
-      String url = callback.getPayload().getLinkByRelation(FileModel.REL_CONTENT).getHref();
+      String url = callback.getPayload().getLinkByRelation(Link.REL_CONTENT).getHref();
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
@@ -222,7 +223,7 @@ public class VirtualFileSystem
    public void updateContent(FileModel file, AsyncRequestCallback<FileModel> callback) throws RequestException
    {
       String url =
-         file.getLinkByRelation(FileModel.REL_CONTENT).getHref()
+         file.getLinkByRelation(Link.REL_CONTENT).getHref()
             + ((file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "");
       AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
          .data(file.getContent()).send(callback);
@@ -241,7 +242,7 @@ public class VirtualFileSystem
       if (item.getItemType() == ItemType.FILE && ((FileModel)item).isLocked())
          lockStr = "?lockToken=" + ((FileModel)item).getLock();
 
-      String url = item.getLinkByRelation(Item.REL_DELETE).getHref() + lockStr;
+      String url = item.getLinkByRelation(Link.REL_DELETE).getHref() + lockStr;
 
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
@@ -258,7 +259,7 @@ public class VirtualFileSystem
       throws RequestException
    {
       String url =
-         source.getLinkByRelation(Item.REL_COPY).getHref() + (destination != null ? "?parentId=" + destination : "");
+         source.getLinkByRelation(Link.REL_COPY).getHref() + (destination != null ? "?parentId=" + destination : "");
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
@@ -277,7 +278,7 @@ public class VirtualFileSystem
       String lockStr = "";
       if (source.getItemType() == ItemType.FILE && ((FileModel)source).isLocked())
          lockStr = "?lockToken=" + ((FileModel)source).getLock();
-      String url = source.getLinkByRelation(Item.REL_MOVE).getHref() + "?parentId=" + destination + lockStr;
+      String url = source.getLinkByRelation(Link.REL_MOVE).getHref() + "?parentId=" + destination + lockStr;
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 

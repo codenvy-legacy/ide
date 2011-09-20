@@ -229,35 +229,35 @@ public class MockVFS implements VirtualFileSystem
    private Map<String, Link> createUrlTemplates()
    {
       Map<String, Link> templates = new HashMap<String, Link>();
-      templates.put(Folder.REL_CREATE_FILE, //
+      templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]", "mediaType", "[mediaType]").toString(), //
-            Folder.REL_CREATE_FILE, //
+            Link.REL_CREATE_FILE, //
             MediaType.WILDCARD));
-      templates.put(Folder.REL_CREATE_FOLDER, //
+      templates.put(Link.REL_CREATE_FOLDER, //
          new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), //
-            Folder.REL_CREATE_FOLDER, //
+            Link.REL_CREATE_FOLDER, //
             null));
-      templates.put(Item.REL_COPY, //
+      templates.put(Link.REL_COPY, //
          new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), //
-            Item.REL_MOVE, //
+            Link.REL_MOVE, //
             null));
-      templates.put(Item.REL_MOVE, //
+      templates.put(Link.REL_MOVE, //
          new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
-            Item.REL_MOVE, //
+            Link.REL_MOVE, //
             null));
-      templates.put(File.REL_LOCK, //
+      templates.put(Link.REL_LOCK, //
          new Link(createURI("lock", "[id]").toString(), //
-            File.REL_LOCK, //
+            Link.REL_LOCK, //
             null));
-      templates.put(File.REL_UNLOCK, //
+      templates.put(Link.REL_UNLOCK, //
          new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), //
-            File.REL_UNLOCK, //
+            Link.REL_UNLOCK, //
             null));
       templates.put(
-         Item.REL_SEARCH, //
+         Link.REL_SEARCH, //
          new Link(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
             "[propertyFilter]").toString(), //
-            Item.REL_SEARCH, //
+            Link.REL_SEARCH, //
             MediaType.APPLICATION_FORM_URLENCODED));
       return templates;
    }

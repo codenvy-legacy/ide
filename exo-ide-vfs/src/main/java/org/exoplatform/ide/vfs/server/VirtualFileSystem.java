@@ -507,7 +507,8 @@ public interface VirtualFileSystem
     * 
     * @param query set of opaque parameters of query statement. Set of
     *           parameters that can be passed by client and how SQL statement
-    *           created from this parameters is implementation specific
+    *           (in case of SQL storage )created from this parameters is
+    *           implementation specific
     * @param maxItems max number of items in response. If -1 then no limit of
     *           max items in result set
     * @param skipCount the skip items. Must be equals or greater the 0

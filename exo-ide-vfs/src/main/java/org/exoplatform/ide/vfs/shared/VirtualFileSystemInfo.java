@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.shared;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -207,7 +208,7 @@ public class VirtualFileSystemInfo
    private QueryCapability queryCapability;
 
    private Folder root;
-   
+
    private final String id;
 
    /**
@@ -223,8 +224,8 @@ public class VirtualFileSystemInfo
     */
    private Map<String, Link> urlTemplates;
 
-   public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported, String anonymousPrincipal,
-      String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
+   public VirtualFileSystemInfo(String id, boolean versioningSupported, boolean lockSupported,
+      String anonymousPrincipal, String anyPrincipal, Collection<String> permissions, ACLCapability aclCapability,
       QueryCapability queryCapability, Map<String, Link> urlTemplates, Folder root)
    {
       this.versioningSupported = versioningSupported;
@@ -244,7 +245,7 @@ public class VirtualFileSystemInfo
       this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, new ArrayList<String>(), ACLCapability.NONE,
          QueryCapability.NONE, null, null);
    }
-   
+
    public String getId()
    {
       return id;
@@ -327,6 +328,10 @@ public class VirtualFileSystemInfo
 
    public Map<String, Link> getUrlTemplates()
    {
+      if (urlTemplates == null)
+      {
+         urlTemplates = new HashMap<String, Link>();
+      }
       return urlTemplates;
    }
 

@@ -29,11 +29,6 @@ import java.util.Map;
  */
 public class File extends Item
 {
-   public static String REL_LOCK = "lock";
-   public static String REL_UNLOCK = "unlock";
-   public static String REL_CONTENT = "content";
-   public static String REL_VERSION_HISTORY = "version-history";
-
    /** Id of version of file. */
    protected String versionId;
 

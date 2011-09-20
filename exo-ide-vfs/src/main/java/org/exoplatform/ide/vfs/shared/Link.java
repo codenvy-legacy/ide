@@ -24,21 +24,36 @@ package org.exoplatform.ide.vfs.shared;
  */
 public class Link
 {
+   // Folder
+   public static String REL_CHILDREN = "children";
+   public static String REL_CREATE_PROJECT = "create-project";
+   public static String REL_CREATE_FOLDER = "create-folder";
+   public static String REL_CREATE_FILE = "create-file";
 
-   /**
-    * URL of resource.
-    */
+   // File
+   public static String REL_CURRENT_VERSION = "current-version";
+   public static String REL_VERSION_HISTORY = "version-history";
+   public static String REL_CONTENT = "content";
+   public static String REL_UNLOCK = "unlock";
+   public static String REL_LOCK = "lock";
+
+   // Common
+   public static String REL_DELETE = "delete";
+   public static String REL_MOVE = "move";
+   public static String REL_COPY = "copy";
+   public static String REL_SELF = "self";
+   public static String REL_ACL = "acl";
+
+   public static String REL_SEARCH = "search";
+   public static String REL_SEARCH_FORM = "search-form";
+
+   /** URL of resource. */
    private String href;
 
-   /**
-    * Consumed/produced media type of resource described by this link.
-    */
+   /** Produced media type of resource described by this link. */
    private String type;
 
-   /**
-    * Relation attribute of link. Client may use it for choice links to retrieve
-    * specific info about resource.
-    */
+   /** Relation attribute of link. Client may use it for choice links to retrieve specific info about resource. */
    private String rel;
 
    public Link(String href, String rel, String type)
@@ -88,6 +103,6 @@ public class Link
    @Override
    public String toString()
    {
-      return "Link [href=" + href + ", type=" + type + "]";
+      return "Link [href=" + href + ", type=" + type + ", rel=" + rel + "]";
    }
 }
