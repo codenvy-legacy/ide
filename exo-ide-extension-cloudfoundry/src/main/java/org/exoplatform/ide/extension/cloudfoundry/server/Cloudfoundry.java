@@ -310,6 +310,7 @@ public class Cloudfoundry
          if (appUrl == null || appUrl.isEmpty())
          {
             Matcher m = suggestUrlPattern.matcher(credential.target);
+            m.matches();
             appUrl = app + m.group(4);
          }
 
