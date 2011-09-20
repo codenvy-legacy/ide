@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -76,8 +77,10 @@ public class LockTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
-      Node file = (Node)session.getItem(filePath);
-      assertTrue("File must be locked. ", file.isLocked());
+      Node node = (Node)session.getItem(filePath);
+      assertTrue("File must be locked. ", node.isLocked());
+      Item file = getItem(filePath);
+      validateLinks(file);
    }
 
    public void testLockFileAlreadyLocked() throws Exception

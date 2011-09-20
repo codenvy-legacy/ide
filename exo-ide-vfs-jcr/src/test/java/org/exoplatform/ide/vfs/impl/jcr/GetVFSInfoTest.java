@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -30,6 +30,10 @@ import org.exoplatform.services.security.IdentityConstants;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -46,7 +50,6 @@ public class GetVFSInfoTest extends JcrFileSystemTest
       //log.info(new String(writer.getBody()));
       VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
       assertNotNull(vfsInfo);
-      vfsInfo.getUrlTemplates();
       assertEquals(true, vfsInfo.isVersioningSupported());
       assertEquals(true, vfsInfo.isLockSupported());
       assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
@@ -60,11 +63,81 @@ public class GetVFSInfoTest extends JcrFileSystemTest
          expectedPermissions.add(bp.value());
       Collection<String> permissions = vfsInfo.getPermissions();
       assertTrue(permissions.containsAll(expectedPermissions));
-      // TODO test URL templates
-      //log.info(">>>>>>>>>\n"+vfsInfo.getUrlTemplates());
       assertNotNull(vfsInfo.getRoot());
       assertEquals("/", vfsInfo.getRoot().getPath());
-      //log.info(">>>>>>>>>\n"+vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
-      assertNotNull(vfsInfo.getRoot().getLinkByRelation(Folder.REL_CHILDREN));
+      validateLinks(vfsInfo.getRoot());
+      validateUrlTemplates(vfsInfo);
+   }
+
+   protected void validateUrlTemplates(VirtualFileSystemInfo info) throws Exception
+   {
+      Map<String, Link> templates = info.getUrlTemplates();
+      //log.info(">>>>>>>>>\n" + templates);
+
+      Link template = templates.get(Link.REL_COPY);
+      assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_COPY, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path("[id]").queryParam("parentId", "[parentId]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_MOVE);
+      assertNotNull("'" + Link.REL_MOVE + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_MOVE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path("[id]").queryParam("parentId", "[parentId]")
+         .queryParam("lockToken", "[lockToken]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FILE);
+      assertNotNull("'" + Link.REL_CREATE_FILE + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FILE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FOLDER);
+      assertNotNull("'" + Link.REL_CREATE_FOLDER + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FOLDER, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_PROJECT);
+      assertNotNull("'" + Link.REL_CREATE_PROJECT + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_PROJECT, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("project").path("[parentId]").queryParam("name", "[name]")
+         .queryParam("type", "[type]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_LOCK);
+      assertNotNull("'" + Link.REL_LOCK + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_LOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("lock").path("[id]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_UNLOCK);
+      assertNotNull("'" + Link.REL_UNLOCK + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_UNLOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("unlock").path("[id]").queryParam("lockToken", "[lockToken]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_SEARCH);
+      assertNotNull("'" + Link.REL_SEARCH + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("statement", "[statement]")
+            .queryParam("maxItems", "[maxItems]").queryParam("skipCount", "[skipCount]").build().toString(),
+         template.getHref());
+
+      template = templates.get(Link.REL_SEARCH_FORM);
+      assertNotNull("'" + Link.REL_SEARCH_FORM + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH_FORM, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("maxItems", "[maxItems]")
+            .queryParam("skipCount", "[skipCount]").queryParam("propertyFilter", "[propertyFilter]").build().toString(),
+         template.getHref());
    }
 }

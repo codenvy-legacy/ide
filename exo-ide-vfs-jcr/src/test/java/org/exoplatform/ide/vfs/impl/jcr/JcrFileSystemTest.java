@@ -22,11 +22,11 @@ import junit.framework.TestCase;
 
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -131,6 +131,15 @@ public abstract class JcrFileSystemTest extends TestCase
 
    // --------------------------------------------
 
+   protected Item getItem(String id) throws Exception
+   {
+      String path = new StringBuilder().append(SERVICE_URI).append("item").append(id).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      Item item = (Item)response.getEntity();
+      return item;
+   }
+
    protected void checkPage(String url, String httpMethod, Method m, List<Object> expected) throws Exception
    {
       checkPage(url, httpMethod, null, null, m, expected);
@@ -160,52 +169,126 @@ public abstract class JcrFileSystemTest extends TestCase
       if (links.size() == 0)
          fail("Links not found. ");
 
-      Link link = links.get(Item.REL_SELF);
-      assertNotNull("'self' link not found. ", link);
+      Link link = links.get(Link.REL_SELF);
+      assertNotNull("'" + Link.REL_SELF + "' link not found. ", link);
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
-      assertEquals(Item.REL_SELF, link.getRel());
+      assertEquals(Link.REL_SELF, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getId()).build().toString(), link.getHref());
 
-      link = links.get(Item.REL_ACL);
-      assertNotNull("'acl' link not found. ", link);
+      link = links.get(Link.REL_ACL);
+      assertNotNull("'" + Link.REL_ACL + "' link not found. ", link);
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
-      assertEquals(Item.REL_ACL, link.getRel());
+      assertEquals(Link.REL_ACL, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("acl").path(item.getId()).build().toString(), link.getHref());
+
+      link = links.get(Link.REL_DELETE);
+      assertNotNull("'" + Link.REL_DELETE + "' link not found. ", link);
+      assertEquals(null, link.getType());
+      assertEquals(Link.REL_DELETE, link.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("delete").path(item.getId()).queryParam("lockToken", "[lockToken]")
+            .build().toString(), link.getHref());
+
+      link = links.get(Link.REL_COPY);
+      assertNotNull("'" + Link.REL_COPY + "' link not found. ", link);
+      assertEquals(null, link.getType());
+      assertEquals(Link.REL_COPY, link.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path(item.getId())
+         .queryParam("parentId", "[parentId]").build().toString(), link.getHref());
+
+      link = links.get(Link.REL_MOVE);
+      assertNotNull("'" + Link.REL_MOVE + "' link not found. ", link);
+      assertEquals(null, link.getType());
+      assertEquals(Link.REL_MOVE, link.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path(item.getId())
+         .queryParam("parentId", "[parentId]").queryParam("lockToken", "[lockToken]").build().toString(),
+         link.getHref());
 
       ItemType type = item.getItemType();
       if (type == ItemType.FILE)
       {
          File file = (File)item;
 
-         link = links.get(File.REL_CONTENT);
-         assertNotNull("'content' link not found. ", link);
+         link = links.get(Link.REL_CONTENT);
+         assertNotNull("'" + Link.REL_CONTENT + "' link not found. ", link);
          assertEquals(file.getMimeType(), link.getType());
-         assertEquals(File.REL_CONTENT, link.getRel());
+         assertEquals(Link.REL_CONTENT, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("content").path(file.getId()).build().toString(),
             link.getHref());
 
-         link = links.get(Item.REL_CURRENT);
-         assertNotNull("'current' link not found. ", link);
+         link = links.get(Link.REL_CURRENT_VERSION);
+         assertNotNull("'" + Link.REL_CURRENT_VERSION + "' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(Item.REL_CURRENT, link.getRel());
+         assertEquals(Link.REL_CURRENT_VERSION, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(file.getId()).build().toString(),
             link.getHref());
 
-         link = links.get(File.REL_VERSION_HISTORY);
-         assertNotNull("'version-history' link not found. ", link);
+         link = links.get(Link.REL_VERSION_HISTORY);
+         assertNotNull("'" + Link.REL_VERSION_HISTORY + "' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(File.REL_VERSION_HISTORY, link.getRel());
+         assertEquals(Link.REL_VERSION_HISTORY, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("version-history").path(file.getId()).build().toString(),
             link.getHref());
+
+         link = links.get(Link.REL_LOCK);
+         if (file.isLocked())
+         {
+            assertNull("'" + Link.REL_LOCK + "' link not allowed for locked files. ", link);
+            link = links.get(Link.REL_UNLOCK);
+            assertEquals(null, link.getType());
+            assertEquals(Link.REL_UNLOCK, link.getRel());
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("unlock").path(file.getId())
+                  .queryParam("lockToken", "[lockToken]").build().toString(), link.getHref());
+         }
+         else
+         {
+            assertNotNull("'" + Link.REL_LOCK + "' link not found. ", link);
+            assertEquals(MediaType.APPLICATION_JSON, link.getType());
+            assertEquals(Link.REL_LOCK, link.getRel());
+            assertEquals(UriBuilder.fromPath(SERVICE_URI).path("lock").path(file.getId()).build().toString(),
+               link.getHref());
+            link = links.get(Link.REL_UNLOCK);
+            assertNull("'" + Link.REL_UNLOCK + "' link not allowed for unlocked files. ", link);
+         }
       }
       else
       {
-         link = links.get(Folder.REL_CHILDREN);
-         assertNotNull("'children' link not found. ", link);
+         link = links.get(Link.REL_CHILDREN);
+         assertNotNull("'" + Link.REL_CHILDREN + "' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
-         assertEquals(Folder.REL_CHILDREN, link.getRel());
+         assertEquals(Link.REL_CHILDREN, link.getRel());
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("children").path(item.getId()).build().toString(),
             link.getHref());
+
+         link = links.get(Link.REL_CREATE_FOLDER);
+         assertNotNull("'" + Link.REL_CREATE_FOLDER + "' link not found. ", link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_CREATE_FOLDER, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path(item.getId()).queryParam("name", "[name]")
+            .build().toString(), link.getHref());
+
+         link = links.get(Link.REL_CREATE_FILE);
+         assertNotNull("'" + Link.REL_CREATE_FILE + "' link not found. ", link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_CREATE_FILE, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path(item.getId()).queryParam("name", "[name]")
+            .build().toString(), link.getHref());
+
+         link = links.get(Link.REL_CREATE_PROJECT);
+         if (item instanceof Project)
+         {
+            assertNull("'" + Link.REL_CREATE_PROJECT + "' link not allowed for project. ", link);
+         }
+         else
+         {
+            assertNotNull("'" + Link.REL_CREATE_PROJECT + "' link not found. ", link);
+            assertEquals(MediaType.APPLICATION_JSON, link.getType());
+            assertEquals(Link.REL_CREATE_PROJECT, link.getRel());
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("project").path(item.getId()).queryParam("name", "[name]")
+                  .queryParam("type", "[type]").build().toString(), link.getHref());
+         }
       }
    }
 }
