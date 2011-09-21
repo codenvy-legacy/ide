@@ -232,32 +232,13 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
          throw new IllegalStateException("Application name required. ");
-      /*if (url == null || url.isEmpty())
-         throw new IllegalStateException("Application URL required. ");*/
       if (workDir == null && war == null)
          throw new IllegalArgumentException("Working directory or location to WAR file required. ");
       if (server == null || server.isEmpty())
-      {
-         /*server = getServer(url);
-         if (server == null || server.isEmpty())
-            throw new IllegalArgumentException(
-               "Location of Cloud Foundry server not specified and cannot be detected from application's URL. ");*/
          throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
-      }
-      // Check is specified or determined server is really Cloud Foundry server. 
-      systemInfo(server);
-      return createApplication(getCredential(server), app, framework, url, instances, memory, nostart, workDir, war);
+      Credential credential = getCredential(server);
+      return createApplication(credential, app, framework, url, instances, memory, nostart, workDir, war);
    }
-
-   /*private static final Pattern applicationUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)\\.(.*)");
-
-   private static final String getServer(String appUrl)
-   {
-      Matcher m = applicationUrlPattern.matcher(appUrl);
-      if (m.matches())
-         return "http://api." + m.group(4);
-      return null;
-   }*/
 
    private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
@@ -1366,7 +1347,7 @@ public class Cloudfoundry
                "text/plain");
          }
          if (server == null || server.isEmpty())
-            server = detectServer(workDir);
+            throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
          Credential credential = getCredential(server);
 
          SystemInfo systemInfo = systemInfo(credential);
