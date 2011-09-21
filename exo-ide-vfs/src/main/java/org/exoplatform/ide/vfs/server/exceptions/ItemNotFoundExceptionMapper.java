@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -26,8 +25,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: ItemNotFoundExceptionMapper.java 64086 2010-12-17 14:43:58Z
- *          andrew00x $
+ * @version $Id$
  */
 @Provider
 public class ItemNotFoundExceptionMapper implements ExceptionMapper<ItemNotFoundException>

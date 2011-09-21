@@ -19,8 +19,7 @@
 package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * Should be used as base class for any VFS (Virtual File System) checked
- * exception.
+ * Should be used as base class for any VFS (Virtual File System) checked exception.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$

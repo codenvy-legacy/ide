@@ -18,15 +18,16 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
+@Provider
 public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>
 {
    /**

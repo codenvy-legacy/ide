@@ -19,9 +19,8 @@
 package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
- * Should be thrown for any errors that are not expressible by another VFS
- * (Virtual File System) exception. Used as base class for any VFS unchecked
- * exceptions.
+ * Should be thrown for any errors that are not expressible by another VFS (Virtual File System) exception. Used as base
+ * class for any VFS unchecked exceptions.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$

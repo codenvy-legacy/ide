@@ -22,8 +22,7 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * If requested action requires optional capability that is not supported.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: NotSupportedException.java 63633 2010-12-03 16:07:20Z andrew00x
- *          $
+ * @version $Id$
  */
 @SuppressWarnings("serial")
 public class NotSupportedException extends VirtualFileSystemRuntimeException
