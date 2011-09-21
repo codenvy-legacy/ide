@@ -24,8 +24,7 @@ import javax.ws.rs.core.MediaType;
  * Provide JCR node type name dependent to specified media or item type.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: ItemType2NodeTypeResolver.java 65533 2011-01-26 12:31:23Z
- *          andrew00x $
+ * @version $Id$
  */
 public class ItemType2NodeTypeResolver
 {
@@ -58,32 +57,23 @@ public class ItemType2NodeTypeResolver
    }
 
    /**
-    * Get node type for folder of specified type. 
-    * By default return:
-    * <ul>
-    * <li>'vfs:project' if type is 'project'</li>
-    * <li>'nt:folder' otherwise</li>
-    * </ul>
-    * 
-    * @param type type of folder
-    * @return node type name
+    * By default return 'nt:folder' always.
     */
    public String getFolderNodeType(String type)
    {
-      if ("project".equalsIgnoreCase(type))
-         return "vfs:project";
       return "nt:folder";
-      
    }
 
    /**
     * Get mixin for adding to JCR folder node.
     * 
-    * @param type type of project
+    * @param type type of folder
     * @return mixins set of mixin node types
     */
    public String[] getFolderMixins(String type)
    {
+      if ("project".equalsIgnoreCase(type))
+         return new String[]{"vfs:project"};
       // TODO
       return null;
    }

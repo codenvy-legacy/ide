@@ -148,7 +148,8 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
          FileData newfile =
             ((FolderData)parentData).createFile(name, itemType2NodeTypeResolver.getFileNodeType(mediaType),
-               itemType2NodeTypeResolver.getFileContentNodeType(mediaType), mediaType, null, null, content);
+               itemType2NodeTypeResolver.getFileContentNodeType(mediaType), mediaType,
+               itemType2NodeTypeResolver.getFileMixins(mediaType), null, content);
          return Response.created(createURI("item", newfile.getId()))
             .entity(fromItemData(newfile, PropertyFilter.ALL_FILTER)).build();
       }
@@ -175,7 +176,8 @@ public class JcrFileSystem implements VirtualFileSystem
          if (ItemType.FOLDER != parentData.getType())
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
          FolderData newfolder =
-            ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(null), null, null);
+            ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType(null),
+               itemType2NodeTypeResolver.getFolderMixins(null), null);
          return Response.created(createURI("item", newfolder.getId()))
             .entity(fromItemData(newfolder, PropertyFilter.ALL_FILTER)).build();
       }
@@ -211,10 +213,50 @@ public class JcrFileSystem implements VirtualFileSystem
             properties = new ArrayList<ConvertibleProperty>(1);
          properties.add(new ConvertibleProperty("type", type));
          FolderData newproject =
-            ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType("project"), null,
-               properties);
+            ((FolderData)parentData).createFolder(name, itemType2NodeTypeResolver.getFolderNodeType("project"),
+               itemType2NodeTypeResolver.getFolderMixins("project"), properties);
          return Response.created(createURI("item", newproject.getId()))
             .entity(fromItemData(newproject, PropertyFilter.ALL_FILTER)).build();
+      }
+      finally
+      {
+         ses.logout();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#convertToProject(java.lang.String, java.lang.String)
+    */
+   @Path("convert-to-project/{folderId:.*}")
+   @Produces({MediaType.APPLICATION_JSON})
+   public Response convertToProject(@PathParam("folderId") String folderId, //
+      @QueryParam("type") String type //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      Session ses = session();
+      try
+      {
+         ItemData folderData = getItemData(ses, folderId);
+         if (ItemType.FOLDER != folderData.getType())
+            throw new InvalidArgumentException("Unable convert to project. Item specified is not a folder. ");
+         if (type == null)
+            throw new InvalidArgumentException("Unable convert to project. Project type missed. ");
+         Node node = folderData.getNode();
+         node.addMixin("vfs:project");
+         node.setProperty("type", type);
+         ses.save();
+         folderData = null;
+         ProjectData projectData = (ProjectData)ItemData.fromNode(node);
+         return Response.created(createURI("item", projectData.getId()))
+            .entity(fromItemData(projectData, PropertyFilter.ALL_FILTER)).build();
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable convert to project " + folderId + ". Operation not permitted. ");
+      }
+      catch (RepositoryException re)
+      {
+         throw new VirtualFileSystemException(re.getMessage(), re);
       }
       finally
       {

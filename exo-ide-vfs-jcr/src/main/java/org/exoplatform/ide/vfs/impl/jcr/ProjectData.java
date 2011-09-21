@@ -67,9 +67,15 @@ class ProjectData extends FolderData
       try
       {
          Session session = node.getSession();
-         NodeType nt = session.getWorkspace().getNodeTypeManager().getNodeType(nodeType);
-         if (nt.isNodeType("vfs:project"))
-            throw new ConstraintException("Can't create new project inside project. ");
+         if (mixinTypes != null && mixinTypes.length > 0)
+         {
+            for (int i = 0; i < mixinTypes.length; i++)
+            {
+               NodeType nt = session.getWorkspace().getNodeTypeManager().getNodeType(mixinTypes[i]);
+               if (nt.isNodeType("vfs:project"))
+                  throw new ConstraintException("Can't create new project inside project. ");
+            }
+         }
       }
       catch (RepositoryException re)
       {

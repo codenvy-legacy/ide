@@ -88,7 +88,7 @@ public class ProjectTest extends JcrFileSystemTest
 
       assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
       Node project = (Node)session.getItem(expectedPath);
-      assertTrue("vfs:project node type expected", project.getPrimaryNodeType().isNodeType(PROJECT_NT));
+      assertTrue("vfs:project node type expected", project.isNodeType(PROJECT_NT));
 
       assertEquals("java", project.getProperty("type").getString());
       assertEquals("MyValue", project.getProperty("MyProperty").getString());
@@ -97,7 +97,8 @@ public class ProjectTest extends JcrFileSystemTest
    public void testCreateProjectInsideProject() throws Exception
    {
       String name = "testCreateProjectInsideProject";
-      Node parentProject = testRoot.addNode(name, PROJECT_NT);
+      Node parentProject = testRoot.addNode(name, "nt:folder");
+      parentProject.addMixin(PROJECT_NT);
       parentProject.setProperty("type", "java");
       parentProject.getSession().save();
 
@@ -121,10 +122,12 @@ public class ProjectTest extends JcrFileSystemTest
    public void testCopyProjectToProject() throws Exception
    {
       String destName = "testCopyProjectToProject_DESTINATION";
-      Node destProject = testRoot.addNode(destName, PROJECT_NT);
+      Node destProject = testRoot.addNode(destName, "nt:folder");
+      destProject.addMixin(PROJECT_NT);
       destProject.setProperty("type", "java");
       String projectName = "testCopyProjectToProject";
-      Node project = testRoot.addNode(projectName, PROJECT_NT);
+      Node project = testRoot.addNode(projectName, "nt:folder");
+      project.addMixin(PROJECT_NT);
       project.setProperty("type", "java");
       project.getSession().save();
 
@@ -143,10 +146,12 @@ public class ProjectTest extends JcrFileSystemTest
    public void testMoveProjectToProject() throws Exception
    {
       String destName = "testCopyProjectToProject_DESTINATION";
-      Node destProject = testRoot.addNode(destName, PROJECT_NT);
+      Node destProject = testRoot.addNode(destName, "nt:folder");
+      destProject.addMixin(PROJECT_NT);
       destProject.setProperty("type", "java");
       String projectName = "testCopyProjectToProject";
-      Node project = testRoot.addNode(projectName, PROJECT_NT);
+      Node project = testRoot.addNode(projectName, "nt:folder");
+      project.addMixin(PROJECT_NT);
       project.setProperty("type", "java");
       project.getSession().save();
 
@@ -165,7 +170,8 @@ public class ProjectTest extends JcrFileSystemTest
    public void testGetProjectItem() throws Exception
    {
       Node getTestRoot = testRoot.addNode("testGetProjectItem", "nt:unstructured");
-      Node proj1 = getTestRoot.addNode("project1", PROJECT_NT);
+      Node proj1 = getTestRoot.addNode("project1", "nt:folder");
+      proj1.addMixin(PROJECT_NT);
       proj1.setProperty("type", "java");
       proj1.setProperty("prop1", "val1");
       getTestRoot.getSession().save();
@@ -193,8 +199,10 @@ public class ProjectTest extends JcrFileSystemTest
    public void testProjectAsChild() throws Exception
    {
       Node readRoot = testRoot.addNode("testProjectAsChild", "nt:unstructured");
-      Node proj1 = readRoot.addNode("project1", PROJECT_NT);
-      Node proj2 = readRoot.addNode("project2", PROJECT_NT);
+      Node proj1 = readRoot.addNode("project1", "nt:folder");
+      proj1.addMixin(PROJECT_NT);
+      Node proj2 = readRoot.addNode("project2", "nt:folder");
+      proj2.addMixin(PROJECT_NT);
       readRoot.addNode("f1", "nt:folder");
       readRoot.addNode("f2", "nt:folder");
       proj1.setProperty("type", "java");
@@ -229,7 +237,8 @@ public class ProjectTest extends JcrFileSystemTest
    public void testUpdateProject() throws Exception
    {
       Node readRoot = testRoot.addNode("testUpdateProject", "nt:unstructured");
-      Node proj1 = readRoot.addNode("project1", PROJECT_NT);
+      Node proj1 = readRoot.addNode("project1", "nt:folder");
+      proj1.addMixin(PROJECT_NT);
       proj1.setProperty("type", "java");
       readRoot.getSession().save();
 
@@ -245,5 +254,33 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(204, response.getStatus());
       Node file = (Node)session.getItem(proj1.getPath());
       assertEquals("MyValue", file.getProperty("MyProperty").getString());
+   }
+
+   public void testConvertFolderToProject() throws Exception
+   {
+      Node convertRoot = testRoot.addNode("testConvertFolderToProject", "nt:unstructured");
+      Node folder = convertRoot.addNode("project1", "nt:folder");
+      convertRoot.getSession().save();
+
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("convert-to-project") //
+         .append(folder.getPath()) //
+         .append("?") //
+         .append("type=") //
+         .append("java").toString();
+ 
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+
+      assertEquals("Error: " + response.getEntity(), 201, response.getStatus());
+      String expectedPath = folder.getPath();
+      String expectedLocation = SERVICE_URI + "item" + expectedPath;
+      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertEquals(expectedLocation, location);
+
+      assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
+      Node project = (Node)session.getItem(expectedPath);
+      assertTrue("vfs:project node type expected", project.isNodeType(PROJECT_NT));
+      assertEquals("java", project.getProperty("type").getString());
    }
 }

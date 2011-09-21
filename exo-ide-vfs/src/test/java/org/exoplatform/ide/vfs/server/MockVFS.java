@@ -160,9 +160,21 @@ public class MockVFS implements VirtualFileSystem
       String id = UUID.randomUUID().toString();
       UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
       URI uri = uriBuilder.build(id);
-      return Response.created(uri).entity(
-         new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId, System
-            .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type)).build();
+      return Response
+         .created(uri)
+         .entity(
+            new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId, System
+               .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type)).build();
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#convertToProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   public Response convertToProject(String folderId, String type) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
    }
 
    @Override
@@ -408,5 +420,4 @@ public class MockVFS implements VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException
    {
    }
-
 }
