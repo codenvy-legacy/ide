@@ -20,9 +20,9 @@
 -->
 <nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:vfs="http://exoplatform.org/vfs">
 
-   <nodeType name="vfs:project" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <nodeType name="vfs:project" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
-         <supertype>nt:folder</supertype>
+         <supertype>nt:base</supertype>
       </supertypes>
       <propertyDefinitions>
          <propertyDefinition name="type" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
