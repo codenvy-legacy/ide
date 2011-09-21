@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.DiffResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
@@ -204,7 +206,7 @@ public abstract class GitClientService
     * @param bare to create bare repository or not
     * @param callback callback
     */
-   public abstract void init(String workDir, boolean bare, AsyncRequestCallback<String> callback);
+   public abstract void init(String workDir, boolean bare, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.

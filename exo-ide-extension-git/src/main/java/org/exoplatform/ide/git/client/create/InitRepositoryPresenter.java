@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.create;
 
+import com.google.gwt.http.client.RequestException;
+
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -188,24 +190,36 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    {
       String workDir = display.getWorkDirValue().getValue();
       boolean bare = display.getBareValue().getValue();
-      GitClientService.getInstance().init(workDir, bare, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
-         {
-            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-            eventBus.fireEvent(new RefreshBrowserEvent());
-         }
+         GitClientService.getInstance().init(workDir, bare,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
+            {
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : GitExtension.MESSAGES.initFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                  eventBus.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.initFailed();
+                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage =
+            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+               .initFailed();
+         eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
       IDE.getInstance().closeView(display.asView().getId());
    }
 

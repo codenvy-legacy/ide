@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+   <c:Border margin="1" borderColor="transparent">
+
+      <c:VPanel>
+         <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
+
+         <g:ScrollPanel ui:field="scrollPanel">
+            <g:FlowPanel width="100%" ui:field="contentPanel"></g:FlowPanel>
+         </g:ScrollPanel>
+      </c:VPanel>
+
+   </c:Border>
+
+</ui:UiBinder>

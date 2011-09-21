@@ -483,4 +483,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/public/images/filetype/txt.png")
    ImageResource textFile();
 
+   /*
+    * Progress images
+    */
+   @Source("org/exoplatform/ide/client/bundled-images/async_request.gif")
+   ImageResource asyncRequest();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/progress.gif")
+   ImageResource progresImage();
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.build;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.user.client.Random;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -508,27 +510,38 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void initRepository(final String path)
    {
-      GitClientService.getInstance().init(path, false, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
+         GitClientService.getInstance().init(path, false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
          {
-            workDir = path;
-            //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-            showBuildMessage(GitExtension.MESSAGES.initSuccess());
-            eventBus.fireEvent(new RefreshBrowserEvent());
-            createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
-         }
+            @Override
+            protected void onSuccess(String result)
+            {
+               workDir = path;
+               //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+               showBuildMessage(GitExtension.MESSAGES.initSuccess());
+               eventBus.fireEvent(new RefreshBrowserEvent());
+               createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : GitExtension.MESSAGES.initFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                     : GitExtension.MESSAGES.initFailed();
+               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         String errorMessage =
+                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
+                     : GitExtension.MESSAGES.initFailed();
+               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      }
    }
 
    private void showBuildMessage(String message)

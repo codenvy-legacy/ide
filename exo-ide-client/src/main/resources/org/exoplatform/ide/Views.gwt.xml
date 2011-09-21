@@ -19,6 +19,10 @@
       </any>
    </replace-with>
    
+   <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
+      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display" />
+   </replace-with>
+   
    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
       <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />
    </replace-with>

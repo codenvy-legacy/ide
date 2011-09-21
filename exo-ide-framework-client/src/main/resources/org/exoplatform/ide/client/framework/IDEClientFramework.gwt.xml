@@ -54,5 +54,6 @@
    <source path="userinfo" />
    <source path="vfs" />
    <source path="outline" />
+   <source path="job" />
    
 </module>

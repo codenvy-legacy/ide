@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -77,6 +74,7 @@ import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
+import org.exoplatform.ide.client.progress.ProgressPresenter;
 import org.exoplatform.ide.client.remote.OpenFileByURLPresenter;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
@@ -92,7 +90,10 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -200,6 +201,8 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new VersionsListPresenter(eventBus);
       new RenameFilePresenter(eventBus);
       new RenameFolderPresenter(eventBus);
+      
+      new ProgressPresenter();
 
       new ShellLinkUpdater(eventBus);
    }

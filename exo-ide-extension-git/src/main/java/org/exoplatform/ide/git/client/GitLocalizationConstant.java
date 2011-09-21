@@ -201,6 +201,14 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("merge.unmarshal.failed")
    String mergeUnmarshallerFailed();
    
+   //----InitRequestHandler
+   
+   @Key("init.started")
+   String initStarted(String repo);
+   
+   @Key("init.finished")
+   String initFinished(String repo);
+   
    //----VIEWS------------------------------------------------------------------
 
    //Add

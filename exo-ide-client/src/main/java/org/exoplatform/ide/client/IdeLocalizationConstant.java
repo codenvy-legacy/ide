@@ -96,15 +96,14 @@ public interface IdeLocalizationConstant extends Constants
    @DefaultStringValue("New folder")
    @Key("newFolderName")
    String newFolderName();
-   
+
    @DefaultStringValue("Project Name")
    @Key("projectName")
    String projectName();
-   
+
    @DefaultStringValue("Project Type")
    @Key("projectType")
    String projectType();
-
 
    /*
     * DocumentationView
@@ -138,7 +137,7 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("outline.title.refreshing.mark.title")
    String outlineTitleRefreshingMarkTitle();
-   
+
    /*
     * PreviewHTMLView
     */
@@ -252,16 +251,16 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.getFilebyURL.prompt")
    String openFileByURLControlPrompt();
-   
+
    @Key("view.openFileByURL.title")
    String openFileByURLViewTitle();
-   
+
    @Key("view.openFileByURL.urlFieldTitle")
    String openFileByURL_URLFieldTitle();
-   
+
    @Key("view.openFileByURL.openButton")
    String openFileByURL_OpenButtonTitle();
-   
+
    @Key("view.openFileByURL.cancelButton")
    String openFileByURL_CancelButtonTitle();
 
@@ -419,6 +418,18 @@ public interface IdeLocalizationConstant extends Constants
    String showPropertiesHidePromptControl();
 
    /*
+    * Controls from menu View
+    */
+   @Key("control.progress.id")
+   String progressControlId();
+
+   @Key("control.progress.title")
+   String progressControlTitle();
+
+   @Key("control.progress.prompt")
+   String progressControlPrompt();
+
+   /*
     * Controls from menu "New"
     */
    @Key("control.new.text.title")
@@ -520,4 +531,13 @@ public interface IdeLocalizationConstant extends Constants
    *    
    **************************************************************************/
 
+   /*************************************************************************
+    * Progress view
+    *************************************************************************/
+
+   @Key("progress.title")
+   String progressViewTitle();
+
+   @Key("progress.remove.finished.button")
+   String progressRemoveAllFinished();
 }

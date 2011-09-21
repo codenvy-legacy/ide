@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -28,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.git.client.create.InitRequestStatusHandler;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchCheckoutRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchCreateRequestMarshaller;
@@ -166,21 +168,20 @@ public class GitClientServiceImpl extends GitClientService
    }
 
    /**
+    * @throws RequestException 
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
-   @Override
-   public void init(String workDir, boolean bare, AsyncRequestCallback<String> callback)
+   public void init(String workDir, boolean bare,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + INIT;
-      callback.setEventBus(eventBus);
 
       InitRequest initRequest = new InitRequest(workDir, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-
       String params = "workdir=" + workDir;
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
+         .data(marshaller.marshal()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
+         .requestStatusHandler(new InitRequestStatusHandler(workDir)).send(callback);
    }
 
    /**
