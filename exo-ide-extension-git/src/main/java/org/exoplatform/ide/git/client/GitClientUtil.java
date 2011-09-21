@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.http.client.URL;
 
 /**
@@ -101,10 +103,14 @@ public class GitClientUtil
     */
    public static String getPublicGitRepoUrl(String href, String restContext)
    {
-      String context = (restContext.endsWith("/")) ? restContext + WEBDAV_CONTEXT : restContext + "/" + WEBDAV_CONTEXT;
       String gitServerContext = getGitServerContext();
-      gitServerContext = gitServerContext.endsWith("/") ? gitServerContext : gitServerContext + "/";
-      String path = href.replaceFirst(context, gitServerContext);
+      //must be smth like /git
+      gitServerContext =
+         gitServerContext.endsWith("/") ? gitServerContext.substring(0, gitServerContext.length() - 1)
+            : gitServerContext;
+      //TODO store this path in project properties
+      String path = Window.Location.getProtocol() + "//" + Window.Location.getHost() + gitServerContext 
+      + "/repository/dev-monit" + href; 
       return path;
    }
 
