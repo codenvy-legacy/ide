@@ -66,6 +66,7 @@ import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServ
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
@@ -258,7 +259,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       //decode url before encoding all url as parameter
       //because we need to path file href as parameter,
       //that's why all characters that are not valid for a URL component have been escaped
-      String href = URL.decodePathSegment(activeFile.getLinkByRelation(org.exoplatform.ide.vfs.shared.File.REL_CONTENT).getHref());
+      String href = URL.decodePathSegment(activeFile.getLinkByRelation(Link.REL_CONTENT).getHref());
       //encode file href to path it as parameter in URL
       href = URL.encodePathSegment(href);
       previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + href);

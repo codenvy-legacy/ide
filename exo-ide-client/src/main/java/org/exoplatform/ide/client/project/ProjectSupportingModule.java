@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.initializer.RegistryConstants;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.IDE;
@@ -45,7 +43,8 @@ import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -86,7 +85,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       if (TemplateService.getInstance() == null)
       {
          new TemplateServiceImpl(eventBus, IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
-            + RegistryConstants.EXO_APPLICATIONS + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
+            + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
       }
       //only for test, will be removed
 //      saveSomeTemplatesToRegistry();

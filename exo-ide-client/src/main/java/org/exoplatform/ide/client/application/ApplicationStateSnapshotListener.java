@@ -134,7 +134,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
             continue;
          }
 
-         files.add(file.getLinkByRelation(Item.REL_SELF).getHref());
+         files.add(file.getLinkByRelation(Link.REL_SELF).getHref());
       }
 
       applicationSettings.setValue("opened-files", files, Store.COOKIES);
@@ -160,7 +160,7 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
    {
       applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
       Map<String, Link> map = event.getVfsInfo().getRoot().getLinks();
-      Link root = event.getVfsInfo().getRoot().getLinks().get(Folder.REL_SELF);
+      Link root = event.getVfsInfo().getRoot().getLinks().get(Link.REL_SELF);
       String s = root.getHref();
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
    }

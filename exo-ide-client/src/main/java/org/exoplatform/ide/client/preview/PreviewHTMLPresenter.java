@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import com.google.gwt.core.client.GWT;
 
@@ -122,7 +123,7 @@ public class PreviewHTMLPresenter implements PreviewHTMLHandler, ViewClosedHandl
          else
          {
             display.setPreviewAvailable(true);
-            display.showPreview(activeFile.getLinkByRelation(File.REL_CONTENT).getHref());
+            display.showPreview(activeFile.getLinkByRelation(Link.REL_CONTENT).getHref());
          }
       }
       else

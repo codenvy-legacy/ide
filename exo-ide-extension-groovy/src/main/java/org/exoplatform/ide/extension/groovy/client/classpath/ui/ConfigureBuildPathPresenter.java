@@ -18,9 +18,14 @@
  */
 package org.exoplatform.ide.extension.groovy.client.classpath.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -54,16 +59,12 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for configuring class path file.
@@ -335,7 +336,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    {
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Item.REL_SELF).getHref(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
          {
             
             @Override

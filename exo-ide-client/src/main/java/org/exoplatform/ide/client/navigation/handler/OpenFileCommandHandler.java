@@ -60,6 +60,7 @@ import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    {
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Item.REL_SELF).getHref(),
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
             new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
             {
                @Override

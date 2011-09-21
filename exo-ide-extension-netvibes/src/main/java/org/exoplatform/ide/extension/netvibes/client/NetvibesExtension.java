@@ -39,6 +39,7 @@ import org.exoplatform.ide.extension.netvibes.client.service.deploy.DeployWidget
 import org.exoplatform.ide.extension.netvibes.client.ui.DeployUwaWidgetPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -113,7 +114,7 @@ public class NetvibesExtension extends Extension implements InitializeServicesHa
          return;
      
       
-      String href = activeFile.getLinkByRelation(File.REL_CONTENT).getHref();
+      String href = activeFile.getLinkByRelation(Link.REL_CONTENT).getHref();
       href = href.replace("jcr", "ide/netvibes");
       
       if (previewForm == null)

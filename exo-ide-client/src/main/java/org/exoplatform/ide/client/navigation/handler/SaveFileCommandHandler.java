@@ -36,6 +36,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -130,7 +131,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       //TODO
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Item.REL_SELF).getHref(),
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
             new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
             {
                @Override
