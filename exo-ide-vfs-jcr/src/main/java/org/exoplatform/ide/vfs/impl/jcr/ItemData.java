@@ -163,7 +163,7 @@ abstract class ItemData
       try
       {
          if (node.getDepth() == 0) // root
-            return "root";
+            return null;
          else
             return node.getParent().getPath();
       }

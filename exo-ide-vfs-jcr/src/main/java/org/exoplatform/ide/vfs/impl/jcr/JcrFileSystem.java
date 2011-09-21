@@ -976,6 +976,11 @@ public class JcrFileSystem implements VirtualFileSystem
          new Link(createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
             Link.REL_MOVE, null));
 
+      String parentId = data.getParentId();
+      if (parentId != null)
+         links.put(Link.REL_PARENT, //
+            new Link(createURI("item", parentId).toString(), Link.REL_PARENT, MediaType.APPLICATION_JSON));
+
       return links;
    }
 
