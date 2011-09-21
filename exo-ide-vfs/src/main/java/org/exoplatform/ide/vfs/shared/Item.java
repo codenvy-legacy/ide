@@ -47,7 +47,7 @@ public abstract class Item
    /** Path. */
    protected String path;
 
-   /** Parent ID. */
+   /** Parent ID. Must be <code>null</code> if item is root folder. */
    protected String parentId;
 
    /** Creation date in long format. */

@@ -38,6 +38,7 @@ public class Link
    public static String REL_LOCK = "lock";
 
    // Common
+   public static String REL_PARENT = "parent";
    public static String REL_DELETE = "delete";
    public static String REL_MOVE = "move";
    public static String REL_COPY = "copy";
