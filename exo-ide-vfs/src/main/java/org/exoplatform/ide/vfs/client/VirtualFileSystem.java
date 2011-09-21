@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.client;
 
+import com.google.gwt.http.client.URL;
+
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
@@ -163,9 +165,9 @@ public class VirtualFileSystem
    {
 
       String name = callback.getPayload().getName();
-      String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref() + "?name=" + name;
-
-      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
+      String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();//.replace("%5Bname%5D", name);
+      String urlString = URL.decode(url).replace("[name]", name);
+      AsyncRequest.build(RequestBuilder.POST, urlString).send(callback);
    }
 
    /**
