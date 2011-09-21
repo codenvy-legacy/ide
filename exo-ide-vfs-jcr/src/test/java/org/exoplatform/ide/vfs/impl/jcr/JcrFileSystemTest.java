@@ -175,6 +175,20 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(Link.REL_SELF, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getId()).build().toString(), link.getHref());
 
+      link = links.get(Link.REL_PARENT);
+      if (item.getParentId() == null)
+      {
+         assertNull("'" + Link.REL_PARENT + "' link not allowed for root folder. ", link);
+      }
+      else
+      {
+         assertNotNull("'" + Link.REL_PARENT + "' link not found. ", link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_PARENT, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getParentId()).build().toString(),
+            link.getHref());
+      }
+
       link = links.get(Link.REL_ACL);
       assertNotNull("'" + Link.REL_ACL + "' link not found. ", link);
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
