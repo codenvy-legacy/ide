@@ -132,6 +132,16 @@ public abstract class HerokuClientService
       RakeCommandAsyncRequestCallback callback);
 
    /**
+    * Get application's logs.
+    * 
+    * @param gitWorkDir working directory location
+    * @param applicationName name of the Heroku application (may be null)
+    * @param linesNumber number of log lines
+    * @param callback callback
+    */
+   public abstract void logs(String gitWorkDir, String applicationName, int linesNumber, LogsAsyncRequestCallback callback);
+
+   /**
     * Get help for rake.
     * 
     * @param gitWorkDir working directory location
@@ -148,8 +158,7 @@ public abstract class HerokuClientService
     * @param applicationName name of the Heroku application (may be null)
     * @param callback callback
     */
-   public abstract void getStackList(String gitWorkDir, String applicationName,
-      StackListAsyncRequestCallback callback);
+   public abstract void getStackList(String gitWorkDir, String applicationName, StackListAsyncRequestCallback callback);
 
    /**
     * Migrate from one stack to another (change deployment environment)

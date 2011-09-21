@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.heroku.client.marshaller.ApplicationInfoUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Constants;
 import org.exoplatform.ide.extension.heroku.client.marshaller.CredentailsMarshaller;
+import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
+import org.exoplatform.ide.extension.heroku.client.marshaller.LogsUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.extension.heroku.client.marshaller.RakeResultUnmarshaller;
 import org.exoplatform.ide.extension.heroku.client.marshaller.StackListUnmarshaller;
@@ -58,6 +60,8 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
    private static final String DESTROY_APPLICATION = "/ide/heroku/apps/destroy";
 
+   private static final String LOGS = "/ide/heroku/apps/logs";
+
    private static final String RENAME_APPLICATION = "/ide/heroku/apps/rename";
 
    private static final String RUN = "/ide/heroku/apps/run";
@@ -69,7 +73,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    private static final String APPLICATION_INFO = "/ide/heroku/apps/info";
 
    private static final String GET_STACKS = "/ide/heroku/apps/stack";
-   
+
    private static final String STACK_MIGRATE = "/ide/heroku/apps/stack-migrate";
 
    /**
@@ -285,7 +289,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       List<Stack> stackList = new ArrayList<Stack>();
       StackListUnmarshaller unmarshaller = new StackListUnmarshaller(stackList);
-      
+
       callback.setEventBus(eventBus);
       callback.setResult(stackList);
       callback.setPayload(unmarshaller);
@@ -309,12 +313,34 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       StackMigrationResponse stackMigrationResponse = new StackMigrationResponse();
       StackMigrationUnmarshaller unmarshaller = new StackMigrationUnmarshaller(stackMigrationResponse);
-      
+
       callback.setEventBus(eventBus);
       callback.setResult(stackMigrationResponse);
       callback.setPayload(unmarshaller);
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
+    */
+   @Override
+   public void logs(String gitWorkDir, String applicationName, int logLines, LogsAsyncRequestCallback callback)
+   {
+      String url = restServiceContext + LOGS;
+
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += "num=" + logLines + "&";
+      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
+
+      LogsResponse logsResponse = new LogsResponse();
+      LogsUnmarshaller unmarshaller = new LogsUnmarshaller(logsResponse);
+
+      callback.setEventBus(eventBus);
+      callback.setResult(logsResponse);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader).send(callback);
    }
 
 }

@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
+import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
-import org.exoplatform.ide.FSLocation;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -174,6 +173,19 @@ public class HerokuService
    ) throws HerokuException, IOException, ParsingResponseException
    {
       return heroku.stackMigrate(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, stack);
+   }
+   
+   @Path("apps/logs")
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   public String logs( //
+      @QueryParam("name") String name, //
+      @QueryParam("num") int logLines, //
+      @QueryParam("workdir") FSLocation workDir, //
+      @Context UriInfo uriInfo //
+   ) throws HerokuException, IOException, ParsingResponseException
+   {
+      return heroku.logs(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, logLines);
    }
 
    @Path("apps/run")

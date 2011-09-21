@@ -55,12 +55,20 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -68,6 +76,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -740,7 +749,8 @@ public class Heroku
       return getStacks(herokuCredentials, name, workDir);
    }
 
-   private List<Stack> getStacks(HerokuCredentials herokuCredentials, String name, File workDir) throws HerokuException, ParsingResponseException, IOException
+   private List<Stack> getStacks(HerokuCredentials herokuCredentials, String name, File workDir)
+      throws HerokuException, ParsingResponseException, IOException
    {
       List<Stack> stacks = new ArrayList<Stack>();
       if (name == null || name.isEmpty())
@@ -1036,6 +1046,139 @@ public class Heroku
          if (http != null)
             http.disconnect();
       }
+   }
+
+   /**
+    * Get the application's logs.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    *           If name not specified and cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>.
+    * @param logLines max number of log lines to be returned
+    * @return {@link String} logs content
+    * @throws IOException if any i/o errors occurs
+    * @throws HerokuException if heroku server return unexpected or error status for request
+    */
+   public String logs(String name, File workDir, int logLines) throws IOException, HerokuException
+   {
+      HerokuCredentials herokuCredentials = authenticator.readCredentials();
+      if (herokuCredentials == null)
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
+      String logsLocation = getLogsLocation(herokuCredentials, name, workDir, logLines);
+      return logs(logsLocation);
+   }
+
+   /**
+    * Get the location of the logs stream.
+    * 
+    * @param herokuCredentials user's credentials
+    * @param name current application name. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
+    *           If name not specified and cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
+    *           case <code>name</code> parameter must be not <code>null</code>.
+    * @param logLines max number of log lines to be returned
+    * @return {@link String} location of logs stream
+    * @throws IOException
+    * @throws HerokuException
+    */
+   private String getLogsLocation(HerokuCredentials herokuCredentials, String name, File workDir, int logLines) throws IOException,
+      HerokuException
+   {
+      if (name == null || name.isEmpty())
+      {
+         name = detectAppName(workDir);
+         if (name == null || name.isEmpty())
+            throw new IllegalStateException("Not heroku application. ");
+      }
+
+      HttpURLConnection http = null;
+      try
+      {
+         String query = (logLines > 0) ? "&num="+logLines : "";
+         //"logplex" query parameter must be true:
+         URL url = new URL(HEROKU_API + "/apps/" + name + "/logs?logplex=true"+query);
+         System.out.println("Heroku.getLogsLocation()>>>"+url.getQuery());
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/xml, */*");
+         authenticate(herokuCredentials, http);
+
+         if (http.getResponseCode() != 200)
+            throw fault(http);
+
+         BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
+         StringBuilder sb = new StringBuilder();
+         String line = null;
+         while ((line = reader.readLine()) != null)
+         {
+            sb.append(line + "\n");
+         }
+         return sb.toString();
+      }
+      finally
+      {
+         if (http != null)
+            http.disconnect();
+      }
+   }
+
+   /**
+    * @param logsLocation location of the logs stream
+    * @return {@link String} logs' content
+    * @throws IOException
+    * @throws HerokuException
+    */
+   private String logs(String logsLocation) throws IOException, HerokuException
+   {
+      // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager()
+      {
+         public java.security.cert.X509Certificate[] getAcceptedIssuers()
+         {
+            return null;
+         }
+
+         public void checkClientTrusted(X509Certificate[] certs, String authType)
+         {
+         }
+
+         public void checkServerTrusted(X509Certificate[] certs, String authType)
+         {
+         }
+      }};
+
+      // Install the all-trusting trust manager
+      SSLContext sc = null;
+      try
+      {
+         sc = SSLContext.getInstance("SSL");
+         sc.init(null, trustAllCerts, new java.security.SecureRandom());
+      }
+      catch (NoSuchAlgorithmException e)
+      {
+         e.printStackTrace();
+      }
+      catch (KeyManagementException e)
+      {
+         e.printStackTrace();
+      }
+     
+      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+      URL url = new URL(logsLocation);
+      URLConnection con = url.openConnection();
+
+      BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+      StringBuilder sb = new StringBuilder();
+      String line = null;
+      while ((line = reader.readLine()) != null)
+      {
+         sb.append(line + "\n");
+      }
+      return sb.toString();
    }
 
    /**

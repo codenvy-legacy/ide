@@ -30,12 +30,14 @@ import org.exoplatform.ide.extension.heroku.client.control.HerokuControl;
 import org.exoplatform.ide.extension.heroku.client.control.RakeControl;
 import org.exoplatform.ide.extension.heroku.client.control.RenameApplicationControl;
 import org.exoplatform.ide.extension.heroku.client.control.ShowApplicationInfoControl;
+import org.exoplatform.ide.extension.heroku.client.control.ShowLogsControl;
 import org.exoplatform.ide.extension.heroku.client.control.SwitchAccountControl;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationCommandHandler;
 import org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.heroku.client.key.KeysPresenter;
 import org.exoplatform.ide.extension.heroku.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter;
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
@@ -86,6 +88,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new RenameApplicationControl());
       IDE.getInstance().addControl(new ChangeApplicationStackConrol());
       IDE.getInstance().addControl(new ShowApplicationInfoControl());
+      IDE.getInstance().addControl(new ShowLogsControl());
       IDE.getInstance().addControl(new RakeControl());
       IDE.getInstance().addControl(new AddKeyControl());
       IDE.getInstance().addControl(new SwitchAccountControl(eventBus));
@@ -100,6 +103,7 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new KeysPresenter(eventBus);
       new RakeCommandPresenter(eventBus);
       new ChangeStackPresenter(eventBus);
+      new LogsPresenter(eventBus); 
    }
 
 }

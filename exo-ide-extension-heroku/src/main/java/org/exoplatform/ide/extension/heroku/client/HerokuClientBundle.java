@@ -38,13 +38,13 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/ok_Disabled.png")
    ImageResource okButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/help.png")
    ImageResource helpButton();
 
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/help_Disabled.png")
    ImageResource helpButtonDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/run.png")
    ImageResource runButton();
 
@@ -74,10 +74,10 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/clearKeys_Disabled.png")
    ImageResource clearKeysDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/changeStack.png")
    ImageResource changeStack();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/changeStack_Disabled.png")
    ImageResource changeStackDisabled();
 
@@ -92,7 +92,7 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/destroyApp_Disabled.png")
    ImageResource destroyApplicationDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/rake.png")
    ImageResource rake();
 
@@ -110,10 +110,22 @@ public interface HerokuClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/appInfo_Disabled.png")
    ImageResource applicationInfoDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount.png")
    ImageResource switchAccount();
 
    @Source("org/exoplatform/ide/extension/heroku/images/controls/switchAccount_Disabled.png")
    ImageResource switchAccountDisabled();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/getLogs.png")
+   ImageResource getLogs();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/buttons/getLogs_Disabled.png")
+   ImageResource getLogsDisabled();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/logs.png")
+   ImageResource logs();
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/logs_Disabled.png")
+   ImageResource logsDisabled();
 }

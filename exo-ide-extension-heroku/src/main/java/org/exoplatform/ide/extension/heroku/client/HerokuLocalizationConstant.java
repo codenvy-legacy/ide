@@ -35,7 +35,7 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Create")
    @Key("createButton")
    String createButton();
-   
+
    @Key("changeButton")
    String changeButton();
 
@@ -50,7 +50,7 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Ok")
    @Key("okButton")
    String okButton();
-   
+
    @DefaultMessage("Try As Demo")
    @Key("loginDemoButton")
    String loginDemoButton();
@@ -155,13 +155,13 @@ public interface HerokuLocalizationConstant extends Messages
    @DefaultMessage("Show application info...")
    @Key("control.showApplicationInfo.prompt")
    String showApplicationInfoControlPrompt();
-   
+
    @Key("control.switchAccount.id")
    String switchAccountControlId();
-   
+
    @Key("control.switchAccount.switch.title")
    String switchAccountControlSwitchTitle();
-   
+
    @Key("control.switchAccount.switch.prompt")
    String switchAccountControlSwitchPrompt();
 
@@ -173,7 +173,7 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("control.rake.prompt")
    String rakeControlPrompt();
-   
+
    @Key("control.changeStack.id")
    String changeStackControlId();
 
@@ -182,7 +182,16 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("control.changeStack.prompt")
    String changeStackControlPrompt();
-   
+
+   @Key("control.logs.id")
+   String logsControlId();
+
+   @Key("control.logs.title")
+   String logsControlTitle();
+
+   @Key("control.logs.prompt")
+   String logsControlPrompt();
+
    //Create Application view
    @DefaultMessage("Create application on Heroku")
    @Key("createApplicationView.title")
@@ -219,10 +228,9 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("renameApplicationSuccess")
    String renameApplicationSuccess(String oldName, String newName);
-   
+
    @Key("stack.list.unmarshal.failed")
    String stackListUnmarshalFailed();
-   
 
    /*Delete application*/
    @Key("deleteApplication.title")
@@ -264,14 +272,24 @@ public interface HerokuLocalizationConstant extends Messages
 
    @Key("rakeView.command.example")
    String rakeViewCommandExample();
-   
+
    /*Change application's stack*/
    @Key("changeStackView.title")
    String changeStackViewTitle();
-   
+
    @Key("changeStackView.stack.field")
    String changeStackViewStackField();
-   
+
    @Key("changeStackView.beta.field")
    String changeStackViewBetaField();
+
+   /*Application logs view*/
+   @Key("logsView.title")
+   String logsViewTitle();
+
+   @Key("logsView.logLines.field")
+   String logsViewLogLinesField();
+
+   @Key("logsView.getLogs.button")
+   String logsViewGetLogsButton();
 }
