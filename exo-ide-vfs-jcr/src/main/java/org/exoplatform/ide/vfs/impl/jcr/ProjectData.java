@@ -18,35 +18,87 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
-/**
- * @version $Id:$
- *
- */
-public class ProjectData extends FolderData
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
+
+class ProjectData extends FolderData
 {
- 
-   public ProjectData(Node node) 
+   ProjectData(Node node)
    {
       super(node);
    }
 
-
-   public final String getProjectType() //throws RepositoryException
+   final String getProjectType() throws ConstraintException, VirtualFileSystemException
    {
       try
       {
          return node.getProperty("type").getString();
-      }   
-      catch (RepositoryException e)
+      }
+      catch (PathNotFoundException e)
       {
-         e.printStackTrace();
-         throw new RuntimeException("JCR integrity broken. Mandatory property 'type' not found.");
+         throw new VirtualFileSystemException("Mandatory property 'type' not found.");
+      }
+      catch (RepositoryException re)
+      {
+         throw new VirtualFileSystemException(re.getMessage(), re);
       }
    }
-   
-   
 
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.FolderData#createFolder(java.lang.String, java.lang.String,
+    *      java.lang.String[], java.util.List)
+    */
+   @Override
+   FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
+      throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
+   {
+      try
+      {
+         Session session = node.getSession();
+         NodeType nt = session.getWorkspace().getNodeTypeManager().getNodeType(nodeType);
+         if (nt.isNodeType("vfs:project"))
+            throw new ConstraintException("Can't create new project inside project. ");
+      }
+      catch (RepositoryException re)
+      {
+         throw new VirtualFileSystemException(re.getMessage(), re);
+      }
+      return super.createFolder(name, nodeType, mixinTypes, properties);
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#copyTo(org.exoplatform.ide.vfs.impl.jcr.FolderData)
+    */
+   @Override
+   ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException, VirtualFileSystemException
+   {
+      if (folder instanceof ProjectData)
+         throw new ConstraintException("Unable copy. Item specified as parent is a project. ");
+      return super.copyTo(folder);
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#moveTo(org.exoplatform.ide.vfs.impl.jcr.FolderData,
+    *      java.lang.String)
+    */
+   @Override
+   String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      if (folder instanceof ProjectData)
+         throw new ConstraintException("Unable move. Item specified as parent is a project. ");
+      return super.moveTo(folder, lockToken);
+   }
 }

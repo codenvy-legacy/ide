@@ -94,13 +94,81 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals("MyValue", project.getProperty("MyProperty").getString());
    }
 
+   public void testCreateProjectInsideProject() throws Exception
+   {
+      String name = "testCreateProjectInsideProject";
+      Node parentProject = testRoot.addNode(name, PROJECT_NT);
+      parentProject.setProperty("type", "java");
+      parentProject.getSession().save();
+
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("project") //
+         .append(parentProject.getPath()) //
+         .append("?") //
+         .append("name=").append("childProject") //
+         .append("&") //
+         .append("type=").append("java").toString();
+
+      Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+      h.put("Content-Type", Arrays.asList("application/json"));
+
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, h, null, null);
+      log.info(response.getEntity());
+      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+   }
+
+   public void testCopyProjectToProject() throws Exception
+   {
+      String destName = "testCopyProjectToProject_DESTINATION";
+      Node destProject = testRoot.addNode(destName, PROJECT_NT);
+      destProject.setProperty("type", "java");
+      String projectName = "testCopyProjectToProject";
+      Node project = testRoot.addNode(projectName, PROJECT_NT);
+      project.setProperty("type", "java");
+      project.getSession().save();
+
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("copy") //
+         .append(project.getPath()) //
+         .append("?") //
+         .append("parentId=").append(destProject.getPath()).toString();
+
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      log.info(response.getEntity());
+      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+   }
+
+   public void testMoveProjectToProject() throws Exception
+   {
+      String destName = "testCopyProjectToProject_DESTINATION";
+      Node destProject = testRoot.addNode(destName, PROJECT_NT);
+      destProject.setProperty("type", "java");
+      String projectName = "testCopyProjectToProject";
+      Node project = testRoot.addNode(projectName, PROJECT_NT);
+      project.setProperty("type", "java");
+      project.getSession().save();
+
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("move") //
+         .append(project.getPath()) //
+         .append("?") //
+         .append("parentId=").append(destProject.getPath()).toString();
+
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      log.info(response.getEntity());
+      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
+   }
+
    public void testGetProjectItem() throws Exception
    {
-      Node readRoot = testRoot.addNode("testGetProjectItem", "nt:unstructured");
-      Node proj1 = readRoot.addNode("project1", PROJECT_NT);
+      Node getTestRoot = testRoot.addNode("testGetProjectItem", "nt:unstructured");
+      Node proj1 = getTestRoot.addNode("project1", PROJECT_NT);
       proj1.setProperty("type", "java");
       proj1.setProperty("prop1", "val1");
-      readRoot.getSession().save();
+      getTestRoot.getSession().save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
@@ -113,18 +181,17 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals("application/json", response.getContentType().toString());
 
       Project p = (Project)response.getEntity();
+      validateLinks(p);
       assertEquals("project1", p.getName());
       assertEquals(PROJECT_MT, p.getMimeType());
       assertEquals("java", p.getProjectType());
 
       assertEquals(2, p.getProperties().size());
       assertEquals("val1", p.getPropertyValue("prop1"));
-
    }
 
    public void testProjectAsChild() throws Exception
    {
-
       Node readRoot = testRoot.addNode("testProjectAsChild", "nt:unstructured");
       Node proj1 = readRoot.addNode("project1", PROJECT_NT);
       Node proj2 = readRoot.addNode("project2", PROJECT_NT);
@@ -178,7 +245,5 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(204, response.getStatus());
       Node file = (Node)session.getItem(proj1.getPath());
       assertEquals("MyValue", file.getProperty("MyProperty").getString());
-
    }
-
 }
