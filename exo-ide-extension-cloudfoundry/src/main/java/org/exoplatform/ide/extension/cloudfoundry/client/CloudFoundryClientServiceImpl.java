@@ -115,8 +115,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#create(java.lang.String, java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void create(String name, String type, String url, int instances, int memory, boolean nostart, String workDir,
-      String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+      String workDir, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String requestUrl = restServiceContext + CREATE;
 
@@ -130,6 +130,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setResult(cloudfoundryApplication);
 
       String params = "name=" + name;
+      params += (server == null) ? "" : "&server=" + server;
       params += (type != null) ? "&type=" + type : "";
       params += (url != null) ? "&url=" + url : "";
       params += "&instances=" + instances;
@@ -440,12 +441,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void validateAction(String action, String appName, String framework, String url, String workDir,
-      int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
+   public void validateAction(String action, String server, String appName, String framework, String url,
+      String workDir, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
       String params = "action=" + action;
+      params += (server == null) ? "" : "&server=" + server;
       params += (appName == null) ? "" : "&name=" + appName;
       params += (framework == null) ? "" : "&type=" + framework;
       params += (url == null) ? "" : "&url=" + url;

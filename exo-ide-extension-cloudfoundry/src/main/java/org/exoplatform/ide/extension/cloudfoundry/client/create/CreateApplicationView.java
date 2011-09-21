@@ -28,7 +28,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 500;
 
-   private static final int HEIGHT = 320;
+   private static final int HEIGHT = 350;
 
    private static final String CREATE_BUTTON_ID = "ideCloudFoundryAppViewCreateButton";
 
@@ -43,12 +43,21 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final String INSTANCES_FIELD_ID = "ideCloudFoundryAppViewInstancesField";
    
    private static final String MEMORY_FIELD_ID = "ideCloudFoundryAppViewMemoryField";
+   
+   private static final String SERVER_FIELD_ID = "ideCloudFoundryAppViewServerField";
 
    private static CreateApplicationViewUiBinder uiBinder = GWT.create(CreateApplicationViewUiBinder.class);
 
    interface CreateApplicationViewUiBinder extends UiBinder<Widget, CreateApplicationView>
    {
    }
+   
+   /**
+    * Server field (location of Cloud Foundry instance where application must be created, e.g.
+    *           http://api.cloudfoundry.com)
+    */
+   @UiField
+   TextField serverField;
 
    /**
     * Application type field.
@@ -117,6 +126,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
+      serverField.setName(SERVER_FIELD_ID);
       typeField.setName(TYPE_FIELD_ID);
       typeField.setHeight(22);
       nameField.setName(NAME_FIELD_ID);
@@ -232,10 +242,10 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getCustomUrlCheckItem()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getUrlCheckItem()
     */
    @Override
-   public HasValue<Boolean> getCustomUrlCheckItem()
+   public HasValue<Boolean> getUrlCheckItem()
    {
       return customUrlField;
    }
@@ -294,6 +304,15 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void focusInUrlField()
    {
       urlField.focusInItem();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#getServerField()
+    */
+   @Override
+   public HasValue<String> getServerField()
+   {
+      return serverField;
    }
 
 }

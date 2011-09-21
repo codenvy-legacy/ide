@@ -166,8 +166,8 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    
    private void validateData()
    {
-      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, workDir, 0, 0, false,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, workDir, 0, 0,
+         false, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)

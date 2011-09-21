@@ -28,9 +28,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -78,11 +75,17 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
       HasValue<String> getUrlField();
       
-      HasValue<Boolean> getCustomUrlCheckItem();
+      /**
+       * Get the checkbox, that indicates is user want to enter custom URL.
+       * @return
+       */
+      HasValue<Boolean> getUrlCheckItem();
       
       HasValue<String> getInstancesField();
       
       HasValue<String> getMemoryField();
+      
+      HasValue<String> getServerField();
       
       HasValue<Boolean> getIsStartAfterCreationCheckItem();
       
@@ -104,7 +107,35 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
    }
    
-   private static final String DEFAULT_APPLICATION_URL = ".cloudfoundry.com";
+   private class AppData
+   {
+      String server;
+      String name;
+      String type;
+      String url;
+      int instances;
+      int memory;
+      boolean nostart;
+      String workDir;
+      
+      public AppData(String server, String name, String type, String url, int instances, int memory,
+         boolean nostart, String workDir)
+      {
+         this.server = server;
+         this.name = name;
+         this.type = type;
+         this.url = url;
+         this.instances = instances;
+         this.memory = memory;
+         this.nostart = nostart;
+         this.workDir = workDir;
+      }
+   }
+   
+   /**
+    * Default value for Server field.
+    */
+   private static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
    
    private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
    
@@ -122,14 +153,16 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    
    private List<Framework> frameworks;
    
+   /**
+    * Public url to war file of application. 
+    */
    private String warUrl;
-   private String name;
-   private String type;
-   private String url;
-   private int instances;
-   private int memory;
-   private boolean nostart;
-   private String workDir;
+   
+   /**
+    * Store application data in format,
+    * that convenient to send to server.
+    */
+   private AppData appData;
    
    public CreateApplicationPresenter(HandlerManager eventbus)
    {
@@ -140,7 +173,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
    
-   public void bindDisplay(final List<Framework> frameworks)
+   public void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -156,7 +189,9 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          @Override
          public void onClick(ClickEvent event)
          {
-            validate();
+            appData = getAppDataFromForm();
+            
+            validateData(appData);
          }
       });
       
@@ -166,19 +201,17 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             display.enableTypeField(!event.getValue());
+            display.enableMemoryField(!event.getValue());
+            
             if (event.getValue())
             {
-               String[] values = {""};
-               display.setTypeValues(values);
-               display.enableMemoryField(false);
+               display.setTypeValues(new String[]{""});
                display.getMemoryField().setValue("");
             }
             else
             {
-               String[] frameworkArray = getApplicationTypes(frameworks);
+               final String[] frameworkArray = getApplicationTypes(frameworks);
                display.setTypeValues(frameworkArray);
-               display.enableMemoryField(true);
-               display.getMemoryField().setValue("");
                display.setSelectedIndexForTypeSelectItem(0);
                Framework framework = findFrameworkByName(frameworkArray[0]);
                display.getMemoryField().setValue(String.valueOf(framework.getMemory()));
@@ -186,19 +219,20 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          }
       });
       
-      display.getCustomUrlCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      display.getUrlCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          @Override
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             display.enableUrlField(event.getValue());
+            
             if (event.getValue())
             {
                display.focusInUrlField();
             }
             else
             {
-               display.getUrlField().setValue(display.getNameField().getValue().toLowerCase() + ".cloudfoundry.com");
+               updateUrlField();
             }
          }
       });
@@ -221,31 +255,40 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            //if url set automatically, than concatenate name field value and ".cloudfoundry.com"
-            if (!display.getCustomUrlCheckItem().getValue())
+            //if url set automatically, than try to create url using server and name
+            if (!display.getUrlCheckItem().getValue())
             {
-               String name = display.getNameField().getValue().toLowerCase();
-               display.getUrlField().setValue(name + ".cloudfoundry.com");
+               updateUrlField();
             }
          }
       });
       
-      this.frameworks = frameworks;
-      String[] values = {""};
-      display.setTypeValues(values);
-      display.getInstancesField().setValue("1");
+      display.getServerField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            //if url set automatically, than try to create url using server and name
+            if (!display.getUrlCheckItem().getValue())
+            {
+               updateUrlField();
+            }
+         }
+      });
+      
+      //set the state of fields
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
-      display.getAutodetectTypeCheckItem().setValue(true);
       display.focusInNameField();
-      String projectName = "";
-      if (selectedItems != null && !selectedItems.isEmpty())
-      {
-         projectName = selectedItems.get(0).getName();
-         display.getNameField().setValue(projectName);
-      }
-      display.getUrlField().setValue(projectName.toLowerCase() + DEFAULT_APPLICATION_URL);
+      
+      //set default values to fields
+      display.setTypeValues(new String[]{""});
+      display.getInstancesField().setValue("1");
+      display.getAutodetectTypeCheckItem().setValue(true);
+      display.getServerField().setValue(DEFAULT_SERVER);
+      display.getNameField().setValue(selectedItems.get(0).getName());
+      updateUrlField();
    }
    
    /**
@@ -255,13 +298,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0)
-      {
-         workDir = null;
-         return;
-      }
-
-      workDir = selectedItems.get(0).getId();
    }
 
    /**
@@ -270,13 +306,13 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      if (workDir == null)
+      if (selectedItems == null || selectedItems.size() == 0)
       {
          String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
          eventBus.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
-      isBuildApplication(workDir);
+      isBuildApplication(selectedItems.get(0).getId());
    }
    
    /**
@@ -301,72 +337,46 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       if (event.getJobStatus().getArtifactUrl() != null)
       {
          warUrl = event.getJobStatus().getArtifactUrl();
-         createApplication();
+         createApplication(appData);
       }
    }
    
    //----Implementation------------------------
    
-   LoggedInHandler createAppHandler = new LoggedInHandler()
+   private String getUrlByServerAndName(String serverUrl, String name)
    {
-      
-      @Override
-      public void onLoggedIn()
+      int index = serverUrl.indexOf(".");
+      if (index < 0)
       {
-         createApplication();
+         return name.toLowerCase();
       }
-   };
-   
-   private void validate()
-   {
-      name = display.getNameField().getValue();
-      if (display.getAutodetectTypeCheckItem().getValue())
-      {
-         type = null;
-         memory = 0;
-      }
-      else
-      {
-         Framework framework = findFrameworkByName(display.getTypeField().getValue());
-         type = framework.getType();
-         try
-         {
-            memory = Integer.parseInt(display.getMemoryField().getValue());
-         }
-         catch (NumberFormatException e)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
-            return;
-         }
-      }
-      url = display.getUrlField().getValue();
-      try
-      {
-         instances = Integer.parseInt(display.getInstancesField().getValue());
-      }
-      catch (NumberFormatException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
-         return;
-      }
-      nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      
-      validateData();
+      final String domain = serverUrl.substring(index, serverUrl.length());
+      return "http://" + name.toLowerCase() + domain;
    }
    
-   private LoggedInHandler validateHandler = new LoggedInHandler()
+   /**
+    * Update the URL field, using values from server and name field.
+    */
+   private void updateUrlField()
    {
-      @Override
-      public void onLoggedIn()
-      {
-         validateData();
-      }
-   };
+      final String url =
+         getUrlByServerAndName(display.getServerField().getValue(), display.getNameField().getValue());
+      display.getUrlField().setValue(url);
+   }
    
-   private void validateData()
+   private void validateData(final AppData app)
    {
-      CloudFoundryClientService.getInstance().validateAction("create", name, type, url, workDir, instances, memory,
-         nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+      LoggedInHandler validateHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn()
+         {
+            validateData(app);
+         }
+      };
+      
+      CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url, app.workDir, 
+         app.instances, app.memory, app.nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)
@@ -391,45 +401,34 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          return;
       }
       
-      final String folderName = selectedItems.get(0).getName();
+//      final String folderName = selectedItems.get(0).getName();
       if (!workDir.endsWith("/"))
       {
          workDir += "/";
       }
-      CloudFoundryClientService.getInstance().checkFileExists(workDir + "pom.xml",
-         new AsyncRequestCallback<String>(eventBus)
+      
+      //TODO: check, is file pom.xml exist in project's root folder
+      getFrameworks();
+   }
+   
+   private void getFrameworks()
+   {
+      LoggedInHandler getFrameworksLoggedInHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn()
+         {
+            getFrameworks();
+         }
+      };
+      
+      CloudFoundryClientService.getInstance().getFrameworks(
+         new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, getFrameworksLoggedInHandler, null)
          {
             @Override
-            protected void onSuccess(String result)
+            protected void onSuccess(List<Framework> result)
             {
-               CloudFoundryClientService.getInstance().getFrameworks(
-                  new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, null, null)
-                  {
-                     @Override
-                     protected void onSuccess(List<Framework> result)
-                     {
-                        showView(result);
-                     }
-                  });
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
-               {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
-                  {
-                     eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(folderName)));
-                     return;
-                  }
-                  else
-                  {
-                     super.onFailure(exception);
-                  }
-               }
-               super.onFailure(exception);
+               openView(result);
             }
          });
    }
@@ -440,9 +439,19 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       eventBus.fireEvent(new BuildApplicationEvent());
    }
    
-   private void createApplication()
+   private void createApplication(final AppData app)
    {
-      CloudFoundryClientService.getInstance().create(name, type, url, instances, memory, nostart, workDir, warUrl,
+      LoggedInHandler createAppHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn()
+         {
+            createApplication(app);
+         }
+      };
+      
+      CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances, app.memory, 
+         app.nostart, app.workDir, warUrl, 
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null)
          {
             @Override
@@ -466,6 +475,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             @Override
             protected void onFailure(Throwable exception)
             {
+               eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
                super.onFailure(exception);
             }
          });
@@ -500,14 +510,19 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       return null;
    }
    
-   private void showView(List<Framework> frameworks)
+   private void openView(List<Framework> frameworks)
    {
       if (display == null)
       {
          display = GWT.create(Display.class);
-         bindDisplay(frameworks);
+         this.frameworks = frameworks;
+         bindDisplay();
          IDE.getInstance().openView(display.asView());
          display.focusInNameField();
+      }
+      else
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent("View Create Cloudfoundry Application must be null"));
       }
    }
    
@@ -533,6 +548,74 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          appUris = appUris.substring(2);
       }
       return appUris;
+   }
+   
+   /**
+    * Process values from application create form,
+    * and store data in bean in format,
+    * that is convenient to send to server
+    * 
+    * @return {@link AppData}
+    */
+   private AppData getAppDataFromForm()
+   {
+      String server = display.getServerField().getValue();
+      if (server == null || server.isEmpty())
+      {
+         //is server is empty, set value to null
+         //it is need for client service
+         //if null, than service will not send this parameter
+         server = null;
+      }
+      String name = display.getNameField().getValue();
+      String type;
+      int memory = 0;
+      if (display.getAutodetectTypeCheckItem().getValue())
+      {
+         type = null;
+         memory = 0;
+      }
+      else
+      {
+         Framework framework = findFrameworkByName(display.getTypeField().getValue());
+         type = framework.getType();
+         try
+         {
+            memory = Integer.parseInt(display.getMemoryField().getValue());
+         }
+         catch (NumberFormatException e)
+         {
+            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+         }
+      }
+      
+      String url;
+      
+      if (display.getUrlCheckItem().getValue())
+      {
+         url = display.getUrlField().getValue();
+         if (url == null || url.isEmpty())
+         {
+            url = null;
+         }
+      }
+      else
+      {
+         url = null;
+      }
+      
+      int instances = 0;
+      try
+      {
+         instances = Integer.parseInt(display.getInstancesField().getValue());
+      }
+      catch (NumberFormatException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+      }
+      boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
+      
+      return new AppData(server, name, type, url, instances, memory, nostart, selectedItems.get(0).getId());
    }
 
 }

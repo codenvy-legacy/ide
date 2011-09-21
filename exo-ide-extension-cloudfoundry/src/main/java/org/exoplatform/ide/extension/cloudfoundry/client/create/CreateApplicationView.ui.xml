@@ -10,6 +10,18 @@
       <g:VerticalPanel spacing="3" horizontalAlignment="center">
          <g:HorizontalPanel width="100%" spacing="0">
             <g:cell verticalAlignment="middle" width="150px">
+               <g:Label text="{locale.createAppServerField}" height="18px"></g:Label>
+            </g:cell>
+            <g:cell>
+               <f:TextField ui:field="serverField" width="100%" height="22px" showTitle="false"></f:TextField>
+            </g:cell>
+            <g:cell width="100px">
+               <g:Label text="" ></g:Label>
+            </g:cell>
+         </g:HorizontalPanel>
+         
+         <g:HorizontalPanel width="100%" spacing="0">
+            <g:cell verticalAlignment="middle" width="150px">
                <g:Label text="{locale.createAppNameField}" height="18px"></g:Label>
             </g:cell>
             <g:cell>

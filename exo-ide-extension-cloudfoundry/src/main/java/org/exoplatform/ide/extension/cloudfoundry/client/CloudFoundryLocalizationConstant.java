@@ -239,6 +239,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("createApp.field.startAfterCreation")
    String createAppStartAfterCreationField();
    
+   @Key("createApp.field.server")
+   String createAppServerField();
+   
    /*
     * CreateApplicationPresenter
     */
@@ -259,6 +262,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    
    @Key("create.application.notFolder")
    String createApplicationNotFolder(String name);
+   
+   @Key("create.application.failed")
+   String applicationCreationFailed();
    
    /*
     * StartApplicationPresenter
