@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -46,8 +47,12 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -312,7 +317,16 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          eventBus.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
-      isBuildApplication(selectedItems.get(0).getId());
+      if (selectedItems.get(0) instanceof Folder)
+      {
+         checkIsProject((FolderModel)selectedItems.get(0));
+      }
+      else
+      {
+         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         return;
+      }
    }
    
    /**
@@ -385,30 +399,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
                closeView();
             }
          });
-   }
-   
-   /**
-    * Check, is work directory contains <code>pom.xml</code> file,
-    * 
-    * @param workDir
-    */
-   private void isBuildApplication(String workDir)
-   {
-      if (!(selectedItems.get(0) instanceof Folder))
-      {
-         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
-         return;
-      }
-      
-//      final String folderName = selectedItems.get(0).getName();
-      if (!workDir.endsWith("/"))
-      {
-         workDir += "/";
-      }
-      
-      //TODO: check, is file pom.xml exist in project's root folder
-      getFrameworks();
    }
    
    private void getFrameworks()
@@ -498,6 +488,11 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       return frameworkNames.toArray(new String[frameworkNames.size()]);
    }
    
+   /**
+    * Find framework from list by name.
+    * @param frameworkName
+    * @return
+    */
    private Framework findFrameworkByName(String frameworkName)
    {
       for (Framework framework : frameworks)
@@ -616,6 +611,47 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
       
       return new AppData(server, name, type, url, instances, memory, nostart, selectedItems.get(0).getId());
+   }
+   
+   /**
+    * Check is selected item project and can be built.
+    */
+   private void checkIsProject(final FolderModel folder)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(folder,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  folder.getChildren().setItems(result);
+                  for (Item i : result)
+                  {
+                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
+                     {
+                        getFrameworks();
+                        return;
+                     }
+                  }
+                  eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(folder.getName())));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                     "Service is not deployed.<br>Parent folder not found."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
 }
