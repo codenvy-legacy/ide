@@ -28,6 +28,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -260,6 +261,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
          {
             eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
             IDE.getInstance().closeView(display.asView().getId());
+            eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
          @Override
