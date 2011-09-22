@@ -150,8 +150,7 @@ public class VirtualFileSystem
       //callback.setEventBus(eventBus);
       //callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref()).send(
-         callback);
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref()).send(callback);
 
    }
 
@@ -163,7 +162,6 @@ public class VirtualFileSystem
    public void createFolder(org.exoplatform.ide.vfs.shared.Folder parent, AsyncRequestCallback<FolderModel> callback)
       throws RequestException
    {
-
       String name = callback.getPayload().getName();
       String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();//.replace("%5Bname%5D", name);
       String urlString = URL.decode(url).replace("[name]", name);
@@ -181,8 +179,8 @@ public class VirtualFileSystem
 
       ProjectModel newProject = callback.getPayload();
       String url =
-         parent.getLinkByRelation(Link.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName()
-            + "&type=" + newProject.getProjectType();
+         parent.getLinkByRelation(Link.REL_CREATE_PROJECT).getHref() + "?name=" + newProject.getName() + "&type="
+            + newProject.getProjectType();
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(newProject.getProperties()).toString())
          .header(HTTPHeader.CONTENT_TYPE, "application/json").send(callback);
@@ -196,10 +194,9 @@ public class VirtualFileSystem
    public void createFile(org.exoplatform.ide.vfs.shared.Folder parent, AsyncRequestCallback<FileModel> callback)
       throws RequestException
    {
-
       FileModel newFile = callback.getPayload();
-      String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref() + "?name=" + newFile.getName();
-
+      String url = parent.getLinkByRelation(Link.REL_CREATE_FILE).getHref();
+      url = URL.decode(url).replace("[name]", newFile.getName());
       AsyncRequest.build(RequestBuilder.POST, url).data(newFile.getContent())
          .header(HTTPHeader.CONTENT_TYPE, newFile.getMimeType()).send(callback);
    }
