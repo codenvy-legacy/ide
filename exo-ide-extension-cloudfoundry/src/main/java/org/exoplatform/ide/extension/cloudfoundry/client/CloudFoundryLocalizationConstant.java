@@ -203,6 +203,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("login.field.password")
    String loginViewPasswordField();
    
+   @Key("login.field.target")
+   String loginViewTargetField();
+   
    /*
     * CreateApplicationView.
     */

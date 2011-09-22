@@ -104,7 +104,8 @@ public class Cloudfoundry
 
    public String getTarget() throws IOException, CloudfoundryException
    {
-      return authenticator.readTarget();
+      String target = authenticator.readTarget();
+      return target;
    }
 
    public Collection<String> getTargets() throws IOException, CloudfoundryException

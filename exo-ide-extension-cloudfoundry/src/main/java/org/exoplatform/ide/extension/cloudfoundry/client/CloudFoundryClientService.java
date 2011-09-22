@@ -72,7 +72,7 @@ public abstract class CloudFoundryClientService
    public abstract void create(String server, String name, String type, String url, int instances, int memory,
       boolean nostart, String workDir, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
    
-   public abstract void login(String email, String password, AsyncRequestCallback<String> callback);
+   public abstract void login(String server, String email, String password, AsyncRequestCallback<String> callback);
    
    public abstract void logout(AsyncRequestCallback<String> callback);
    
@@ -183,6 +183,15 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getSystemInfo(AsyncRequestCallback<SystemInfo> callback);
+   public abstract void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback);
+   
+   /**
+    * Get the list of available targes for user.
+    * 
+    * @param callback callback, that client has to implement to handle response from server
+    */
+   public abstract void getTargets(AsyncRequestCallback<List<String>> callback);
+   
+   public abstract void getTarget(String server, AsyncRequestCallback<StringBuilder> callback);
    
 }

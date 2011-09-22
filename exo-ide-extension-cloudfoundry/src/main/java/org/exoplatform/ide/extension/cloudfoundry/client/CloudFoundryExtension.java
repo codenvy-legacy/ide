@@ -64,6 +64,11 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
 
    public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudFoundryLocalizationConstant.class);
+   
+   /**
+    * Default CloudFoundry server.
+    */
+   public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)

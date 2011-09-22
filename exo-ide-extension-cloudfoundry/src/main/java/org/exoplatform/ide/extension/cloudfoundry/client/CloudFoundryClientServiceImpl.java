@@ -31,6 +31,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.Cloudfoundry
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.SystemInfoUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
@@ -86,6 +88,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    private static final String VALIDATE_ACTION = BASE_URL + "/apps/validate-action";
 
    private static final String APPS = BASE_URL + "/apps";
+   
+   private static final String TARGETS = BASE_URL + "/target/all";
+   
+   private static final String TARGET = BASE_URL + "/target";
    
    /**
     * Events handler.
@@ -148,11 +154,12 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void login(String email, String password, AsyncRequestCallback<String> callback)
+   public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + LOGIN;
 
       HashMap<String, String> credentials = new HashMap<String, String>();
+      credentials.put("server", server);
       credentials.put("email", email);
       credentials.put("password", password);
       CredentailsMarshaller marshaller = new CredentailsMarshaller(credentials);
@@ -478,10 +485,12 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getSystemInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getSystemInfo(AsyncRequestCallback<SystemInfo> callback)
+   public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback)
    {
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
+      String params = (server == null) ? "" : "?server=" + server;
+      
       SystemInfo systemInfo = new SystemInfo();
       SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
       
@@ -489,7 +498,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
       
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url + params, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
@@ -505,6 +514,41 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setPayload(new ApplicationListUnmarshaller(apps));
       callback.setResult(apps);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getTargets(AsyncRequestCallback<List<String>> callback)
+   {
+      String url = restServiceContext + TARGETS;
+      callback.setEventBus(eventBus);
+      List<String> targes = new ArrayList<String>();
+      callback.setResult(targes);
+      TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(targes);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTarget(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getTarget(String server, AsyncRequestCallback<StringBuilder> callback)
+   {
+      String url = restServiceContext + TARGET;
+      String params = (server == null) ? "" : "?target=" + server;
+      
+      callback.setEventBus(eventBus);
+      StringBuilder target = new StringBuilder();
+      callback.setResult(target);
+      TargetUnmarshaller unmarshaller = new TargetUnmarshaller(target);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.GET, url + params, loader).send(callback);
    }
 
 }

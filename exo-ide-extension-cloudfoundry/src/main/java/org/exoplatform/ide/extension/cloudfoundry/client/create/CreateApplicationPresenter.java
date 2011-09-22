@@ -137,11 +137,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
    }
    
-   /**
-    * Default value for Server field.
-    */
-   private static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
-   
    private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
    
    private Display display;
@@ -291,7 +286,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       display.setTypeValues(new String[]{""});
       display.getInstancesField().setValue("1");
       display.getAutodetectTypeCheckItem().setValue(true);
-      display.getServerField().setValue(DEFAULT_SERVER);
+      display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
       display.getNameField().setValue(selectedItems.get(0).getName());
       updateUrlField();
    }

@@ -40,6 +40,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
+import java.util.List;
+
 /**
  * Presenter for login view.
  * The view must be pointed in Views.gwt.xml.
@@ -79,6 +81,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasValue}
        */
       HasValue<String> getPasswordField();
+      
+      /**
+       * Get target select item.
+       * @return
+       */
+      HasValue<String> getTargetSelectField();
 
       /**
        * Change the enable state of the login button.
@@ -91,6 +99,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * Give focus to login field.
        */
       void focusInEmailField();
+      
+      /**
+       * Set the list of available targets.
+       * @param targets
+       */
+      void setTargetValues(String[] targets);
    }
 
    private Display display;
@@ -100,6 +114,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    private LoggedInHandler loggedIn;
 
    private LoginCanceledHandler loginCanceled;
+   
+   /**
+    * The last server, that user logged in.
+    */
+   private String server;
 
    public LoginPresenter(HandlerManager eventBus)
    {
@@ -195,12 +214,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    protected void getSystemInformation()
    {
-      CloudFoundryClientService.getInstance().getSystemInfo(new AsyncRequestCallback<SystemInfo>()
+      CloudFoundryClientService.getInstance().getSystemInfo(server, new AsyncRequestCallback<SystemInfo>()
       {
          @Override
          protected void onSuccess(SystemInfo result)
          {
             display.getEmailField().setValue(result.getUser());
+            getTargets();
          }
 
          /**
@@ -213,6 +233,33 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             {
                Dialogs.getInstance().showError(exception.getMessage());
             }
+            else
+            {
+               getTargets();
+            }
+         }
+      });
+   }
+   
+   private void getTargets()
+   {
+      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      {
+         @Override
+         protected void onSuccess(List<String> result)
+         {
+            if (result.isEmpty())
+            {
+               display.setTargetValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+               display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+            }
+            else
+            {
+               String[] targets = new String[result.size()];
+               targets = result.toArray(targets);
+               display.setTargetValues(targets);
+               display.getTargetSelectField().setValue(result.get(0));
+            }
          }
       });
    }
@@ -222,10 +269,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
     */
    protected void doLogin()
    {
+      final String enteredServer = display.getTargetSelectField().getValue();
       final String email = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
 
-      CloudFoundryClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
+      CloudFoundryClientService.getInstance().login(enteredServer, email, password, new AsyncRequestCallback<String>()
       {
          /**
           * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
@@ -233,6 +281,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          @Override
          protected void onSuccess(String result)
          {
+            server = enteredServer;
             eventBus.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
             if (loggedIn != null)
             {
