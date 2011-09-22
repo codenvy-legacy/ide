@@ -70,6 +70,8 @@ class CloudfoundryCredentials
       int i = 0;
       for (Map.Entry<String, String> e : tokens.entrySet())
       {
+         if (i > 0)
+            body.append(',');
          body.append('"') //
             .append(e.getKey()) //
             .append('"') //
@@ -77,8 +79,6 @@ class CloudfoundryCredentials
             .append('"') //
             .append(e.getValue()) //
             .append('"');
-         if (i > 0)
-            body.append(',');
          i++;
       }
       body.append('}');
