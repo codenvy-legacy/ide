@@ -18,16 +18,48 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import javax.ws.rs.QueryParam;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.java.client.marshaller.MavenResponseUnmarshaller;
+import org.exoplatform.ide.extension.java.shared.MavenResponse;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
 
 /**
+ * Implementation of {@link JavaClientService} service.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: JavaClientService.java Jun 21, 2011 12:33:19 PM vereshchaka $
+ * @version $Id: JavaClientServiceImpl.java Jun 21, 2011 5:02:07 PM vereshchaka $
  *
  */
-public abstract class JavaClientService
+public class JavaClientService
 {
+   
+   private static final String BASE_URL = "/ide/application/java";
+   
+   private static final String CREATE_PROJECT = BASE_URL + "/create";
+   
+   private static final String CLEAN_PROJECT = BASE_URL + "/clean";
+   
+   private static final String PACKAGE_PROJECT = BASE_URL + "/package";
+   
+   /**
+    * Events handler.
+    */
+   private HandlerManager eventBus;
+
+   /**
+    * REST service context.
+    */
+   private String restServiceContext;
+
+   /**
+    * Loader to be displayed.
+    */
+   private Loader loader;
    
    private static JavaClientService instance;
    
@@ -39,35 +71,76 @@ public abstract class JavaClientService
       return instance;
    }
    
-   protected JavaClientService()
+   
+   public JavaClientService(HandlerManager eventBus, String restContext, Loader loader)
    {
+      this.loader = loader;
+      this.eventBus = eventBus;
+      this.restServiceContext = restContext;
       instance = this;
    }
    
-   /**
-    * Creates java project.
-    * 
-    * @param projectName - the name of new project
-    * @param projectType - type ot new project
-    * @param workDir - the location of new project
-    * @param callback - callback, client has to implement
-    */
-   public abstract void createProject(String projectName, String projectType, String groupId, String artifactId, String version, String workDir, MavenResponseCallback callback);
+   public void createProject(String projectName, String projectType, String groupId, String artifactId, String version, String workDir, MavenResponseCallback callback)
+   {
+      final String url = restServiceContext + CREATE_PROJECT;
+      String params = "projectName=" + projectName;
+      params += "&projectType=" + projectType;
+      params += "&groupId=" + groupId;
+      params += "&artifactId=" + artifactId;
+      params += "&version=" + version;
+      params += "&parentId=" + workDir;
+      params += "&vfsId=" + "dev-monit"; //TODO: need remove hardcode
+      
+      MavenResponse mavenResponse = new MavenResponse();
+      callback.setResult(mavenResponse);
+      callback.setEventBus(eventBus);
+      
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse); 
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
 
    /**
-    * Clean project.
-    * 
-    * @param baseDir - the location of project
-    * @param callback - callback, client has to implement
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#packageProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public abstract void cleanProject(String baseDir, MavenResponseCallback callback);
-   
+   public void packageProject(String baseDir, MavenResponseCallback callback)
+   {
+      final String url = restServiceContext + PACKAGE_PROJECT;
+      String params = "workdir=" + baseDir;
+      
+      MavenResponse mavenResponse = new MavenResponse();
+      callback.setResult(mavenResponse);
+      callback.setEventBus(eventBus);
+      
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+      .send(callback);
+   }
+
    /**
-    * Package project.
-    * 
-    * @param baseDir - the location of project
-    * @param callback - callback, client has to implement
+    * @see org.exoplatform.ide.extension.java.client.JavaClientService#cleanProject(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public abstract void packageProject(String baseDir, MavenResponseCallback callback);
+   public void cleanProject(String baseDir, MavenResponseCallback callback)
+   {
+      final String url = restServiceContext + CLEAN_PROJECT;
+      String params = "workdir=" + baseDir;
+      
+      MavenResponse mavenResponse = new MavenResponse();
+      callback.setResult(mavenResponse);
+      callback.setEventBus(eventBus);
+      
+      MavenResponseUnmarshaller unmarshaller = new MavenResponseUnmarshaller(mavenResponse);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+      .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+      .send(callback);
+   }
 
 }

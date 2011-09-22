@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
-import org.exoplatform.ide.client.debug.SeleniumTestsHelper;
+import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;

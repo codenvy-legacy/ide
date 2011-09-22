@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.Panel;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;

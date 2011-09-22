@@ -26,10 +26,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,6 +49,10 @@ import org.exoplatform.ide.maven.InvocationRequestFactory;
 import org.exoplatform.ide.maven.MavenTask;
 import org.exoplatform.ide.maven.TaskService;
 import org.exoplatform.ide.maven.TaskWatcher;
+import org.exoplatform.ide.vfs.impl.jcr.ItemType2NodeTypeResolver;
+import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -67,10 +74,23 @@ public class JavaAppService
       "clean", "package"));
 
    private final TaskService taskService;
+   
+   private VirtualFileSystem vfs;
 
-   public JavaAppService(TaskService taskService)
+   public JavaAppService(TaskService taskService, RepositoryService repositoryService, @QueryParam("vfsId") String vfsId,@Context UriInfo uriInfo)
    {
       this.taskService = taskService;
+      Repository repository;
+      try
+      {
+         repository = repositoryService.getCurrentRepository();
+         vfs = new JcrFileSystem(repository,vfsId, new ItemType2NodeTypeResolver(),uriInfo);
+      }
+      catch (RepositoryException e)
+      {
+         e.printStackTrace();
+      }
+     
    }
 
    /**
@@ -89,7 +109,7 @@ public class JavaAppService
    @POST
    @Path("create")
    public Response createApplication(
-      @QueryParam("workdir") FSLocation baseDir,
+      @QueryParam("parentId") String parentId,
       @QueryParam("projectName") String projectName,
       @QueryParam("projectType") String projectType,
       @QueryParam("groupId") String groupId,
@@ -98,29 +118,11 @@ public class JavaAppService
       @Context UriInfo uriInfo) throws Exception {
 
       String resource = projectType;      
-      File dir = new File(baseDir.getLocalPath(uriInfo));
-      try
-      {
-         if (dir.exists())
-         {
-            File projectDirectory = new File(dir, projectName);
-            URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
-            
-            JavaProjectArchetype archetype = new JavaProjectArchetype(projectDirectory, projectName, groupId, artifactId, version);
-            archetype.exportResourcesFromURL(url);
-            
-            GitHelper.addToGitIgnore(projectDirectory, "target/");
-         }
-         else
-            throw new IllegalStateException("Can't find work dir. ");
-      }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-            LOG.error(e);
-
-         return Response.serverError().entity(e.getMessage()).build();
-      }
+      URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+      if (vfs == null)
+         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
+      JavaProjectArchetype archetype = new JavaProjectArchetype(projectName, groupId, artifactId, version,parentId,vfs);
+      archetype.exportResources(url);
       return Response.ok().build();      
    }
 

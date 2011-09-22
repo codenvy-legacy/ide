@@ -18,26 +18,27 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.exoplatform.commons.utils.MimeTypeResolver;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Project;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-
-import sun.net.www.protocol.jar.JarURLConnection;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -46,114 +47,89 @@ import sun.net.www.protocol.jar.JarURLConnection;
 public class JavaProjectArchetype
 {
 
-   /**
-    * Destination folder where project will be created.
-    */
-   private File destination;
-   
+   private final String parentId;
+
    /**
     * Project's name.
     */
-   private String projectName;
+   private final String projectName;
 
    /**
     * Project's group ID.
     */
-   private String groupId;
+   private final String groupId;
 
    /**
     * Project's artifact ID.
     */
-   private String artifactId;
+   private final String artifactId;
 
    /**
     * Project's version.
     */
-   private String version;
+   private final String version;
 
-   public JavaProjectArchetype(File destination, String projectName, String groupId, String artifactId, String version)
+   private final VirtualFileSystem vfs;
+   
+   private MimeTypeResolver mimeTypeResolver;
+
+   public JavaProjectArchetype(String projectName, String groupId, String artifactId, String version, String parentId,
+      VirtualFileSystem vfs)
    {
-      this.destination = destination;
+      this.parentId = parentId;
       this.projectName = projectName;
       this.groupId = groupId;
       this.artifactId = artifactId;
       this.version = version;
+      this.vfs = vfs;
+      mimeTypeResolver = new MimeTypeResolver();
    }
 
-   public void exportResourcesFromURL(URL url) throws IOException
+   public void exportResources(URL url) throws IOException, URISyntaxException, ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      if (url.getProtocol().startsWith("jar"))
+      File res = new File(url.toURI());
+      Response response = vfs.createProject(parentId, projectName, projectName, null);
+      Project project = (Project)response.getEntity();
+      File[] files = res.listFiles();
+      for (int i = 0; i < files.length; i++)
       {
-         JarURLConnection con = new JarURLConnection(url, null);
-         copyJarResources(con);
+         exportFile(project.getId(), files[i]);
       }
-      else
-      {
-         File template = new File(url.getFile());
-         if (template.exists())
-            FileUtils.copyDirectory(template, destination);
-         else
-            throw new IllegalStateException("Can not create project \"" + artifactId + "\".");
-      }
+
    }
 
-   private void copyJarResources(final JarURLConnection jarConnection) throws IOException
+   private void exportFile(String parentId, File file) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException, IOException
    {
-      @SuppressWarnings("restriction")
-      final JarFile jarFile = jarConnection.getJarFile();
-
-      for (final Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();)
+      if (file.isDirectory())
       {
-         final JarEntry entry = e.nextElement();
-         if (entry.getName().startsWith(jarConnection.getEntryName()))
+         Response response = vfs.createFolder(parentId, file.getName());
+         if (response.getEntity() instanceof Folder)
          {
-            final String filename = StringUtils.removeStart(entry.getName(), //
-               jarConnection.getEntryName());
-
-            final File f = new File(destination, filename);
-            if (!entry.isDirectory())
+            Folder folder = (Folder)response.getEntity();
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++)
             {
-               final InputStream entryInputStream = jarFile.getInputStream(entry);
-               if ("/pom.xml".equals(filename))
-               {
-                  copyPomXML(entryInputStream, f);
-               }
-               else
-               {
-                  copyStream(entryInputStream, f);
-               }
-            }
-            else
-            {
-               if (!ensureDirectoryExists(f))
-               {
-                  throw new WebApplicationException(Response.serverError().entity("Could not create directory: " + f.getAbsolutePath()).build());
-               }
+               exportFile(folder.getId(), files[i]);
             }
          }
       }
-   }
-
-   private void copyStream(InputStream is, File destFile) throws IOException
-   {
-      OutputStream outputStream = new FileOutputStream(destFile);
-
-      final byte[] buf = new byte[1024];
-
-      int readed = 0;
-      while ((readed = is.read(buf)) > 0)
+      
+      else
       {
-         outputStream.write(buf, 0, readed);
+         if ("pom.xml".equals(file.getName()))
+            vfs.createFile(parentId, file.getName(), MediaType.TEXT_XML_TYPE, copyPomXML(new FileInputStream(file)));
+         else
+            vfs.createFile(parentId, file.getName(), MediaType.valueOf(mimeTypeResolver.getMimeType(file.getName())), new FileInputStream(file));
       }
 
-      is.close();
-      outputStream.close();
    }
 
-   private void copyPomXML(InputStream is, File destFile) throws IOException
-   {
-      PrintWriter writer = new PrintWriter(destFile);
 
+   private InputStream copyPomXML(InputStream is) throws IOException
+   {
+      StringBuilder buffer = new StringBuilder(is.available());
       InputStreamReader streamReader = new InputStreamReader(is);
       BufferedReader reader = new BufferedReader(streamReader);
 
@@ -161,10 +137,11 @@ public class JavaProjectArchetype
       while (line != null)
       {
          // replacing ${name} ${groupId}, ${artifactId}, ${version}
-         while (line.indexOf("${name}") >= 0) {
+         while (line.indexOf("${name}") >= 0)
+         {
             line = line.replace("${name}", projectName);
          }
-         
+
          while (line.indexOf("${groupId}") >= 0)
          {
             line = line.replace("${groupId}", groupId);
@@ -180,19 +157,11 @@ public class JavaProjectArchetype
             line = line.replace("${version}", version);
          }
 
-         writer.println(line);
-         
+         buffer.append(line + "\n");
+
          line = reader.readLine();
       }
-      writer.println();
-
-      writer.close();
       is.close();
+      return new ByteArrayInputStream(buffer.toString().getBytes());
    }
-
-   private boolean ensureDirectoryExists(final File f)
-   {
-      return f.exists() || f.mkdir();
-   }
-
 }

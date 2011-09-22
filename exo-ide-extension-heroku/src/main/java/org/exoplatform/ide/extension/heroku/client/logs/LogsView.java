@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.button.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.component.VPanel;

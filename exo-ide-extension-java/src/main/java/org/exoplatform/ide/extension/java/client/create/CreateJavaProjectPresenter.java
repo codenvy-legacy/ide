@@ -184,14 +184,14 @@ public class CreateJavaProjectPresenter implements ViewClosedHandler, CreateJava
       String version = "1.0-SNAPSHOT";
       
       Item item = selectedItems.get(0);
-      String workDir = item.getId();
-      if (item instanceof FileModel)
-      {
-         workDir = item.getParentId();
-      }
+//      String workDir = item.getId();
+//      if (item instanceof FileModel)
+//      {
+//         workDir = item.getParentId();
+//      }
       
       JavaClientService.getInstance().createProject(projectName, projectType.value(), 
-         groupId, artifactId, version, workDir, new MavenResponseCallback(eventBus)
+         groupId, artifactId, version, item.getId(), new MavenResponseCallback(eventBus)
       {
          @Override
          protected void onSuccess(MavenResponse result)

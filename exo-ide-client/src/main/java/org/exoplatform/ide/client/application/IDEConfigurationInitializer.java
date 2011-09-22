@@ -43,7 +43,6 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
-import org.exoplatform.ide.client.model.conversation.ConversationServiceImpl;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
@@ -97,7 +96,6 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
                   eventBus.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
 
-                  new ConversationServiceImpl(eventBus, IDELoader.getInstance(), applicationConfiguration.getContext());
                   new SettingsServiceImpl(eventBus, applicationConfiguration.getRegistryURL(), result.getUserInfo()
                      .getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
 

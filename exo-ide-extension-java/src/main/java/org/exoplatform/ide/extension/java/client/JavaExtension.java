@@ -51,7 +51,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new JavaClientServiceImpl(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new JavaClientService(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
