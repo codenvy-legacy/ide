@@ -65,7 +65,7 @@ public class DialogAboutTest extends BaseTest
       assertFalse(selenium().isElementPresent("ideAboutFormOkButton"));
       assertFalse(selenium().isElementPresent("//div[@view-id=\"ideAboutView\"]//td//img[@class=\"gwt-Image\"]"));
       assertFalse(selenium().isTextPresent("About"));
-      assertFalse(selenium().isTextPresent(PRODUCT_NAME));
+    //  assertFalse(selenium().isTextPresent(PRODUCT_NAME));
       //      assertFalse(selenium().isTextPresent("Version: 1.0-Beta03-SNAPSHOT"));
       assertFalse(selenium().isTextPresent(COMPANY));
       assertFalse(selenium().isTextPresent("Revision:"));

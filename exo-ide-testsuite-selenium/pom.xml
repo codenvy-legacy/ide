@@ -16,7 +16,6 @@
 
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <firefox.profile.dir>target/firefoxProfile</firefox.profile.dir>
    </properties>
    <dependencies>
       <dependency>
@@ -82,7 +81,7 @@
          <groupId>org.everrest</groupId>
          <artifactId>everrest-httpclient</artifactId>
       </dependency>
-      
+
    </dependencies>
 
    <build>
@@ -104,33 +103,13 @@
          </activation>
          <build>
             <plugins>
-               <plugin>
-                  <artifactId>maven-antrun-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-patch-firefox-profile</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                           <tasks>
-                              <copy todir="${project.build.directory}/firefoxProfile">
-                                 <fileset dir="${basedir}/src/test/resources/firefoxProfile" />
-                              </copy>
-                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="@@@@@@" value="${java.io.tmpdir}" />
-                              <replace file="${project.build.directory}/firefoxProfile/prefs.js" token="\" value="\\" />
-                           </tasks>
-                        </configuration>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
+
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-compiler-plugin</artifactId>
                   <configuration>
-                     <source>1.5</source>
-                     <target>1.5</target>
+                     <source>1.6</source>
+                     <target>1.6</target>
                   </configuration>
                </plugin>
                <plugin>
@@ -161,7 +140,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>selenium-maven-plugin</artifactId>
-                  <version>1.0.1</version>
+                  <version>2.0</version>
                   <executions>
                      <execution>
                         <phase>pre-integration-test</phase>
@@ -170,8 +149,6 @@
                         </goals>
                         <configuration>
                            <background>true</background>
-                           <userExtensions>${user.extension.dir}</userExtensions>
-                           <firefoxProfileTemplate>${firefox.profile.dir}</firefoxProfileTemplate>
                         </configuration>
                      </execution>
                   </executions>
@@ -185,7 +162,8 @@
                      <threadCount>4</threadCount>
                   </configuration>
                </plugin>
-            --></plugins>
+            -->
+            </plugins>
          </build>
          <reporting>
             <plugins>
