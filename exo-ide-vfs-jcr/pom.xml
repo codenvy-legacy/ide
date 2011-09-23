@@ -13,10 +13,22 @@
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>

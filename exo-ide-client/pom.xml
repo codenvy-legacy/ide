@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -15,7 +16,7 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
@@ -64,7 +65,7 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-testframework</artifactId>
@@ -141,7 +142,8 @@
                   <configuration>
                      <tasks>
                         <echo file="target/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
-                           buildNumber = ${buildNumber}
+                           buildNumber =
+                           ${buildNumber}
                            buildTime =${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
@@ -151,7 +153,7 @@
          </plugin>
       </plugins>
    </build>
-   
+
    <profiles>
       <profile>
          <id>shell</id>
@@ -164,178 +166,190 @@
          </properties>
 
          <dependencies>
-         
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-gadget</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-gadget</artifactId>
-		         <exclusions>
-		            <exclusion>
-		               <groupId>xstream</groupId>
-		               <artifactId>xstream</artifactId>
-		            </exclusion>
-		         </exclusions>
-		      </dependency>         
-         
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-groovy</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-javascript</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-java</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-jsp</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-css</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-gtmpl</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-html</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-chromattic</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-netvibes</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-ruby</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-php</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-xml</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-editor-gadget</artifactId>
-		      </dependency>
-         
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-groovy</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-java</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-jenkins</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-netvibes</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-chromattic</artifactId>
-		         <exclusions>
-		          <exclusion>
-		            <groupId>org.hsqldb</groupId>
-		             <artifactId>hsqldb</artifactId>
-		          </exclusion>
-		         </exclusions>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-git</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-ssh</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-heroku</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-openshift</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-cloudbees</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-		      </dependency>
-		
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-logreader</artifactId>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.log-reader</groupId>
-		         <artifactId>log-reader-service</artifactId>
-		         <version>1.0-M2</version>
-		      </dependency>
-		      
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-ruby</artifactId>
-		      </dependency>
-         
-		      <dependency>
-		         <groupId>org.exoplatform.ide</groupId>
-		         <artifactId>exo-ide-extension-samples</artifactId>
-		      </dependency>
-         
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-gadget</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-gadget</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-groovy</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-javascript</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-java</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-jsp</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-css</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-gtmpl</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-html</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-chromattic</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-netvibes</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-ruby</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-php</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-xml</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-gadget</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-groovy</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-java</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-jenkins</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-netvibes</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-chromattic</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>org.hsqldb</groupId>
+                     <artifactId>hsqldb</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-git</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-ssh</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-heroku</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-openshift</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-cloudbees</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-cloudfoundry</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-logreader</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.log-reader</groupId>
+               <artifactId>log-reader-service</artifactId>
+               <version>1.0-M2</version>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-ruby</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-samples</artifactId>
+            </dependency>
+
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.commons</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
                <scope>runtime</scope>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.container</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
                <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -434,10 +448,10 @@
                   </exclusion>
                </exclusions>
             </dependency>
-            
+
             <dependency>
-            	<groupId>org.everrest</groupId>
-            	<artifactId>everrest-proxy</artifactId>
+               <groupId>org.everrest</groupId>
+               <artifactId>everrest-proxy</artifactId>
             </dependency>
 
             <dependency>

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.cloudbees.client;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -94,5 +95,10 @@ public abstract class CloudBeesClientService
     */
    public abstract void deployWar(String appId, String warFile, String message,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+   
+   /**
+    * Receive all CB applications on this account
+    */
+   public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback);
 
 }

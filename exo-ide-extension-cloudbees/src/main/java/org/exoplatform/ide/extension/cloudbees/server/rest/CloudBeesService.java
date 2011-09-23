@@ -132,4 +132,12 @@ public class CloudBeesService
    {
       cloudbees.deleteApplication(appId, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
    }
+   
+   @Path("apps/all")   
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<Map<String,String>> getAllApplications() throws Exception
+   {
+      return cloudbees.listApplications();
+   }
 }

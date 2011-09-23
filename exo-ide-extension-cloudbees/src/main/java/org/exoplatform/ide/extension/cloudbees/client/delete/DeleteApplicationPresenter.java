@@ -64,7 +64,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    private String workDir;
 
    private String appId;
-   
+
    private String appTitle;
 
    /**
@@ -84,7 +84,16 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      getApplicationInfo();
+      if (event.getAppId() != null && event.getAppTitle() != null)
+      {
+         appId = event.getAppId();
+         appTitle = event.getAppTitle();
+         askForDelete(appTitle);
+      }
+      else
+      {
+         getApplicationInfo();
+      }
    }
 
    /**
@@ -94,10 +103,11 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0) {
+      if (selectedItems.size() == 0)
+      {
          return;
       }
-      
+
       workDir = selectedItems.get(0).getId();
    }
 
@@ -137,8 +147,7 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
       final String title = (applicationTitle != null) ? applicationTitle : workDir;
 
       Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-        CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title),
-         new BooleanValueReceivedHandler()
+         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title), new BooleanValueReceivedHandler()
          {
 
             @Override
@@ -171,8 +180,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new OutputEvent(
-                  CloudBeesExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appTitle), Type.INFO));
+               eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                  .applicationDeletedMsg(appTitle), Type.INFO));
             }
          });
    }

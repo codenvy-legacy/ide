@@ -20,11 +20,23 @@
          <type>jar</type>
          <scope>provided</scope>
          <version>${org.exoplatform.gatein.version}</version>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>

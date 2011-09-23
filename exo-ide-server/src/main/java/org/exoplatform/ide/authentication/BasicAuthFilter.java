@@ -95,6 +95,7 @@ public class BasicAuthFilter implements Filter
          container = ExoContainerContext.getTopContainer();
       }
 
+      Identity identity = null;
       try
       {
          Authenticator authenticator = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
@@ -109,7 +110,7 @@ public class BasicAuthFilter implements Filter
 
          String userId = authenticator.validateUser(credentials);
 
-         Identity identity = authenticator.createIdentity(userId);
+         identity = authenticator.createIdentity(userId);
 
          IdentityRegistry ir = (IdentityRegistry)container.getComponentInstanceOfType(IdentityRegistry.class);
          if (ir == null)
@@ -120,7 +121,6 @@ public class BasicAuthFilter implements Filter
          ir.register(identity);
          ConversationState.setCurrent(new ConversationState(identity));
 
-         chain.doFilter(new AuthServletRequest(httpRequest, identity), response);
 
       }
       catch (LoginException e)
@@ -134,8 +134,11 @@ public class BasicAuthFilter implements Filter
       {
          LOG.error("Error occurs ", e);
          HttpServletResponse httpResponse = (HttpServletResponse)response;
-         httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+         httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+         return;
       }
+      
+      chain.doFilter(new AuthServletRequest(httpRequest, identity), response);
 
    }
 

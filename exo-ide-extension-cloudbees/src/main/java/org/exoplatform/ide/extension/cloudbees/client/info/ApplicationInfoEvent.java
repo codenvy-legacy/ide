@@ -28,7 +28,25 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler>
 {
-   
+
+   private ApplicationInfo appInfo;
+
+   /**
+    * 
+    */
+   public ApplicationInfoEvent()
+   {
+   }
+
+   /**
+    * @param appInfo
+    */
+   public ApplicationInfoEvent(ApplicationInfo appInfo)
+   {
+      super();
+      this.appInfo = appInfo;
+   }
+
    /**
     * Type used to register this event.
     */
@@ -50,6 +68,14 @@ public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler>
    protected void dispatch(ApplicationInfoHandler handler)
    {
       handler.onShowApplicationInfo(this);
+   }
+
+   /**
+    * @return the appInfo
+    */
+   public ApplicationInfo getAppInfo()
+   {
+      return appInfo;
    }
 
 }

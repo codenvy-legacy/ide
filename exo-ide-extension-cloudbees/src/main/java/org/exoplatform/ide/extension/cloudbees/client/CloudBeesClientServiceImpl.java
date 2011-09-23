@@ -26,6 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfo;
+import org.exoplatform.ide.extension.cloudbees.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.CredentailsMarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
@@ -58,6 +61,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String LOGOUT = BASE_URL + "/logout";
    
    private static final String INITIALIZE = BASE_URL + "/apps/create";
+   
+   private static final String APP_LIST = BASE_URL + "/apps/all";
 
    /**
     * Events handler.
@@ -224,6 +229,21 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#applicationList(org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    */
+   @Override
+   public void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback)
+   {
+      final String url = restServiceContext + APP_LIST;
+      List<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
+      Unmarshallable unmarshaler = new ApplicationListUnmarshaller(result);
+      callback.setEventBus(eventBus);
+      callback.setPayload(unmarshaler);
+      callback.setResult(result);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

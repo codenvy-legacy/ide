@@ -29,7 +29,29 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 {
+
+   private String appId;
    
+   private String appTitle;
+
+   /**
+    * 
+    */
+   public DeleteApplicationEvent()
+   {
+   }
+
+   /**
+    * @param appId
+    * @param appTitle
+    */
+   public DeleteApplicationEvent(String appId, String appTitle)
+   {
+      super();
+      this.appId = appId;
+      this.appTitle = appTitle;
+   }
+
    /**
     * Type used to register this event.
     */
@@ -52,5 +74,23 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
    {
       handler.onDeleteApplication(this);
    }
+
+   /**
+    * @return the appId
+    */
+   public String getAppId()
+   {
+      return appId;
+   }
+
+   /**
+    * @return the appTitle
+    */
+   public String getAppTitle()
+   {
+      return appTitle;
+   }
+   
+   
 
 }

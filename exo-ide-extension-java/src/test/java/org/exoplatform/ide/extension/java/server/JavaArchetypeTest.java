@@ -93,7 +93,7 @@ public class JavaArchetypeTest extends Base
       URL url = JavaArchetypeTest.class.getResource("/java-spring-project");
       archetype.exportResources(url);
      Assert.assertNotNull(modifiedPom);
-     System.out.println("JavaArchetypeTest.checkPom()" + modifiedPom);
+     System.out.println(modifiedPom);
      Assert.assertTrue(modifiedPom.contains(versionId));
      Assert.assertTrue(modifiedPom.contains(artifactId));
      Assert.assertTrue(modifiedPom.contains(groupId));

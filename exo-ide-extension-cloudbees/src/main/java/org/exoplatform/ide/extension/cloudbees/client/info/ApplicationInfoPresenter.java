@@ -50,14 +50,14 @@ import java.util.Map.Entry;
  */
 public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClosedHandler, ItemsSelectedHandler
 {
-   
+
    interface Display extends IsView
    {
       HasClickHandlers getOkButton();
 
       ListGridItem<Entry<String, String>> getApplicationInfoGrid();
    }
-   
+
    private Display display;
 
    /**
@@ -76,12 +76,12 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
    public ApplicationInfoPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
+
    /**
     * Bind presenter with display.
     */
@@ -104,10 +104,17 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
    @Override
    public void onShowApplicationInfo(ApplicationInfoEvent event)
    {
-      String workDir = selectedItems.get(0).getId();
-      showApplicationInfo(workDir);
+      if (event.getAppInfo() != null)
+      {
+         showAppInfo(event.getAppInfo().toMap());
+      }
+      else
+      {
+         String workDir = selectedItems.get(0).getId();
+         showApplicationInfo(workDir);
+      }
    }
-   
+
    private void showApplicationInfo(final String workDir)
    {
       CloudBeesClientService.getInstance().getApplicationInfo(workDir, null,
@@ -123,21 +130,27 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
             @Override
             protected void onSuccess(Map<String, String> result)
             {
-               if (display == null)
-               {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-               }
-               Iterator<Entry<String, String>> it = result.entrySet().iterator();
-               List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String,String>>();
-               while (it.hasNext())
-               {
-                  valueList.add(it.next());
-               }
-               display.getApplicationInfoGrid().setValue(valueList);
+               showAppInfo(result);
             }
          });
+   }
+
+   private void showAppInfo(Map<String, String> map)
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+      }
+
+      Iterator<Entry<String, String>> it = map.entrySet().iterator();
+      List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();
+      while (it.hasNext())
+      {
+         valueList.add(it.next());
+      }
+      display.getApplicationInfoGrid().setValue(valueList);
    }
 
    /**

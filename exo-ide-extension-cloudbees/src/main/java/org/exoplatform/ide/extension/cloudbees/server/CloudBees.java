@@ -262,13 +262,13 @@ public class CloudBees
          idfile.delete();
    }
 
-   public List<String> listApplications() throws Exception /* from BeesClient */
+   public List<Map<String, String>> listApplications() throws Exception /* from BeesClient */
    {
       BeesClient beesClient = getBeesClient();
       List<ApplicationInfo> ainfos = beesClient.applicationList().getApplications();
-      List<String> ids = new ArrayList<String>(ainfos.size());
+      List<Map<String, String>> ids = new ArrayList<Map<String, String>>(ainfos.size());
       for (ApplicationInfo i : ainfos)
-         ids.add(i.getId());
+         ids.add(toMap(i));
       return ids;
    }
 

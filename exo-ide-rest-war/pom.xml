@@ -20,6 +20,12 @@
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.framework.web</artifactId>
          <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.core</groupId>

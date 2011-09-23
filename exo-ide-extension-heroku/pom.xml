@@ -23,6 +23,12 @@
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>javax.ws.rs</groupId>
