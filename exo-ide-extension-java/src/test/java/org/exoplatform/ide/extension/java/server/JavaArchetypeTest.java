@@ -93,6 +93,7 @@ public class JavaArchetypeTest extends Base
       URL url = JavaArchetypeTest.class.getResource("/java-spring-project");
       archetype.exportResources(url);
      Assert.assertNotNull(modifiedPom);
+     System.out.println("JavaArchetypeTest.checkPom()" + modifiedPom);
      Assert.assertTrue(modifiedPom.contains(versionId));
      Assert.assertTrue(modifiedPom.contains(artifactId));
      Assert.assertTrue(modifiedPom.contains(groupId));
@@ -119,24 +120,26 @@ public class JavaArchetypeTest extends Base
             new File(path, name, path, parentId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance()
                .getTimeInMillis(), "version-id", mediaType.getType(), 100500, false, null, null);
          items.put(path, file);
-         try
+         if ("pom.xml".equals(name))
          {
-            StringBuilder buffer = new StringBuilder(content.available());
-            InputStreamReader streamReader = new InputStreamReader(content);
-            BufferedReader reader = new BufferedReader(streamReader);
-            String line = reader.readLine();
-            while (line != null)
+            try
             {
-               buffer.append(line + "\n");
-               line = reader.readLine();
+               StringBuilder buffer = new StringBuilder(content.available());
+               InputStreamReader streamReader = new InputStreamReader(content);
+               BufferedReader reader = new BufferedReader(streamReader);
+               String line = reader.readLine();
+               while (line != null)
+               {
+                  buffer.append(line + "\n");
+                  line = reader.readLine();
+               }
+               modifiedPom = buffer.toString();
             }
-            modifiedPom = buffer.toString();
+            catch (IOException e)
+            {
+               e.printStackTrace();
+            }
          }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         
          return Response.ok(file).build();
       }
 
