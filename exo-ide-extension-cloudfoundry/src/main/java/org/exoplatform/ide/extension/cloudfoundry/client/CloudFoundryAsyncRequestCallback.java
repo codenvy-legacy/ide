@@ -50,12 +50,21 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
    
    private LoginCanceledHandler loginCanceled;
 
+   private String loginUrl;
+
    public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
+   {
+      this(eventBus, loggedIn, loginCanceled, null);
+   }
+
+   public CloudFoundryAsyncRequestCallback(HandlerManager eventBus, LoggedInHandler loggedIn,
+      LoginCanceledHandler loginCanceled, String loginUrl)
    {
       this.eventbus = eventBus;
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
+      this.loginUrl = loginUrl;
       setEventBus(eventBus);
    }
 
@@ -71,7 +80,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
                   && serverException.getMessage().contains("Authentication required."))
          {
-            eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled));
+            eventbus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
             return;
          }
          else

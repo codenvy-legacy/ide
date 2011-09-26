@@ -196,6 +196,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    {
       loggedIn = event.getLoggedIn();
       loginCanceled = event.getLoginCanceled();
+      if (event.getLoginUrl() != null)
+      {
+         server = event.getLoginUrl();
+      }
       if (display == null)
       {
          Display display = GWT.create(Display.class);
@@ -251,14 +255,24 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
             if (result.isEmpty())
             {
                display.setTargetValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-               display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+               if (server == null || server.isEmpty())
+               {
+                  display.getTargetSelectField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+               }
+               else
+                  display.getTargetSelectField().setValue(server);
             }
             else
             {
                String[] targets = new String[result.size()];
                targets = result.toArray(targets);
                display.setTargetValues(targets);
-               display.getTargetSelectField().setValue(result.get(0));
+               if (server == null && server.isEmpty())
+               {
+                  display.getTargetSelectField().setValue(result.get(0));
+               }
+               else
+                  display.getTargetSelectField().setValue(server);
             }
          }
       });

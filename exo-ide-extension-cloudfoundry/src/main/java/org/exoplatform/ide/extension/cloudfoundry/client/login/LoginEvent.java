@@ -39,10 +39,24 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    
    private LoginCanceledHandler loginCanceled;
    
-   public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
+   private String loginUrl;
+
+   /**
+    * @param loggedIn
+    * @param loginCanceled
+    * @param loginUrl
+    */
+   public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl)
    {
+      super();
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
+      this.loginUrl = loginUrl;
+   }
+
+   public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
+   {
+      this(loggedIn, loginCanceled, null);
    }
    
    public LoggedInHandler getLoggedIn()
@@ -74,6 +88,14 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    protected void dispatch(LoginHandler handler)
    {
       handler.onLogin(this);
+   }
+   
+   /**
+    * @return the loginUrl
+    */
+   public String getLoginUrl()
+   {
+      return loginUrl;
    }
 
 }

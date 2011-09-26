@@ -385,7 +385,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       };
       
       CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url, app.workDir, 
-         app.instances, app.memory, app.nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+         app.instances, app.memory, app.nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null, app.server)
          {
             @Override
             protected void onSuccess(String result)
@@ -437,7 +437,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       
       CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances, app.memory, 
          app.nostart, app.workDir, warUrl, 
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null)
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null, app.server)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
