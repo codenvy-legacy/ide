@@ -16,6 +16,11 @@
          <artifactId>jsr250-api</artifactId>
       </dependency>
       <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+         <version>1</version> <!-- TODO add in parent pom.xml -->
+      </dependency>
+      <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>

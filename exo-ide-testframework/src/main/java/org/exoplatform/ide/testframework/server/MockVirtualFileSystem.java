@@ -107,7 +107,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public VirtualFileSystemInfo getVfsInfo() throws VirtualFileSystemException
+   public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException
    {
       return null;
    }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.discovery;
 
-import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
@@ -56,7 +56,7 @@ public class RepositoryDiscoveryService
    public static final String WEBDAV_SCHEME = "jcr-webdav";
 
    public static final String DEF_WS = "dev-monit";
-   
+
    public static final String VFS_CONTEXT = "vfs/jcr";
 
    /** See {@link SessionProviderService} */
@@ -80,7 +80,7 @@ public class RepositoryDiscoveryService
 
    private RepositoryService repositoryService;
 
-   public RepositoryDiscoveryService(RepositoryService repositoryService,  String defEntryPoint, boolean discoverable)
+   public RepositoryDiscoveryService(RepositoryService repositoryService, String defEntryPoint, boolean discoverable)
    {
       this.repositoryService = repositoryService;
 
@@ -89,7 +89,6 @@ public class RepositoryDiscoveryService
       else
          entryPoint = DEF_WS;
 
-      
       this.discoverable = discoverable;
    }
 
@@ -101,9 +100,10 @@ public class RepositoryDiscoveryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/entrypoints/")
-   public List<HashMap<String, String>> getEntryPoints(@Context UriInfo uriInfo) throws RepositoryException, RepositoryConfigurationException
+   public List<HashMap<String, String>> getEntryPoints(@Context UriInfo uriInfo) throws RepositoryException,
+      RepositoryConfigurationException
    {
-      List<HashMap<String, String>> entryPoints = new ArrayList<HashMap<String,String>>();
+      List<HashMap<String, String>> entryPoints = new ArrayList<HashMap<String, String>>();
       ManageableRepository repository = repositoryService.getCurrentRepository();
       if (repository == null)
          repository = repositoryService.getDefaultRepository();
@@ -114,14 +114,14 @@ public class RepositoryDiscoveryService
             String workspace = workspaceEntry.getName();
             //TODO: maybe not good use directly imlementation JcrFileSystemFactory.class
             String href =
-               uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).path(workspace).build().toString();
+               uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(workspace).build().toString();
             HashMap<String, String> point = new HashMap<String, String>(2);
             point.put("href", href);
             point.put("workspace", workspace);
             entryPoints.add(point);
          }
       }
-     return entryPoints;
+      return entryPoints;
    }
 
    @GET
@@ -134,7 +134,8 @@ public class RepositoryDiscoveryService
       if (repository == null)
          repository = repositoryService.getDefaultRepository();
 
-      String href = uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).path(entryPoint).build().toString();
+      String href =
+         uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(entryPoint).build().toString();
       HashMap<String, String> point = new HashMap<String, String>(2);
       point.put("href", href);
       point.put("workspace", entryPoint);
@@ -147,187 +148,187 @@ public class RepositoryDiscoveryService
    {
       return "" + discoverable;
    }
-   
-//TODO : need remove this methods use for search VFS api   
 
-//   /**
-//    * Method search item location
-//    * @param uriInfo
-//    * @param location Start point to search
-//    * @param name Name of item
-//    * @return location of item
-//    */
-//   @GET
-//   @Path("/find/location")
-//   public String getFileLocation(@Context UriInfo uriInfo, @QueryParam("location") String location,
-//      @QueryParam("name") String name)
-//   {
-//      String baseUri = uriInfo.getBaseUri().toASCIIString();
-//      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
-//      try
-//      {
-//         Session session =
-//            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
-//               + jcrLocation[2]);
-//         Node rootNode = session.getRootNode();
-//         Node node = rootNode.getNode(jcrLocation[2]);
-//         Node itemNode = findNode(node, name);
-//         if (itemNode != null)
-//         {
-//            String itemLocation = baseUri + Utils.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
-//            itemLocation += (itemNode.getPath().startsWith("/")) ? itemNode.getPath() : "/" + itemNode.getPath();
-//            return itemLocation;
-//         }
-//         else
-//         {
-//            throw new FileNotFoundException("Item " + name + " not found.");
-//         }
-//      }
-//      catch (RepositoryException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (RepositoryConfigurationException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (FileNotFoundException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 404));
-//      }
-//   }
-//
-//   /**
-//    * Find file and return content.
-//    * Search of file stars from <code>location</code> and walk up to the root folder.
-//    * @param uriInfo
-//    * @param location Start point to search
-//    * @param name File name
-//    * @return file content
-//    */
-//   @GET
-//   @Path("/find/content")
-//   public String getFileContent(@Context UriInfo uriInfo, @QueryParam("location") String location,
-//      @QueryParam("name") String name)
-//   {
-//      String baseUri = uriInfo.getBaseUri().toASCIIString();
-//      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
-//      try
-//      {
-//         Session session =
-//            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
-//               + jcrLocation[2]);
-//         Node rootNode = session.getRootNode();
-//         Node node = rootNode.getNode(jcrLocation[2]);
-//         Node itemNode = findNode(node, name);
-//         if (itemNode != null)
-//         {
-//            return itemNode.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_DATA).getString();
-//         }
-//         else
-//         {
-//            throw new FileNotFoundException("File " + name + " not found.");
-//         }
-//      }
-//      catch (RepositoryException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (RepositoryConfigurationException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (FileNotFoundException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 404));
-//      }
-//   }
-//   
-//   /**
-//    * Check, is file exists.
-//    * 
-//    * @param uriInfo
-//    * @param location the location of file
-//    */
-//   @GET
-//   @Path("/find/file")
-//   public void fileExists(@Context UriInfo uriInfo, @QueryParam("location") String location)
-//   {
-//      String baseUri = uriInfo.getBaseUri().toASCIIString();
-//      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
-//      try
-//      {
-//         Session session =
-//            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
-//               + jcrLocation[2]);
-//         Node rootNode = session.getRootNode();
-//         try
-//         {
-//            rootNode.getNode(jcrLocation[2]);
-//            return;
-//         }
-//         catch (PathNotFoundException e)
-//         {
-//            throw new FileNotFoundException("File " + location + " not found.");
-//         }
-////         Node itemNode = findNode(node, name);
-////         if (itemNode != null)
-////         {
-////            return;
-////         }
-////         else
-////         {
-////            throw new FileNotFoundException("File " + location + " not found.");
-////         }
-//      }
-//      catch (RepositoryException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (RepositoryConfigurationException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 500));
-//      }
-//      catch (FileNotFoundException e)
-//      {
-//         throw new WebApplicationException(e, createErrorResponse(e, 404));
-//      }
-//   }
-//
-//   /**
-//    * Find class path file's node by name step by step going upper in node hierarchy.
-//    * 
-//    * @param node node, in what child nodes to find class path file
-//    * @return {@link Node} found jcr node
-//    * @throws RepositoryException
-//    */
-//   private Node findNode(Node node, String name) throws RepositoryException
-//   {
-//      if (node == null)
-//         return null;
-//      //Get all child node that end with name
-//      NodeIterator nodeIterator = node.getNodes("*" + name);
-//      while (nodeIterator.hasNext())
-//      {
-//         Node childNode = nodeIterator.nextNode();
-//         if (name.equals(childNode.getName()))
-//            return childNode;
-//      }
-//      try
-//      {
-//         //Go upper to find item path file:   
-//         Node parentNode = node.getParent();
-//         return findNode(parentNode, name);
-//      }
-//      catch (ItemNotFoundException e)
-//      {
-//         return null;
-//      }
-//      catch (AccessDeniedException e)
-//      {
-//         return null;
-//      }
-//   }
+   //TODO : need remove this methods use for search VFS api   
+
+   //   /**
+   //    * Method search item location
+   //    * @param uriInfo
+   //    * @param location Start point to search
+   //    * @param name Name of item
+   //    * @return location of item
+   //    */
+   //   @GET
+   //   @Path("/find/location")
+   //   public String getFileLocation(@Context UriInfo uriInfo, @QueryParam("location") String location,
+   //      @QueryParam("name") String name)
+   //   {
+   //      String baseUri = uriInfo.getBaseUri().toASCIIString();
+   //      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
+   //      try
+   //      {
+   //         Session session =
+   //            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
+   //               + jcrLocation[2]);
+   //         Node rootNode = session.getRootNode();
+   //         Node node = rootNode.getNode(jcrLocation[2]);
+   //         Node itemNode = findNode(node, name);
+   //         if (itemNode != null)
+   //         {
+   //            String itemLocation = baseUri + Utils.WEBDAV_CONTEXT + jcrLocation[0] + "/" + jcrLocation[1];
+   //            itemLocation += (itemNode.getPath().startsWith("/")) ? itemNode.getPath() : "/" + itemNode.getPath();
+   //            return itemLocation;
+   //         }
+   //         else
+   //         {
+   //            throw new FileNotFoundException("Item " + name + " not found.");
+   //         }
+   //      }
+   //      catch (RepositoryException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (RepositoryConfigurationException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (FileNotFoundException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 404));
+   //      }
+   //   }
+   //
+   //   /**
+   //    * Find file and return content.
+   //    * Search of file stars from <code>location</code> and walk up to the root folder.
+   //    * @param uriInfo
+   //    * @param location Start point to search
+   //    * @param name File name
+   //    * @return file content
+   //    */
+   //   @GET
+   //   @Path("/find/content")
+   //   public String getFileContent(@Context UriInfo uriInfo, @QueryParam("location") String location,
+   //      @QueryParam("name") String name)
+   //   {
+   //      String baseUri = uriInfo.getBaseUri().toASCIIString();
+   //      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
+   //      try
+   //      {
+   //         Session session =
+   //            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
+   //               + jcrLocation[2]);
+   //         Node rootNode = session.getRootNode();
+   //         Node node = rootNode.getNode(jcrLocation[2]);
+   //         Node itemNode = findNode(node, name);
+   //         if (itemNode != null)
+   //         {
+   //            return itemNode.getNode(NodeTypeUtil.JCR_CONTENT).getProperty(NodeTypeUtil.JCR_DATA).getString();
+   //         }
+   //         else
+   //         {
+   //            throw new FileNotFoundException("File " + name + " not found.");
+   //         }
+   //      }
+   //      catch (RepositoryException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (RepositoryConfigurationException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (FileNotFoundException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 404));
+   //      }
+   //   }
+   //   
+   //   /**
+   //    * Check, is file exists.
+   //    * 
+   //    * @param uriInfo
+   //    * @param location the location of file
+   //    */
+   //   @GET
+   //   @Path("/find/file")
+   //   public void fileExists(@Context UriInfo uriInfo, @QueryParam("location") String location)
+   //   {
+   //      String baseUri = uriInfo.getBaseUri().toASCIIString();
+   //      String[] jcrLocation = Utils.parseJcrLocation(baseUri, location);
+   //      try
+   //      {
+   //         Session session =
+   //            Utils.getSession(repositoryService, sessionProviderService, jcrLocation[0], jcrLocation[1] + "/"
+   //               + jcrLocation[2]);
+   //         Node rootNode = session.getRootNode();
+   //         try
+   //         {
+   //            rootNode.getNode(jcrLocation[2]);
+   //            return;
+   //         }
+   //         catch (PathNotFoundException e)
+   //         {
+   //            throw new FileNotFoundException("File " + location + " not found.");
+   //         }
+   ////         Node itemNode = findNode(node, name);
+   ////         if (itemNode != null)
+   ////         {
+   ////            return;
+   ////         }
+   ////         else
+   ////         {
+   ////            throw new FileNotFoundException("File " + location + " not found.");
+   ////         }
+   //      }
+   //      catch (RepositoryException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (RepositoryConfigurationException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 500));
+   //      }
+   //      catch (FileNotFoundException e)
+   //      {
+   //         throw new WebApplicationException(e, createErrorResponse(e, 404));
+   //      }
+   //   }
+   //
+   //   /**
+   //    * Find class path file's node by name step by step going upper in node hierarchy.
+   //    * 
+   //    * @param node node, in what child nodes to find class path file
+   //    * @return {@link Node} found jcr node
+   //    * @throws RepositoryException
+   //    */
+   //   private Node findNode(Node node, String name) throws RepositoryException
+   //   {
+   //      if (node == null)
+   //         return null;
+   //      //Get all child node that end with name
+   //      NodeIterator nodeIterator = node.getNodes("*" + name);
+   //      while (nodeIterator.hasNext())
+   //      {
+   //         Node childNode = nodeIterator.nextNode();
+   //         if (name.equals(childNode.getName()))
+   //            return childNode;
+   //      }
+   //      try
+   //      {
+   //         //Go upper to find item path file:   
+   //         Node parentNode = node.getParent();
+   //         return findNode(parentNode, name);
+   //      }
+   //      catch (ItemNotFoundException e)
+   //      {
+   //         return null;
+   //      }
+   //      catch (AccessDeniedException e)
+   //      {
+   //         return null;
+   //      }
+   //   }
 
    /**
     * Create response to send with error message.
@@ -340,7 +341,7 @@ public class RepositoryDiscoveryService
    {
       return Response.status(status).entity(t.getMessage()).type("text/plain").build();
    }
-   
+
    public static String getEntryPoint()
    {
       return entryPoint;

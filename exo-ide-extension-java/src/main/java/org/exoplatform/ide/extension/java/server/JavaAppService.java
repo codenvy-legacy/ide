@@ -18,44 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import org.exoplatform.ide.maven.TaskService;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
+import java.net.URL;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
-
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.exoplatform.ide.FSLocation;
-import org.exoplatform.ide.extension.java.shared.MavenResponse;
-import org.exoplatform.ide.git.server.GitHelper;
-import org.exoplatform.ide.maven.InvocationRequestFactory;
-import org.exoplatform.ide.maven.MavenTask;
-import org.exoplatform.ide.maven.TaskService;
-import org.exoplatform.ide.maven.TaskWatcher;
-import org.exoplatform.ide.vfs.impl.jcr.ItemType2NodeTypeResolver;
-import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -64,142 +39,120 @@ import org.exoplatform.services.log.Log;
 @Path("ide/application/java")
 public class JavaAppService
 {
+   //   /** Logger. */
+   //   private static final Log LOG = ExoLogger.getLogger(JavaAppService.class);
+   //
+   //   private static InvocationRequestFactory CLEAN_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList("clean"));
+   //
+   //   private static InvocationRequestFactory PACKAGE_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList(
+   //      "clean", "package"));
 
-   /** Logger. */
-   private static final Log LOG = ExoLogger.getLogger(JavaAppService.class);   
-   
-   private static InvocationRequestFactory CLEAN_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList("clean"));
+   //   private final TaskService taskService;
 
-   private static InvocationRequestFactory PACKAGE_REQUEST_FACTORY = new InvocationRequestFactory(Arrays.asList(
-      "clean", "package"));
+   private final VirtualFileSystemRegistry vfsRegistry;
 
-   private final TaskService taskService;
-   
-   private VirtualFileSystem vfs;
-
-   public JavaAppService(TaskService taskService, RepositoryService repositoryService, @QueryParam("vfsId") String vfsId,@Context UriInfo uriInfo)
+   public JavaAppService(TaskService taskService, VirtualFileSystemRegistry vfsRegistry)
    {
-      this.taskService = taskService;
-      Repository repository;
-      try
-      {
-         repository = repositoryService.getCurrentRepository();
-         vfs = new JcrFileSystem(repository,vfsId, new ItemType2NodeTypeResolver(),uriInfo);
-      }
-      catch (RepositoryException e)
-      {
-         e.printStackTrace();
-      }
-     
+      //this.taskService = taskService;
+      this.vfsRegistry = vfsRegistry;
    }
 
    /**
     * Creates Java project.
-    * 
-    * @param baseDir
-    * @param projectName
-    * @param projectType
-    * @param groupId
-    * @param artifactId
-    * @param version
-    * @param uriInfo
-    * @return
-    * @throws Exception
     */
    @POST
    @Path("create")
-   public Response createApplication(
-      @QueryParam("parentId") String parentId,
-      @QueryParam("projectName") String projectName,
-      @QueryParam("projectType") String projectType,
-      @QueryParam("groupId") String groupId,
-      @QueryParam("artifactId") String artifactId,
-      @QueryParam("version") String version,
-      @Context UriInfo uriInfo) throws Exception {
-
-      String resource = projectType;      
+   public Response createApplication(@QueryParam("parentId") String parentId,
+      @QueryParam("projectName") String projectName, @QueryParam("projectType") String projectType,
+      @QueryParam("groupId") String groupId, @QueryParam("artifactId") String artifactId,
+      @QueryParam("version") String version, @Context UriInfo uriInfo, @QueryParam("vfsId") String vfsId)
+      throws Exception
+   {
+      String resource = projectType;
       URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
-      JavaProjectArchetype archetype = new JavaProjectArchetype(projectName, groupId, artifactId, version,parentId,vfs);
+      JavaProjectArchetype archetype =
+         new JavaProjectArchetype(projectName, groupId, artifactId, version, parentId, vfs);
       archetype.exportResources(url);
-      return Response.ok().build();      
+      return Response.ok().build();
    }
 
-   @POST
-   @Path("clean")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response clean(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
-   {
-      InvocationRequest request = CLEAN_REQUEST_FACTORY.createRequest();
-      request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
-      MavenResponse mvn = execute(request);
-      return createResponse(mvn);
-   }
-
-   @POST
-   @Path("package")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response pack(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
-   {
-      InvocationRequest request = PACKAGE_REQUEST_FACTORY.createRequest();
-      File dir = new File(baseDir.getLocalPath(uriInfo));
-      request.setBaseDirectory(dir);
-      MavenResponse mvn = execute(request);
-      String[] files = new File(dir, "target").list(new FilenameFilter()
-      {
-         @Override
-         public boolean accept(File dir, String name)
-         {
-            return name.endsWith(".war"); // Support only web applications at the moment.
-         }
-      });
-      if (files != null && files.length > 0)
-      {
-         Map<String, String> result = new HashMap<String, String>(1);
-         result.put("war", //
-            baseDir.getURL() + "/target/" + files[0]);
-         mvn.setResult(result);
-      }
-      return createResponse(mvn);
-   }
-
-   /*private Response execute(InvocationRequest request, long timeout ) throws Exception
-   {
-      return execute(request, new TaskWatcher(timeout));
-   }*/
-
-   private Response createResponse(MavenResponse mvn)
-   {
-      ResponseBuilder b = mvn.getExitCode() == 0 ? Response.ok() : Response.status(500);
-      return b.entity(mvn).type(MediaType.APPLICATION_JSON).build();
-   }
-
-   private MavenResponse execute(InvocationRequest request) throws Exception
-   {
-      return execute(request, null);
-   }
-
-   private MavenResponse execute(InvocationRequest request, TaskWatcher watcher) throws Exception
-   {
-      MavenTask task = taskService.add(request, watcher);
-      InvocationResult result;
-      try
-      {
-         result = task.get(); // Block until task end.
-      }
-      finally
-      {
-         // Do not store task in pool since we are waiting until it ends and read output from it.
-         taskService.remove(task.getId());
-      }
-
-      CommandLineException executionException = result.getExecutionException();
-      if (executionException != null)
-         throw executionException;
-
-      // Send output of maven task to caller.
-      int exitCode = result.getExitCode();
-      return new MavenResponse(exitCode, task.getTaskLogger().getLogAsString(), null);
-   }
+   //   @POST
+   //   @Path("clean")
+   //   @Produces(MediaType.APPLICATION_JSON)
+   //   public Response clean(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
+   //   {
+   //      InvocationRequest request = CLEAN_REQUEST_FACTORY.createRequest();
+   //      request.setBaseDirectory(new File(baseDir.getLocalPath(uriInfo)));
+   //      MavenResponse mvn = execute(request);
+   //      return createResponse(mvn);
+   //   }
+   //
+   //   @POST
+   //   @Path("package")
+   //   @Produces(MediaType.APPLICATION_JSON)
+   //   public Response pack(@QueryParam("workdir") FSLocation baseDir, @Context UriInfo uriInfo) throws Exception
+   //   {
+   //      InvocationRequest request = PACKAGE_REQUEST_FACTORY.createRequest();
+   //      File dir = new File(baseDir.getLocalPath(uriInfo));
+   //      request.setBaseDirectory(dir);
+   //      MavenResponse mvn = execute(request);
+   //      String[] files = new File(dir, "target").list(new FilenameFilter()
+   //      {
+   //         @Override
+   //         public boolean accept(File dir, String name)
+   //         {
+   //            return name.endsWith(".war"); // Support only web applications at the moment.
+   //         }
+   //      });
+   //      if (files != null && files.length > 0)
+   //      {
+   //         Map<String, String> result = new HashMap<String, String>(1);
+   //         result.put("war", //
+   //            baseDir.getURL() + "/target/" + files[0]);
+   //         mvn.setResult(result);
+   //      }
+   //      return createResponse(mvn);
+   //   }
+   //
+   //   /*private Response execute(InvocationRequest request, long timeout ) throws Exception
+   //   {
+   //      return execute(request, new TaskWatcher(timeout));
+   //   }*/
+   //
+   //   private Response createResponse(MavenResponse mvn)
+   //   {
+   //      ResponseBuilder b = mvn.getExitCode() == 0 ? Response.ok() : Response.status(500);
+   //      return b.entity(mvn).type(MediaType.APPLICATION_JSON).build();
+   //   }
+   //
+   //   private MavenResponse execute(InvocationRequest request) throws Exception
+   //   {
+   //      return execute(request, null);
+   //   }
+   //
+   //   private MavenResponse execute(InvocationRequest request, TaskWatcher watcher) throws Exception
+   //   {
+   //      MavenTask task = taskService.add(request, watcher);
+   //      InvocationResult result;
+   //      try
+   //      {
+   //         result = task.get(); // Block until task end.
+   //      }
+   //      finally
+   //      {
+   //         // Do not store task in pool since we are waiting until it ends and read output from it.
+   //         taskService.remove(task.getId());
+   //      }
+   //
+   //      CommandLineException executionException = result.getExecutionException();
+   //      if (executionException != null)
+   //         throw executionException;
+   //
+   //      // Send output of maven task to caller.
+   //      int exitCode = result.getExitCode();
+   //      return new MavenResponse(exitCode, task.getTaskLogger().getLogAsString(), null);
+   //   }
 }

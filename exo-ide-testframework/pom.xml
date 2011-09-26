@@ -20,15 +20,19 @@
          <artifactId>gwt-user</artifactId>
       </dependency>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
       
       <!--For Mock REST services -->
        <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
       </dependency>
 
        <dependency>

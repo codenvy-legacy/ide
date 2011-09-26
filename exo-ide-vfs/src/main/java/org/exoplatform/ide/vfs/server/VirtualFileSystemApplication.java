@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.impl.jcr;
+package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentExceptionMapper;
@@ -24,9 +24,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.LockExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedExceptionMapper;
-import org.exoplatform.services.jcr.RepositoryService;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,17 +32,17 @@ import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: JcrFileSystemApplication.java 64090 2010-12-17 14:53:30Z
- *          andrew00x $
+ * @version $Id: $
  */
-public class JcrFileSystemApplication extends Application
+public class VirtualFileSystemApplication extends Application
 {
    private final Set<Object> singletons = new HashSet<Object>();
+   private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public JcrFileSystemApplication(RepositoryService repositoryService,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+   public VirtualFileSystemApplication()
    {
-      singletons.add(new JcrFileSystemFactory(repositoryService, itemType2NodeTypeResolver));
+      singletons.add(classes.add(VirtualFileSystemFactory.class));
+      singletons.add(classes.add(RequestContextResolver.class));
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
@@ -53,18 +51,13 @@ public class JcrFileSystemApplication extends Application
       singletons.add(new PermissionDeniedExceptionMapper());
    }
 
-   public JcrFileSystemApplication(RepositoryService repositoryService)
-   {
-      this(repositoryService, new ItemType2NodeTypeResolver());
-   }
-
    /**
     * @see javax.ws.rs.core.Application#getClasses()
     */
    @Override
    public Set<Class<?>> getClasses()
    {
-      return Collections.emptySet();
+      return classes;
    }
 
    /**

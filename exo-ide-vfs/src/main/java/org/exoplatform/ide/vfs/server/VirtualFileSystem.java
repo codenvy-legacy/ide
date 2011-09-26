@@ -275,7 +275,7 @@ public interface VirtualFileSystem
     */
    @GET
    @Produces({MediaType.APPLICATION_JSON})
-   VirtualFileSystemInfo getVfsInfo() throws VirtualFileSystemException;
+   VirtualFileSystemInfo getInfo() throws VirtualFileSystemException;
 
    /**
     * Get item by id. Example of JSON response:

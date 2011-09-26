@@ -27,6 +27,7 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -58,7 +59,7 @@ import javax.ws.rs.core.UriBuilder;
 public abstract class JcrFileSystemTest extends TestCase
 {
    protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/vfs/jcr/ws/";
+   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/ws/";
    protected final String DEFAULT_CONTENT = "__TEST__";
 
    protected Log log = ExoLogger.getExoLogger(getClass());
@@ -304,5 +305,77 @@ public abstract class JcrFileSystemTest extends TestCase
                   .queryParam("type", "[type]").build().toString(), link.getHref());
          }
       }
+   }
+
+   protected void validateUrlTemplates(VirtualFileSystemInfo info) throws Exception
+   {
+      Map<String, Link> templates = info.getUrlTemplates();
+      //log.info(">>>>>>>>>\n" + templates);
+
+      Link template = templates.get(Link.REL_COPY);
+      assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_COPY, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path("[id]").queryParam("parentId", "[parentId]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_MOVE);
+      assertNotNull("'" + Link.REL_MOVE + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_MOVE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path("[id]").queryParam("parentId", "[parentId]")
+         .queryParam("lockToken", "[lockToken]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FILE);
+      assertNotNull("'" + Link.REL_CREATE_FILE + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FILE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FOLDER);
+      assertNotNull("'" + Link.REL_CREATE_FOLDER + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FOLDER, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_PROJECT);
+      assertNotNull("'" + Link.REL_CREATE_PROJECT + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_PROJECT, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("project").path("[parentId]").queryParam("name", "[name]")
+         .queryParam("type", "[type]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_LOCK);
+      assertNotNull("'" + Link.REL_LOCK + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_LOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("lock").path("[id]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_UNLOCK);
+      assertNotNull("'" + Link.REL_UNLOCK + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_UNLOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("unlock").path("[id]").queryParam("lockToken", "[lockToken]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_SEARCH);
+      assertNotNull("'" + Link.REL_SEARCH + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("statement", "[statement]")
+            .queryParam("maxItems", "[maxItems]").queryParam("skipCount", "[skipCount]").build().toString(),
+         template.getHref());
+
+      template = templates.get(Link.REL_SEARCH_FORM);
+      assertNotNull("'" + Link.REL_SEARCH_FORM + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH_FORM, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("maxItems", "[maxItems]")
+            .queryParam("skipCount", "[skipCount]").queryParam("propertyFilter", "[propertyFilter]").build().toString(),
+         template.getHref());
    }
 }

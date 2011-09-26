@@ -22,6 +22,7 @@ import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -77,7 +78,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -90,17 +90,23 @@ public class JcrFileSystem implements VirtualFileSystem
    protected final Repository repository;
    protected final String workspaceName;
    protected final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
-   protected final UriInfo uriInfo;
+   protected final URI baseUri;
 
    private VirtualFileSystemInfo vfsInfo;
 
    public JcrFileSystem(Repository repository, String workspaceName,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver, UriInfo uriInfo)
+      ItemType2NodeTypeResolver itemType2NodeTypeResolver, URI baseUri)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
       this.itemType2NodeTypeResolver = itemType2NodeTypeResolver;
-      this.uriInfo = uriInfo;
+      this.baseUri = baseUri;
+   }
+
+   public JcrFileSystem(Repository repository, String workspaceName,
+      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+   {
+      this(repository, workspaceName, itemType2NodeTypeResolver, URI.create(""));
    }
 
    /**
@@ -377,7 +383,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVfsInfo()
     */
-   public VirtualFileSystemInfo getVfsInfo() throws VirtualFileSystemException
+   public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException
    {
       if (vfsInfo == null)
       {
@@ -1028,8 +1034,8 @@ public class JcrFileSystem implements VirtualFileSystem
 
    private URI createURI(String rel, String id, String... query)
    {
-      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      uriBuilder.path(JcrFileSystemFactory.class, "getVFS");
+      UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
+      uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
       uriBuilder.path(rel);
       if (id != null)
          uriBuilder.path(id);

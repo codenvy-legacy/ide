@@ -31,20 +31,23 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class GetVFSInfoTest extends JcrFileSystemTest
+public class GetAvailableFileSystemsTest extends JcrFileSystemTest
 {
-   public void testVFSInfo() throws Exception
+   public void testAvailableFS() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      ContainerResponse response = launcher.service("GET", SERVICE_URI, BASE_URI, null, null, writer, null);
-      assertNotNull(response.getEntity());
-      assertEquals(response.getEntity().toString(), 200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
-      assertNotNull(vfsInfo);
+      String path = BASE_URI + "/ide/vfs";
+      ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, wr, null);
+      log.info(new String(wr.getBody()));
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      @SuppressWarnings("unchecked")
+      Collection<VirtualFileSystemInfo> entity = (Collection<VirtualFileSystemInfo>)response.getEntity();
+      assertNotNull(entity);
+      assertEquals(1, entity.size());
+      VirtualFileSystemInfo vfsInfo = entity.iterator().next();
       assertEquals(true, vfsInfo.isVersioningSupported());
       assertEquals(true, vfsInfo.isLockSupported());
       assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
@@ -62,5 +65,7 @@ public class GetVFSInfoTest extends JcrFileSystemTest
       assertEquals("/", vfsInfo.getRoot().getPath());
       validateLinks(vfsInfo.getRoot());
       validateUrlTemplates(vfsInfo);
+      JcrFileSystem jcrFileSystem = new JcrFileSystem(session.getRepository(), session.getWorkspace().getName(), new ItemType2NodeTypeResolver());
+      log.info(jcrFileSystem.getInfo().getUrlTemplates());
    }
 }

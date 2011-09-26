@@ -222,7 +222,7 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
-   public VirtualFileSystemInfo getVfsInfo()
+   public VirtualFileSystemInfo getInfo()
    {
       try
       {

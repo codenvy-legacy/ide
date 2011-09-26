@@ -24,9 +24,7 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
-import org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemFactory;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -133,11 +131,11 @@ public class IDEConfigurationService
             final Map<String, Object> userSettings = getUserSettings();
             result.put("userSettings", userSettings);
          }
-         String href = uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).path(entryPoint).build().toString();
+         String href = uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(entryPoint).build().toString();
          result.put("defaultEntrypoint", href);
          result.put("discoverable", discoverable);
          result.put("vfsId", entryPoint);
-         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(JcrFileSystemFactory.class).build().toString());
+         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).build().toString());
          return result;
       }
       catch (Exception e)
