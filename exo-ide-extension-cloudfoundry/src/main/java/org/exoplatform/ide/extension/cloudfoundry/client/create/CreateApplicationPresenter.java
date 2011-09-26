@@ -29,6 +29,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -109,6 +110,13 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       void setSelectedIndexForTypeSelectItem(int index);
       
       void focusInUrlField();
+      
+      /**
+       * Set the list of servers to ServerSelectField.
+       * 
+       * @param servers
+       */
+      void setServerValues(String[] servers);
       
    }
    
@@ -509,6 +517,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          bindDisplay();
          IDE.getInstance().openView(display.asView());
          display.focusInNameField();
+         getServers();
       }
       else
       {
@@ -647,6 +656,28 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          e.printStackTrace();
          eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+   
+   /**
+    * Get the list of server and put them to select field.
+    */
+   private void getServers()
+   {
+      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      {
+         @Override
+         protected void onSuccess(List<String> result)
+         {
+            if (result.isEmpty())
+            {
+               display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+            }
+            else
+            {
+               display.setServerValues(result.toArray(new String[result.size()]));
+            }
+         }
+      });
    }
 
 }

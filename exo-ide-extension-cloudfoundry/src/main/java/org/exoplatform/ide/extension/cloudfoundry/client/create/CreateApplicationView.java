@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -57,7 +58,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     *           http://api.cloudfoundry.com)
     */
    @UiField
-   TextField serverField;
+   ComboBoxField serverField;
 
    /**
     * Application type field.
@@ -127,6 +128,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       add(uiBinder.createAndBindUi(this));
 
       serverField.setName(SERVER_FIELD_ID);
+      serverField.setWidth(208);
       typeField.setName(TYPE_FIELD_ID);
       typeField.setHeight(22);
       nameField.setName(NAME_FIELD_ID);
@@ -313,6 +315,15 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public HasValue<String> getServerField()
    {
       return serverField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#setServerValues(java.lang.String[])
+    */
+   @Override
+   public void setServerValues(String[] servers)
+   {
+      serverField.setValueMap(servers);
    }
 
 }

@@ -13,7 +13,8 @@
                <g:Label text="{locale.createAppServerField}" height="18px"></g:Label>
             </g:cell>
             <g:cell>
-               <f:TextField ui:field="serverField" width="100%" height="22px" showTitle="false"></f:TextField>
+               <f:ComboBoxField ui:field="serverField" height="22px" width="100%" pickListWidth="208px" pickListHeight="100"
+                        showTitle="false"></f:ComboBoxField>
             </g:cell>
             <g:cell width="100px">
                <g:Label text="" ></g:Label>
