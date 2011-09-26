@@ -65,7 +65,5 @@ public class GetAvailableFileSystemsTest extends JcrFileSystemTest
       assertEquals("/", vfsInfo.getRoot().getPath());
       validateLinks(vfsInfo.getRoot());
       validateUrlTemplates(vfsInfo);
-      JcrFileSystem jcrFileSystem = new JcrFileSystem(session.getRepository(), session.getWorkspace().getName(), new ItemType2NodeTypeResolver());
-      log.info(jcrFileSystem.getInfo().getUrlTemplates());
    }
 }
