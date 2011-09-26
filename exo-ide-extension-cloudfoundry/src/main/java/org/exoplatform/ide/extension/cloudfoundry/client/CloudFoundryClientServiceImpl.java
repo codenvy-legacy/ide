@@ -506,9 +506,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getApplicationList(CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback)
+   public void getApplicationList(String server, CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback)
    {
       String url = restServiceContext + APPS;
+      
+      if (server != null && !server.isEmpty())
+      {
+         url += "?server=" + server;
+      }
+      
       callback.setEventBus(eventBus);
       List<CloudfoundryApplication> apps = new ArrayList<CloudfoundryApplication>();
       callback.setPayload(new ApplicationListUnmarshaller(apps));
@@ -537,10 +543,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTarget(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getTarget(String server, AsyncRequestCallback<StringBuilder> callback)
+   public void getTarget(AsyncRequestCallback<StringBuilder> callback)
    {
       String url = restServiceContext + TARGET;
-      String params = (server == null) ? "" : "?target=" + server;
       
       callback.setEventBus(eventBus);
       StringBuilder target = new StringBuilder();
@@ -548,7 +553,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       TargetUnmarshaller unmarshaller = new TargetUnmarshaller(target);
       callback.setPayload(unmarshaller);
       
-      AsyncRequest.build(RequestBuilder.GET, url + params, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
 }

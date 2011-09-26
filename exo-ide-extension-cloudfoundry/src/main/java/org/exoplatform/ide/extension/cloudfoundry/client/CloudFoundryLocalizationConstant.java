@@ -53,6 +53,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("button.map")
    String mapButton();
    
+   @Key("button.show")
+   String showButton();
+   
    /*
     * Controls.
     */
@@ -487,5 +490,8 @@ public interface CloudFoundryLocalizationConstant extends Messages
     */
    @Key("apps.view.title")
    String appsViewTitle();
+   
+   @Key("apps.view.server.label")
+   String appsServerLabel();
 
 }

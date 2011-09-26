@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 import com.google.gwt.uibinder.client.UiField;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,6 +29,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -52,13 +55,19 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
    private static final int WIDTH = 820;
 
    /**
-    * Ok button.
+    * Close button.
     */
    @UiField
-   ImageButton okButton;
+   ImageButton closeButton;
+   
+   @UiField
+   ImageButton showButton;
 
    @UiField
    ApplicationsListGrid applicationsGrid;
+   
+   @UiField
+   ComboBoxField serverField;
 
    public ApplicationsView()
    {
@@ -67,12 +76,12 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getOkButton()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getCloseButton()
     */
    @Override
-   public HasClickHandlers getOkButton()
+   public HasClickHandlers getCloseButton()
    {
-      return okButton;
+      return closeButton;
    }
 
    /**
@@ -91,6 +100,33 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
    public HasApplicationsActions getActions()
    {
       return applicationsGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getServerSelectField()
+    */
+   @Override
+   public HasValue<String> getServerSelectField()
+   {
+      return serverField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#setServerValues(java.lang.String[])
+    */
+   @Override
+   public void setServerValues(String[] servers)
+   {
+      serverField.setValueMap(servers);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#getShowButton()
+    */
+   @Override
+   public HasClickHandlers getShowButton()
+   {
+      return showButton;
    }
 
 }

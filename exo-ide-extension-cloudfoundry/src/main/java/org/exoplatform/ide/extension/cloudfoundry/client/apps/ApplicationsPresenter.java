@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
+import com.google.gwt.user.client.ui.HasValue;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,6 +27,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -34,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
@@ -41,6 +45,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationE
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,14 +59,31 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    {
       String ID = "ideCloudFoundryApplicationsView";
 
-      HasClickHandlers getOkButton();
+      HasClickHandlers getCloseButton();
+      
+      HasClickHandlers getShowButton();
 
       ListGridItem<CloudfoundryApplication> getAppsGrid();
 
       HasApplicationsActions getActions();
+      
+      /**
+       * Get server select field.
+       * @return
+       */
+      HasValue<String> getServerSelectField();
+      
+      /**
+       * Set the list of servers to ServerSelectField.
+       * 
+       * @param servers
+       */
+      void setServerValues(String[] servers);
    }
 
    private Display display;
+   
+   private List<String> servers = new ArrayList<String>();
 
    /**
     *  
@@ -78,13 +100,21 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     */
    public void bindDisplay()
    {
-      display.getOkButton().addClickHandler(new ClickHandler()
+      display.getCloseButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
             IDE.getInstance().closeView(display.asView().getId());
+         }
+      });
+      
+      display.getShowButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateApplicationList(display.getServerSelectField().getValue());
          }
       });
 
@@ -135,7 +165,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    @Override
    public void onShowApplications(ShowApplicationsEvent event)
    {
-      CloudFoundryClientService.getInstance().getApplicationList(
+      CloudFoundryClientService.getInstance().getApplicationList(CloudFoundryExtension.DEFAULT_SERVER,
          new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(IDE.EVENT_BUS, //
             new LoggedInHandler()//
             {
@@ -157,6 +187,8 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                   IDE.getInstance().openView(display.asView());
                }
                display.getAppsGrid().setValue(result);
+               display.getServerSelectField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
+               getServers();
             }
          });
    }
@@ -181,6 +213,50 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    {
       if (display != null)
          onShowApplications(null);
+   }
+   
+   private void getServers()
+   {
+      CloudFoundryClientService.getInstance().getTargets(new AsyncRequestCallback<List<String>>()
+      {
+         @Override
+         protected void onSuccess(List<String> result)
+         {
+            servers = result;
+            display.setServerValues(result.toArray(new String[result.size()]));
+         }
+      });
+   }
+   
+   /**
+    * Show the list of applications registered on <code>server</code>.
+    * @param server
+    */
+   private void updateApplicationList(final String server)
+   {
+      CloudFoundryClientService.getInstance().getApplicationList(server,
+         new CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>>(IDE.EVENT_BUS, //
+            new LoggedInHandler()//
+            {
+               @Override
+               public void onLoggedIn()
+               {
+                  updateApplicationList(server);
+               }
+            }, null, server)
+         {
+
+            @Override
+            protected void onSuccess(List<CloudfoundryApplication> result)
+            {
+               display.getAppsGrid().setValue(result);
+               //update the list of servers, if was enter value, that doesn't present in list
+               if (!servers.contains(server))
+               {
+                  getServers();
+               }
+            }
+         });
    }
 
 }
