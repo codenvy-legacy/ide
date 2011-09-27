@@ -6,8 +6,7 @@
    License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
    site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
@@ -61,10 +60,6 @@
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
    </component>
-   
-   <component>
-     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
-   </component>
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
@@ -88,11 +83,11 @@
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.samples.server.Github</type>
       <init-params>
@@ -236,4 +231,19 @@
       </init-params>
    </component>
 
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemRegistry</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>dev-monit</value>
+            <value>production</value>
+         </values-param>
+      </init-params>
+   </component>
 </configuration>

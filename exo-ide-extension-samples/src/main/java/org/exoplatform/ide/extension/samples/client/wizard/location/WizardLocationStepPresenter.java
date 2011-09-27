@@ -264,7 +264,8 @@ VfsChangedHandler, ProjectCreationFinishedHandler
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint().getHref();
+      //TODO not url
+      this.workspace = event.getVfsInfo().getId();
    }
    
    private void onFolderOpened(FolderModel folder)

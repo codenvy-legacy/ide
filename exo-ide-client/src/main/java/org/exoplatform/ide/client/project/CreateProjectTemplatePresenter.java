@@ -275,7 +275,6 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
          @Override
          public void onSubmit(FileTemplate fileTemplate)
          {
-            System.out.println(">>>>>>mimetype: " + fileTemplate.getMimeType());
             if ("".equals(fileTemplate.getFileName().trim()))
             {
                Dialogs.getInstance().showError(ENTER_FILE_NAME_FIRST);
@@ -416,7 +415,6 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             }
          }
       }
-      System.out.println(">>>>>>>>icon: " + fileTemplate.getMimeType() + " " + fileTemplate.getIcon());
       selectedFolder.getChildren().add(fileTemplate);
       display.updateTree();
       display.selectTemplate(fileTemplate);

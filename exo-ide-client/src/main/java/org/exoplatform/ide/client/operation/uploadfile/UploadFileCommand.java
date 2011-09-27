@@ -103,7 +103,7 @@ public class UploadFileCommand extends SimpleControl implements IDEControl, Item
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

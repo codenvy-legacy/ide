@@ -519,11 +519,12 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      currentEntryPoint = event.getEntryPoint().getHref();
+      //TODO  check changes here:
+      currentEntryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
       vfsInfo = event.getVfsInfo();
       if (display != null)
       {
-         display.setCurrentRepository(getRepositoryFromEntryPoint(event.getEntryPoint().getHref()));
+         display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
       }
    }
 

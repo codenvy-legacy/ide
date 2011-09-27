@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -31,8 +33,6 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigation.WorkspacePresenter;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -104,7 +104,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

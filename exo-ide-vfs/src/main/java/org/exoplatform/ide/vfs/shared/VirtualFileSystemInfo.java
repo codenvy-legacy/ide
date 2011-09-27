@@ -209,7 +209,7 @@ public class VirtualFileSystemInfo
 
    private Folder root;
 
-   private final String id;
+   private String id;
 
    /**
     * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
@@ -249,6 +249,11 @@ public class VirtualFileSystemInfo
    public String getId()
    {
       return id;
+   }
+   
+   public void setId(String id)
+   {
+      this.id = id;
    }
 
    public boolean isVersioningSupported()

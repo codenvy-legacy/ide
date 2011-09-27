@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -46,10 +45,10 @@ import org.exoplatform.ide.client.model.configuration.IDEInitializationConfigura
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -129,22 +128,16 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
        */
       if (applicationSettings.getValueAsString("entry-point") == null)
       {
-         if (applicationConfiguration.getVfsBaseUrl()!= null)
+         if (applicationConfiguration.getVfsId() != null)
          {
-            String defaultEntryPoint = applicationConfiguration.getVfsBaseUrl();
-            if (!defaultEntryPoint.endsWith("/"))
-            {
-               defaultEntryPoint += "/";
-            }
-            applicationSettings.setValue("entry-point", applicationConfiguration.getDefaultEntryPoint(), Store.COOKIES);
+            applicationSettings.setValue("entry-point", applicationConfiguration.getVfsId(), Store.COOKIES);
          }
       }
 
       if (applicationSettings.getValueAsString("entry-point") != null)
       {
          String entryPoint = applicationSettings.getValueAsString("entry-point");
-         EntryPoint point = new EntryPoint(entryPoint, entryPoint);
-         eventBus.fireEvent(new SwitchEntryPointEvent(point));
+         eventBus.fireEvent(new SwitchVFSEvent(entryPoint));
       }
       else
       {
@@ -158,7 +151,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       if (handler != null)
          handler.removeHandler();
 
-      if (event.getEntryPoint() == null)
+      if (event.getVfsInfo() == null || event.getVfsInfo().getId() == null)
       {
          promptToSelectEntryPoint();
       }

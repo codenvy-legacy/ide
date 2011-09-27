@@ -45,8 +45,6 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
 import java.util.ArrayList;
@@ -158,7 +156,8 @@ public class ApplicationStateSnapshotListener implements EditorFileOpenedHandler
     */
    public void onVfsChanged(VfsChangedEvent event)
    {
-      applicationSettings.setValue("entry-point", event.getEntryPoint(), Store.COOKIES);
+      String workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
+      applicationSettings.setValue("entry-point", workspace, Store.COOKIES);
       Map<String, Link> map = event.getVfsInfo().getRoot().getLinks();
       Link root = event.getVfsInfo().getRoot().getLinks().get(Link.REL_SELF);
       String s = root.getHref();

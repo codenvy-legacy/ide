@@ -18,19 +18,19 @@
  */
 package org.exoplatform.ide.client.workspace.ui;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,7 +46,7 @@ public class SelectWorkspaceView extends ViewImpl implements
    /**
     * Initial width of this view.
     */
-   private static final int WIDTH = 450;
+   private static final int WIDTH = 320;
 
    /**
     * Initial height of this view.
@@ -71,7 +71,7 @@ public class SelectWorkspaceView extends ViewImpl implements
     * Grid for displaying list of available workspaces.
     */
    @UiField
-   EntryPointsListGrid entryPointListGrid;
+   VFSListGrid entryPointListGrid;
 
    @UiField
    ImageButton okButton;
@@ -86,7 +86,7 @@ public class SelectWorkspaceView extends ViewImpl implements
    }
 
    @Override
-   public ListGridItem<EntryPoint> getWorkspaceListGrid()
+   public ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid()
    {
       return entryPointListGrid;
    }
@@ -104,7 +104,7 @@ public class SelectWorkspaceView extends ViewImpl implements
    }
 
    @Override
-   public void setSelectedItem(EntryPoint item)
+   public void setSelectedItem(VirtualFileSystemInfo item)
    {
       entryPointListGrid.selectItem(item);
    }

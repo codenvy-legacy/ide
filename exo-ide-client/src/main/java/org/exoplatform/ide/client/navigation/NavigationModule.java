@@ -128,9 +128,10 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       //eventBus.fireEvent(new RegisterControlEvent(new CreateFolderControl()));
       new CreateFolderPresenter();
 
-      IDE.getInstance().addControl(new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT
-         .controlNewTextTitle(), IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT,
-         MimeType.TEXT_PLAIN).setGroup(1));
+      IDE.getInstance().addControl(
+         new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
+            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN)
+            .setGroup(1));
 
       /*      eventBus.fireEvent(new RegisterControlEvent(new NewItemControl("File/New/New JSON File", "JSON File",
                "Create New JSON File", Images.FileTypes.JSON, MimeType.APPLICATION_JSON))); */
@@ -157,10 +158,10 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       IDE.getInstance().addControl(new CopyItemsCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new PasteItemsCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new RenameItemCommand());
-      
+
       //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
       new DeleteItemsPresenter();
-      
+
       IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new GoToFolderControl());
@@ -201,7 +202,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new VersionsListPresenter(eventBus);
       new RenameFilePresenter(eventBus);
       new RenameFolderPresenter(eventBus);
-      
+
       new ProgressPresenter();
 
       new ShellLinkUpdater(eventBus);
@@ -209,7 +210,11 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new VirtualFileSystem(event.getApplicationConfiguration().getDefaultEntryPoint());
+      String workspace =
+         (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
+            .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
+            .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
+            new VirtualFileSystem(workspace);
    }
 
    public void onCopyItems(CopyItemsEvent event)
@@ -249,7 +254,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint().getHref();
+      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 
    /**

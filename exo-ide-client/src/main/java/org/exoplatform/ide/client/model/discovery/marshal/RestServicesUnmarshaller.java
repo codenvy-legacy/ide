@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.model.discovery.marshal;
 
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.discovery.RestService;
-
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.discovery.RestService;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,14 +37,14 @@ import com.google.gwt.json.client.JSONObject;
  * @version $Id: Dec 21, 2010 5:24:56 PM evgen $
  *
  */
-public class RestServicesUnmarshaller implements Unmarshallable
+public class RestServicesUnmarshaller implements Unmarshallable<List<RestService>>
 {
 
    /**
     * 
     */
    private static final String ROOT_RESOURCES = "rootResources";
-   
+
    private static final String PARSE_REST_SERVICE_ERROR = IDE.ERRORS_CONSTANT.restServiceParseError();
 
    private List<RestService> restServices;
@@ -78,7 +78,7 @@ public class RestServicesUnmarshaller implements Unmarshallable
     */
    private void parseRestServices(String text)
    {
-      JSONObject jso = new JSONObject(build(text));
+      JSONObject jso = JSONParser.parseStrict(text).isObject();
       if (jso.containsKey(ROOT_RESOURCES))
       {
          JSONArray jsa = jso.get(ROOT_RESOURCES).isArray();
@@ -87,7 +87,7 @@ public class RestServicesUnmarshaller implements Unmarshallable
             JSONObject service = jsa.get(i).isObject();
             String fqn = service.get("fqn").isString().stringValue();
             String path = service.get("path").isString().stringValue();
-            if(!path.startsWith("/"))
+            if (!path.startsWith("/"))
             {
                path = "/" + path;
             }
@@ -98,8 +98,13 @@ public class RestServicesUnmarshaller implements Unmarshallable
 
    }
 
-   public static native JavaScriptObject build(String json) /*-{
-      return eval('(' + json + ')');
-   }-*/;
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public List<RestService> getPayload()
+   {
+      return restServices;
+   }
 
 }

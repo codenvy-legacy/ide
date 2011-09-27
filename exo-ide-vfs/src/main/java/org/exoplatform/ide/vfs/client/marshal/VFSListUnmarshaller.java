@@ -19,26 +19,36 @@
 package org.exoplatform.ide.vfs.client.marshal;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.List;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 25, 2011 evgen $
+ * Unmarshaller for the list of virtual file systems.
+ * 
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id:  Sep 27, 2011 9:41:55 AM anya $
  *
  */
-public class LockUnmarshaller implements Unmarshallable<LockToken>
+public class VFSListUnmarshaller implements Unmarshallable<List<VirtualFileSystemInfo>>
 {
+   /**
+    * The list of virtual file systems.
+    */
+   private List<VirtualFileSystemInfo> vfsList;
 
-   private LockToken lockToken;
-
-   public LockUnmarshaller(LockToken lockToken)
+   /**
+    * @param vfsList the list of virtual file systems
+    */
+   public VFSListUnmarshaller(List<VirtualFileSystemInfo> vfsList)
    {
-      this.lockToken = lockToken;
+      this.vfsList = vfsList;
    }
 
    /**
@@ -49,24 +59,26 @@ public class LockUnmarshaller implements Unmarshallable<LockToken>
    {
       try
       {
-         JSONValue value = JSONParser.parseLenient(response.getText());
-         lockToken.setLockToken(value.isObject().get("lockToken").isString().stringValue());
+         JSONArray jsonArray = JSONParser.parseLenient(response.getText()).isArray();
+         for (int i = 0; i < jsonArray.size(); i++)
+         {
+            VirtualFileSystemInfo vfsInfo = JSONDeserializer.VFSINFO_DESERIALIZER.toObject(jsonArray.get(i));
+            vfsList.add(vfsInfo);
+         }
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         throw new UnmarshallerException("Can't parse lock token");
+         throw new UnmarshallerException("Can't parse the list of virtual file systems.");
       }
-
    }
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
    @Override
-   public LockToken getPayload()
+   public List<VirtualFileSystemInfo> getPayload()
    {
-      return lockToken;
+      return vfsList;
    }
-
 }

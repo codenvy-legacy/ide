@@ -18,19 +18,23 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.Utils;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryCallback;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -48,18 +52,17 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
+import org.exoplatform.ide.vfs.client.marshal.VFSListUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -81,7 +84,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       /*
        * Returns Workspace list grid
        */
-      ListGridItem<EntryPoint> getWorkspaceListGrid();
+      ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid();
 
       /*
        * Returns Ok button
@@ -105,7 +108,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
        * Selects specified item in 
        * @param currentEntryPoint
        */
-      void setSelectedItem(EntryPoint item);
+      void setSelectedItem(VirtualFileSystemInfo item);
 
    }
 
@@ -128,12 +131,12 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    /**
     * Current Workspace, used by IDE
     */
-   private EntryPoint workingWorkspace;
+   private String workingWorkspace;
 
    /**
     * Selected Workspace in Workspace List Grid
     */
-   private EntryPoint selectedWorkspace;
+   private VirtualFileSystemInfo selectedWorkspace;
 
    /**
     * Application Settings for retrieving current Workspace and storing selected Workspace
@@ -154,7 +157,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    /**
     * List of workspaces for displaying in Workspace List
     */
-   private List<EntryPoint> workspaceList = new ArrayList<EntryPoint>();
+   private List<VirtualFileSystemInfo> workspaceList = new ArrayList<VirtualFileSystemInfo>();
 
    public SelectWorkspacePresenter(HandlerManager eventBus)
    {
@@ -185,7 +188,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
 
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
 
-      workingWorkspace = (EntryPoint)applicationSettings.getValueAsObject("entry-point");
+      workingWorkspace = applicationSettings.getValueAsString("entry-point");
    }
 
    /**
@@ -222,19 +225,36 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
          return;
       }
 
-      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
+      try
       {
-         @Override
-         protected void onSuccess(List<EntryPoint> result)
-         {
-            workspaceList = result;
+         VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
+            new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
+               new ArrayList<VirtualFileSystemInfo>()))
+            {
 
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-         }
-      });
+               @Override
+               protected void onSuccess(List<VirtualFileSystemInfo> result)
+               {
+                  workspaceList = result;
 
+                  display = GWT.create(Display.class);
+                  IDE.getInstance().openView(display.asView());
+                  bindDisplay();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -264,35 +284,35 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            onEntryPointDoubleClicked();
+            onVFSDoubleClicked();
          }
       });
 
-      display.getWorkspaceListGrid().addSelectionHandler(new SelectionHandler<EntryPoint>()
+      display.getWorkspaceListGrid().addSelectionHandler(new SelectionHandler<VirtualFileSystemInfo>()
       {
-         public void onSelection(SelectionEvent<EntryPoint> event)
+         public void onSelection(SelectionEvent<VirtualFileSystemInfo> event)
          {
-            onEntryPointSelected(event.getSelectedItem());
+            onVFSSelected(event.getSelectedItem());
          }
       });
 
       display.setOkButtonEnabled(false);
-      updateWorkspacesListGrid();
+      updateVFSListGrid();
    }
 
    /**
     * Update Workspaces List Grid
     */
-   private void updateWorkspacesListGrid()
+   private void updateVFSListGrid()
    {
-      EntryPoint selectedWorkspace = null;
+      VirtualFileSystemInfo selectedWorkspace = null;
 
-      List<EntryPoint> workspaces = new ArrayList<EntryPoint>();
+      List<VirtualFileSystemInfo> workspaces = new ArrayList<VirtualFileSystemInfo>();
       for (int i = 0; i < workspaceList.size(); i++)
       {
-         EntryPoint entryPoint = workspaceList.get(i);
+         VirtualFileSystemInfo entryPoint = workspaceList.get(i);
          workspaces.add(entryPoint);
-         if (entryPoint.getHref().equals(workingWorkspace))
+         if (entryPoint.getId().equals(workingWorkspace))
          {
             selectedWorkspace = entryPoint;
          }
@@ -310,7 +330,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
     * 
     * @param selectedItem
     */
-   protected void onEntryPointSelected(EntryPoint selectedItem)
+   protected void onVFSSelected(VirtualFileSystemInfo selectedItem)
    {
       selectedWorkspace = selectedItem;
 
@@ -320,31 +340,23 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
          return;
       }
 
-      if (selectedWorkspace.getHref().equals(workingWorkspace))
-      {
-         display.setOkButtonEnabled(false);
-      }
-      else
-      {
-         display.setOkButtonEnabled(true);
-      }
+      boolean currentVFSSelected = selectedWorkspace.getId().equals(workingWorkspace);
+      display.setOkButtonEnabled(!currentVFSSelected);
    }
 
    /**
     * Handler of Double Clicking on the Workspace List
     */
-   protected void onEntryPointDoubleClicked()
+   protected void onVFSDoubleClicked()
    {
       if (selectedWorkspace == null)
       {
          return;
       }
-
-      if (selectedWorkspace.getHref().equals(workingWorkspace))
+      if (selectedWorkspace.getId().equals(workingWorkspace))
       {
          return;
       }
-
       changeEntryPoint();
    }
 
@@ -457,16 +469,14 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
     */
    private void storeCurrentWorkspaceToConfiguration()
    {
-      applicationSettings.setValue("entry-point", selectedWorkspace, Store.COOKIES);
+      applicationSettings.setValue("entry-point", selectedWorkspace.getId(), Store.COOKIES);
       SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      /*
-       * Handle of ApplicationSettingsSaved Event and switch current workspace.
-       */
+      //Handle of ApplicationSettingsSaved Event and switch current workspace.
       if (display != null)
       {
-         workingWorkspace = selectedWorkspace;
+         workingWorkspace = selectedWorkspace.getId();
          IDE.getInstance().closeView(Display.ID);
-         eventBus.fireEvent(new SwitchEntryPointEvent(selectedWorkspace));
+         eventBus.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
       }
    }
 

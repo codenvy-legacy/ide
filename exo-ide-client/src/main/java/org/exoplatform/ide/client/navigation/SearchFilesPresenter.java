@@ -23,10 +23,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -38,14 +38,17 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
 import org.exoplatform.ide.client.navigation.event.SearchFilesHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,8 +56,8 @@ import java.util.List;
  * @version $Id:   $
  *
  */
-public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler, ItemsSelectedHandler,
-   VfsChangedHandler
+public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler,
+   ItemsSelectedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -73,8 +76,9 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
       void setMimeTypeValues(String[] mimeTypes);
 
    }
-   
-   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.searchFileSearchError();
+
+   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .searchFileSearchError();
 
    private Display display;
 
@@ -121,64 +125,80 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private void setPath()
    {
-    //TODO
-//      String path;
-//      if (selectedItems.size() == 0)
-//      {
-//         path = "/";
-//      }
-//      else
-//      {
-//         Item selectedItem = selectedItems.get(0);
-//
-//         String href = selectedItem.getHref();
-//         if (selectedItem instanceof File)
-//         {
-//            href = href.substring(0, href.lastIndexOf("/") + 1);
-//         }
-//
-//         path = href.substring(entryPoint.length() - 1);
-//      }
-//
-//      display.getPathItem().setValue(path);
+      //TODO
+      //      String path;
+      //      if (selectedItems.size() == 0)
+      //      {
+      //         path = "/";
+      //      }
+      //      else
+      //      {
+      //         Item selectedItem = selectedItems.get(0);
+      //
+      //         String href = selectedItem.getHref();
+      //         if (selectedItem instanceof File)
+      //         {
+      //            href = href.substring(0, href.lastIndexOf("/") + 1);
+      //         }
+      //
+      //         path = href.substring(entryPoint.length() - 1);
+      //      }
+      //
+      //      display.getPathItem().setValue(path);
    }
 
    private void doSearch()
    {
       //TODO
-//      String content = display.getSearchContentItem().getValue();
-//      String contentType = display.getMimeTypeItem().getValue();
-//
-//      Item item = selectedItems.get(0);
-//
-//      String path = item.getHref();
-//      path = path.substring(entryPoint.length());
-//      if (item instanceof File)
-//      {
-//         path = path.substring(0, path.lastIndexOf("/") + 1);
-//      }
-//
-//      if (!"".equals(path) && !path.startsWith("/"))
-//      {
-//         path = "/" + path;
-//      }
-//
-//      final Folder folder = new Folder(entryPoint);
-//      VirtualFileSystem.getInstance().search(folder, content, contentType, path, new AsyncRequestCallback<Folder>()
-//      {
-//         @Override
-//         protected void onSuccess(Folder result)
-//         {
-//            eventBus.fireEvent(new SearchResultReceivedEvent(folder));
-//            IDE.getInstance().closeView(display.asView().getId());
-//         }
-//
-//         @Override
-//         protected void onFailure(Throwable exception)
-//         {
-//            eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
-//         }
-//      });
+      HashMap<String, String> query = new HashMap<String, String>();
+      String content = display.getSearchContentItem().getValue();
+      String contentType = display.getMimeTypeItem().getValue();
+      query.put("text", content);
+      query.put("mediaType", contentType);
+
+      Item item = selectedItems.get(0);
+
+      String path = item.getId();
+      if (item instanceof File)
+      {
+         path = path.substring(0, path.lastIndexOf("/"));
+      }
+
+      if (!"".equals(path) && !path.startsWith("/"))
+      {
+         path = "/" + path;
+      }
+
+      query.put("path", path);
+      final FolderModel folder = new FolderModel();
+      folder.setId(path);
+      folder.setPath(path);
+      try
+      {
+         VirtualFileSystem.getInstance().search(query, -1, 0,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  folder.getChildren().setItems(result);
+                  eventBus.fireEvent(new SearchResultReceivedEvent(folder));
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+      }
    }
 
    private void fillMimeTypes()
@@ -199,10 +219,11 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    public void onSearchFiles(SearchFilesEvent event)
    {
-      if (display != null) {
+      if (display != null)
+      {
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
@@ -235,7 +256,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint().getHref();
+      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 
 }

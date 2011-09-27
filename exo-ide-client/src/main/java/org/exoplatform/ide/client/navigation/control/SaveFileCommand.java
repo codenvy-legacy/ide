@@ -108,7 +108,7 @@ public class SaveFileCommand extends SimpleControl implements IDEControl, Editor
     */
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

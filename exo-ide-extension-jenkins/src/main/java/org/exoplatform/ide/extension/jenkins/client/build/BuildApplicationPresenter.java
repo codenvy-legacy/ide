@@ -105,7 +105,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    private String entryPoint;
 
    private boolean buildInProgress = false;
-   
+
    /**
     * The id of folder, which contains project to build.
     * If id is null, than get the id of selected folder.
@@ -139,7 +139,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          Dialogs.getInstance().showError(message);
          return;
       }
-      
+
       //the id of folder to build can be received from event.
       //In other case, it will be got from selected items.
       folderId = event.getFolderId();
@@ -216,7 +216,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-      
+
       String uName = userInfo.getName().split("@")[0];//Jenkins don't alow in job name '@' character
       JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
          repository, uName, mail, workDir, new AsyncRequestCallback<Job>()
@@ -241,7 +241,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          projectName = projectName.substring(0, projectName.length() - 1);
       }
-      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length()-1);
+      projectName = projectName.substring(projectName.lastIndexOf("/") + 1, projectName.length() - 1);
       return projectName;
    }
 
@@ -257,15 +257,15 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          wd = wd.substring(0, wd.length() - 1);
       }
-      wd = wd.substring(entryPoint.length()-1);
-//      wd = wd.substring(0, wd.lastIndexOf("/"));
-//
-//      String ep = entryPoint;
-//      if (ep.endsWith("/"))
-//      {
-//         ep = ep.substring(0, ep.length() - 1);
-//      }
-//      ep = ep.substring(0, ep.lastIndexOf("/"));
+      wd = wd.substring(entryPoint.length() - 1);
+      //      wd = wd.substring(0, wd.lastIndexOf("/"));
+      //
+      //      String ep = entryPoint;
+      //      if (ep.endsWith("/"))
+      //      {
+      //         ep = ep.substring(0, ep.length() - 1);
+      //      }
+      //      ep = ep.substring(0, ep.lastIndexOf("/"));
 
       return wd;//.substring(ep.length());
    }
@@ -473,34 +473,33 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
 
       //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(startDirId,
-         new AsyncRequestCallback<WorkDirResponse>()
+      GitClientService.getInstance().getWorkDir(startDirId, new AsyncRequestCallback<WorkDirResponse>()
+      {
+         @Override
+         protected void onSuccess(WorkDirResponse result)
          {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               onWorkDirReceived();
-            }
+            workDir = result.getWorkDir();
+            workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
+            onWorkDirReceived();
+         }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.noGitRepositoryTitle(),
-                  JenkinsExtension.MESSAGES.noGitRepository(), new BooleanValueReceivedHandler()
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.noGitRepositoryTitle(),
+               JenkinsExtension.MESSAGES.noGitRepository(), new BooleanValueReceivedHandler()
+               {
+                  @Override
+                  public void booleanValueReceived(Boolean value)
                   {
-                     @Override
-                     public void booleanValueReceived(Boolean value)
+                     if (value != null && value)
                      {
-                        if (value != null && value)
-                        {
-                           initRepository(startDirId);
-                        }
+                        initRepository(startDirId);
                      }
-                  });
-            }
-         });
+                  }
+               });
+         }
+      });
    }
 
    /**
@@ -512,35 +511,36 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         GitClientService.getInstance().init(path, false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
+         GitClientService.getInstance().init(path, false,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
-               workDir = path;
-               //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-               showBuildMessage(GitExtension.MESSAGES.initSuccess());
-               eventBus.fireEvent(new RefreshBrowserEvent());
-               createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
-            }
+               @Override
+               protected void onSuccess(String result)
+               {
+                  workDir = path;
+                  //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
+                  eventBus.fireEvent(new RefreshBrowserEvent());
+                  createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                     : GitExtension.MESSAGES.initFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.initFailed();
+                  eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               }
+            });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
          String errorMessage =
-                  (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage()
-                     : GitExtension.MESSAGES.initFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+               .initFailed();
+         eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
    }
 
@@ -576,7 +576,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint().getHref();
+      //TODO not url
+      entryPoint = event.getVfsInfo().getId();
    }
 
 }

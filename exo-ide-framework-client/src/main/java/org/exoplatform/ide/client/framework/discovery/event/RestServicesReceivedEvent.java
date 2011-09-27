@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.discovery.event;
 
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 
-import com.google.gwt.event.shared.GwtEvent;
+import java.util.List;
 
 /**
  * Calls from {@link DiscoveryService} when list of REST Services received

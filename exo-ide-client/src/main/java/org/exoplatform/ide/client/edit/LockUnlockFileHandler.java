@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.edit.event.LockFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
@@ -39,8 +40,10 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
+import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.LockUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 
 import java.util.LinkedHashMap;
@@ -144,14 +147,14 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
          try
          {
             VirtualFileSystem.getInstance().lock(activeFile,
-               new AsyncRequestCallback<LockToken>(new LockUnmarshaller())
+               new AsyncRequestCallback<LockToken>(new LockUnmarshaller(new LockToken()))
                {
 
                   @Override
                   protected void onSuccess(LockToken result)
                   {
                      eventBus.fireEvent(new ItemLockedEvent(activeFile, result));
-
+                     updateLockFileState(activeFile);
                   }
 
                   @Override
@@ -182,6 +185,7 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
                   protected void onSuccess(Object result)
                   {
                      eventBus.fireEvent(new ItemUnlockedEvent(activeFile));
+                     updateLockFileState(activeFile);
                   }
 
                   @Override
@@ -196,6 +200,33 @@ public class LockUnlockFileHandler implements LockFileHandler, UserInfoReceivedH
                e.printStackTrace();
             }
          }
+      }
+   }
+
+   private void updateLockFileState(final FileModel file)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(),
+            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
+            {
+
+               @Override
+               protected void onSuccess(FileModel result)
+               {
+                  eventBus.fireEvent(new EditorReplaceFileEvent(file, result));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
       }
    }
 

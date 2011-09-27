@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
  */
 public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo>
 {
- 
+
    private final VirtualFileSystemInfo virtualFileSystemInfo;
 
    /**
@@ -53,29 +53,27 @@ public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo
     */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
-   {      
+   {
       JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-           
-      virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.
-            toObject(jsonObject.get("versioningSupported"))); //
-      virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.
-            toObject(jsonObject.get("lockSupported"))); //
-      virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("anonymousPrincipal"))); //
-      virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("anyPrincipal"))); //
-      virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.
-            toSet(jsonObject.get("permissions"))); //
-      virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("aclCapability")).toLowerCase())); //
-      virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.
-            toObject(jsonObject.get("queryCapability")).toLowerCase()));
-      virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.
-            toMap(jsonObject.get("urlTemplates")));
-            
+      virtualFileSystemInfo.setId(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject.get("id")));
+      virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
+         .get("versioningSupported"))); //
+      virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
+         .get("lockSupported"))); //
+      virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
+         .get("anonymousPrincipal"))); //
+      virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
+         .get("anyPrincipal"))); //
+      virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.toSet(jsonObject.get("permissions"))); //
+      virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
+         jsonObject.get("aclCapability")).toLowerCase())); //
+      virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
+         jsonObject.get("queryCapability")).toLowerCase()));
+      virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")));
+
       JSONObject root = jsonObject.get("root").isObject();
-    
-      virtualFileSystemInfo.setRoot(new FolderModel(root)); 
+
+      virtualFileSystemInfo.setRoot(new FolderModel(root));
    }
 
    @Override
@@ -83,7 +81,5 @@ public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo
    {
       return this.virtualFileSystemInfo;
    }
-   
-   
 
 }

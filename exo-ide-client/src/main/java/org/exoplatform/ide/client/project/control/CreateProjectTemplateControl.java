@@ -52,10 +52,11 @@ public class CreateProjectTemplateControl extends SimpleControl implements IDECo
       setPrompt(PROMPT);
       setGroup(3);
       setEnabled(true);
-      setImages(IDEImageBundle.INSTANCE.createProjectTemplate(), IDEImageBundle.INSTANCE.createProjectTemplateDisabled());
-      setEvent(new CreateProjectTemplateEvent());      
+      setImages(IDEImageBundle.INSTANCE.createProjectTemplate(),
+         IDEImageBundle.INSTANCE.createProjectTemplateDisabled());
+      setEvent(new CreateProjectTemplateEvent());
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -63,13 +64,13 @@ public class CreateProjectTemplateControl extends SimpleControl implements IDECo
    {
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

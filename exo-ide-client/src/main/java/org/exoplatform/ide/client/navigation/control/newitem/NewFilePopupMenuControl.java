@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control.newitem;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -25,8 +27,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS.
@@ -58,7 +58,7 @@ public class NewFilePopupMenuControl extends PopupMenuControl implements IDECont
    
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

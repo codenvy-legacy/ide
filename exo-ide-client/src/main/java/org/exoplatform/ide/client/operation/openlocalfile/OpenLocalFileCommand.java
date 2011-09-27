@@ -86,7 +86,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, I
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

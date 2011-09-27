@@ -205,7 +205,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
       if (locktokens == null || locktokens.isEmpty())
       {
-         return item.getName().isEmpty() ? "/" : item.getName();
+         return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
       }
 
       if (item instanceof FileModel && ((FileModel)item).isLocked())

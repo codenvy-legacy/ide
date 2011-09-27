@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.vfs.event;
 
-import org.exoplatform.ide.client.framework.vfs.Folder;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -32,9 +32,9 @@ public class SearchResultReceivedEvent extends GwtEvent<SearchResultReceivedHand
 
    public static final GwtEvent.Type<SearchResultReceivedHandler> TYPE = new Type<SearchResultReceivedHandler>();
 
-   private Folder folder;
+   private FolderModel folder;
 
-   public SearchResultReceivedEvent(Folder folder)
+   public SearchResultReceivedEvent(FolderModel folder)
    {
       this.folder = folder;
    }
@@ -51,7 +51,7 @@ public class SearchResultReceivedEvent extends GwtEvent<SearchResultReceivedHand
       return TYPE;
    }
 
-   public Folder getFolder()
+   public FolderModel getFolder()
    {
       return folder;
    }

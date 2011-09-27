@@ -269,7 +269,8 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint().getHref();
+      //TODO not url
+      this.workspace = event.getVfsInfo().getId();
    }
    
    private void onFolderOpened(FolderModel folder)
@@ -361,6 +362,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    {
       try
       {
+         //TODO pass url not id
          new VirtualFileSystem(workspace).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {

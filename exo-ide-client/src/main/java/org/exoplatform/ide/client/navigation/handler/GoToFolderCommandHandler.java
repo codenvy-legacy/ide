@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -28,9 +27,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.client.navigation.event.GoToFolderEvent;
@@ -74,7 +70,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint().getHref();
+      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)

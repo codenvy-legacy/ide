@@ -127,7 +127,7 @@ public class RenameItemCommand extends SimpleControl implements IDEControl, Item
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

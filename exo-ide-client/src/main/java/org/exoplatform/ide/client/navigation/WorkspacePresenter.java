@@ -18,13 +18,24 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -32,6 +43,8 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -60,8 +73,8 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent;
-import org.exoplatform.ide.client.workspace.event.SwitchEntryPointHandler;
+import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
+import org.exoplatform.ide.client.workspace.event.SwitchVFSHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
@@ -78,24 +91,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -105,11 +107,11 @@ import com.google.gwt.user.client.Timer;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPointHandler, SelectItemHandler,
+public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
-   ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
+   ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
+   ConfigurationReceivedSuccessfullyHandler
 {
-
    public interface Display extends IsView
    {
 
@@ -186,6 +188,8 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
+   private String vfsBaseUrl;
+
    public WorkspacePresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
@@ -195,13 +199,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
       handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
       handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE, eventBus.addHandler(ItemLockedEvent.TYPE, this));
-      handlerRegistrations.put(SwitchEntryPointEvent.TYPE, eventBus.addHandler(SwitchEntryPointEvent.TYPE, this));
+      handlerRegistrations.put(SwitchVFSEvent.TYPE, eventBus.addHandler(SwitchVFSEvent.TYPE, this));
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
       handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
          eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
       handlerRegistrations.put(AddItemTreeIconEvent.TYPE, eventBus.addHandler(AddItemTreeIconEvent.TYPE, this));
       handlerRegistrations.put(RemoveItemTreeIconEvent.TYPE, eventBus.addHandler(RemoveItemTreeIconEvent.TYPE, this));
-
+      handlerRegistrations.put(ConfigurationReceivedSuccessfullyEvent.TYPE,
+         eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this));
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
@@ -500,6 +505,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
       if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;
+         file.setLocked(false);
          file.setLock(null);
          display.updateItemState(file);
       }
@@ -507,23 +513,23 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
    public void onItemLocked(ItemLockedEvent event)
    {
-
       Item item = event.getItem();
+      onRefreshBrowser(new RefreshBrowserEvent());
       if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;
+         file.setLocked(true);
          file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
          display.updateItemState(file);
       }
-
    }
 
    /**
     * Switching active workspace by Switch Workspace Event
     * 
-    * @see SwitchEntryPointEvent#onSwitchEntryPoint(org.exoplatform.ide.client.workspace.event.SwitchEntryPointEvent)
+    * @see SwitchVFSEvent#onSwitchVFS(org.exoplatform.ide.client.workspace.event.SwitchVFSEvent)
     */
-   public void onSwitchEntryPoint(final SwitchEntryPointEvent event)
+   public void onSwitchVFS(final SwitchVFSEvent event)
    {
       if (display == null)
       {
@@ -547,7 +553,10 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
 
       try
       {
-         new VirtualFileSystem(event.getEntryPoint().getHref()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+         String workspaceUrl =
+            (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
+         //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
+            new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
 
@@ -555,8 +564,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
             protected void onSuccess(VirtualFileSystemInfo result)
             {
                eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-
-               eventBus.fireEvent(new VfsChangedEvent(result, event.getEntryPoint()));
+               eventBus.fireEvent(new VfsChangedEvent(result));
 
                display.asView().setViewVisible();
 
@@ -584,7 +592,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
                foldersToRefresh.clear();
 
                eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-               eventBus.fireEvent(new VfsChangedEvent(null, null));
+               eventBus.fireEvent(new VfsChangedEvent(null));
             }
          });
       }
@@ -693,6 +701,15 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchEntryPoi
          display = null;
          viewOpened = false;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent)
+    */
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
    }
 
 }

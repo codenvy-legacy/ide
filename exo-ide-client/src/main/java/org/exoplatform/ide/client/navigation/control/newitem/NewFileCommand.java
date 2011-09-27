@@ -99,7 +99,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      entryPoint = event.getEntryPoint().getHref();
+      entryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
       updateEnabling();
    }
 

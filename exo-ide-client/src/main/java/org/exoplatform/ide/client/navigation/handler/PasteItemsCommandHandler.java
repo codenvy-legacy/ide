@@ -100,7 +100,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       if (context.getItemsToCopy().size() != 0)
       {
          folderToPaste = getFolderToPaste();
-         folderFromPaste = getPahtFromPaste(context.getItemsToCopy().get(0));
+         folderFromPaste = getPathFromPaste(context.getItemsToCopy().get(0));
          copyNextItem();
          numItemToCut = 0;
          return;
@@ -109,7 +109,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       if (context.getItemsToCut().size() != 0)
       {
          folderToPaste = getFolderToPaste();
-         folderFromPaste = getPahtFromPaste(context.getItemsToCut().get(0));
+         folderFromPaste = getPathFromPaste(context.getItemsToCut().get(0));
          numItemToCut = context.getItemsToCut().size();
          cutNextItem();
       }
@@ -126,7 +126,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       return (FolderModel)selectedItems.get(0);
    }
 
-   private FolderModel getPahtFromPaste(Item item)
+  private FolderModel getPathFromPaste(Item item)
    {
       if (item instanceof FileModel)
       {
@@ -134,7 +134,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
          return f.getParent();
       }
 
-      return (FolderModel)item;
+      return ((FolderModel)item).getParent();
    }
 
    /****************************************************************************************************
@@ -267,12 +267,9 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
          Dialogs.getInstance().showError(IDE.ERRORS_CONSTANT.pasteItemsCantMoveToTheSameFolder());
          return;
       }
-
-      String destination = folderToPaste + URL.encodePathSegment(item.getName());
-
       try
       {
-         VirtualFileSystem.getInstance().move(item, destination, lockTokens.get(item.getId()),
+         VirtualFileSystem.getInstance().move(item, folderToPaste.getId(), lockTokens.get(item.getId()),
             new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
             {
 
@@ -306,12 +303,9 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
 
       List<FolderModel> folders = new ArrayList<FolderModel>();
 
-      FolderModel folderFrom = folderFromPaste;
-      FolderModel folderTo = folderToPaste;
-
-      folders.add(folderFrom);
-      folders.add(folderTo);
-      eventBus.fireEvent(new RefreshBrowserEvent(folders, folderTo));
+      folders.add(folderFromPaste);
+      folders.add(folderToPaste);
+      eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPaste)); 
    }
 
    /****************************************************************************************************

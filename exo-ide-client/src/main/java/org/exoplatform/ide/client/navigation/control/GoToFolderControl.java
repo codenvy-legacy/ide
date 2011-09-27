@@ -78,7 +78,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

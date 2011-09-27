@@ -239,7 +239,8 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint().getHref();
+      //TODO not url
+      this.workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 
 }

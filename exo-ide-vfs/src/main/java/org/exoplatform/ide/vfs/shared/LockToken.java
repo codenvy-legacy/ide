@@ -28,7 +28,11 @@ package org.exoplatform.ide.vfs.shared;
  */
 public class LockToken
 {
-   private final String token;
+   private String token;
+
+   public LockToken()
+   {
+   }
 
    /**
     * @param token string representation of lock token
@@ -46,6 +50,13 @@ public class LockToken
       return token;
    }
 
+   public void setLockToken(String token)
+   {
+      if (token == null)
+         throw new IllegalArgumentException("Lock token may not be null. ");
+      this.token = token;
+   }
+
    /**
     * @see java.lang.Object#equals(java.lang.Object)
     */
@@ -54,7 +65,7 @@ public class LockToken
    {
       if (this == obj)
          return true;
-      if ((obj == null) || (obj.getClass() != this.getClass()))
+      if ((obj == null) || (obj.getClass() != this.getClass()) || (token == null))
          return false;
       LockToken otherLockToken = (LockToken)obj;
       return token.equals(otherLockToken.token);

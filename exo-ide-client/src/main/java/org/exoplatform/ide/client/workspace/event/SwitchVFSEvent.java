@@ -16,75 +16,52 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.discovery;
+package org.exoplatform.ide.client.workspace.event;
 
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version @version $Id: $
  */
 
-public class EntryPoint 
+public class SwitchVFSEvent extends GwtEvent<SwitchVFSHandler>
 {
-   private String href;
-   
-   private String workspace;
-   
+
+   public static final GwtEvent.Type<SwitchVFSHandler> TYPE = new GwtEvent.Type<SwitchVFSHandler>();
+
    /**
-    * 
+    * Virtual file system id.
     */
-   public EntryPoint()
+   private String vfs;
+
+   /**
+    * @param vfs virtual file system id
+    */
+   public SwitchVFSEvent(String vfs)
    {
+      this.vfs = vfs;
+   }
+
+   @Override
+   protected void dispatch(SwitchVFSHandler handler)
+   {
+      handler.onSwitchVFS(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<SwitchVFSHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
    /**
-    * @param href
-    * @param workspace
+    * @return the vfs
     */
-   public EntryPoint(String href, String workspace)
+   public String getVfs()
    {
-      this.href = href;
-      this.workspace = workspace;
+      return vfs;
    }
-
-   
-   /**
-    * @return the href
-    */
-   public String getHref()
-   {
-      return href;
-   }
-
-   /**
-    * @param href the href to set
-    */
-   public void setHref(String href)
-   {
-      this.href = href;
-   }
-
-   /**
-    * @return the workspace
-    */
-   public String getWorkspace()
-   {
-      return workspace;
-   }
-
-   /**
-    * @param workspace the workspace to set
-    */
-   public void setWorkspace(String workspace)
-   {
-      this.workspace = workspace;
-   }
-   
-   
-
-   
-
-   
 }

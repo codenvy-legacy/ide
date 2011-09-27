@@ -36,9 +36,9 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
 import org.exoplatform.gwtframework.commons.wadl.IllegalWADLException;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Param;
@@ -48,12 +48,13 @@ import org.exoplatform.gwtframework.commons.wadl.WadlProcessor;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.discovery.DiscoveryService;
+import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
 import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.model.discovery.marshal.RestServicesUnmarshaller;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +75,6 @@ import java.util.TreeMap;
 public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscoveryHandler, InitializeServicesHandler,
    ViewClosedHandler
 {
-
    public interface Display extends IsView
    {
 
@@ -121,7 +121,7 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
       eventBus.addHandler(ShowRestServicesDiscoveryEvent.TYPE, this);
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      
+
       IDE.getInstance().addControl(new RestServicesDiscoveryControl());
    }
 
@@ -394,21 +394,30 @@ public class RestServicesDiscoveryPresenter implements ShowRestServicesDiscovery
 
    private void loadRestServices()
    {
-      DiscoveryService.getInstance().getRestServices(new AsyncRequestCallback<List<RestService>>()
+      try
       {
-         @Override
-         protected void onSuccess(List<RestService> result)
-         {
-            refreshRestServices(result);
-         }
+         RestDiscoveryService.getInstance().getRestServices(
+            new AsyncRequestCallback<List<RestService>>(new RestServicesUnmarshaller(new ArrayList<RestService>()))
+            {
+               @Override
+               protected void onSuccess(List<RestService> result)
+               {
+                  refreshRestServices(result);
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-               .restServicesDiscoveryGetRestServicesFailure()));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception, org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+                     .restServicesDiscoveryGetRestServicesFailure()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

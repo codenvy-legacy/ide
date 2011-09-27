@@ -105,7 +105,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

@@ -126,7 +126,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      rootId = event.getVfsInfo().getRoot().getId();
+      rootId = (event.getVfsInfo() != null &&  event.getVfsInfo().getRoot() != null) ? event.getVfsInfo().getRoot().getId() : null;
    }
 
 }

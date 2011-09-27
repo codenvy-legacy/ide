@@ -90,7 +90,6 @@ ViewClosedHandler, SearchResultReceivedHandler
    public void onSearchResultReceived(SearchResultReceivedEvent event)
    {
       searchResult = event.getFolder();
-
       if (display == null)
       {
          Display display = GWT.create(Display.class);
@@ -109,7 +108,6 @@ ViewClosedHandler, SearchResultReceivedHandler
    private void refreshSearchResult()
    {
 //      searchResult.setIcon(Images.FileTypes.WORKSPACE);
-
       if (searchResult.getChildren() != null && !searchResult.getChildren().getItems().isEmpty())
       {
          // sort items in search result list

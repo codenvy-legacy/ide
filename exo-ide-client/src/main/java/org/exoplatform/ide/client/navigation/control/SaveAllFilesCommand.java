@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -39,12 +38,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
-import org.exoplatform.ide.client.framework.vfs.File;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedEvent;
 import org.exoplatform.ide.client.framework.vfs.event.FileContentSavedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -135,7 +134,7 @@ public class SaveAllFilesCommand extends SimpleControl implements IDEControl, Ed
 
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getEntryPoint() != null)
+      if (event.getVfsInfo() != null)
       {
          setVisible(true);
       }

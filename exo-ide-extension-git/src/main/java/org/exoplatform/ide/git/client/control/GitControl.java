@@ -86,8 +86,9 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      this.workspace = event.getEntryPoint().getHref();
-      if (event.getEntryPoint() != null)
+      //TODO not url
+      this.workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
+      if (workspace != null)
       {
          setVisible(true);
       }

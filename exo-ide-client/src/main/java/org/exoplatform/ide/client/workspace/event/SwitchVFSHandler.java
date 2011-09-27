@@ -16,34 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model.discovery.marshal;
+package org.exoplatform.ide.client.workspace.event;
 
-import com.google.gwt.http.client.Response;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.discovery.DefaultEntryPointCallback;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version @version $Id: $
  */
 
-public class DefaultEntryPointUnmarshaller implements Unmarshallable
+public interface SwitchVFSHandler extends EventHandler
 {
    
-   private DefaultEntryPointCallback entryPointCallback;
-   
-   public DefaultEntryPointUnmarshaller(DefaultEntryPointCallback callback)
-   {
-      this.entryPointCallback = callback;
-   }
-
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      entryPointCallback.setResult(response.getText());
-   }
+   void onSwitchVFS(SwitchVFSEvent event);
 
 }

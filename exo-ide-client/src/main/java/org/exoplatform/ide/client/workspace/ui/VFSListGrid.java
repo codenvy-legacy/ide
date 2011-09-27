@@ -18,37 +18,37 @@
  */
 package org.exoplatform.ide.client.workspace.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.discovery.EntryPoint;
-
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
+
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
-public class EntryPointsListGrid extends ListGrid<EntryPoint>
+public class VFSListGrid extends ListGrid<VirtualFileSystemInfo>
 {
    private final String ID = "ideEntryPointListGrid";
    
    private static final String ENTRY_POINT_COLUMN = IDE.PREFERENCES_CONSTANT.entryPointListGridName();
    
-   public EntryPointsListGrid()
+   public VFSListGrid()
    {
       super();
       
       setID(ID);
 
       SafeHtmlCell htmlCell = new SafeHtmlCell();
-      Column<EntryPoint, SafeHtml> entryNameColumn = new Column<EntryPoint, SafeHtml>(htmlCell)
+      Column<VirtualFileSystemInfo, SafeHtml> entryNameColumn = new Column<VirtualFileSystemInfo, SafeHtml>(htmlCell)
       {
          @Override
-         public SafeHtml getValue(final EntryPoint item)
+         public SafeHtml getValue(final VirtualFileSystemInfo item)
          {
             SafeHtml html = new SafeHtml()
             {
@@ -57,7 +57,7 @@ public class EntryPointsListGrid extends ListGrid<EntryPoint>
                @Override
                public String asString()
                {
-                  return "<span title = \"" + item.getHref() + "\">" + item.getHref() + "</span>";
+                  return "<span title = \"" + item.getId() + "\">" + item.getId() + "</span>";
                }
             };
             return html;

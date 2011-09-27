@@ -9,7 +9,7 @@
 	<c:VPanel>
 	
 		<c:Border margin="5">
-			<w:EntryPointsListGrid ui:field="entryPointListGrid"></w:EntryPointsListGrid>
+			<w:VFSListGrid ui:field="entryPointListGrid"></w:VFSListGrid>
 		</c:Border>
 
 		<c:Panel height="40px">
