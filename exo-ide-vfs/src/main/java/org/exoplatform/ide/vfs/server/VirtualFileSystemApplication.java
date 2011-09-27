@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.server;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundExceptionMapper;
+import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolvExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.LockExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedExceptionMapper;
@@ -49,6 +50,7 @@ public class VirtualFileSystemApplication extends Application
       singletons.add(new ItemNotFoundExceptionMapper());
       singletons.add(new NotSupportedExceptionMapper());
       singletons.add(new PermissionDeniedExceptionMapper());
+      singletons.add(new LocalPathResolvExceptionMapper());
    }
 
    /**

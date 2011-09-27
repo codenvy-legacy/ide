@@ -25,6 +25,8 @@ import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
+import org.exoplatform.ide.vfs.server.LocalPathResolver;
+import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolvException;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,14 +60,28 @@ public class HerokuService
    @Inject
    private Heroku heroku;
 
-   public HerokuService()
+   @Inject
+   private LocalPathResolver localPathResolver;
+
+   private String vfsId;
+
+   private String path;
+
+   private String appName;
+
+   public HerokuService(@QueryParam("vfsId") String vfsId, //
+      @QueryParam("path") String path, @QueryParam("name") String name)
    {
+      this.path = path;
+      this.vfsId = vfsId;
+      this.appName = name;
    }
 
-   protected HerokuService(Heroku heroku)
+   protected HerokuService(Heroku heroku, LocalPathResolver localPathResolver)
    {
       // Use this constructor when deploy HerokuService as singleton resource.
       this.heroku = heroku;
+      this.localPathResolver = localPathResolver;
    }
 
    @Path("login")
@@ -102,90 +118,62 @@ public class HerokuService
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsCreate( //
-      @QueryParam("name") String name, //
-      @QueryParam("remote") String remote, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public Map<String, String> appsCreate(@QueryParam("remote") String remote) throws HerokuException, IOException,
+      ParsingResponseException, LocalPathResolvException
    {
-      return heroku.createApplication(name, remote, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return heroku.createApplication(appName, remote, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/destroy")
    @POST
-   public void appsDestroy( //
-      @QueryParam("name") String name, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException
+   public void appsDestroy() throws HerokuException, IOException, LocalPathResolvException
    {
-      heroku.destroyApplication(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      heroku.destroyApplication(appName, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsInfo( //
-      @QueryParam("name") String name, //
-      @QueryParam("raw") boolean inRawFormat, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat) throws HerokuException, IOException,
+      ParsingResponseException, LocalPathResolvException
    {
-      return heroku
-         .applicationInfo(name, inRawFormat, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return heroku.applicationInfo(appName, inRawFormat, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/rename")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsRename( //
-      @QueryParam("name") String name, //
-      @QueryParam("newname") String newname, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public Map<String, String> appsRename(@QueryParam("newname") String newname) throws HerokuException, IOException,
+      ParsingResponseException, LocalPathResolvException
    {
-      return heroku.renameApplication(name, newname, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return heroku.renameApplication(appName, newname, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/stack")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Stack> appsStack( //
-      @QueryParam("name") String name, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public List<Stack> appsStack() throws HerokuException, IOException, ParsingResponseException,
+      LocalPathResolvException
    {
-      return heroku.getStacks(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      return heroku.getStacks(appName, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/stack-migrate")
    @POST
    @Produces(MediaType.TEXT_PLAIN)
-   public String stackMigrate( //
-      @QueryParam("name") String name, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @QueryParam("stack") String stack, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public String stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
+      ParsingResponseException, LocalPathResolvException
    {
-      return heroku.stackMigrate(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, stack);
+      return heroku.stackMigrate(appName, new File(localPathResolver.resolve(vfsId, path)), stack);
    }
-   
+
    @Path("apps/logs")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public String logs( //
-      @QueryParam("name") String name, //
-      @QueryParam("num") int logLines, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public String logs( @QueryParam("num") int logLines)
+    throws HerokuException, IOException, ParsingResponseException, LocalPathResolvException
    {
-      return heroku.logs(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, logLines);
+      return heroku.logs(appName, new File(localPathResolver.resolve(vfsId, path)), logLines);
    }
 
    @Path("apps/run")

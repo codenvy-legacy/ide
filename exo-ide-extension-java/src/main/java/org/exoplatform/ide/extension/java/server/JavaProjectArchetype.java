@@ -83,7 +83,7 @@ public class JavaProjectArchetype
     * @throws PermissionDeniedException
     * @throws VirtualFileSystemException
     */
-   public void exportResources(URL url, String projectType, String projectName, String groupId, String artifactId,
+   public Project exportResources(URL url, String projectType, String projectName, String groupId, String artifactId,
       String version, String parentId, VirtualFileSystem vfs) throws IOException, URISyntaxException,
       ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -95,6 +95,7 @@ public class JavaProjectArchetype
       {
          export(project.getId(), files[i], groupId, artifactId, version, projectName, vfs);
       }
+      return project;
 
    }
 

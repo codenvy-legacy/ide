@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.java.server;
 import org.exoplatform.ide.maven.TaskService;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.net.URL;
 
@@ -68,10 +69,10 @@ public class JavaAppService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
-      archetype.exportResources(url, projectType, projectName, groupId, artifactId, version,parentId,vfs);
+      Project project = archetype.exportResources(url, projectType, projectName, groupId, artifactId, version,parentId,vfs);
       //TODO: 
       //GitHelper.addToGitIgnore(dir, "/target"); 
-      return Response.ok().build();      
+      return Response.ok(project).build();      
    }
 
   
