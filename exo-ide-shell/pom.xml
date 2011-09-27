@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
@@ -21,17 +22,20 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
+         <version>2.3.0</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
+         <version>2.3.0</version>
       </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
          <scope>test</scope>
+         <version>2.3.0</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -105,7 +109,7 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-webdav-client</artifactId>
+         <artifactId>exo-ide-vfs</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>
@@ -120,7 +124,12 @@
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-integration-exo</artifactId>
-         <scope>test</scope>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
@@ -174,15 +183,20 @@
                <artifactId>crsh.jcr</artifactId>
                <version>${crash.version}</version>
                <exclusions>
-                  <exclusion>
+                  <!-- exclusion>
                      <artifactId>slf4j-api</artifactId>
                      <groupId>org.slf4j</groupId>
-                  </exclusion>
+                  </exclusion -->
                   <exclusion>
                      <artifactId>crsh.shell.packaging</artifactId>
                      <groupId>org.crsh</groupId>
                   </exclusion>
                </exclusions>
+            </dependency>
+            <dependency>
+               <groupId>org.slf4j</groupId>
+               <artifactId>slf4j-log4j12</artifactId>
+               <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.kernel</groupId>
@@ -193,20 +207,6 @@
                <groupId>org.exoplatform.kernel</groupId>
                <artifactId>exo.kernel.container</artifactId>
                <scope>runtime</scope>
-            </dependency>
-            <!--dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.commons</artifactId> </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> 
-               <artifactId>exo.ws.rest.core</artifactId> </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.frameworks.servlet</artifactId> 
-               </dependency> <dependency> <groupId>org.exoplatform.ws</groupId> <artifactId>exo.ws.rest.ext</artifactId> </dependency -->
-            <dependency>
-               <groupId>org.exoplatform.jcr</groupId>
-               <artifactId>exo.jcr.component.webdav</artifactId>
-               <scope>runtime</scope>
-               <exclusions>
-                  <exclusion>
-                     <artifactId>xstream</artifactId>
-                     <groupId>xstream</groupId>
-                  </exclusion>
-               </exclusions>
             </dependency>
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
@@ -278,6 +278,17 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-git</artifactId>
             </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-vfs-jcr</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>xstream</groupId>
+                     <artifactId>xstream</artifactId>
+                  </exclusion>
+               </exclusions>
+               <scope>runtime</scope>
+            </dependency>
          </dependencies>
          <build>
             <plugins>
@@ -306,6 +317,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
+                  <version>2.3.0-1</version>
                   <configuration>
                      <runTarget>Shell/Shell.html</runTarget>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
