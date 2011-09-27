@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -31,14 +32,15 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Timer;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ide.shell.client.CLIResourceUtil;
-import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.ConsoleWriter;
-import org.exoplatform.ide.shell.client.ShellComandBuffer;
-import org.exoplatform.ide.shell.client.ShellService;
+import org.exoplatform.ide.shell.client.commands.Utils;
+import org.exoplatform.ide.shell.client.marshal.GenericJsonUnmarshaller;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,7 @@ import java.util.List;
  * @version $Id:  Aug 2, 2011 11:03:32 AM anya $
  *
  */
-public class ShellPresenter implements ConsoleWriter
+public class ShellPresenter
 {
    interface Display extends ConsoleWriter
    {
@@ -85,9 +87,9 @@ public class ShellPresenter implements ConsoleWriter
 
    private ShellComandBuffer buffer;
 
-   public ShellPresenter()
+   public ShellPresenter(Display display)
    {
-      display = GWT.create(Display.class);
+      this.display = display;
       bindDisplay();
       buffer = new ShellComandBuffer();
    }
@@ -100,7 +102,7 @@ public class ShellPresenter implements ConsoleWriter
          @Override
          public void onClick(ClickEvent event)
          {
-            clearConsole();
+            display.clearConsole();
             display.focusInConsole();
          }
       });
@@ -197,7 +199,7 @@ public class ShellPresenter implements ConsoleWriter
             //key code '88' is x   
             else if (event.getNativeEvent().getKeyCode() == 88 && event.isControlKeyDown() && event.isShiftKeyDown())
             {
-               clearConsole();
+               display.clearConsole();
             }
             else if (BrowserResolver.CURRENT_BROWSER != Browser.FIREFOX)
             {
@@ -217,7 +219,7 @@ public class ShellPresenter implements ConsoleWriter
                   goDown();
                   handled = true;
                }
-               else if(code == KeyCodes.KEY_TAB)
+               else if (code == KeyCodes.KEY_TAB)
                {
                   performComplete();
                   handled = true;
@@ -235,24 +237,6 @@ public class ShellPresenter implements ConsoleWriter
    }
 
    /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#print(java.lang.String)
-    */
-   @Override
-   public void print(String str)
-   {
-      display.print(str);
-   }
-
-   /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#clearConsole()
-    */
-   @Override
-   public void clearConsole()
-   {
-      display.clearConsole();
-   }
-
-   /**
     * Process user command.
     * 
     * @param command
@@ -260,27 +244,29 @@ public class ShellPresenter implements ConsoleWriter
    public void processCommand(String command)
    {
       buffer.add(command);
-      ShellService.getService().processCommand(command, new AsyncRequestCallback<String>()
-      {
-
-         @Override
-         protected void onSuccess(String result)
+      ShellService.getService().processCommand(command,
+         new AsyncRequestCallback<StringBuilder>(new GenericJsonUnmarshaller(new StringBuilder()))
          {
-            result = (result.endsWith("\n") || result.isEmpty()) ? result : result + "\n";
-            display.print(result);
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            //TODO
-            display.print((exception.getMessage() != null) ? exception.getMessage() + "\n"
-               : "Unknown error in processing the command.\n");
-         }
-      });
+            @Override
+            protected void onSuccess(StringBuilder result)
+            {
+               String res = result.toString();
+               res = (res.endsWith("\n") || res.isEmpty()) ? res : res + "\n";
+               display.print(res);
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               //TODO
+               display.print((exception.getMessage() != null) ? exception.getMessage() + "\n"
+                  : "Unknown error in processing the command.\n");
+            }
+         });
    }
 
    /**
@@ -303,7 +289,10 @@ public class ShellPresenter implements ConsoleWriter
       }
 
       if (suggestions.isEmpty())
+      {
+         performFolderNameComplete();
          return;
+      }
 
       if (suggestions.size() == 1)
       {
@@ -322,6 +311,120 @@ public class ShellPresenter implements ConsoleWriter
          display.printPrompt();
          display.appendBuffer(prefix);
          display.refreshConsole();
+      }
+
+   }
+
+   /**
+    * 
+    */
+   private void performFolderNameComplete()
+   {
+      final String prefix =
+         display.getBuffer().substring(display.getBuffer().lastIndexOf(" ") + 1, display.getBuffer().length());
+      final String namePrefix;
+      if(prefix.contains("/"))
+      {
+         namePrefix = prefix.substring(prefix.lastIndexOf("/") + 1, prefix.length());
+      }
+      else
+         namePrefix = prefix;
+      if (prefix.isEmpty())
+      {
+         try
+         {
+            VirtualFileSystem.getInstance().getChildren(Environment.get().getCurrentFolder(),
+               new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+               {
+
+                  @Override
+                  protected void onSuccess(List<Item> result)
+                  {
+                     List<Item> folders = new ArrayList<Item>();
+                     for (Item i : result)
+                     {
+                        if (i instanceof FolderModel)
+                        {
+                           folders.add(i);
+                        }
+                     }
+
+                     display.appendBuffer("\n");
+                     display.appendBuffer(Utils.fomatItems(folders));
+                     display.submitBuffer();
+                     display.printPrompt();
+                     display.appendBuffer(prefix);
+                     display.refreshConsole();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     CloudShell.console().println(
+                        CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+         }
+      }
+      else
+      {
+         try
+         {
+            VirtualFileSystem.getInstance().getChildren(Environment.get().getCurrentFolder(),
+               new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+               {
+
+                  @Override
+                  protected void onSuccess(List<Item> result)
+                  {
+                     List<Item> folders = new ArrayList<Item>();
+                     for (Item i : result)
+                     {
+                        if (i.getName().startsWith(namePrefix))
+                        {
+                           folders.add(i);
+                        }
+                     }
+                     if (folders.isEmpty())
+                     {
+                        return;
+                     }
+                     if (folders.size() == 1)
+                     {
+                        String buf = display.getBuffer();
+                        display.clearBuffer();
+                        display.appendBuffer(buf + folders.get(0).getName().substring(namePrefix.length()) + "/");
+                        display.refreshConsole();
+                     }
+                     else
+                     {
+                        display.appendBuffer("\n");
+                        display.appendBuffer(Utils.fomatItems(folders));
+                        display.submitBuffer();
+                        display.printPrompt();
+                        display.appendBuffer(prefix);
+                        display.refreshConsole();
+                     }
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     CloudShell.console().println(
+                        CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+         }
       }
 
    }
@@ -354,32 +457,5 @@ public class ShellPresenter implements ConsoleWriter
       display.clearBuffer();
       display.appendBuffer(command);
       display.refreshConsole();
-   }
-
-   /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#printPrompt()
-    */
-   @Override
-   public void printPrompt()
-   {
-      display.printPrompt();
-   }
-
-   /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#printToBuffer(java.lang.String)
-    */
-   @Override
-   public void printToBuffer(String str)
-   {
-      display.printToBuffer(str);
-   }
-
-   /**
-    * @see org.exoplatform.ide.shell.client.ConsoleWriter#flush()
-    */
-   @Override
-   public void flush()
-   {
-      display.flush();
    }
 }

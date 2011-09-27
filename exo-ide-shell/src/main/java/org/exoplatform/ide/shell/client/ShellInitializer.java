@@ -18,17 +18,22 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window.Location;
 
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.module.vfs.webdav.WebDavVirtualFileSystem;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.ide.shell.client.ShellPresenter.Display;
+import org.exoplatform.ide.shell.client.marshal.ShellConfigurationUnmarshaller;
+import org.exoplatform.ide.shell.client.marshal.StringUnmarshaller;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -58,35 +63,76 @@ public class ShellInitializer
 
    public void init()
    {
-      ShellService.getService().loadConfiguration(getConfigurationURL(), new AsyncRequestCallback<ShellConfiguration>()
+      try
       {
-
-         @Override
-         protected void onSuccess(ShellConfiguration result)
-         {
-            new WebDavVirtualFileSystem(CloudShell.EVENT_BUS, new EmptyLoader(), new HashMap<String, String>(),
-               "/rest/private/");
-
-            String entryPoint = getCookie("eXo-IDE-" + result.getUserInfo().getName() + "-entry-point_str");
-            if (entryPoint != null && !entryPoint.isEmpty())
+         ShellService.getService().loadConfiguration(getConfigurationURL(),
+            new AsyncRequestCallback<ShellConfiguration>(new ShellConfigurationUnmarshaller(new ShellConfiguration()))
             {
-               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, entryPoint);
-               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.ENTRY_POINT, entryPoint);
-            }
-            else
-            {
-               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR,
-                  result.getEntryPoint());
-               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.ENTRY_POINT,
-                  result.getEntryPoint());
-            }
 
-            VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.USER_NAME,
-               result.getUserInfo().getName());
-            updateCurrentDir();
-            CloudShell.consoleWriter = new ShellPresenter();
+               @Override
+               protected void onSuccess(ShellConfiguration result)
+               {
+                  String entryPoint = getCookie("eXo-IDE-" + result.getUserInfo().getName() + "-entry-point_str");
+                  if (entryPoint != null && !entryPoint.isEmpty())
+                  {
+                     Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, entryPoint);
+                  }
+                  else
+                  {
+                     Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, result.getEntryPoint());
+                  }
+                  Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUserInfo().getName());
+                  updateCurrentDir();
+                  Display console = GWT.create(Display.class);
+                  CloudShell.consoleWriter = console;
+                  new ShellPresenter(console);
+                  try
+                  {
+                     new VirtualFileSystem(Environment.get().getValue(EnvironmentVariables.ENTRY_POINT) + "/")
+                        .init(new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(
+                           new VirtualFileSystemInfo()))
+                        {
 
-            ShellService.getService().getCommands(new AsyncRequestCallback<Set<CLIResource>>()
+                           @Override
+                           protected void onSuccess(VirtualFileSystemInfo result)
+                           {
+                              Environment.get().setCurrentFolder((FolderModel)result.getRoot());
+                              getCommands();
+                           }
+
+                           @Override
+                           protected void onFailure(Throwable exception)
+                           {
+                              //TODO
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     e.printStackTrace();
+                  }
+
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+
+   private void getCommands()
+   {
+      try
+      {
+         ShellService.getService().getCommands(
+            new AsyncRequestCallback<Set<CLIResource>>(new CLIResourceUnmarshaller(new HashSet<CLIResource>()))
             {
                @Override
                protected void onSuccess(Set<CLIResource> result)
@@ -94,33 +140,51 @@ public class ShellInitializer
                   CloudShell.getCommands().addAll(result);
                   login();
                }
-            });
 
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  // TODO Auto-generated method stub
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+
    }
 
    private void login()
    {
       String command = "ws login dev-monit";
-      ShellService.getService().login(command, new AsyncRequestCallback<String>()
+      try
       {
+         ShellService.getService().login(command,
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            {
 
-         @Override
-         protected void onSuccess(String result)
-         {
-            CloudShell.console().print("Welcome to eXo Cloud Shell\n" + result);
-         }
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  CloudShell.console().print("Welcome to eXo Cloud Shell\n" + result.toString());
+               }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            CloudShell.console().print(exception.getMessage());
-         }
-      });
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  CloudShell.console().print(exception.getMessage());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    private void updateCurrentDir()
@@ -134,27 +198,27 @@ public class ShellInitializer
          }
          if (!path.endsWith("/"))
             path = path + "/";
-         final Folder f =
-            new Folder(VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT) + path);
-         VirtualFileSystem.getInstance().getChildren(f, new AsyncRequestCallback<Folder>()
-         {
-
-            @Override
-            protected void onSuccess(Folder result)
-            {
-               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
-            }
-
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               super.onFailure(exception);
-               CloudShell.console().print(CloudShell.messages.cdErrorFolder(f.getName()) + "\n");
-            }
-         });
+         //         final FolderModel f =
+         //            new FolderModel(VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT) + path);
+         //         VirtualFileSystem.getInstance().getChildren(f, new AsyncRequestCallback<Folder>()
+         //         {
+         //
+         //            @Override
+         //            protected void onSuccess(Folder result)
+         //            {
+         //               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
+         //            }
+         //
+         //            /**
+         //             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+         //             */
+         //            @Override
+         //            protected void onFailure(Throwable exception)
+         //            {
+         //               super.onFailure(exception);
+         //               CloudShell.console().print(CloudShell.messages.cdErrorFolder(f.getName()) + "\n");
+         //            }
+         //         });
       }
    }
 }

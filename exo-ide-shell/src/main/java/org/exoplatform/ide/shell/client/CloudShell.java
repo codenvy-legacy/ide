@@ -4,10 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.ide.shell.client.ConsoleWriter;
-import org.exoplatform.ide.shell.client.Messages;
-import org.exoplatform.ide.shell.client.ShellInitializer;
-import org.exoplatform.ide.shell.client.ShellPresenter;
 import org.exoplatform.ide.shell.client.commands.CatCommand;
 import org.exoplatform.ide.shell.client.commands.CdCommand;
 import org.exoplatform.ide.shell.client.commands.ClearCommand;
@@ -52,10 +48,6 @@ public class CloudShell implements EntryPoint
     */
    public static ConsoleWriter console()
    {
-      if (consoleWriter == null)
-      {
-         consoleWriter = new ShellPresenter();
-      }
       return consoleWriter;
    }
 

@@ -23,10 +23,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.Constants;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter;
 import org.exoplatform.ide.shell.shared.CLIResourceParameter.Type;
@@ -39,7 +37,7 @@ import java.util.Set;
  * @version $Id:  Aug 4, 2011 4:34:11 PM anya $
  *
  */
-public class CLIResourceUnmarshaller implements Unmarshallable, Constants
+public class CLIResourceUnmarshaller implements Unmarshallable<Set<CLIResource>>, Constants
 {
    private Set<CLIResource> resources;
 
@@ -49,10 +47,11 @@ public class CLIResourceUnmarshaller implements Unmarshallable, Constants
    }
 
    /**
+    * @throws UnmarshallerException 
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
-   public void unmarshal(Response response) throws UnmarshallerException
+   public void unmarshal(Response response) throws org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException
    {
       try
       {
@@ -135,6 +134,15 @@ public class CLIResourceUnmarshaller implements Unmarshallable, Constants
          set.add(parameter);
       }
       return set;
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Set<CLIResource> getPayload()
+   {
+      return resources;
    }
 
 }

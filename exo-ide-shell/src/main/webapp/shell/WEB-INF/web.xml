@@ -25,14 +25,19 @@
    <listener>
       <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
    </listener>
+
+   <context-param>
+      <param-name>everrest.exoplatform.standalone.config</param-name>
+      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+   </context-param>
+   
    <listener>
-      <listener-class>org.exoplatform.ws.frameworks.servlet.StandaloneContainerInitializedListener</listener-class>
+      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
    </listener>
+   
    <servlet>
       <servlet-name>RestServer</servlet-name>
-      <description>eXo - Platform REST Server</description>
-      <servlet-class>org.exoplatform.services.rest.servlet.RestServlet</servlet-class>
-      <load-on-startup>4</load-on-startup>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
    
    <filter-mapping>

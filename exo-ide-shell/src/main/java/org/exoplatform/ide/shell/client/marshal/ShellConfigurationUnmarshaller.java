@@ -25,8 +25,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 
@@ -35,7 +35,7 @@ import org.exoplatform.ide.shell.client.model.ShellConfiguration;
  * @version $Id:  Aug 12, 2011 evgen $
  *
  */
-public class ShellConfigurationUnmarshaller implements Unmarshallable
+public class ShellConfigurationUnmarshaller implements Unmarshallable<ShellConfiguration>
 {
 
    private static final String USER = "user";
@@ -107,6 +107,15 @@ public class ShellConfigurationUnmarshaller implements Unmarshallable
       }
 
       configuration.setUserInfo(userInfo);
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public ShellConfiguration getPayload()
+   {
+      return configuration;
    }
 
 }

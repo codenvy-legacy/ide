@@ -18,21 +18,11 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
-import org.exoplatform.gwtframework.commons.xml.QName;
-import org.exoplatform.ide.client.framework.vfs.File;
-import org.exoplatform.ide.client.framework.vfs.FileCallback;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback;
-import org.exoplatform.ide.client.framework.vfs.ItemProperty;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.commands.Utils;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -92,64 +82,62 @@ public class CatCommand extends ClientCommand
 
    private void getNextContent()
    {
-      String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
-      if (files.size() != 0)
-      {
-
-         final File f = new File(Utils.getPath(workdir, files.get(0)));
-
-         List<QName> prop = new ArrayList<QName>();
-         prop.add(ItemProperty.GETCONTENTTYPE);
-         VirtualFileSystem.getInstance().getProperties(f, prop, new ItemPropertiesCallback()
-         {
-
-            @Override
-            protected void onSuccess(Item result)
-            {
-               if (result.getProperty(ItemProperty.GETCONTENTTYPE) != null)
-                  VirtualFileSystem.getInstance().getContent(f, new FileCallback()
-                  {
-                     @Override
-                     protected void onSuccess(File result)
-                     {
-                        String content = Utils.htmlEncode(result.getContent());
-                        out.append(content);
-                        out.append("\n");
-                        files.remove(0);
-                        getNextContent();
-                     }
-
-                     /**
-                      * @see org.exoplatform.ide.client.framework.vfs.FileCallback#onFailure(java.lang.Throwable)
-                      */
-                     @Override
-                     protected void onFailure(Throwable exception)
-                     {
-                        CloudShell.console().print(CloudShell.messages.catGetFileContentError() + "\n");
-                     }
-                  });
-               else
-               {
-                  CloudShell.console().print(CloudShell.messages.catFolderError(files.get(0)) + "\n");
-               }
-
-            }
-
-            /**
-             * @see org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               CloudShell.console().print(CloudShell.messages.catFileNotFound(files.get(0)) + "\n");
-            }
-         });
-
-      }
-      else
-      {
-         CloudShell.console().print(out.toString());
-      }
+//      String workdir = Environment.get().getValue(EnvironmentVariables.WORKDIR);
+//      if (files.size() != 0)
+//      {
+//
+//         final FileModel f = new File(Utils.getPath(workdir, files.get(0)));
+//
+//         VirtualFileSystem.getInstance().getProperties(f, prop, new ItemPropertiesCallback()
+//         {
+//
+//            @Override
+//            protected void onSuccess(Item result)
+//            {
+//               if (result.getProperty(ItemProperty.GETCONTENTTYPE) != null)
+//                  VirtualFileSystem.getInstance().getContent(f, new FileCallback()
+//                  {
+//                     @Override
+//                     protected void onSuccess(File result)
+//                     {
+//                        String content = Utils.htmlEncode(result.getContent());
+//                        out.append(content);
+//                        out.append("\n");
+//                        files.remove(0);
+//                        getNextContent();
+//                     }
+//
+//                     /**
+//                      * @see org.exoplatform.ide.client.framework.vfs.FileCallback#onFailure(java.lang.Throwable)
+//                      */
+//                     @Override
+//                     protected void onFailure(Throwable exception)
+//                     {
+//                        CloudShell.console().print(CloudShell.messages.catGetFileContentError() + "\n");
+//                     }
+//                  });
+//               else
+//               {
+//                  CloudShell.console().print(CloudShell.messages.catFolderError(files.get(0)) + "\n");
+//               }
+//
+//            }
+//
+//            /**
+//             * @see org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback#onFailure(java.lang.Throwable)
+//             */
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               CloudShell.console().print(CloudShell.messages.catFileNotFound(files.get(0)) + "\n");
+//            }
+//         });
+//
+//      }
+//      else
+//      {
+//         CloudShell.console().print(out.toString());
+//      }
 
    }
 

@@ -19,32 +19,23 @@
 package org.exoplatform.ide.shell.client;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.shell.client.CLIResourceUnmarshaller;
-import org.exoplatform.ide.shell.client.CLIResourceUtil;
-import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.MandatoryParameterNotFoundException;
-import org.exoplatform.ide.shell.client.ShellService;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
+import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.GnuParser;
 import org.exoplatform.ide.shell.client.cli.Parser;
 import org.exoplatform.ide.shell.client.cli.Util;
-import org.exoplatform.ide.shell.client.marshal.GenericJsonUnmarshaller;
 import org.exoplatform.ide.shell.client.marshal.LoginMarshaller;
 import org.exoplatform.ide.shell.client.marshal.ShellConfigurationUnmarshaller;
-import org.exoplatform.ide.shell.client.marshal.StringUnmarshaller;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
@@ -53,7 +44,6 @@ import org.exoplatform.ide.shell.shared.CLIResourceParameter.Type;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -70,8 +60,6 @@ public class ShellService
 
    private final String RESOURCES_PATH = "ide/cli/resources";
 
-   private Loader loader = new EmptyLoader();
-
    public static ShellService getService()
    {
       if (service == null)
@@ -81,31 +69,31 @@ public class ShellService
       return service;
    }
 
-   public void getCommands(AsyncRequestCallback<Set<CLIResource>> callback)
+   public void getCommands(AsyncRequestCallback<Set<CLIResource>> callback) throws RequestException
    {
       String url = REST_CONTEXT + "/" + RESOURCES_PATH;
 
-      Set<CLIResource> resources = new HashSet<CLIResource>();
+//      Set<CLIResource> resources = new HashSet<CLIResource>();
+//
+//      CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
+//      callback.setResult(resources);
+//      callback.setPayload(unmarshaller);
 
-      CLIResourceUnmarshaller unmarshaller = new CLIResourceUnmarshaller(resources);
-      callback.setResult(resources);
-      callback.setPayload(unmarshaller);
-
-      AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader())
+      AsyncRequest.build(RequestBuilder.GET, url)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback)
+   public void loadConfiguration(String url, AsyncRequestCallback<ShellConfiguration> callback) throws RequestException
    {
       ShellConfiguration conf = new ShellConfiguration();
       ShellConfigurationUnmarshaller unmarshaller = new ShellConfigurationUnmarshaller(conf);
-      callback.setPayload(unmarshaller);
-      callback.setResult(conf);
-      callback.setEventBus(CloudShell.EVENT_BUS);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+//      callback.setPayload(unmarshaller);
+//      callback.setResult(conf);
+//      callback.setEventBus(CloudShell.EVENT_BUS);
+      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
 
-   public void processCommand(String cmd, AsyncRequestCallback<String> callback)
+   public void processCommand(String cmd, AsyncRequestCallback<StringBuilder> callback)
    {
       List<CLIResource> appropriateCommands = findAppropriateCommands(cmd);
       if (appropriateCommands.size() <= 0)
@@ -145,12 +133,6 @@ public class ShellService
                }
                setAcceptTypes(resource, asyncRequest);
                setContentType(resource, asyncRequest);
-               if (resource.getProduces().contains(MimeType.APPLICATION_JSON))
-               {
-                  callback.setPayload(new GenericJsonUnmarshaller(callback));
-               }
-               else
-                  callback.setPayload(new StringUnmarshaller(callback));
                asyncRequest.send(callback);
             }
          }
@@ -199,13 +181,13 @@ public class ShellService
       return true;
    }
 
-   public void login(String command, AsyncRequestCallback<String> callback)
+   public void login(String command, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = REST_CONTEXT + "/ide/crash/command";
       LoginMarshaller marshaller = new LoginMarshaller(command);
-      callback.setPayload(new StringUnmarshaller(callback));
+//      callback.setPayload(new StringUnmarshaller(callback));
 
-      AsyncRequest.build(RequestBuilder.POST, url, new EmptyLoader()).data(marshaller)
+      AsyncRequest.build(RequestBuilder.POST, url).data(marshaller.marshal())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
@@ -343,15 +325,15 @@ public class ShellService
    {
       if (HTTPMethod.POST.equalsIgnoreCase(method))
       {
-         return AsyncRequest.build(RequestBuilder.POST, url, new EmptyLoader());
+         return AsyncRequest.build(RequestBuilder.POST, url);
       }
       else if (HTTPMethod.GET.equalsIgnoreCase(method))
       {
-         return AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader());
+         return AsyncRequest.build(RequestBuilder.GET, url);
       }
       else
       {
-         return AsyncRequest.build(RequestBuilder.GET, url, new EmptyLoader()).header(
+         return AsyncRequest.build(RequestBuilder.GET, url).header(
             HTTPHeader.X_HTTP_METHOD_OVERRIDE, method);
       }
    }
@@ -526,7 +508,7 @@ public class ShellService
    protected String processSystemProperty(CLIResourceParameter parameter) throws MandatoryParameterNotFoundException
    {
       String propertyName = parameter.getName().substring(1);
-      String value = VirtualFileSystem.getInstance().getEnvironmentVariable(propertyName);
+      String value = Environment.get().getValue(propertyName);
       if (value == null && parameter.isMandatory())
       {
          throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredPropertyNotSet(propertyName));

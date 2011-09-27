@@ -18,15 +18,11 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.commands.Utils;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 import java.util.HashSet;
 import java.util.List;
@@ -82,10 +78,10 @@ public class CdCommand extends ClientCommand
             CloudShell.console().printPrompt();
             return;
          }
-         final Folder newFolder =
-            new Folder(Utils.getPath(
-               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
-         goToDir(newFolder);
+//         final Folder newFolder =
+//            new Folder(Utils.getPath(
+//               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
+//         goToDir(newFolder);
       }
       else
       {
@@ -96,28 +92,28 @@ public class CdCommand extends ClientCommand
    /**
     * @param newFolder
     */
-   private void goToDir(final Folder newFolder)
+   private void goToDir(final FolderModel newFolder)
    {
-      VirtualFileSystem.getInstance().getChildren(newFolder, new AsyncRequestCallback<Folder>()
-      {
-
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
-            CloudShell.console().printPrompt();
-         }
-
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            super.onFailure(exception);
-            CloudShell.console().print(CloudShell.messages.cdErrorFolder(newFolder.getName()) + "\n");
-         }
-      });
+//      VirtualFileSystem.getInstance().getChildren(newFolder, new AsyncRequestCallback<Folder>()
+//      {
+//
+//         @Override
+//         protected void onSuccess(Folder result)
+//         {
+//            VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
+//            CloudShell.console().printPrompt();
+//         }
+//
+//         /**
+//          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+//          */
+//         @Override
+//         protected void onFailure(Throwable exception)
+//         {
+//            super.onFailure(exception);
+//            CloudShell.console().print(CloudShell.messages.cdErrorFolder(newFolder.getName()) + "\n");
+//         }
+//      });
    }
 
 }

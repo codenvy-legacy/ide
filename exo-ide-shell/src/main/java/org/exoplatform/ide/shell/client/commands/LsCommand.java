@@ -47,8 +47,6 @@ public class LsCommand extends ClientCommand
 
    private static final Set<String> commads = new HashSet<String>();
 
-   private static final String TAB = "  ";
-
    static
    {
       commads.add("ls");
@@ -103,7 +101,7 @@ public class LsCommand extends ClientCommand
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  CloudShell.console().println(fomatItems(result));
+                  CloudShell.console().println(Utils.fomatItems(result));
                }
 
                /**
@@ -121,104 +119,6 @@ public class LsCommand extends ClientCommand
          CloudShell.console().println(CloudShell.messages.lsError(folder.getPath()));
          e.printStackTrace();
       }
-   }
-
-   /**
-    * Format items in several columns. Main purpose is reducing terminal space.
-    * @param items
-    * @return
-    */
-   private String fomatItems(List<Item> items)
-   {
-      List<List<Item>> table = new ArrayList<List<Item>>();
-      StringBuilder result = new StringBuilder();
-      List<StringBuilder> strings = new ArrayList<StringBuilder>();
-
-      int splitCount = 1;
-      boolean formatComplete = false;
-      do
-      {
-         table.clear();
-         strings.clear();
-         int i = 0;
-         while (i < items.size())
-         {
-            if ((i + splitCount) > items.size())
-               table.add(items.subList(i, items.size()));
-
-            else
-               table.add(items.subList(i, i + splitCount));
-            i += splitCount;
-         }
-         int currentMaxLenght = 0;
-
-         int lineLength[] = new int[splitCount];
-         for (List<Item> list : table)
-         {
-            int maxLen = getMaxNameLength(list);
-            for (int j = 0; j < list.size(); j++)
-            {
-               Item item = list.get(j);
-               String name = item.getName();
-               if (strings.size() <= j)
-               {
-                  strings.add(new StringBuilder());
-               }
-               char chars[] = new char[maxLen - name.length()];
-               Arrays.fill(chars, (char)' ');
-               StringBuilder builder = strings.get(j).append(TAB);
-               if (item instanceof FolderModel)
-               {
-                  builder.append("<span style=\"color:#246fd5;\">").append(name).append("</span>");
-               }
-               else
-                  builder.append(name);
-               builder.append(chars);
-               // line may contains some HTML code, we need count only symbols that displaying on terminal
-               lineLength[j] += TAB.length() + name.length() + chars.length;
-            }
-         }
-
-         for (int in : lineLength)
-         {
-            if (in > currentMaxLenght)
-               currentMaxLenght = in;
-         }
-         if (currentMaxLenght > CloudShell.console().getLengts())
-         {
-            formatComplete = true;
-            splitCount++;
-         }
-         else
-            formatComplete = false;
-
-      }
-      while (formatComplete);
-
-      for (StringBuilder b : strings)
-      {
-         result.append(b.toString()).append("\n");
-      }
-
-      return result.toString();
-   }
-
-   /**
-    * Get longest name length 
-    * @param items
-    * @return
-    */
-   private int getMaxNameLength(List<Item> items)
-   {
-      int max = 0;
-      for (Item i : items)
-      {
-         if (i.getName().length() > max)
-         {
-            max = i.getName().length();
-         }
-      }
-      return max;
    }
 
 }

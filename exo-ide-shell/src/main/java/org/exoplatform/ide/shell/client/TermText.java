@@ -37,8 +37,6 @@ import com.google.gwt.user.client.ui.FocusWidget;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -228,13 +226,13 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
    void printPrompt()
    {
-      String path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
+      String path = Environment.get().getCurrentFolder().getPath();
 
-      path = path.substring(0, path.lastIndexOf("/"));
-      path = path.substring(path.lastIndexOf("/") + 1, path.length());
-      if (VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
-         path = "/";
-      path = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.USER_NAME) + ":" + path;
+//      path = path.substring(0, path.lastIndexOf("/"));
+//      path = path.substring(path.lastIndexOf("/") + 1, path.length());
+//      if (Environment.get().getValue(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
+//         path = "/";
+      path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
       state.append(path + "$ ");
    }
 
@@ -352,4 +350,5 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       int code = event.getNativeEvent().getKeyCode();
       handleKeyEvent(code, event);
    }
+   
 }

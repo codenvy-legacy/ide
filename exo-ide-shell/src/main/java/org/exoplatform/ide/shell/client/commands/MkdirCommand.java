@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.commands.Utils;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,37 +68,44 @@ public class MkdirCommand extends ClientCommand
          printHelp(CloudShell.messages.mkdirUsage(), CloudShell.messages.mkdirHeader());
          return;
       }
+      @SuppressWarnings("unchecked")
       List<String> args = commandLine.getArgList();
       args.remove(0);
       if (args.isEmpty())
       {
-         CloudShell.console().print(CloudShell.messages.mkdirError() + "\n");
+         CloudShell.console().println(CloudShell.messages.mkdirError());
          return;
       }
+      FolderModel parentFolder = Environment.get().getCurrentFolder();
       for (String name : args)
       {
-         Folder newFolder =
-            new Folder(Utils.getPath(
-               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), name));
-         VirtualFileSystem.getInstance().createFolder(newFolder, new AsyncRequestCallback<Folder>()
+
+         FolderModel newFolder = new FolderModel(name, parentFolder);
+         try
          {
+            VirtualFileSystem.getInstance().createFolder(parentFolder,
+               new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+               {
 
-            @Override
-            protected void onSuccess(Folder result)
-            {
-               CloudShell.console().print(result.getName() + "\n");
-            }
+                  @Override
+                  protected void onSuccess(FolderModel result)
+                  {
+                     CloudShell.console().println(result.getName());
+                  }
 
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               CloudShell.console().print(exception.getMessage() + "\n");
-               super.onFailure(exception);
-            }
-         });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     CloudShell.console().println(exception.getMessage());
+
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            CloudShell.console().println(e.getMessage());
+         }
+
       }
 
    }

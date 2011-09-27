@@ -20,9 +20,9 @@ package org.exoplatform.ide.shell.client.marshal;
 
 import com.google.gwt.http.client.Response;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
+
 
 /**
  * Dummy Unmarshaller, need to unmarshall string response
@@ -30,18 +30,18 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id:  Aug 5, 2011 evgen $
  *
  */
-public class StringUnmarshaller implements Unmarshallable
+public class StringUnmarshaller implements Unmarshallable<StringBuilder>
 {
 
-   protected AsyncRequestCallback<String> callback;
+   protected StringBuilder builder;
 
    /**
     * @param callback
     */
-   public StringUnmarshaller(AsyncRequestCallback<String> callback)
+   public StringUnmarshaller(StringBuilder builder)
    {
       super();
-      this.callback = callback;
+      this.builder = builder;
    }
 
    /**
@@ -50,7 +50,16 @@ public class StringUnmarshaller implements Unmarshallable
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
-      callback.setResult(response.getText());
+      builder.append(response.getText());
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public StringBuilder getPayload()
+   {
+      return builder;
    }
 
 }

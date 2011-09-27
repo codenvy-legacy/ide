@@ -25,10 +25,8 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.shell.client.commands.Utils;
-import org.exoplatform.ide.shell.client.marshal.StringUnmarshaller;
 
 /**
  * This unmarshaller format JSON string to pretty HTML string.
@@ -40,7 +38,7 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
 {
 
    private static final JSONObject defaultColorMap = new JSONObject();
-   
+
    public static final String STRING = "string";
 
    public static final String NUMBER = "number";
@@ -81,12 +79,10 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
    /**
     * @param callback
     */
-   public GenericJsonUnmarshaller(AsyncRequestCallback<String> callback)
+   public GenericJsonUnmarshaller(StringBuilder builder)
    {
-      super(callback);
+      super(builder);
    }
-
-
 
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
@@ -94,12 +90,13 @@ public class GenericJsonUnmarshaller extends StringUnmarshaller
       try
       {
          JSONValue jsonValue = JSONParser.parseLenient(response.getText());
-         callback.setResult(toHtmlJson(jsonValue));
+         builder.append(toHtmlJson(jsonValue));
       }
       catch (Exception e)
       {
          e.printStackTrace();
-         callback.setResult(response.getText());
+         builder.setLength(0);
+         builder.append(response.getText());
       }
    }
 

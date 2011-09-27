@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.google.gwt.user.client.DOM;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
@@ -252,5 +254,24 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    {
       termText.printPrompt();
       termText.repaint();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ConsoleWriter#println(java.lang.String)
+    */
+   @Override
+   public void println(String str)
+   {
+      termText.print(str + "\n");
+      termText.repaint();
+   }
+
+   /**
+    * @see org.exoplatform.ide.shell.client.ConsoleWriter#getLengts()
+    */
+   @Override
+   public int getLengts()
+   {
+      return termText.getOffsetWidth() / DOM.getElementById("crash-cursor").getOffsetWidth();
    }
 }

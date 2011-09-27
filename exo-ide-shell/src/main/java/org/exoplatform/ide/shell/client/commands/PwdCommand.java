@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
 import org.exoplatform.ide.shell.client.CloudShell;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.EnvironmentVariables;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
@@ -62,9 +62,7 @@ public class PwdCommand extends ClientCommand
          printHelp(CloudShell.messages.pwdUsage(), CloudShell.messages.pwdHeader());
          return;
       }
-      String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
-      String entryPoint = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT);
-      workdir = workdir.substring(entryPoint.length() - 1);
+      String workdir = Environment.get().getCurrentFolder().getPath();
       CloudShell.console().print(workdir + "\n");
    }
 

@@ -27,6 +27,8 @@ public interface ConsoleWriter
 {
    void print(String str);
    
+   void println(String str);
+   
    /**
     * Print to console buffer(without add prompt on each call this method)
     * @param str
@@ -41,4 +43,6 @@ public interface ConsoleWriter
    void printPrompt();
    
    void clearConsole();
+   
+   int getLengts();
 }
