@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
-import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
@@ -42,11 +41,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * REST interface to {@link Heroku}.
@@ -63,26 +60,14 @@ public class HerokuService
    @Inject
    private LocalPathResolver localPathResolver;
 
+   @QueryParam("vfsId")
    private String vfsId;
 
+   @QueryParam("path")
    private String path;
 
+   @QueryParam("name")
    private String appName;
-
-   public HerokuService(@QueryParam("vfsId") String vfsId, //
-      @QueryParam("path") String path, @QueryParam("name") String name)
-   {
-      this.path = path;
-      this.vfsId = vfsId;
-      this.appName = name;
-   }
-
-   protected HerokuService(Heroku heroku, LocalPathResolver localPathResolver)
-   {
-      // Use this constructor when deploy HerokuService as singleton resource.
-      this.heroku = heroku;
-      this.localPathResolver = localPathResolver;
-   }
 
    @Path("login")
    @POST
@@ -170,8 +155,8 @@ public class HerokuService
    @Path("apps/logs")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public String logs( @QueryParam("num") int logLines)
-    throws HerokuException, IOException, ParsingResponseException, LocalPathResolvException
+   public String logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
+      LocalPathResolvException
    {
       return heroku.logs(appName, new File(localPathResolver.resolve(vfsId, path)), logLines);
    }
@@ -180,15 +165,11 @@ public class HerokuService
    @POST
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput run( //
-      @QueryParam("name") String name, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo, //
-      final String command //
-   ) throws HerokuException, IOException, ParsingResponseException
+   public StreamingOutput run(final String command) throws HerokuException, IOException, ParsingResponseException,
+      LocalPathResolvException
    {
       final HttpChunkReader chunkReader =
-         heroku.run(name, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null, command);
+         heroku.run(appName, new File(localPathResolver.resolve(vfsId, path)), command);
       return new StreamingOutput()
       {
          @Override
