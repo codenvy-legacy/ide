@@ -274,7 +274,7 @@
                <description>ref-addresses</description>
                <!-- Change this configuration to run under your database -->
                <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-               <property name="url" value="jdbc:mysql://mysql.exoplatform.com.ua:3306/demo_ide" />
+               <property name="url" value="jdbc:mysql://mysql.exoplatform.com.ua:3306/demo_ide?characterEncoding=UTF-8" />
                <property name="username" value="demo_ide" />
                <property name="password" value="demoIdE" />
                <property name="validationQuery" value="select 1"/>
