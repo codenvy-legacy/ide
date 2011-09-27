@@ -40,7 +40,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
@@ -74,10 +73,9 @@ public class JavaArchetypeTest extends Base
    @Test
    public void createProject() throws Exception
    {
-      JavaProjectArchetype archetype =
-         new JavaProjectArchetype("java-spring-project", groupId, artifactId, versionId, "/", new MockVfs());
+      JavaProjectArchetype archetype =  new JavaProjectArchetype();
       URL url = JavaArchetypeTest.class.getResource("/java-spring-project");
-      archetype.exportResources(url);
+      archetype.exportResources(url, "java-spring","java-spring-project", groupId, artifactId, versionId, "/", new MockVfs());
       for (int i = 0; i < assertnames.length; i++)
       {
          Assert.assertTrue(items.containsKey(assertnames[i]));
@@ -89,11 +87,10 @@ public class JavaArchetypeTest extends Base
    public void checkPom() throws Exception
    {
       JavaProjectArchetype archetype =
-         new JavaProjectArchetype("java-spring-project", groupId, artifactId, versionId, "/", new MockVfs());
+         new JavaProjectArchetype();
       URL url = JavaArchetypeTest.class.getResource("/java-spring-project");
-      archetype.exportResources(url);
+      archetype.exportResources(url, "java-spring","java-spring-project", groupId, artifactId, versionId, "/", new MockVfs());
      Assert.assertNotNull(modifiedPom);
-     System.out.println(modifiedPom);
      Assert.assertTrue(modifiedPom.contains(versionId));
      Assert.assertTrue(modifiedPom.contains(artifactId));
      Assert.assertTrue(modifiedPom.contains(groupId));

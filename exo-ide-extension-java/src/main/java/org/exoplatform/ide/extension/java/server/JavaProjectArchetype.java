@@ -27,80 +27,94 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
+ * Provide exporting resources via VirtailFileSystem.
+ * For example copy template of project.
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 public class JavaProjectArchetype
 {
 
-   private final String parentId;
 
-   /**
-    * Project's name.
-    */
-   private final String projectName;
-
-   /**
-    * Project's group ID.
-    */
-   private final String groupId;
-
-   /**
-    * Project's artifact ID.
-    */
-   private final String artifactId;
-
-   /**
-    * Project's version.
-    */
-   private final String version;
-
-   private final VirtualFileSystem vfs;
-   
    private MimeTypeResolver mimeTypeResolver;
 
-   public JavaProjectArchetype(String projectName, String groupId, String artifactId, String version, String parentId,
-      VirtualFileSystem vfs)
+   private Templates transfomRules;
+
+   public JavaProjectArchetype()
    {
-      this.parentId = parentId;
-      this.projectName = projectName;
-      this.groupId = groupId;
-      this.artifactId = artifactId;
-      this.version = version;
-      this.vfs = vfs;
       mimeTypeResolver = new MimeTypeResolver();
    }
 
-   public void exportResources(URL url) throws IOException, URISyntaxException, ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   /**
+    * @param url
+    * @param projectType
+    * @param projectName
+    * @param groupId
+    * @param artifactId
+    * @param version
+    * @param parentId
+    * @param vfs
+    * @throws IOException
+    * @throws URISyntaxException
+    * @throws ItemNotFoundException
+    * @throws InvalidArgumentException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    */
+   public void exportResources(URL url, String projectType, String projectName, String groupId, String artifactId,
+      String version, String parentId, VirtualFileSystem vfs) throws IOException, URISyntaxException,
+      ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       File res = new File(url.toURI());
-      Response response = vfs.createProject(parentId, projectName, projectName, null);
+      Response response = vfs.createProject(parentId, projectName, projectType, null);
       Project project = (Project)response.getEntity();
       File[] files = res.listFiles();
       for (int i = 0; i < files.length; i++)
       {
-         exportFile(project.getId(), files[i]);
+         export(project.getId(), files[i], groupId, artifactId, version, projectName, vfs);
       }
 
    }
 
-   private void exportFile(String parentId, File file) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException, IOException
+   /**
+    * @param parentId
+    * @param file
+    * @param groupId
+    * @param artifactId
+    * @param version
+    * @param projectName
+    * @param vfs
+    * @throws ItemNotFoundException
+    * @throws InvalidArgumentException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    * @throws IOException
+    */
+   private void export(String parentId, File file, String groupId, String artifactId, String version, String projectName, VirtualFileSystem vfs)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException,
+      IOException
    {
       if (file.isDirectory())
       {
@@ -111,57 +125,84 @@ public class JavaProjectArchetype
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++)
             {
-               exportFile(folder.getId(), files[i]);
+               export(folder.getId(), files[i], groupId, artifactId, version, projectName, vfs);
             }
          }
       }
-      
       else
       {
          if ("pom.xml".equals(file.getName()))
-            vfs.createFile(parentId, file.getName(), MediaType.TEXT_XML_TYPE, copyPomXML(new FileInputStream(file)));
+            vfs.createFile(parentId, file.getName(), MediaType.TEXT_XML_TYPE,
+               transformPomXml(file, groupId, artifactId, version, projectName));
          else
-            vfs.createFile(parentId, file.getName(), MediaType.valueOf(mimeTypeResolver.getMimeType(file.getName())), new FileInputStream(file));
+            vfs.createFile(parentId, file.getName(), MediaType.valueOf(mimeTypeResolver.getMimeType(file.getName())),
+               new FileInputStream(file));
       }
 
    }
 
-
-   private InputStream copyPomXML(InputStream is) throws IOException
+   /**
+    * @param file
+    * @param groupId
+    * @param artifactId
+    * @param version
+    * @param projectName
+    * @return
+    * @throws IOException
+    */
+   private InputStream transformPomXml(File file, String groupId, String artifactId, String version, String projectName)
+      throws IOException
    {
-      StringBuilder buffer = new StringBuilder(is.available());
-      InputStreamReader streamReader = new InputStreamReader(is);
-      BufferedReader reader = new BufferedReader(streamReader);
-
-      String line = reader.readLine();
-      while (line != null)
+      if (transfomRules == null)
+         loadTransformRules(); // Load XSLT transformation rules.  
+      try
       {
-         // replacing ${name} ${groupId}, ${artifactId}, ${version}
-         while (line.indexOf("${name}") >= 0)
-         {
-            line = line.replace("${name}", projectName);
-         }
-
-         while (line.indexOf("${groupId}") >= 0)
-         {
-            line = line.replace("${groupId}", groupId);
-         }
-
-         while (line.indexOf("${artifactId}") >= 0)
-         {
-            line = line.replace("${artifactId}", artifactId);
-         }
-
-         while (line.indexOf("${version}") >= 0)
-         {
-            line = line.replace("${version}", version);
-         }
-
-         buffer.append(line + "\n");
-
-         line = reader.readLine();
+         Transformer tr = transfomRules.newTransformer();
+         tr.setParameter("groupId", groupId);
+         tr.setParameter("artifactId", artifactId);
+         tr.setParameter("version", version);
+         tr.setParameter("name", projectName);
+         StringWriter output = new StringWriter();
+         tr.transform(new StreamSource(file), new StreamResult(output));
+         return new ByteArrayInputStream(output.toString().getBytes());
       }
-      is.close();
-      return new ByteArrayInputStream(buffer.toString().getBytes());
+      catch (TransformerConfigurationException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+      catch (TransformerException e)
+      {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * 
+    */
+   private void loadTransformRules()
+   {
+      if (transfomRules != null)
+         return;
+      synchronized (this)
+      {
+         if (transfomRules != null)
+            return;
+         try
+         {
+            final String fileName = "pom.xslt";
+            InputStream xsltSource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+            if (xsltSource == null)
+               throw new RuntimeException("File " + fileName + " not found.");
+            transfomRules = TransformerFactory.newInstance().newTemplates(new StreamSource(xsltSource));
+         }
+         catch (TransformerConfigurationException e)
+         {
+            throw new RuntimeException(e.getMessage(), e);
+         }
+         catch (TransformerFactoryConfigurationError e)
+         {
+            throw new RuntimeException(e.getMessage(), e);
+         }
+      }
    }
 }
