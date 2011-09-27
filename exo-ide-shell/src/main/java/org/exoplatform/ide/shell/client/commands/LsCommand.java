@@ -18,17 +18,21 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.vfs.Folder;
-import org.exoplatform.ide.client.framework.vfs.Item;
-import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.commands.Utils;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +46,8 @@ public class LsCommand extends ClientCommand
 {
 
    private static final Set<String> commads = new HashSet<String>();
+
+   private static final String TAB = "  ";
 
    static
    {
@@ -70,53 +76,149 @@ public class LsCommand extends ClientCommand
          printHelp(CloudShell.messages.lsUsage(), CloudShell.messages.lsHeader());
          return;
       }
-      String workdir = VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR);
+      FolderModel current = Environment.get().getCurrentFolder();
       if (args.size() == 0)
       {
-         getFolderContent(workdir);
+         getFolderContent(current);
       }
       else
       {
-         getFolderContent(Utils.getPath(workdir, args.get(0)));
+
+         String path = Utils.getPath(current, args.get(0));
+         CloudShell.console().println(path);
+         //TODO 
+
       }
 
    }
 
-   private void getFolderContent(final String path)
+   private void getFolderContent(final FolderModel folder)
    {
-      Folder f = new Folder(path);
-      VirtualFileSystem.getInstance().getChildren(f, new AsyncRequestCallback<Folder>()
+      try
       {
-
-         @Override
-         protected void onSuccess(Folder result)
-         {
-            StringBuilder res = new StringBuilder();
-            for (Item i : result.getChildren())
+         VirtualFileSystem.getInstance().getChildren(folder,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
-               if(i instanceof Folder)
+
+               @Override
+               protected void onSuccess(List<Item> result)
                {
-                  res.append("<span style=\"color:#246fd5;\">").append(i.getName()).append("</span>");
+                  CloudShell.console().println(fomatItems(result));
+               }
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  CloudShell.console().println(CloudShell.messages.lsError(folder.getPath()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         CloudShell.console().println(CloudShell.messages.lsError(folder.getPath()));
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * Format items in several columns. Main purpose is reducing terminal space.
+    * @param items
+    * @return
+    */
+   private String fomatItems(List<Item> items)
+   {
+      List<List<Item>> table = new ArrayList<List<Item>>();
+      StringBuilder result = new StringBuilder();
+      List<StringBuilder> strings = new ArrayList<StringBuilder>();
+
+      int splitCount = 1;
+      boolean formatComplete = false;
+      do
+      {
+         table.clear();
+         strings.clear();
+         int i = 0;
+         while (i < items.size())
+         {
+            if ((i + splitCount) > items.size())
+               table.add(items.subList(i, items.size()));
+
+            else
+               table.add(items.subList(i, i + splitCount));
+            i += splitCount;
+         }
+         int currentMaxLenght = 0;
+
+         int lineLength[] = new int[splitCount];
+         for (List<Item> list : table)
+         {
+            int maxLen = getMaxNameLength(list);
+            for (int j = 0; j < list.size(); j++)
+            {
+               Item item = list.get(j);
+               String name = item.getName();
+               if (strings.size() <= j)
+               {
+                  strings.add(new StringBuilder());
+               }
+               char chars[] = new char[maxLen - name.length()];
+               Arrays.fill(chars, (char)' ');
+               StringBuilder builder = strings.get(j).append(TAB);
+               if (item instanceof FolderModel)
+               {
+                  builder.append("<span style=\"color:#246fd5;\">").append(name).append("</span>");
                }
                else
-               {
-                  res.append(i.getName());
-               }
-               
-               res.append("\n");
+                  builder.append(name);
+               builder.append(chars);
+               // line may contains some HTML code, we need count only symbols that displaying on terminal
+               lineLength[j] += TAB.length() + name.length() + chars.length;
             }
-            CloudShell.console().print(res.toString());
          }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
+         for (int in : lineLength)
          {
-            CloudShell.console().print(CloudShell.messages.lsError(path) + "\n");
+            if (in > currentMaxLenght)
+               currentMaxLenght = in;
          }
-      });
+         if (currentMaxLenght > CloudShell.console().getLengts())
+         {
+            formatComplete = true;
+            splitCount++;
+         }
+         else
+            formatComplete = false;
+
+      }
+      while (formatComplete);
+
+      for (StringBuilder b : strings)
+      {
+         result.append(b.toString()).append("\n");
+      }
+
+      return result.toString();
+   }
+
+   /**
+    * Get longest name length 
+    * @param items
+    * @return
+    */
+   private int getMaxNameLength(List<Item> items)
+   {
+      int max = 0;
+      for (Item i : items)
+      {
+         if (i.getName().length() > max)
+         {
+            max = i.getName().length();
+         }
+      }
+      return max;
    }
 
 }
