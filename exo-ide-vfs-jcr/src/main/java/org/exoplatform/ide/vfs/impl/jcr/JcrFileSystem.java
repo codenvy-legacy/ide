@@ -454,18 +454,30 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Override
-   public Item getItemByPath(@QueryParam("path") String path, //
+   public Item getItemByPath(
+      @QueryParam("path") String path, //
+      @QueryParam("versionId") String versionId,
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException
    {
       Session ses = session();
       try
       {
-         return fromItemData(getItemData(ses, path), propertyFilter);
+         ItemData data = getItemData(ses, path);
+         if (versionId != null && ItemType.FILE == data.getType())
+         {
+            FileData version = ((FileData)data).getVersion(versionId);
+            return fromItemData(version, propertyFilter);
+         }
+         else if (versionId != null)
+         {
+            throw new InvalidArgumentException("Object " + path + " is not a file. Version ID must not be set. ");
+         }
+         return fromItemData(data, propertyFilter);
       }
       finally
       {

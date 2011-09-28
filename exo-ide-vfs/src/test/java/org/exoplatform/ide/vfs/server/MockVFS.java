@@ -296,11 +296,12 @@ public class MockVFS implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, org.exoplatform.ide.vfs.server.PropertyFilter)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Override
-   public Item getItemByPath(String path, PropertyFilter propertyFilter) throws ItemNotFoundException,
-      PermissionDeniedException, VirtualFileSystemException
+   public Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter)
+      throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }

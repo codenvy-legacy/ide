@@ -140,7 +140,27 @@ public class VersionsTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
-      log.info(">>>>>>>> " + response.getHttpHeaders());
+      //log.info(">>>>>>>> " + response.getHttpHeaders());
+   }
+
+   public void testGetVersionByPathAndID() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("itembypath") //
+         .append("?") //
+         .append("path=") //
+         .append(filePath) //
+         .append("&") //
+         .append("versionId=") //
+         .append("2") //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      File file = (File)response.getEntity();
+      assertEquals(filePath, file.getPath());
+      assertEquals("2", file.getVersionId());
    }
 
    public void testGetVersionByIdInvalidVersion() throws Exception

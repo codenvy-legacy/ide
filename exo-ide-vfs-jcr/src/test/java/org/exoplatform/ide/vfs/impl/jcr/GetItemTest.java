@@ -115,7 +115,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFilePropertyFilter() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-     // No filter - all properties
+      // No filter - all properties
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("item") //
@@ -198,5 +198,39 @@ public class GetItemTest extends JcrFileSystemTest
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FOLDER, item.getItemType());
       validateLinks(item);
+   }
+
+   public void testGetFolderByPath() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("itembypath") //
+         .append("?") //
+         .append("path=") //
+         .append(folderPath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      //log.info(new String(writer.getBody()));
+      assertEquals(200, response.getStatus());
+      Item item = (Item)response.getEntity();
+      assertEquals(ItemType.FOLDER, item.getItemType());
+      validateLinks(item);
+   }
+
+   public void testGetFolderByPathWithVersionID() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("itembypath") //
+         .append("?") //
+         .append("path=") //
+         .append(folderPath) //
+         .append("&") //
+         .append("versionId=") //
+         .append("1").toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(400, response.getStatus());
    }
 }

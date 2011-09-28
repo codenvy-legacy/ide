@@ -47,9 +47,10 @@ import javax.ws.rs.core.Response;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
 public class MockVirtualFileSystem implements VirtualFileSystem
 {
@@ -133,11 +134,12 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, org.exoplatform.ide.vfs.server.PropertyFilter)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
    @Override
-   public Item getItemByPath(String path, PropertyFilter propertyFilter) throws ItemNotFoundException,
-      PermissionDeniedException, VirtualFileSystemException
+   public Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter)
+      throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
@@ -174,16 +176,15 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Item move(String id, String parentId, String lockToken) throws ItemNotFoundException,
-      ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException
+   public Item move(String id, String parentId, String lockToken) throws ItemNotFoundException, ConstraintException,
+      LockException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
 
    @Override
-   public Item rename(String id, MediaType mediaType, String newname, String lockToken)
-      throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
-      VirtualFileSystemException
+   public Item rename(String id, MediaType mediaType, String newname, String lockToken) throws ItemNotFoundException,
+      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }

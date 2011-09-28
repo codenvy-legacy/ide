@@ -306,6 +306,7 @@ public interface VirtualFileSystem
     * Get item by path.
     * 
     * @param path item path
+    * @param versionId version id for File item. Must be <code>null</code> for Folders.
     * @param propertyFilter only properties which are accepted by filter should be included in response. See
     *           {@link PropertyFilter#accept(String)}
     * @return item
@@ -316,8 +317,8 @@ public interface VirtualFileSystem
    @GET
    @Path("itembypath")
    @Produces({MediaType.APPLICATION_JSON})
-   Item getItemByPath(String path, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
-      VirtualFileSystemException;
+   Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
@@ -339,8 +340,8 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("version")
-   Response getVersionResponse(String id, String versionId) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+   Response getVersionResponse(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get list of versions of File. Even if File is not versionable result must contain at least one item (current
