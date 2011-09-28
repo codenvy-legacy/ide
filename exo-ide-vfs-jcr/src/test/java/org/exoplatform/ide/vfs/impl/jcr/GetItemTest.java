@@ -93,6 +93,24 @@ public class GetItemTest extends JcrFileSystemTest
       validateLinks(item);
    }
 
+   public void testGetFileByPath() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("itembypath") //
+         .append("?") //
+         .append("path=") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      //log.info(new String(writer.getBody()));
+      Item item = (Item)response.getEntity();
+      assertEquals(ItemType.FILE, item.getItemType());
+      assertEquals(filePath, item.getPath());
+      validateLinks(item);
+   }
+
    @SuppressWarnings("rawtypes")
    public void testGetFilePropertyFilter() throws Exception
    {

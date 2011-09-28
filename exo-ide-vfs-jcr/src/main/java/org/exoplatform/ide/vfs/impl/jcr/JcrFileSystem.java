@@ -454,6 +454,26 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String,
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    */
+   @Override
+   public Item getItemByPath(@QueryParam("path") String path, //
+      @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      Session ses = session();
+      try
+      {
+         return fromItemData(getItemData(ses, path), propertyFilter);
+      }
+      finally
+      {
+         ses.logout();
+      }
+   }
+
+   /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersion(java.lang.String,
     *      org.exoplatform.ide.vfs.VersionId)
     */
@@ -999,6 +1019,10 @@ public class JcrFileSystem implements VirtualFileSystem
 
       links.put(Link.REL_SELF, //
          new Link(createURI("item", id).toString(), Link.REL_SELF, MediaType.APPLICATION_JSON));
+
+      links.put(Link.REL_BY_PATH, //
+         new Link(createURI("itembypath", null, "path", data.getPath()).toString(), Link.REL_BY_PATH,
+            MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_ACL, //
          new Link(createURI("acl", id).toString(), Link.REL_ACL, MediaType.APPLICATION_JSON));

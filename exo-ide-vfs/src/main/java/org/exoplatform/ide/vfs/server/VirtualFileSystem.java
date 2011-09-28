@@ -302,6 +302,23 @@ public interface VirtualFileSystem
    Item getItem(String id, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
       VirtualFileSystemException;
 
+   /**
+    * Get item by path.
+    * 
+    * @param path item path
+    * @param propertyFilter only properties which are accepted by filter should be included in response. See
+    *           {@link PropertyFilter#accept(String)}
+    * @return item
+    * @throws ItemNotFoundException if <code>path</code> does not exist
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @GET
+   @Path("itembypath")
+   @Produces({MediaType.APPLICATION_JSON})
+   Item getItemByPath(String path, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
+      VirtualFileSystemException;
+
    ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 

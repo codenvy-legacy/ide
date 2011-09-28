@@ -176,6 +176,13 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(Link.REL_SELF, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getId()).build().toString(), link.getHref());
 
+      link = links.get(Link.REL_BY_PATH);
+      assertNotNull("'" + Link.REL_BY_PATH + "' link not found. ", link);
+      assertEquals(MediaType.APPLICATION_JSON, link.getType());
+      assertEquals(Link.REL_BY_PATH, link.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").queryParam("path", item.getPath()).build()
+         .toString(), link.getHref());
+
       link = links.get(Link.REL_PARENT);
       if (item.getParentId() == null)
       {
