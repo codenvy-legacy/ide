@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.exoplatform.ide.maven.TaskService;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -27,9 +26,11 @@ import java.net.URL;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -45,7 +46,7 @@ public class JavaAppService
    
    private final JavaProjectArchetype archetype;
 
-   public JavaAppService(TaskService taskService, VirtualFileSystemRegistry vfsRegistry, JavaProjectArchetype archetype)
+   public JavaAppService(VirtualFileSystemRegistry vfsRegistry, JavaProjectArchetype archetype)
    {
       this.archetype = archetype;
       this.vfsRegistry = vfsRegistry;
@@ -54,6 +55,7 @@ public class JavaAppService
    
    @POST
    @Path("create")
+   @Produces(MediaType.APPLICATION_JSON)
    public Response createApplication(
       @QueryParam("parentId") String parentId,
       @QueryParam("projectName") String projectName,
