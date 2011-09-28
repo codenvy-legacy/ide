@@ -88,11 +88,14 @@ public class GitService
    @Inject
    private LocalPathResolver localPathResolver;
 
-   @QueryParam("vfsId")
+   @QueryParam("vfsid")
    private String vfsId;
 
    @QueryParam("path")
    private String path;
+   
+   @Context
+   private SecurityContext sctx;
 
    private static class InfoPageWrapper implements StreamingOutput
    {
@@ -116,9 +119,9 @@ public class GitService
    @Path("add")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void add(@Context SecurityContext sctx, AddRequest request) throws GitException, LocalPathResolvException
+   public void add(AddRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.add(request);
@@ -132,10 +135,10 @@ public class GitService
    @Path("branch-checkout")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void branchCheckout(@Context SecurityContext sctx, BranchCheckoutRequest request) throws GitException,
+   public void branchCheckout(BranchCheckoutRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.branchCheckout(request);
@@ -150,10 +153,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Branch branchCreate(@Context SecurityContext sctx, BranchCreateRequest request) throws GitException,
+   public Branch branchCreate(BranchCreateRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.branchCreate(request);
@@ -167,10 +170,10 @@ public class GitService
    @Path("branch-delete")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void branchDelete(@Context SecurityContext sctx, BranchDeleteRequest request) throws GitException,
+   public void branchDelete(BranchDeleteRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.branchDelete(request);
@@ -185,10 +188,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Branch> branchList(@Context SecurityContext sctx, BranchListRequest request) throws GitException,
+   public List<Branch> branchList(BranchListRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.branchList(request);
@@ -202,10 +205,10 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(@Context SecurityContext sctx, CloneRequest request) throws URISyntaxException, GitException,
+   public void clone(CloneRequest request) throws URISyntaxException, GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.clone(request);
@@ -220,10 +223,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Revision commit(@Context SecurityContext sctx, CommitRequest request) throws GitException,
+   public Revision commit(CommitRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.commit(request);
@@ -238,10 +241,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput diff(@Context SecurityContext sctx, DiffRequest request) throws GitException,
+   public StreamingOutput diff(DiffRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          InfoPage diffPage = gitConnection.diff(request);
@@ -256,9 +259,9 @@ public class GitService
    @Path("fetch")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void fetch(@Context SecurityContext sctx, FetchRequest request) throws GitException, LocalPathResolvException
+   public void fetch(FetchRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.fetch(request);
@@ -272,9 +275,9 @@ public class GitService
    @Path("init")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void init(@Context SecurityContext sctx, InitRequest request) throws GitException, LocalPathResolvException
+   public void init(InitRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.init(request);
@@ -289,10 +292,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput log(@Context SecurityContext sctx, LogRequest request) throws GitException,
+   public StreamingOutput log(LogRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          InfoPage logPage = gitConnection.log(request);
@@ -308,9 +311,9 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Log jsonLog(@Context SecurityContext sctx, LogRequest request) throws GitException, LocalPathResolvException
+   public Log jsonLog(LogRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.log(request);
@@ -325,10 +328,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public MergeResult merge(@Context SecurityContext sctx, MergeRequest request) throws GitException,
+   public MergeResult merge(MergeRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.merge(request);
@@ -342,9 +345,9 @@ public class GitService
    @Path("mv")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void mv(@Context SecurityContext sctx, MoveRequest request) throws GitException, LocalPathResolvException
+   public void mv(MoveRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.mv(request);
@@ -358,9 +361,9 @@ public class GitService
    @Path("pull")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void pull(@Context SecurityContext sctx, PullRequest request) throws GitException, LocalPathResolvException
+   public void pull(PullRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.pull(request);
@@ -374,9 +377,9 @@ public class GitService
    @Path("push")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void push(@Context SecurityContext sctx, PushRequest request) throws GitException, LocalPathResolvException
+   public void push(PushRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.push(request);
@@ -390,10 +393,10 @@ public class GitService
    @Path("remote-add")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void remoteAdd(@Context SecurityContext sctx, RemoteAddRequest request) throws GitException,
+   public void remoteAdd(RemoteAddRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.remoteAdd(request);
@@ -409,7 +412,7 @@ public class GitService
    public void remoteDelete(@PathParam("name") String name, @Context SecurityContext sctx) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.remoteDelete(name);
@@ -424,10 +427,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Remote> remoteList(@Context SecurityContext sctx, RemoteListRequest request) throws GitException,
+   public List<Remote> remoteList(RemoteListRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.remoteList(request);
@@ -441,10 +444,10 @@ public class GitService
    @Path("remote-update")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void remoteUpdate(@Context SecurityContext sctx, RemoteUpdateRequest request) throws GitException,
+   public void remoteUpdate(RemoteUpdateRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.remoteUpdate(request);
@@ -458,9 +461,9 @@ public class GitService
    @Path("reset")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void reset(@Context SecurityContext sctx, ResetRequest request) throws GitException, LocalPathResolvException
+   public void reset(ResetRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.reset(request);
@@ -474,9 +477,9 @@ public class GitService
    @Path("rm")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void rm(@Context SecurityContext sctx, RmRequest request) throws GitException, LocalPathResolvException
+   public void rm(RmRequest request) throws GitException, LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.rm(request);
@@ -491,10 +494,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput status(@Context SecurityContext sctx, StatusRequest request) throws GitException,
+   public StreamingOutput status(StatusRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          StatusPage statusPage = gitConnection.status(request);
@@ -510,10 +513,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Status jsonStatus(@Context SecurityContext sctx, StatusRequest request) throws GitException,
+   public Status jsonStatus(StatusRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.status(request);
@@ -528,10 +531,10 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public Tag tagCreate(@Context SecurityContext sctx, TagCreateRequest request) throws GitException,
+   public Tag tagCreate(TagCreateRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.tagCreate(request);
@@ -545,10 +548,10 @@ public class GitService
    @Path("tag-delete")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void tagDelete(@Context SecurityContext sctx, TagDeleteRequest request) throws GitException,
+   public void tagDelete(TagDeleteRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.tagDelete(request);
@@ -563,10 +566,10 @@ public class GitService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
-   public List<Tag> tagList(@Context SecurityContext sctx, TagListRequest request) throws GitException,
+   public List<Tag> tagList(TagListRequest request) throws GitException,
       LocalPathResolvException
    {
-      GitConnection gitConnection = getGitConnection(vfsId, path, sctx);
+      GitConnection gitConnection = getGitConnection();
       try
       {
          return gitConnection.tagList(request);
@@ -577,7 +580,7 @@ public class GitService
       }
    }
 
-   protected GitConnection getGitConnection(String vfsId, String path, SecurityContext sctx) throws GitException,
+   protected GitConnection getGitConnection() throws GitException,
       LocalPathResolvException
    {
       GitUser user = null;
