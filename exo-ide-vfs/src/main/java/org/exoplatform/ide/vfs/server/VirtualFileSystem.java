@@ -27,9 +27,11 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.InputStream;
@@ -57,7 +59,7 @@ public interface VirtualFileSystem
     * 
     * @param id id of source item
     * @param parentId id of parent for new copy
-    * @return Response with 201 status and Location header that point to newly created copy of item
+    * @return newly created copy of item
     * @throws ItemNotFoundException if <code>source</code> or <code>parentId</code> does not exist
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
@@ -69,8 +71,9 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("copy")
-   Response copy(String id, String parentId) throws ItemNotFoundException, ConstraintException,
-      PermissionDeniedException, VirtualFileSystemException;
+   @Produces({MediaType.APPLICATION_JSON})
+   Item copy(String id, String parentId) throws ItemNotFoundException, ConstraintException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Create new File in specified folder.
@@ -79,7 +82,7 @@ public interface VirtualFileSystem
     * @param name name of File
     * @param mediaType media type of content
     * @param content content of File
-    * @return Response with 201 status and Location header that point to newly created file
+    * @return newly created file
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
@@ -92,7 +95,8 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("file")
-   Response createFile(String parentId, String name, MediaType mediaType, InputStream content)
+   @Produces({MediaType.APPLICATION_JSON})
+   File createFile(String parentId, String name, MediaType mediaType, InputStream content)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -100,7 +104,7 @@ public interface VirtualFileSystem
     * 
     * @param parentId id of parent for new folder
     * @param name name of new folder
-    * @return Response with 201 status and Location header that point to newly created folder
+    * @return newly created folder
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
@@ -113,7 +117,8 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("folder")
-   Response createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
+   @Produces({MediaType.APPLICATION_JSON})
+   Folder createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
@@ -125,7 +130,7 @@ public interface VirtualFileSystem
     * @param name project name
     * @param type project type
     * @param properties
-    * @return Response with 201 status and Location header that point to newly created project
+    * @return newly created project
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
     *            <ul>
@@ -139,24 +144,9 @@ public interface VirtualFileSystem
     */
    @POST
    @Path("project")
-   Response createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
+   @Produces({MediaType.APPLICATION_JSON})
+   Project createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
-
-   /**
-    * Convert specified folder to project.
-    * 
-    * @param folderId folder to be converted to project
-    * @param type type of project
-    * @return Response with 201 status and Location header that point to the project
-    * @throws ItemNotFoundException if <code>folderId</code> does not exist
-    * @throws InvalidArgumentException if item <code>folderId</code> exists but is not a folder
-    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
-    * @throws VirtualFileSystemException if any other errors occur
-    */
-   @POST
-   @Path("convert-to-project")
-   Response convertToProject(String folderId, String type) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Delete item <code>id</code>. If item is folder then all children of this folder should be removed or
@@ -252,6 +242,9 @@ public interface VirtualFileSystem
    ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, PropertyFilter propertyFilter)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
+   ContentStream getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
+
    /**
     * Get binary content of File.
     * 
@@ -264,8 +257,8 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("content")
-   Response getContent(String id) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
-      VirtualFileSystemException;
+   Response getContentResponse(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get information about virtual file system and its capabilities.
@@ -309,6 +302,9 @@ public interface VirtualFileSystem
    Item getItem(String id, PropertyFilter propertyFilter) throws ItemNotFoundException, PermissionDeniedException,
       VirtualFileSystemException;
 
+   ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
+
    /**
     * Get binary content of version of File item.
     * 
@@ -326,8 +322,8 @@ public interface VirtualFileSystem
     */
    @GET
    @Path("version")
-   Response getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
+   Response getVersionResponse(String id, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get list of versions of File. Even if File is not versionable result must contain at least one item (current
@@ -433,7 +429,7 @@ public interface VirtualFileSystem
     * @param parentId id of new parent
     * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
     *           there is no lock token, e.g. item is not locked
-    * @return Response with 201 status and Location header that point to moved item
+    * @return moved item
     * @throws ItemNotFoundException if <code>id</code> or <code>newparentId</code> does not exist
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
@@ -448,21 +444,19 @@ public interface VirtualFileSystem
    @POST
    @Path("move")
    @Produces({MediaType.APPLICATION_JSON})
-   Response move(String id, String parentId, String lockToken) throws ItemNotFoundException, ConstraintException,
+   Item move(String id, String parentId, String lockToken) throws ItemNotFoundException, ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
-    * Rename and(or) set content type for File item.
+    * Rename and(or) set content type for Item.
     * 
-    * @param id id of File to be updated
-    * @param mediaType new media type. May be not specified if not need to change content type, e.g. need rename only
-    * @param newname new name of File. May be not specified if not need to change name, e.g. need update content type
-    *           only
+    * @param id id of Item to be updated
+    * @param mediaType new media type. May be not specified if not need to change media type, e.g. need rename only
+    * @param newname new name of Item. May be not specified if not need to change name, e.g. need update media type only
     * @param lockToken lock token. This lock token will be used if <code>id</code> is locked. Pass <code>null</code> if
     *           there is no lock token, e.g. item is not locked
-    * @return Response with 201 status and Location header that point to renamed file
+    * @return renamed item
     * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws InvalidArgumentException if <code>id</code> is not File
     * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
     *            not matched
     * @throws ConstraintException if file can't be updated cause to any constraint
@@ -471,8 +465,8 @@ public interface VirtualFileSystem
    @POST
    @Path("rename")
    @Produces({MediaType.APPLICATION_JSON})
-   Response rename(String id, MediaType mediaType, String newname, String lockToken) throws ItemNotFoundException,
-      InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException;
+   Item rename(String id, MediaType mediaType, String newname, String lockToken) throws ItemNotFoundException,
+      LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Executes a SQL query statement against the contents of virtual file system.

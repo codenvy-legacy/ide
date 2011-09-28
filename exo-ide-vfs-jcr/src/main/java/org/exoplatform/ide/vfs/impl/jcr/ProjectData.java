@@ -24,14 +24,13 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.nodetype.NodeType;
 
 class ProjectData extends FolderData
 {
@@ -44,11 +43,12 @@ class ProjectData extends FolderData
    {
       try
       {
-         return node.getProperty("type").getString();
+         return node.getProperty("vfs:projectType").getString();
       }
       catch (PathNotFoundException e)
       {
-         throw new VirtualFileSystemException("Mandatory property 'type' not found.");
+         //throw new VirtualFileSystemException("Mandatory property 'vfs:projectType' not found.");
+         return null;
       }
       catch (RepositoryException re)
       {
@@ -64,22 +64,19 @@ class ProjectData extends FolderData
    FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
       throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
    {
-      try
+      if (properties != null && properties.size() > 0)
       {
-         Session session = node.getSession();
-         if (mixinTypes != null && mixinTypes.length > 0)
+         for (ConvertibleProperty property : properties)
          {
-            for (int i = 0; i < mixinTypes.length; i++)
+            if ("vfs:mimeType".equals(property.getName()))
             {
-               NodeType nt = session.getWorkspace().getNodeTypeManager().getNodeType(mixinTypes[i]);
-               if (nt.isNodeType("vfs:project"))
+               List<String> value = property.getValue();
+               if (value != null && value.size() > 0 && Project.PROJECT_MIME_TYPE.equalsIgnoreCase(value.get(0)))
+               {
                   throw new ConstraintException("Can't create new project inside project. ");
+               }
             }
          }
-      }
-      catch (RepositoryException re)
-      {
-         throw new VirtualFileSystemException(re.getMessage(), re);
       }
       return super.createFolder(name, nodeType, mixinTypes, properties);
    }

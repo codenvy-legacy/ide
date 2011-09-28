@@ -93,11 +93,8 @@ public class MoveTest extends JcrFileSystemTest
          .append("parentId=") //
          .append(moveTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + fileNode.getName();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
       assertFalse("File must be moved. ", session.itemExists(filePath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
@@ -117,11 +114,8 @@ public class MoveTest extends JcrFileSystemTest
          .append(lock.getLockToken()) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + fileNode.getName();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
       assertFalse("File must be moved. ", session.itemExists(filePath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
@@ -198,17 +192,9 @@ public class MoveTest extends JcrFileSystemTest
          .append("?") //
          .append("parentId=") //
          .append(moveTestDestinationNode.getPath()).toString();
-      
-      
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
-      
-      System.out.println("MoveTest.testMoveFolder()" + folderPath + " :: " + moveTestDestinationNode.getPath());
-      
+      assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + folderNode.getName();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
       assertFalse("Folder must be moved. ", session.itemExists(folderPath));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after moving. ", session.itemExists(expectedPath + "/file"));

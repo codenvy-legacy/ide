@@ -20,18 +20,42 @@
 -->
 <nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:vfs="http://exoplatform.org/vfs">
 
-   <nodeType name="vfs:project" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+<!--    <nodeType name="vfs:folder" isMixin="true" hasOrderableChildNodes="false" primaryItemName=""> -->
+<!--       <supertypes> -->
+<!--          <supertype>nt:base</supertype> -->
+<!--       </supertypes> -->
+<!--       <propertyDefinitions> -->
+<!--          <propertyDefinition name="vfs:mimeType" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"> -->
+<!--          </propertyDefinition> -->
+<!--          <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"> -->
+<!--          </propertyDefinition> -->
+<!--          <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"> -->
+<!--          </propertyDefinition> -->
+<!--       </propertyDefinitions> -->
+<!--    </nodeType> -->
+
+<!--    <nodeType name="vfs:project" isMixin="true" hasOrderableChildNodes="false" primaryItemName=""> -->
+<!--       <supertypes> -->
+<!--          <supertype>vfs:folder</supertype> -->
+<!--       </supertypes> -->
+<!--       <propertyDefinitions> -->
+<!--          <propertyDefinition name="vfs:projectType" requiredType="String" autoCreated="true" mandatory="true" onParentVersion="COPY" protected="false" multiple="false"> -->
+<!--             <defaultValues> -->
+<!--                <defaultValue>default</defaultValue> -->
+<!--             </defaultValues> -->
+<!--          </propertyDefinition> -->
+<!--       </propertyDefinitions> -->
+<!--    </nodeType> -->
+   
+   <nodeType name="vfs:mixunstructured" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
       <supertypes>
          <supertype>nt:base</supertype>
       </supertypes>
       <propertyDefinitions>
-         <propertyDefinition name="type" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
-         </propertyDefinition>
          <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
          </propertyDefinition>
          <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
          </propertyDefinition>
       </propertyDefinitions>
    </nodeType>
-   
 </nodeTypes>

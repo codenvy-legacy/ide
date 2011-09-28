@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
@@ -114,8 +115,7 @@ class VersionData extends FileData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of file " + getId()
-            + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get versions of file " + getId() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
@@ -124,19 +124,20 @@ class VersionData extends FileData
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#rename(java.lang.String,
-    *      javax.ws.rs.core.MediaType, java.lang.String)
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#rename(java.lang.String, javax.ws.rs.core.MediaType,
+    *      java.lang.String, java.lang.String[], java.lang.String[])
     */
    @Override
-   void rename(String newname, MediaType mediaType, String lockToken) throws LockException, PermissionDeniedException,
+   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
+      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
       throw new NotSupportedException("Unable update not current version of file. ");
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#setContent(java.io.InputStream,
-    *      javax.ws.rs.core.MediaType, java.lang.String)
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#setContent(java.io.InputStream, javax.ws.rs.core.MediaType,
+    *      java.lang.String)
     */
    @Override
    void setContent(InputStream content, MediaType mediaType, String lockToken) throws LockException,
@@ -146,9 +147,9 @@ class VersionData extends FileData
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getCurrentVersionId()
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getLatestVersionId()
     */
-   String getCurrentVersionId() throws VirtualFileSystemException
+   String getLatestVersionId() throws VirtualFileSystemException
    {
       try
       {

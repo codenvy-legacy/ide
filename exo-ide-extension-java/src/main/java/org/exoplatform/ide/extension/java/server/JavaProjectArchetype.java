@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -48,15 +47,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
- * Provide exporting resources via VirtailFileSystem.
- * For example copy template of project.
+ * Provide exporting resources via VirtailFileSystem. For example copy template of project.
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 public class JavaProjectArchetype
 {
-
 
    private MimeTypeResolver mimeTypeResolver;
 
@@ -88,8 +85,7 @@ public class JavaProjectArchetype
       ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       File res = new File(url.toURI());
-      Response response = vfs.createProject(parentId, projectName, projectType, null);
-      Project project = (Project)response.getEntity();
+      Project project = vfs.createProject(parentId, projectName, projectType, null);
       File[] files = res.listFiles();
       for (int i = 0; i < files.length; i++)
       {
@@ -113,21 +109,17 @@ public class JavaProjectArchetype
     * @throws VirtualFileSystemException
     * @throws IOException
     */
-   private void export(String parentId, File file, String groupId, String artifactId, String version, String projectName, VirtualFileSystem vfs)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException,
-      IOException
+   private void export(String parentId, File file, String groupId, String artifactId, String version,
+      String projectName, VirtualFileSystem vfs) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException, IOException
    {
       if (file.isDirectory())
       {
-         Response response = vfs.createFolder(parentId, file.getName());
-         if (response.getEntity() instanceof Folder)
+         Folder folder = vfs.createFolder(parentId, file.getName());;
+         File[] files = file.listFiles();
+         for (int i = 0; i < files.length; i++)
          {
-            Folder folder = (Folder)response.getEntity();
-            File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++)
-            {
-               export(folder.getId(), files[i], groupId, artifactId, version, projectName, vfs);
-            }
+            export(folder.getId(), files[i], groupId, artifactId, version, projectName, vfs);
          }
       }
       else

@@ -91,11 +91,8 @@ public class CopyTest extends JcrFileSystemTest
          .append("parentId=") //
          .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = copyTestDestinationNode.getPath() + "/" + fileNode.getName();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
       assertTrue("Source file not found. ", session.itemExists(filePath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
@@ -134,11 +131,8 @@ public class CopyTest extends JcrFileSystemTest
          .append("parentId=") //
          .append(copyTestDestinationNode.getPath()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = copyTestDestinationNode.getPath() + "/" + folderNode.getName();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
       assertTrue("Source folder not found. ", session.itemExists(folderPath));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after coping. ", session.itemExists(expectedPath + "/file"));

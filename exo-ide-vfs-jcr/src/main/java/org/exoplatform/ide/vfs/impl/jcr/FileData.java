@@ -48,15 +48,15 @@ import javax.ws.rs.core.MediaType;
  */
 class FileData extends ItemData
 {
-   class FileVersionIterator extends LazyIterator<FileData>
+   private static class FileVersionIterator extends LazyIterator<FileData>
    {
       private javax.jcr.version.VersionIterator i;
+      private FileData latest;
 
-      private boolean currentSeen;
-
-      FileVersionIterator(javax.jcr.version.VersionIterator i)
+      FileVersionIterator(javax.jcr.version.VersionIterator i, FileData latest)
       {
          this.i = i;
+         this.latest = latest;
          fetchNext();
       }
 
@@ -79,17 +79,20 @@ class FileData extends ItemData
                throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
             }
          }
-         if (next == null && !currentSeen)
+         if (next == null && latest != null)
          {
-            currentSeen = true;
-            next = FileData.this;
+            next = latest;
+            latest = null;
          }
       }
    }
 
-   class SingleVersionIterator extends LazyIterator<FileData>
+   private static class SingleVersionIterator extends LazyIterator<FileData>
    {
-      private boolean currentSeen;
+      public SingleVersionIterator(FileData file)
+      {
+         next = file;
+      }
 
       /**
        * @see org.exoplatform.ide.vfs.server.LazyIterator#fetchNext()
@@ -98,15 +101,10 @@ class FileData extends ItemData
       protected void fetchNext()
       {
          next = null;
-         if (!currentSeen)
-         {
-            currentSeen = true;
-            next = FileData.this;
-         }
       }
    }
 
-   static final String CURRENT_VERSION_ID = "current";
+   private static final String CURRENT_VERSION_ID = "0";
 
    FileData(Node node)
    {
@@ -128,7 +126,7 @@ class FileData extends ItemData
     * @return latest version's id
     * @throws VirtualFileSystemException if any error occurs
     */
-   String getCurrentVersionId() throws VirtualFileSystemException
+   String getLatestVersionId() throws VirtualFileSystemException
    {
       return getId();
    }
@@ -156,37 +154,32 @@ class FileData extends ItemData
       }
    }
 
-   /**
-    * Get media type of content.
-    * 
-    * @return type of content
-    * @throws PermissionDeniedException if content type can't be retrieved cause to security restriction
-    * @throws VirtualFileSystemException if any other errors occurs
-    */
-   String getContenType() throws PermissionDeniedException, VirtualFileSystemException
+   MediaType getMediaType() throws PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
-         String mimeType = node.getProperty("jcr:content/jcr:mimeType").getString();
+         String str = node.getProperty("jcr:content/jcr:mimeType").getString();
+         if (str.isEmpty())
+         {
+            return null;
+         }
          try
          {
             String encoding = node.getProperty("jcr:content/jcr:encoding").getString();
-            // TODO : default charset ?
-            mimeType += (";charset=" + encoding);
+            str += (";charset=" + encoding);
          }
          catch (PathNotFoundException e)
          {
          }
-         return mimeType;
+         return MediaType.valueOf(str);
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
+         throw new PermissionDeniedException("Unable get mime type of object " + getId() + ". Access denied. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get type of content of file " + getId() + ". " + e.getMessage(),
-            e);
+         throw new VirtualFileSystemException("Unable get mime type of object " + getId() + ". " + e.getMessage(), e);
       }
    }
 
@@ -227,13 +220,13 @@ class FileData extends ItemData
       {
          if (!(node.isNodeType("mix:versionable")))
          {
-            return new SingleVersionIterator();
+            return new SingleVersionIterator(this);
          }
          else
          {
             javax.jcr.version.VersionIterator i = node.getVersionHistory().getAllVersions();
             i.next(); // skip jcr:rootVersion
-            return new FileVersionIterator(i);
+            return new FileVersionIterator(i, this);
          }
       }
       catch (AccessDeniedException e)
@@ -252,10 +245,21 @@ class FileData extends ItemData
       try
       {
          if (getVersionId().equals(versionId))
+         {
             return this;
-         // If not file versionable then any version ID is not acceptable.
+         }
          if (!(node.isNodeType("mix:versionable")))
+         {
+            // If not file versionable then any version ID is not acceptable.
             throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
+         }
+//         if (CURRENT_VERSION_ID.equals(versionId))
+//         {
+//            Version versionNode = (Version)node.getParent();
+//            String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
+//            Session session = node.getSession();
+//            return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+//         }
          try
          {
             return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"));
@@ -302,7 +306,9 @@ class FileData extends ItemData
    String lock() throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (isLocked())
+      {
          throw new LockException("File already locked. ");
+      }
       try
       {
          if (node.canAddMixin("mix:lockable"))
@@ -339,12 +345,16 @@ class FileData extends ItemData
    void unlock(String lockToken) throws LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (!isLocked())
+      {
          throw new LockException("File is not locked. ");
+      }
       try
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
          node.unlock();
       }
       catch (javax.jcr.lock.LockException e)
@@ -380,29 +390,25 @@ class FileData extends ItemData
    }
 
    /**
-    * Rename and(or) update content type of current file.
-    * 
-    * @param newname new name. May be <code>null</code> if name is unchangeable
-    * @param mediaType new media type. May be <code>null</code> if content type is unchangeable
-    * @param lockToken lock token. This lock token will be used if file is locked. Pass <code>null</code> if there is no
-    *           lock token
-    * @throws ConstraintException if parent folder already contains file with the same name as specified or if
-    *            <code>newname</code> is invalid
-    * @throws LockException if file is locked and <code>lockToken</code> is <code>null</code> or does not matched
-    * @throws PermissionDeniedException if file can't be renamed cause to security restriction
-    * @throws VirtualFileSystemException if any other errors occurs
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#rename(java.lang.String, javax.ws.rs.core.MediaType,
+    *      java.lang.String, java.lang.String[], java.lang.String[])
     */
-   void rename(String newname, MediaType mediaType, String lockToken) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
+      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       if ((newname == null || newname.length() == 0) && mediaType == null)
-         return;
+      {
+         return getId();
+      }
 
       try
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
          if (newname != null && newname.length() > 0)
          {
             Node parent = node.getParent();
@@ -410,13 +416,27 @@ class FileData extends ItemData
             session.move(node.getPath(), destinationPath);
             node = (Node)session.getItem(destinationPath);
          }
+
+         if (addMixinTypes != null)
+         {
+            for (int i = 0; i < addMixinTypes.length; i++)
+            {
+               if (node.canAddMixin(addMixinTypes[i]))
+               {
+                  node.addMixin(addMixinTypes[i]);
+               }
+            }
+         }
+
          if (mediaType != null)
          {
             Node contentNode = node.getNode("jcr:content");
             contentNode.setProperty("jcr:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype()));
             contentNode.setProperty("jcr:encoding", mediaType.getParameters().get("charset"));
          }
+
          session.save();
+         return getId();
       }
       catch (ItemExistsException e)
       {
@@ -454,7 +474,9 @@ class FileData extends ItemData
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
 
          if (!node.isNodeType("mix:versionable"))
          {

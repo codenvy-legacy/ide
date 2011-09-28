@@ -22,6 +22,7 @@ import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
@@ -36,6 +37,7 @@ import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.PropertyDefinition;
@@ -47,7 +49,7 @@ import javax.ws.rs.core.MediaType;
  */
 public class FolderData extends ItemData
 {
-   private class ChildrenIterator extends LazyIterator<ItemData>
+   private static class ChildrenIterator extends LazyIterator<ItemData>
    {
       private NodeIterator i;
 
@@ -77,12 +79,52 @@ public class FolderData extends ItemData
             }
          }
       }
-
    }
 
    FolderData(Node node)
    {
       super(node, ItemType.FOLDER);
+   }
+
+   boolean isRootFolder() throws VirtualFileSystemException
+   {
+      try
+      {
+         return node.getDepth() == 0;
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getMediaType()
+    */
+   @Override
+   MediaType getMediaType() throws PermissionDeniedException, VirtualFileSystemException
+   {
+      try
+      {
+         String str = node.getProperty("vfs:mimeType").getString();
+         if (str.isEmpty())
+         {
+            return null;
+         }
+         return MediaType.valueOf(str);
+      }
+      catch (PathNotFoundException e)
+      {
+         return null;
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable get mime type of object " + getId() + ". Access denied. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable get mime type of object " + getId() + ". " + e.getMessage(), e);
+      }
    }
 
    LazyIterator<ItemData> getChildren() throws PermissionDeniedException, VirtualFileSystemException
@@ -118,16 +160,21 @@ public class FolderData extends ItemData
          if (mixinTypes != null)
          {
             for (int i = 0; i < mixinTypes.length; i++)
-               fileNode.addMixin(mixinTypes[i]);
+            {
+               if (fileNode.canAddMixin(mixinTypes[i]))
+               {
+                  fileNode.addMixin(mixinTypes[i]);
+               }
+            }
          }
 
-         // TODO : property name mapping ?
-         // vfs:blabla -> jcr:blabla
          if (properties != null && properties.size() > 0)
          {
             Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(fileNode);
             for (ConvertibleProperty property : properties)
+            {
                updateProperty(fileNode, propertyDefinitions.get(property.getName()), property);
+            }
          }
 
          Session session = node.getSession();
@@ -153,20 +200,17 @@ public class FolderData extends ItemData
     * 
     * @param name name of folder
     * @param nodeType primary node type name
-    * @param mixinTypes mixin types that must be added. Should be
-    *           <code>null</code> if there is no additional mixins
-    * @param properties set of properties that should be added to newly created
-    *           node. Should be <code>null</code> if there is no properties
+    * @param mixinTypes mixin types that must be added. Should be <code>null</code> if there is no additional mixins
+    * @param properties set of properties that should be added to newly created node. Should be <code>null</code> if
+    *           there is no properties
     * @return newly created folder item
-    * @throws InvalidArgumentException if folder already has item with name
-    *            <code>name</code>
+    * @throws InvalidArgumentException if folder already has item with name <code>name</code>
     * @throws ConstraintException if any of following conditions are met:
     *            <ul>
     *            <li>at least one of updated properties is read-only</li>
     *            <li>value of any updated properties is not acceptable</li>
     *            </ul>
-    * @throws PermissionDeniedException if properties can't be updated cause to
-    *            security restriction
+    * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
@@ -178,18 +222,21 @@ public class FolderData extends ItemData
          if (mixinTypes != null)
          {
             for (int i = 0; i < mixinTypes.length; i++)
-               folderNode.addMixin(mixinTypes[i]);
+            {
+               if (folderNode.canAddMixin(mixinTypes[i]))
+               {
+                  folderNode.addMixin(mixinTypes[i]);
+               }
+            }
          }
 
-         // TODO : property name mapping ?
-         // vfs:blabla -> jcr:blabla
          if (properties != null && properties.size() > 0)
          {
-                        
             Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(folderNode);
-            for (ConvertibleProperty property : properties) 
+            for (ConvertibleProperty property : properties)
+            {
                updateProperty(folderNode, propertyDefinitions.get(property.getName()), property);
-
+            }
          }
 
          Session session = node.getSession();
@@ -208,6 +255,65 @@ public class FolderData extends ItemData
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#rename(java.lang.String, javax.ws.rs.core.MediaType,
+    *      java.lang.String, java.lang.String[], java.lang.String[])
+    */
+   @Override
+   String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
+      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      if ((newname == null || newname.length() == 0) && mediaType == null)
+      {
+         return getId();
+      }
+
+      try
+      {
+         Session session = node.getSession();
+         if (newname != null && newname.length() > 0)
+         {
+            Node parent = node.getParent();
+            String destinationPath = (parent.getDepth() == 0 ? "/" : (parent.getPath() + "/")) + newname;
+            session.move(node.getPath(), destinationPath);
+            node = (Node)session.getItem(destinationPath);
+         }
+
+         if (addMixinTypes != null)
+         {
+            for (int i = 0; i < addMixinTypes.length; i++)
+            {
+               if (node.canAddMixin(addMixinTypes[i]))
+               {
+                  node.addMixin(addMixinTypes[i]);
+               }
+            }
+         }
+
+         if (mediaType != null && node.isNodeType("vfs:mixunstructured"))
+         {
+            // If possible add mime type. Otherwise default one will be used.
+            node.setProperty("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype()));
+         }
+
+         session.save();
+         return getId();
+      }
+      catch (ItemExistsException e)
+      {
+         throw new ConstraintException("Folder with the same name already exists. ");
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Unable rename folder " + getId() + ". Operation not permitted. ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException("Unable rename folder " + getId() + ". " + e.getMessage(), e);
       }
    }
 }

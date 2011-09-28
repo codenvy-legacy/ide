@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -60,6 +61,7 @@ import javax.jcr.ValueFormatException;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Wrapper around node to simplify interaction with JCR.
@@ -88,7 +90,10 @@ abstract class ItemData
          return new FileData(node.getParent());
       if (node.isNodeType("nt:frozenNode"))
          return new VersionData(node);
-      if (node.isNodeType("vfs:project"))
+      //if (node.isNodeType("vfs:project"))
+      //   return new ProjectData(node);
+      if (node.isNodeType("vfs:mixunstructured") && node.hasProperty("vfs:mimeType")
+         && Project.PROJECT_MIME_TYPE.equalsIgnoreCase(node.getProperty("vfs:mimeType").getString()))
          return new ProjectData(node);
       return new FolderData(node);
    }
@@ -98,9 +103,8 @@ abstract class ItemData
       "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory", "jcr:mixinTypes",
       "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid"));
 
-   protected Node node;
-
-   protected ItemType type;
+   Node node;
+   final ItemType type;
 
    ItemData(Node node, ItemType type)
    {
@@ -143,6 +147,15 @@ abstract class ItemData
    }
 
    /**
+    * Get media type of object.
+    * 
+    * @return type of object
+    * @throws PermissionDeniedException if content type can't be retrieved cause to security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   abstract MediaType getMediaType() throws PermissionDeniedException, VirtualFileSystemException;
+
+   /**
     * @return path of this item
     * @throws VirtualFileSystemException if any errors occurs
     */
@@ -158,14 +171,19 @@ abstract class ItemData
       }
    }
 
+   /**
+    * @return id of parent folder or null if current item is root folder
+    * @throws VirtualFileSystemException if any errors occur
+    */
    String getParentId() throws VirtualFileSystemException
    {
       try
       {
-         if (node.getDepth() == 0) // root
+         if (type == ItemType.FOLDER && ((FolderData)this).isRootFolder())
+         {
             return null;
-         else
-            return node.getParent().getPath();
+         }
+         return fromNode(node.getParent()).getId();
       }
       catch (RepositoryException e)
       {
@@ -213,12 +231,11 @@ abstract class ItemData
    @SuppressWarnings("rawtypes")
    List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException, VirtualFileSystemException
    {
-
       if (filter == null)
+      {
          throw new NullPointerException("PropertyFilter should not be null");
+      }
 
-      // TODO : property name mapping ?
-      // jcr:blabla -> vfs:blabla
       try
       {
          List<Property> properties = new ArrayList<Property>();
@@ -242,7 +259,7 @@ abstract class ItemData
    }
 
    @SuppressWarnings("rawtypes")
-   Property createProperty(javax.jcr.Property property) throws RepositoryException
+   private Property createProperty(javax.jcr.Property property) throws RepositoryException
    {
       PropertyDefinition definition = property.getDefinition();
       boolean multiple = definition.isMultiple();
@@ -354,28 +371,24 @@ abstract class ItemData
    void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
-
-      updateProperties(this.node, properties, lockToken);
-
-   }
-
-   void updateProperties(Node node, List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
-   {
       if (properties == null || properties.size() == 0)
+      {
          return;
+      }
 
-      // TODO : property name mapping ?
-      // vfs:blabla -> jcr:blabla
       try
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
 
-         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
+         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(node);
          for (ConvertibleProperty property : properties)
+         {
             updateProperty(node, propertyDefinitions.get(property.getName()), property);
+         }
 
          session.save();
       }
@@ -394,35 +407,34 @@ abstract class ItemData
       }
    }
 
-   void updateProperty(PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-
-      updateProperty(this.node, pd, property);
-   }
-
-   void updateProperty(Node node, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException,
+   void updateProperty(Node theNode, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
       String name = property.getName();
       String[] value = property.valueToArray(String[].class);
 
       if (value == null)
+      {
          value = new String[0];
+      }
 
       if (pd != null)
       {
          if (pd.isProtected())
+         {
             throw new ConstraintException("Property " + name + " is read-only. ");
+         }
          if (pd.isMandatory() && value.length == 0)
+         {
             throw new ConstraintException("Property " + name + " can't have null value. ");
+         }
       }
 
       try
       {
          if (value.length == 0)
          {
-            node.setProperty(name, (Value)null);
+            theNode.setProperty(name, (Value)null);
          }
          else
          {
@@ -433,12 +445,14 @@ abstract class ItemData
             {
                Value[] jcrValue = new Value[value.length];
                for (int i = 0; i < value.length; i++)
+               {
                   jcrValue[i] = new StringValue(value[i]);
-               node.setProperty(name, jcrValue);
+               }
+               theNode.setProperty(name, jcrValue);
             }
             else
             {
-               node.setProperty(name, new StringValue(value[0]));
+               theNode.setProperty(name, new StringValue(value[0]));
             }
          }
       }
@@ -460,20 +474,14 @@ abstract class ItemData
       }
    }
 
-   Map<String, PropertyDefinition> getPropertyDefinitions() throws RepositoryException
-   {
-
-      return getPropertyDefinitions(this.node);
-   }
-
    Map<String, PropertyDefinition> getPropertyDefinitions(Node node) throws RepositoryException
    {
       NodeType nodeType = node.getPrimaryNodeType();
       PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
-      Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>(propertyDefinitions.length);
+      Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>();
       for (int i = 0; i < propertyDefinitions.length; i++)
          cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
-
+      // TODO check mixin node types
       return cache;
    }
 
@@ -503,23 +511,23 @@ abstract class ItemData
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
          if (node.isLocked())
          {
             // ====== Workaround for disabling removing locked node. ======
             // JCR back-end does not prevent removing locked node (need lock parent node).
             Lock lock = node.getLock();
             if (lock.getLockToken() == null)
+            {
                throw new LockException("Unable delete item " + getId() + ". Item is locked. ");
+            }
          }
          node.remove();
          session.save();
          node = null;
       }
-      /*catch (javax.jcr.lock.LockException e)
-      {
-         throw new LockException("Unable delete item " + getId() + ". Item is locked. ");
-      }*/
       catch (AccessDeniedException e)
       {
          throw new PermissionDeniedException("Unable delete item " + getId() + ". Operation not permitted. ");
@@ -542,7 +550,9 @@ abstract class ItemData
       try
       {
          if (!node.isNodeType("exo:privilegeable"))
+         {
             return Collections.emptyList();
+         }
 
          ExtendedNode extNode = (ExtendedNode)node;
          Map<String, Set<String>> tmp = new HashMap<String, Set<String>>();
@@ -565,11 +575,17 @@ abstract class ItemData
             ace.setPrincipal(principal);
             Set<String> values = tmp.get(principal);
             if (values.size() == PermissionType.ALL.length)
+            {
                ace.getPermissions().add(BasicPermissions.ALL.value());
+            }
             else if (values.contains(PermissionType.READ) && values.contains(PermissionType.ADD_NODE))
+            {
                ace.getPermissions().add(BasicPermissions.READ.value());
+            }
             else if (values.contains(PermissionType.SET_PROPERTY) && values.contains(PermissionType.REMOVE))
+            {
                ace.getPermissions().add(BasicPermissions.WRITE.value());
+            }
             acl.add(ace);
          }
          return acl;
@@ -637,20 +653,32 @@ abstract class ItemData
          Session session = extNode.getSession();
 
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
 
          if (!extNode.isNodeType("exo:privilegeable"))
+         {
             extNode.addMixin("exo:privilegeable");
+         }
 
          Map<String, String[]> aces = new HashMap<String, String[]>(tmp.size());
          for (Map.Entry<String, Set<String>> e : tmp.entrySet())
+         {
             aces.put(e.getKey(), e.getValue().toArray(new String[e.getValue().size()]));
+         }
 
          if (override)
+         {
             extNode.setPermissions(aces);
+         }
          else
+         {
             for (Map.Entry<String, String[]> e : aces.entrySet())
+            {
                extNode.setPermission(e.getKey(), e.getValue());
+            }
+         }
 
          session.save();
       }
@@ -710,7 +738,7 @@ abstract class ItemData
     * @param folder new parent
     * @param lockToken lock token. This lock token will be used if this item is locked. Pass <code>null</code> if there
     *           is no lock token
-    * @return id moved object
+    * @return id of moved object
     * @throws ConstraintException if destination folder already contains item with the same name as current
     * @throws LockException if this item is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if item can't be moved cause to security restriction
@@ -723,7 +751,9 @@ abstract class ItemData
       {
          Session session = node.getSession();
          if (lockToken != null)
+         {
             session.addLockToken(lockToken);
+         }
          String itemPath = getPath();
          String destinationPath = folder.getPath();
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
@@ -750,6 +780,27 @@ abstract class ItemData
             + e.getMessage(), e);
       }
    }
+
+   /**
+    * Rename and(or) update content type of current object.
+    * 
+    * @param newname new name. May be <code>null</code> if name is unchangeable
+    * @param mediaType new media type. May be <code>null</code> if content type is unchangeable
+    * @param lockToken lock token. This lock token will be used if object is locked. Pass <code>null</code> if there is
+    *           no lock token
+    * @param addMixinTypes mixin types that must be added. Should be <code>null</code> if there is no additional mixins
+    * @param removeMixinTypes mixin types that must be removed. Should be <code>null</code> if there is no mixins to
+    *           remove
+    * @return id of renamed object
+    * @throws ConstraintException if parent folder already contains object with the same name as specified or if
+    *            <code>newname</code> is invalid
+    * @throws LockException if object is locked and <code>lockToken</code> is <code>null</code> or does not matched
+    * @throws PermissionDeniedException if object can't be renamed cause to security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   abstract String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
+      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    Node getNode()
    {

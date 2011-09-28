@@ -38,8 +38,8 @@ import javax.jcr.Node;
 public class VersionsTest extends JcrFileSystemTest
 {
    private Node versionsTestNode;
-
    private String filePath;
+   private Node fileNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -52,7 +52,7 @@ public class VersionsTest extends JcrFileSystemTest
       versionsTestNode = testRoot.addNode(name, "nt:unstructured");
       versionsTestNode.addMixin("exo:privilegeable");
 
-      Node fileNode = versionsTestNode.addNode("VersionsTest_FILE", "nt:file");
+      fileNode = versionsTestNode.addNode("VersionsTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -94,7 +94,37 @@ public class VersionsTest extends JcrFileSystemTest
       assertEquals(3, all.size());
       assertEquals("1", all.get(0));
       assertEquals("2", all.get(1));
-      assertEquals("current", all.get(2));
+      assertEquals("0", all.get(2));
+      //log.info(new String(writer.getBody()));
+   }
+
+   @SuppressWarnings("unchecked")
+   public void testGetSinleVersions() throws Exception
+   {
+      Node singleVersionFileNode = versionsTestNode.addNode("testGetSinleVersions", "nt:file");
+      Node contentNode = singleVersionFileNode.addNode("jcr:content", "nt:resource");
+      contentNode.setProperty("jcr:mimeType", "text/plain");
+      contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      session.save();
+
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("version-history") //
+         .append(singleVersionFileNode.getPath()) //
+         .toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      List<File> items = ((ItemList<File>)response.getEntity()).getItems();
+      List<String> all = new ArrayList<String>(1);
+      for (File i : items)
+      {
+         validateLinks(i);
+         all.add(i.getVersionId());
+      }
+      assertEquals(1, all.size());
+      assertEquals("0", all.get(0));
       //log.info(new String(writer.getBody()));
    }
 
@@ -110,7 +140,7 @@ public class VersionsTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
-      log.info(">>>>>>>> "+response.getHttpHeaders());
+      log.info(">>>>>>>> " + response.getHttpHeaders());
    }
 
    public void testGetVersionByIdInvalidVersion() throws Exception
@@ -124,7 +154,7 @@ public class VersionsTest extends JcrFileSystemTest
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
-     log.info(new String(writer.getBody()));
+      log.info(new String(writer.getBody()));
    }
 
    public void testGetVersionsPagingSkipCount() throws Exception
@@ -179,7 +209,7 @@ public class VersionsTest extends JcrFileSystemTest
          all.add(i.getVersionId());
       }
       assertEquals(3, all.size());
-      
+
       all.remove(2);
 
       path = new StringBuilder() //

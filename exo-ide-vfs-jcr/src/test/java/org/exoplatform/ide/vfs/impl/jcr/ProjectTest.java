@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -38,13 +39,7 @@ import javax.jcr.Node;
  */
 public class ProjectTest extends JcrFileSystemTest
 {
-
-   private static final String PROJECT_NT = "vfs:project";
-   private static final String PROJECT_MT = "text/vnd.ideproject+directory";
-
    private String CREATE_TEST_PATH;
-
-   //private Node readTestNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -63,9 +58,7 @@ public class ProjectTest extends JcrFileSystemTest
    public void testCreateProject() throws Exception
    {
       String name = "testCreateProject";
-
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
-
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("project") //
@@ -74,23 +67,17 @@ public class ProjectTest extends JcrFileSystemTest
          .append("name=") //
          .append(name).append("&").append("type=") //
          .append("java").toString();
-
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
-
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
 
-      assertEquals("Error: " + response.getEntity(), 201, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       String expectedPath = CREATE_TEST_PATH + "/" + name;
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
 
       assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
       Node project = (Node)session.getItem(expectedPath);
-      assertTrue("vfs:project node type expected", project.isNodeType(PROJECT_NT));
 
-      assertEquals("java", project.getProperty("type").getString());
+      assertEquals("java", project.getProperty("vfs:projectType").getString());
       assertEquals("MyValue", project.getProperty("MyProperty").getString());
    }
 
@@ -98,8 +85,9 @@ public class ProjectTest extends JcrFileSystemTest
    {
       String name = "testCreateProjectInsideProject";
       Node parentProject = testRoot.addNode(name, "nt:folder");
-      parentProject.addMixin(PROJECT_NT);
-      parentProject.setProperty("type", "java");
+      parentProject.addMixin("vfs:mixunstructured");
+      parentProject.setProperty("vfs:projectType", "java");
+      parentProject.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       parentProject.getSession().save();
 
       String path = new StringBuilder() //
@@ -123,12 +111,14 @@ public class ProjectTest extends JcrFileSystemTest
    {
       String destName = "testCopyProjectToProject_DESTINATION";
       Node destProject = testRoot.addNode(destName, "nt:folder");
-      destProject.addMixin(PROJECT_NT);
-      destProject.setProperty("type", "java");
+      destProject.addMixin("vfs:mixunstructured");
+      destProject.setProperty("vfs:projectType", "java");
+      destProject.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       String projectName = "testCopyProjectToProject";
       Node project = testRoot.addNode(projectName, "nt:folder");
-      project.addMixin(PROJECT_NT);
-      project.setProperty("type", "java");
+      project.addMixin("vfs:mixunstructured");
+      project.setProperty("vfs:projectType", "java");
+      project.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       project.getSession().save();
 
       String path = new StringBuilder() //
@@ -147,12 +137,14 @@ public class ProjectTest extends JcrFileSystemTest
    {
       String destName = "testCopyProjectToProject_DESTINATION";
       Node destProject = testRoot.addNode(destName, "nt:folder");
-      destProject.addMixin(PROJECT_NT);
-      destProject.setProperty("type", "java");
+      destProject.addMixin("vfs:mixunstructured");
+      destProject.setProperty("vfs:projectType", "java");
+      destProject.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       String projectName = "testCopyProjectToProject";
       Node project = testRoot.addNode(projectName, "nt:folder");
-      project.addMixin(PROJECT_NT);
-      project.setProperty("type", "java");
+      project.addMixin("vfs:mixunstructured");
+      project.setProperty("vfs:projectType", "java");
+      project.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       project.getSession().save();
 
       String path = new StringBuilder() //
@@ -171,9 +163,10 @@ public class ProjectTest extends JcrFileSystemTest
    {
       Node getTestRoot = testRoot.addNode("testGetProjectItem", "nt:unstructured");
       Node proj1 = getTestRoot.addNode("project1", "nt:folder");
-      proj1.addMixin(PROJECT_NT);
-      proj1.setProperty("type", "java");
+      proj1.addMixin("vfs:mixunstructured");
+      proj1.setProperty("vfs:projectType", "java");
       proj1.setProperty("prop1", "val1");
+      proj1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       getTestRoot.getSession().save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -189,25 +182,28 @@ public class ProjectTest extends JcrFileSystemTest
       Project p = (Project)response.getEntity();
       validateLinks(p);
       assertEquals("project1", p.getName());
-      assertEquals(PROJECT_MT, p.getMimeType());
+      assertEquals(Project.PROJECT_MIME_TYPE, p.getMimeType());
       assertEquals("java", p.getProjectType());
 
-      assertEquals(2, p.getProperties().size());
+      assertEquals(3, p.getProperties().size());
       assertEquals("val1", p.getPropertyValue("prop1"));
+      assertEquals(Project.PROJECT_MIME_TYPE, p.getPropertyValue("vfs:mimeType"));
    }
 
    public void testProjectAsChild() throws Exception
    {
       Node readRoot = testRoot.addNode("testProjectAsChild", "nt:unstructured");
       Node proj1 = readRoot.addNode("project1", "nt:folder");
-      proj1.addMixin(PROJECT_NT);
+      proj1.addMixin("vfs:mixunstructured");
       Node proj2 = readRoot.addNode("project2", "nt:folder");
-      proj2.addMixin(PROJECT_NT);
+      proj2.addMixin("vfs:mixunstructured");
       readRoot.addNode("f1", "nt:folder");
       readRoot.addNode("f2", "nt:folder");
-      proj1.setProperty("type", "java");
+      proj1.setProperty("vfs:projectType", "java");
+      proj1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       proj1.setProperty("prop1", "val1");
-      proj2.setProperty("type", "groovy");
+      proj2.setProperty("vfs:projectType", "groovy");
+      proj2.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       readRoot.getSession().save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -223,7 +219,7 @@ public class ProjectTest extends JcrFileSystemTest
       for (Item i : children.getItems())
       {
          validateLinks(i);
-         if (i.getMimeType().equals(PROJECT_MT))
+         if (i.getMimeType().equals(Project.PROJECT_MIME_TYPE))
          {
             assertTrue(i instanceof Project);
             assertNotNull(((Project)i).getProjectType());
@@ -238,8 +234,9 @@ public class ProjectTest extends JcrFileSystemTest
    {
       Node readRoot = testRoot.addNode("testUpdateProject", "nt:unstructured");
       Node proj1 = readRoot.addNode("project1", "nt:folder");
-      proj1.addMixin(PROJECT_NT);
-      proj1.setProperty("type", "java");
+      proj1.addMixin("vfs:mixunstructured");
+      proj1.setProperty("vfs:projectType", "java");
+      proj1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       readRoot.getSession().save();
 
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
@@ -261,26 +258,59 @@ public class ProjectTest extends JcrFileSystemTest
       Node convertRoot = testRoot.addNode("testConvertFolderToProject", "nt:unstructured");
       Node folder = convertRoot.addNode("project1", "nt:folder");
       convertRoot.getSession().save();
-
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("convert-to-project") //
+         .append("rename") //
          .append(folder.getPath()) //
          .append("?") //
-         .append("type=") //
-         .append("java").toString();
- 
+         .append("mediaType=") //
+         .append("text/vnd.ideproject%2Bdirectory") // text/vnd.ideproject+directory
+         .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      assertEquals("text/vnd.ideproject+directory", folder.getProperty("vfs:mimeType").getString());
 
-      assertEquals("Error: " + response.getEntity(), 201, response.getStatus());
-      String expectedPath = folder.getPath();
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(folder.getPath()) //
+         .toString();
+      response = launcher.service("GET", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      Folder project = (Folder)response.getEntity();
+      assertEquals("text/vnd.ideproject+directory", project.getMimeType());
+      assertTrue("Folder must be converted to Project. ", project instanceof Project);
+   }
 
-      assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
-      Node project = (Node)session.getItem(expectedPath);
-      assertTrue("vfs:project node type expected", project.isNodeType(PROJECT_NT));
-      assertEquals("java", project.getProperty("type").getString());
+   public void testConvertProjectToFolder() throws Exception
+   {
+      Node convertRoot = testRoot.addNode("testConvertProjectToFolder", "nt:unstructured");
+      Node project = convertRoot.addNode("project1", "nt:folder");
+      project.addMixin("vfs:mixunstructured");
+      project.setProperty("vfs:mimeType", "text/vnd.ideproject+directory");
+      project.setProperty("vfs:projectType", "default");
+      convertRoot.getSession().save();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("rename") //
+         .append(project.getPath()) //
+         .append("?") //
+         .append("mediaType=") //
+         .append("text/directory") //
+         .toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      assertEquals("text/directory", project.getProperty("vfs:mimeType").getString());
+
+      path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("item") //
+         .append(project.getPath()) //
+         .toString();
+      response = launcher.service("GET", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      Folder folder = (Folder)response.getEntity();
+      assertEquals("text/directory", folder.getMimeType());
+      assertFalse("Project must be converted to Folder. ", folder instanceof Project);
    }
 }

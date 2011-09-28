@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -38,11 +37,13 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,19 +81,17 @@ public class MockVFS implements VirtualFileSystem
 
    @Override
    @Path("copy/{id:.*}")
-   public Response copy(@PathParam("id") String id, //
+   public Item copy(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId) throws ItemNotFoundException, ConstraintException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      URI uri = uriBuilder.build(UUID.randomUUID().toString());
-      return Response.created(uri).build();
+      return null;
    }
 
    @Override
    @Path("file/{parentId:.*}")
    @Produces({MediaType.APPLICATION_JSON})
-   public Response createFile(@PathParam("parentId") String parentId, @QueryParam("name") String name,
+   public File createFile(@PathParam("parentId") String parentId, @QueryParam("name") String name,
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
       InputStream content) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
       VirtualFileSystemException
@@ -106,10 +105,8 @@ public class MockVFS implements VirtualFileSystem
       {
          e.printStackTrace();
       }
-      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      URI uri = uriBuilder.build(UUID.randomUUID().toString());
       File newFile = createFile(parentId, name, mediaType, len);
-      return Response.created(uri).entity(newFile).build();
+      return newFile;
    }
 
    /**
@@ -137,44 +134,23 @@ public class MockVFS implements VirtualFileSystem
 
    @Path("folder/{parentId:.*}")
    @Produces({MediaType.APPLICATION_JSON})
-   public Response createFolder(@PathParam("parentId") String parentId, @QueryParam("name") String name)
+   public Folder createFolder(@PathParam("parentId") String parentId, @QueryParam("name") String name)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      URI uri = uriBuilder.build(UUID.randomUUID().toString());
-      return Response
-         .created(uri)
-         .entity(
-            new Folder(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId, System
-               .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>())).build();
+      return new Folder(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId,
+         System.currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>());
    }
 
    @SuppressWarnings("unchecked")
    @Path("project/{parentId:.*}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON})
-   public Response createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
+   public Project createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
       @QueryParam("type") String type, List<ConvertibleProperty> properties) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      String id = UUID.randomUUID().toString();
-      UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
-      URI uri = uriBuilder.build(id);
-      return Response
-         .created(uri)
-         .entity(
-            new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId, System
-               .currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type)).build();
-   }
-
-   /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#convertToProject(java.lang.String, java.lang.String)
-    */
-   @Override
-   public Response convertToProject(String folderId, String type) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
+      return new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId,
+         System.currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type);
    }
 
    @Override
@@ -214,11 +190,21 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
-   @Path("content/{id:.*}")
-   public Response getContent(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
+   public ContentStream getContent(@PathParam("id") String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      return Response.ok("Hello, world!", MimeType.TEXT_PLAIN).build();
+      ByteArrayInputStream b = new ByteArrayInputStream("Hello, world!".getBytes());
+      return new ContentStream(b, "text/plain", b.available(), new Date());
+   }
+
+   @Override
+   @Path("content/{id:.*}")
+   public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      ContentStream content = getContent(id);
+      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
+         .build();
    }
 
    @Override
@@ -310,8 +296,16 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
+   public ContentStream getVersion(@PathParam("id") String id, //
+      @PathParam("versionId") String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
    @Path("version/{id:.*}/{versionId}")
-   public Response getVersion(@PathParam("id") String id, //
+   public Response getVersionResponse(@PathParam("id") String id, //
       @PathParam("versionId") String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -338,7 +332,7 @@ public class MockVFS implements VirtualFileSystem
 
    @Override
    @Path("move/{id:.*}")
-   public Response move(@PathParam("id") String id, @QueryParam("parentId") String parentId,
+   public Item move(@PathParam("id") String id, @QueryParam("parentId") String parentId,
       @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
@@ -347,7 +341,7 @@ public class MockVFS implements VirtualFileSystem
 
    @Override
    @Path("rename/{id:.*}")
-   public Response rename(@PathParam("id") String id, //
+   public Item rename(@PathParam("id") String id, //
       @QueryParam("mediaType") MediaType mediaType, //
       @QueryParam("newname") String newname, //
       @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, InvalidArgumentException, LockException,

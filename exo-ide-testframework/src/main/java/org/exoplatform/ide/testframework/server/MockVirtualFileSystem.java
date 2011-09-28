@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.testframework.server;
 
+import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -30,9 +31,11 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.LockToken;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.InputStream;
@@ -52,28 +55,28 @@ public class MockVirtualFileSystem implements VirtualFileSystem
 {
 
    @Override
-   public Response copy(String id, String parentId) throws ItemNotFoundException, ConstraintException,
+   public Item copy(String id, String parentId) throws ItemNotFoundException, ConstraintException,
       PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
 
    @Override
-   public Response createFile(String parentId, String name, MediaType mediaType, InputStream content)
+   public File createFile(String parentId, String name, MediaType mediaType, InputStream content)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
 
    @Override
-   public Response createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
+   public Folder createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
 
    @Override
-   public Response createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
+   public Project createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
@@ -100,7 +103,17 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Response getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
+   public ContentStream getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String)
+    */
+   @Override
+   public Response getContentResponse(String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
    {
       return null;
@@ -120,8 +133,18 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Response getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+   public ContentStream getVersion(String id, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersionResponse(java.lang.String, java.lang.String)
+    */
+   @Override
+   public Response getVersionResponse(String id, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
@@ -141,14 +164,14 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Response move(String id, String parentId, String lockToken) throws ItemNotFoundException,
+   public Item move(String id, String parentId, String lockToken) throws ItemNotFoundException,
       ConstraintException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
 
    @Override
-   public Response rename(String id, MediaType mediaType, String newname, String lockToken)
+   public Item rename(String id, MediaType mediaType, String newname, String lockToken)
       throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -194,14 +217,4 @@ public class MockVirtualFileSystem implements VirtualFileSystem
       throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
    }
-
-   @Override
-   public Response convertToProject(String folderId, String type) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
-   {
-      return null;
-   }
-   
-   
-
 }

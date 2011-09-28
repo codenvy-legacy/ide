@@ -65,20 +65,39 @@ public class CreateTest extends JcrFileSystemTest
          .append("?") //
          .append("name=") //
          .append(name).toString(); //
-      
       Map <String, List <String>> headers = new HashMap <String, List <String>> ();
       List <String> contentType = new ArrayList<String>();
       contentType.add("text/plain;charset=utf8");
       headers.put("Content-Type", contentType);
       
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
-      
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = CREATE_TEST_PATH + "/" + name;
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
+      assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
+      Node file = (Node)session.getItem(expectedPath);
+      assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
+      assertEquals("utf8", file.getNode("jcr:content").getProperty("jcr:encoding").getString());
+      assertEquals(content, file.getNode("jcr:content").getProperty("jcr:data").getString());
+   }
+
+   public void testCreateFileInRoot() throws Exception
+   {
+      String name = "testCreateFileInRoot";
+      String content = "test create file";
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("file") //
+         .append("?") //
+         .append("name=") //
+         .append(name).toString(); //
+      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
+      List <String> contentType = new ArrayList<String>();
+      contentType.add("text/plain;charset=utf8");
+      headers.put("Content-Type", contentType);
       
-      assertEquals(expectedLocation, location);
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = "/" + name;
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
@@ -98,12 +117,8 @@ public class CreateTest extends JcrFileSystemTest
          .append(name).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = CREATE_TEST_PATH + "/" + name;
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
-
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
@@ -124,14 +139,10 @@ public class CreateTest extends JcrFileSystemTest
          .append("?") //
          .append("name=") //
          .append(name).toString();
+      
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
-
-      assertEquals(201, response.getStatus());
+      assertEquals(200, response.getStatus());
       String expectedPath = CREATE_TEST_PATH + "/" + name;
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
-
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
@@ -201,18 +212,30 @@ public class CreateTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("folder") //
-         //.append(CREATE_TEST_PATH) //
+         .append(CREATE_TEST_PATH) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
+      Node folder = (Node)session.getItem(expectedPath);
+      assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
+   }
 
-      assertEquals(201, response.getStatus());
-      String expectedPath = /*CREATE_TEST_PATH + */"/" + name;
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
-
+   public void testCreateFolderInRoot() throws Exception
+   {
+      String name = "testCreateFolderInRoot";
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("folder") //
+         .append("?") //
+         .append("name=") //
+         .append(name).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = "/" + name;
       assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
       Node folder = (Node)session.getItem(expectedPath);
       assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));

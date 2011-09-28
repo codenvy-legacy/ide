@@ -35,9 +35,9 @@ import javax.jcr.lock.Lock;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class RenameFileTest extends JcrFileSystemTest
+public class RenameTest extends JcrFileSystemTest
 {
-   private Node renameFileTestNode;
+   private Node renameTestNode;
 
    private String filePath;
 
@@ -53,9 +53,9 @@ public class RenameFileTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      renameFileTestNode = testRoot.addNode(name, "nt:unstructured");
+      renameTestNode = testRoot.addNode(name, "nt:unstructured");
 
-      fileNode = renameFileTestNode.addNode("RenameFileTest_FILE", "nt:file");
+      fileNode = renameTestNode.addNode("RenameFileTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:encoding", "utf8");
@@ -65,7 +65,7 @@ public class RenameFileTest extends JcrFileSystemTest
       fileNode.addMixin("exo:privilegeable");
       filePath = fileNode.getPath();
 
-      Node folderNode = renameFileTestNode.addNode("RenameFileTest_FOLDER", "nt:folder");
+      Node folderNode = renameTestNode.addNode("RenameFileTest_FOLDER", "nt:folder");
       folderPath = folderNode.getPath();
 
       session.save();
@@ -85,11 +85,8 @@ public class RenameFileTest extends JcrFileSystemTest
          .append("text/*;charset=ISO-8859-1") //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
-      String expectedPath = renameFileTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
+      assertEquals(200, response.getStatus());
+      String expectedPath = renameTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
       assertTrue(session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(DEFAULT_CONTENT, file.getProperty("jcr:content/jcr:data").getString());
@@ -114,11 +111,8 @@ public class RenameFileTest extends JcrFileSystemTest
          .append("lockToken=") //
          .append(lock.getLockToken()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(201, response.getStatus());
-      String expectedPath = renameFileTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
-      String expectedLocation = SERVICE_URI + "item" + expectedPath;
-      String location = response.getHttpHeaders().getFirst("Location").toString();
-      assertEquals(expectedLocation, location);
+      assertEquals(200, response.getStatus());
+      String expectedPath = renameTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
       assertTrue(session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(DEFAULT_CONTENT, file.getProperty("jcr:content/jcr:data").getString());
@@ -178,6 +172,30 @@ public class RenameFileTest extends JcrFileSystemTest
          .append("_FOLDER_NEW_NAME_") //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-      assertEquals(400, response.getStatus());
+      assertEquals(200, response.getStatus());
+      String expectedPath = renameTestNode.getPath() + "/" + "_FOLDER_NEW_NAME_";
+      assertTrue(session.itemExists(expectedPath));
    }
+
+   //   public void testRenameFolderUpdateMimeType() throws Exception
+   //   {
+   //      String path = new StringBuilder() //
+   //         .append(SERVICE_URI) //
+   //         .append("rename") //
+   //         .append(folderPath) //
+   //         .append("?") //
+   //         .append("newname=") //
+   //         .append("_FOLDER_NEW_NAME_") //
+   //         .append("&") //
+   //         .append("mediaType=") //
+   //         .append("text/directory%2BFOO") // text/directory+FOO
+   //         .toString();
+   //      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+   //      assertEquals(200, response.getStatus());
+   //      String expectedPath = renameTestNode.getPath() + "/" + "_FOLDER_NEW_NAME_";
+   //      assertTrue(session.itemExists(expectedPath));
+   //      Node folder = (Node)session.getItem(expectedPath);
+   //      assertTrue(folder.isNodeType("vfs:folder"));
+   //      assertEquals("text/directory+FOO", folder.getProperty("vfs:mimeType").getString());
+   //   }
 }

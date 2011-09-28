@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class Folder extends Item
 {
-   public static String FOLDER_MIME_TYPE = "text/directory";
+   public static final String FOLDER_MIME_TYPE = "text/directory";
 
    /**
     * Instance of Folder with specified attributes.
