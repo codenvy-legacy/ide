@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -97,6 +98,21 @@ public class CopyTest extends JcrFileSystemTest
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
+   public void testCopyFileAlreadyExist() throws Exception
+   {
+      session.getWorkspace().copy(fileNode.getPath(), copyTestDestinationNode.getPath() + "/" + fileNode.getName());
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("copy/") //
+         .append(fileId) //
+         .append("?") //
+         .append("parentId=") //
+         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus());
+      assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
+   }
+
    public void testCopyFileDestination_NoPermissions() throws Exception
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(2);
@@ -136,5 +152,20 @@ public class CopyTest extends JcrFileSystemTest
       assertTrue("Source folder not found. ", session.itemExists(folderNode.getPath()));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after coping. ", session.itemExists(expectedPath + "/file"));
+   }
+
+   public void testCopyFolderAlreadyExist() throws Exception
+   {
+      session.getWorkspace().copy(folderNode.getPath(), copyTestDestinationNode.getPath() + "/" + folderNode.getName());
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("copy/") //
+         .append(folderId) //
+         .append("?") //
+         .append("parentId=") //
+         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus());
+      assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
    }
 }

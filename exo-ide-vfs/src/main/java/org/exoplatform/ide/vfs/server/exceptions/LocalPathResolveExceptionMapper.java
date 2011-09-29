@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -25,9 +27,10 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Provider
 public class LocalPathResolveExceptionMapper implements ExceptionMapper<LocalPathResolveException>
 {
@@ -38,6 +41,6 @@ public class LocalPathResolveExceptionMapper implements ExceptionMapper<LocalPat
    public Response toResponse(LocalPathResolveException exception)
    {
       return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-               .build();
+         .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_NOT_FOUND)).build();
    }
 }

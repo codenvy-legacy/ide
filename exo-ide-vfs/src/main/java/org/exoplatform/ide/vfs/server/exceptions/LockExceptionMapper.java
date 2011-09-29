@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -35,6 +37,7 @@ public class LockExceptionMapper implements ExceptionMapper<LockException>
     */
    public Response toResponse(LockException exception)
    {
-      return Response.status(423).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      return Response.status(423).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .header("X-Exit-Code", Integer.toString(ExitCodes.LOCK_CONFLICT)).build();
    }
 }

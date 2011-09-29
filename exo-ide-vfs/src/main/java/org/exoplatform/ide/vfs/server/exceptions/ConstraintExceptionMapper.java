@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -37,6 +39,7 @@ public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintExce
    @Override
    public Response toResponse(ConstraintException exception)
    {
-      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
+      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .header("X-Exit-Code", Integer.toString(ExitCodes.CONSTRAINT)).build();
    }
 }

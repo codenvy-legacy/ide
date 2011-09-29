@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -710,11 +711,12 @@ abstract class ItemData
     * 
     * @param folder parent
     * @return newly create copy
-    * @throws ConstraintException if destination folder already contains item with the same name as current
+    * @throws ItemAlreadyExistException if destination folder already contains item with the same name as current
     * @throws PermissionDeniedException if new copy can't be created cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   ItemData copyTo(FolderData folder) throws ConstraintException, PermissionDeniedException, VirtualFileSystemException
+   ItemData copyTo(FolderData folder) throws ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       try
       {
@@ -727,7 +729,7 @@ abstract class ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Destination folder already contains item with the same name. ");
+         throw new ItemAlreadyExistException("Destination folder already contains item with the same name. ");
       }
       catch (AccessDeniedException e)
       {
@@ -748,13 +750,13 @@ abstract class ItemData
     * @param lockToken lock token. This lock token will be used if this item is locked. Pass <code>null</code> if there
     *           is no lock token
     * @return id of moved object
-    * @throws ConstraintException if destination folder already contains item with the same name as current
+    * @throws ItemAlreadyExistException if destination folder already contains item with the same name as current
     * @throws LockException if this item is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if item can't be moved cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   String moveTo(FolderData folder, String lockToken) throws ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+   String moveTo(FolderData folder, String lockToken) throws LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       try
       {
@@ -772,7 +774,7 @@ abstract class ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Destination folder already contains item with the same name. ");
+         throw new ItemAlreadyExistException("Destination folder already contains item with the same name. ");
       }
       catch (javax.jcr.lock.LockException e)
       {
@@ -802,15 +804,15 @@ abstract class ItemData
     * @param removeMixinTypes mixin types that must be removed. Should be <code>null</code> if there is no mixins to
     *           remove
     * @return id of renamed object
-    * @throws ConstraintException if parent folder already contains object with the same name as specified or if
-    *            <code>newname</code> is invalid
+    * @throws ConstraintException 
+    * @throws ItemAlreadyExistException if parent folder already contains object with the same name as specified
     * @throws LockException if object is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if object can't be renamed cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
    abstract String rename(String newname, MediaType mediaType, String lockToken, String[] addMixinTypes,
-      String[] removeMixinTypes) throws ConstraintException, LockException, PermissionDeniedException,
-      VirtualFileSystemException;
+      String[] removeMixinTypes) throws ConstraintException, ItemAlreadyExistException, LockException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    Node getNode()
    {

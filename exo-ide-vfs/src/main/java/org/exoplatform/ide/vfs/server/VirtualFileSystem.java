@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
@@ -61,19 +62,16 @@ public interface VirtualFileSystem
     * @param parentId id of parent for new copy
     * @return newly created copy of item
     * @throws ItemNotFoundException if <code>source</code> or <code>parentId</code> does not exist
-    * @throws ConstraintException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>parentId</code> if not a folder</li>
-    *            <li><code>parentId</code> already contains item with the same name</li>
-    *            </ul>
+    * @throws ConstraintException if <code>parentId</code> if not a folder
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("copy")
    @Produces({MediaType.APPLICATION_JSON})
-   Item copy(String id, String parentId) throws ItemNotFoundException, ConstraintException, PermissionDeniedException,
-      VirtualFileSystemException;
+   Item copy(String id, String parentId) throws ItemNotFoundException, ConstraintException, ItemAlreadyExistException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Create new File in specified folder.
@@ -88,8 +86,8 @@ public interface VirtualFileSystem
     *            <ul>
     *            <li><code>parentId</code> if not a folder</li>
     *            <li><code>name</code> is not specified</li>
-    *            <li><code>parentId</code> already contains item with the same name</li>
     *            </ul>
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -97,7 +95,8 @@ public interface VirtualFileSystem
    @Path("file")
    @Produces({MediaType.APPLICATION_JSON})
    File createFile(String parentId, String name, MediaType mediaType, InputStream content)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+      throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Create new folder in specified folder.
@@ -110,8 +109,8 @@ public interface VirtualFileSystem
     *            <ul>
     *            <li><code>parentId</code> if not a folder</li>
     *            <li><code>name</code> is not specified</li>
-    *            <li><code>parentId</code> already contains item with the same name</li>
     *            </ul>
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -119,7 +118,7 @@ public interface VirtualFileSystem
    @Path("folder")
    @Produces({MediaType.APPLICATION_JSON})
    Folder createFolder(String parentId, String name) throws ItemNotFoundException, InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException;
+      ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Create new project in specified folder.
@@ -136,9 +135,9 @@ public interface VirtualFileSystem
     *            <ul>
     *            <li><code>parentId</code> if not a folder</li>
     *            <li><code>name</code> is not specified</li>
-    *            <li><code>parentId</code> already contains item with the same name</li>
-    *            <li><code>type</code> is not known</li>
+    *            <li><code>type</code> is not specified</li>
     *            </ul>
+    * @throws ItemAlreadyExistException if <code>parentId</code> already contains item with the same name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -146,7 +145,8 @@ public interface VirtualFileSystem
    @Path("project")
    @Produces({MediaType.APPLICATION_JSON})
    Project createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+      throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Delete item <code>id</code>. If item is folder then all children of this folder should be removed or
@@ -449,11 +449,8 @@ public interface VirtualFileSystem
     *           there is no lock token, e.g. item is not locked
     * @return moved item
     * @throws ItemNotFoundException if <code>id</code> or <code>newparentId</code> does not exist
-    * @throws ConstraintException if any of following conditions are met:
-    *            <ul>
-    *            <li><code>newparentId</code> if not a folder</li>
-    *            <li><code>newparentId</code> already contains item with the same name</li>
-    *            </ul>
+    * @throws ConstraintException if <code>newparentId</code> if not a folder
+    * @throws ItemAlreadyExistException if <code>newparentId</code> already contains item with the same name
     * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
     *            not matched
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -463,7 +460,7 @@ public interface VirtualFileSystem
    @Path("move")
    @Produces({MediaType.APPLICATION_JSON})
    Item move(String id, String parentId, String lockToken) throws ItemNotFoundException, ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+      ItemAlreadyExistException, LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Rename and(or) set content type for Item.
@@ -478,13 +475,16 @@ public interface VirtualFileSystem
     * @throws LockException if item <code>id</code> is locked and <code>lockToken</code> is <code>null</code> or does
     *            not matched
     * @throws ConstraintException if file can't be updated cause to any constraint
+    * @throws ItemAlreadyExistException if parent folder already contains item with specified name
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
     */
    @POST
    @Path("rename")
    @Produces({MediaType.APPLICATION_JSON})
    Item rename(String id, MediaType mediaType, String newname, String lockToken) throws ItemNotFoundException,
-      LockException, PermissionDeniedException, VirtualFileSystemException;
+      LockException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException;
 
    /**
     * Executes a SQL query statement against the contents of virtual file system.

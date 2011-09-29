@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -50,7 +51,7 @@ public class RenameTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      renameTestNode = testRoot.addNode(name, "nt:unstructured");
+      renameTestNode = testRoot.addNode(name, "nt:folder");
 
       fileNode = renameTestNode.addNode("RenameFileTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
@@ -89,6 +90,32 @@ public class RenameTest extends JcrFileSystemTest
       assertEquals(DEFAULT_CONTENT, file.getProperty("jcr:content/jcr:data").getString());
       assertEquals("text/*", file.getProperty("jcr:content/jcr:mimeType").getString());
       assertEquals("ISO-8859-1", file.getProperty("jcr:content/jcr:encoding").getString());
+   }
+
+   public void testRenameFileAlreadyExists() throws Exception
+   {
+      Node existedFile = renameTestNode.addNode("_FILE_NEW_NAME_", "nt:file");
+      Node existedFileContent = existedFile.addNode("jcr:content", "nt:resource");
+      existedFileContent.setProperty("jcr:mimeType", "text/plain");
+      existedFileContent.setProperty("jcr:encoding", "utf8");
+      existedFileContent.setProperty("jcr:lastModified", Calendar.getInstance());
+      existedFileContent.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      session.save();
+      
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("rename/") //
+         .append(fileID) //
+         .append("?") //
+         .append("newname=") //
+         .append("_FILE_NEW_NAME_") //
+         .append("&") //
+         .append("mediaType=") //
+         .append("text/*;charset=ISO-8859-1") //
+         .toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus());
+      assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
    }
 
    public void testRenameFileLocked() throws Exception

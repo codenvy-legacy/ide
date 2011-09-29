@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -37,6 +39,6 @@ public class PermissionDeniedExceptionMapper implements ExceptionMapper<Permissi
    public Response toResponse(PermissionDeniedException exception)
    {
       return Response.status(Response.Status.FORBIDDEN).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .build();
+         .header("X-Exit-Code", Integer.toString(ExitCodes.NOT_PERMITTED)).build();
    }
 }

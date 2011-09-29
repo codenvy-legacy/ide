@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,27 +18,18 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
-import org.exoplatform.ide.vfs.shared.ExitCodes;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-@Provider
-public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>
+@SuppressWarnings("serial")
+public final class ItemAlreadyExistException extends VirtualFileSystemException
 {
    /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    * @param message the message
     */
-   @Override
-   public Response toResponse(NotSupportedException exception)
+   public ItemAlreadyExistException(String message)
    {
-      return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-               .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
+      super(message);
    }
 }

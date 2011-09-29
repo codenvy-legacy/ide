@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -26,19 +26,19 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id$
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
 @Provider
-public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>
+public class ItemAlreadyExistExceptionMapper implements ExceptionMapper<ItemAlreadyExistException>
 {
    /**
     * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Response toResponse(NotSupportedException exception)
+   public Response toResponse(ItemAlreadyExistException exception)
    {
-      return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-               .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
+      return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+         .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_EXISTS)).build();
    }
 }

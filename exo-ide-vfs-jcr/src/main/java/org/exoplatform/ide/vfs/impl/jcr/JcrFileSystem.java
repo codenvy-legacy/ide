@@ -26,6 +26,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
@@ -116,7 +117,8 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("copy/{id}")
    public Item copy(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId //
-   ) throws ItemNotFoundException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
+   ) throws ItemNotFoundException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       Session ses = session();
       try
@@ -146,7 +148,8 @@ public class JcrFileSystem implements VirtualFileSystem
       @QueryParam("name") String name, //
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType, //
       InputStream content //
-   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       checkName(name);
       Session ses = session();
@@ -213,7 +216,8 @@ public class JcrFileSystem implements VirtualFileSystem
       @QueryParam("name") String name, //
       @QueryParam("type") String type, //
       List<ConvertibleProperty> properties //
-   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       checkName(name);
       Session ses = session();
@@ -637,8 +641,8 @@ public class JcrFileSystem implements VirtualFileSystem
    public Item move(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId, //
       @QueryParam("lockToken") String lockToken //
-   ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
-      VirtualFileSystemException
+   ) throws ItemNotFoundException, ConstraintException, LockException, ItemAlreadyExistException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       Session ses = session();
       try

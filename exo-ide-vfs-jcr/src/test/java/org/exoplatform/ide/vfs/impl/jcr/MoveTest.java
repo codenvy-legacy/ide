@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
@@ -93,6 +94,21 @@ public class MoveTest extends JcrFileSystemTest
       String expectedPath = moveTestDestinationNode.getPath() + "/" + fileNode.getName();
       assertFalse("File must be moved. ", session.itemExists(originPath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
+   }
+
+   public void testMoveFileAlreadyExist() throws Exception
+   {
+      session.getWorkspace().copy(fileNode.getPath(), moveTestDestinationNode.getPath() + "/" + fileNode.getName());
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("move/") //
+         .append(fileID) //
+         .append("?") //
+         .append("parentId=") //
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus());
+      assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
    }
 
    public void testMoveLockedFile() throws Exception
@@ -199,5 +215,20 @@ public class MoveTest extends JcrFileSystemTest
       assertFalse("Folder must be moved. ", session.itemExists(originPath));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after moving. ", session.itemExists(expectedPath + "/file"));
+   }
+
+   public void testMoveFolderAlreadyExist() throws Exception
+   {
+      session.getWorkspace().copy(folderNode.getPath(), moveTestDestinationNode.getPath() + "/" + folderNode.getName());
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("move/") //
+         .append(folderID) //
+         .append("?") //
+         .append("parentId=") //
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus());
+      assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
    }
 }

@@ -22,6 +22,7 @@ import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -40,6 +41,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.ws.rs.core.MediaType;
 
@@ -146,7 +148,7 @@ public class FolderData extends ItemData
 
    FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType, String[] mixinTypes,
       List<ConvertibleProperty> properties, InputStream content) throws InvalidArgumentException,
-      PermissionDeniedException, VirtualFileSystemException
+      ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
@@ -183,7 +185,7 @@ public class FolderData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new InvalidArgumentException("Item with the name: " + name + " already exists. ");
+         throw new ItemAlreadyExistException("Item with the name: " + name + " already exists. ");
       }
       catch (AccessDeniedException e)
       {
@@ -214,7 +216,8 @@ public class FolderData extends ItemData
     * @throws VirtualFileSystemException if any other errors occurs
     */
    FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
-      throws InvalidArgumentException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
+      throws InvalidArgumentException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       try
       {
@@ -245,7 +248,7 @@ public class FolderData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new InvalidArgumentException("Item with the name: " + name + " already exists. ");
+         throw new ItemAlreadyExistException("Item with the name: " + name + " already exists. ");
       }
       catch (AccessDeniedException e)
       {
@@ -305,7 +308,11 @@ public class FolderData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("Folder with the same name already exists. ");
+         throw new ItemAlreadyExistException("Folder with the same name already exists. ");
+      }
+      catch (ConstraintViolationException e)
+      {
+         throw new ConstraintException(e.getMessage(), e);
       }
       catch (AccessDeniedException e)
       {

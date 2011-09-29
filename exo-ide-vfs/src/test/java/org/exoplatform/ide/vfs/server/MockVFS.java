@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
@@ -83,7 +84,7 @@ public class MockVFS implements VirtualFileSystem
    @Path("copy/{id:.*}")
    public Item copy(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId) throws ItemNotFoundException, ConstraintException,
-      PermissionDeniedException, VirtualFileSystemException
+      PermissionDeniedException, ItemAlreadyExistException, VirtualFileSystemException
    {
       return null;
    }
@@ -94,7 +95,7 @@ public class MockVFS implements VirtualFileSystem
    public File createFile(@PathParam("parentId") String parentId, @QueryParam("name") String name,
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
       InputStream content) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
-      VirtualFileSystemException
+      ItemAlreadyExistException, VirtualFileSystemException
    {
       long len = 0;
       try
@@ -135,7 +136,8 @@ public class MockVFS implements VirtualFileSystem
    @Path("folder/{parentId:.*}")
    @Produces({MediaType.APPLICATION_JSON})
    public Folder createFolder(@PathParam("parentId") String parentId, @QueryParam("name") String name)
-      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+      throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       return new Folder(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId,
          System.currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>());
@@ -147,7 +149,7 @@ public class MockVFS implements VirtualFileSystem
    @Produces({MediaType.APPLICATION_JSON})
    public Project createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
       @QueryParam("type") String type, List<ConvertibleProperty> properties) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+      InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       return new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId,
          System.currentTimeMillis(), Collections.EMPTY_LIST, new HashMap<String, Link>(), type);
@@ -345,7 +347,7 @@ public class MockVFS implements VirtualFileSystem
    @Path("move/{id:.*}")
    public Item move(@PathParam("id") String id, @QueryParam("parentId") String parentId,
       @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, ConstraintException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+      ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }
@@ -356,7 +358,7 @@ public class MockVFS implements VirtualFileSystem
       @QueryParam("mediaType") MediaType mediaType, //
       @QueryParam("newname") String newname, //
       @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, InvalidArgumentException, LockException,
-      PermissionDeniedException, VirtualFileSystemException
+      ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
    }

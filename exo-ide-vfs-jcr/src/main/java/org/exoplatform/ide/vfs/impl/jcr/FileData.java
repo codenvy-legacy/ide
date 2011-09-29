@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -38,6 +39,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.lock.Lock;
+import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.ws.rs.core.MediaType;
@@ -202,8 +204,8 @@ class FileData extends ItemData
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException(
-            "Unable get length of content of file " + getName() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get length of content of file " + getName() + ". "
+            + e.getMessage(), e);
       }
    }
 
@@ -253,13 +255,13 @@ class FileData extends ItemData
             // If not file versionable then any version ID is not acceptable.
             throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
          }
-//         if (CURRENT_VERSION_ID.equals(versionId))
-//         {
-//            Version versionNode = (Version)node.getParent();
-//            String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
-//            Session session = node.getSession();
-//            return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
-//         }
+         //         if (CURRENT_VERSION_ID.equals(versionId))
+         //         {
+         //            Version versionNode = (Version)node.getParent();
+         //            String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
+         //            Session session = node.getSession();
+         //            return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+         //         }
          try
          {
             return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"));
@@ -363,7 +365,8 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable remove lock from file " + getName() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable remove lock from file " + getName()
+            + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
@@ -440,7 +443,11 @@ class FileData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ConstraintException("File with the same name already exists. ");
+         throw new ItemAlreadyExistException("File with the same name already exists. ");
+      }
+      catch (ConstraintViolationException e)
+      {
+         throw new ConstraintException(e.getMessage(), e);
       }
       catch (javax.jcr.lock.LockException e)
       {
@@ -509,7 +516,8 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update content of file " + getName() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update content of file " + getName()
+            + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
