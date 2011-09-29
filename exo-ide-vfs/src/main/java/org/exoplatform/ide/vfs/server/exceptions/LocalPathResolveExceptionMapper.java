@@ -18,25 +18,26 @@
  */
 package org.exoplatform.ide.vfs.server.exceptions;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
 /**
- * This exception occurs in case LocalPathResolver in some reason can't resolve the path. 
- * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-@SuppressWarnings("serial")
-public class LocalPathResolvException extends VirtualFileSystemException
+@Provider
+public class LocalPathResolveExceptionMapper implements ExceptionMapper<LocalPathResolveException>
 {
-
-   public LocalPathResolvException(String message, Throwable cause)
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Response toResponse(LocalPathResolveException exception)
    {
-      super(message, cause);
+      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+               .build();
    }
-
-   public LocalPathResolvException(String message)
-   {
-      super(message);
-   }
-
 }

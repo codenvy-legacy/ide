@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolvException;
+import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 
 /**
  * Need for resolving location for file/folders on real-life file system. 
@@ -38,5 +38,5 @@ public interface LocalPathResolver
     * @param path the to the item in current VirtualFileSystem
     * @return
     */
-   String resolve(String vfsId, String path) throws LocalPathResolvException;
+   String resolve(String vfsId, String path) throws LocalPathResolveException;
 }
