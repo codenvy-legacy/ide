@@ -61,10 +61,10 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
             throw new LocalPathResolveException(
                "Can't resolve path on the Local File System. Root path may not be null.");
          ManageableRepository repository = repositoryService.getCurrentRepository();
-         repository.getConfiguration().getName();
+         String repositoryName = repository.getConfiguration().getName();
          if (!fsRootPath.endsWith("/"))
             fsRootPath += "/"; // unix like path only!
-         return fsRootPath + vfsId + path;
+         return fsRootPath + repositoryName + "/" + vfsId + path;
       }
       catch (RepositoryException e)
       {
