@@ -44,6 +44,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -112,7 +113,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String, java.lang.String)
     */
-   @Path("copy/{id:.*}")
+   @Path("copy/{id}")
    public Item copy(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId //
    ) throws ItemNotFoundException, ConstraintException, PermissionDeniedException, VirtualFileSystemException
@@ -137,7 +138,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFile(java.lang.String, java.lang.String,
     *      javax.ws.rs.core.MediaType, java.io.InputStream)
     */
-   @Path("file{S:(/)?}{parentId:.*}")
+   @Path("file/{parentId}")
    @Produces({MediaType.APPLICATION_JSON})
    public File createFile(@PathParam("parentId") String parentId, //
       @QueryParam("name") String name, //
@@ -170,7 +171,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String, java.lang.String)
     */
-   @Path("folder{S:(/)?}{parentId:.*}")
+   @Path("folder/{parentId}")
    @Produces({MediaType.APPLICATION_JSON})
    public Folder createFolder(@PathParam("parentId") String parentId, //
       @QueryParam("name") String name //
@@ -199,7 +200,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createProject(java.lang.String, java.lang.String,
     *      java.lang.String, java.util.List)
     */
-   @Path("project{S:(/)?}{parentId:.*}")
+   @Path("project/{parentId}")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON})
    public Project createProject(@PathParam("parentId") String parentId, //
@@ -236,7 +237,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#delete(java.lang.String, java.lang.String)
     */
-   @Path("delete/{id:.*}")
+   @Path("delete/{id}")
    public void delete(@PathParam("id") String id, //
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, ConstraintException, LockException, PermissionDeniedException,
@@ -256,7 +257,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getACL(java.lang.String)
     */
-   @Path("acl/{id:.*}")
+   @Path("acl/{id}")
    public List<AccessControlEntry> getACL(@PathParam("id") String id) throws NotSupportedException,
       ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -275,7 +276,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String, int, int,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("children/{id:.*}")
+   @Path("children/{id}")
    public ItemList<Item> getChildren(@PathParam("id") String folderId, //
       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
       @QueryParam("skipCount") int skipCount, //
@@ -347,7 +348,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String)
     */
-   @Path("content/{id:.*}")
+   @Path("content/{id}")
    public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -366,12 +367,14 @@ public class JcrFileSystem implements VirtualFileSystem
          BasicPermissions[] basicPermissions = BasicPermissions.values();
          List<String> permissions = new ArrayList<String>(basicPermissions.length);
          for (BasicPermissions bp : basicPermissions)
+         {
             permissions.add(bp.value());
+         }
          Session ses = session();
          Folder root;
          try
          {
-            root = (Folder)fromItemData(getItemData(ses, ""), PropertyFilter.valueOf(PropertyFilter.ALL));
+            root = (Folder)fromItemData(getItemDataByPath(ses, "/"), PropertyFilter.valueOf(PropertyFilter.ALL));
          }
          finally
          {
@@ -389,6 +392,13 @@ public class JcrFileSystem implements VirtualFileSystem
    private Map<String, Link> createUrlTemplates()
    {
       Map<String, Link> templates = new HashMap<String, Link>();
+
+      templates.put(Link.REL_ITEM, //
+         new Link(createURI("item", "[id]").toString(), Link.REL_ITEM, MediaType.APPLICATION_JSON));
+
+      templates.put(Link.REL_ITEM_BY_PATH, //
+         new Link(createURI("itembypath", null, "path", "[path]").toString(), Link.REL_ITEM_BY_PATH,
+            MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]").toString(), //
@@ -437,7 +447,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItem(java.lang.String,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("item/{id:.*}")
+   @Path("item/{id}")
    public Item getItem(@PathParam("id") String id, //
       @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
@@ -467,7 +477,7 @@ public class JcrFileSystem implements VirtualFileSystem
       Session ses = session();
       try
       {
-         ItemData data = getItemData(ses, path);
+         ItemData data = getItemDataByPath(ses, path);
          if (versionId != null && ItemType.FILE == data.getType())
          {
             FileData version = ((FileData)data).getVersion(versionId);
@@ -513,7 +523,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersionResponse(java.lang.String, java.lang.String)
     */
-   @Path("version/{id:.*}/{versionId}")
+   @Path("version/{id}/{versionId}")
    public Response getVersionResponse(@PathParam("id") String id, //
       @PathParam("versionId") String versionId //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
@@ -527,7 +537,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String, int, int,
     *      org.exoplatform.ide.vfs.server.PropertyFilter)
     */
-   @Path("version-history/{id:.*}")
+   @Path("version-history/{id}")
    public ItemList<File> getVersions(@PathParam("id") String id, //
       @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
       @QueryParam("skipCount") int skipCount, //
@@ -575,7 +585,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#lock(java.lang.String)
     */
-   @Path("lock/{id:.*}")
+   @Path("lock/{id}")
    public LockToken lock(@PathParam("id") String id) throws NotSupportedException, ItemNotFoundException,
       InvalidArgumentException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -596,7 +606,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#move(java.lang.String, java.lang.String, java.lang.String)
     */
-   @Path("move/{id:.*}")
+   @Path("move/{id}")
    public Item move(@PathParam("id") String id, //
       @QueryParam("parentId") String parentId, //
       @QueryParam("lockToken") String lockToken //
@@ -623,7 +633,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#rename(java.lang.String, javax.ws.rs.core.MediaType,
     *      java.lang.String, java.lang.String)
     */
-   @Path("rename/{id:.*}")
+   @Path("rename/{id}")
    public Item rename(@PathParam("id") String id, //
       @QueryParam("mediaType") MediaType mediaType, //
       @QueryParam("newname") String newname, //
@@ -821,7 +831,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#unlock(java.lang.String, java.lang.String)
     */
-   @Path("unlock/{id:.*}")
+   @Path("unlock/{id}")
    public void unlock(@PathParam("id") String id, //
       @QueryParam("lockToken") String lockToken //
    ) throws NotSupportedException, ItemNotFoundException, LockException, PermissionDeniedException,
@@ -845,7 +855,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateACL(java.lang.String, java.util.List,
     *      java.lang.Boolean, java.lang.String)
     */
-   @Path("acl/{id:.*}")
+   @Path("acl/{id}")
    public void updateACL(@PathParam("id") String id, //
       List<AccessControlEntry> acl, //
       @DefaultValue("false") @QueryParam("override") Boolean override, //
@@ -868,7 +878,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#updateContent(java.lang.String, javax.ws.rs.core.MediaType,
     *      java.io.InputStream, java.lang.String)
     */
-   @Path("content/{id:.*}")
+   @Path("content/{id}")
    public void updateContent(
       @PathParam("id") String id, //
       @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType,
@@ -895,7 +905,7 @@ public class JcrFileSystem implements VirtualFileSystem
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#update(java.lang.String, java.util.Collection,
     *      java.util.List)
     */
-   @Path("item/{id:.*}")
+   @Path("item/{id}")
    public void updateItem(@PathParam("id") String id, //
       List<ConvertibleProperty> properties, //
       @QueryParam("lockToken") String lockToken //
@@ -1032,10 +1042,6 @@ public class JcrFileSystem implements VirtualFileSystem
       links.put(Link.REL_SELF, //
          new Link(createURI("item", id).toString(), Link.REL_SELF, MediaType.APPLICATION_JSON));
 
-      links.put(Link.REL_BY_PATH, //
-         new Link(createURI("itembypath", null, "path", data.getPath()).toString(), Link.REL_BY_PATH,
-            MediaType.APPLICATION_JSON));
-
       links.put(Link.REL_ACL, //
          new Link(createURI("acl", id).toString(), Link.REL_ACL, MediaType.APPLICATION_JSON));
 
@@ -1086,16 +1092,37 @@ public class JcrFileSystem implements VirtualFileSystem
    {
       try
       {
-         return ItemData.fromNode(((id == null || id.length() == 0) ? session.getRootNode() : (Node)session.getItem((id
-            .charAt(0) != '/') ? ("/" + id) : id)));
+         return ItemData.fromNode(((ExtendedSession)session).getNodeByIdentifier(id));
       }
-      catch (PathNotFoundException e)
+      catch (javax.jcr.ItemNotFoundException e)
       {
-         throw new ItemNotFoundException("Oject " + id + " does not exists. ");
+         throw new ItemNotFoundException("Object " + id + " does not exists. ");
       }
       catch (AccessDeniedException e)
       {
          throw new PermissionDeniedException("Access denied to object " + id + ". ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   private ItemData getItemDataByPath(Session session, String path) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      try
+      {
+         return ItemData.fromNode(((path == null || path.length() == 0 || "/".equals(path)) //
+            ? session.getRootNode() : (Node)session.getItem((path.charAt(0) != '/') ? ("/" + path) : path)));
+      }
+      catch (PathNotFoundException e)
+      {
+         throw new ItemNotFoundException("Object " + path + " does not exists. ");
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Access denied to object " + path + ". ");
       }
       catch (RepositoryException e)
       {

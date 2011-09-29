@@ -101,7 +101,7 @@ abstract class ItemData
    /** Set of known JCR properties that should be skipped. */
    static final Set<String> SKIPPED_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:primaryType", "jcr:created",
       "jcr:uuid", "jcr:baseVersion", "jcr:isCheckedOut", "jcr:predecessors", "jcr:versionHistory", "jcr:mixinTypes",
-      "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid"));
+      "jcr:frozenMixinTypes", "jcr:frozenPrimaryType", "jcr:frozenUuid", "exo:permissions", "exo:owner"));
 
    Node node;
    final ItemType type;
@@ -116,9 +116,16 @@ abstract class ItemData
     * @return unified id of this item
     * @throws VirtualFileSystemException if any errors occurs
     */
-   String getId() throws VirtualFileSystemException
+   final String getId() throws VirtualFileSystemException
    {
-      return getPath();
+      try
+      {
+         return ((ExtendedNode)node).getIdentifier();
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
    }
 
    /**
@@ -250,11 +257,12 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get properties of item " + getId() + ". Operation not permitted.");
+         throw new PermissionDeniedException("Unable get properties of item " + getPath()
+            + ". Operation not permitted.");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get properties of item " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get properties of item " + getPath() + ". " + e.getMessage(), e);
       }
    }
 
@@ -394,16 +402,17 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable to update properties of item " + getId() + ". Item is locked. ");
+         throw new LockException("Unable to update properties of item " + getPath() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable to update properties of item " + getId()
+         throw new PermissionDeniedException("Unable to update properties of item " + getPath()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update properties of item " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update properties of item " + getPath() + ". " + e.getMessage(),
+            e);
       }
    }
 
@@ -521,7 +530,7 @@ abstract class ItemData
             Lock lock = node.getLock();
             if (lock.getLockToken() == null)
             {
-               throw new LockException("Unable delete item " + getId() + ". Item is locked. ");
+               throw new LockException("Unable delete item " + getPath() + ". Item is locked. ");
             }
          }
          node.remove();
@@ -530,11 +539,11 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable delete item " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable delete item " + getPath() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable delete item " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable delete item " + getPath() + ". " + e.getMessage(), e);
       }
    }
 
@@ -592,11 +601,11 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get ACL of item " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get ACL of item " + getPath() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get ACL of item " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get ACL of item " + getPath() + ". " + e.getMessage(), e);
       }
    }
 
@@ -684,15 +693,15 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update ACL of item " + getId() + ". Item is locked. ");
+         throw new LockException("Unable update ACL of item " + getPath() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update ACL of item " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update ACL of item " + getPath() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update ACL of item " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update ACL of item " + getPath() + ". " + e.getMessage(), e);
       }
    }
 
@@ -722,12 +731,12 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable copy item " + getId() + " to " + folder.getId()
+         throw new PermissionDeniedException("Unable copy item " + getPath() + " to " + folder.getPath()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable copy item " + getId() + " to " + folder.getId() + ". "
+         throw new VirtualFileSystemException("Unable copy item " + getPath() + " to " + folder.getPath() + ". "
             + e.getMessage(), e);
       }
    }
@@ -767,16 +776,17 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable move item " + getId() + " to " + folder.getId() + ". Source item is locked. ");
+         throw new LockException("Unable move item " + getPath() + " to " + folder.getPath()
+            + ". Source item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable move item " + getId() + " to " + folder.getId()
+         throw new PermissionDeniedException("Unable move item " + getPath() + " to " + folder.getPath()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable move item " + getId() + " to " + folder.getId() + ". "
+         throw new VirtualFileSystemException("Unable move item " + getPath() + " to " + folder.getPath() + ". "
             + e.getMessage(), e);
       }
    }

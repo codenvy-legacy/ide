@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 
 import java.io.ByteArrayInputStream;
@@ -37,7 +39,7 @@ public class UpdateTest extends JcrFileSystemTest
 {
    private Node updatePropertiesTestNode;
 
-   private String filePath;
+   private String fileID;
 
    @Override
    protected void setUp() throws Exception
@@ -54,7 +56,7 @@ public class UpdateTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("exo:unstructuredMixin");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -63,7 +65,7 @@ public class UpdateTest extends JcrFileSystemTest
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
       doUpdate(properties);
-      Node file = (Node)session.getItem(filePath);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals("MyValue", file.getProperty("MyProperty").getString());
    }
 
@@ -71,7 +73,7 @@ public class UpdateTest extends JcrFileSystemTest
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[123]}]";
       doUpdate(properties);
-      Node file = (Node)session.getItem(filePath);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(123L, file.getProperty("MyProperty").getLong());
    }
 
@@ -79,7 +81,7 @@ public class UpdateTest extends JcrFileSystemTest
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[true]}]";
       doUpdate(properties);
-      Node file = (Node)session.getItem(filePath);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(true, file.getProperty("MyProperty").getBoolean());
    }
 
@@ -87,8 +89,8 @@ public class UpdateTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath) //
+         .append("item/") //
+         .append(fileID) //
          .toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));

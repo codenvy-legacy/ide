@@ -22,6 +22,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -39,7 +40,9 @@ import javax.jcr.Node;
  */
 public class ProjectTest extends JcrFileSystemTest
 {
-   private String CREATE_TEST_PATH;
+   private String createTestPath;
+   private String createTestID;
+   private Node createTestNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -49,10 +52,10 @@ public class ProjectTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      testRoot.addNode(name, "nt:unstructured");
-
+      createTestNode = testRoot.addNode(name, "nt:unstructured");
       session.save();
-      CREATE_TEST_PATH = "/" + TEST_ROOT_NAME + "/" + name;
+      createTestPath = createTestNode.getPath();
+      createTestID = ((ExtendedNode)createTestNode).getIdentifier();
    }
 
    public void testCreateProject() throws Exception
@@ -61,8 +64,8 @@ public class ProjectTest extends JcrFileSystemTest
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("project") //
-         .append(CREATE_TEST_PATH) //
+         .append("project/") //
+         .append(createTestID) //
          .append("?") //
          .append("name=") //
          .append(name).append("&").append("type=") //
@@ -72,7 +75,7 @@ public class ProjectTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
 
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = createTestPath + "/" + name;
 
       assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
       Node project = (Node)session.getItem(expectedPath);
@@ -92,8 +95,8 @@ public class ProjectTest extends JcrFileSystemTest
 
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("project") //
-         .append(parentProject.getPath()) //
+         .append("project/") //
+         .append(((ExtendedNode)parentProject).getIdentifier()) //
          .append("?") //
          .append("name=").append("childProject") //
          .append("&") //
@@ -123,10 +126,10 @@ public class ProjectTest extends JcrFileSystemTest
 
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("copy") //
-         .append(project.getPath()) //
+         .append("copy/") //
+         .append(((ExtendedNode)project).getIdentifier()) //
          .append("?") //
-         .append("parentId=").append(destProject.getPath()).toString();
+         .append("parentId=").append(((ExtendedNode)destProject).getIdentifier()).toString();
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
@@ -149,10 +152,10 @@ public class ProjectTest extends JcrFileSystemTest
 
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(project.getPath()) //
+         .append("move/") //
+         .append(((ExtendedNode)project).getIdentifier()) //
          .append("?") //
-         .append("parentId=").append(destProject.getPath()).toString();
+         .append("parentId=").append(((ExtendedNode)destProject).getIdentifier()).toString();
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
@@ -172,8 +175,8 @@ public class ProjectTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(proj1.getPath()).toString();
+         .append("item/") //
+         .append(((ExtendedNode)proj1).getIdentifier()).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
 
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -209,8 +212,8 @@ public class ProjectTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(readRoot.getPath()).toString();
+         .append("children/") //
+         .append(((ExtendedNode)readRoot).getIdentifier()).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -242,8 +245,8 @@ public class ProjectTest extends JcrFileSystemTest
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(proj1.getPath()) //
+         .append("item/") //
+         .append(((ExtendedNode)proj1).getIdentifier()) //
          .toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
@@ -260,8 +263,8 @@ public class ProjectTest extends JcrFileSystemTest
       convertRoot.getSession().save();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(folder.getPath()) //
+         .append("rename/") //
+         .append(((ExtendedNode)folder).getIdentifier()) //
          .append("?") //
          .append("mediaType=") //
          .append("text/vnd.ideproject%2Bdirectory") // text/vnd.ideproject+directory
@@ -272,8 +275,8 @@ public class ProjectTest extends JcrFileSystemTest
 
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(folder.getPath()) //
+         .append("item/") //
+         .append(((ExtendedNode)folder).getIdentifier()) //
          .toString();
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
@@ -292,8 +295,8 @@ public class ProjectTest extends JcrFileSystemTest
       convertRoot.getSession().save();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(project.getPath()) //
+         .append("rename/") //
+         .append(((ExtendedNode)project).getIdentifier()) //
          .append("?") //
          .append("mediaType=") //
          .append("text/directory") //
@@ -304,8 +307,8 @@ public class ProjectTest extends JcrFileSystemTest
 
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(project.getPath()) //
+         .append("item/") //
+         .append(((ExtendedNode)project).getIdentifier()) //
          .toString();
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());

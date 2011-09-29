@@ -43,9 +43,7 @@ import javax.jcr.Node;
 public class ChildrenTest extends JcrFileSystemTest
 {
    private Node childrenTestNode;
-
-   private String folderPath;
-
+   private String folderId;
    private String propertyFilter = "PropertyA";
 
    /**
@@ -82,7 +80,7 @@ public class ChildrenTest extends JcrFileSystemTest
 
       session.save();
 
-      folderPath = folderNode.getPath();
+      folderId = ((ExtendedNode)folderNode).getIdentifier();
    }
 
    public void testGetChildren() throws Exception
@@ -90,8 +88,8 @@ public class ChildrenTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath).toString();
+         .append("children/") //
+         .append(folderId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -118,8 +116,8 @@ public class ChildrenTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath).toString();
+         .append("children/") //
+         .append(folderId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -131,8 +129,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Get all children.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath).toString();
+         .append("children/") //
+         .append(folderId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
@@ -147,8 +145,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Skip first item in result.
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath) //
+         .append("children/") //
+         .append(folderId) //
          .append("?") //
          .append("skipCount=") //
          .append("1") //
@@ -162,8 +160,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Get all children.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath).toString();
+         .append("children/") //
+         .append(folderId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
@@ -174,8 +172,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Exclude last item from result.
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath) //
+         .append("children/") //
+         .append(folderId) //
          .append("?") //
          .append("maxItems=") //
          .append("2") //
@@ -191,8 +189,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Get children without filter.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath) //
+         .append("children/") //
+         .append(folderId) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
@@ -214,8 +212,8 @@ public class ChildrenTest extends JcrFileSystemTest
       // Get children and apply filter for properties.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("children") //
-         .append(folderPath) //
+         .append("children/") //
+         .append(folderId) //
          .append("?") //
          .append("propertyFilter=") //
          .append(propertyFilter) //

@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -38,10 +38,8 @@ import javax.jcr.Node;
 public class LockTest extends JcrFileSystemTest
 {
    private Node lockTestNode;
-
-   private String folderPath;
-
-   private String filePath;
+   private String folderID;
+   private String fileID;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -55,14 +53,14 @@ public class LockTest extends JcrFileSystemTest
       lockTestNode.addMixin("exo:privilegeable");
 
       Node folderNode = lockTestNode.addNode("LockTest_FOLDER", "nt:folder");
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       Node fileNode = lockTestNode.addNode("LockTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -72,20 +70,18 @@ public class LockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("lock") //
-         .append(filePath).toString();
+         .append("lock/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
-      Node node = (Node)session.getItem(filePath);
+      Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertTrue("File must be locked. ", node.isLocked());
-      Item file = getItem(filePath);
-      validateLinks(file);
    }
 
    public void testLockFileAlreadyLocked() throws Exception
    {
-      Node node = ((Node)session.getItem(filePath));
+      Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       node.addMixin("mix:lockable");
       session.save();
       node.lock(true, false);
@@ -93,8 +89,8 @@ public class LockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("lock") //
-         .append(filePath).toString();
+         .append("lock/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -110,11 +106,13 @@ public class LockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("lock") //
-         .append(filePath).toString();
+         .append("lock/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
+      Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      assertFalse("File must not be locked. ", node.isLocked());
    }
 
    public void testLockFolder() throws Exception
@@ -122,8 +120,8 @@ public class LockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("lock") //
-         .append(folderPath).toString();
+         .append("lock/") //
+         .append(folderID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
    }

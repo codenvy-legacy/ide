@@ -38,15 +38,10 @@ import javax.jcr.lock.Lock;
 public class MoveTest extends JcrFileSystemTest
 {
    private Node moveTestNode;
-
    private Node moveTestDestinationNode;
-
-   private String folderPath;
-
-   private String filePath;
-
+   private String folderID;
+   private String fileID;
    private Node folderNode;
-
    private Node fileNode;
 
    /**
@@ -66,7 +61,7 @@ public class MoveTest extends JcrFileSystemTest
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       moveTestDestinationNode = testRoot.addNode("MoveTest_DESTINATION_FOLDER", "nt:folder");
       moveTestDestinationNode.addMixin("exo:privilegeable");
@@ -78,7 +73,7 @@ public class MoveTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("mix:lockable");
       fileNode.addMixin("exo:privilegeable");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -87,15 +82,16 @@ public class MoveTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(filePath) //
+         .append("move/") //
+         .append(fileID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      String originPath = fileNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + fileNode.getName();
-      assertFalse("File must be moved. ", session.itemExists(filePath));
+      assertFalse("File must be moved. ", session.itemExists(originPath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
@@ -104,19 +100,20 @@ public class MoveTest extends JcrFileSystemTest
       Lock lock = fileNode.lock(true, false);
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(filePath) //
+         .append("move/") //
+         .append(fileID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()) //
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()) //
          .append("&") //
          .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
+      String originPath = fileNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + fileNode.getName();
-      assertFalse("File must be moved. ", session.itemExists(filePath));
+      assertFalse("File must be moved. ", session.itemExists(originPath));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
@@ -126,15 +123,16 @@ public class MoveTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(filePath) //
+         .append("move/") //
+         .append(fileID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      String originPath = fileNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(423, response.getStatus());
-      assertTrue("File must not be moved since its parent is locked. ", session.itemExists(filePath));
+      assertTrue("File must not be moved since its parent is locked. ", session.itemExists(originPath));
    }
 
    public void testMoveFileNoPermissions() throws Exception
@@ -148,15 +146,16 @@ public class MoveTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(filePath) //
+         .append("move/") //
+         .append(fileID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      String originPath = fileNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
-      assertTrue("File must not be moved since permissions restriction. ", session.itemExists(filePath));
+      assertTrue("File must not be moved since permissions restriction. ", session.itemExists(originPath));
    }
 
    public void testMoveFileDestination_NoPermissions() throws Exception
@@ -170,15 +169,16 @@ public class MoveTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(filePath) //
+         .append("move/") //
+         .append(fileID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      String originPath = fileNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
-      assertTrue("Source file not found. ", session.itemExists(filePath));
+      assertTrue("Source file not found. ", session.itemExists(originPath));
       assertFalse("File must not be moved since destination folder is locked. ",
          session.itemExists(moveTestDestinationNode.getPath() + "/MoveTest_FILE"));
    }
@@ -187,15 +187,16 @@ public class MoveTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("move") //
-         .append(folderPath) //
+         .append("move/") //
+         .append(folderID) //
          .append("?") //
          .append("parentId=") //
-         .append(moveTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)moveTestDestinationNode).getIdentifier()).toString();
+      String originPath = folderNode.getPath();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = moveTestDestinationNode.getPath() + "/" + folderNode.getName();
-      assertFalse("Folder must be moved. ", session.itemExists(folderPath));
+      assertFalse("Folder must be moved. ", session.itemExists(originPath));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after moving. ", session.itemExists(expectedPath + "/file"));
    }

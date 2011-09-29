@@ -38,11 +38,8 @@ import javax.jcr.lock.Lock;
 public class RenameTest extends JcrFileSystemTest
 {
    private Node renameTestNode;
-
-   private String filePath;
-
-   private String folderPath;
-
+   private String fileID;
+   private String folderID;
    private Node fileNode;
 
    /**
@@ -63,10 +60,10 @@ public class RenameTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("mix:lockable");
       fileNode.addMixin("exo:privilegeable");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       Node folderNode = renameTestNode.addNode("RenameFileTest_FOLDER", "nt:folder");
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       session.save();
    }
@@ -75,8 +72,8 @@ public class RenameTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(filePath) //
+         .append("rename/") //
+         .append(fileID) //
          .append("?") //
          .append("newname=") //
          .append("_FILE_NEW_NAME_") //
@@ -99,8 +96,8 @@ public class RenameTest extends JcrFileSystemTest
       Lock lock = fileNode.lock(true, false);
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(filePath) //
+         .append("rename/") //
+         .append(fileID) //
          .append("?") //
          .append("newname=") //
          .append("_FILE_NEW_NAME_") //
@@ -126,8 +123,8 @@ public class RenameTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(filePath) //
+         .append("rename/") //
+         .append(fileID) //
          .append("?") //
          .append("newname=") //
          .append("_FILE_NEW_NAME_") //
@@ -150,8 +147,8 @@ public class RenameTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(filePath) //
+         .append("rename/") //
+         .append(fileID) //
          .append("?") //
          .append("newname=") //
          .append("_FILE_NEW_NAME_") //
@@ -165,8 +162,8 @@ public class RenameTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("rename") //
-         .append(folderPath) //
+         .append("rename/") //
+         .append(folderID) //
          .append("?") //
          .append("newname=") //
          .append("_FOLDER_NEW_NAME_") //

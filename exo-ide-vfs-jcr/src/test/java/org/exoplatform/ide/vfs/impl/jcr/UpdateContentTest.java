@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -40,14 +41,9 @@ import javax.jcr.lock.Lock;
 public class UpdateContentTest extends JcrFileSystemTest
 {
    private Node updateContentTestNode;
-
-   private String filePath;
-
-   private String folderPath;
-
+   private String fileID;
+   private String folderID;
    private String content = "__UpdateContentTest__";
-
-   private Node fileNode;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -59,17 +55,17 @@ public class UpdateContentTest extends JcrFileSystemTest
       String name = getClass().getName();
       updateContentTestNode = testRoot.addNode(name, "nt:unstructured");
 
-      fileNode = updateContentTestNode.addNode("UpdateContentTest_FILE", "nt:file");
+      Node fileNode = updateContentTestNode.addNode("UpdateContentTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("exo:privilegeable");
       fileNode.addMixin("mix:lockable");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       Node folderNode = updateContentTestNode.addNode("UpdateContentTest_FOLDER", "nt:folder");
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       session.save();
    }
@@ -78,11 +74,8 @@ public class UpdateContentTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath) //
-//         .append("?") //
-//         .append("mediaType=") //
-//         .append("text/plain;charset=utf8") //
+         .append("content/") //
+         .append(fileID) //
          .toString();
       
       Map <String, List <String>> headers = new HashMap <String, List <String>> ();
@@ -93,7 +86,7 @@ public class UpdateContentTest extends JcrFileSystemTest
       
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node file = (Node)session.getItem(filePath);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());
       assertEquals("text/plain", file.getProperty("jcr:content/jcr:mimeType").getString());
       assertEquals("utf8", file.getProperty("jcr:content/jcr:encoding").getString());
@@ -104,8 +97,8 @@ public class UpdateContentTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(folderPath).toString();
+         .append("content/") //
+         .append(folderID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -115,14 +108,15 @@ public class UpdateContentTest extends JcrFileSystemTest
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)fileNode).setPermissions(permissions);
+      ExtendedNode file = (ExtendedNode)((ExtendedSession)session).getNodeByIdentifier(fileID);
+      file.setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath).toString();
+         .append("content/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -130,15 +124,13 @@ public class UpdateContentTest extends JcrFileSystemTest
 
    public void testUpdateContentLocked() throws Exception
    {
-      Lock lock = fileNode.lock(true, false);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      Lock lock = file.lock(true, false);
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath) //
+         .append("content/") //
+         .append(fileID) //
          .append("?") //
-//         .append("mediaType=") //
-//         .append("text/plain;charset=utf8") //
-//         .append("&") //
          .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
@@ -150,7 +142,7 @@ public class UpdateContentTest extends JcrFileSystemTest
       
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       assertEquals(204, response.getStatus());
-      Node file = (Node)session.getItem(filePath);
+      file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(content, file.getProperty("jcr:content/jcr:data").getString());
       assertEquals("text/plain", file.getProperty("jcr:content/jcr:mimeType").getString());
       assertEquals("utf8", file.getProperty("jcr:content/jcr:encoding").getString());
@@ -158,12 +150,13 @@ public class UpdateContentTest extends JcrFileSystemTest
 
    public void testUpdateContentLocked_NoLockTokens() throws Exception
    {
-      fileNode.lock(true, false);
+      Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      file.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath).toString();
+         .append("content/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));

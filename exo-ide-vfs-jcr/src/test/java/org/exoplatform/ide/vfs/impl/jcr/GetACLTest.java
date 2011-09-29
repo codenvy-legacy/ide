@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -39,8 +40,7 @@ import javax.jcr.Node;
 public class GetACLTest extends JcrFileSystemTest
 {
    private Node getAclTestNode;
-
-   private String filePath;
+   private String fileID;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -61,7 +61,7 @@ public class GetACLTest extends JcrFileSystemTest
       fileNode.addMixin("exo:privilegeable");
       ((ExtendedNode)fileNode).setPermission("root", PermissionType.ALL);
       ((ExtendedNode)fileNode).setPermission("john", new String[]{PermissionType.READ});
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -70,8 +70,8 @@ public class GetACLTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("acl") //
-         .append(filePath) //
+         .append("acl/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
@@ -90,14 +90,14 @@ public class GetACLTest extends JcrFileSystemTest
    {
       Map<String, String[]> permissions = new HashMap<String, String[]>(2);
       permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)session.getItem(filePath)).setPermissions(permissions);
+      ((ExtendedNode)((ExtendedSession)session).getNodeByIdentifier(fileID)).setPermissions(permissions);
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("acl") //
-         .append(filePath) //
+         .append("acl/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());

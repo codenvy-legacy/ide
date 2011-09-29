@@ -20,6 +20,8 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -38,8 +40,7 @@ import javax.jcr.Node;
 public class VersionsTest extends JcrFileSystemTest
 {
    private Node versionsTestNode;
-   private String filePath;
-   private Node fileNode;
+   private String fileID;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -52,7 +53,7 @@ public class VersionsTest extends JcrFileSystemTest
       versionsTestNode = testRoot.addNode(name, "nt:unstructured");
       versionsTestNode.addMixin("exo:privilegeable");
 
-      fileNode = versionsTestNode.addNode("VersionsTest_FILE", "nt:file");
+      Node fileNode = versionsTestNode.addNode("VersionsTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -70,7 +71,7 @@ public class VersionsTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream("__TEST__002".getBytes()));
       session.save();
 
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
    }
 
    @SuppressWarnings("unchecked")
@@ -79,8 +80,8 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(filePath) //
+         .append("version-history/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -111,8 +112,8 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(singleVersionFileNode.getPath()) //
+         .append("version-history/") //
+         .append(((ExtendedNode)singleVersionFileNode).getIdentifier()) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -133,8 +134,8 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version") //
-         .append(filePath) //
+         .append("version/") //
+         .append(fileID) //
          .append("/2") //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
@@ -146,12 +147,13 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersionByPathAndID() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      Node fileNode  = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("itembypath") //
          .append("?") //
          .append("path=") //
-         .append(filePath) //
+         .append(fileNode.getPath()) //
          .append("&") //
          .append("versionId=") //
          .append("2") //
@@ -159,7 +161,6 @@ public class VersionsTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       File file = (File)response.getEntity();
-      assertEquals(filePath, file.getPath());
       assertEquals("2", file.getVersionId());
    }
 
@@ -168,8 +169,8 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version") //
-         .append(filePath) //
+         .append("version/") //
+         .append(fileID) //
          .append("/5") //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
@@ -182,8 +183,8 @@ public class VersionsTest extends JcrFileSystemTest
       // Get all versions.
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(filePath).toString();
+         .append("version-history/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -198,8 +199,8 @@ public class VersionsTest extends JcrFileSystemTest
       // Skip first item in result.
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(filePath) //
+         .append("version-history/") //
+         .append(fileID) //
          .append("?") //
          .append("skipCount=") //
          .append("1") //
@@ -215,8 +216,8 @@ public class VersionsTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(filePath) //
+         .append("version-history/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
@@ -234,8 +235,8 @@ public class VersionsTest extends JcrFileSystemTest
 
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("version-history") //
-         .append(filePath) //
+         .append("version-history/") //
+         .append(fileID) //
          .append("?") //
          .append("maxItems=") //
          .append("2") //

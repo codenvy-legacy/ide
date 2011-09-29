@@ -43,7 +43,8 @@ public class Link
    public static String REL_MOVE = "move";
    public static String REL_COPY = "copy";
    public static String REL_SELF = "self";
-   public static String REL_BY_PATH = "by-path";
+   public static String REL_ITEM = "item";
+   public static String REL_ITEM_BY_PATH = "item-by-path";
    public static String REL_ACL = "acl";
 
    public static String REL_SEARCH = "search";

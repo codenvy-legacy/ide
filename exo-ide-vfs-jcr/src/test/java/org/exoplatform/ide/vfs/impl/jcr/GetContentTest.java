@@ -39,11 +39,8 @@ import javax.ws.rs.core.MediaType;
 public class GetContentTest extends JcrFileSystemTest
 {
    private Node getContentTestNode;
-
-   private String filePath;
-
-   private String folderPath;
-
+   private String fileID;
+   private String folderID;
    private String content = "__GetContentTest__";
 
    /**
@@ -63,10 +60,10 @@ public class GetContentTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:encoding", "utf8");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content.getBytes()));
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       Node folderNode = getContentTestNode.addNode("GetContentTest_FOLDER", "nt:folder");
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       session.save();
    }
@@ -76,8 +73,8 @@ public class GetContentTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath).toString();
+         .append("content/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -91,8 +88,8 @@ public class GetContentTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(folderPath).toString();
+         .append("content/") //
+         .append(folderID).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -108,8 +105,8 @@ public class GetContentTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("content") //
-         .append(filePath).toString();
+         .append("content/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));

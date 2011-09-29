@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -28,6 +29,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.lock.Lock;
 
@@ -38,13 +40,9 @@ import javax.jcr.lock.Lock;
 public class DeleteTest extends JcrFileSystemTest
 {
    private Node deleteTestNode;
-
-   private String folderPath;
-
-   private String filePath;
-
+   private String folderID;
+   private String fileID;
    private Node folderNode;
-
    private Node fileNode;
 
    /**
@@ -66,7 +64,7 @@ public class DeleteTest extends JcrFileSystemTest
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       folderNode.addMixin("exo:privilegeable");
-      folderPath = folderNode.getPath();
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
 
       fileNode = deleteTestNode.addNode("DeleteTest_FILE", "nt:file");
       Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
@@ -75,7 +73,7 @@ public class DeleteTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("mix:lockable");
       fileNode.addMixin("exo:privilegeable");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -84,11 +82,18 @@ public class DeleteTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(filePath).toString();
+         .append("delete/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      assertFalse("File must be removed. ", session.itemExists(filePath));
+      try
+      {
+         ((ExtendedSession)session).getNodeByIdentifier(fileID);
+         fail("File must be removed. ");
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
    }
 
    public void testDeleteFileLocked() throws Exception
@@ -96,15 +101,22 @@ public class DeleteTest extends JcrFileSystemTest
       Lock lock = fileNode.lock(true, false);
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(filePath) //
+         .append("delete/") //
+         .append(fileID) //
          .append("?") //
          .append("lockToken=") //
          .append(lock.getLockToken()) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      assertFalse("File must be removed. ", session.itemExists(filePath));
+      try
+      {
+         ((ExtendedSession)session).getNodeByIdentifier(fileID);
+         fail("File must be removed. ");
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
    }
 
    public void testDeleteFileLocked_NoLockToken() throws Exception
@@ -113,13 +125,20 @@ public class DeleteTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(filePath) //
+         .append("delete/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue("File must not be removed since locked parent. ", session.itemExists(filePath));
+      try
+      {
+         ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      }
+      catch (ItemNotFoundException e)
+      {
+         fail("File must not be removed since locked parent. ");
+      }
    }
 
    public void testDeleteFileNoPermissions() throws Exception
@@ -133,21 +152,28 @@ public class DeleteTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(filePath).toString();
+         .append("delete/") //
+         .append(fileID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue("File must not be removed since permissions restriction. ", session.itemExists(filePath));
+      try
+      {
+         ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      }
+      catch (ItemNotFoundException e)
+      {
+         fail("File must not be removed since permissions restriction. ");
+      }
    }
 
-   public void testDeleteFileWrongPath() throws Exception
+   public void testDeleteFileWrongID() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(filePath + "_WRONG_PATH").toString();
+         .append("delete/") //
+         .append(fileID + "_WRONG_ID").toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -157,10 +183,17 @@ public class DeleteTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("delete") //
-         .append(folderPath).toString();
+         .append("delete/") //
+         .append(folderID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      assertFalse("Folder must be removed. ", session.itemExists(folderPath));
+      try
+      {
+         ((ExtendedSession)session).getNodeByIdentifier(folderID);
+         fail("Folder must be removed. ");
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
    }
 }

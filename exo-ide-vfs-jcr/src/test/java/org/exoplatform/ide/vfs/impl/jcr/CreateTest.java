@@ -37,8 +37,8 @@ import javax.ws.rs.core.MediaType;
  */
 public class CreateTest extends JcrFileSystemTest
 {
-   private String CREATE_TEST_PATH;
-
+   private String createTestNodeID;
+   private String createTestNodePath;
    private Node createTestNode;
 
    /**
@@ -51,17 +51,18 @@ public class CreateTest extends JcrFileSystemTest
       String name = getClass().getName();
       createTestNode = testRoot.addNode(name, "nt:unstructured");
       session.save();
-      CREATE_TEST_PATH = "/" + TEST_ROOT_NAME + "/" + name;
+      createTestNodeID = ((ExtendedNode)createTestNode).getIdentifier();
+      createTestNodePath = createTestNode.getPath();
    }
-
+   
    public void testCreateFile() throws Exception
    {
       String name = "testCreateFile";
       String content = "test create file";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(CREATE_TEST_PATH) //
+         .append("file/") //
+         .append(createTestNodeID) //
          .append("?") //
          .append("name=") //
          .append(name).toString(); //
@@ -72,7 +73,7 @@ public class CreateTest extends JcrFileSystemTest
       
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
       assertEquals(200, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = createTestNodePath + "/" + name;
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
@@ -86,7 +87,8 @@ public class CreateTest extends JcrFileSystemTest
       String content = "test create file";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
+         .append("file/") //
+         .append(((ExtendedNode)session.getRootNode()).getIdentifier()) //
          .append("?") //
          .append("name=") //
          .append(name).toString(); //
@@ -110,15 +112,15 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFileNoContent";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(CREATE_TEST_PATH) //
+         .append("file/") //
+         .append(createTestNodeID) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
       assertEquals(200, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = createTestNodePath + "/" + name;
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
@@ -134,15 +136,15 @@ public class CreateTest extends JcrFileSystemTest
       String content = "test create file without media type";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(CREATE_TEST_PATH) //
+         .append("file/") //
+         .append(createTestNodeID) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
       
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
       assertEquals(200, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = createTestNodePath + "/" + name;
       assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
       Node file = (Node)session.getItem(expectedPath);
       assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
@@ -156,8 +158,8 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(CREATE_TEST_PATH).toString();
+         .append("file/") //
+         .append(createTestNodeID).toString();
       ContainerResponse response =
          launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
@@ -171,15 +173,15 @@ public class CreateTest extends JcrFileSystemTest
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
       ((ExtendedNode)parent).setPermissions(permissions);
-      String parentPath = parent.getPath();
       session.save();
+      String parentID = ((ExtendedNode)parent).getIdentifier();
 
       String name = "testCreateFileNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(parentPath) //
+         .append("file/") //
+         .append(parentID) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
@@ -195,8 +197,8 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFileWrongParent";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("file") //
-         .append(CREATE_TEST_PATH + "_WRONG_PATH") //
+         .append("file/") //
+         .append(createTestNodeID + "_WRONG_ID") //
          .append("?") //
          .append("name=") //
          .append(name).toString();
@@ -211,14 +213,14 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFolder";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("folder") //
-         .append(CREATE_TEST_PATH) //
+         .append("folder/") //
+         .append(createTestNodeID) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
-      String expectedPath = CREATE_TEST_PATH + "/" + name;
+      String expectedPath = createTestNodePath + "/" + name;
       assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
       Node folder = (Node)session.getItem(expectedPath);
       assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
@@ -229,7 +231,8 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFolderInRoot";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("folder") //
+         .append("folder/") //
+         .append(((ExtendedNode)session.getRootNode()).getIdentifier()) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
@@ -246,8 +249,8 @@ public class CreateTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("folder") //
-         .append(CREATE_TEST_PATH).toString();
+         .append("folder/") //
+         .append(createTestNodeID).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -260,15 +263,15 @@ public class CreateTest extends JcrFileSystemTest
       Map<String, String[]> permissions = new HashMap<String, String[]>(1);
       permissions.put("root", PermissionType.ALL);
       ((ExtendedNode)parent).setPermissions(permissions);
-      String parentPath = parent.getPath();
       session.save();
+      String parentID = ((ExtendedNode)parent).getIdentifier();
 
       String name = "testCreateFolderNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("folder") //
-         .append(parentPath) //
+         .append("folder/") //
+         .append(parentID) //
          .append("?") //
          .append("name=") //
          .append(name).toString();
@@ -283,8 +286,8 @@ public class CreateTest extends JcrFileSystemTest
       String name = "testCreateFolderWrongParent";
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("folder") //
-         .append(CREATE_TEST_PATH + "_WRONG_PATH") //
+         .append("folder/") //
+         .append(createTestNodeID + "_WRONG_ID") //
          .append("?") //
          .append("name=") //
          .append(name).toString();

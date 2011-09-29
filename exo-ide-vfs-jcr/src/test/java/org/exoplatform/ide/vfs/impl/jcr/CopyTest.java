@@ -40,9 +40,9 @@ public class CopyTest extends JcrFileSystemTest
 
    private Node copyTestDestinationNode;
 
-   private String folderPath;
+   private String folderId;
 
-   private String filePath;
+   private String fileId;
 
    private Node fileNode;
 
@@ -65,7 +65,7 @@ public class CopyTest extends JcrFileSystemTest
       childContentNode.setProperty("jcr:mimeType", "text/plain");
       childContentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       childContentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      folderPath = folderNode.getPath();
+      folderId = ((ExtendedNode)folderNode).getIdentifier();
 
       copyTestDestinationNode = testRoot.addNode("CopyTest_DESTINATION_FOLDER", "nt:folder");
       copyTestDestinationNode.addMixin("mix:lockable");
@@ -76,7 +76,7 @@ public class CopyTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      filePath = fileNode.getPath();
+      fileId = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
    }
@@ -85,15 +85,15 @@ public class CopyTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("copy") //
-         .append(filePath) //
+         .append("copy/") //
+         .append(fileId) //
          .append("?") //
          .append("parentId=") //
-         .append(copyTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = copyTestDestinationNode.getPath() + "/" + fileNode.getName();
-      assertTrue("Source file not found. ", session.itemExists(filePath));
+      assertTrue("Source file not found. ", session.itemExists(fileNode.getPath()));
       assertTrue("Not found file in destination location. ", session.itemExists(expectedPath));
    }
 
@@ -108,15 +108,15 @@ public class CopyTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("copy") //
-         .append(filePath) //
+         .append("copy/") //
+         .append(fileId) //
          .append("?") //
          .append("parentId=") //
-         .append(copyTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
-      assertTrue("Source file not found. ", session.itemExists(filePath));
+      assertTrue("Source file not found. ", session.itemExists(fileNode.getPath()));
       assertFalse("File must not be copied since destination folder is locked. ",
          session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_FILE"));
    }
@@ -125,15 +125,15 @@ public class CopyTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("copy") //
-         .append(folderPath) //
+         .append("copy/") //
+         .append(folderId) //
          .append("?") //
          .append("parentId=") //
-         .append(copyTestDestinationNode.getPath()).toString();
+         .append(((ExtendedNode)copyTestDestinationNode).getIdentifier()).toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = copyTestDestinationNode.getPath() + "/" + folderNode.getName();
-      assertTrue("Source folder not found. ", session.itemExists(folderPath));
+      assertTrue("Source folder not found. ", session.itemExists(folderNode.getPath()));
       assertTrue("Not found folder in destination location. ", session.itemExists(expectedPath));
       assertTrue("Child of folder missing after coping. ", session.itemExists(expectedPath + "/file"));
    }

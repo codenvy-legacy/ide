@@ -30,6 +30,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -134,11 +135,15 @@ public abstract class JcrFileSystemTest extends TestCase
 
    protected Item getItem(String id) throws Exception
    {
-      String path = new StringBuilder().append(SERVICE_URI).append("item").append(id).toString();
+      String path = new StringBuilder().append(SERVICE_URI).append("item/").append(id).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null, null);
-      assertEquals(200, response.getStatus());
-      Item item = (Item)response.getEntity();
-      return item;
+      if (response.getStatus() == 200)
+         return (Item)response.getEntity();
+      if (response.getStatus() == 404)
+         return null;
+      fail("Unable get " + id + ".\nStatus: " + response.getStatus() + "\nMessage: " + response.getEntity());
+      // 
+      return null;
    }
 
    protected void checkPage(String url, String httpMethod, Method m, List<Object> expected) throws Exception
@@ -163,7 +168,7 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(all, expected);
    }
 
-   protected void validateLinks(Item item)
+   protected void validateLinks(Item item) throws Exception
    {
       Map<String, Link> links = item.getLinks();
 
@@ -175,13 +180,6 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(MediaType.APPLICATION_JSON, link.getType());
       assertEquals(Link.REL_SELF, link.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(item.getId()).build().toString(), link.getHref());
-
-      link = links.get(Link.REL_BY_PATH);
-      assertNotNull("'" + Link.REL_BY_PATH + "' link not found. ", link);
-      assertEquals(MediaType.APPLICATION_JSON, link.getType());
-      assertEquals(Link.REL_BY_PATH, link.getRel());
-      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").queryParam("path", item.getPath()).build()
-         .toString(), link.getHref());
 
       link = links.get(Link.REL_PARENT);
       if (item.getParentId() == null)
@@ -242,7 +240,19 @@ public abstract class JcrFileSystemTest extends TestCase
          assertNotNull("'" + Link.REL_CURRENT_VERSION + "' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
          assertEquals(Link.REL_CURRENT_VERSION, link.getRel());
-         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(file.getId()).build().toString(),
+         String id = file.getId();
+         Node fileNode = ((ExtendedSession)session).getNodeByIdentifier(id);
+         String expectedCurrentVersionId;
+         if (fileNode.isNodeType("nt:frozenNode"))
+         {
+            expectedCurrentVersionId =
+               ((javax.jcr.version.Version)fileNode.getParent()).getContainingHistory().getVersionableUUID();
+         }
+         else
+         {
+            expectedCurrentVersionId = id;
+         }
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path(expectedCurrentVersionId).build().toString(),
             link.getHref());
 
          link = links.get(Link.REL_VERSION_HISTORY);
@@ -319,7 +329,20 @@ public abstract class JcrFileSystemTest extends TestCase
       Map<String, Link> templates = info.getUrlTemplates();
       //log.info(">>>>>>>>>\n" + templates);
 
-      Link template = templates.get(Link.REL_COPY);
+      Link template = templates.get(Link.REL_ITEM);
+      assertNotNull("'" + Link.REL_ITEM + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_ITEM, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path("[id]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_ITEM_BY_PATH);
+      assertNotNull("'" + Link.REL_ITEM_BY_PATH + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_ITEM_BY_PATH, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").queryParam("path", "[path]").build().toString(),
+         template.getHref());
+
+      template = templates.get(Link.REL_COPY);
       assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
       assertEquals(null, template.getType());
       assertEquals(Link.REL_COPY, template.getRel());

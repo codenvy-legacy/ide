@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
@@ -33,9 +35,7 @@ import javax.jcr.Node;
 public class UnlockTest extends JcrFileSystemTest
 {
    private Node unlockTestNode;
-
-   private String filePath;
-
+   private String fileID;
    private String fileLockToken;
 
    /**
@@ -55,7 +55,7 @@ public class UnlockTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       fileNode.addMixin("mix:lockable");
-      filePath = fileNode.getPath();
+      fileID = ((ExtendedNode)fileNode).getIdentifier();
 
       session.save();
 
@@ -66,15 +66,15 @@ public class UnlockTest extends JcrFileSystemTest
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("unlock") //
-         .append(filePath) //
+         .append("unlock/") //
+         .append(fileID) //
          .append("?") //
          .append("lockToken=") //
          .append(fileLockToken) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      Node node = (Node)session.getItem(filePath);
+      Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertFalse("Lock must be removed. ", node.isLocked());
    }
 
@@ -83,8 +83,8 @@ public class UnlockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("unlock") //
-         .append(filePath) //
+         .append("unlock/") //
+         .append(fileID) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
@@ -96,8 +96,8 @@ public class UnlockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("unlock") //
-         .append(filePath) //
+         .append("unlock/") //
+         .append(fileID) //
          .append("?") //
          .append("lockToken=") //
          .append(fileLockToken + "_WRONG") //
@@ -119,8 +119,8 @@ public class UnlockTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("unlock") //
-         .append(fileNode.getPath()) //
+         .append("unlock/") //
+         .append(((ExtendedNode)fileNode).getIdentifier()) //
          .toString();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());

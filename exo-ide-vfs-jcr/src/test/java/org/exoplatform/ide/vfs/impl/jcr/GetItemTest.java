@@ -41,9 +41,9 @@ import javax.jcr.Node;
 public class GetItemTest extends JcrFileSystemTest
 {
    private Node getObjectTestNode;
-
+   private String folderId;
    private String folderPath;
-
+   private String fileId;
    private String filePath;
 
    /**
@@ -58,6 +58,7 @@ public class GetItemTest extends JcrFileSystemTest
       getObjectTestNode.addMixin("exo:privilegeable");
 
       Node folderNode = getObjectTestNode.addNode("GetObjectTest_FOLDER", "nt:folder");
+      folderId = ((ExtendedNode)folderNode).getIdentifier();
       folderPath = folderNode.getPath();
 
       Node fileNode = getObjectTestNode.addNode("GetObjectTest_FILE", "nt:file");
@@ -72,6 +73,7 @@ public class GetItemTest extends JcrFileSystemTest
       fileNode.setProperty("MyProperty04", true);
       fileNode.setProperty("MyProperty05", Calendar.getInstance());
       fileNode.setProperty("MyProperty06", 123.456);
+      fileId = ((ExtendedNode)fileNode).getIdentifier();
       filePath = fileNode.getPath();
 
       session.save();
@@ -82,13 +84,14 @@ public class GetItemTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath).toString();
+         .append("item/") //
+         .append(fileId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
+      assertEquals(fileId, item.getId());
       assertEquals(filePath, item.getPath());
       validateLinks(item);
    }
@@ -107,6 +110,7 @@ public class GetItemTest extends JcrFileSystemTest
       //log.info(new String(writer.getBody()));
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
+      assertEquals(fileId, item.getId());
       assertEquals(filePath, item.getPath());
       validateLinks(item);
    }
@@ -118,8 +122,8 @@ public class GetItemTest extends JcrFileSystemTest
       // No filter - all properties
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath) //
+         .append("item/") //
+         .append(fileId) //
          .toString();
 
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
@@ -140,8 +144,8 @@ public class GetItemTest extends JcrFileSystemTest
       // With filter
       path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath) //
+         .append("item/") //
+         .append(fileId) //
          .append("?") //
          .append("propertyFilter=") //
          .append("MyProperty02") //
@@ -162,8 +166,8 @@ public class GetItemTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath + "_WRONG_ID_").toString();
+         .append("item/") //
+         .append(fileId + "_WRONG_ID_").toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -178,8 +182,8 @@ public class GetItemTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(filePath).toString();
+         .append("item/") //
+         .append(fileId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -190,13 +194,15 @@ public class GetItemTest extends JcrFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
-         .append("item") //
-         .append(folderPath).toString();
+         .append("item/") //
+         .append(folderId).toString();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FOLDER, item.getItemType());
+      assertEquals(folderId, item.getId());
+      assertEquals(folderPath, item.getPath());
       validateLinks(item);
    }
 
@@ -214,6 +220,8 @@ public class GetItemTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FOLDER, item.getItemType());
+      assertEquals(folderId, item.getId());
+      assertEquals(folderPath, item.getPath());
       validateLinks(item);
    }
 
