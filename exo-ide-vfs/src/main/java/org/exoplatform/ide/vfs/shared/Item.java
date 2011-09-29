@@ -134,6 +134,15 @@ public class Item
    }
 
    /**
+    * @param itemType the itemType
+    */
+   public void setItemType(ItemType itemType)
+   {
+      // For JSON transformations ONLY.
+      this.itemType = itemType;
+   }
+
+   /**
     * @return path
     */
    public String getPath()
