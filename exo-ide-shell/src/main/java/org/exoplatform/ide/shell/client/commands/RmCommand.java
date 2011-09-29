@@ -18,12 +18,21 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -59,33 +68,70 @@ public class RmCommand extends ClientCommand
          printHelp(CloudShell.messages.rmUsage(), CloudShell.messages.rmHeader());
          return;
       }
-//      List<String> args = commandLine.getArgList();
-//      args.remove(commads.iterator().next());
-//      if (args.size() == 1)
-//      {
-//         String path = args.get(0);
-//         Folder deleteItem =
-//            new Folder(Utils.getPath(
-//               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
-//         VirtualFileSystem.getInstance().deleteItem(deleteItem, new AsyncRequestCallback<Item>()
-//         {
-//
-//            @Override
-//            protected void onSuccess(Item result)
-//            {
-//               CloudShell.console().printPrompt();
-//            }
-//
-//            /**
-//             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-//             */
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               CloudShell.console().print(exception.getMessage() + "\n");
-//            }
-//         });
-//      }
+      @SuppressWarnings("unchecked")
+      List<String> args = commandLine.getArgList();
+      args.remove(commads.iterator().next());
+      if (args.size() == 1)
+      {
+         String path = args.get(0);
+         final String newPath = Utils.getPath(Environment.get().getCurrentFolder(), path);
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(newPath,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     deleteItem(result.getItem());
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                     CloudShell.console().println(exception.getMessage());
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            CloudShell.console().println(e.getMessage());
+            e.printStackTrace();
+         }
+      }
+   }
+
+   private void deleteItem(Item item)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               CloudShell.console().printPrompt();
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               CloudShell.console().println(exception.getMessage());
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         CloudShell.console().println(e.getMessage());
+         e.printStackTrace();
+      }
    }
 
 }

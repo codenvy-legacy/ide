@@ -28,7 +28,9 @@ import org.exoplatform.gwtframework.commons.rest.copy.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.copy.MimeType;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -141,7 +143,7 @@ public class VirtualFileSystem
     * 
     * @param path
     */
-   public void getChildren(FolderModel folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
+   public void getChildren(Folder folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
       //      ItemList<Item> items = new ItemList<Item>();
       //      folder.setChildren(items);
@@ -325,15 +327,43 @@ public class VirtualFileSystem
    }
 
    /**
-    * Get item by location(href).
+    * Get item by location(self relation).
     * @param location of item
     * @param callback
     * @throws RequestException 
     */
+   @Deprecated
    public void getItemByLocation(String location, AsyncRequestCallback<? extends Item> callback)
       throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, location).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(location)).send(callback);
+   }
+
+   /**
+    * Get item by path.
+    * Path MUST not start with "\"
+    * @param path to item
+    * @param callback
+    * @throws RequestException
+    */
+   public void getItemByPath(String path, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
+      url = URL.decode(url).replace("[path]", path);
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
+   }
+
+   /**
+    * Get item by id.
+    * @param id Id of the Item
+    * @param callback
+    * @throws RequestException
+    */
+   public void getItemById(String id, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get((Link.REL_ITEM)).getHref();
+      url = URL.decode(url).replace("[id]", id);
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).send(callback);
    }
 
    /**
@@ -352,7 +382,7 @@ public class VirtualFileSystem
       String data = "";
       for (String key : query.keySet())
       {
-         String value =  query.get(key);
+         String value = query.get(key);
          data += (value != null && !value.isEmpty()) ? key + "=" + value + "&" : "";
       }
       AsyncRequest.build(RequestBuilder.POST, url)

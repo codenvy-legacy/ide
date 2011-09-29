@@ -28,11 +28,12 @@ import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,8 @@ public class LsCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
-      List<String> args = commandLine.getArgList();
+      @SuppressWarnings("unchecked")
+      final List<String> args = commandLine.getArgList();
       args.remove(0);
 
       if (commandLine.hasOption("h"))
@@ -74,7 +76,7 @@ public class LsCommand extends ClientCommand
          printHelp(CloudShell.messages.lsUsage(), CloudShell.messages.lsHeader());
          return;
       }
-      FolderModel current = Environment.get().getCurrentFolder();
+      Folder current = Environment.get().getCurrentFolder();
       if (args.size() == 0)
       {
          getFolderContent(current);
@@ -83,14 +85,40 @@ public class LsCommand extends ClientCommand
       {
 
          String path = Utils.getPath(current, args.get(0));
-         CloudShell.console().println(path);
-         //TODO 
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(path,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     if (result.getItem() instanceof Folder)
+                        getFolderContent((Folder)result.getItem());
+                     else
+                        CloudShell.console().print(CloudShell.messages.lsError(result.getItem().getName()));
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                     CloudShell.console().print(CloudShell.messages.lsError(args.get(0)));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().print(CloudShell.messages.lsError(args.get(0)));
+         }
 
       }
 
    }
 
-   private void getFolderContent(final FolderModel folder)
+   private void getFolderContent(final Folder folder)
    {
       try
       {

@@ -16,20 +16,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.shell.client;
+package org.exoplatform.ide.vfs.client.model;
+
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
+ * Wrapper for {@link ItemWrapper} to help unmarshall item unknown type
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 11, 2011 evgen $
+ * @version $Id:  Sep 29, 2011 evgen $
  *
  */
-public interface EnvironmentVariables
+public class ItemWrapper
 {
-   String WORKDIR = "workdir";
-   
-   String ENTRY_POINT = "ENTRY_POINT";
-   
-   String USER_NAME = "USER_NAME";
-   
-   String COMMAND_BUFFER = "COMMAND_BUFFER";
+   private Item item;
+
+   /**
+    * 
+    */
+   public ItemWrapper()
+   {
+   }
+
+   /**
+    * @param item
+    */
+   public ItemWrapper(Item item)
+   {
+      super();
+      this.item = item;
+   }
+
+   /**
+    * @return the item
+    */
+   public Item getItem()
+   {
+      return item;
+   }
+
+   /**
+    * @param item the item to set
+    */
+   public void setItem(Item item)
+   {
+      this.item = item;
+   }
+
 }

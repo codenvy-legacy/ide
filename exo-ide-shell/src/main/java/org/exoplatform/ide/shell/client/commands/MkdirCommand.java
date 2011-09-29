@@ -29,6 +29,7 @@ import org.exoplatform.ide.shell.client.model.ClientCommand;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -76,11 +77,12 @@ public class MkdirCommand extends ClientCommand
          CloudShell.console().println(CloudShell.messages.mkdirError());
          return;
       }
-      FolderModel parentFolder = Environment.get().getCurrentFolder();
+      Folder parentFolder = Environment.get().getCurrentFolder();
       for (String name : args)
       {
 
-         FolderModel newFolder = new FolderModel(name, parentFolder);
+         FolderModel newFolder = new FolderModel();
+         newFolder.setName(name);
          try
          {
             VirtualFileSystem.getInstance().createFolder(parentFolder,

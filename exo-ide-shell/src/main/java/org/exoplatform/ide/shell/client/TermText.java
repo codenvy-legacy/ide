@@ -228,10 +228,13 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
    {
       String path = Environment.get().getCurrentFolder().getPath();
 
-//      path = path.substring(0, path.lastIndexOf("/"));
-//      path = path.substring(path.lastIndexOf("/") + 1, path.length());
-//      if (Environment.get().getValue(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
-//         path = "/";
+      if (!path.equals("/"))
+      {
+//         path = path.substring(0, path.lastIndexOf("/"));
+         path = path.substring(path.lastIndexOf("/") + 1, path.length());
+      }
+      //      if (Environment.get().getValue(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
+      //         path = "/";
       path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
       state.append(path + "$ ");
    }
@@ -350,5 +353,5 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       int code = event.getNativeEvent().getKeyCode();
       handleKeyEvent(code, event);
    }
-   
+
 }

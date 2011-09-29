@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.shell.client;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
+
 import java.util.ArrayList;
 
 /**
@@ -29,7 +32,7 @@ import java.util.ArrayList;
  */
 public class ShellComandBuffer extends ArrayList<String>
 {
-   private final int MAX_SIZE = 32;
+   private final int MAX_SIZE = 500;
 
    private static final long serialVersionUID = 1L;
 
@@ -45,12 +48,12 @@ public class ShellComandBuffer extends ArrayList<String>
       {
          remove(0);
       }
-      if (size() > 0 && e.equals(get(size()-1)))
+      if (size() > 0 && e.equals(get(size() - 1)))
       {
          resetIterator();
          return false;
       }
-      
+
       boolean result = super.add(e);
       resetIterator();
       return result;
@@ -84,7 +87,7 @@ public class ShellComandBuffer extends ArrayList<String>
     */
    public String goDown()
    {
-      if (iterator < 0 || iterator == size()-1)
+      if (iterator < 0 || iterator == size() - 1)
       {
          resetIterator();
          return null;
@@ -94,6 +97,32 @@ public class ShellComandBuffer extends ArrayList<String>
          iterator++;
       }
       return get(iterator);
+   }
+
+   /**
+    * Transform buffer to JSON Array
+    * @return String of JSON Array
+    */
+   public String toJSON()
+   {
+      JSONArray a = new JSONArray();
+      for (int i = 0; i < size(); i++)
+      {
+         a.set(i, new JSONString(get(i)));
+      }
+      return a.toString();
+   }
+
+   /**
+    * Init buffer from JSON Array
+    * @param array
+    */
+   public void init(JSONArray array)
+   {
+      for (int i = 0; i < array.size(); i++)
+      {
+         add(array.get(i).isString().stringValue());
+      }
    }
 
 }

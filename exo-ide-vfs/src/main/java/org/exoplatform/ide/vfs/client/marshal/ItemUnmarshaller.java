@@ -27,23 +27,35 @@ import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 30, 2011 evgen $
  *
  */
-public class ItemUnmarshaller implements Unmarshallable<Item>
+public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
 {
 
-   private Item item;
+   private ItemWrapper item;
+
+   /**
+    * Item type
+    */
+   private static final String TYPE = "itemType";
+
+   /**
+    * Item mime type
+    */
+   private static final String MIME_TYPE = "mimeType";
 
    /**
     * @param item
     */
-   public ItemUnmarshaller(Item item)
+   public ItemUnmarshaller(ItemWrapper item)
    {
       super();
       this.item = item;
@@ -58,16 +70,23 @@ public class ItemUnmarshaller implements Unmarshallable<Item>
       try
       {
          JSONValue val = JSONParser.parseLenient(response.getText());
-         JSONObject ob = val.isObject();
-         ItemType type = ItemType.fromValue(ob.get("itemType").isString().stringValue());
-         if(type == ItemType.FILE)
+         JSONObject object = val.isObject();
+         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+         String mimeType = object.get(MIME_TYPE).isString().stringValue();
+
+         if (type == ItemType.FOLDER)
          {
-            ((FileModel)item).init(ob);
+            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
+            {
+               item.setItem(new ProjectModel(object));
+            }
+            else
+            {
+               item.setItem(new FolderModel(object));
+            }
          }
          else
-         {
-            ((FolderModel)item).init(ob);
-         }
+            item.setItem(new FileModel(object));
       }
       catch (Exception e)
       {
@@ -79,7 +98,7 @@ public class ItemUnmarshaller implements Unmarshallable<Item>
     * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
    @Override
-   public Item getPayload()
+   public ItemWrapper getPayload()
    {
       return item;
    }

@@ -20,6 +20,7 @@ package org.exoplatform.ide.shell.client.commands;
 
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.List;
 public class Utils
 {
    private static final String TAB = "  ";
-   
+
    /**
     * Create new path with current folder and user entered path.
     * Respect relative paths i.e "../../a/b/../b1"
@@ -42,7 +43,7 @@ public class Utils
     * @param path to new location
     * @return new absolute path
     */
-   public static String getPath(FolderModel currentFolder, String path)
+   public static String getPath(Folder currentFolder, String path)
    {
       if (path.startsWith("./"))
       {
@@ -55,20 +56,27 @@ public class Utils
       //absolute path
       if (path.startsWith("/"))
       {
-         return path;
+         return path.substring(1);
       }
       if (!path.startsWith(".."))
       {
-         if (path.startsWith("/"))
-         {
-            path = path.substring(1);
-         }
-         return currentFolder.getPath() + path;
+         String folderPath = currentFolder.getPath().substring(1);
+         
+         if (folderPath.endsWith("/") && path.startsWith("/"))
+            return folderPath + path.substring(1);
+
+         if(folderPath.isEmpty())
+            return path;
+         
+         if (!folderPath.endsWith("/") && !path.startsWith("/"))
+            return folderPath + "/" + path;
+         
+         return folderPath + path;
       }
       else
       {
          String[] parent = path.split("/");
-         String currentPath = currentFolder.getPath();
+         String currentPath = currentFolder.getPath().substring(1);
          if (currentPath.endsWith("/"))
          {
             currentPath = currentPath.substring(0, currentPath.length() - 1);
@@ -77,6 +85,11 @@ public class Utils
          {
             if (s.equals(".."))
             {
+               if (currentPath.lastIndexOf("/") == -1)
+               {
+                  currentPath = "";
+                  break;
+               }
                currentPath = currentPath.substring(0, currentPath.lastIndexOf("/"));
             }
             else
@@ -84,8 +97,6 @@ public class Utils
                currentPath += "/" + s;
             }
          }
-         if (!currentPath.endsWith("/"))
-            currentPath += "/";
          return currentPath;
       }
    }
@@ -105,7 +116,6 @@ public class Utils
       output = output.replaceAll("'", "&#039;");
       return output;
    }
-   
 
    /**
     * Format items in several columns. Main purpose is reducing terminal space.
@@ -203,6 +213,24 @@ public class Utils
          }
       }
       return max;
+   }
+
+   /**
+    * Get Maximum length Item name
+    * @param items
+    * @return  item name
+    */
+   public static String getMaxLengthName(List<Item> items)
+   {
+      String name = "";
+      for (Item i : items)
+      {
+         if (i.getName().length() > name.length())
+         {
+            name = i.getName();
+         }
+      }
+      return name;
    }
 
 }

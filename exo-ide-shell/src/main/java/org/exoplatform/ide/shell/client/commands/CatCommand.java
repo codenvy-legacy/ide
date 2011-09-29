@@ -18,10 +18,22 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +72,7 @@ public class CatCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
+      @SuppressWarnings("unchecked")
       List<String> args = commandLine.getArgList();
       args.remove(0);
       if (commandLine.hasOption("h"))
@@ -82,62 +95,77 @@ public class CatCommand extends ClientCommand
 
    private void getNextContent()
    {
-//      String workdir = Environment.get().getValue(EnvironmentVariables.WORKDIR);
-//      if (files.size() != 0)
-//      {
-//
-//         final FileModel f = new File(Utils.getPath(workdir, files.get(0)));
-//
-//         VirtualFileSystem.getInstance().getProperties(f, prop, new ItemPropertiesCallback()
-//         {
-//
-//            @Override
-//            protected void onSuccess(Item result)
-//            {
-//               if (result.getProperty(ItemProperty.GETCONTENTTYPE) != null)
-//                  VirtualFileSystem.getInstance().getContent(f, new FileCallback()
-//                  {
-//                     @Override
-//                     protected void onSuccess(File result)
-//                     {
-//                        String content = Utils.htmlEncode(result.getContent());
-//                        out.append(content);
-//                        out.append("\n");
-//                        files.remove(0);
-//                        getNextContent();
-//                     }
-//
-//                     /**
-//                      * @see org.exoplatform.ide.client.framework.vfs.FileCallback#onFailure(java.lang.Throwable)
-//                      */
-//                     @Override
-//                     protected void onFailure(Throwable exception)
-//                     {
-//                        CloudShell.console().print(CloudShell.messages.catGetFileContentError() + "\n");
-//                     }
-//                  });
-//               else
-//               {
-//                  CloudShell.console().print(CloudShell.messages.catFolderError(files.get(0)) + "\n");
-//               }
-//
-//            }
-//
-//            /**
-//             * @see org.exoplatform.ide.client.framework.vfs.ItemPropertiesCallback#onFailure(java.lang.Throwable)
-//             */
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               CloudShell.console().print(CloudShell.messages.catFileNotFound(files.get(0)) + "\n");
-//            }
-//         });
-//
-//      }
-//      else
-//      {
-//         CloudShell.console().print(out.toString());
-//      }
+      Folder workdir = Environment.get().getCurrentFolder();
+      if (files.size() != 0)
+      {
+
+         String newPath = Utils.getPath(workdir, files.get(0));
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(newPath,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     try
+                     {
+                        Item i = result.getItem();
+                        if (i instanceof FileModel)
+                        {
+                           VirtualFileSystem.getInstance().getContent(
+                              new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller((FileModel)i))
+                              {
+
+                                 @Override
+                                 protected void onSuccess(FileModel result)
+                                 {
+                                    String content = Utils.htmlEncode(result.getContent());
+                                    out.append(content);
+                                    out.append("\n");
+                                    files.remove(0);
+                                    getNextContent();
+                                 }
+
+                                 @Override
+                                 protected void onFailure(Throwable exception)
+                                 {
+                                    exception.printStackTrace();
+                                    CloudShell.console().println(CloudShell.messages.catGetFileContentError());
+                                 }
+                              });
+                        }
+                        else
+                        {
+                           CloudShell.console().println(CloudShell.messages.catFolderError(i.getName()));
+                        }
+                     }
+                     catch (RequestException e)
+                     {
+                        e.printStackTrace();
+                        CloudShell.console().println(CloudShell.messages.catGetFileContentError());
+                     }
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                     CloudShell.console().println(CloudShell.messages.catGetFileContentError());
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().println(CloudShell.messages.catFileNotFound(files.get(0)));
+         }
+      }
+      else
+      {
+         CloudShell.console().print(out.toString());
+      }
 
    }
 

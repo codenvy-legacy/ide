@@ -18,11 +18,18 @@
  */
 package org.exoplatform.ide.shell.client.commands;
 
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
+import org.exoplatform.ide.shell.client.Environment;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +64,7 @@ public class CdCommand extends ClientCommand
    @Override
    public void execute(CommandLine commandLine)
    {
+      @SuppressWarnings("unchecked")
       List<String> args = commandLine.getArgList();
       args.remove(0);
 
@@ -78,42 +86,43 @@ public class CdCommand extends ClientCommand
             CloudShell.console().printPrompt();
             return;
          }
-//         final Folder newFolder =
-//            new Folder(Utils.getPath(
-//               VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.WORKDIR), path));
-//         goToDir(newFolder);
+         final String newPath = Utils.getPath(Environment.get().getCurrentFolder(), path);
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(newPath,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     if (result.getItem() instanceof Folder)
+                     {
+                        Environment.get().setCurrentFolder((Folder)result.getItem());
+                        CloudShell.console().printPrompt();
+                     }
+                     else
+                        CloudShell.console().println(CloudShell.messages.cdErrorFolder(result.getItem().getName()));
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                     CloudShell.console().println(CloudShell.messages.cdErrorFolder(newPath));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().println(CloudShell.messages.cdErrorFolder(newPath));
+         }
       }
       else
       {
-         CloudShell.console().print(CloudShell.messages.cdError() + "\n");
+         CloudShell.console().println(CloudShell.messages.cdError());
       }
-   }
-
-   /**
-    * @param newFolder
-    */
-   private void goToDir(final FolderModel newFolder)
-   {
-//      VirtualFileSystem.getInstance().getChildren(newFolder, new AsyncRequestCallback<Folder>()
-//      {
-//
-//         @Override
-//         protected void onSuccess(Folder result)
-//         {
-//            VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
-//            CloudShell.console().printPrompt();
-//         }
-//
-//         /**
-//          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-//          */
-//         @Override
-//         protected void onFailure(Throwable exception)
-//         {
-//            super.onFailure(exception);
-//            CloudShell.console().print(CloudShell.messages.cdErrorFolder(newFolder.getName()) + "\n");
-//         }
-//      });
    }
 
 }

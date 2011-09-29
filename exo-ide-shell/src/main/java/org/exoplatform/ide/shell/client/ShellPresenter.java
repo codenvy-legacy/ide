@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONValue;
+
+import com.google.gwt.json.client.JSONParser;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,7 +32,11 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
@@ -39,8 +45,11 @@ import org.exoplatform.ide.shell.client.commands.Utils;
 import org.exoplatform.ide.shell.client.marshal.GenericJsonUnmarshaller;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,11 +96,34 @@ public class ShellPresenter
 
    private ShellComandBuffer buffer;
 
+   private int lastKeyPressed;
+
+   private boolean isTabPressed;
+
    public ShellPresenter(Display display)
    {
       this.display = display;
       bindDisplay();
       buffer = new ShellComandBuffer();
+      try
+      {
+         String com = Environment.get().getValue(EnvironmentVariables.COMMAND_BUFFER);
+         JSONValue value = JSONParser.parseLenient(com);
+         buffer.init(value.isArray());
+      }
+      catch (Exception e)
+      {
+         // TODO: handle exception
+      }
+      Window.addWindowClosingHandler(new ClosingHandler()
+      {
+
+         @Override
+         public void onWindowClosing(ClosingEvent event)
+         {
+            Environment.get().saveValue(EnvironmentVariables.COMMAND_BUFFER, buffer.toJSON());
+         }
+      });
    }
 
    public void bindDisplay()
@@ -165,7 +197,7 @@ public class ShellPresenter
                   handled = true;
                }
             }
-
+            lastKeyPressed = code;
             if (handled)
             {
                display.refreshConsole();
@@ -224,6 +256,7 @@ public class ShellPresenter
                   performComplete();
                   handled = true;
                }
+               lastKeyPressed = code;
                if (handled)
                {
                   display.refreshConsole();
@@ -290,6 +323,12 @@ public class ShellPresenter
 
       if (suggestions.isEmpty())
       {
+         if (lastKeyPressed == KeyCodes.KEY_TAB)
+         {
+            isTabPressed = true;
+         }
+         else
+            isTabPressed = false;
          performFolderNameComplete();
          return;
       }
@@ -322,8 +361,52 @@ public class ShellPresenter
    {
       final String prefix =
          display.getBuffer().substring(display.getBuffer().lastIndexOf(" ") + 1, display.getBuffer().length());
+      if (prefix.contains("/"))
+      {
+         final String folderPath = prefix.substring(0, prefix.lastIndexOf("/"));
+         String newPath = Utils.getPath(Environment.get().getCurrentFolder(), folderPath);
+         try
+         {
+            VirtualFileSystem.getInstance().getItemByPath(newPath,
+               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+               {
+
+                  @Override
+                  protected void onSuccess(ItemWrapper result)
+                  {
+                     Item i = result.getItem();
+                     if (i instanceof Folder)
+                     {
+                        getFolderChildren((Folder)i, prefix);
+                     }
+                     //TODO
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     exception.printStackTrace();
+                     CloudShell.console().print(CloudShell.messages.cdErrorFolder(folderPath) + "\n");
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            CloudShell.console().print(CloudShell.messages.cdErrorFolder(folderPath) + "\n");
+         }
+      }
+      else
+      {
+         getFolderChildren(Environment.get().getCurrentFolder(), prefix);
+      }
+
+   }
+
+   private void childrenReceived(List<Item> childrens, String prefix)
+   {
       final String namePrefix;
-      if(prefix.contains("/"))
+      if (prefix.contains("/"))
       {
          namePrefix = prefix.substring(prefix.lastIndexOf("/") + 1, prefix.length());
       }
@@ -331,102 +414,112 @@ public class ShellPresenter
          namePrefix = prefix;
       if (prefix.isEmpty())
       {
-         try
-         {
-            VirtualFileSystem.getInstance().getChildren(Environment.get().getCurrentFolder(),
-               new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-               {
-
-                  @Override
-                  protected void onSuccess(List<Item> result)
-                  {
-                     List<Item> folders = new ArrayList<Item>();
-                     for (Item i : result)
-                     {
-                        if (i instanceof FolderModel)
-                        {
-                           folders.add(i);
-                        }
-                     }
-
-                     display.appendBuffer("\n");
-                     display.appendBuffer(Utils.fomatItems(folders));
-                     display.submitBuffer();
-                     display.printPrompt();
-                     display.appendBuffer(prefix);
-                     display.refreshConsole();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     CloudShell.console().println(
-                        CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-            CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
-         }
+         display.appendBuffer("\n");
+         display.appendBuffer(Utils.fomatItems(childrens));
+         display.submitBuffer();
+         display.printPrompt();
+         display.appendBuffer(prefix);
+         display.refreshConsole();
       }
       else
       {
-         try
+         List<Item> items = new ArrayList<Item>();
+         for (Item i : childrens)
          {
-            VirtualFileSystem.getInstance().getChildren(Environment.get().getCurrentFolder(),
-               new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            if (i.getName().startsWith(namePrefix))
+            {
+               items.add(i);
+            }
+         }
+         if (items.isEmpty())
+         {
+            return;
+         }
+         if (items.size() == 1)
+         {
+            String buf = display.getBuffer();
+            display.clearBuffer();
+            Item i = items.get(0);
+            String s = "";
+            if (i.getItemType() != ItemType.FILE)
+               s = "/";
+            else
+               s = " ";
+            display.appendBuffer(buf + items.get(0).getName().substring(namePrefix.length()) + s);
+            display.refreshConsole();
+         }
+         else
+         {
+            boolean flag = true;
+            String p = namePrefix;
+            String maxName = Utils.getMaxLengthName(items);
+            while (flag)
+            {
+               if (p.equals(maxName))
                {
-
-                  @Override
-                  protected void onSuccess(List<Item> result)
+                  break;
+               }
+               p += maxName.charAt(p.length());
+               for (Item i : items)
+               {
+                  if (!i.getName().startsWith(p))
                   {
-                     List<Item> folders = new ArrayList<Item>();
-                     for (Item i : result)
-                     {
-                        if (i.getName().startsWith(namePrefix))
-                        {
-                           folders.add(i);
-                        }
-                     }
-                     if (folders.isEmpty())
-                     {
-                        return;
-                     }
-                     if (folders.size() == 1)
-                     {
-                        String buf = display.getBuffer();
-                        display.clearBuffer();
-                        display.appendBuffer(buf + folders.get(0).getName().substring(namePrefix.length()) + "/");
-                        display.refreshConsole();
-                     }
-                     else
-                     {
-                        display.appendBuffer("\n");
-                        display.appendBuffer(Utils.fomatItems(folders));
-                        display.submitBuffer();
-                        display.printPrompt();
-                        display.appendBuffer(prefix);
-                        display.refreshConsole();
-                     }
+                     flag = false;
+                     p = p.substring(0, p.length() - 1);
+                     break;
                   }
+               }
+            }
+            if (namePrefix.equals(p) && isTabPressed)
+            {
+               String buf = display.getBuffer();
+               display.appendBuffer("\n");
+               display.appendBuffer(Utils.fomatItems(items));
+               display.submitBuffer();
+               display.printPrompt();
+               display.appendBuffer(buf);
+               display.refreshConsole();
+            }
+            else
+            {
+               p = p.substring(namePrefix.length());
+               String buf = display.getBuffer();
+               display.clearBuffer();
+               display.appendBuffer(buf + p);
+               display.refreshConsole();
+            }
+         }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     CloudShell.console().println(
-                        CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-            CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
-         }
       }
+   }
 
+   private void getFolderChildren(final Folder folder, final String prefix)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(folder,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  childrenReceived(result, prefix);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  CloudShell.console().println(
+                     CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         CloudShell.console().println(CloudShell.messages.lsError(Environment.get().getCurrentFolder().getPath()));
+      }
    }
 
    /**

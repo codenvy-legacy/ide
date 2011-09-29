@@ -20,7 +20,6 @@ package org.exoplatform.ide.shell.client.commands;
 
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.shell.client.Environment;
-import org.exoplatform.ide.shell.client.EnvironmentVariables;
 import org.exoplatform.ide.shell.client.cli.CommandLine;
 import org.exoplatform.ide.shell.client.cli.Options;
 import org.exoplatform.ide.shell.client.model.ClientCommand;

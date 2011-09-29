@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import com.google.gwt.storage.client.Storage;
+
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gwt.storage.client.Storage;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -38,7 +38,7 @@ public class Environment
 
    private Map<String, String> storageMap;
 
-   private FolderModel currentFolder;
+   private Folder currentFolder;
 
    /**
     * 
@@ -47,7 +47,7 @@ public class Environment
    {
       if (Storage.isSessionStorageSupported())
       {
-         storage = Storage.getSessionStorageIfSupported();
+         storage = Storage.getLocalStorageIfSupported();
       }
       else
       {
@@ -95,7 +95,7 @@ public class Environment
    /**
     * @return the currentFolder
     */
-   public FolderModel getCurrentFolder()
+   public Folder getCurrentFolder()
    {
       return currentFolder;
    }
@@ -103,7 +103,7 @@ public class Environment
    /**
     * @param currentFolder the currentFolder to set
     */
-   public void setCurrentFolder(FolderModel currentFolder)
+   public void setCurrentFolder(Folder currentFolder)
    {
       this.currentFolder = currentFolder;
    }
