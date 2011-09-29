@@ -39,7 +39,7 @@ public class Item
    protected String name;
 
    /** Type of object. */
-   protected ItemType itemType;
+   protected final ItemType itemType;
 
    /** Media type. */
    protected String mimeType;
@@ -88,11 +88,6 @@ public class Item
       this.itemType = itemType;
    }
 
-   public Item()
-   {
-      // For JSON transformations ONLY.
-   }
-
    /**
     * @return id of object
     */
@@ -131,15 +126,6 @@ public class Item
    public ItemType getItemType()
    {
       return itemType;
-   }
-
-   /**
-    * @param itemType the itemType
-    */
-   public void setItemType(ItemType itemType)
-   {
-      // For JSON transformations ONLY.
-      this.itemType = itemType;
    }
 
    /**
