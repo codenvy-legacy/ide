@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.client.model;
 import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -34,6 +36,7 @@ import java.util.List;
  */
 public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project implements ItemContext
 {
+   private ItemList<Item> children = new ItemList<Item>();
    private FolderModel parent;
    private boolean persisted;
 
@@ -55,6 +58,12 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
    public ProjectModel()
    {
       super();
+   }
+   
+   public ProjectModel(JSONObject itemObject)
+   {
+      super();
+      init(itemObject);
    }
 
    @SuppressWarnings({"unchecked", "rawtypes"})
@@ -100,5 +109,21 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
    public boolean isPersisted()
    {
       return persisted;
+   }
+   
+   /**
+    * @return the children
+    */
+   public ItemList<Item> getChildren()
+   {
+      return children;
+   }
+
+   /**
+    * @param children the children to set
+    */
+   public void setChildren(ItemList<Item> children)
+   {
+      this.children = children;
    }
 }
