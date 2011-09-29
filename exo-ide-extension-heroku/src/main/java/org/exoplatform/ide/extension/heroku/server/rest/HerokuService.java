@@ -25,7 +25,7 @@ import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolvException;
+import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,14 +104,14 @@ public class HerokuService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsCreate(@QueryParam("remote") String remote) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolvException
+      ParsingResponseException, LocalPathResolveException
    {
       return heroku.createApplication(appName, remote, new File(localPathResolver.resolve(vfsId, path)));
    }
 
    @Path("apps/destroy")
    @POST
-   public void appsDestroy() throws HerokuException, IOException, LocalPathResolvException
+   public void appsDestroy() throws HerokuException, IOException, LocalPathResolveException
    {
       heroku.destroyApplication(appName, new File(localPathResolver.resolve(vfsId, path)));
    }
@@ -120,7 +120,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolvException
+      ParsingResponseException, LocalPathResolveException
    {
       return heroku.applicationInfo(appName, inRawFormat, new File(localPathResolver.resolve(vfsId, path)));
    }
@@ -129,7 +129,7 @@ public class HerokuService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsRename(@QueryParam("newname") String newname) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolvException
+      ParsingResponseException, LocalPathResolveException
    {
       return heroku.renameApplication(appName, newname, new File(localPathResolver.resolve(vfsId, path)));
    }
@@ -138,7 +138,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public List<Stack> appsStack() throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolvException
+      LocalPathResolveException
    {
       return heroku.getStacks(appName, new File(localPathResolver.resolve(vfsId, path)));
    }
@@ -147,7 +147,7 @@ public class HerokuService
    @POST
    @Produces(MediaType.TEXT_PLAIN)
    public String stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolvException
+      ParsingResponseException, LocalPathResolveException
    {
       return heroku.stackMigrate(appName, new File(localPathResolver.resolve(vfsId, path)), stack);
    }
@@ -156,7 +156,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.TEXT_PLAIN)
    public String logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolvException
+      LocalPathResolveException
    {
       return heroku.logs(appName, new File(localPathResolver.resolve(vfsId, path)), logLines);
    }
@@ -166,7 +166,7 @@ public class HerokuService
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
    public StreamingOutput run(final String command) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolvException
+      LocalPathResolveException
    {
       final HttpChunkReader chunkReader =
          heroku.run(appName, new File(localPathResolver.resolve(vfsId, path)), command);
