@@ -294,9 +294,6 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       display.setTypeValues(new String[]{""});
       display.getInstancesField().setValue("1");
       display.getAutodetectTypeCheckItem().setValue(true);
-      display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
-      display.getNameField().setValue(selectedItems.get(0).getName());
-      updateUrlField();
    }
    
    /**
@@ -671,11 +668,16 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             if (result.isEmpty())
             {
                display.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+               display.getServerField().setValue(CloudFoundryExtension.DEFAULT_SERVER);
             }
             else
             {
-               display.setServerValues(result.toArray(new String[result.size()]));
+               String[] servers = result.toArray(new String[result.size()]);
+               display.setServerValues(servers);
+               display.getServerField().setValue(servers[0]);
             }
+            display.getNameField().setValue(selectedItems.get(0).getName());
+            updateUrlField();
          }
       });
    }
