@@ -137,5 +137,21 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
   </component>
+  
+  <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemRegistry</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>dev-monit</value>
+            <value>production</value>
+         </values-param>
+      </init-params>
+   </component>
 
 </configuration>
