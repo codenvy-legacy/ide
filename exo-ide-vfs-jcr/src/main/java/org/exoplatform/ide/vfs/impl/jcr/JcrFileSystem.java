@@ -124,7 +124,9 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData object = getItemData(ses, id);
          ItemData folder = getItemData(ses, parentId);
          if (ItemType.FOLDER != folder.getType())
+         {
             throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder. ");
+         }
          ItemData newobject = object.copyTo((FolderData)folder);
          return fromItemData(newobject, PropertyFilter.ALL_FILTER);
       }
@@ -152,7 +154,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData parentData = getItemData(ses, parentId);
          if (ItemType.FOLDER != parentData.getType())
+         {
             throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
+         }
          FileData newfile = ((FolderData)parentData).createFile(name, //
             itemType2NodeTypeResolver.getFileNodeType(mediaType), //
             itemType2NodeTypeResolver.getFileContentNodeType(mediaType), //
@@ -183,7 +187,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData parentData = getItemData(ses, parentId);
          if (ItemType.FOLDER != parentData.getType())
+         {
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
+         }
          FolderData newfolder = ((FolderData)parentData).createFolder(name, //
             itemType2NodeTypeResolver.getFolderNodeType((String)null), //
             itemType2NodeTypeResolver.getFolderMixins((String)null), //
@@ -215,11 +221,17 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData parentData = getItemData(ses, parentId);
          if (ItemType.FOLDER != parentData.getType())
+         {
             throw new InvalidArgumentException("Unable to create project. Item specified as parent is not a folder. ");
+         }
          if (properties == null)
+         {
             properties = new ArrayList<ConvertibleProperty>();
+         }
          if (type != null)
+         {
             properties.add(new ConvertibleProperty("vfs:projectType", type));
+         }
          properties.add(new ConvertibleProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE));
 
          FolderData newproject = ((FolderData)parentData).createFolder(name, //
@@ -284,14 +296,18 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
+      {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      }
 
       Session ses = session();
       try
       {
          ItemData data = getItemData(ses, folderId);
          if (ItemType.FOLDER != data.getType())
-            throw new InvalidArgumentException("Unable get children. Item " + folderId + " is not a folder. ");
+         {
+            throw new InvalidArgumentException("Unable get children. Item " + data.getName() + " is not a folder. ");
+         }
 
          FolderData folderData = (FolderData)data;
          LazyIterator<ItemData> children = folderData.getChildren();
@@ -307,7 +323,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
          List<Item> l = new ArrayList<Item>();
          for (int count = 0; children.hasNext() && (maxItems < 0 || count < maxItems); count++)
+         {
             l.add(fromItemData(children.next(), propertyFilter));
+         }
 
          ItemList<Item> il = new ItemList<Item>(l);
          il.setNumItems(children.size());
@@ -332,7 +350,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData data = getItemData(ses, id);
          if (ItemType.FILE != data.getType())
-            throw new InvalidArgumentException("Unable get content. Item " + id + " is not a file. ");
+         {
+            throw new InvalidArgumentException("Unable get content. Item " + data.getName() + " is not a file. ");
+         }
          FileData fileData = (FileData)data;
          ContentStream stream =
             new ContentStream(fileData.getContent(), fileData.getMediaType().toString(), fileData.getContenLength(),
@@ -507,7 +527,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData data = getItemData(ses, id);
          if (ItemType.FILE != data.getType())
-            throw new InvalidArgumentException("Object " + id + " is not a file. ");
+         {
+            throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
+         }
          FileData versionData = ((FileData)data).getVersion(versionId);
          ContentStream stream =
             new ContentStream(versionData.getContent(), versionData.getMediaType().toString(),
@@ -545,14 +567,16 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       if (skipCount < 0)
+      {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      }
 
       Session ses = session();
       try
       {
          ItemData data = getItemData(ses, id);
          if (ItemType.FILE != data.getType())
-            throw new InvalidArgumentException("Object " + id + " is not a file. ");
+            throw new InvalidArgumentException("Object " + data.getName() + " is not a file. ");
 
          FileData fileData = (FileData)data;
          LazyIterator<FileData> versions = fileData.getAllVersions();
@@ -568,7 +592,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
          List<File> l = new ArrayList<File>();
          for (int count = 0; versions.hasNext() && (maxItems < 0 || count < maxItems); count++)
+         {
             l.add((File)fromItemData(versions.next(), propertyFilter));
+         }
 
          ItemList<File> il = new ItemList<File>(l);
          il.setNumItems(versions.size());
@@ -594,7 +620,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData itemData = getItemData(ses, id);
          if (ItemType.FILE != itemData.getType())
+         {
             throw new InvalidArgumentException("Locking allowed for Files only. ");
+         }
          return new LockToken(((FileData)itemData).lock());
       }
       finally
@@ -619,7 +647,9 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData object = getItemData(ses, id);
          ItemData folder = getItemData(ses, parentId);
          if (ItemType.FOLDER != folder.getType())
-            throw new InvalidArgumentException("Object " + parentId + " is not a folder. ");
+         {
+            throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
+         }
          String movedId = object.moveTo((FolderData)folder, lockToken);
          return fromItemData(getItemData(ses, movedId), PropertyFilter.ALL_FILTER);
       }
@@ -668,7 +698,9 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
       if (skipCount < 0)
+      {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      }
 
       StringBuilder sql = new StringBuilder();
       sql.append("SELECT * FROM nt:resource");
@@ -679,15 +711,21 @@ public class JcrFileSystem implements VirtualFileSystem
 
          String path = query.getFirst("path");
          if (path != null && path.length() > 0)
+         {
             where.add("jcr:path LIKE '" + path + "/%'");
+         }
 
          String text = query.getFirst("text");
          if (text != null && text.length() > 0)
+         {
             where.add("CONTAINS(*, '" + text + "')");
+         }
 
          String mediaType = query.getFirst("mediaType");
          if (mediaType != null && mediaType.length() > 0)
+         {
             where.add("jcr:mimeType = '" + mediaType + "'");
+         }
 
          if (where.size() > 0)
          {
@@ -744,7 +782,9 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             ItemData data = ItemData.fromNode(nodes.nextNode());
             if (namePattern == null || namePattern.matcher(data.getName()).matches())
+            {
                l.add(fromItemData(data, propertyFilter));
+            }
          }
 
          ItemList<Item> il = new ItemList<Item>(l);
@@ -777,22 +817,15 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
    {
       if (skipCount < 0)
+      {
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+      }
       Session ses = session();
       try
       {
          QueryManager queryManager = ses.getWorkspace().getQueryManager();
          Query query = queryManager.createQuery(statement, Query.SQL);
          QueryResult result = query.execute();
-         StringBuilder propertyFilter = new StringBuilder();
-         for (String n : result.getColumnNames())
-         {
-            if (SKIPPED_QUERY_PROPERTIES.contains(n))
-               continue;
-            if (propertyFilter.length() > 0)
-               propertyFilter.append(',');
-            propertyFilter.append(n);
-         }
          NodeIterator nodes = result.getNodes();
          try
          {
@@ -805,8 +838,20 @@ public class JcrFileSystem implements VirtualFileSystem
          }
 
          List<Item> l = new ArrayList<Item>();
+         StringBuilder propertyFilterBuilder = new StringBuilder();
+         for (String n : result.getColumnNames())
+         {
+            if (SKIPPED_QUERY_PROPERTIES.contains(n))
+               continue;
+            if (propertyFilterBuilder.length() > 0)
+               propertyFilterBuilder.append(',');
+            propertyFilterBuilder.append(n);
+         }
+         PropertyFilter propertyFilter = PropertyFilter.valueOf(propertyFilterBuilder.toString());
          for (int count = 0; nodes.hasNext() && (maxItems < 0 || count < maxItems); count++)
-            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), PropertyFilter.valueOf(propertyFilter.toString())));
+         {
+            l.add(fromItemData(ItemData.fromNode(nodes.nextNode()), propertyFilter));
+         }
 
          ItemList<Item> il = new ItemList<Item>(l);
          il.setNumItems((int)nodes.getSize());
@@ -842,7 +887,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData itemData = getItemData(ses, id);
          if (itemData.getType() != ItemType.FILE)
+         {
             throw new LockException("Object is not locked. "); // Folder can't be locked.
+         }
          ((FileData)itemData).unlock(lockToken);
       }
       finally
@@ -892,7 +939,9 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData data = getItemData(ses, id);
          if (ItemType.FILE != data.getType())
-            throw new InvalidArgumentException("Object " + id + " is not file. ");
+         {
+            throw new InvalidArgumentException("Object " + data.getName() + " is not file. ");
+         }
          ((FileData)data).setContent(newcontent, mediaType, lockToken);
       }
       finally

@@ -119,11 +119,11 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get mime type of object " + getId() + ". Access denied. ");
+         throw new PermissionDeniedException("Unable get mime type of folder " + getName() + ". Access denied. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get mime type of object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get mime type of folder " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -136,7 +136,7 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of folder " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of folder " + getName() + ". ");
       }
       catch (RepositoryException e)
       {
@@ -187,7 +187,7 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable add file in folder " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable add file in folder " + getPath() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
@@ -249,7 +249,7 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable add new folder in folder " + getId()
+         throw new PermissionDeniedException("Unable add new folder in folder " + getPath()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
@@ -309,11 +309,11 @@ public class FolderData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable rename folder " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable rename folder " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable rename folder " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable rename folder " + getName() + ". " + e.getMessage(), e);
       }
    }
 }

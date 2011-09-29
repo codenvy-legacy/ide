@@ -115,11 +115,11 @@ class VersionData extends FileData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get versions of file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get versions of file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get versions of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 

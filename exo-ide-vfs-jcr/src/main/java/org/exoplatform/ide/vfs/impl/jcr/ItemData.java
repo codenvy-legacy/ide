@@ -257,12 +257,12 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get properties of item " + getPath()
+         throw new PermissionDeniedException("Unable get properties of item " + getName()
             + ". Operation not permitted.");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get properties of item " + getPath() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get properties of item " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -402,16 +402,16 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable to update properties of item " + getPath() + ". Item is locked. ");
+         throw new LockException("Unable to update properties of item " + getName() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable to update properties of item " + getPath()
+         throw new PermissionDeniedException("Unable to update properties of item " + getName()
             + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update properties of item " + getPath() + ". " + e.getMessage(),
+         throw new VirtualFileSystemException("Unable update properties of item " + getName() + ". " + e.getMessage(),
             e);
       }
    }
@@ -530,7 +530,7 @@ abstract class ItemData
             Lock lock = node.getLock();
             if (lock.getLockToken() == null)
             {
-               throw new LockException("Unable delete item " + getPath() + ". Item is locked. ");
+               throw new LockException("Unable delete item " + getName() + ". Item is locked. ");
             }
          }
          node.remove();
@@ -539,11 +539,11 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable delete item " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable delete item " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable delete item " + getPath() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable delete item " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -601,11 +601,11 @@ abstract class ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get ACL of item " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get ACL of item " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get ACL of item " + getPath() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get ACL of item " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -693,15 +693,15 @@ abstract class ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update ACL of item " + getPath() + ". Item is locked. ");
+         throw new LockException("Unable update ACL of item " + getName() + ". Item is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update ACL of item " + getPath() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update ACL of item " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update ACL of item " + getPath() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update ACL of item " + getName() + ". " + e.getMessage(), e);
       }
    }
 

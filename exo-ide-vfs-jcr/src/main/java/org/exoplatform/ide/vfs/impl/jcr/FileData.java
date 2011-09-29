@@ -146,11 +146,11 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of file " + getName() + ". ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get content of file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get content of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -175,11 +175,11 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get mime type of object " + getId() + ". Access denied. ");
+         throw new PermissionDeniedException("Unable get mime type of file " + getName() + ". Access denied. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get mime type of object " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get mime type of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -198,12 +198,12 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to content of file " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to content of file " + getName() + ". ");
       }
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException(
-            "Unable get length of content of file " + getId() + ". " + e.getMessage(), e);
+            "Unable get length of content of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -231,11 +231,11 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable get versions of file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable get versions of file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable get versions of file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable get versions of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -271,7 +271,7 @@ class FileData extends ItemData
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Access denied to version " + versionId + " of file " + getId() + ". ");
+         throw new PermissionDeniedException("Access denied to version " + versionId + " of file " + getName() + ". ");
       }
       catch (RepositoryException e)
       {
@@ -322,15 +322,15 @@ class FileData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable place lock to file " + getId() + ". " + e.getMessage());
+         throw new LockException("Unable place lock to file " + getName() + ". " + e.getMessage());
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable place lock to file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable place lock to file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable place lock to file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable place lock to file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -359,15 +359,15 @@ class FileData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable remove lock from file " + getId() + ". " + e.getMessage());
+         throw new LockException("Unable remove lock from file " + getName() + ". " + e.getMessage());
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable remove lock from file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable remove lock from file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable remove lock from file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable remove lock from file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -444,15 +444,15 @@ class FileData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable rename file " + getId() + ". File is locked. ");
+         throw new LockException("Unable rename file " + getName() + ". File is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable rename file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable rename file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable rename file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable rename file " + getName() + ". " + e.getMessage(), e);
       }
    }
 
@@ -505,15 +505,15 @@ class FileData extends ItemData
       }
       catch (javax.jcr.lock.LockException e)
       {
-         throw new LockException("Unable update content of file " + getId() + ". File is locked. ");
+         throw new LockException("Unable update content of file " + getName() + ". File is locked. ");
       }
       catch (AccessDeniedException e)
       {
-         throw new PermissionDeniedException("Unable update content of file " + getId() + ". Operation not permitted. ");
+         throw new PermissionDeniedException("Unable update content of file " + getName() + ". Operation not permitted. ");
       }
       catch (RepositoryException e)
       {
-         throw new VirtualFileSystemException("Unable update content of file " + getId() + ". " + e.getMessage(), e);
+         throw new VirtualFileSystemException("Unable update content of file " + getName() + ". " + e.getMessage(), e);
       }
    }
 }
