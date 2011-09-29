@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.List;
 
@@ -38,14 +40,19 @@ import java.util.List;
  * @version $Id: FilderContentUnmarshaller Feb 2, 2011 2:59:31 PM evgen $
  *
  */
-public class ChildrenUnmarshaller implements Unmarshallable <List<Item>>
+public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
 {
 
    /**
     * Item type
     */
    private static final String TYPE = "itemType";
-   
+
+   /**
+    * Item mime type
+    */
+   private static final String MIME_TYPE = "mimeType";
+
    private final List<Item> items;
 
    /**
@@ -76,9 +83,7 @@ public class ChildrenUnmarshaller implements Unmarshallable <List<Item>>
          String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
          throw new UnmarshallerException(message);
       }
-   } 
-   
-   
+   }
 
    @Override
    public List<Item> getPayload()
@@ -94,19 +99,29 @@ public class ChildrenUnmarshaller implements Unmarshallable <List<Item>>
    private void parseItems(JSONArray itemsArray)
    {
       //ArrayList<Item> items = new ArrayList<Item>();
-//      items.clear();
-      
+      //      items.clear();
+
       for (int i = 0; i < itemsArray.size(); i++)
       {
-         JSONObject object = itemsArray.get(i).isObject();         
-         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());         
-         
+         JSONObject object = itemsArray.get(i).isObject();
+         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+         String mimeType = object.get(MIME_TYPE).isString().stringValue();
+
          if (type == ItemType.FOLDER)
-            items.add(new FolderModel(object));
+         {
+            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
+            {
+               items.add(new ProjectModel(object));
+            }
+            else
+            {
+               items.add(new FolderModel(object));
+            }
+         }
          else
             items.add(new FileModel(object));
       }
-      
+
       //this.folder.getChildren().setItems(items);
    }
 
