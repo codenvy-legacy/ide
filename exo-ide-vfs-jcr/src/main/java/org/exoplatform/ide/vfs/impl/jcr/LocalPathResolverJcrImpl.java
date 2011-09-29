@@ -19,7 +19,7 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolvException;
+import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 
@@ -27,12 +27,12 @@ import javax.jcr.RepositoryException;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class LocalPathResolverJcrImpl implements LocalPathResolver
 {
-
    private final RepositoryService repositoryService;
 
    public LocalPathResolverJcrImpl(RepositoryService repositoryService)
@@ -41,25 +41,24 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
    }
 
    /**
-    * vfsId in JCR implementation equals workspace name
+    * vfsId in JCR implementation equals workspace name.
     * 
-    * {@inheritDoc}
-    * @throws RepositoryException 
+    * @throws RepositoryException
     */
    @Override
-   public String resolve(String vfsId, String path) throws LocalPathResolvException
+   public String resolve(String vfsId, String path) throws LocalPathResolveException
    {
       try
       {
          if (vfsId == null || vfsId.length() == 0)
-            throw new LocalPathResolvException(
+            throw new LocalPathResolveException(
                "Can't resolve path on the Local File System. vfsid  may not be null or empty");
          if (path == null || path.length() == 0)
-            throw new LocalPathResolvException(
+            throw new LocalPathResolveException(
                "Can't resolve path on the Local File System. Item path may not be null or empty");
          String fsRootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
          if (fsRootPath == null)
-            throw new LocalPathResolvException(
+            throw new LocalPathResolveException(
                "Can't resolve path on the Local File System. Root path may not be null.");
          ManageableRepository repository = repositoryService.getCurrentRepository();
          repository.getConfiguration().getName();
@@ -69,7 +68,7 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
       }
       catch (RepositoryException e)
       {
-         throw new LocalPathResolvException("Can't resolve path on the Local File System", e);
+         throw new LocalPathResolveException("Can't resolve path on the Local File System", e);
       }
    }
 }
