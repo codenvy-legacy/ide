@@ -77,6 +77,7 @@ public class LockTest extends JcrFileSystemTest
       log.info(new String(writer.getBody()));
       Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertTrue("File must be locked. ", node.isLocked());
+      validateLinks(getItem(fileID));
    }
 
    public void testLockFileAlreadyLocked() throws Exception

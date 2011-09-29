@@ -414,50 +414,49 @@ public class JcrFileSystem implements VirtualFileSystem
       Map<String, Link> templates = new HashMap<String, Link>();
 
       templates.put(Link.REL_ITEM, //
-         new Link(createURI("item", "[id]").toString(), Link.REL_ITEM, MediaType.APPLICATION_JSON));
+         new Link(createURI("item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_ITEM_BY_PATH, //
-         new Link(createURI("itembypath", null, "path", "[path]").toString(), Link.REL_ITEM_BY_PATH,
-            MediaType.APPLICATION_JSON));
+         new Link(createURI("itembypath", null, "path", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_CREATE_FILE, //
-         new Link(createURI("file", "[parentId]", "name", "[name]").toString(), //
+         new Link(createURI("file", "[parentId]", "name", "[name]"), //
             Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_CREATE_FOLDER, //
-         new Link(createURI("folder", "[parentId]", "name", "[name]").toString(), //
+         new Link(createURI("folder", "[parentId]", "name", "[name]"), //
             Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_CREATE_PROJECT, //
-         new Link(createURI("project", "[parentId]", "name", "[name]", "type", "[type]").toString(), //
+         new Link(createURI("project", "[parentId]", "name", "[name]", "type", "[type]"), //
             Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_COPY, //
-         new Link(createURI("copy", "[id]", "parentId", "[parentId]").toString(), //
-            Link.REL_COPY, null));
+         new Link(createURI("copy", "[id]", "parentId", "[parentId]"), //
+            Link.REL_COPY, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_MOVE, //
-         new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
-            Link.REL_MOVE, null));
+         new Link(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]"), //
+            Link.REL_MOVE, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_LOCK, //
-         new Link(createURI("lock", "[id]").toString(), //
+         new Link(createURI("lock", "[id]"), //
             Link.REL_LOCK, MediaType.APPLICATION_JSON));
 
       templates.put(Link.REL_UNLOCK, //
-         new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]").toString(), //
+         new Link(createURI("unlock", "[id]", "lockToken", "[lockToken]"), //
             Link.REL_UNLOCK, null));
 
       templates.put(
          Link.REL_SEARCH_FORM, //
          new Link(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
-            "[propertyFilter]").toString(), //
+            "[propertyFilter]"), //
             Link.REL_SEARCH_FORM, MediaType.APPLICATION_JSON));
 
       templates.put(
          Link.REL_SEARCH, //
          new Link(createURI("search", null, "statement", "[statement]", "maxItems", "[maxItems]", "skipCount",
-            "[skipCount]").toString(), //
+            "[skipCount]"), //
             Link.REL_SEARCH, MediaType.APPLICATION_JSON));
 
       return templates;
@@ -1012,28 +1011,23 @@ public class JcrFileSystem implements VirtualFileSystem
       String id = file.getId();
 
       links.put(Link.REL_CONTENT, //
-         new Link(createURI("content", id).toString(), //
-            Link.REL_CONTENT, file.getMediaType().toString()));
+         new Link(createURI("content", id), Link.REL_CONTENT, file.getMediaType().toString()));
 
       links.put(Link.REL_VERSION_HISTORY, //
-         new Link(createURI("version-history", id).toString(), //
-            Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
+         new Link(createURI("version-history", id), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CURRENT_VERSION, // 
-         new Link(createURI("item", file.getLatestVersionId()).toString(), //
-            Link.REL_CURRENT_VERSION, MediaType.APPLICATION_JSON));
+         new Link(createURI("item", file.getLatestVersionId()), Link.REL_CURRENT_VERSION, MediaType.APPLICATION_JSON));
 
       if (file.isLocked())
       {
          links.put(Link.REL_UNLOCK, //
-            new Link(createURI("unlock", id, "lockToken", "[lockToken]").toString(), //
-               Link.REL_UNLOCK, null));
+            new Link(createURI("unlock", id, "lockToken", "[lockToken]"), Link.REL_UNLOCK, null));
       }
       else
       {
          links.put(Link.REL_LOCK, //
-            new Link(createURI("lock", id).toString(), //
-               Link.REL_LOCK, MediaType.APPLICATION_JSON));
+            new Link(createURI("lock", id), Link.REL_LOCK, MediaType.APPLICATION_JSON));
       }
 
       return links;
@@ -1045,19 +1039,19 @@ public class JcrFileSystem implements VirtualFileSystem
       String id = folder.getId();
 
       links.put(Link.REL_CHILDREN, //
-         new Link(createURI("children", id).toString(), //
+         new Link(createURI("children", id), //
             Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
-         new Link(createURI("folder", id, "name", "[name]").toString(), //
+         new Link(createURI("folder", id, "name", "[name]"), //
             Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FILE, //
-         new Link(createURI("file", id, "name", "[name]").toString(), //
+         new Link(createURI("file", id, "name", "[name]"), //
             Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_PROJECT, //
-         new Link(createURI("project", id, "name", "[name]", "type", "[type]").toString(), //
+         new Link(createURI("project", id, "name", "[name]", "type", "[type]"), //
             Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
 
       return links;
@@ -1069,15 +1063,15 @@ public class JcrFileSystem implements VirtualFileSystem
       String id = project.getId();
 
       links.put(Link.REL_CHILDREN, //
-         new Link(createURI("children", id).toString(), //
+         new Link(createURI("children", id), //
             Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
-         new Link(createURI("folder", id, "name", "[name]").toString(), //
+         new Link(createURI("folder", id, "name", "[name]"), //
             Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FILE, //
-         new Link(createURI("file", id, "name", "[name]").toString(), //
+         new Link(createURI("file", id, "name", "[name]"), //
             Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
 
       return links;
@@ -1089,32 +1083,33 @@ public class JcrFileSystem implements VirtualFileSystem
       String id = data.getId();
 
       links.put(Link.REL_SELF, //
-         new Link(createURI("item", id).toString(), Link.REL_SELF, MediaType.APPLICATION_JSON));
+         new Link(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_ACL, //
-         new Link(createURI("acl", id).toString(), Link.REL_ACL, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_DELETE, //
-         new Link(createURI("delete", id, "lockToken", "[lockToken]").toString(), //
-            Link.REL_DELETE, null));
-
-      links.put(Link.REL_COPY, //
-         new Link(createURI("copy", id, "parentId", "[parentId]").toString(), //
-            Link.REL_COPY, null));
-
-      links.put(Link.REL_MOVE, //
-         new Link(createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]").toString(), //
-            Link.REL_MOVE, null));
+         new Link(createURI("acl", id), Link.REL_ACL, MediaType.APPLICATION_JSON));
 
       String parentId = data.getParentId();
+      // Root folder can't be moved copied and has not parent.
       if (parentId != null)
-         links.put(Link.REL_PARENT, //
-            new Link(createURI("item", parentId).toString(), Link.REL_PARENT, MediaType.APPLICATION_JSON));
+      {
+         links.put(Link.REL_DELETE, //
+            new Link((data.isLocked() ? createURI("delete", id, "lockToken", "[lockToken]") : createURI("delete", id)),
+               Link.REL_DELETE, null));
 
+         links.put(Link.REL_COPY, //
+            new Link(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
+
+         links.put(Link.REL_MOVE, //
+            new Link((data.isLocked() ? createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]")
+               : createURI("move", id, "parentId", "[parentId]")), Link.REL_MOVE, MediaType.APPLICATION_JSON));
+
+         links.put(Link.REL_PARENT, //
+            new Link(createURI("item", parentId), Link.REL_PARENT, MediaType.APPLICATION_JSON));
+      }
       return links;
    }
 
-   private URI createURI(String rel, String id, String... query)
+   private String createURI(String rel, String id, String... query)
    {
       UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
       uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
@@ -1133,7 +1128,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
       URI uri = uriBuilder.build(workspaceName);
 
-      return uri;
+      return uri.toString();
    }
 
    private ItemData getItemData(Session session, String id) throws ItemNotFoundException, PermissionDeniedException,

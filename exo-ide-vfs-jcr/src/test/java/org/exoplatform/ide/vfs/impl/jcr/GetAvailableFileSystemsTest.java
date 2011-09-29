@@ -41,7 +41,7 @@ public class GetAvailableFileSystemsTest extends JcrFileSystemTest
       String path = BASE_URI + "/ide/vfs";
       ByteArrayContainerResponseWriter wr = new ByteArrayContainerResponseWriter();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, wr, null);
-      //log.info(new String(wr.getBody()));
+      log.info(new String(wr.getBody()));
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       Collection<VirtualFileSystemInfo> entity = (Collection<VirtualFileSystemInfo>)response.getEntity();

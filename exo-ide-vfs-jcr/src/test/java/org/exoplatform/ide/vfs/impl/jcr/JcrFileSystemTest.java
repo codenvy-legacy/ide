@@ -202,27 +202,66 @@ public abstract class JcrFileSystemTest extends TestCase
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("acl").path(item.getId()).build().toString(), link.getHref());
 
       link = links.get(Link.REL_DELETE);
-      assertNotNull("'" + Link.REL_DELETE + "' link not found. ", link);
-      assertEquals(null, link.getType());
-      assertEquals(Link.REL_DELETE, link.getRel());
-      assertEquals(
-         UriBuilder.fromPath(SERVICE_URI).path("delete").path(item.getId()).queryParam("lockToken", "[lockToken]")
-            .build().toString(), link.getHref());
+      if (item.getParentId() == null)
+      {
+         assertNull("'" + Link.REL_DELETE + "' link not allowed for root folder. ", link);
+      }
+      else
+      {
+         assertNotNull("'" + Link.REL_DELETE + "' link not found. ", link);
+         assertEquals(null, link.getType());
+         assertEquals(Link.REL_DELETE, link.getRel());
+         if (item.getItemType() == ItemType.FILE && ((File)item).isLocked())
+         {
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("delete").path(item.getId())
+                  .queryParam("lockToken", "[lockToken]").build().toString(), link.getHref());
+         }
+         else
+         {
+            assertEquals(UriBuilder.fromPath(SERVICE_URI).path("delete").path(item.getId()).build().toString(),
+               link.getHref());
+         }
+      }
 
       link = links.get(Link.REL_COPY);
-      assertNotNull("'" + Link.REL_COPY + "' link not found. ", link);
-      assertEquals(null, link.getType());
-      assertEquals(Link.REL_COPY, link.getRel());
-      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path(item.getId())
-         .queryParam("parentId", "[parentId]").build().toString(), link.getHref());
+      if (item.getParentId() == null)
+      {
+         assertNull("'" + Link.REL_COPY + "' link not allowed for root folder. ", link);
+      }
+      else
+      {
+         assertNotNull("'" + Link.REL_COPY + "' link not found. ", link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_COPY, link.getRel());
+         assertEquals(
+            UriBuilder.fromPath(SERVICE_URI).path("copy").path(item.getId()).queryParam("parentId", "[parentId]")
+               .build().toString(), link.getHref());
+      }
 
       link = links.get(Link.REL_MOVE);
-      assertNotNull("'" + Link.REL_MOVE + "' link not found. ", link);
-      assertEquals(null, link.getType());
-      assertEquals(Link.REL_MOVE, link.getRel());
-      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path(item.getId())
-         .queryParam("parentId", "[parentId]").queryParam("lockToken", "[lockToken]").build().toString(),
-         link.getHref());
+      if (item.getParentId() == null)
+      {
+         assertNull("'" + Link.REL_MOVE + "' link not allowed for root folder. ", link);
+      }
+      else
+      {
+         assertNotNull("'" + Link.REL_MOVE + "' link not found. ", link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_MOVE, link.getRel());
+         if (item.getItemType() == ItemType.FILE && ((File)item).isLocked())
+         {
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("move").path(item.getId()).queryParam("parentId", "[parentId]")
+                  .queryParam("lockToken", "[lockToken]").build().toString(), link.getHref());
+         }
+         else
+         {
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("move").path(item.getId()).queryParam("parentId", "[parentId]")
+                  .build().toString(), link.getHref());
+         }
+      }
 
       ItemType type = item.getItemType();
       if (type == ItemType.FILE)
@@ -344,14 +383,14 @@ public abstract class JcrFileSystemTest extends TestCase
 
       template = templates.get(Link.REL_COPY);
       assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
-      assertEquals(null, template.getType());
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
       assertEquals(Link.REL_COPY, template.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path("[id]").queryParam("parentId", "[parentId]")
          .build().toString(), template.getHref());
 
       template = templates.get(Link.REL_MOVE);
       assertNotNull("'" + Link.REL_MOVE + "' template not found. ", template);
-      assertEquals(null, template.getType());
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
       assertEquals(Link.REL_MOVE, template.getRel());
       assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path("[id]").queryParam("parentId", "[parentId]")
          .queryParam("lockToken", "[lockToken]").build().toString(), template.getHref());
