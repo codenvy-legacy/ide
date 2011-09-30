@@ -486,18 +486,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          @Override
          protected void onFailure(Throwable exception)
          {
-            Dialogs.getInstance().ask(JenkinsExtension.MESSAGES.noGitRepositoryTitle(),
-               JenkinsExtension.MESSAGES.noGitRepository(), new BooleanValueReceivedHandler()
-               {
-                  @Override
-                  public void booleanValueReceived(Boolean value)
-                  {
-                     if (value != null && value)
-                     {
-                        initRepository(startDirId);
-                     }
-                  }
-               });
+            initRepository(startDirId);
          }
       });
    }
@@ -521,7 +510,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
                   showBuildMessage(GitExtension.MESSAGES.initSuccess());
                   eventBus.fireEvent(new RefreshBrowserEvent());
-                  createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+                  onWorkDirReceived();
                }
 
                @Override
