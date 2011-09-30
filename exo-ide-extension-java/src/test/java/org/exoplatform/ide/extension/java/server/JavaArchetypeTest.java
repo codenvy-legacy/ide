@@ -69,7 +69,7 @@ public class JavaArchetypeTest extends Base
 
    private String modifiedPom;
 
-   //@Test
+   @Test
    public void createProject() throws Exception
    {
       JavaProjectArchetype archetype =  new JavaProjectArchetype();
@@ -82,7 +82,7 @@ public class JavaArchetypeTest extends Base
 
    }
    
-   //@Test
+   @Test
    public void checkPom() throws Exception
    {
       JavaProjectArchetype archetype =

@@ -19,18 +19,20 @@
 package org.exoplatform.ide.extension.jenkins.server;
 
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
-import org.exoplatform.ide.git.server.GitHelper;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -38,6 +40,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,7 +67,9 @@ public abstract class JenkinsClient
    protected class HttpStream extends InputStream
    {
       private final HttpURLConnection http;
+
       private InputStream in;
+
       private boolean closed;
 
       public HttpStream(HttpURLConnection http)
@@ -123,28 +129,29 @@ public abstract class JenkinsClient
    protected final String baseURL;
 
    private String jobTemplate;
+
    private Templates transfomRules;
+
 
    public JenkinsClient(String baseURL)
    {
       this.baseURL = baseURL;
    }
 
-   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void createJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/createItem?name=" + jobName);
       postJob(url, configXml(git, user, email));
-      if (workDir != null && workDir.exists())
-         writeJenkinsJobName(workDir, jobName);
+      writeJenkinsJobName(projectId, jobName, vfs);
    }
 
-   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void updateJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+      if ((jobName == null || jobName.isEmpty()))
       {
-         jobName = readJenkinsJobName(workDir);
+         jobName = readJenkinsJobName(projectId, vfs);
          if (jobName == null || jobName.isEmpty())
             throw new IllegalArgumentException("Job name required. ");
       }
@@ -321,7 +328,7 @@ public abstract class JenkinsClient
       }
    }
 
-   public void build(String jobName, File workDir) throws IOException, JenkinsException
+   public void build(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
       ConversationState userState = ConversationState.getCurrent();
       if (userState != null)
@@ -331,7 +338,7 @@ public abstract class JenkinsClient
          {
             try
             {
-               JobStatus lastJobStatus = jobStatus(lastJob, null);
+               JobStatus lastJobStatus = jobStatus(lastJob, null, null);
                if (JobStatus.Status.END == lastJobStatus.getStatus())
                   userState.removeAttribute("org.exoplatform.ide.jenkins.job");
                else
@@ -347,9 +354,9 @@ public abstract class JenkinsClient
          }
       }
 
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+      if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(workDir);
+         jobName = readJenkinsJobName(projectId, vfs);
          if (jobName == null || jobName.isEmpty())
             throw new IllegalArgumentException("Job name required. ");
       }
@@ -374,11 +381,11 @@ public abstract class JenkinsClient
          userState.setAttribute("org.exoplatform.ide.jenkins.job", jobName);
    }
 
-   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
+   public JobStatus jobStatus(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+      if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(workDir);
+         jobName = readJenkinsJobName(projectId, vfs);
          if (jobName == null || jobName.isEmpty())
             throw new IllegalArgumentException("Job name required. ");
       }
@@ -526,16 +533,16 @@ public abstract class JenkinsClient
       }
    }
 
-   public InputStream consoleOutput(String jobName, File workDir) throws IOException, JenkinsException
+   public InputStream consoleOutput(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      if ((jobName == null || jobName.isEmpty()) && workDir != null)
+      if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(workDir);
+         jobName = readJenkinsJobName(projectId, vfs);
          if (jobName == null || jobName.isEmpty())
             throw new IllegalArgumentException("Job name required. ");
       }
 
-      if (jobStatus(jobName, workDir).getStatus() != JobStatus.Status.END)
+      if (jobStatus(jobName, projectId, vfs).getStatus() != JobStatus.Status.END)
          return null; // Do not show output if job in queue for build or building now.
 
       HttpURLConnection http = null;
@@ -617,46 +624,45 @@ public abstract class JenkinsClient
 
    /* ============================================================ */
 
-   private void writeJenkinsJobName(File workDir, String jobName) throws IOException
+//   private void writeJenkinsJobName(File workDir, String jobName) throws IOException
+//   {
+//      String filename = ".jenkins-job";
+//      File idfile = new File(workDir, filename);
+//      FileWriter w = null;
+//      try
+//      {
+//         w = new FileWriter(idfile);
+//         w.write(jobName);
+//         w.write('\n');
+//         w.flush();
+//      }
+//      finally
+//      {
+//         if (w != null)
+//            w.close();
+//      }
+//      // Add file to .gitignore
+//      GitHelper.addToGitIgnore(workDir, filename);
+//   }
+
+   private void writeJenkinsJobName(String projectId, String jobName, VirtualFileSystem vfs) throws VirtualFileSystemException
    {
-      String filename = ".jenkins-job";
-      File idfile = new File(workDir, filename);
-      FileWriter w = null;
-      try
-      {
-         w = new FileWriter(idfile);
-         w.write(jobName);
-         w.write('\n');
-         w.flush();
-      }
-      finally
-      {
-         if (w != null)
-            w.close();
-      }
-      // Add file to .gitignore
-      GitHelper.addToGitIgnore(workDir, filename);
+      ConvertibleProperty jenkinsJob = new ConvertibleProperty("jenkins-job", jobName);
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(jenkinsJob);
+      vfs.updateItem(projectId, properties, null);
    }
 
-   private String readJenkinsJobName(File workDir) throws IOException
+   private String readJenkinsJobName(String projectId, VirtualFileSystem vfs) throws VirtualFileSystemException
    {
-      String filename = ".jenkins-job";
-      File jobfile = new File(workDir, filename);
-      String jobName = null;
-      if (jobfile.exists())
-      {
-         BufferedReader r = null;
-         try
-         {
-            r = new BufferedReader(new FileReader(jobfile));
-            jobName = r.readLine();
-         }
-         finally
-         {
-            if (r != null)
-               r.close();
-         }
-      }
-      return jobName;
+      Item item = vfs.getItem(projectId, PropertyFilter.valueOf("jenkins-job"));
+      StringProperty jenkinsJob = (StringProperty)item.getProperty("jenkins-job");
+      if (jenkinsJob == null)
+         return null;
+      List<String> list = jenkinsJob.getValue();
+      if (list == null)
+         return null;
+      return list.get(0);
    }
+
 }

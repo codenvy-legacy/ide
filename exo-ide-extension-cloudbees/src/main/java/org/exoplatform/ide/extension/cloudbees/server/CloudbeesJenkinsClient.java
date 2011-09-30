@@ -23,6 +23,8 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,21 +80,21 @@ public class CloudbeesJenkinsClient extends JenkinsClient
       }
       return defaultValue;
    }
-
+   
    @Override
-   public void createJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void createJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs)
+      throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      super.createJob(jobName, git, user, email, workDir);
+      super.createJob(jobName, git, user, email, projectId, vfs);
    }
 
    @Override
-   public void updateJob(String jobName, String git, String user, String email, File workDir) throws IOException,
-      JenkinsException
+   public void updateJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      super.updateJob(jobName, git, user, email, workDir);
+      super.updateJob(jobName, git, user, email, projectId, vfs);
    }
 
    @Override
@@ -103,24 +105,24 @@ public class CloudbeesJenkinsClient extends JenkinsClient
    }
 
    @Override
-   public void build(String jobName, File workDir) throws IOException, JenkinsException
+   public void build(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      super.build(jobName, workDir);
+      super.build(jobName, projectId,vfs);
    }
 
    @Override
-   public JobStatus jobStatus(String jobName, File workDir) throws IOException, JenkinsException
+   public JobStatus jobStatus(String jobName,String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      return super.jobStatus(jobName, workDir);
+      return super.jobStatus(jobName, projectId, vfs);
    }
 
    @Override
-   public InputStream consoleOutput(String jobName, File workDir) throws IOException, JenkinsException
+   public InputStream consoleOutput(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      return super.consoleOutput(jobName, workDir);
+      return super.consoleOutput(jobName, projectId, vfs);
    }
 
    private synchronized void doLogin() throws IOException, JenkinsException

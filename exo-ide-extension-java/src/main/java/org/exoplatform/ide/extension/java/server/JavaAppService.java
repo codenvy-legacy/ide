@@ -20,8 +20,11 @@ package org.exoplatform.ide.extension.java.server;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Project;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.ws.rs.POST;
@@ -56,7 +59,7 @@ public class JavaAppService
    @POST
    @Path("create")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response createApplication(
+   public Project createApplication(
       @QueryParam("parentId") String parentId,
       @QueryParam("projectName") String projectName,
       @QueryParam("projectType") String projectType,
@@ -64,17 +67,16 @@ public class JavaAppService
       @QueryParam("artifactId") String artifactId,
       @QueryParam("version") String version,
       @QueryParam("vfsId") String vfsId,
-      @Context UriInfo uriInfo) throws Exception {
+      @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException, URISyntaxException {
 
-      String resource = projectType;      
-      URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+      URL url = Thread.currentThread().getContextClassLoader().getResource(projectType);
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
-         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
+         throw new VirtualFileSystemException("Virtual file system not initialized");
       Project project = archetype.exportResources(url, projectType, projectName, groupId, artifactId, version,parentId,vfs);
       //TODO: 
       //GitHelper.addToGitIgnore(dir, "/target"); 
-      return Response.ok(project).build();      
+      return project;    
    }
 
   

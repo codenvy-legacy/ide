@@ -19,7 +19,11 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 
@@ -34,6 +38,7 @@ import javax.jcr.RepositoryException;
 public class LocalPathResolverJcrImpl implements LocalPathResolver
 {
    private final RepositoryService repositoryService;
+   
 
    public LocalPathResolverJcrImpl(RepositoryService repositoryService)
    {
@@ -41,19 +46,17 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
    }
 
    /**
-    * vfsId in JCR implementation equals workspace name.
     * 
-    * @throws RepositoryException
     */
    @Override
-   public String resolve(String vfsId, String path) throws LocalPathResolveException
+   public String resolve(VirtualFileSystem vfs, String id) throws LocalPathResolveException
    {
       try
       {
-         if (vfsId == null || vfsId.length() == 0)
+         if (vfs == null)
             throw new LocalPathResolveException(
-               "Can't resolve path on the Local File System. vfsid  may not be null or empty");
-         if (path == null || path.length() == 0)
+               "Can't resolve path on the Local File System : Virtual file system not initialized");
+         if (id == null || id.length() == 0)
             throw new LocalPathResolveException(
                "Can't resolve path on the Local File System. Item path may not be null or empty");
          String fsRootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
@@ -64,7 +67,18 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
          String repositoryName = repository.getConfiguration().getName();
          if (!fsRootPath.endsWith("/"))
             fsRootPath += "/"; // unix like path only!
-         return fsRootPath + repositoryName + "/" + vfsId + path;
+         Item item = null;
+         String vfsId = null;
+         try
+         {
+            vfsId = vfs.getInfo().getId();
+            item = vfs.getItem(id, PropertyFilter.NONE_FILTER);
+         }
+         catch (VirtualFileSystemException e)
+         {
+           throw new LocalPathResolveException("Can't resolve path on the Local File System", e);
+         }
+         return fsRootPath + repositoryName + "/" + vfsId + item.getPath();
       }
       catch (RepositoryException e)
       {
