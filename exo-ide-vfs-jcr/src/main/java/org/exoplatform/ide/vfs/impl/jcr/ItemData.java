@@ -30,7 +30,6 @@ import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.NumberProperty;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -60,7 +59,6 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 import javax.jcr.lock.Lock;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.ws.rs.core.MediaType;
 
@@ -91,10 +89,7 @@ abstract class ItemData
          return new FileData(node.getParent());
       if (node.isNodeType("nt:frozenNode"))
          return new VersionData(node);
-      //if (node.isNodeType("vfs:project"))
-      //   return new ProjectData(node);
-      if (node.isNodeType("vfs:mixunstructured") && node.hasProperty("vfs:mimeType")
-         && Project.PROJECT_MIME_TYPE.equalsIgnoreCase(node.getProperty("vfs:mimeType").getString()))
+      if (node.isNodeType("vfs:project"))
          return new ProjectData(node);
       return new FolderData(node);
    }
@@ -147,9 +142,9 @@ abstract class ItemData
 
    /**
     * @return type of this item
-    * @see Type
+    * @see ItemType
     */
-   ItemType getType()
+   final ItemType getType()
    {
       return type;
    }
@@ -237,7 +232,24 @@ abstract class ItemData
     * @throws VirtualFileSystemException if any other errors occurs
     */
    @SuppressWarnings("rawtypes")
-   List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException, VirtualFileSystemException
+   final List<Property> getProperties(PropertyFilter filter) throws PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      return getProperties(this.node, filter);
+   }
+
+   /**
+    * Get set of properties that acceptable by specified <code>filter</code>.
+    * 
+    * @param theNode the node
+    * @param filter filter
+    * @return properties
+    * @throws PermissionDeniedException if properties can't be retrieved cause to security restriction
+    * @throws VirtualFileSystemException if any other errors occurs
+    */
+   @SuppressWarnings("rawtypes")
+   List<Property> getProperties(Node theNode, PropertyFilter filter) throws PermissionDeniedException,
+      VirtualFileSystemException
    {
       if (filter == null)
       {
@@ -247,12 +259,14 @@ abstract class ItemData
       try
       {
          List<Property> properties = new ArrayList<Property>();
-         for (PropertyIterator i = node.getProperties(); i.hasNext();)
+         for (PropertyIterator i = theNode.getProperties(); i.hasNext();)
          {
             javax.jcr.Property jcrProperty = i.nextProperty();
             String name = jcrProperty.getName();
             if (!SKIPPED_PROPERTIES.contains(name) && filter.accept(name))
+            {
                properties.add(createProperty(jcrProperty));
+            }
          }
          return properties;
       }
@@ -281,7 +295,9 @@ abstract class ItemData
                Value[] jcrValues = property.getValues();
                v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
+               {
                   v.add((double)jcrValues[i].getLong());
+               }
             }
             else
             {
@@ -297,7 +313,9 @@ abstract class ItemData
                Value[] jcrValues = property.getValues();
                v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
+               {
                   v.add(jcrValues[i].getDouble());
+               }
             }
             else
             {
@@ -313,7 +331,9 @@ abstract class ItemData
                Value[] jcrValues = property.getValues();
                v = new ArrayList<Double>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
+               {
                   v.add(jcrValues[i].getDouble());
+               }
             }
             else
             {
@@ -329,7 +349,9 @@ abstract class ItemData
                Value[] jcrValues = property.getValues();
                v = new ArrayList<Boolean>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
+               {
                   v.add(jcrValues[i].getBoolean());
+               }
             }
             else
             {
@@ -350,7 +372,9 @@ abstract class ItemData
                Value[] jcrValues = property.getValues();
                v = new ArrayList<String>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
+               {
                   v.add(jcrValues[i].getString());
+               }
             }
             else
             {
@@ -377,7 +401,7 @@ abstract class ItemData
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
+   final void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
       LockException, PermissionDeniedException, VirtualFileSystemException
    {
       if (properties == null || properties.size() == 0)
@@ -393,10 +417,9 @@ abstract class ItemData
             session.addLockToken(lockToken);
          }
 
-         Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(node);
          for (ConvertibleProperty property : properties)
          {
-            updateProperty(node, propertyDefinitions.get(property.getName()), property);
+            updateProperty(node, property);
          }
 
          session.save();
@@ -417,8 +440,8 @@ abstract class ItemData
       }
    }
 
-   void updateProperty(Node theNode, PropertyDefinition pd, ConvertibleProperty property) throws ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
    {
       String name = property.getName();
       String[] value = property.valueToArray(String[].class);
@@ -426,18 +449,6 @@ abstract class ItemData
       if (value == null)
       {
          value = new String[0];
-      }
-
-      if (pd != null)
-      {
-         if (pd.isProtected())
-         {
-            throw new ConstraintException("Property " + name + " is read-only. ");
-         }
-         if (pd.isMandatory() && value.length == 0)
-         {
-            throw new ConstraintException("Property " + name + " can't have null value. ");
-         }
       }
 
       try
@@ -448,21 +459,27 @@ abstract class ItemData
          }
          else
          {
-            // If property definition exists then use it to determine is property
-            // multiple otherwise determine it from specified value. 
-            boolean multiple = pd != null ? pd.isMultiple() : value.length > 1;
-            if (multiple)
             {
                Value[] jcrValue = new Value[value.length];
                for (int i = 0; i < value.length; i++)
                {
                   jcrValue[i] = new StringValue(value[i]);
                }
-               theNode.setProperty(name, jcrValue);
-            }
-            else
-            {
-               theNode.setProperty(name, new StringValue(value[0]));
+               if (jcrValue.length > 1)
+               {
+                  try
+                  {
+                     theNode.setProperty(name, jcrValue);
+                  }
+                  catch (ValueFormatException e)
+                  {
+                     theNode.setProperty(name, jcrValue[0]);
+                  }
+               }
+               else
+               {
+                  theNode.setProperty(name, jcrValue[0]);
+               }
             }
          }
       }
@@ -482,17 +499,6 @@ abstract class ItemData
       {
          throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
       }
-   }
-
-   Map<String, PropertyDefinition> getPropertyDefinitions(Node node) throws RepositoryException
-   {
-      NodeType nodeType = node.getPrimaryNodeType();
-      PropertyDefinition[] propertyDefinitions = nodeType.getPropertyDefinitions();
-      Map<String, PropertyDefinition> cache = new HashMap<String, PropertyDefinition>();
-      for (int i = 0; i < propertyDefinitions.length; i++)
-         cache.put(propertyDefinitions[i].getName(), propertyDefinitions[i]);
-      // TODO check mixin node types
-      return cache;
    }
 
    /**
@@ -804,7 +810,7 @@ abstract class ItemData
     * @param removeMixinTypes mixin types that must be removed. Should be <code>null</code> if there is no mixins to
     *           remove
     * @return id of renamed object
-    * @throws ConstraintException 
+    * @throws ConstraintException
     * @throws ItemAlreadyExistException if parent folder already contains object with the same name as specified
     * @throws LockException if object is locked and <code>lockToken</code> is <code>null</code> or does not matched
     * @throws PermissionDeniedException if object can't be renamed cause to security restriction
@@ -814,8 +820,40 @@ abstract class ItemData
       String[] removeMixinTypes) throws ConstraintException, ItemAlreadyExistException, LockException,
       PermissionDeniedException, VirtualFileSystemException;
 
-   Node getNode()
+   final Node getNode()
    {
       return node;
+   }
+
+   /**
+    * @see java.lang.Object#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      int hash = 8;
+      hash = hash * 31 + type.hashCode();
+      hash = hash * 31 + node.hashCode();
+      return hash;
+   }
+
+   /**
+    * @see java.lang.Object#equals(java.lang.Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (obj == null || getClass() != obj.getClass())
+         return false;
+      ItemData other = (ItemData)obj;
+      if (type != other.type)
+         return false;
+      if (!node.equals(other.node))
+         return false;
+      return true;
    }
 }

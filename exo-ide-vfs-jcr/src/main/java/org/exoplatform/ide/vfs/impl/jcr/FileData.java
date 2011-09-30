@@ -57,6 +57,7 @@ class FileData extends ItemData
 
       FileVersionIterator(javax.jcr.version.VersionIterator i, FileData latest)
       {
+         i.next(); // skip jcr:rootVersion
          this.i = i;
          this.latest = latest;
          fetchNext();
@@ -226,9 +227,7 @@ class FileData extends ItemData
          }
          else
          {
-            javax.jcr.version.VersionIterator i = node.getVersionHistory().getAllVersions();
-            i.next(); // skip jcr:rootVersion
-            return new FileVersionIterator(i, this);
+            return new FileVersionIterator(node.getVersionHistory().getAllVersions(), this);
          }
       }
       catch (AccessDeniedException e)
@@ -255,13 +254,6 @@ class FileData extends ItemData
             // If not file versionable then any version ID is not acceptable.
             throw new InvalidArgumentException("Version " + versionId + " does not exist. ");
          }
-         //         if (CURRENT_VERSION_ID.equals(versionId))
-         //         {
-         //            Version versionNode = (Version)node.getParent();
-         //            String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
-         //            Session session = node.getSession();
-         //            return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
-         //         }
          try
          {
             return (FileData)fromNode(node.getVersionHistory().getVersion(versionId).getNode("jcr:frozenNode"));

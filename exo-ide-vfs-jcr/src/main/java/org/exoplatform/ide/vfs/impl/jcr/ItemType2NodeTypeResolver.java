@@ -30,10 +30,6 @@ import javax.ws.rs.core.MediaType;
  */
 public class ItemType2NodeTypeResolver
 {
-   public ItemType2NodeTypeResolver()
-   {
-   }
-
    /**
     * By default return 'nt:file' always.
     */
@@ -45,7 +41,9 @@ public class ItemType2NodeTypeResolver
    public final String getFileNodeType(MediaType mediaType)
    {
       if (mediaType == null)
+      {
          return getFileNodeType((String)null);
+      }
       return getFileNodeType((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 
@@ -60,7 +58,9 @@ public class ItemType2NodeTypeResolver
    public final String getFileContentNodeType(MediaType mediaType)
    {
       if (mediaType == null)
+      {
          return getFileContentNodeType((String)null);
+      }
       return getFileContentNodeType((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 
@@ -78,7 +78,9 @@ public class ItemType2NodeTypeResolver
    public final String[] getFileMixins(MediaType mediaType)
    {
       if (mediaType == null)
+      {
          return getFileMixins((String)null);
+      }
       return getFileMixins((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 
@@ -93,7 +95,9 @@ public class ItemType2NodeTypeResolver
    public final String getFolderNodeType(MediaType mediaType)
    {
       if (mediaType == null)
+      {
          return getFolderNodeType((String)null);
+      }
       return getFolderNodeType((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 
@@ -105,22 +109,23 @@ public class ItemType2NodeTypeResolver
     */
    public String[] getFolderMixins(String mediaType)
    {
-      /*if (mediaType == null)
-         return null;
-      if (mediaType.equalsIgnoreCase(Project.PROJECT_MIME_TYPE))
-         return new String[]{"vfs:project"};
-      return new String[]{"vfs:folder"};*/
       if (mediaType == null)
+      {
          return null;
+      }
       if (mediaType.equalsIgnoreCase(Project.PROJECT_MIME_TYPE))
-         return new String[]{"vfs:mixunstructured"};
+      {
+         return new String[]{"vfs:project"};
+      }
       return null;
    }
 
    public final String[] getFolderMixins(MediaType mediaType)
    {
       if (mediaType == null)
+      {
          return getFolderMixins((String)null);
+      }
       return getFolderMixins((mediaType.getType() + "/" + mediaType.getSubtype()));
    }
 }

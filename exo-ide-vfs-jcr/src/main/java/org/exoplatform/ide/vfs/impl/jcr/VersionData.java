@@ -38,8 +38,10 @@ import javax.ws.rs.core.MediaType;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-class VersionData extends FileData
+final class VersionData extends FileData
 {
+   private FileData latest;
+
    VersionData(Node node)
    {
       super(node);
@@ -53,7 +55,7 @@ class VersionData extends FileData
    {
       try
       {
-         return getCurrentVersion().getName();
+         return getLatestVersion().getName();
       }
       catch (RepositoryException e)
       {
@@ -69,7 +71,7 @@ class VersionData extends FileData
    {
       try
       {
-         return getCurrentVersion().getPath();
+         return getLatestVersion().getPath();
       }
       catch (RepositoryException e)
       {
@@ -111,7 +113,7 @@ class VersionData extends FileData
    {
       try
       {
-         return getCurrentVersion().getAllVersions();
+         return getLatestVersion().getAllVersions();
       }
       catch (AccessDeniedException e)
       {
@@ -153,7 +155,7 @@ class VersionData extends FileData
    {
       try
       {
-         return getCurrentVersion().getId();
+         return getLatestVersion().getId();
       }
       catch (RepositoryException e)
       {
@@ -161,11 +163,15 @@ class VersionData extends FileData
       }
    }
 
-   private FileData getCurrentVersion() throws RepositoryException
+   private FileData getLatestVersion() throws RepositoryException
    {
-      Version versionNode = (Version)node.getParent();
-      String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
-      Session session = node.getSession();
-      return (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+      if (latest == null)
+      {
+         Version versionNode = (Version)node.getParent();
+         String versionableUUID = versionNode.getContainingHistory().getVersionableUUID();
+         Session session = node.getSession();
+         latest = (FileData)ItemData.fromNode(session.getNodeByUUID(versionableUUID));
+      }
+      return latest;
    }
 }

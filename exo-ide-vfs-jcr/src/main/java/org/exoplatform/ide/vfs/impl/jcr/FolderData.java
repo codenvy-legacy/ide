@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -28,11 +29,11 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
@@ -42,7 +43,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.PropertyDefinition;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -70,10 +70,9 @@ public class FolderData extends ItemData
          next = null;
          while (next == null && i.hasNext())
          {
-            Node c = i.nextNode();
             try
             {
-               next = ItemData.fromNode(c);
+               next = ItemData.fromNode(i.nextNode());
             }
             catch (RepositoryException e)
             {
@@ -88,7 +87,7 @@ public class FolderData extends ItemData
       super(node, ItemType.FOLDER);
    }
 
-   boolean isRootFolder() throws VirtualFileSystemException
+   final boolean isRootFolder() throws VirtualFileSystemException
    {
       try
       {
@@ -129,7 +128,7 @@ public class FolderData extends ItemData
       }
    }
 
-   LazyIterator<ItemData> getChildren() throws PermissionDeniedException, VirtualFileSystemException
+   final LazyIterator<ItemData> getChildren() throws PermissionDeniedException, VirtualFileSystemException
    {
       try
       {
@@ -172,10 +171,9 @@ public class FolderData extends ItemData
 
          if (properties != null && properties.size() > 0)
          {
-            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(fileNode);
             for (ConvertibleProperty property : properties)
             {
-               updateProperty(fileNode, propertyDefinitions.get(property.getName()), property);
+               updateProperty(fileNode, property);
             }
          }
 
@@ -235,10 +233,9 @@ public class FolderData extends ItemData
 
          if (properties != null && properties.size() > 0)
          {
-            Map<String, PropertyDefinition> propertyDefinitions = getPropertyDefinitions(folderNode);
             for (ConvertibleProperty property : properties)
             {
-               updateProperty(folderNode, propertyDefinitions.get(property.getName()), property);
+               updateProperty(folderNode, property);
             }
          }
 
@@ -286,6 +283,14 @@ public class FolderData extends ItemData
             node = (Node)session.getItem(destinationPath);
          }
 
+         if (removeMixinTypes != null && removeMixinTypes.length > 0)
+         {
+            for (int i = 0; i < removeMixinTypes.length; i++)
+            {
+               node.removeMixin(removeMixinTypes[i]);
+            }
+         }
+
          if (addMixinTypes != null)
          {
             for (int i = 0; i < addMixinTypes.length; i++)
@@ -297,10 +302,10 @@ public class FolderData extends ItemData
             }
          }
 
-         if (mediaType != null && node.isNodeType("vfs:mixunstructured"))
+         if (mediaType != null && node.isNodeType("vfs:project"))
          {
-            // If possible add mime type. Otherwise default one will be used.
-            node.setProperty("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype()));
+            updateProperty(node,
+               new ConvertibleProperty("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));
          }
 
          session.save();
@@ -321,6 +326,43 @@ public class FolderData extends ItemData
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException("Unable rename folder " + getName() + ". " + e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#updateProperty(javax.jcr.Node,
+    *      org.exoplatform.ide.vfs.server.ConvertibleProperty)
+    */
+   @Override
+   final void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
+      PermissionDeniedException, VirtualFileSystemException
+   {
+      try
+      {
+         super.updateProperty(theNode.isNodeType("vfs:project") ? theNode.getNode(".project") : theNode, property);
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getProperties(javax.jcr.Node,
+    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    */
+   @Override
+   @SuppressWarnings("rawtypes")
+   final List<Property> getProperties(Node theNode, PropertyFilter filter) throws PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      try
+      {
+         return super.getProperties(theNode.isNodeType("vfs:project") ? theNode.getNode(".project") : theNode, filter);
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
       }
    }
 }

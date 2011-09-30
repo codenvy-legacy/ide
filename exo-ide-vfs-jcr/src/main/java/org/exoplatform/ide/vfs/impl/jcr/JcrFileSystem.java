@@ -678,10 +678,14 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData data = getItemData(ses, id);
+         MediaType currentMediaType = data.getMediaType();
+         String[] removeMixinTypes =
+            data.getType() == ItemType.FILE ? itemType2NodeTypeResolver.getFileMixins(currentMediaType)
+               : itemType2NodeTypeResolver.getFolderMixins(currentMediaType);
          String[] addMixinTypes =
             data.getType() == ItemType.FILE ? itemType2NodeTypeResolver.getFileMixins(mediaType)
                : itemType2NodeTypeResolver.getFolderMixins(mediaType);
-         String renamedId = data.rename(newname, mediaType, lockToken, addMixinTypes, null);
+         String renamedId = data.rename(newname, mediaType, lockToken, addMixinTypes, removeMixinTypes);
          return fromItemData(getItemData(ses, renamedId), PropertyFilter.ALL_FILTER);
       }
       finally
@@ -998,8 +1002,9 @@ public class JcrFileSystem implements VirtualFileSystem
       if (data instanceof ProjectData)
       {
          ProjectData projectData = (ProjectData)data;
-         return new Project(projectData.getId(), projectData.getName(), projectData.getMediaType().toString(),
-            projectData.getPath(), projectData.getParentId(), projectData.getCreationDate(),
+         MediaType mediaType = projectData.getMediaType();
+         return new Project(projectData.getId(), projectData.getName(), mediaType == null ? Project.FOLDER_MIME_TYPE
+            : mediaType.toString(), projectData.getPath(), projectData.getParentId(), projectData.getCreationDate(),
             projectData.getProperties(propertyFilter), createProjectLinks(projectData), projectData.getProjectType());
       }
 
