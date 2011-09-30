@@ -32,10 +32,23 @@ public class FormFields
 
    public static final String LOCATION = "location";
    
+   public static final String PARENT_ID = "parentId";
+   
+   public static final String NAME = "name";
+   
    public static final String MIME_TYPE = "mimeType";
    
-   public static final String NODE_TYPE = "nodeType";
+   public static final String VFS_ID = "vfsId";
    
-   public static final String JCR_CONTENT_NODE_TYPE = "jcrContentNodeType";
+   /**
+    * Operation with file: update or create
+    */
+   public static final String ACTION_UPDATE = "update";
+   
+   /**
+    * The id of existing file, which will be overrided with
+    * new uploaded file.
+    */
+   public static final String FILE_ID = "fileId";
    
 }

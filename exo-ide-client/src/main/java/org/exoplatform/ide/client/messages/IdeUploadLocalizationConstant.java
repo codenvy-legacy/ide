@@ -79,5 +79,14 @@ public interface IdeUploadLocalizationConstant extends Constants
    
    @Key("openFileByPath.fileUrl")
    String openFileByPathFileUrl();
+   
+   /*
+    * UploadFilePresenter
+    */
+   @Key("upload.file.exist.title")
+   String uploadFileExistTitle();
+   
+   @Key("upload.file.exist.text")
+   String uploadFileExistText();
 
 }

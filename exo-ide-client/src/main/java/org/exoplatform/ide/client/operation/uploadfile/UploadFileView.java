@@ -114,19 +114,19 @@ public class UploadFileView extends ViewImpl implements org.exoplatform.ide.clie
    }
 
    @Override
-   public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
+   public void setHiddenFields(String parentId, String name, String mimeType, String vfsId)
    {
       Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
       postFieldsPanel.add(mimeTypeField);
 
-      Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
-      postFieldsPanel.add(nodeTypeField);
-
-      Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
-      postFieldsPanel.add(jcrContentNodeTypeField);
-
-      Hidden locationField = new Hidden(FormFields.LOCATION, location);
-      postFieldsPanel.add(locationField);
+      Hidden parentIdField = new Hidden(FormFields.PARENT_ID, parentId);
+      postFieldsPanel.add(parentIdField);
+      
+      Hidden nameField = new Hidden(FormFields.NAME, name);
+      postFieldsPanel.add(nameField);
+      
+      Hidden vfsIdField = new Hidden(FormFields.VFS_ID, vfsId);
+      postFieldsPanel.add(vfsIdField);
    }
 
    @Override
@@ -163,6 +163,26 @@ public class UploadFileView extends ViewImpl implements org.exoplatform.ide.clie
    public HasFileSelectedHandler getFileUploadInput()
    {
       return fileUploadInput;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setFileIdHiddenField(java.lang.String)
+    */
+   @Override
+   public void setFileIdHiddenField(String fileId)
+   {
+      Hidden fileIdField = new Hidden(FormFields.FILE_ID, fileId);
+      postFieldsPanel.add(fileIdField);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display#setActionHiddedField(java.lang.String)
+    */
+   @Override
+   public void setActionHiddedField(String action)
+   {
+      Hidden actionIdField = new Hidden(FormFields.ACTION_UPDATE, action);
+      postFieldsPanel.add(actionIdField);
    }   
 
 }
