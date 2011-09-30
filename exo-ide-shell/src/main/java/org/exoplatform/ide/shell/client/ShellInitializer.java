@@ -29,8 +29,11 @@ import org.exoplatform.ide.shell.client.marshal.StringUnmarshaller;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
 import org.exoplatform.ide.shell.shared.CLIResource;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashSet;
@@ -82,10 +85,6 @@ public class ShellInitializer
                      Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT, result.getEntryPoint());
                   }
                   Environment.get().saveValue(EnvironmentVariables.USER_NAME, result.getUserInfo().getName());
-                  updateCurrentDir();
-                  Display console = GWT.create(Display.class);
-                  CloudShell.consoleWriter = console;
-                  new ShellPresenter(console);
                   try
                   {
                      new VirtualFileSystem(Environment.get().getValue(EnvironmentVariables.ENTRY_POINT) + "/")
@@ -97,6 +96,10 @@ public class ShellInitializer
                            protected void onSuccess(VirtualFileSystemInfo result)
                            {
                               Environment.get().setCurrentFolder((FolderModel)result.getRoot());
+                              updateCurrentDir();
+                              Display console = GWT.create(Display.class);
+                              CloudShell.consoleWriter = console;
+                              new ShellPresenter(console);
                               getCommands();
                            }
 
@@ -189,36 +192,34 @@ public class ShellInitializer
 
    private void updateCurrentDir()
    {
-      String path = Location.getParameter("workdir");
-      if (path != null && !path.isEmpty())
+      String id = Location.getParameter("workdir");
+      if (id != null && !id.isEmpty())
       {
-         if (path.startsWith("/"))
+         try
          {
-            path = path.substring(1);
+            VirtualFileSystem.getInstance().getItemById(id, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  if(result.getItem() instanceof Folder)
+                  {
+                     Environment.get().setCurrentFolder((Folder)result.getItem());
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+               }
+            });
          }
-         if (!path.endsWith("/"))
-            path = path + "/";
-         //         final FolderModel f =
-         //            new FolderModel(VirtualFileSystem.getInstance().getEnvironmentVariable(EnvironmentVariables.ENTRY_POINT) + path);
-         //         VirtualFileSystem.getInstance().getChildren(f, new AsyncRequestCallback<Folder>()
-         //         {
-         //
-         //            @Override
-         //            protected void onSuccess(Folder result)
-         //            {
-         //               VirtualFileSystem.getInstance().setEnvironmentVariable(EnvironmentVariables.WORKDIR, result.getHref());
-         //            }
-         //
-         //            /**
-         //             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-         //             */
-         //            @Override
-         //            protected void onFailure(Throwable exception)
-         //            {
-         //               super.onFailure(exception);
-         //               CloudShell.console().print(CloudShell.messages.cdErrorFolder(f.getName()) + "\n");
-         //            }
-         //         });
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 }

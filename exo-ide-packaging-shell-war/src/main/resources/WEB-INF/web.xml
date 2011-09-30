@@ -29,7 +29,6 @@
       <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
 
-
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
