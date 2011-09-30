@@ -69,8 +69,8 @@ public class HerokuService
    @QueryParam("vfsId")
    private String vfsId;
 
-   @QueryParam("path")
-   private String path;
+   @QueryParam("projectid")
+   private String projectId;
 
    @QueryParam("name")
    private String appName;
@@ -115,7 +115,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.createApplication(appName, remote, new File(localPathResolver.resolve(vfs, path)));
+      return heroku.createApplication(appName, remote, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/destroy")
@@ -125,7 +125,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      heroku.destroyApplication(appName, new File(localPathResolver.resolve(vfs, path)));
+      heroku.destroyApplication(appName, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/info")
@@ -137,7 +137,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.applicationInfo(appName, inRawFormat, new File(localPathResolver.resolve(vfs, path)));
+      return heroku.applicationInfo(appName, inRawFormat, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/rename")
@@ -149,7 +149,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.renameApplication(appName, newname, new File(localPathResolver.resolve(vfs, path)));
+      return heroku.renameApplication(appName, newname, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/stack")
@@ -161,7 +161,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.getStacks(appName, new File(localPathResolver.resolve(vfs, path)));
+      return heroku.getStacks(appName, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/stack-migrate")
@@ -173,7 +173,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.stackMigrate(appName, new File(localPathResolver.resolve(vfs, path)), stack);
+      return heroku.stackMigrate(appName, new File(localPathResolver.resolve(vfs, projectId)), stack);
    }
 
    @Path("apps/logs")
@@ -185,7 +185,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.logs(appName, new File(localPathResolver.resolve(vfs, path)), logLines);
+      return heroku.logs(appName, new File(localPathResolver.resolve(vfs, projectId)), logLines);
    }
 
    @Path("apps/run")
@@ -198,7 +198,7 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      final HttpChunkReader chunkReader = heroku.run(appName, new File(localPathResolver.resolve(vfs, path)), command);
+      final HttpChunkReader chunkReader = heroku.run(appName, new File(localPathResolver.resolve(vfs, projectId)), command);
       return new StreamingOutput()
       {
          @Override
