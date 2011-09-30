@@ -563,6 +563,10 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          //if null, than service will not send this parameter
          server = null;
       }
+      else if (server.endsWith("/"))
+      {
+         server = server.substring(0, server.length() - 1);
+      }
       String name = display.getNameField().getValue();
       String type;
       int memory = 0;
