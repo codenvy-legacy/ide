@@ -24,12 +24,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -38,10 +35,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,8 +50,7 @@ import java.util.List;
  * @version $Id:  Jun 1, 2011 11:32:37 AM anya $
  *
  */
-public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, ViewClosedHandler, ItemsSelectedHandler,
-   LoggedInHandler
+public class ApplicationInfoPresenter extends GitPresenter implements ShowApplicationInfoHandler, ViewClosedHandler, LoggedInHandler
 {
    /**
     * Properties order to be displayed.
@@ -116,30 +110,13 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git working directory.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus events handler
     */
    public ApplicationInfoPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-      
+      super(eventBus);
       eventBus.addHandler(ShowApplicationInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -164,7 +141,10 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    @Override
    public void onShowApplicationInfo(ShowApplicationInfoEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         getApplicationInfo();
+      }
    }
 
    /**
@@ -180,42 +160,12 @@ public class ApplicationInfoPresenter implements ShowApplicationInfoHandler, Vie
    }
 
    /**
-    * Get working directory.
-    */
-   protected void getWorkDir()
-   {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               getApplicationInfo();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
-   }
-
-   /**
     * Get application's information.
     */
    public void getApplicationInfo()
    {
-      HerokuClientService.getInstance().getApplicationInfo(workDir, null, false,
+      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 

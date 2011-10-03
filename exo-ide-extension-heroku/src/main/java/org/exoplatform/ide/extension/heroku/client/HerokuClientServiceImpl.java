@@ -136,13 +136,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createApplication(String applicationName, String gitWorkDir, String remoteName,
+   public void createApplication(String applicationName, String vfsId, String path, String remoteName,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += "workdir=" + gitWorkDir;
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -158,12 +159,13 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void deleteApplication(String gitWorkDir, String applicationName, HerokuAsyncRequestCallback callback)
+   public void deleteApplication(String applicationName, String vfsId, String path, HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -193,14 +195,15 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void getApplicationInfo(String gitWorkDir, String applicationName, boolean isRaw,
+   public void getApplicationInfo(String applicationName, String vfsId, String path, boolean isRaw,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + APPLICATION_INFO;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
       callback.setResult(properties);
@@ -214,15 +217,16 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void renameApplication(String gitWorkDir, String applicationName, String newName,
+   public void renameApplication(String applicationName, String vfsId, String path, String newName,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + RENAME_APPLICATION;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params = (newName != null) ? "newname=" + newName + "&" : "";
-      params += (gitWorkDir != null) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
       callback.setResult(properties);
@@ -236,13 +240,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void run(String gitWorkDir, String applicationName, String command, RakeCommandAsyncRequestCallback callback)
+   public void run(String applicationName, String vfsId, String path, String command, RakeCommandAsyncRequestCallback callback)
    {
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
       RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
 
@@ -258,13 +263,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
     */
    @Override
-   public void help(String gitWorkDir, String applicationName, RakeCommandAsyncRequestCallback callback)
+   public void help(String applicationName, String vfsId, String path, RakeCommandAsyncRequestCallback callback)
    {
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
       RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
 
@@ -280,13 +286,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getStackList(String gitWorkDir, String applicationName, StackListAsyncRequestCallback callback)
+   public void getStackList(String applicationName, String vfsId, String path, StackListAsyncRequestCallback callback)
    {
       String url = restServiceContext + GET_STACKS;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       List<Stack> stackList = new ArrayList<Stack>();
       StackListUnmarshaller unmarshaller = new StackListUnmarshaller(stackList);
 
@@ -302,15 +309,16 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
     */
    @Override
-   public void migrateStack(String gitWorkDir, String applicationName, String stack,
+   public void migrateStack(String applicationName, String vfsId, String path, String stack,
       StackMigrationAsyncRequestCallback callback)
    {
       String url = restServiceContext + STACK_MIGRATE;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params = (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
-      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       StackMigrationResponse stackMigrationResponse = new StackMigrationResponse();
       StackMigrationUnmarshaller unmarshaller = new StackMigrationUnmarshaller(stackMigrationResponse);
 
@@ -325,14 +333,15 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
     */
    @Override
-   public void logs(String gitWorkDir, String applicationName, int logLines, LogsAsyncRequestCallback callback)
+   public void logs(String applicationName, String vfsId, String path, int logLines, LogsAsyncRequestCallback callback)
    {
       String url = restServiceContext + LOGS;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += "num=" + logLines + "&";
-      params += (gitWorkDir != null && !gitWorkDir.isEmpty()) ? "workdir=" + gitWorkDir : "";
-
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      
       LogsResponse logsResponse = new LogsResponse();
       LogsUnmarshaller unmarshaller = new LogsUnmarshaller(logsResponse);
 

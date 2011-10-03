@@ -67,21 +67,23 @@ public abstract class HerokuClientService
     * Creates new application on Heroku.
     * 
     * @param applicationName application's name
-    * @param gitWorkDir Git working directory href
+    * @param vfsId virtual file system id
+    * @param projectid GIT workdir's projectid
     * @param remoteName name of Git remote repository
     * @param callback callback
     */
-   public abstract void createApplication(String applicationName, String gitWorkDir, String remoteName,
+   public abstract void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
       HerokuAsyncRequestCallback callback);
 
    /**
     * Deletes application pointed by it's name or Git location.
     * 
-    * @param gitWorkDir href of Git working directory
     * @param applicationName application's name
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void deleteApplication(String gitWorkDir, String applicationName, HerokuAsyncRequestCallback callback);
+   public abstract void deleteApplication(String applicationName, String vfsId, String projectid, HerokuAsyncRequestCallback callback);
 
    /**
     * Adds(deploys) public ssh keys on Heroku.
@@ -100,74 +102,81 @@ public abstract class HerokuClientService
    /**
     * Get information about Heroku application, pointed by application's name or Git work directory location.
     * 
-    * @param gitWorkDir Git working directory location
     * @param applicationName application's name
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param isRaw the format of the response if <code>true</code> then get result as raw Map. If <code>false</code> (default) result
     *           is Map that contains predefined set of key-value pair
     * @param callback callback
     */
-   public abstract void getApplicationInfo(String gitWorkDir, String applicationName, boolean isRaw,
+   public abstract void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
       HerokuAsyncRequestCallback callback);
 
    /**
     * Rename Heroku application, pointed by application's name or Git work directory location.
     * 
-    * @param gitWorkDir Git working directory location
     * @param applicationName application's name
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param newName new name of the application
     * @param callback callback
     */
-   public abstract void renameApplication(String gitWorkDir, String applicationName, String newName,
+   public abstract void renameApplication(String applicationName, String vfsId, String projectid, String newName,
       HerokuAsyncRequestCallback callback);
 
    /**
     * Run Heroku rake command.
     * 
-    * @param gitWorkDir working directory location
     * @param applicationName name of the Heroku application (may be null)
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param command command to run (example: rake db:migrate)
     * @param callback callback
     */
-   public abstract void run(String gitWorkDir, String applicationName, String command,
+   public abstract void run(String applicationName, String vfsId, String projectid, String command,
       RakeCommandAsyncRequestCallback callback);
 
    /**
     * Get application's logs.
     * 
-    * @param gitWorkDir working directory location
     * @param applicationName name of the Heroku application (may be null)
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param linesNumber number of log lines
     * @param callback callback
     */
-   public abstract void logs(String gitWorkDir, String applicationName, int linesNumber, LogsAsyncRequestCallback callback);
+   public abstract void logs(String applicationName, String vfsId, String projectid, int linesNumber, LogsAsyncRequestCallback callback);
 
    /**
     * Get help for rake.
     * 
-    * @param gitWorkDir working directory location
     * @param applicationName name of the Heroku application (may be null)
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void help(String gitWorkDir, String applicationName, RakeCommandAsyncRequestCallback callback);
+   public abstract void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback);
 
    /**
     * Get the list of Heroku application's available stacks (deployment environment).
     * The list contains info about current stack.
     * 
-    * @param gitWorkDir working directory location
     * @param applicationName name of the Heroku application (may be null)
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param callback callback
     */
-   public abstract void getStackList(String gitWorkDir, String applicationName, StackListAsyncRequestCallback callback);
+   public abstract void getStackList(String applicationName, String vfsId, String projectid, StackListAsyncRequestCallback callback);
 
    /**
     * Migrate from one stack to another (change deployment environment)
     * 
-    * @param gitWorkDir working directory location
     * @param applicationName name of the Heroku application (may be null)
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root folder of GIT repository)
     * @param stack name of the stack
     * @param callback callback
     */
-   public abstract void migrateStack(String gitWorkDir, String applicationName, String stack,
+   public abstract void migrateStack(String applicationName, String vfsId, String projectid, String stack,
       StackMigrationAsyncRequestCallback callback);
 }

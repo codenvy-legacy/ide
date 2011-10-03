@@ -20,11 +20,8 @@ package org.exoplatform.ide.extension.heroku.client.delete;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -33,10 +30,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -52,23 +47,8 @@ import java.util.List;
  * @version $Id:  May 26, 2011 5:24:52 PM anya $
  *
  */
-public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, DeleteApplicationHandler, LoggedInHandler
+public class DeleteApplicationCommandHandler extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git working directory.
-    */
-   private String workDir;
-
    private static final String NAME_PROPERTY = "name";
 
    /**
@@ -76,10 +56,8 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
     */
    public DeleteApplicationCommandHandler(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
+      super(eventBus);
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -88,48 +66,10 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * Get the location of Git working directory.
-    */
-   protected void getWorkDir()
-   {
-      if (selectedItems == null || selectedItems.size() <= 0)
+      if (makeSelectionCheck())
       {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
+         getApplicationInfo();
       }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-
-               getApplicationInfo();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
    }
 
    /**
@@ -137,7 +77,8 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
     */
    protected void getApplicationInfo()
    {
-      HerokuClientService.getInstance().getApplicationInfo(workDir, null, false,
+      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
@@ -152,7 +93,7 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
                      break;
                   }
                }
-               askForDelete(name);
+               askForDelete(name, workdir);
             }
          });
    }
@@ -162,10 +103,10 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
     * 
     * @param gitWorkDir
     */
-   protected void askForDelete(final String deleteName)
+   protected void askForDelete(final String deleteName, final String workdir)
    {
       final boolean isName = (deleteName != null);
-      String deletion = (isName) ? deleteName : workDir;
+      String deletion = (isName) ? deleteName : workdir;
 
       Dialogs.getInstance().ask(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
         HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(deletion),
@@ -177,7 +118,7 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
             {
                if (value != null && value)
                {
-                  doDelete();
+                  doDelete(workdir);
                }
             }
          });
@@ -187,9 +128,9 @@ public class DeleteApplicationCommandHandler implements ItemsSelectedHandler, De
     * Perform deleting the application on Heroku.
     *
     */
-   protected void doDelete()
+   protected void doDelete(String workdir)
    {
-      HerokuClientService.getInstance().deleteApplication(workDir, null, new HerokuAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), workdir, new HerokuAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(List<Property> result)

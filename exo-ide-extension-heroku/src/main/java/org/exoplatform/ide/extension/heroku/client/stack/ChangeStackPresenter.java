@@ -41,6 +41,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationResponse;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -125,7 +126,10 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    @Override
    public void onChangeApplicationStack(ChangeApplicationStackEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         getStacks();
+      }
    }
 
    /**
@@ -140,18 +144,10 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getStacks();
-   }
-
    public void getStacks()
    {
-      HerokuClientService.getInstance().getStackList(workDir, null, new StackListAsyncRequestCallback(eventBus, this)
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().getStackList(null, vfs.getId(), workdir, new StackListAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(List<Stack> result)
@@ -189,8 +185,8 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       Stack stack = display.getSelectedStack();
       if (stack == null)
          return;
-
-      HerokuClientService.getInstance().migrateStack(workDir, null, stack.getName(),
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().migrateStack(null, vfs.getId(), workdir, stack.getName(),
          new StackMigrationAsyncRequestCallback(eventBus, this)
          {
 

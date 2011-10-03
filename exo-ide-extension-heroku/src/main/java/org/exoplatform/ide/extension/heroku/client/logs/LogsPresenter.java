@@ -28,12 +28,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -42,12 +38,8 @@ import org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for application's logs view.
@@ -57,7 +49,7 @@ import java.util.List;
  * @version $Id:  Sep 19, 2011 2:28:02 PM anya $
  *
  */
-public class LogsPresenter implements ShowLogsHandler, ItemsSelectedHandler, LoggedInHandler, ViewClosedHandler
+public class LogsPresenter extends GitPresenter implements ShowLogsHandler, LoggedInHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -78,26 +70,13 @@ public class LogsPresenter implements ShowLogsHandler, ItemsSelectedHandler, Log
     */
    private Display display;
 
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git working directory.
-    */
-   private String workDir;
-
    /**
     * @param eventBus events handler
     */
    public LogsPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       eventBus.addHandler(ShowLogsEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -164,48 +143,10 @@ public class LogsPresenter implements ShowLogsHandler, ItemsSelectedHandler, Log
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * Get working directory.
-    */
-   protected void getWorkDir()
-   {
-      if (selectedItems == null || selectedItems.size() <= 0)
+      if (makeSelectionCheck())
       {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
+         getLogs();
       }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               getLogs();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               exception.printStackTrace();
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
    }
 
    /**
@@ -215,8 +156,8 @@ public class LogsPresenter implements ShowLogsHandler, ItemsSelectedHandler, Log
    {
       int logLines =
          (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
-
-      HerokuClientService.getInstance().logs(workDir, null, logLines, new LogsAsyncRequestCallback(eventBus, this)
+         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         HerokuClientService.getInstance().logs(null, vfs.getId(), workdir, logLines, new LogsAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(LogsResponse result)

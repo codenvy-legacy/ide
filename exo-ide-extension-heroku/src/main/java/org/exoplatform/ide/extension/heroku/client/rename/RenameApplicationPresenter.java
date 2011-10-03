@@ -28,12 +28,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -45,10 +41,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -65,7 +59,7 @@ import java.util.List;
  * @version $Id:  Jun 2, 2011 11:54:59 AM anya $
  *
  */
-public class RenameApplicationPresenter implements RenameApplicationHandler, ViewClosedHandler, ItemsSelectedHandler,
+public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler,
    LoggedInHandler
 {
    interface Display extends IsView
@@ -107,25 +101,10 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git working directory.
-    */
-   private String workDir;
-
-   /**
     * Heroku application's name.
     */
    private String applicationName;
-   
+
    private static final String NAME_PROPERTY = "name";
 
    /**
@@ -133,10 +112,9 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
     */
    public RenameApplicationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(RenameApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -198,16 +176,10 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
    @Override
    public void onRenameApplication(RenameApplicationEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
+      if (makeSelectionCheck())
+      {
+         getApplicationInfo();
+      }
    }
 
    /**
@@ -223,43 +195,12 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
    }
 
    /**
-    * Get the location of Git working directory.
-    */
-   protected void getWorkDir()
-   {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-
-               getApplicationInfo();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
-   }
-
-   /**
     * Get information about application.
     */
    protected void getApplicationInfo()
    {
-      HerokuClientService.getInstance().getApplicationInfo(workDir, null, false,
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
@@ -305,14 +246,16 @@ public class RenameApplicationPresenter implements RenameApplicationHandler, Vie
    public void doRenameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      HerokuClientService.getInstance().renameApplication(workDir, null, newName,
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().renameApplication(null, vfs.getId(), workdir, newName,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 
             @Override
             protected void onSuccess(List<Property> result)
             {
-               eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(applicationName, newName), Type.INFO));
+               eventBus.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
+                  applicationName, newName), Type.INFO));
                IDE.getInstance().closeView(display.asView().getId());
             }
          });

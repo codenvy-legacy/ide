@@ -40,6 +40,7 @@ import org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallba
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter of the view for executing rake command.
@@ -181,22 +182,17 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onRakeCommand(RakeCommandEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      if (display == null)
+      if (makeSelectionCheck())
       {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.enableRunButton(false);
-         display.focusInCommandField();
+
+         if (display == null)
+         {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.enableRunButton(false);
+            display.focusInCommandField();
+         }
       }
    }
 
@@ -220,10 +216,10 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String command = (display.getCommandField() != null) ? display.getCommandField().getValue().trim() : null;
       if (command == null)
          return;
-
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       command = (command.startsWith("rake")) ? command : "rake " + command;
       isHelp = false;
-      HerokuClientService.getInstance().run(workDir, null, command, new RakeCommandAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().run(null, vfs.getId(), workdir, command, new RakeCommandAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(RakeCommandResult result)
@@ -240,7 +236,8 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    public void doHelp()
    {
       isHelp = true;
-      HerokuClientService.getInstance().help(workDir, null, new RakeCommandAsyncRequestCallback(eventBus, this)
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().help(null, vfs.getId(), workdir, new RakeCommandAsyncRequestCallback(eventBus, this)
       {
 
          @Override

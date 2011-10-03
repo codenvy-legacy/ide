@@ -25,11 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -41,10 +37,8 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -56,7 +50,7 @@ import java.util.List;
  * @version $Id:  May 26, 2011 2:37:21 PM anya $
  *
  */
-public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelectedHandler, CreateApplicationHandler,
+public class CreateApplicationPresenter extends GitPresenter implements ViewClosedHandler, CreateApplicationHandler,
    LoggedInHandler
 {
    interface Display extends IsView
@@ -112,28 +106,12 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Git working directory.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus events handler
     */
    public CreateApplicationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
 
@@ -169,16 +147,18 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
+      if (makeSelectionCheck())
+      {
+         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         if (display == null)
+         {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.focusInApplicationNameField();
+            display.getWorkDirLocationField().setValue(workdir);
+         }
+      }
    }
 
    /**
@@ -194,51 +174,14 @@ public class CreateApplicationPresenter implements ViewClosedHandler, ItemsSelec
    }
 
    /**
-    * Get the location of Git work directory.
-    */
-   protected void getWorkDir()
-   {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               if (display == null)
-               {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-                  display.focusInApplicationNameField();
-                  display.getWorkDirLocationField().setValue(workDir);
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
-   }
-
-   /**
     * Perform creation of application on Heroku.
     */
    protected void doCreateApplication()
    {
       String applicationName = display.getApplicationNameField().getValue();
       String remoteName = display.getRemoteNameField().getValue();
-      HerokuClientService.getInstance().createApplication(applicationName, workDir, remoteName,
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), workdir, remoteName,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 
