@@ -37,6 +37,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.Image;
@@ -67,18 +68,13 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
    @Override
    public void onPreviewApplication(PreviewApplicationEvent event)
    {
-      getWorkDir();
-   }
-
-   @Override
-   public void onWorkDirReceived()
-   {
       getApplicationInfo();
    }
 
    private void getApplicationInfo()
    {
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workDir, new AsyncRequestCallback<AppInfo>()
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
       {
 
          @Override

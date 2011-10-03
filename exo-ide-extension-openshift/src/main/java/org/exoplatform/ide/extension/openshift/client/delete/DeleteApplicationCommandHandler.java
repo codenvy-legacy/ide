@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -69,15 +70,6 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
       getApplicationsInfo();
    }
 
@@ -86,7 +78,8 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void getApplicationsInfo()
    {
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workDir, new AsyncRequestCallback<AppInfo>()
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
       {
 
          @Override

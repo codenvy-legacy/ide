@@ -83,7 +83,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
        * @return {@link TreeGridItem}
        */
       TreeGridItem<Item> getNavigationTree();
-      
+
       /**
        * Get selected items in the tree.
        * 
@@ -97,59 +97,59 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
        * @param itemId item's path
        */
       void selectItem(String itemId);
-      
+
       HasValue<String> getFolderNameField();
-      
+
       HasClickHandlers getNewFolderButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getFinishButton();
-      
+
       HasClickHandlers getBackButton();
-      
+
       void enableFinishButton(boolean enable);
-      
+
       void enableNewFolderButton(boolean enable);
-      
+
       void focusInFolderNameField();
    }
-   
+
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
-   
+
    private HandlerManager eventBus;
-   
+
    private Display display;
-   
+
    /**
-    * Current workspace's href.
+    * Current virtual file system.
     */
-   private String workspace;
-   
+   private VirtualFileSystemInfo vfs;
+
    private List<FolderModel> foldersToRefresh = new ArrayList<FolderModel>();
-   
+
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    /**
     * The if of root folder.
     */
    private String rootId;
-   
+
    /**
     * Repository, that was selected on previous step.
     * In this step it will be cloned.
     */
    private Repository repository;
-   
+
    public SelectLocationPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(SelectLocationEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
-   
+
    private void bindDisplay()
    {
       display.getNavigationTree().addOpenHandler(new OpenHandler<Item>()
@@ -159,7 +159,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             onFolderOpened((FolderModel)event.getTarget());
          }
       });
-      
+
       display.getNavigationTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          @Override
@@ -190,7 +190,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             closeView();
          }
       });
-      
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -199,7 +199,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             closeView();
          }
       });
-      
+
       display.getBackButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -209,7 +209,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             closeView();
          }
       });
-      
+
       display.getNewFolderButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -218,7 +218,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             createFolder();
          }
       });
-      
+
       display.getFolderNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -235,7 +235,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             }
          }
       });
-      
+
       display.enableNewFolderButton(false);
 
       getFolders();
@@ -262,7 +262,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
@@ -270,26 +270,26 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    public void onVfsChanged(VfsChangedEvent event)
    {
       //TODO not url
-      this.workspace = event.getVfsInfo().getId();
+      this.vfs = event.getVfsInfo();
    }
-   
+
    private void onFolderOpened(FolderModel folder)
    {
       if (!folder.getChildren().getItems().isEmpty())
          return;
-      
+
       foldersToRefresh = new ArrayList<FolderModel>();
       foldersToRefresh.add(folder);
       refreshNextFolder(null);
    }
-   
+
    private void refreshNextFolder(final String itemToSelect)
    {
       if (foldersToRefresh.size() == 0)
       {
          return;
       }
-      
+
       final FolderModel folder = foldersToRefresh.get(0);
       try
       {
@@ -311,14 +311,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
                   folderContentReceived(folder, itemToSelect);
 
                }
-               
+
                @Override
                protected void onFailure(Throwable exception)
                {
                   foldersToRefresh.clear();
                   exception.printStackTrace();
                }
-               
+
             });
       }
       catch (RequestException e)
@@ -326,14 +326,14 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          e.printStackTrace();
       }
    }
-   
+
    private void folderContentReceived(FolderModel folder, String itemToSelect)
    {
       foldersToRefresh.remove(folder);
       removeItemsNotToBeDisplayed(folder.getChildren().getItems());
-      
+
       display.getNavigationTree().setValue(folder);
-      
+
       if (foldersToRefresh.size() > 0)
       {
          refreshNextFolder(itemToSelect);
@@ -346,7 +346,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          }
       }
    }
-   
+
    private void removeItemsNotToBeDisplayed(List<Item> items)
    {
       List<Item> itemsToRemove = new ArrayList<Item>();
@@ -357,13 +357,13 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
       }
       items.removeAll(itemsToRemove);
    }
-   
+
    private void getFolders()
    {
       try
       {
-         //TODO pass url not id
-         new VirtualFileSystem(workspace).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+         //FIXME pass url not id!!!!!
+         new VirtualFileSystem(vfs.getId()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
 
@@ -388,7 +388,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          e.printStackTrace();
       }
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -404,7 +404,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          eventBus.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -417,7 +417,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
          return;
       }
-      
+
       final String newFolderName = display.getFolderNameField().getValue();
       if (newFolderName == null || newFolderName.isEmpty())
       {
@@ -454,17 +454,18 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
          eventBus.fireEvent(new ExceptionThrownEvent(e, lb.selectLocationErrorCantCreateFolder()));
       }
    }
-   
+
    private void cloneRepository(Repository repo)
    {
-      String workDir = selectedItems.get(0).getId();
+      //TODO Check this works: 
+      String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       String remoteUri = repo.getUrl();
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";
       }
 
-      GitClientService.getInstance().cloneRepository(workDir, remoteUri, null,
+      GitClientService.getInstance().cloneRepository(vfs.getId(), workDir, remoteUri, null,
          new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>()
          {
 
@@ -472,8 +473,10 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             protected void onSuccess(String result)
             {
                eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-               FolderModel folder = (FolderModel)selectedItems.get(0);
-               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
+               //TODO check this works:
+               //FolderModel folder = (FolderModel)selectedItems.get(0);
+               //eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
+               eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
             }
 
             @Override
@@ -486,7 +489,7 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
             }
          });
    }
-   
+
    /**
     * Work up to the root folder to create a list of folder to refresh.
     * Need to refresh all folders, that were created during "Select Location"

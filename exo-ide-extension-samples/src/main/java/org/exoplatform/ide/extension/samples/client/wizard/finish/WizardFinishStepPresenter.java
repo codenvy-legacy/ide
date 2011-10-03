@@ -256,7 +256,9 @@ ApplicationBuiltHandler
                   workDirId = result.getId();
                   buildApplication(result.getId());
                }
-               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
+               //TODO check this works:
+               //eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
+               eventBus.fireEvent(new RefreshBrowserEvent(parent));
                eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
                closeView();
             }

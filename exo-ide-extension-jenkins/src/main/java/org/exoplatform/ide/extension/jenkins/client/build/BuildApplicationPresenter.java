@@ -54,6 +54,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
@@ -144,16 +145,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //In other case, it will be got from selected items.
       folderId = event.getFolderId();
 
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      beforeBuild();
+      if (makeSelectionCheck())
+      {
+         beforeBuild();
+      }
    }
 
    /**
@@ -175,6 +170,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          else
             url = item.getParentId();
       }
+      
+      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
       {
          @Override
@@ -195,7 +192,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                ServerException ex = (ServerException)exception;
                if (ex.getHTTPStatus() == HTTPStatus.NOT_FOUND)
                {
-                  createJob(GitClientUtil.getPublicGitRepoUrl(workDir, restContext));
+                  createJob(GitClientUtil.getPublicGitRepoUrl(workdir, restContext));
                   return;
                }
             }
@@ -216,10 +213,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       String uName = userInfo.getName().split("@")[0];//Jenkins don't alow in job name '@' character
       JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
-         repository, uName, mail, workDir, new AsyncRequestCallback<Job>()
+         repository, uName, mail, workdir, new AsyncRequestCallback<Job>()
          {
             @Override
             protected void onSuccess(Job result)
@@ -236,7 +233,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    */
    private String getProjectName()
    {
-      String projectName = workDir;
+      String projectName = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       if (projectName.endsWith("/"))
       {
          projectName = projectName.substring(0, projectName.length() - 1);
@@ -252,7 +249,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private String getProjectDir()
    {
-      String wd = workDir;
+      String wd = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       if (wd.endsWith("/"))
       {
          wd = wd.substring(0, wd.length() - 1);
@@ -452,7 +449,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * @see org.exoplatform.ide.git.client.GitPresenter#getWorkDir()
-    */
+    *//*
    @Override
    public void getWorkDir()
    {
@@ -489,24 +486,23 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             initRepository(startDirId);
          }
       });
-   }
+   }*/
 
    /**
     * Initialize Git repository.
     * 
     * @param path working directory of the repository
     */
-   private void initRepository(final String path)
+   /*private void initRepository(final String path)
    {
       try
       {
-         GitClientService.getInstance().init(path, false,
+         GitClientService.getInstance().init(vfs.getId(), path, false,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  workDir = path;
                   //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
                   showBuildMessage(GitExtension.MESSAGES.initSuccess());
                   eventBus.fireEvent(new RefreshBrowserEvent());
@@ -532,7 +528,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
    }
-
+*/
    private void showBuildMessage(String message)
    {
       if (display != null)

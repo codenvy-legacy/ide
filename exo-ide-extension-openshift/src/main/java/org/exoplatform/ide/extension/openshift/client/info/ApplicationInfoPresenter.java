@@ -35,6 +35,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,7 +102,7 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    @Override
    public void onShowApplicationInfo(ShowApplicationInfoEvent event)
    {
-      getWorkDir();
+      getApplicationInfo();
    }
 
    /**
@@ -121,7 +122,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    public void getApplicationInfo()
    {
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workDir, new AsyncRequestCallback<AppInfo>()
+      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
       {
 
          @Override
@@ -189,14 +191,5 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       {
          getApplicationInfo();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getApplicationInfo();
    }
 }
