@@ -199,8 +199,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
     */
    protected void getApplicationInfo()
    {
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
@@ -246,8 +246,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    public void doRenameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().renameApplication(null, vfs.getId(), workdir, newName,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().renameApplication(null, vfs.getId(), projectId, newName,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 

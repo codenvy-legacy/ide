@@ -180,8 +180,8 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       String applicationName = display.getApplicationNameField().getValue();
       String remoteName = display.getRemoteNameField().getValue();
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), workdir, remoteName,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, remoteName,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 

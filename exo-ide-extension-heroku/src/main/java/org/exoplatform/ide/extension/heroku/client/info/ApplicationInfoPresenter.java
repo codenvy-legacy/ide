@@ -164,8 +164,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    public void getApplicationInfo()
    {
-      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
 

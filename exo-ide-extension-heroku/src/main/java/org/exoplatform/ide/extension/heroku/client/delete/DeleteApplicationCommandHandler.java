@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -77,8 +78,8 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void getApplicationInfo()
    {
-      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), workdir, false,
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
          new HerokuAsyncRequestCallback(eventBus, this)
          {
             @Override
@@ -93,7 +94,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
                      break;
                   }
                }
-               askForDelete(name, workdir);
+               askForDelete(name, project);
             }
          });
    }
@@ -103,10 +104,10 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     * 
     * @param gitWorkDir
     */
-   protected void askForDelete(final String deleteName, final String workdir)
+   protected void askForDelete(final String deleteName, final ProjectModel project)
    {
       final boolean isName = (deleteName != null);
-      String deletion = (isName) ? deleteName : workdir;
+      String deletion = (isName) ? deleteName : project.getPath();
 
       Dialogs.getInstance().ask(HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
         HerokuExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(deletion),
@@ -118,7 +119,7 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
             {
                if (value != null && value)
                {
-                  doDelete(workdir);
+                  doDelete(project.getId());
                }
             }
          });
@@ -128,9 +129,9 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     * Perform deleting the application on Heroku.
     *
     */
-   protected void doDelete(String workdir)
+   protected void doDelete(String projectId)
    {
-      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), workdir, new HerokuAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().deleteApplication(null, vfs.getId(), projectId, new HerokuAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(List<Property> result)

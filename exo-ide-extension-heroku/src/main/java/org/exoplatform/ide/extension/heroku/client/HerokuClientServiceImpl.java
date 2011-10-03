@@ -136,14 +136,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createApplication(String applicationName, String vfsId, String path, String remoteName,
+   public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -159,12 +159,12 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#deleteApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void deleteApplication(String applicationName, String vfsId, String path, HerokuAsyncRequestCallback callback)
+   public void deleteApplication(String applicationName, String vfsId, String projectid, HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
@@ -195,14 +195,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void getApplicationInfo(String applicationName, String vfsId, String path, boolean isRaw,
+   public void getApplicationInfo(String applicationName, String vfsId, String projectid, boolean isRaw,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + APPLICATION_INFO;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -217,7 +217,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void renameApplication(String applicationName, String vfsId, String path, String newName,
+   public void renameApplication(String applicationName, String vfsId, String projectid, String newName,
       HerokuAsyncRequestCallback callback)
    {
       String url = restServiceContext + RENAME_APPLICATION;
@@ -225,7 +225,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params = (newName != null) ? "newname=" + newName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Property> properties = new ArrayList<Property>();
       ApplicationInfoUnmarshaller unmarshaller = new ApplicationInfoUnmarshaller(properties);
@@ -240,13 +240,13 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#run(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
-   public void run(String applicationName, String vfsId, String path, String command, RakeCommandAsyncRequestCallback callback)
+   public void run(String applicationName, String vfsId, String projectid, String command, RakeCommandAsyncRequestCallback callback)
    {
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
       RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
@@ -263,13 +263,13 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#help(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallback)
     */
    @Override
-   public void help(String applicationName, String vfsId, String path, RakeCommandAsyncRequestCallback callback)
+   public void help(String applicationName, String vfsId, String projectid, RakeCommandAsyncRequestCallback callback)
    {
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
       RakeResultUnmarshaller unmarshaller = new RakeResultUnmarshaller(rakeCommandResult);
@@ -286,13 +286,13 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#getStackList(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getStackList(String applicationName, String vfsId, String path, StackListAsyncRequestCallback callback)
+   public void getStackList(String applicationName, String vfsId, String projectid, StackListAsyncRequestCallback callback)
    {
       String url = restServiceContext + GET_STACKS;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Stack> stackList = new ArrayList<Stack>();
       StackListUnmarshaller unmarshaller = new StackListUnmarshaller(stackList);
@@ -309,7 +309,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#migrateStack(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.StackListAsyncRequestCallback)
     */
    @Override
-   public void migrateStack(String applicationName, String vfsId, String path, String stack,
+   public void migrateStack(String applicationName, String vfsId, String projectid, String stack,
       StackMigrationAsyncRequestCallback callback)
    {
       String url = restServiceContext + STACK_MIGRATE;
@@ -317,7 +317,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params = (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       StackMigrationResponse stackMigrationResponse = new StackMigrationResponse();
       StackMigrationUnmarshaller unmarshaller = new StackMigrationUnmarshaller(stackMigrationResponse);
@@ -333,14 +333,14 @@ public class HerokuClientServiceImpl extends HerokuClientService
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#logs(java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.LogsAsyncRequestCallback)
     */
    @Override
-   public void logs(String applicationName, String vfsId, String path, int logLines, LogsAsyncRequestCallback callback)
+   public void logs(String applicationName, String vfsId, String projectid, int logLines, LogsAsyncRequestCallback callback)
    {
       String url = restServiceContext + LOGS;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += "num=" + logLines + "&";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
-      params += (path != null && !path.trim().isEmpty()) ? "path=" + path : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       LogsResponse logsResponse = new LogsResponse();
       LogsUnmarshaller unmarshaller = new LogsUnmarshaller(logsResponse);

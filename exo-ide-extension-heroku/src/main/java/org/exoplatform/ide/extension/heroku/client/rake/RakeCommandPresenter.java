@@ -216,10 +216,10 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String command = (display.getCommandField() != null) ? display.getCommandField().getValue().trim() : null;
       if (command == null)
          return;
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       command = (command.startsWith("rake")) ? command : "rake " + command;
       isHelp = false;
-      HerokuClientService.getInstance().run(null, vfs.getId(), workdir, command, new RakeCommandAsyncRequestCallback(eventBus, this)
+      HerokuClientService.getInstance().run(null, vfs.getId(), projectId, command, new RakeCommandAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(RakeCommandResult result)
@@ -236,8 +236,8 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    public void doHelp()
    {
       isHelp = true;
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().help(null, vfs.getId(), workdir, new RakeCommandAsyncRequestCallback(eventBus, this)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(eventBus, this)
       {
 
          @Override

@@ -146,8 +146,8 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
 
    public void getStacks()
    {
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().getStackList(null, vfs.getId(), workdir, new StackListAsyncRequestCallback(eventBus, this)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().getStackList(null, vfs.getId(), projectId, new StackListAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(List<Stack> result)
@@ -185,8 +185,8 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
       Stack stack = display.getSelectedStack();
       if (stack == null)
          return;
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      HerokuClientService.getInstance().migrateStack(null, vfs.getId(), workdir, stack.getName(),
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      HerokuClientService.getInstance().migrateStack(null, vfs.getId(), projectId, stack.getName(),
          new StackMigrationAsyncRequestCallback(eventBus, this)
          {
 

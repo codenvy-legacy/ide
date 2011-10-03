@@ -156,8 +156,8 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
    {
       int logLines =
          (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
-         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-         HerokuClientService.getInstance().logs(null, vfs.getId(), workdir, logLines, new LogsAsyncRequestCallback(eventBus, this)
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines, new LogsAsyncRequestCallback(eventBus, this)
       {
          @Override
          protected void onSuccess(LogsResponse result)
