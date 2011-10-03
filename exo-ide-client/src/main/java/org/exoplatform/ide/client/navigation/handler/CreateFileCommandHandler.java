@@ -41,7 +41,9 @@ import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,7 +102,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
             index++;
          }
       }
-      FolderModel parent;
+      FolderModel parent = new FolderModel();
       if (selectedItems != null && selectedItems.size() != 0)
       {
          Item item = selectedItems.get(0);
@@ -109,14 +111,14 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          {
             parent = ((FileModel)item).getParent();
          }
-         else
+         else if (item instanceof FolderModel)
          {
             parent = (FolderModel)item;
          }
-      }
-      else
-      {
-         parent = new FolderModel();
+         else if (item instanceof ProjectModel)
+         {
+            parent = new FolderModel((Project)item);
+         }
       }
 
       FileModel newFile = new FileModel(fileName, event.getMimeType(), content, parent);

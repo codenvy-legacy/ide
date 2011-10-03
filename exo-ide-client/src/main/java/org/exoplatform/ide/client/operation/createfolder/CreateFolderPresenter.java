@@ -18,8 +18,16 @@
  */
 package org.exoplatform.ide.client.operation.createfolder;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -34,18 +42,11 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -80,7 +81,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    public CreateFolderPresenter()
    {
       IDE.getInstance().addControl(new CreateFolderControl());
-      
+
       IDE.EVENT_BUS.addHandler(CreateFolderEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
@@ -125,8 +126,9 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    {
       final String newFolderName = display.getFolderNameField().getValue();
       final FolderModel baseFolder =
-         selectedItems.get(0) instanceof FolderModel ? (FolderModel)selectedItems.get(0) : ((FileModel)selectedItems
-            .get(0)).getParent();
+         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent() : new FolderModel(
+            (Folder)selectedItems.get(0));
+
       FolderModel newFolder = new FolderModel();
       newFolder.setName(newFolderName);
       try
@@ -170,7 +172,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
          IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(IDE.ERRORS_CONSTANT.createFolderSelectParentFolder()));
          return;
       }
-      
+
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       display.setFocusInNameField();

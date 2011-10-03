@@ -158,7 +158,7 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
       Item item = selectedItems.get(0);
 
-      String path = item.getId();
+      String path = item.getPath();
       if (item instanceof File)
       {
          path = path.substring(0, path.lastIndexOf("/"));

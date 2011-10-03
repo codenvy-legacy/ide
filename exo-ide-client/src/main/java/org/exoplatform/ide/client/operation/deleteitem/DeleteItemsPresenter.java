@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.client.operation.deleteitem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -52,14 +53,14 @@ import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -366,13 +367,11 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
       selectedItems.clear();
 
-      FolderModel folder;
-      if (lastDeletedItem instanceof FileModel)
+      FolderModel folder = null;
+      if (lastDeletedItem instanceof ItemContext)
       {
-         folder = ((FileModel)lastDeletedItem).getParent();
+         folder = ((ItemContext)lastDeletedItem).getParent();
       }
-      else
-         folder = ((FolderModel)lastDeletedItem).getParent();
       IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder));
       IDE.EVENT_BUS.fireEvent(new SelectItemEvent(folder.getId()));
    }

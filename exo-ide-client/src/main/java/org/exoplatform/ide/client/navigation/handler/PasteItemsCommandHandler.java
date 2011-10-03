@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -46,7 +45,8 @@ import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -67,9 +67,9 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
 
    private ApplicationContext context;
 
-   private FolderModel folderFromPaste;
+   private Folder folderFromPaste;
 
-   private FolderModel folderToPaste;
+   private Folder folderToPaste;
 
    private int numItemToCut;
 
@@ -115,7 +115,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       }
    }
 
-   private FolderModel getFolderToPaste()
+   private Folder getFolderToPaste()
    {
       if (selectedItems.get(0) instanceof FileModel)
       {
@@ -123,18 +123,12 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
          return f.getParent();
       }
 
-      return (FolderModel)selectedItems.get(0);
+      return (Folder)selectedItems.get(0);
    }
 
-  private FolderModel getPathFromPaste(Item item)
+   private Folder getPathFromPaste(Item item)
    {
-      if (item instanceof FileModel)
-      {
-         FileModel f = (FileModel)item;
-         return f.getParent();
-      }
-
-      return ((FolderModel)item).getParent();
+      return ((ItemContext)item).getParent();
    }
 
    /****************************************************************************************************
@@ -301,11 +295,11 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
    {
       eventBus.fireEvent(new PasteItemsCompleteEvent());
 
-      List<FolderModel> folders = new ArrayList<FolderModel>();
+      List<Folder> folders = new ArrayList<Folder>();
 
       folders.add(folderFromPaste);
       folders.add(folderToPaste);
-      eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPaste)); 
+      eventBus.fireEvent(new RefreshBrowserEvent(folders, folderToPaste));
    }
 
    /****************************************************************************************************
@@ -316,7 +310,7 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
    {
       if (numItemToCut > 0)
       {
-         List<FolderModel> folders = new ArrayList<FolderModel>();
+         List<Folder> folders = new ArrayList<Folder>();
 
          folders.add(folderFromPaste);
          folders.add(folderToPaste);
@@ -324,88 +318,88 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       }
    }
 
-//   private void updateOpenedFiles(FolderModel movedFolder, FolderModel source)
-//   {
-//      //TODO
-//      if (!href.endsWith("/"))
-//      {
-//         href += "/";
-//      }
-//      List<String> keys = new ArrayList<String>();
-//      for (String key : openedFiles.keySet())
-//      {
-//         keys.add(key);
-//      }
-//
-//      for (String key : keys)
-//      {
-//         if (key.startsWith(sourceHref))
-//         {
-//            File file = openedFiles.get(key);
-//            String fileHref = file.getHref().replace(sourceHref, href);
-//            file.setHref(fileHref);
-//
-//            openedFiles.remove(key);
-//            openedFiles.put(fileHref, file);
-//            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
-//         }
-//      }
-//   }
+   //   private void updateOpenedFiles(FolderModel movedFolder, FolderModel source)
+   //   {
+   //      //TODO
+   //      if (!href.endsWith("/"))
+   //      {
+   //         href += "/";
+   //      }
+   //      List<String> keys = new ArrayList<String>();
+   //      for (String key : openedFiles.keySet())
+   //      {
+   //         keys.add(key);
+   //      }
+   //
+   //      for (String key : keys)
+   //      {
+   //         if (key.startsWith(sourceHref))
+   //         {
+   //            File file = openedFiles.get(key);
+   //            String fileHref = file.getHref().replace(sourceHref, href);
+   //            file.setHref(fileHref);
+   //
+   //            openedFiles.remove(key);
+   //            openedFiles.put(fileHref, file);
+   //            eventBus.fireEvent(new EditorReplaceFileEvent(new File(key), file));
+   //         }
+   //      }
+   //   }
 
    public void moveComplete(String newId, final Item source)
    {
-//      Unmarshallable<Item> unmarshall;
-//      if (source instanceof FileModel)
-//      {
-//         unmarshall = new ItemUnmarshaller(new FileModel());
-//      }
-//      else
-//      {
-//         unmarshall = new ItemUnmarshaller(new FolderModel());
-//      }
-//
-//      try
-//      {
-//         VirtualFileSystem.getInstance().getItem(newId, new AsyncRequestCallback<Item>(unmarshall)
-//         {
-//
-//            @Override
-//            protected void onSuccess(Item result)
-//            {
-//               numItemToCut--;
-//               if (result instanceof FileModel)
-//               {
-//                  FileModel file = (FileModel)result;
-//
-//                  if (openedFiles.containsKey(source.getId()))
-//                  {
-//                     FileModel openedFile = openedFiles.get(source.getId());
-//                     openedFiles.remove(source.getId());
-//                     file.setContent(openedFile.getContent());
-//                     openedFiles.put(file.getId(), file);
-//
-//                     eventBus.fireEvent(new EditorReplaceFileEvent((FileModel)source, file));
-//                  }
-//               }
-//               else
-//               {
-//                  updateOpenedFiles((FolderModel)result, (FolderModel)source);
-//               }
-//
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-//            }
-//         });
-//      }
-//      catch (RequestException e)
-//      {
-//         e.printStackTrace();
-//         eventBus.fireEvent(new ExceptionThrownEvent(e));
-//      }
+      //      Unmarshallable<Item> unmarshall;
+      //      if (source instanceof FileModel)
+      //      {
+      //         unmarshall = new ItemUnmarshaller(new FileModel());
+      //      }
+      //      else
+      //      {
+      //         unmarshall = new ItemUnmarshaller(new FolderModel());
+      //      }
+      //
+      //      try
+      //      {
+      //         VirtualFileSystem.getInstance().getItem(newId, new AsyncRequestCallback<Item>(unmarshall)
+      //         {
+      //
+      //            @Override
+      //            protected void onSuccess(Item result)
+      //            {
+      //               numItemToCut--;
+      //               if (result instanceof FileModel)
+      //               {
+      //                  FileModel file = (FileModel)result;
+      //
+      //                  if (openedFiles.containsKey(source.getId()))
+      //                  {
+      //                     FileModel openedFile = openedFiles.get(source.getId());
+      //                     openedFiles.remove(source.getId());
+      //                     file.setContent(openedFile.getContent());
+      //                     openedFiles.put(file.getId(), file);
+      //
+      //                     eventBus.fireEvent(new EditorReplaceFileEvent((FileModel)source, file));
+      //                  }
+      //               }
+      //               else
+      //               {
+      //                  updateOpenedFiles((FolderModel)result, (FolderModel)source);
+      //               }
+      //
+      //            }
+      //
+      //            @Override
+      //            protected void onFailure(Throwable exception)
+      //            {
+      //               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+      //            }
+      //         });
+      //      }
+      //      catch (RequestException e)
+      //      {
+      //         e.printStackTrace();
+      //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      //      }
       if (context.getItemsToCut().size() != 0)
       {
          context.getItemsToCut().remove(source);

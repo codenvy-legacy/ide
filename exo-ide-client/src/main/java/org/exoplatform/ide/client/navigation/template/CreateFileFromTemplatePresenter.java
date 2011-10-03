@@ -62,6 +62,7 @@ import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -222,9 +223,13 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          {
             baseFolder = ((FileModel)item).getParent();
          }
-         else
+         else if (item instanceof FolderModel)
          {
             baseFolder = (FolderModel)item;
+         }
+         else if (item instanceof ProjectModel)
+         {
+            baseFolder = new FolderModel((ProjectModel)item);
          }
       }
    }
@@ -352,12 +357,12 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       fileName = getDefaultNewFileName(baseFolder, fileName);
 
       final FileModel newFile = new FileModel(fileName, contentType, selectedTemplate.getContent(), baseFolder);
-//      newFile.setContentType(contentType);
-//      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
-//      newFile.setIcon(ImageUtil.getIcon(contentType));
-//      newFile.setNewFile(true);
-//      newFile.setContentChanged(true);
-//      newFile.setContent(selectedTemplate.getContent());
+      //      newFile.setContentType(contentType);
+      //      newFile.setJcrContentNodeType(NodeTypeUtil.getContentNodeType(contentType));
+      //      newFile.setIcon(ImageUtil.getIcon(contentType));
+      //      newFile.setNewFile(true);
+      //      newFile.setContentChanged(true);
+      //      newFile.setContent(selectedTemplate.getContent());
       eventBus.fireEvent(new OpenFileEvent(newFile));
 
       closeView();

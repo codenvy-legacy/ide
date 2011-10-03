@@ -32,7 +32,9 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +143,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          {
             return child;
          }
-         if (userObject instanceof FolderModel)
+         if (userObject instanceof FolderModel || userObject instanceof ProjectModel)
          {
             TreeItem child2 = getChild(child, id);
             if (child2 != null)
@@ -184,7 +186,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       TreeItem node = new TreeItem(createItemWidget(ImageUtil.getIcon(item.getMimeType()), getTitle(item)));
 
       node.setUserObject(item);
-      if (item instanceof FolderModel)
+      if (item instanceof FolderModel || item instanceof ProjectModel)
       {
          // TODO fix this 
          node.addItem("");
@@ -235,15 +237,16 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          return;
       }
 
+      ItemList<Item> children = (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
       if (tree.getItemCount() == 0)
       {
          TreeItem addItem = createTreeNode(value);
          tree.addItem(addItem);
-         if (((FolderModel)value).getChildren() == null)
+         if (children == null)
             return;
       }
 
-      if (((FolderModel)value).getChildren() == null)
+      if (children == null)
       {
          return;
       }
@@ -259,7 +262,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       TreeItem parent = getNodeById(value.getId());
       try
       {
-         setItems(parent, ((FolderModel)value).getChildren().getItems());
+         setItems(parent, children.getItems());
          if (tree.getSelectedItem() != null)
          {
             moveHighlight(tree.getSelectedItem());

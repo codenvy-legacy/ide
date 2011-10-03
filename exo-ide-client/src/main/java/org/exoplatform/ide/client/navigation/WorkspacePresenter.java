@@ -85,9 +85,11 @@ import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -184,7 +186,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    private String itemToSelect;
 
-   private List<FolderModel> foldersToRefresh = new ArrayList<FolderModel>();
+   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -220,7 +222,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       {
          public void onOpen(OpenEvent<Item> event)
          {
-            onFolderOpened((FolderModel)event.getTarget());
+               onFolderOpened((Folder)event.getTarget());
          }
       });
 
@@ -324,13 +326,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
     * 
     * @param openedFolder
     */
-   protected void onFolderOpened(FolderModel openedFolder)
+   protected void onFolderOpened(Folder openedFolder)
    {
       //Commented to fix bug with selection of new folder
       //      itemToSelect = null;
-      if (!openedFolder.getChildren().getItems().isEmpty())
+      ItemList<Item> children = (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren() : ((FolderModel)openedFolder).getChildren();
+      if (!children.getItems().isEmpty())
          return;
-      foldersToRefresh = new ArrayList<FolderModel>();
+      foldersToRefresh = new ArrayList<Folder>();
       foldersToRefresh.add(openedFolder);
       refreshNextFolder();
    }
@@ -360,7 +363,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       }
       else
       {
-         foldersToRefresh = new ArrayList<FolderModel>();
+         foldersToRefresh = new ArrayList<Folder>();
 
          if (selectedItems.size() > 0)
          {
@@ -369,9 +372,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
             {
                foldersToRefresh.add(((FileModel)item).getParent());
             }
-            else
+            else if (item instanceof Folder)
             {
-               foldersToRefresh.add((FolderModel)item);
+               foldersToRefresh.add((Folder)item);
             }
          }
       }
@@ -386,7 +389,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
          return;
       }
 
-      final FolderModel folder = foldersToRefresh.get(0);
+      final Folder folder = foldersToRefresh.get(0);
       try
       {
          VirtualFileSystem.getInstance().getChildren(folder,
@@ -405,17 +408,34 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  folder.getChildren().getItems().clear();
-                  folder.getChildren().getItems().addAll(result);
+                  if (folder instanceof FolderModel)
+                  {
+                     ((FolderModel)folder).getChildren().getItems().clear();
+                     ((FolderModel)folder).getChildren().getItems().addAll(result);
+                  }
+                  else if (folder instanceof ProjectModel)
+                  {
+                     ((ProjectModel)folder).getChildren().getItems().clear();
+                     ((ProjectModel)folder).getChildren().getItems().addAll(result);
+                  }
+
                   for (Item i : result)
                   {
                      if (i instanceof ItemContext)
                      {
-                        ((ItemContext)i).setParent(folder);
+                        ((ItemContext)i).setParent(new FolderModel(folder));
+                     }
+
+                     if (folder instanceof ProjectModel)
+                     {
+                        ((ItemContext)i).setProject((ProjectModel)folder);
+                     }
+                     else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
+                     {
+                        ((ItemContext)i).setProject(((ItemContext)folder).getProject());
                      }
                   }
                   folderContentReceived(folder);
-
                }
             });
       }
@@ -425,13 +445,14 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       }
    }
 
-   private void folderContentReceived(FolderModel folder)
+   private void folderContentReceived(Folder folder)
    {
       eventBus.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
-      removeSystemItemsFromView(folder.getChildren().getItems());
-      Collections.sort(folder.getChildren().getItems(), comparator);
+      List<Item> children = (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder).getChildren().getItems();
+      removeSystemItemsFromView(children);
+      Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
 
@@ -474,11 +495,11 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
    {
       public int compare(Item item1, Item item2)
       {
-         if (item1 instanceof FolderModel && item2 instanceof FileModel)
+         if (item1 instanceof Folder && item2 instanceof FileModel)
          {
             return -1;
          }
-         else if (item1 instanceof File && item2 instanceof FolderModel)
+         else if (item1 instanceof File && item2 instanceof Folder)
          {
             return 1;
          }
@@ -556,7 +577,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
          String workspaceUrl =
             (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + event.getVfs() : vfsBaseUrl + "/" + event.getVfs();
          //TODO workspace URL consists of vfsBaseURL (taken from IDE init conf) and VFS id (path parameter)
-            new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+         new VirtualFileSystem(workspaceUrl).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
             new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
 
