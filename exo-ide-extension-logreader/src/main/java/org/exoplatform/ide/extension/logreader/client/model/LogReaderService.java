@@ -80,7 +80,7 @@ public class LogReaderService
    }
 
    /**
-    * Get nex log file for current log
+    * Get next log file for current log
     * @param token of current log
     * @param callback
     */

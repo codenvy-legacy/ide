@@ -135,6 +135,11 @@ public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandl
     */
    private void refreshLog()
    {
+      if(currentToken == null)
+      {
+         getLogs();
+         return;
+      }
       LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>()
       {
 
