@@ -20,12 +20,14 @@ package org.exoplatform.ide.git.client;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ import java.util.List;
  * @version $Id:  Apr 20, 2011 2:08:46 PM anya $
  *
  */
-public abstract class GitPresenter implements ItemsSelectedHandler
+public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHandler
 {
    /**
     * Events handler.
@@ -53,9 +55,9 @@ public abstract class GitPresenter implements ItemsSelectedHandler
    protected List<Item> selectedItems;
 
    /**
-    * Working directory of the Git repository.
+    * Current virtual file system.
     */
-   protected String workDir;
+   protected VirtualFileSystemInfo vfs;
 
    /**
     * @param eventBus
@@ -64,6 +66,7 @@ public abstract class GitPresenter implements ItemsSelectedHandler
    {
       this.eventBus = eventBus;
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -75,36 +78,36 @@ public abstract class GitPresenter implements ItemsSelectedHandler
       this.selectedItems = event.getSelectedItems();
    }
 
-   public void getWorkDir()
+   protected boolean makeSelectionCheck()
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
+         return false;
       }
 
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(selectedItems.get(0).getId(),
-         new AsyncRequestCallback<WorkDirResponse>()
-         {
-            @Override
-            protected void onSuccess(WorkDirResponse result)
-            {
-               workDir = result.getWorkDir();
-               workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-               onWorkDirReceived();
-            }
+      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
+      {
+         //TODO change message:
+         Dialogs.getInstance().showInfo("Project is not selected.");
+         return false;
+      }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError(GitExtension.MESSAGES.notGitRepository());
-            }
-         });
+      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
+      {
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+         return false;
+      }
+
+      return true;
    }
 
    /**
-    * Perform actions, when location of the working directory is successfully received.
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
-   public abstract void onWorkDirReceived();
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      this.vfs = event.getVfsInfo();
+   }
 }

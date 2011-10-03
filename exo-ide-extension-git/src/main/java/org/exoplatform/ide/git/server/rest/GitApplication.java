@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.ide.vfs.server.RequestContextResolver;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,16 +31,14 @@ import javax.ws.rs.core.Application;
  */
 public class GitApplication extends Application
 {
-   private Set<Class<?>> classes;
-   
-   private Set<Object> singletons;
+   private final Set<Object> singletons = new HashSet<Object>();
+   private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
    public GitApplication()
    {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(GitService.class);
+      singletons.add(classes.add(GitService.class));
+      singletons.add(classes.add(RequestContextResolver.class));
       classes.add(GitRepoService.class);
-      singletons = new HashSet<Object>(1);
       singletons.add(new GitExceptionMapper());
    }
 
@@ -51,7 +51,7 @@ public class GitApplication extends Application
       return classes;
    }
    
-   /**
+   /**session
     * @see javax.ws.rs.core.Application#getSingletons()
     */
    @Override

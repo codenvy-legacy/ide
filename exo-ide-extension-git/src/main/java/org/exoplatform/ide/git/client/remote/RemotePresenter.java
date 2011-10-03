@@ -34,6 +34,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -169,7 +170,11 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
    @Override
    public void onShowRemotes(ShowRemotesEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getRemotes(projectId);
+      }
    }
 
    /**
@@ -179,9 +184,9 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     * 
     * @param workDir
     */
-   public void getRemotes(final String workDir)
+   public void getRemotes(final String projectId)
    {
-      GitClientService.getInstance().remoteList(workDir, null, true, new AsyncRequestCallback<List<Remote>>()
+      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true, new AsyncRequestCallback<List<Remote>>()
       {
          @Override
          protected void onSuccess(List<Remote> result)
@@ -233,15 +238,14 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private void addRemoteRepository(String name, String url)
    {
-      if (workDir == null)
-         return;
-      GitClientService.getInstance().remoteAdd(workDir, name, url, new AsyncRequestCallback<String>()
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().remoteAdd(vfs.getId(), projectId, name, url, new AsyncRequestCallback<String>()
       {
 
          @Override
          protected void onSuccess(String result)
          {
-            getRemotes(workDir);
+            getRemotes(projectId);
          }
 
          @Override
@@ -259,8 +263,6 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private void askToDelete()
    {
-      if (workDir == null)
-         return;
       final Remote selectedRemote = display.getSelectedRemote();
       if (selectedRemote == null)
       {
@@ -289,13 +291,14 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private void doDelete(String name)
    {
-      GitClientService.getInstance().remoteDelete(workDir, name, new AsyncRequestCallback<String>()
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().remoteDelete(vfs.getId(), projectId, name, new AsyncRequestCallback<String>()
       {
 
          @Override
          protected void onSuccess(String result)
          {
-            getRemotes(workDir);
+            getRemotes(projectId);
          }
 
          @Override
@@ -318,14 +321,5 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       {
          display = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getRemotes(workDir);
    }
 }

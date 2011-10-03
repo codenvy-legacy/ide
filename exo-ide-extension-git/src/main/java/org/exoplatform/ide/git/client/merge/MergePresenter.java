@@ -41,6 +41,7 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.merge.Reference.RefType;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.MergeResult;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -120,46 +121,41 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
    @Override
    public void onMerge(MergeEvent event)
    {
-      getWorkDir();
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      if (display == null)
+      if (makeSelectionCheck())
       {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.enableMergeButton(false);
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         if (display == null)
+         {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.enableMergeButton(false);
+         }
+
+         GitClientService.getInstance().branchList(vfs.getId(), projectId, false, new AsyncRequestCallback<List<Branch>>()
+         {
+
+            @Override
+            protected void onSuccess(List<Branch> result)
+            {
+               if (result == null || result.size() == 0)
+                  return;
+               setReferences(result, true);
+            }
+         });
+
+         GitClientService.getInstance().branchList(vfs.getId(), projectId, true, new AsyncRequestCallback<List<Branch>>()
+         {
+
+            @Override
+            protected void onSuccess(List<Branch> result)
+            {
+               if (result == null || result.size() == 0)
+                  return;
+               setReferences(result, false);
+            }
+         });
       }
-
-      GitClientService.getInstance().branchList(workDir, false, new AsyncRequestCallback<List<Branch>>()
-      {
-
-         @Override
-         protected void onSuccess(List<Branch> result)
-         {
-            if (result == null || result.size() == 0)
-               return;
-            setReferences(result, true);
-         }
-      });
-
-      GitClientService.getInstance().branchList(workDir, true, new AsyncRequestCallback<List<Branch>>()
-      {
-
-         @Override
-         protected void onSuccess(List<Branch> result)
-         {
-            if (result == null || result.size() == 0)
-               return;
-            setReferences(result, false);
-         }
-      });
    }
 
    /**
@@ -210,8 +206,9 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
       {
          return;
       }
-
-      GitClientService.getInstance().merge(workDir, reference.getDisplayName(), new AsyncRequestCallback<MergeResult>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+      GitClientService.getInstance().merge(vfs.getId(), projectId, reference.getDisplayName(), new AsyncRequestCallback<MergeResult>()
       {
 
          @Override

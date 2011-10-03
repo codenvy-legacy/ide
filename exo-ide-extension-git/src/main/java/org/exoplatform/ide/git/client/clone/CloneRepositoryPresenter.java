@@ -28,22 +28,15 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for Clone Repository View.
@@ -52,7 +45,7 @@ import java.util.List;
  * @version $Id:  Mar 22, 2011 4:31:12 PM anya $
  *
  */
-public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepositoryHandler, VfsChangedHandler
+public class CloneRepositoryPresenter extends GitPresenter implements CloneRepositoryHandler
 {
    public interface Display extends IsView
    {
@@ -106,27 +99,16 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
     */
    private Display display;
 
-   private HandlerManager eventBus;
-
    private static final String DEFAULT_REPO_NAME = "origin";
-
-   /**
-    * Selected items in browser tree.
-    */
-   private List<Item> selectedItems;
-
-   private String workspace;
 
    /**
     * @param eventBus
     */
    public CloneRepositoryPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super(eventBus);
+      
       eventBus.addHandler(CloneRepositoryEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -172,34 +154,16 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
    @Override
    public void onCloneRepository(CloneRepositoryEvent event)
    {
-      if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof Folder))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      if (workspace != null && workspace.equals(selectedItems.get(0).getId()))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-         return;
-      }
-
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
-      display.focusInRemoteUrlField();
-      display.getWorkDirValue().setValue(selectedItems.get(0).getId(), true);
-      display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
-      display.enableCloneButton(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
+     if (makeSelectionCheck())
+     {
+        Display d = GWT.create(Display.class);
+        IDE.getInstance().openView(d.asView());
+        bindDisplay(d);
+        display.focusInRemoteUrlField();
+        display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
+        display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
+        display.enableCloneButton(false);
+     }
    }
 
    /**
@@ -207,18 +171,18 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
     */
    private void cloneRepository()
    {
-      String workDir = display.getWorkDirValue().getValue();
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
-
-      GitClientService.getInstance().cloneRepository(workDir, remoteUri, remoteName, new AsyncRequestCallback<String>()
+      
+      GitClientService.getInstance().cloneRepository(vfs.getId(), projectId, remoteUri, remoteName, new AsyncRequestCallback<String>()
       {
 
          @Override
          protected void onSuccess(String result)
          {
             eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-            eventBus.fireEvent(new RefreshBrowserEvent());
+            eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
          }
 
          @Override
@@ -232,15 +196,4 @@ public class CloneRepositoryPresenter implements ItemsSelectedHandler, CloneRepo
       });
       IDE.getInstance().closeView(display.asView().getId());
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      //TODO not url
-      this.workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
-   }
-
 }

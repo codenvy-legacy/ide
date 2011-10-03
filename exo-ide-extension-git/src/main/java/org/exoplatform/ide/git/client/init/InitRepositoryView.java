@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.create;
+package org.exoplatform.ide.git.client.init;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -45,7 +45,7 @@ import org.exoplatform.ide.git.client.GitExtension;
  *
  */
 public class InitRepositoryView extends ViewImpl implements
-   org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display
+   org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display
 {
 
    public static final String ID = "ideInitRepositoryView";
@@ -147,7 +147,7 @@ public class InitRepositoryView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display#getBareValue()
+    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getBareValue()
     */
    @Override
    public HasValue<Boolean> getBareValue()
@@ -156,7 +156,7 @@ public class InitRepositoryView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display#getWorkDirValue()
+    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getWorkDirValue()
     */
    @Override
    public HasValue<String> getWorkDirValue()
@@ -165,7 +165,7 @@ public class InitRepositoryView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display#getInitButton()
+    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getInitButton()
     */
    @Override
    public HasClickHandlers getInitButton()
@@ -174,7 +174,7 @@ public class InitRepositoryView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()

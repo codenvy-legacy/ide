@@ -38,6 +38,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -189,7 +190,11 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    @Override
    public void onPull(PullEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getRemotes(projectId);
+      }
    }
 
    /**
@@ -202,7 +207,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
       display.enablePullButton(false);
-
+      
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
       {
@@ -211,8 +217,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
 
       display.setRemoteValues(remoteValues);
 
-      getBranches(workDir, false);
-      getBranches(workDir, true);
+      getBranches(projectId, false);
+      getBranches(projectId, true);
    }
 
    /**
@@ -252,8 +258,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
-
-      GitClientService.getInstance().pull(workDir, refs, remoteName, new AsyncRequestCallback<String>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().pull(vfs.getId(), projectId, refs, remoteName, new AsyncRequestCallback<String>()
       {
 
          @Override

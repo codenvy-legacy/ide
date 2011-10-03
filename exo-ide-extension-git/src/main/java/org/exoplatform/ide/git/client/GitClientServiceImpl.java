@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.client;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -29,7 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.git.client.create.InitRequestStatusHandler;
+import org.exoplatform.ide.git.client.init.InitRequestStatusHandler;
 import org.exoplatform.ide.git.client.marshaller.AddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchCheckoutRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.BranchCreateRequestMarshaller;
@@ -171,34 +170,34 @@ public class GitClientServiceImpl extends GitClientService
     * @throws RequestException 
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
-   public void init(String workDir, boolean bare,
+   public void init(String vfsId, String projectid, boolean bare,
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + INIT;
 
-      InitRequest initRequest = new InitRequest(workDir, bare);
+      InitRequest initRequest = new InitRequest(projectid, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-      String params = "workdir=" + workDir;
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
       org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
          .data(marshaller.marshal()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
-         .requestStatusHandler(new InitRequestStatusHandler(workDir)).send(callback);
+         .requestStatusHandler(new InitRequestStatusHandler(projectid)).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String workDir, String remoteUri, String remoteName,
+   public void cloneRepository(String vfsId, String projectid, String remoteUri, String remoteName,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + CLONE;
       callback.setEventBus(eventBus);
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir);
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, projectid);
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -207,7 +206,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void statusText(String workDir, boolean shortFormat, String[] fileFilter,
+   public void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
       AsyncRequestCallback<StatusResponse> callback)
    {
       String url = restServiceContext + STATUS;
@@ -221,8 +220,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(statusResponse);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
          .send(callback);
@@ -232,15 +231,11 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#getWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getWorkDir(String workDir, AsyncRequestCallback<WorkDirResponse> callback)
+   @Deprecated
+   public void getWorkDir(String vfsId, String projectid, AsyncRequestCallback<WorkDirResponse> callback)
    {
-
-      //decode path segment, because URL is encoded
-      //decodePathSegment used, because we must have possibility to
-      //decode @ symbol
-      String location = URL.decodePathSegment(workDir);
-
       String url = restServiceContext + WORKDIR;
+      url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       callback.setEventBus(eventBus);
 
       WorkDirResponse workDirResponse = new WorkDirResponse();
@@ -248,14 +243,14 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(workDirResponse);
       callback.setPayload(unmarshaller);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.git.client.GitClientService#add(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
+   public void add(String vfsId, String projectid, boolean update, String[] filePattern, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + ADD;
       callback.setEventBus(eventBus);
@@ -263,8 +258,8 @@ public class GitClientServiceImpl extends GitClientService
       AddRequest addRequest = new AddRequest(filePattern, update);
       AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -273,7 +268,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#commit(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback)
+   public void commit(String vfsId, String projectid, String message, boolean all, AsyncRequestCallback<Revision> callback)
    {
       String url = restServiceContext + COMMIT;
       callback.setEventBus(eventBus);
@@ -287,8 +282,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setPayload(unmarshaller);
       callback.setResult(revision);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -297,7 +292,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#push(java.lang.String, java.lang.String[], java.lang.String, boolean)
     */
    @Override
-   public void push(String workDir, String[] refSpec, String remote, boolean force,
+   public void push(String vfsId, String projectid, String[] refSpec, String remote, boolean force,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + PUSH;
@@ -309,8 +304,8 @@ public class GitClientServiceImpl extends GitClientService
 
       PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -319,7 +314,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteList(java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void remoteList(String workDir, String remoteName, boolean verbose,
+   public void remoteList(String vfsId, String projectid, String remoteName, boolean verbose,
       AsyncRequestCallback<List<Remote>> callback)
    {
       String url = restServiceContext + REMOTE_LIST;
@@ -333,8 +328,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setPayload(unmarshaller);
       callback.setResult(remotes);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -343,7 +338,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchList(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void branchList(String workDir, boolean remote, AsyncRequestCallback<List<Branch>> callback)
+   public void branchList(String vfsId, String projectid, boolean remote, AsyncRequestCallback<List<Branch>> callback)
    {
       String url = restServiceContext + BRANCH_LIST;
       callback.setEventBus(eventBus);
@@ -361,8 +356,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setPayload(unmarshaller);
       callback.setResult(branches);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -371,7 +366,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void status(String workDir, AsyncRequestCallback<StatusResponse> callback)
+   public void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback)
    {
       String url = restServiceContext + STATUS;
 
@@ -384,8 +379,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(statusResponse);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -395,7 +390,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchDelete(java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void branchDelete(String workDir, String name, boolean force, AsyncRequestCallback<String> callback)
+   public void branchDelete(String vfsId, String projectid, String name, boolean force, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + BRANCH_DELETE;
 
@@ -403,8 +398,8 @@ public class GitClientServiceImpl extends GitClientService
       BranchDeleteRequest branchDeleteRequest = new BranchDeleteRequest(name, force);
       BranchDeleteRequestMarshaller marshaller = new BranchDeleteRequestMarshaller(branchDeleteRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -413,7 +408,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchCreate(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void branchCreate(String workDir, String name, String startPoint, AsyncRequestCallback<Branch> callback)
+   public void branchCreate(String vfsId, String projectid, String name, String startPoint, AsyncRequestCallback<Branch> callback)
    {
       String url = restServiceContext + BRANCH_CREATE;
 
@@ -426,8 +421,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(branch);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -437,7 +432,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#branchCheckout(java.lang.String, java.lang.String, java.lang.String, boolean)
     */
    @Override
-   public void branchCheckout(String workDir, String name, String startPoint, boolean createNew,
+   public void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + BRANCH_CHECKOUT;
@@ -446,8 +441,8 @@ public class GitClientServiceImpl extends GitClientService
       BranchCheckoutRequest branchCheckoutRequest = new BranchCheckoutRequest(name, startPoint, createNew);
       BranchCheckoutRequestMarshaller marshaller = new BranchCheckoutRequestMarshaller(branchCheckoutRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -456,7 +451,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remove(java.lang.String, java.lang.String[], org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remove(String workDir, String[] files, AsyncRequestCallback<String> callback)
+   public void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOVE;
 
@@ -464,8 +459,8 @@ public class GitClientServiceImpl extends GitClientService
       RmRequest rmRequest = new RmRequest(files);
       RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -474,7 +469,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#reset(java.lang.String, java.lang.String[], java.lang.String, org.exoplatform.ide.git.shared.ResetRequest.ResetType, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void reset(String workDir, String[] paths, String commit, ResetType resetType,
+   public void reset(String vfsId, String projectid, String[] paths, String commit, ResetType resetType,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + RESET;
@@ -487,8 +482,8 @@ public class GitClientServiceImpl extends GitClientService
 
       ResetRequestMarshaller marshaller = new ResetRequestMarshaller(resetRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -497,7 +492,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#log(java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
+   public void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback)
    {
       String url = restServiceContext + LOG;
 
@@ -510,8 +505,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(logResponse);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       if (isTextFormat)
       {
          AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
@@ -530,7 +525,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteAdd(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remoteAdd(String workDir, String name, String repositoryURL, AsyncRequestCallback<String> callback)
+   public void remoteAdd(String vfsId, String projectid, String name, String repositoryURL, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOTE_ADD;
 
@@ -539,8 +534,8 @@ public class GitClientServiceImpl extends GitClientService
 
       RemoteAddRequestMarshaller marshaller = new RemoteAddRequestMarshaller(remoteAddRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -549,14 +544,14 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#remoteDelete(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void remoteDelete(String workDir, String name, AsyncRequestCallback<String> callback)
+   public void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + REMOTE_DELETE + "/" + name;
 
       callback.setEventBus(eventBus);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
    }
 
@@ -564,7 +559,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#fetch(java.lang.String, java.lang.String, java.lang.String[], boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void fetch(String workDir, String remote, String[] refspec, boolean removeDeletedRefs,
+   public void fetch(String vfsId, String projectid, String remote, String[] refspec, boolean removeDeletedRefs,
       AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + FETCH;
@@ -573,8 +568,8 @@ public class GitClientServiceImpl extends GitClientService
       FetchRequest fetchRequest = new FetchRequest(refspec, remote, removeDeletedRefs, 0);
       FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -583,7 +578,7 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#pull(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void pull(String workDir, String refSpec, String remote, AsyncRequestCallback<String> callback)
+   public void pull(String vfsId, String projectid, String refSpec, String remote, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + PULL;
       callback.setEventBus(eventBus);
@@ -591,8 +586,8 @@ public class GitClientServiceImpl extends GitClientService
       PullRequest pullRequest = new PullRequest(remote, refSpec, 0);
       PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -601,22 +596,22 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String, java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
+   public void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
       String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback)
    {
       DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, commitB);
-      diff(diffRequest, workDir, callback);
+      diff(diffRequest, vfsId, projectid, callback);
    }
 
    /**
     * @see org.exoplatform.ide.git.client.GitClientService#diff(java.lang.String[], org.exoplatform.ide.git.shared.DiffRequest.DiffType, boolean, int, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
+   public void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
       String commitA, boolean cached, AsyncRequestCallback<DiffResponse> callback)
    {
       DiffRequest diffRequest = new DiffRequest(fileFilter, type, noRenames, renameLimit, commitA, cached);
-      diff(diffRequest, workDir, callback);
+      diff(diffRequest, vfsId, projectid, callback);
    }
 
    /**
@@ -626,7 +621,7 @@ public class GitClientServiceImpl extends GitClientService
     * @param href working directory's href
     * @param callback callback
     */
-   protected void diff(DiffRequest diffRequest, String workDir, AsyncRequestCallback<DiffResponse> callback)
+   protected void diff(DiffRequest diffRequest, String vfsId, String projectid, AsyncRequestCallback<DiffResponse> callback)
    {
       String url = restServiceContext + DIFF;
       callback.setEventBus(eventBus);
@@ -638,8 +633,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(diffResponse);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
-
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
@@ -648,25 +643,21 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#deleteWorkDir(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void deleteWorkDir(String href, AsyncRequestCallback<String> callback)
+   public void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback)
    {
-      //decode path segment, because URL is encoded
-      //decodePathSegment used, because we must have possibility to
-      //decode @ symbol
-      String location = URL.decodePathSegment(href);
-
       String url = restServiceContext + WORKDIR;
+      url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       callback.setEventBus(eventBus);
 
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.LOCATION, location)
-         .header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.X_HTTP_METHOD_OVERRIDE, HTTPMethod.DELETE)
+         .send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void merge(String workDir, String commit, AsyncRequestCallback<MergeResult> callback)
+   public void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback)
    {
       String url = restServiceContext + MERGE;
 
@@ -679,7 +670,8 @@ public class GitClientServiceImpl extends GitClientService
       callback.setResult(merge);
       callback.setPayload(unmarshaller);
 
-      String params = "workdir=" + workDir;
+      String params = "vfsid=" + vfsId + "&projectid=" +projectid;
+      
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).data(marshaller)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);

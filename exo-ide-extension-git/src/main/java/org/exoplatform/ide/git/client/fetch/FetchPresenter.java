@@ -37,6 +37,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -200,7 +201,11 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    @Override
    public void onFetch(FetchEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getRemotes(projectId);
+      }
    }
 
    /**
@@ -216,8 +221,8 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
-
-      GitClientService.getInstance().fetch(workDir, remoteName, new String[]{refs}, removeDeletedRefs,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().fetch(vfs.getId(), projectId, remoteName, new String[]{refs}, removeDeletedRefs,
          new AsyncRequestCallback<String>()
          {
 
@@ -256,9 +261,9 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       }
 
       display.setRemoteValues(remoteValues);
-
-      getBranches(workDir, false);
-      getBranches(workDir, true);
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      getBranches(projectId, false);
+      getBranches(projectId, true);
    }
 
    /**

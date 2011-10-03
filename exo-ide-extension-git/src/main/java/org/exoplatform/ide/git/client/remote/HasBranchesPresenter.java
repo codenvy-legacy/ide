@@ -63,9 +63,9 @@ public abstract class HasBranchesPresenter extends GitPresenter
     * Get the list of remote repositories for local one.
     * If remote repositories are found, then method {@link #onRemotesReceived(List)} is called.
     */
-   public void getRemotes()
+   public void getRemotes(String projectId)
    {
-      GitClientService.getInstance().remoteList(workDir, null, true, new AsyncRequestCallback<List<Remote>>()
+      GitClientService.getInstance().remoteList(vfs.getId(), projectId, null, true, new AsyncRequestCallback<List<Remote>>()
       {
          @Override
          protected void onSuccess(List<Remote> result)
@@ -97,9 +97,9 @@ public abstract class HasBranchesPresenter extends GitPresenter
     * @param workDir Git repository work tree location
     * @param remote get remote branches if <code>true</code>
     */
-   public void getBranches(String workDir, final boolean remote)
+   public void getBranches(String projectId, final boolean remote)
    {
-      GitClientService.getInstance().branchList(workDir, remote, new AsyncRequestCallback<List<Branch>>()
+      GitClientService.getInstance().branchList(vfs.getId(), projectId, remote, new AsyncRequestCallback<List<Branch>>()
       {
 
          @Override
@@ -138,15 +138,6 @@ public abstract class HasBranchesPresenter extends GitPresenter
     * @param branches local branches
     */
    protected abstract void setLocalBranches(List<Branch> branches);
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getRemotes();
-   }
 
    /**
     * Set values of remote branches: filter remote branches due to 

@@ -34,6 +34,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -132,7 +133,11 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
    @Override
    public void onRemoveFiles(RemoveFilesEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getStatus(projectId);
+      }
    }
 
    /**
@@ -140,9 +145,9 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
     * 
     * @param workDir
     */
-   private void getStatus(final String workDir)
+   private void getStatus(final String projectId)
    {
-      GitClientService.getInstance().status(workDir, new AsyncRequestCallback<StatusResponse>()
+      GitClientService.getInstance().status(vfs.getId(), projectId, new AsyncRequestCallback<StatusResponse>()
       {
 
          @Override
@@ -189,8 +194,8 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
             files.add(file.getPath());
          }
       }
-
-      GitClientService.getInstance().remove(workDir, files.toArray(new String[files.size()]),
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().remove(vfs.getId(), projectId, files.toArray(new String[files.size()]),
          new AsyncRequestCallback<String>()
          {
 
@@ -211,12 +216,4 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
          });
    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getStatus(workDir);
-   }
 }

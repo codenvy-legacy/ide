@@ -24,8 +24,8 @@
       <when-type-is class="org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.git.client.create.InitRepositoryView">
-      <when-type-is class="org.exoplatform.ide.git.client.create.InitRepositoryPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.git.client.init.InitRepositoryView">
+      <when-type-is class="org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.git.client.add.AddToIndexView">

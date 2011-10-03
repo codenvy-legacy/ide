@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.git.client.GitWorkDirNotFoundException;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
@@ -34,13 +33,11 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * This REST service is used for searching ".git" folder stored in JCR 
@@ -54,6 +51,12 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/git-repo")
 public class GitRepoService
 {
+   @QueryParam("vfsid")
+   private String vfsId;
+
+   @QueryParam("path")
+   private String path;
+
    /**
     * WebDav context.
     */
@@ -63,8 +66,7 @@ public class GitRepoService
     * Name of the Git's work folder.
     */
    public static final String GIT = ".git";
-   
-   
+
    /**
     * Repository service.
     */
@@ -81,12 +83,11 @@ public class GitRepoService
    @GET
    @Path("workdir")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
+   public String getWorkDir()
    {
       try
       {
-         
-         Node node = getNodeByPath(location);
+         Node node = getNodeByPath(path);
          //Find node, where ".git" is stored:
          Node gitNode = findGitNode(node);
          if (gitNode != null)
@@ -106,23 +107,23 @@ public class GitRepoService
       }
       catch (GitWorkDirNotFoundException e)
       {
-         throw new WebApplicationException(e,404);
+         throw new WebApplicationException(e, 404);
       }
       catch (Exception e)
       {
-         throw new WebApplicationException(e,404);
+         throw new WebApplicationException(e, 404);
       }
    }
 
    @DELETE
    @Path("workdir")
    @Produces(MediaType.TEXT_PLAIN)
-   public void deleteWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location)
+   public void deleteWorkDir()
    {
       try
       {
-         Node node = getNodeByPath(location);
-      
+         Node node = getNodeByPath(path);
+
          //Find node, where ".git" is stored:
          Node gitNode = findGitNode(node);
          if (gitNode != null)
@@ -184,8 +185,7 @@ public class GitRepoService
          return null;
       }
    }
-   
-   
+
    private Node getNodeByPath(String path) throws PathNotFoundException, RepositoryException
    {
       if (path.startsWith("/"))
@@ -232,10 +232,10 @@ public class GitRepoService
     * @throws LoginException 
     * @throws Exception
     */
-   public Session getSession() throws LoginException, NoSuchWorkspaceException, RepositoryException 
+   public Session getSession() throws LoginException, NoSuchWorkspaceException, RepositoryException
    {
       ManageableRepository repository = repositoryService.getCurrentRepository();
-      return repository.login(RepositoryDiscoveryService.getEntryPoint());
+      return repository.login(vfsId);
    }
 
 }

@@ -39,6 +39,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.Date;
 
@@ -157,7 +158,15 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
    @Override
    public void onCommit(CommitEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+         //Commit button is disabled, because message is empty:
+         display.enableCommitButton(false);
+         display.focusInMessageField();
+      }
    }
 
    /**
@@ -165,13 +174,11 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
     */
    private void doCommit()
    {
-      if (workDir == null)
-         return;
-
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
       
-      GitClientService.getInstance().commit(workDir, message, all, new AsyncRequestCallback<Revision>()
+      GitClientService.getInstance().commit(vfs.getId(), projectId, message, all, new AsyncRequestCallback<Revision>()
       {
          @Override
          protected void onSuccess(Revision result)
@@ -196,19 +203,5 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
          }
       });
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
-      //Commit button is disabled, because message is empty:
-      display.enableCommitButton(false);
-      display.focusInMessageField();
    }
 }

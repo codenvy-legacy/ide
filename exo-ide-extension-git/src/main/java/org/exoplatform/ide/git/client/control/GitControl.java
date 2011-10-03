@@ -26,6 +26,8 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * The common control for working with Git.
@@ -34,13 +36,12 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  * @version $Id:  Apr 15, 2011 10:06:58 AM anya $
  *
  */
-public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   VfsChangedHandler
+public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler
 {
    /**
     * Current workspace's href.
     */
-   private String workspace;
+   private VirtualFileSystemInfo workspace;
 
    /**
     * @param id control's id
@@ -61,12 +62,20 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          setEnabled(false);
          return;
       }
-      setEnabled(!isWorkspaceSelected(event.getSelectedItems().get(0).getId()));
+      boolean enabled = !isWorkspaceSelected(event.getSelectedItems().get(0).getId());
+      enabled = enabled && isProjectSelected((ItemContext)event.getSelectedItems().get(0));
+      setEnabled(enabled);
    }
 
-   protected boolean isWorkspaceSelected(String href)
+   protected boolean isWorkspaceSelected(String id)
    {
-      return (workspace != null && href != null && href.equals(workspace));
+      return (workspace != null && workspace.getRoot().getId() != null && id != null && id.equals(workspace.getRoot()
+         .getId()));
+   }
+
+   protected boolean isProjectSelected(ItemContext item)
+   {
+      return item.getProject() != null && item.getProject().getId() != null;
    }
 
    /**
@@ -86,8 +95,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      //TODO not url
-      this.workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
+      this.workspace = event.getVfsInfo();
       if (workspace != null)
       {
          setVisible(true);

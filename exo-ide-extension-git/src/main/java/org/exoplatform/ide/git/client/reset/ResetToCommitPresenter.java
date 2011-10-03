@@ -40,6 +40,7 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for view for reseting head to commit.
@@ -167,12 +168,17 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
    @Override
    public void onResetToCommit(ResetToCommitEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         getCommits();
+      }
    }
 
    private void getCommits()
    {
-      GitClientService.getInstance().log(workDir, false, new AsyncRequestCallback<LogResponse>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+      GitClientService.getInstance().log(vfs.getId(), projectId, false, new AsyncRequestCallback<LogResponse>()
       {
 
          @Override
@@ -204,8 +210,8 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
       ResetType type = display.getMixMode().getValue() ? ResetType.MIXED : null;
       type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
       type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
-
-      GitClientService.getInstance().reset(workDir, null, revision.getId(), type, new AsyncRequestCallback<String>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type, new AsyncRequestCallback<String>()
       {
 
          @Override
@@ -222,14 +228,5 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
             eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
          }
       });
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getCommits();
    }
 }

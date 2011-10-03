@@ -37,6 +37,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,7 +207,11 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    public void onPushToRemote(PushToRemoteEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getRemotes(projectId);
+      }
    }
 
    /**
@@ -214,14 +219,13 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
     */
    public void doPush()
    {
-      if (workDir == null)
-         return;
-
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
       final String remote = display.getRemoteValue().getValue();
       String localBranch = display.getLocalBranchesValue().getValue();
       String remoteBranch = display.getRemoteBranchesValue().getValue();
 
-      GitClientService.getInstance().push(workDir, new String[]{localBranch + ":" + remoteBranch}, remote, false,
+      GitClientService.getInstance().push(vfs.getId(), projectId, new String[]{localBranch + ":" + remoteBranch}, remote, false,
          new AsyncRequestCallback<String>()
          {
 
@@ -248,6 +252,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    public void onRemotesReceived(List<Remote> remotes)
    {
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       display = GWT.create(Display.class);
       bindDisplay();
       display.enablePushButton(false);
@@ -261,8 +266,8 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
 
       display.setRemoteValues(remoteValues);
 
-      getBranches(workDir, false);
-      getBranches(workDir, true);
+      getBranches(projectId, false);
+      getBranches(projectId, true);
    }
 
    /**

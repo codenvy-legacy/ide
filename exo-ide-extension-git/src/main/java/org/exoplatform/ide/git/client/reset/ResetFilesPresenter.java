@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -35,12 +38,10 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for view for reseting files from index.
@@ -133,7 +134,10 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    @Override
    public void onResetFiles(ResetFilesEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         getStatus(((ItemContext)selectedItems.get(0)).getProject().getId());
+      }
    }
 
    /**
@@ -141,9 +145,9 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
     * 
     * @param workDir
     */
-   private void getStatus(final String workDir)
+   private void getStatus(final String projectId)
    {
-      GitClientService.getInstance().status(workDir, new AsyncRequestCallback<StatusResponse>()
+      GitClientService.getInstance().status(vfs.getId(), projectId, new AsyncRequestCallback<StatusResponse>()
       {
 
          @Override
@@ -190,8 +194,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             files.add(file.getPath());
          }
       }
-
-      GitClientService.getInstance().reset(workDir, files.toArray(new String[files.size()]), "HEAD", null,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD", null,
          new AsyncRequestCallback<String>()
          {
 
@@ -211,14 +215,5 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                eventBus.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
             }
          });
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      getStatus(workDir);
    }
 }

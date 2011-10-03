@@ -32,9 +32,9 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -128,7 +128,14 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    @Override
    public void onAddFiles(AddFilesEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         display.getMessage().setValue(formMessage(workdir), true);
+      }
    }
 
    /**
@@ -137,18 +144,17 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     * 
     * @return {@link String} message to display
     */
-   private String formMessage()
+   private String formMessage(String workdir)
    {
       if (selectedItems == null || selectedItems.size() <= 0)
          return "";
       Item selectedItem = selectedItems.get(0);
-
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItem.getPath(), workDir);
+      String pattern = selectedItem.getPath().replaceFirst(workdir, "");
+      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
       //Root of the working tree:
       if (pattern.length() == 0 || "/".equals(pattern))
       {
-         
          return GitExtension.MESSAGES.addToIndexAllChanges();
       }
 
@@ -160,7 +166,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       {
          return GitExtension.MESSAGES.addToIndexFile(pattern);
       }
-      
    }
 
    /**
@@ -168,14 +173,17 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private void doAdd()
    {
-      if (workDir == null || selectedItems == null || selectedItems.size() <= 0)
+      if (selectedItems == null || selectedItems.size() <= 0)
          return;
       boolean update = display.getUpdateValue().getValue();
-      String pattern = GitClientUtil.getFilePatternByHref(selectedItems.get(0).getPath(), workDir);
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
+      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
       String[] filePatterns =
          (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
 
-      GitClientService.getInstance().add(workDir, update, filePatterns, new AsyncRequestCallback<String>()
+      GitClientService.getInstance().add(vfs.getId(), projectId, update, filePatterns, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
@@ -195,18 +203,5 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       });
 
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
-
-      display.getMessage().setValue(formMessage(), true);
    }
 }

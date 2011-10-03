@@ -26,11 +26,11 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 
 import java.util.List;
 
@@ -68,18 +68,21 @@ public abstract class GitClientService
    /**
     * Add changes to Git index (temporary storage).
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param update if <code>true</code> then never stage new files, but stage modified new contents of tracked files
     * and remove files from the index if the corresponding files in the working tree have been removed 
     * @param filePattern pattern of the files to be added, default is "." (all files are added)
     * @param callback callback
     */
-   public abstract void add(String workDir, boolean update, String[] filePattern, AsyncRequestCallback<String> callback);
+   public abstract void add(String vfsId, String projectid, boolean update, String[] filePattern,
+      AsyncRequestCallback<String> callback);
 
    /**
     * Fetch changes from remote repository to local one.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+     * @param projectid project's id (root of GIT repository)
     * @param remote remote repository's name
     * @param refspec  list of refspec to fetch.
     * <p>
@@ -93,7 +96,7 @@ public abstract class GitClientService
     * @param removeDeletedRefs if <code>true</code> then delete removed refs from local repository
     * @param callback callback
     */
-   public abstract void fetch(String workDir, String remote, String[] refspec, boolean removeDeletedRefs,
+   public abstract void fetch(String vfsId, String projectid, String remote, String[] refspec, boolean removeDeletedRefs,
       AsyncRequestCallback<String> callback);
 
    /**
@@ -102,83 +105,94 @@ public abstract class GitClientService
     * the parameter <code>remote</code> tells to get remote branches 
     * if <code>true</code> or local ones (if <code>false</code>).
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+     * @param projectid project's id (root of GIT repository)
     * @param remote get remote branches
     * @param callback callback
     */
-   public abstract void branchList(String workDir, boolean remote, AsyncRequestCallback<List<Branch>> callback);
+   public abstract void branchList(String vfsId, String projectid, boolean remote,
+      AsyncRequestCallback<List<Branch>> callback);
 
    /**
     * Delete branch.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+     * @param projectid project's id (root of GIT repository)
     * @param name name of the branch to delete
     * @param force force if <code>true</code> delete branch {@link #name} even if it is not fully merged
     * @param callback callback
     */
-   public abstract void branchDelete(String workDir, String name, boolean force, AsyncRequestCallback<String> callback);
+   public abstract void branchDelete(String vfsId, String projectid, String name, boolean force,
+      AsyncRequestCallback<String> callback);
 
    /**
     * Create new branch with pointed name.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)  
     * @param name new branch's name
     * @param startPoint name of a commit at which to start the new branch
     * @param callback callback
     */
-   public abstract void branchCreate(String workDir, String name, String startPoint,
+   public abstract void branchCreate(String vfsId, String projectid, String name, String startPoint,
       AsyncRequestCallback<Branch> callback);
 
    /**
     * Checkout the branch with pointed name.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+     * @param projectid project's id (root of GIT repository)
     * @param name branch's name
     * @param startPoint if {@link #createNew} is <code>true</code> then the name of a commit at which to start the new branch
     * @param createNew if <code>true</code> then create a new branch
     * @param callback callback
     */
-   public abstract void branchCheckout(String workDir, String name, String startPoint, boolean createNew,
+   public abstract void branchCheckout(String vfsId, String projectid, String name, String startPoint, boolean createNew,
       AsyncRequestCallback<String> callback);
 
    /**
     * Get the list of remote repositories for pointed by <code>workDir</code> parameter one.
     * 
-    * @param workDir  location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param remoteName remote repository's name
     * @param verbose If <code>true</code> show remote url and name otherwise show remote name
     * @param callback callback
     */
-   public abstract void remoteList(String workDir, String remoteName, boolean verbose,
+   public abstract void remoteList(String vfsId, String projectid, String remoteName, boolean verbose,
       AsyncRequestCallback<List<Remote>> callback);
 
    /**
     * Adds remote repository to the list of remote repositories.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param name remote repository's name
     * @param url remote repository's URL
     * @param callback callback
     */
-   public abstract void remoteAdd(String workDir, String name, String url, AsyncRequestCallback<String> callback);
+   public abstract void remoteAdd(String vfsId, String projectid, String name, String url,
+      AsyncRequestCallback<String> callback);
 
    /**
     * Deletes the pointed(by name) remote repository from the list of repositories.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param name remote repository name to delete
     * @param callback callback
     */
-   public abstract void remoteDelete(String workDir, String name, AsyncRequestCallback<String> callback);
+   public abstract void remoteDelete(String vfsId, String projectid, String name, AsyncRequestCallback<String> callback);
 
    /**
     * Remove files from the working tree and the index.
     * 
-    * @param workDir  location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param files files to remove
     * @param callback callback
     */
-   public abstract void remove(String workDir, String[] files, AsyncRequestCallback<String> callback);
+   public abstract void remove(String vfsId, String projectid, String[] files, AsyncRequestCallback<String> callback);
 
    /**
     * Reset current HEAD to the specified state.
@@ -190,28 +204,32 @@ public abstract class GitClientService
     * updates the index (resetting it to the tree of [commit]) 
     * and the working tree depending on [mode].
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository) 
     * @param paths paths to reset
     * @param commit commit to which current head should be reset
     * @param resetType type of the reset
     * @param callback callback
     */
-   public abstract void reset(String workDir, String[] paths, String commit, ResetRequest.ResetType resetType,
-      AsyncRequestCallback<String> callback);
+   public abstract void reset(String vfsId, String projectid, String[] paths, String commit,
+      ResetRequest.ResetType resetType, AsyncRequestCallback<String> callback);
 
    /**
     * Initializes new Git repository.
     * 
-    * @param workDir working directory of the new repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param bare to create bare repository or not
     * @param callback callback
     */
-   public abstract void init(String workDir, boolean bare, org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void init(String vfsId, String projectid, boolean bare,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.
     * 
-    * @param workDir ocation of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)  
     * @param refSpec  list of refspec to fetch.
     * <p>
     * Expected form is:
@@ -224,12 +242,14 @@ public abstract class GitClientService
     * @param remote remote remote repository's name
     * @param callback callback
     */
-   public abstract void pull(String workDir, String refSpec, String remote, AsyncRequestCallback<String> callback);
+   public abstract void pull(String vfsId, String projectid, String refSpec, String remote,
+      AsyncRequestCallback<String> callback);
 
    /**
     * Push changes from local repository to remote one.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid projectid to GIT repository  
     * @param refSpec list of refspec to push
     * @param remote remote repository name or url
     * @param force  push refuses to update a remote ref that is not 
@@ -237,18 +257,19 @@ public abstract class GitClientService
     * This can cause the remote repository to lose commits
     * @param callback callback
     */
-   public abstract void push(String workDir, String[] refSpec, String remote, boolean force,
+   public abstract void push(String vfsId, String projectid, String[] refSpec, String remote, boolean force,
       AsyncRequestCallback<String> callback);
 
    /**
     * Clones one remote repository to local one.
     * 
-    * @param workDir working directory of the new repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)  
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
     * @param callback callback
     */
-   public abstract void cloneRepository(String workDir, String remoteUri, String remoteName,
+   public abstract void cloneRepository(String vfsId, String projectid, String remoteUri, String remoteName,
       AsyncRequestCallback<String> callback);
 
    /**
@@ -256,17 +277,20 @@ public abstract class GitClientService
     * The result of the commit is represented by {@link Revision}, which is returned
     * by callback in <code>onSuccess(Revision result)</code>.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
     * @param callback callback
     */
-   public abstract void commit(String workDir, String message, boolean all, AsyncRequestCallback<Revision> callback);
+   public abstract void commit(String vfsId, String projectid, String message, boolean all,
+      AsyncRequestCallback<Revision> callback);
 
    /**
     * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param fileFilter files for which to show changes
     * @param type type of diff format
     * @param noRenames don't show renamed files
@@ -275,14 +299,15 @@ public abstract class GitClientService
     * @param commitB second commit to be compared
     * @param callback callback
     */
-   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit,
-      String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback);
+   public abstract void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
+      int renameLimit, String commitA, String commitB, AsyncRequestCallback<DiffResponse> callback);
 
    /**
     * Compare commit with index or working tree (depends on {@link #cached}), 
     * get the diff for pointed file(s) or for the whole project in text format.
     * 
-    * @param workDir location of Git repository working directory
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param fileFilter files for which to show changes
     * @param type type of diff format
     * @param noRenames don't show renamed files
@@ -292,29 +317,30 @@ public abstract class GitClientService
     * if <code>false</code>, then compare with working tree.
     * @param callback callback
     */
-   public abstract void diff(String workDir, String[] fileFilter, DiffType type, boolean noRenames, int renameLimit, String commitA,
-      boolean cached, AsyncRequestCallback<DiffResponse> callback);
+   public abstract void diff(String vfsId, String projectid, String[] fileFilter, DiffType type, boolean noRenames,
+      int renameLimit, String commitA, boolean cached, AsyncRequestCallback<DiffResponse> callback);
 
    /**
     * Get log of commits.
     * The result is the list of {@link Revision},  which is returned
     * by callback in <code>onSuccess(Revision result)</code>.
     * 
-    * @param workDir working directory of the Git repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param isTextFormat if <code>true</code> the loq response will be in text format
     * @param callback callback
     */
-   public abstract void log(String workDir, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback);
-   
+   public abstract void log(String vfsId, String projectid, boolean isTextFormat, AsyncRequestCallback<LogResponse> callback);
+
    /**
     * Merge the pointed commit with current HEAD.
     * 
-    * @param workDir working directory of the Git repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param commit commit's reference to merge with 
     * @param callback callback
     */
-   public abstract void merge(String workDir, String commit, AsyncRequestCallback<MergeResult> callback);
-   
+   public abstract void merge(String vfsId, String projectid, String commit, AsyncRequestCallback<MergeResult> callback);
 
    /**
     * Gets the working tree status. The status of added, modified or deleted files is shown is written in {@link String}.
@@ -335,38 +361,43 @@ public abstract class GitClientService
     * ?? folder/test.css
     * </pre>
     * 
-    * @param workDir working directory of the Git repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)  
     * @param shortFormat to show in short format or not
     * @param fileFilter file filter to show status. It may be either list of file names to show status or name of directory to show all files under them.
     * @param callback callback
     */
-   public abstract void statusText(String workDir, boolean shortFormat, String[] fileFilter,
+   public abstract void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
       AsyncRequestCallback<StatusResponse> callback);
 
    /**
     * Gets the working tree status : list of untracked, changed not commited 
     * and changed not updated.
     * 
-    * @param workDir working directory of the Git repository
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
     * @param callback callback
     */
-   public abstract void status(String workDir, AsyncRequestCallback<StatusResponse> callback);
+   public abstract void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback);
 
    /**
     * Get the Git work directory (where ".git" folder is located) 
     * for the pointed item's location.
     * 
-    * @param href item's location (encoded location, service will decode location by himself)
+    * @param vfsId virtual file system's id
+    * @param projectid project's id (root of GIT repository)
     * @param callback
     */
-   public abstract void getWorkDir(String href, AsyncRequestCallback<WorkDirResponse> callback);
-   
+   @Deprecated
+   public abstract void getWorkDir(String vfsId, String projectid, AsyncRequestCallback<WorkDirResponse> callback);
+
    /**
     * Get the Git work directory (where ".git" folder is located) 
     * for the pointed item's location and delete it.
     * 
-    * @param href item's location (encoded location, service will decode location by himself)
+    * @param vfsId virtual file system's id
+    * @param projectid project's id (root of GIT repository)
     * @param callback callback
     */
-   public abstract void deleteWorkDir(String href, AsyncRequestCallback<String> callback);
+   public abstract void deleteWorkDir(String vfsId, String projectid, AsyncRequestCallback<String> callback);
 }

@@ -34,6 +34,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -196,9 +197,9 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     * @param workDir Git repository work tree location
     * @param remote get remote branches if <code>true</code>
     */
-   public void getBranches(String workDir)
+   public void getBranches(String projectId)
    {
-      GitClientService.getInstance().branchList(workDir, false, new AsyncRequestCallback<List<Branch>>()
+      GitClientService.getInstance().branchList(vfs.getId(), projectId, false, new AsyncRequestCallback<List<Branch>>()
       {
 
          @Override
@@ -223,7 +224,17 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    @Override
    public void onShowBranches(ShowBranchesEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView(d.asView());
+         bindDisplay(d);
+
+         display.enableCheckoutButton(false);
+         display.enableDeleteButton(false);
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         getBranches(projectId);
+      }
    }
 
    private void askNewBranchName()
@@ -249,16 +260,15 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doCreateBranch(String name)
    {
-      if (workDir == null)
-         return;
-
-      GitClientService.getInstance().branchCreate(workDir, name, null, new AsyncRequestCallback<Branch>()
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+      GitClientService.getInstance().branchCreate(vfs.getId(), projectId, name, null, new AsyncRequestCallback<Branch>()
       {
 
          @Override
          protected void onSuccess(Branch result)
          {
-            getBranches(workDir);
+            getBranches(projectId);
          }
 
          @Override
@@ -277,17 +287,18 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    private void doCheckoutBranch()
    {
       String name = display.getSelectedBranch().getDisplayName();
-      if (name == null || workDir == null)
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      if (name == null)
       {
          return;
       }
 
-      GitClientService.getInstance().branchCheckout(workDir, name, null, false, new AsyncRequestCallback<String>()
+      GitClientService.getInstance().branchCheckout(vfs.getId(), projectId, name, null, false, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
          {
-            getBranches(workDir);
+            getBranches(projectId);
             eventBus.fireEvent(new RefreshBrowserEvent());
          }
 
@@ -308,8 +319,6 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    private void askDeleteBranch()
    {
       final String name = display.getSelectedBranch().getName();
-      if (workDir == null || name == null)
-         return;
 
       Dialogs.getInstance().ask(GitExtension.MESSAGES.branchDelete(), GitExtension.MESSAGES.branchDeleteAsk(name),
          new BooleanValueReceivedHandler()
@@ -333,12 +342,13 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doDeleteBranch(String name)
    {
-      GitClientService.getInstance().branchDelete(workDir, name, true, new AsyncRequestCallback<String>()
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
          {
-            getBranches(workDir);
+            getBranches(projectId);
          }
 
          @Override
@@ -350,20 +360,4 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
          }
       });
    }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
-
-      display.enableCheckoutButton(false);
-      display.enableDeleteButton(false);
-      getBranches(workDir);
-   }
-
 }

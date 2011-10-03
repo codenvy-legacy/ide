@@ -16,36 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.create;
-
-import com.google.gwt.http.client.RequestException;
-
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Item;
+package org.exoplatform.ide.git.client.init;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for Init Repository view.
@@ -54,7 +44,7 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version $Id:  Mar 24, 2011 9:07:58 AM anya $
  *
  */
-public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSelectedHandler, VfsChangedHandler
+public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler
 {
    public interface Display extends IsView
    {
@@ -89,24 +79,13 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
 
    private Display display;
 
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in the browser tree.
-    */
-   private List<Item> selectedItems;
-
-   private String workspace;
-
    /**
     * @param eventBus
     */
    public InitRepositoryPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       eventBus.addHandler(InitRepositoryEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -135,52 +114,18 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.create.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.create.InitRepositoryEvent)
+    * @see org.exoplatform.ide.git.client.init.InitRepositoryHandler#onInitRepository(org.exoplatform.ide.git.client.init.InitRepositoryEvent)
     */
    @Override
    public void onInitRepository(InitRepositoryEvent event)
    {
-      if (selectedItems == null || selectedItems.size() != 1 || !(selectedItems.get(0) instanceof FolderModel))
+      if (makeSelectionCheck())
       {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
+         Display d = GWT.create(Display.class);
+         IDE.getInstance().openView((View)d);
+         bindDisplay(d);
+         display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
       }
-
-      if (workspace != null && workspace.equals(selectedItems.get(0).getId()))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-         return;
-      }
-
-      getWorkDir(selectedItems.get(0).getId());
-   }
-
-   /**
-    * Get the location of the Git working directory, starting 
-    * from pointed href.
-    * 
-    * @param href
-    */
-   private void getWorkDir(String href)
-   {
-      GitClientService.getInstance().getWorkDir(href, new AsyncRequestCallback<WorkDirResponse>()
-      {
-
-         @Override
-         protected void onSuccess(WorkDirResponse result)
-         {
-            Dialogs.getInstance().showInfo(GitExtension.MESSAGES.repositoryAlreadyExists());
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
-            display.getWorkDirValue().setValue(selectedItems.get(0).getId(), true);
-         }
-      });
    }
 
    /**
@@ -188,11 +133,11 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
     */
    public void initRepository()
    {
-      String workDir = display.getWorkDirValue().getValue();
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       boolean bare = display.getBareValue().getValue();
       try
       {
-         GitClientService.getInstance().init(workDir, bare,
+         GitClientService.getInstance().init(vfs.getId(), projectId, bare,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
 
@@ -200,7 +145,7 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
                protected void onSuccess(String result)
                {
                   eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                  eventBus.fireEvent(new RefreshBrowserEvent());
+                  eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                }
 
                @Override
@@ -221,24 +166,5 @@ public class InitRepositoryPresenter implements InitRepositoryHandler, ItemsSele
          eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      //TODO not url
-      this.workspace = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
    }
 }

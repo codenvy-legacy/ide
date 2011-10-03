@@ -24,11 +24,13 @@ import com.google.gwt.http.client.URL;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
@@ -55,7 +57,11 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
    @Override
    public void onDeleteRepository(DeleteRepositoryEvent event)
    {
-      getWorkDir();
+      if (makeSelectionCheck())
+      {
+         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         askBeforeDelete(workDir);
+      }
    }
 
    /**
@@ -84,9 +90,10 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     */
    public void doDeleteRepository()
    {
+      final String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       if (workDir == null || workDir.isEmpty())
          return;
-      GitClientService.getInstance().deleteWorkDir(workDir, new AsyncRequestCallback<String>()
+      GitClientService.getInstance().deleteWorkDir(vfs.getId(), workDir, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
@@ -95,19 +102,9 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
             String href = URL.decode(workDir);
             //TODO to fix this with encoding symbol "@"
             href = href.replaceAll("@", "%40");
-            //TODO
-//            eventBus.fireEvent(new RefreshBrowserEvent(new Folder(getParentFolder(workDir)), new Folder((href))));
+            eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
          }
       });
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#onWorkDirReceived()
-    */
-   @Override
-   public void onWorkDirReceived()
-   {
-      askBeforeDelete(workDir);
    }
 
    public String getParentFolder(String child)

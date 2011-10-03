@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.create;
+package org.exoplatform.ide.git.client.init;
 
 import org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.job.Job;
