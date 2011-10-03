@@ -165,6 +165,7 @@ public class CreateProjectPresenter
             @Override
             protected void onSuccess(ProjectModel result)
             {
+               IDE.getInstance().closeView(display.asView().getId());
                eventBus.fireEvent(new RefreshBrowserEvent(result.getParent()));
             }
 
