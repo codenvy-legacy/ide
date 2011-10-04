@@ -14,12 +14,10 @@
        <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
-         <version>2.3.0</version>
        </dependency>
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
-         <version>2.3.0</version>
       </dependency>
        <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -124,7 +122,6 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
-            <version>2.3.0-1</version>
             <configuration>
                <module>org.exoplatform.ide.shell.Shell</module>
                <runTarget>org.exoplatform.ide.shell.Shell/Shell.html</runTarget>

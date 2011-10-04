@@ -27,9 +27,9 @@
       <org.exoplatform.ws.version>2.2.0-GA</org.exoplatform.ws.version>
       <org.exoplatform.gwtframework.version>1.2.0-M4-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- Third parties -->
-      <gwt.version>2.2.0</gwt.version>
+      <gwt.version>2.4.0</gwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
-      <gwt.maven.plugin.version>2.2.0</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.4.0</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
