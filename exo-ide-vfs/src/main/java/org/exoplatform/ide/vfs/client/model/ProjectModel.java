@@ -77,7 +77,7 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-      projectType = itemObject.get("projectType").isString().stringValue();
+      projectType = (itemObject.get("projectType") != null) ?  itemObject.get("projectType").isString().stringValue() : null;
       this.persisted = true;
    }
 
