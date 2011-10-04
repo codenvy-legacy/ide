@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.preview;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
@@ -38,9 +41,6 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * Created by The eXo Platform SAS .
@@ -68,42 +68,46 @@ public class PreviewApplicationPresenter extends GitPresenter implements Preview
    @Override
    public void onPreviewApplication(PreviewApplicationEvent event)
    {
-      getApplicationInfo();
+      if (makeSelectionCheck())
+      {
+         getApplicationInfo();
+      }
    }
 
    private void getApplicationInfo()
    {
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
-      {
-
-         @Override
-         protected void onSuccess(AppInfo result)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
+         new AsyncRequestCallback<AppInfo>()
          {
-            applicationInfoReceived(result);
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+            @Override
+            protected void onSuccess(AppInfo result)
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.OK == serverException.getHTTPStatus()
-                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-               {
-                  addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
-                  return;
-               }
+               applicationInfoReceived(result);
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-               .getApplicationInfoFail()));
-         }
-      });
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  ServerException serverException = (ServerException)exception;
+                  if (HTTPStatus.OK == serverException.getHTTPStatus()
+                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  {
+                     addLoggedInHandler();
+                     eventBus.fireEvent(new LoginEvent());
+                     return;
+                  }
+               }
+               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .getApplicationInfoFail()));
+            }
+         });
    }
 
    private void addLoggedInHandler()

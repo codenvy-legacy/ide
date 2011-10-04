@@ -138,7 +138,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void createApplication(String name, String type, String workdir, AsyncRequestCallback<AppInfo> callback)
+   public void createApplication(String name, String vfsId, String projectId, String type,
+      AsyncRequestCallback<AppInfo> callback)
    {
       String url = restServiceContext + CREATE_APPLICATION;
 
@@ -147,7 +148,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setResult(appInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      String params = "?app=" + name + "&type=" + type + "&workdir=" + workdir;
+      String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
@@ -155,11 +156,11 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#destroyApplication(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void destroyApplication(String name, AsyncRequestCallback<String> callback)
+   public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       callback.setEventBus(eventBus);
-      String params = "?app=" + name;
+      String params = "?name=" + name + "&vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
@@ -184,7 +185,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getApplicationInfo(String applicationName, String workDir, AsyncRequestCallback<AppInfo> callback)
+   public void getApplicationInfo(String applicationName, String vfsId, String projectId,
+      AsyncRequestCallback<AppInfo> callback)
    {
       String url = restServiceContext + APPLICATION_INFO;
 
@@ -193,8 +195,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setResult(appInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      String params = (applicationName != null && !applicationName.isEmpty()) ? "app=" + applicationName + "&" : "";
-      params += (workDir != null && !workDir.isEmpty()) ? "workdir=" + workDir : "";
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += "vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader).send(callback);
    }
 
@@ -211,6 +213,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setResult(types);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 }

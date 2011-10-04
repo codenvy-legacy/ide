@@ -70,7 +70,10 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      getApplicationsInfo();
+      if (makeSelectionCheck())
+      {
+         getApplicationsInfo();
+      }
    }
 
    /**
@@ -78,8 +81,8 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void getApplicationsInfo()
    {
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, new AsyncRequestCallback<AppInfo>()
       {
 
          @Override
@@ -98,14 +101,15 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
             {
                ServerException serverException = (ServerException)exception;
                if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
                {
                   addLoggedInHandler();
                   eventBus.fireEvent(new LoginEvent());
                   return;
                }
             }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.getApplicationInfoFail()));
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .getApplicationInfoFail()));
          }
       });
    }
@@ -160,7 +164,8 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void doDeleteApplication(final String name)
    {
-      OpenShiftClientService.getInstance().destroyApplication(name, new AsyncRequestCallback<String>()
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), projectId, new AsyncRequestCallback<String>()
       {
 
          @Override
@@ -169,14 +174,15 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
             eventBus.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name),
                Type.INFO));
          }
-         
+
          /**
           * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
           */
          @Override
          protected void onFailure(Throwable exception)
          {
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationFail(name)));
+            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+               .deleteApplicationFail(name)));
          }
       });
    }

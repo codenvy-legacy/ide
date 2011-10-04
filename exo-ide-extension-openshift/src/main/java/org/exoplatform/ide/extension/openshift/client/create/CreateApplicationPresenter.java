@@ -31,10 +31,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -47,8 +44,9 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -59,7 +57,7 @@ import java.util.List;
  * @version $Id:  Jun 7, 2011 5:50:34 PM anya $
  *
  */
-public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateApplicationHandler, ViewClosedHandler,
+public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler,
    LoggedInHandler
 {
    interface Display extends IsView
@@ -67,7 +65,7 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
       /**
        * Get create button's click handler.
        * 
-       * @return {@link HasClickHandlers} click handler
+       * @return {@link HasClickHandlers} click handler  @Override
        */
       HasClickHandlers getCreateButton();
 
@@ -117,29 +115,14 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
    private Display display;
 
    /**
-    * Events handler manager.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Application's location.
-    */
-   private String workDir;
-
-   /**
     * @param eventBus
     */
    public CreateApplicationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
+
       eventBus.addHandler(CreateApplicationEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -197,30 +180,28 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      if (selectedItems == null || selectedItems.size() == 0 || !(selectedItems.get(0) instanceof FolderModel))
+      if (makeSelectionCheck())
       {
-         Dialogs.getInstance().showInfo(OpenShiftExtension.LOCALIZATION_CONSTANT.selectFolder());
-         return;
-      }
-      workDir = selectedItems.get(0).getId();
+         final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
 
-      OpenShiftClientService.getInstance().getApplicationTypes(new AsyncRequestCallback<List<String>>()
-      {
-         @Override
-         protected void onSuccess(List<String> result)
+         OpenShiftClientService.getInstance().getApplicationTypes(new AsyncRequestCallback<List<String>>()
          {
-            if (display == null)
+            @Override
+            protected void onSuccess(List<String> result)
             {
-               display = GWT.create(Display.class);
-               bindDisplay();
-               IDE.getInstance().openView(display.asView());
-               display.setApplicationTypeValues(result.toArray(new String[result.size()]));
-               display.focusInApplicationNameField();
-               display.getWorkDirLocationField().setValue(workDir);
-               display.enableCreateButton(false);
+               if (display == null)
+               {
+                  display = GWT.create(Display.class);
+                  bindDisplay();
+                  IDE.getInstance().openView(display.asView());
+                  display.setApplicationTypeValues(result.toArray(new String[result.size()]));
+                  display.focusInApplicationNameField();
+                  display.getWorkDirLocationField().setValue(projectModel.getPath());
+                  display.enableCreateButton(false);
+               }
             }
-         }
-      });
+         });
+      }
    }
 
    /**
@@ -230,7 +211,8 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
    {
       final String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
-      OpenShiftClientService.getInstance().createApplication(applicationName, type, workDir,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
          new AsyncRequestCallback<AppInfo>()
          {
 
@@ -301,14 +283,5 @@ public class CreateApplicationPresenter implements ItemsSelectedHandler, CreateA
       {
          doCreateApplication();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
    }
 }

@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.openshift.server.rest;
 
-import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
 import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.vfs.server.LocalPathResolver;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +40,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -50,6 +51,21 @@ public class ExpressService
 {
    @Inject
    private Express express;
+   
+   @Inject
+   private LocalPathResolver localPathResolver;
+
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   @QueryParam("vfsid")
+   private String vfsId;
+
+   @QueryParam("projectid")
+   private String projectId;
+
+   @QueryParam("name")
+   private String appName;
 
    public ExpressService()
    {
@@ -87,11 +103,13 @@ public class ExpressService
    @POST
    @Path("apps/create")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo createApplication(@QueryParam("app") String app, @QueryParam("type") String type,
-      @QueryParam("workdir") FSLocation workDir, @Context UriInfo uriInfo) throws ExpressException, IOException,
-      ParsingResponseException
+   public AppInfo createApplication(@QueryParam("type") String type) throws ExpressException, IOException,
+ ParsingResponseException, VirtualFileSystemException
    {
-      return express.createApplication(app, type, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      return express.createApplication(appName, type, new File(localPathResolver.resolve(vfs, projectId)));
    }
    
    @GET
@@ -105,18 +123,22 @@ public class ExpressService
    @GET
    @Path("apps/info")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo applicationInfo(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
-      @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
+   public AppInfo applicationInfo() throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
-      return express.applicationInfo(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      return express.applicationInfo(appName, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @POST
    @Path("apps/destroy")
-   public void destroyApplication(@QueryParam("app") String app, @QueryParam("workdir") FSLocation workDir,
-      @Context UriInfo uriInfo) throws ExpressException, IOException, ParsingResponseException
+   public void destroyApplication() throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
-      express.destroyApplication(app, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      express.destroyApplication(appName, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @GET

@@ -24,7 +24,6 @@ import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 import java.util.List;
 
-
 /**
  * OpenShift client service.
  * 
@@ -51,7 +50,7 @@ public abstract class OpenShiftClientService
    {
       instance = this;
    }
-   
+
    /**
     * Performs log in OpenShift.
     * 
@@ -60,7 +59,7 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void login(String login, String password, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Creates new domain name. A domain name is a requirement for 
     * each new application that you create in the cloud 
@@ -71,25 +70,30 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void createDomain(String name, boolean alter, AsyncRequestCallback<String> callback);
-   
+
    /**
     * Creates OpenShift application.
     * 
     * @param name application's name
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
     * @param type application's type
     * @param workdir application's working directory
     * @param callback callback
     */
-   public abstract void createApplication(String name, String type, String workdir, AsyncRequestCallback<AppInfo> callback);
-   
+   public abstract void createApplication(String name, String vfsId, String projectId, String type,
+      AsyncRequestCallback<AppInfo> callback);
+
    /**
     * Destroys application with pointed name from OpenShift. 
     * 
     * @param name application's name
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
     * @param callback callback
     */
-   public abstract void destroyApplication(String name, AsyncRequestCallback<String> callback);
-   
+   public abstract void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback);
+
    /**
     * Get user's information. 
     * You can view the Framework Type, Creation Date, GitURL and PublicURL details for each application.
@@ -98,15 +102,16 @@ public abstract class OpenShiftClientService
     * @param callback callback
     */
    public abstract void getUserInfo(boolean appsInfo, AsyncRequestCallback<RHUserInfo> callback);
-   
+
    /**
     * Get application's information.
     * 
     * @param applicationName application name
-    * @param workDir application's working directory
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
     * @param callback callback
     */
-   public abstract void getApplicationInfo(String applicationName, String workDir, AsyncRequestCallback<AppInfo> callback);
+   public abstract void getApplicationInfo(String applicationName, String vfsId, String projectId, AsyncRequestCallback<AppInfo> callback);
 
    /**
     * Get types of allowed applications.

@@ -102,7 +102,10 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
    @Override
    public void onShowApplicationInfo(ShowApplicationInfoEvent event)
    {
-      getApplicationInfo();
+      if (makeSelectionCheck())
+      {
+         getApplicationInfo();
+      }
    }
 
    /**
@@ -122,54 +125,57 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    public void getApplicationInfo()
    {
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      OpenShiftClientService.getInstance().getApplicationInfo(null, workdir, new AsyncRequestCallback<AppInfo>()
-      {
-
-         @Override
-         protected void onSuccess(AppInfo result)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
+         new AsyncRequestCallback<AppInfo>()
          {
-            if (display == null)
-            {
-               display = GWT.create(Display.class);
-               bindDisplay();
-               IDE.getInstance().openView(display.asView());
-            }
-            
-            List<Property> properties = new ArrayList<Property>();
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result.getName()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result.getType()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), result
-               .getPublicUrl()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
-               .getGitUrl()));
-            String time =
-               DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date(result.getCreationTime()));
-            properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
-            display.getApplicationInfoGrid().setValue(properties);
-         }
 
-         /**
-          * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-          */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+            @Override
+            protected void onSuccess(AppInfo result)
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+               if (display == null)
                {
-                  addLoggedInHandler();
-                  eventBus.fireEvent(new LoginEvent());
-                  return;
+                  display = GWT.create(Display.class);
+                  bindDisplay();
+                  IDE.getInstance().openView(display.asView());
                }
-            }
-            eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT.getApplicationInfoFail()));
-         }
 
-      });
+               List<Property> properties = new ArrayList<Property>();
+               properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), result.getName()));
+               properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result.getType()));
+               properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), result
+                  .getPublicUrl()));
+               properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
+                  .getGitUrl()));
+               String time =
+                  DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM)
+                     .format(new Date(result.getCreationTime()));
+               properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
+               display.getApplicationInfoGrid().setValue(properties);
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  ServerException serverException = (ServerException)exception;
+                  if (HTTPStatus.OK == serverException.getHTTPStatus()
+                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                  {
+                     addLoggedInHandler();
+                     eventBus.fireEvent(new LoginEvent());
+                     return;
+                  }
+               }
+               eventBus.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .getApplicationInfoFail()));
+            }
+
+         });
    }
 
    /**
