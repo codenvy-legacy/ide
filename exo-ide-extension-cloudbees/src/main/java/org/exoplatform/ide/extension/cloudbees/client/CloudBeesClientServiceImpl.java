@@ -59,9 +59,9 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String LOGIN = BASE_URL + "/login";
 
    private static final String LOGOUT = BASE_URL + "/logout";
-   
+
    private static final String INITIALIZE = BASE_URL + "/apps/create";
-   
+
    private static final String APP_LIST = BASE_URL + "/apps/all";
 
    /**
@@ -86,31 +86,30 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       this.restServiceContext = restContext;
    }
 
-      /**
-       * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deployWar(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-       */
-      @Override
-      public void deployWar(String appId, String warFile, String message,
-         CloudBeesAsyncRequestCallback<Map<String, String>> callback)
-      {
-         final String url = restServiceContext + DEPLOY_WAR;
-         
-         String params = "appid=" + appId + "&";
-         params += "war=" + warFile;
-         if (message != null && !message.isEmpty())
-            params += "&message=" + message;
-   
-         Map<String, String> responseMap = new HashMap<String, String>();
-         callback.setResult(responseMap);
-         callback.setEventBus(eventBus);
-         
-         DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
-         callback.setPayload(unmarshaller);
-   
-         AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
-            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-            .send(callback);
-      }
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deployWar(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void deployWar(String appId, String warFile, String message,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+   {
+      final String url = restServiceContext + DEPLOY_WAR;
+
+      String params = "appid=" + appId + "&";
+      params += "war=" + warFile;
+      if (message != null && !message.isEmpty())
+         params += "&message=" + message;
+
+      Map<String, String> responseMap = new HashMap<String, String>();
+      callback.setResult(responseMap);
+      callback.setEventBus(eventBus);
+
+      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
 
    /**
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getDomains(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
@@ -167,13 +166,13 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void getApplicationInfo(String workDir, String appId,
+   public void getApplicationInfo(String appId, String vfsId, String projectId,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback)
    {
       final String url = restServiceContext + APPS_INFO;
 
       String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "workdir=" + workDir;
+      params += "vfsid=" + vfsId + "&projectid=" + projectId;
 
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
@@ -190,12 +189,13 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void deleteApplication(String workDir, String appId, CloudBeesAsyncRequestCallback<String> callback)
+   public void deleteApplication(String appId, String vfsId, String projectId,
+      CloudBeesAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + APPS_DELETE;
 
       String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "workdir=" + workDir;
+      params += "vfsid=" + vfsId + "&projectid=" + projectId;
 
       callback.setResult(null);
       callback.setEventBus(eventBus);
@@ -207,19 +207,17 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void initializeApplication(String appId, String warFile, String message, String workDir,
+   public void initializeApplication(String appId, String vfsId, String projectId, String warFile, String message,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback)
    {
-      final String url = restServiceContext + INITIALIZE ;
+      final String url = restServiceContext + INITIALIZE;
 
       String params = "appid=" + appId + "&";
       params += "war=" + warFile;
+      params += "&vfsid=" + vfsId + "&projectid=" + projectId;
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
       
-      if(workDir !=null)
-         params +="&workdir="+ workDir;
-
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
       callback.setEventBus(eventBus);

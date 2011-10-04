@@ -28,8 +28,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -42,7 +40,8 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.Iterator;
 import java.util.List;
@@ -54,8 +53,8 @@ import java.util.Map.Entry;
  * @version $Id: InitializeApplicationPresenter.java Jun 23, 2011 12:49:09 PM vereshchaka $
  *
  */
-public class InitializeApplicationPresenter implements ViewClosedHandler, InitializeApplicationHandler,
-   ItemsSelectedHandler, ApplicationBuiltHandler
+public class InitializeApplicationPresenter extends GitPresenter implements ViewClosedHandler,
+   InitializeApplicationHandler, ApplicationBuiltHandler
 {
 
    interface Display extends IsView
@@ -75,7 +74,6 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
       void focusInApplicationNameField();
 
       void setDomainValues(String[] domains);
-
    }
 
    private String[] domains;
@@ -86,22 +84,11 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
 
    private String applicationId;
 
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-
    public InitializeApplicationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(InitializeApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -164,7 +151,10 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    @Override
    public void onInitializeApplication(InitializeApplicationEvent event)
    {
-      getDomains();
+      if (makeSelectionCheck())
+      {
+         getDomains();
+      }
    }
 
    private void getDomains()
@@ -207,8 +197,8 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
 
    private void doDeployApplication()
    {
-      final String workDir = selectedItems.get(0).getId();
-      CloudBeesClientService.getInstance().initializeApplication(applicationId, warUrl, null, workDir,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudBeesClientService.getInstance().initializeApplication(applicationId, vfs.getId(), projectId, warUrl, null,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployWarLoggedInHandler, null)
          {
             @Override
@@ -281,15 +271,6 @@ public class InitializeApplicationPresenter implements ViewClosedHandler, Initia
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
    }
 
    /**

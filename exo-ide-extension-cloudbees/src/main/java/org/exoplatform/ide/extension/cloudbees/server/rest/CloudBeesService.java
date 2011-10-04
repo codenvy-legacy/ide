@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.server.rest;
 
-import org.exoplatform.ide.FSLocation;
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
+import org.exoplatform.ide.vfs.server.LocalPathResolver;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.File;
 import java.net.URL;
@@ -46,6 +49,21 @@ public class CloudBeesService
 {
    @Inject
    private CloudBees cloudbees;
+   
+   @Inject
+   private LocalPathResolver localPathResolver;
+
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   @QueryParam("vfsId")
+   private String vfsId;
+
+   @QueryParam("projectid")
+   private String projectId;
+
+   @QueryParam("appid")
+   private String appId;
 
    public CloudBeesService()
    {
@@ -84,53 +102,51 @@ public class CloudBeesService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> createApplication( //
-      @QueryParam("appid") String appId, //
       @QueryParam("message") String message, // Optional
-      @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws Exception
    {
-      return cloudbees.createApplication(appId, message, workDir != null ? new File(workDir.getLocalPath(uriInfo))
-         : null, war);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      return cloudbees.createApplication(appId, message, new File(localPathResolver.resolve(vfs, projectId)), war);
    }
 
    @Path("apps/update")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> updateApplication( //
-      @QueryParam("appid") String appId, //
       @QueryParam("message") String message, // Optional
-      @QueryParam("workdir") FSLocation workDir, //
       @QueryParam("war") URL war, //
       @Context UriInfo uriInfo //
    ) throws Exception
    {
-      return cloudbees.updateApplication(appId, message, workDir != null ? new File(workDir.getLocalPath(uriInfo))
-         : null, war);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      return cloudbees.updateApplication(appId, message, new File(localPathResolver.resolve(vfs, projectId)), war);
    }
 
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> applicationInfo( //
-      @QueryParam("appid") String appId, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws Exception
+   public Map<String, String> applicationInfo() throws Exception
    {
-      return cloudbees.applicationInfo(appId, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      return cloudbees.applicationInfo(appId, new File(localPathResolver.resolve(vfs, projectId)));
    }
 
    @Path("apps/delete")
    @POST
-   public void deleteApplication( //
-      @QueryParam("appid") String appId, //
-      @QueryParam("workdir") FSLocation workDir, //
-      @Context UriInfo uriInfo //
-   ) throws Exception
+   public void deleteApplication() throws Exception
    {
-      cloudbees.deleteApplication(appId, workDir != null ? new File(workDir.getLocalPath(uriInfo)) : null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      cloudbees.deleteApplication(appId, new File(localPathResolver.resolve(vfs, projectId)));
    }
    
    @Path("apps/all")   

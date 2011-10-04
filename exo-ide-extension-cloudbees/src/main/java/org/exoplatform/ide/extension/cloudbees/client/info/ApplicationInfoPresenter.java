@@ -27,14 +27,14 @@ import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +48,7 @@ import java.util.Map.Entry;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoPresenter.java Jun 30, 2011 5:02:31 PM vereshchaka $
  */
-public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClosedHandler, ItemsSelectedHandler
+public class ApplicationInfoPresenter extends GitPresenter implements ApplicationInfoHandler, ViewClosedHandler
 {
 
    interface Display extends IsView
@@ -61,25 +61,14 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
     * @param eventBus events handler
     */
    public ApplicationInfoPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -108,22 +97,22 @@ public class ApplicationInfoPresenter implements ApplicationInfoHandler, ViewClo
       {
          showAppInfo(event.getAppInfo().toMap());
       }
-      else
+      else if (makeSelectionCheck())
       {
-         String workDir = selectedItems.get(0).getId();
-         showApplicationInfo(workDir);
+         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         showApplicationInfo(projectId);
       }
    }
 
-   private void showApplicationInfo(final String workDir)
+   private void showApplicationInfo(final String projectId)
    {
-      CloudBeesClientService.getInstance().getApplicationInfo(workDir, null,
+      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
          {
             @Override
             public void onLoggedIn()
             {
-               showApplicationInfo(workDir);
+               showApplicationInfo(projectId);
             }
          }, null)
          {

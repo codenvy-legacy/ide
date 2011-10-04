@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,23 +44,8 @@ import java.util.Map;
  * @version $Id: DeleteApplicationPresenter.java Jul 1, 2011 12:59:52 PM vereshchaka $
  *
  */
-public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteApplicationHandler
+public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Location of application on file system.
-    */
-   private String workDir;
-
    private String appId;
 
    private String appTitle;
@@ -72,10 +55,9 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     */
    public DeleteApplicationPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
 
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -84,31 +66,19 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      if (event.getAppId() != null && event.getAppTitle() != null)
+      if (makeSelectionCheck())
       {
-         appId = event.getAppId();
-         appTitle = event.getAppTitle();
-         askForDelete(appTitle);
+         if (event.getAppId() != null && event.getAppTitle() != null)
+         {
+            appId = event.getAppId();
+            appTitle = event.getAppTitle();
+            askForDelete(appTitle);
+         }
+         else
+         {
+            getApplicationInfo();
+         }
       }
-      else
-      {
-         getApplicationInfo();
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0)
-      {
-         return;
-      }
-
-      workDir = selectedItems.get(0).getId();
    }
 
    /**
@@ -116,7 +86,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     */
    protected void getApplicationInfo()
    {
-      CloudBeesClientService.getInstance().getApplicationInfo(workDir, null,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudBeesClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
          {
             @Override
@@ -144,7 +115,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     */
    protected void askForDelete(final String applicationTitle)
    {
-      final String title = (applicationTitle != null) ? applicationTitle : workDir;
+      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      final String title = (applicationTitle != null) ? applicationTitle : projectPath;
 
       Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
          CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title), new BooleanValueReceivedHandler()
@@ -167,7 +139,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
     */
    protected void doDelete()
    {
-      CloudBeesClientService.getInstance().deleteApplication(workDir, appId,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<String>(eventBus, new LoggedInHandler()
          {
             @Override

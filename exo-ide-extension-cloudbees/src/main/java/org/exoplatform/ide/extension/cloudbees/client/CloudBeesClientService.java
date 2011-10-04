@@ -33,71 +33,90 @@ import java.util.Map;
  */
 public abstract class CloudBeesClientService
 {
-   
+
    private static CloudBeesClientService instance;
-   
+
    public static CloudBeesClientService getInstance()
    {
       return instance;
    }
-   
+
    protected CloudBeesClientService()
    {
       instance = this;
    }
-   
+
    /**
     * Initialize application.
     * 
-    * @param appId
-    * @param warFile
-    * @param message
-    * @param callback
+    * @param appId application's id
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param warFile location of the build war with application
+    * @param message initialization message
+    * @param callback callback
     */
-   public abstract void initializeApplication(String appId, String warFile, String message, String workDir,
-      CloudBeesAsyncRequestCallback<Map<String, String>> callback);
-   
+   public abstract void initializeApplication(String appId, String vfsId, String projectId, String warFile,
+      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback);
+
    /**
-    * Get the domains.
+    * Get the available domains.
     * 
     * @param callback - callback that client has to implement
     */
    public abstract void getDomains(CloudBeesAsyncRequestCallback<List<String>> callback);
-   
+
+   /**
+    * Login CloudBees.
+    * 
+    * @param email user's email (login)
+    * @param password user's password
+    * @param callback callback
+    */
    public abstract void login(String email, String password, AsyncRequestCallback<String> callback);
-   
+
+   /**
+    * Logout CloudBees.
+    * 
+    * @param callback callback
+    */
    public abstract void logout(AsyncRequestCallback<String> callback);
-   
+
    /**
     * Get the application info.
     * 
-    * @param workDir - the location of work dir on file system
-    * @param appId - id of application
-    * @param callback - callcack, that client has to implement
+    * @param appId application's id
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param callback callback
     */
-   public abstract void getApplicationInfo(String workDir, String appId,
+   public abstract void getApplicationInfo(String appId, String vfsId, String projectId,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback);
-   
+
    /**
     * Delete application from CloudBees.
-    * @param workDir - the location of work dir on file system
-    * @param appId - id of application
-    * @param callback - callcack, that client has to implement
+    * 
+    * @param appId application's id
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param callback callback
     */
-   public abstract void deleteApplication(String workDir, String appId,
+   public abstract void deleteApplication(String appId, String vfsId, String projectId,
       CloudBeesAsyncRequestCallback<String> callback);
 
    /**
-    * @param appId
-    * @param warFile
-    * @param message
-    * @param callback
+    * Deploy war with the application.
+    * 
+    * @param appId application's id
+    * @param warFile deploy built war with the application
+    * @param message message for deploying war
+    * @param callback callback
     */
    public abstract void deployWar(String appId, String warFile, String message,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback);
-   
+
    /**
-    * Receive all CB applications on this account
+    * Receive all CB applications for this account.
     */
    public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback);
 
