@@ -178,7 +178,7 @@ public class GitClientServiceImpl extends GitClientService
       InitRequest initRequest = new InitRequest(projectid, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
       String params = "vfsid=" + vfsId + "&projectid=" +projectid;
-      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequest.build(RequestBuilder.POST, url + "?" + params)
          .data(marshaller.marshal()).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
          .requestStatusHandler(new InitRequestStatusHandler(projectid)).send(callback);
    }
