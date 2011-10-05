@@ -267,7 +267,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                String[] targets = new String[result.size()];
                targets = result.toArray(targets);
                display.setTargetValues(targets);
-               if (server == null && server.isEmpty())
+               if (server == null || server.isEmpty())
                {
                   display.getTargetSelectField().setValue(result.get(0));
                }
