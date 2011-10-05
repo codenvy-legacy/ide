@@ -86,7 +86,10 @@ import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
+import org.eclipse.jgit.treewalk.filter.NotIgnoredFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
+import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
@@ -1315,9 +1318,10 @@ public class JGitConnection implements GitConnection
          treeWalk.reset();
          treeWalk.setRecursive(true);
 
+         TreeFilter fileFilter = null;
          String[] rawFileFilter = request.getFileFilter();
          if (rawFileFilter != null && rawFileFilter.length > 0)
-            treeWalk.setFilter(PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter)));
+            fileFilter = PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter));
 
          try
          {
@@ -1343,6 +1347,10 @@ public class JGitConnection implements GitConnection
 
             treeWalk.addTree(new DirCacheIterator(dirCache));
             treeWalk.addTree(new FileTreeIterator(repository));
+            if (fileFilter != null)
+               treeWalk.setFilter(AndTreeFilter.create(new NotIgnoredFilter(wdTreeN), fileFilter));
+            else
+               treeWalk.setFilter(new NotIgnoredFilter(wdTreeN));
 
             while (treeWalk.next())
             {
