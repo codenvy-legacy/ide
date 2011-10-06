@@ -172,7 +172,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       final String url = restServiceContext + APPS_INFO;
 
       String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "vfsid=" + vfsId + "&projectid=" + projectId;
+      params += "vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
 
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
@@ -195,7 +196,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       final String url = restServiceContext + APPS_DELETE;
 
       String params = (appId != null) ? "appid=" + appId + "&" : "";
-      params += "vfsid=" + vfsId + "&projectid=" + projectId;
+      params += "vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
 
       callback.setResult(null);
       callback.setEventBus(eventBus);
@@ -214,10 +216,11 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
 
       String params = "appid=" + appId + "&";
       params += "war=" + warFile;
-      params += "&vfsid=" + vfsId + "&projectid=" + projectId;
+      params += "&vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
-      
+
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
       callback.setEventBus(eventBus);

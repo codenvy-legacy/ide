@@ -49,14 +49,14 @@ public class CloudBeesService
 {
    @Inject
    private CloudBees cloudbees;
-   
+
    @Inject
    private LocalPathResolver localPathResolver;
 
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
 
-   @QueryParam("vfsId")
+   @QueryParam("vfsid")
    private String vfsId;
 
    @QueryParam("projectid")
@@ -110,7 +110,7 @@ public class CloudBeesService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return cloudbees.createApplication(appId, message, new File(localPathResolver.resolve(vfs, projectId)), war);
+      return cloudbees.createApplication(appId, message, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, war);
    }
 
    @Path("apps/update")
@@ -125,7 +125,7 @@ public class CloudBeesService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return cloudbees.updateApplication(appId, message, new File(localPathResolver.resolve(vfs, projectId)), war);
+      return cloudbees.updateApplication(appId, message, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, war);
    }
 
    @Path("apps/info")
@@ -136,7 +136,8 @@ public class CloudBeesService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return cloudbees.applicationInfo(appId, new File(localPathResolver.resolve(vfs, projectId)));
+      return cloudbees.applicationInfo(appId, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null);
    }
 
    @Path("apps/delete")
@@ -146,13 +147,14 @@ public class CloudBeesService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      cloudbees.deleteApplication(appId, new File(localPathResolver.resolve(vfs, projectId)));
+      cloudbees.deleteApplication(appId, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null);
    }
-   
-   @Path("apps/all")   
+
+   @Path("apps/all")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Map<String,String>> getAllApplications() throws Exception
+   public List<Map<String, String>> getAllApplications() throws Exception
    {
       return cloudbees.listApplications();
    }

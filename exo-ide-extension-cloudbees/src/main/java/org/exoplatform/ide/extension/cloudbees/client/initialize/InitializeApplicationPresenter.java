@@ -182,7 +182,7 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
       applicationId = display.getApplicationIdField().getValue();
 
       IDE.EVENT_BUS.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.EVENT_BUS.fireEvent(new BuildApplicationEvent());
+      IDE.EVENT_BUS.fireEvent(new BuildApplicationEvent(((ItemContext)selectedItems.get(0)).getProject()));
       closeView();
    }
 

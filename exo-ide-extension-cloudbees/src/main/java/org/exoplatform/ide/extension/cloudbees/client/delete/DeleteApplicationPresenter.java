@@ -66,18 +66,15 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      if (makeSelectionCheck())
+      if (event.getAppId() != null && event.getAppTitle() != null)
       {
-         if (event.getAppId() != null && event.getAppTitle() != null)
-         {
-            appId = event.getAppId();
-            appTitle = event.getAppTitle();
-            askForDelete(appTitle);
-         }
-         else
-         {
-            getApplicationInfo();
-         }
+         appId = event.getAppId();
+         appTitle = event.getAppTitle();
+         askForDelete(appTitle);
+      }
+      else if (makeSelectionCheck())
+      {
+         getApplicationInfo();
       }
    }
 
@@ -115,8 +112,10 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    protected void askForDelete(final String applicationTitle)
    {
-      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      final String title = (applicationTitle != null) ? applicationTitle : projectPath;
+      String title = (applicationTitle != null) ? applicationTitle : "";
+      title =
+         (title.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems
+            .get(0)).getProject().getPath() : title;
 
       Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
          CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title), new BooleanValueReceivedHandler()
@@ -139,7 +138,11 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    protected void doDelete()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = null;
+      if (((ItemContext)selectedItems.get(0)).getProject() != null)
+      {
+         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      }
       CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
          new CloudBeesAsyncRequestCallback<String>(eventBus, new LoggedInHandler()
          {

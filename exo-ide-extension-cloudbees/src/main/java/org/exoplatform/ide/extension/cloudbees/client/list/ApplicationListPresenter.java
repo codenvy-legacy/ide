@@ -105,7 +105,6 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
          @Override
          public void onSelection(SelectionEvent<ApplicationInfo> event)
          {
-            outputHandler = evenBus.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
             evenBus.fireEvent(new ApplicationInfoEvent(event.getSelectedItem()));
          }
       });
@@ -116,6 +115,7 @@ public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicat
          @Override
          public void onSelection(SelectionEvent<ApplicationInfo> event)
          {
+            outputHandler = evenBus.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
             evenBus.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getId(), event.getSelectedItem()
                .getTitle()));
          }
