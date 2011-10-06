@@ -213,6 +213,6 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
 
    public boolean isVersion()
    {
-      return versionId == null ? false : !versionId.equals("current");
+      return versionId == null ? false : !versionId.equals("0");
    }
 }
