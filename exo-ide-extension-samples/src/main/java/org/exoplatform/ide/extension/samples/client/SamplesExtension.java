@@ -71,7 +71,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       SamplesClientBundle.INSTANCE.css().ensureInjected();
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
-
+      
       new StartPagePresenter(eventBus);
       new SelectLocationPresenter(eventBus);
       new ShowSamplesPresenter(eventBus);
@@ -86,5 +86,4 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       
       eventBus.fireEvent(new OpenStartPageEvent());
    }
-
 }

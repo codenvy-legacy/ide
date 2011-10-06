@@ -114,19 +114,17 @@ public class SamplesClientServiceImpl extends SamplesClientService
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudBeesApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback)
     */
    @Override
-   public void createCloudBeesApplication(String appId, String warFile, String message, String workDir,
+   public void createCloudBeesApplication(String appId, String vfsId, String projectId, String warFile, String message,
       CloudBeesAsyncRequestCallback<Map<String, String>> callback)
    {
       final String url = restServiceContext + CLOUDBEES_CREATE;
 
       String params = "appid=" + appId + "&";
       params += "war=" + warFile;
+      params += "&vfsid=" + vfsId + "&projectid=" + projectId;
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
       
-      if(workDir !=null)
-         params +="&workdir="+ workDir;
-
       Map<String, String> responseMap = new HashMap<String, String>();
       callback.setResult(responseMap);
       callback.setEventBus(eventBus);

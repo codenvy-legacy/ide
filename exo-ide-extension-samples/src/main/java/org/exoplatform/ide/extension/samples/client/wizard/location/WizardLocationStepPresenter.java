@@ -37,6 +37,8 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
+import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -56,7 +58,10 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -76,8 +81,8 @@ import java.util.List;
  * @version $Id: WizardLocationStepPresenter.java Sep 12, 2011 12:09:31 PM vereshchaka $
  *
  */
-public class WizardLocationStepPresenter implements ShowWizardLocationStepHandler, ViewClosedHandler, 
-VfsChangedHandler, ProjectCreationFinishedHandler
+public class WizardLocationStepPresenter implements ShowWizardLocationStepHandler, ViewClosedHandler,
+   VfsChangedHandler, ProjectCreationFinishedHandler, ConfigurationReceivedSuccessfullyHandler
 {
    public interface Display extends IsView
    {
@@ -85,7 +90,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
        * @return {@link TreeGridItem}
        */
       TreeGridItem<Item> getNavigationTree();
-      
+
       /**
        * Get selected items in the tree.
        * 
@@ -99,61 +104,64 @@ VfsChangedHandler, ProjectCreationFinishedHandler
        * @param itemId item's path
        */
       void selectItem(String itemId);
-      
+
       HasValue<String> getFolderNameField();
-      
+
       HasClickHandlers getNewFolderButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasClickHandlers getNextButton();
-      
+
       HasClickHandlers getBackButton();
-      
+
       void enableNextButton(boolean enable);
-      
+
       void enableNewFolderButton(boolean enable);
-      
+
       void focusInFolderNameField();
    }
-   
+
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
-   
+
    private HandlerManager eventBus;
-   
+
    private Display display;
-   
+
    /**
-    * Current workspace's href.
+    * Current virtual file system.
     */
-   private String workspace;
-   
-   private List<FolderModel> foldersToRefresh = new ArrayList<FolderModel>();
-   
+   private VirtualFileSystemInfo vfs;
+
+   private String vfsBaseUrl;
+
+   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
+
    private List<Item> selectedItems = new ArrayList<Item>();
-   
+
    private ProjectProperties projectProperties = new ProjectProperties();
-   
+
    public WizardLocationStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(ShowWizardLocationStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
       eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+      eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
    }
-   
+
    private void bindDisplay()
    {
       display.getNavigationTree().addOpenHandler(new OpenHandler<Item>()
       {
          public void onOpen(OpenEvent<Item> event)
          {
-            onFolderOpened((FolderModel)event.getTarget());
+            onFolderOpened((Folder)event.getTarget());
          }
       });
-      
+
       display.getNavigationTree().addSelectionHandler(new SelectionHandler<Item>()
       {
          @Override
@@ -185,7 +193,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             closeView();
          }
       });
-      
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -195,7 +203,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             closeView();
          }
       });
-      
+
       display.getBackButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -205,7 +213,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             closeView();
          }
       });
-      
+
       display.getNewFolderButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -214,7 +222,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             createFolder();
          }
       });
-      
+
       display.getFolderNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -231,7 +239,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
             }
          }
       });
-      
+
       display.enableNewFolderButton(false);
 
       getFolders();
@@ -257,35 +265,36 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      //TODO not url
-      this.workspace = event.getVfsInfo().getId();
+      this.vfs = event.getVfsInfo();
    }
-   
-   private void onFolderOpened(FolderModel folder)
+
+   private void onFolderOpened(Folder openedFolder)
    {
-      if (!folder.getChildren().getItems().isEmpty())
-         return;
+      ItemList<Item> children = (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren() : ((FolderModel)openedFolder).getChildren();
       
-      foldersToRefresh = new ArrayList<FolderModel>();
-      foldersToRefresh.add(folder);
+      if (!children.getItems().isEmpty())
+         return;
+
+      foldersToRefresh = new ArrayList<Folder>();
+      foldersToRefresh.add(openedFolder);
       refreshNextFolder(null);
    }
-   
+
    private void refreshNextFolder(final String itemToSelect)
    {
       if (foldersToRefresh.size() == 0)
       {
          return;
       }
-      
-      final FolderModel folder = foldersToRefresh.get(0);
+
+      final Folder folder = foldersToRefresh.get(0);
       try
       {
          VirtualFileSystem.getInstance().getChildren(folder,
@@ -294,26 +303,44 @@ VfsChangedHandler, ProjectCreationFinishedHandler
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  folder.getChildren().getItems().clear();
-                  folder.getChildren().getItems().addAll(result);
+                  if (folder instanceof FolderModel)
+                  {
+                     ((FolderModel)folder).getChildren().getItems().clear();
+                     ((FolderModel)folder).getChildren().getItems().addAll(result);
+                  }
+                  else if (folder instanceof ProjectModel)
+                  {
+                     ((ProjectModel)folder).getChildren().getItems().clear();
+                     ((ProjectModel)folder).getChildren().getItems().addAll(result);
+                  }
+                  
                   for (Item i : result)
                   {
                      if (i instanceof ItemContext)
                      {
-                        ((ItemContext)i).setParent(folder);
+                        ((ItemContext)i).setParent(new FolderModel(folder));
+                     }
+
+                     if (folder instanceof ProjectModel)
+                     {
+                        ((ItemContext)i).setProject((ProjectModel)folder);
+                     }
+                     else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
+                     {
+                        ((ItemContext)i).setProject(((ItemContext)folder).getProject());
                      }
                   }
                   folderContentReceived(folder, itemToSelect);
 
                }
-               
+
                @Override
                protected void onFailure(Throwable exception)
                {
                   foldersToRefresh.clear();
                   exception.printStackTrace();
                }
-               
+
             });
       }
       catch (RequestException e)
@@ -321,14 +348,15 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          e.printStackTrace();
       }
    }
-   
-   private void folderContentReceived(FolderModel folder, String itemToSelect)
+
+   private void folderContentReceived(Folder folder, String itemToSelect)
    {
       foldersToRefresh.remove(folder);
-      removeItemsNotToBeDisplayed(folder.getChildren().getItems());
-      
+      List<Item> children = (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder).getChildren().getItems();
+      removeItemsNotToBeDisplayed(children);
+
       display.getNavigationTree().setValue(folder);
-      
+
       if (foldersToRefresh.size() > 0)
       {
          refreshNextFolder(itemToSelect);
@@ -341,7 +369,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          }
       }
    }
-   
+
    private void removeItemsNotToBeDisplayed(List<Item> items)
    {
       List<Item> itemsToRemove = new ArrayList<Item>();
@@ -352,13 +380,14 @@ VfsChangedHandler, ProjectCreationFinishedHandler
       }
       items.removeAll(itemsToRemove);
    }
-   
+
    private void getFolders()
    {
       try
       {
-         new VirtualFileSystem(workspace).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
-            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
+         String workspace = (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfs.getId() : vfsBaseUrl + "/" + vfs.getId();
+         new VirtualFileSystem(workspace).init(new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(
+            new VirtualFileSystemInfo()))
          {
 
             @Override
@@ -381,7 +410,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          e.printStackTrace();
       }
    }
-   
+
    private void openView()
    {
       if (display == null)
@@ -397,7 +426,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          eventBus.fireEvent(new ExceptionThrownEvent("Select Location View must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -410,7 +439,7 @@ VfsChangedHandler, ProjectCreationFinishedHandler
          eventBus.fireEvent(new ExceptionThrownEvent(lb.selectLocationErrorParentFolderNotSelected()));
          return;
       }
-      
+
       final String newFolderName = display.getFolderNameField().getValue();
       if (newFolderName == null || newFolderName.isEmpty())
       {
@@ -458,5 +487,14 @@ VfsChangedHandler, ProjectCreationFinishedHandler
       //(creation finished or canceled)
       projectProperties = new ProjectProperties();
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent)
+    */
+   @Override
+   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
+   {
+      vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
+   }
+
 }

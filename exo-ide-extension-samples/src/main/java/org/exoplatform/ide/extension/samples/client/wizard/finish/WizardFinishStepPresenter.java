@@ -51,10 +51,13 @@ import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.Cloudfound
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
 import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
 import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +71,7 @@ import java.util.Map.Entry;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
-public class WizardFinishStepPresenter implements ShowWizardFinishStepHandler, ViewClosedHandler, 
+public class WizardFinishStepPresenter extends GitPresenter  implements ShowWizardFinishStepHandler, ViewClosedHandler, 
 ApplicationBuiltHandler
 {
    public interface Display extends IsView
@@ -88,8 +91,6 @@ ApplicationBuiltHandler
    
    private static final SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
    
-   private HandlerManager eventBus;
-   
    private Display display;
    
    /**
@@ -103,14 +104,11 @@ ApplicationBuiltHandler
     */
    private String warUrl;
    
-   /**
-    * The id of project folder.
-    */
-   private String workDirId;
+   private ProjectModel project;
    
    public WizardFinishStepPresenter(HandlerManager eventBus)
    {
-      this.eventBus = eventBus;
+      super(eventBus);
       
       eventBus.addHandler(ShowWizardFinishStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -253,12 +251,12 @@ ApplicationBuiltHandler
             {
                if (!ProjectProperties.Paas.NONE.equals(projectProperties.getPaas()))
                {
-                  workDirId = result.getId();
-                  buildApplication(result.getId());
+                  project = result;
+                  buildApplication(project);
                }
                //TODO check this works:
-               //eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
-               eventBus.fireEvent(new RefreshBrowserEvent(parent));
+               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
+             //  eventBus.fireEvent(new RefreshBrowserEvent(parent));
                eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
                closeView();
             }
@@ -288,15 +286,15 @@ ApplicationBuiltHandler
     * @param folder - the parent folder of your project
     * @return
     */
-   private ArrayList<FolderModel> getFoldersToRefresh(FolderModel folder)
+   private ArrayList<Folder> getFoldersToRefresh(Folder folder)
    {
-      ArrayList<FolderModel> folders = new ArrayList<FolderModel>();
+      ArrayList<Folder> folders = new ArrayList<Folder>();
       folders.add(0, folder);
-      FolderModel parent = folder.getParent();
+      Folder parent = ((ItemContext)folder).getParent();
       while (parent != null)
       {
          folders.add(0, parent);
-         parent = parent.getParent();
+         parent = ((ItemContext)parent).getParent();
       }
       return folders;
    }
@@ -315,8 +313,7 @@ ApplicationBuiltHandler
       final String applicationId =
          projectProperties.getProperties().get("cf-name") + "/" + projectProperties.getProperties().get("domain");
       
-      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, warUrl, null, workDirId,
-         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployToCloudBeesLoggedInHandler)
+      SamplesClientService.getInstance().createCloudBeesApplication(applicationId, vfs.getId(), project.getId(), warUrl, null, new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, deployToCloudBeesLoggedInHandler)
          {
             @Override
             protected void onSuccess(final Map<String, String> deployResult)
@@ -361,7 +358,8 @@ ApplicationBuiltHandler
    {
       String name = projectProperties.getProperties().get("cf-name");
       String url = projectProperties.getProperties().get("url");
-      SamplesClientService.getInstance().createCloudFoundryApplication(name, url, workDirId, warUrl,
+      //TODO Fix cloud foundry
+      SamplesClientService.getInstance().createCloudFoundryApplication(name, url, project.getPath(), warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, deployToCloudFoundryLoggedInHandler)
          {
             @Override
@@ -394,10 +392,10 @@ ApplicationBuiltHandler
          });
    }
    
-   private void buildApplication(String folderId)
+   private void buildApplication(ProjectModel projectModel)
    {
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
-      eventBus.fireEvent(new BuildApplicationEvent(folderId));
+      eventBus.fireEvent(new BuildApplicationEvent(projectModel));
    }
 
    /**
