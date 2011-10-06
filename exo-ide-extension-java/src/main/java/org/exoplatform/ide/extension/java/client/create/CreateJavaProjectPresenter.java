@@ -42,7 +42,6 @@ import org.exoplatform.ide.extension.java.client.JavaExtension;
 import org.exoplatform.ide.extension.java.client.MavenResponseCallback;
 import org.exoplatform.ide.extension.java.shared.MavenResponse;
 import org.exoplatform.ide.extension.java.shared.ProjectType;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
