@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.event;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -27,17 +29,18 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
 {
-   private String folderId;
-   
-   public BuildApplicationEvent(String folderId)
-   {
-      this.folderId = folderId;
-   }
-   
+   private ProjectModel project;
+
    public BuildApplicationEvent()
    {
+      this.project = null;
    }
-   
+
+   public BuildApplicationEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
+
    public static final GwtEvent.Type<BuildApplicationHandler> TYPE = new Type<BuildApplicationHandler>();
 
    /**
@@ -57,14 +60,14 @@ public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
    {
       handler.onBuildApplication(this);
    }
-   
-   /**
-    * Get the id of folder, which contains project to build.
-    * @return the folder
-    */
-   public String getFolderId()
-   {
-      return folderId;
-   }
 
+   /**
+    * Get the project for build.
+    * 
+    * @return the project
+    */
+   public ProjectModel getProject()
+   {
+      return project;
+   }
 }

@@ -78,12 +78,12 @@ public class JenkinsService
     * @param workDir Git working directory
     * @param callback
     */
-   public void createJenkinsJob(String name, String git, String user, String mail, String workDir,
+   public void createJenkinsJob(String name, String git, String user, String mail, String vfsId, String projectId,
       AsyncRequestCallback<Job> callback)
    {
       String url =
-         restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&workdir="
-            + workDir + "&git=" + git;
+         restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&vfsid=" + vfsId
+            + "&projectid=" + projectId + "&git=" + git;
       Job job = new Job();
       JenkinsJobUnmarshaller unmarshaller = new JenkinsJobUnmarshaller(job);
       callback.setEventBus(IDE.EVENT_BUS);
@@ -97,9 +97,9 @@ public class JenkinsService
     * @param jobName Name of Job
     * @param callback
     */
-   public void buildJob(String jobName, AsyncRequestCallback<String> callback)
+   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
    {
-      String url = restContext + JENKINS + "/job/build?name=" + jobName;
+      String url = restContext + JENKINS + "/job/build?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setEventBus(IDE.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
    }
@@ -109,9 +109,10 @@ public class JenkinsService
     * @param jobName Name of Job
     * @param callback
     */
-   public void jobStatus(String jobName, AsyncRequestCallback<JobStatus> callback)
+   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback)
    {
-      String url = restContext + JENKINS + "/job/status?name=" + jobName;
+      String url =
+         restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
       JobStatus jobStatus = new JobStatus();
       callback.setEventBus(IDE.EVENT_BUS);
       callback.setResult(jobStatus);
@@ -119,22 +120,10 @@ public class JenkinsService
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);
    }
 
-   /**
-    * @param dirUrl
-    * @param fileName
-    * @param callback
-    */
-   public void getFileContent(String dirUrl, String fileName, AsyncRequestCallback<String> callback)
+   public void getJenkinsOutput(String vfsId, String projectId, String jobName, AsyncRequestCallback<String> callback)
    {
-      String url = restContext + "/ide/discovery/find/content?location=" + dirUrl + "&name=" + fileName;
-      callback.setEventBus(IDE.EVENT_BUS);
-      callback.setPayload(new StringContentUnmarshaller(callback));
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
-   }
-
-   public void getJenkinsOutput(String jobName, AsyncRequestCallback<String> callback)
-   {
-      String url = restContext + JENKINS + "/job/console-output?name=" + jobName;
+      String url = restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid="
+      + vfsId + "&projectid="+ projectId;
       callback.setEventBus(IDE.EVENT_BUS);
       callback.setPayload(new StringContentUnmarshaller(callback));
       AsyncRequest.build(RequestBuilder.GET, url, null).send(callback);

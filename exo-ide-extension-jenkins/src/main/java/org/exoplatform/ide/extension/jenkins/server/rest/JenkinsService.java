@@ -50,11 +50,10 @@ public class JenkinsService
 {
    @Inject
    private JenkinsClient jenkins;
-   
+
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-   
-   
+
    public JenkinsService()
    {
    }
@@ -73,10 +72,9 @@ public class JenkinsService
       @QueryParam("git") String git, //
       @QueryParam("user") String user, //
       @QueryParam("email") String email, //
-      @QueryParam("projectId") String projectId, //
-      @QueryParam("vfsId") String vfsId,
-      @Context UriInfo uriInfo
-   ) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, //
+      @QueryParam("vfsid") String vfsId, @Context UriInfo uriInfo) throws IOException, JenkinsException,
+      VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
@@ -91,9 +89,8 @@ public class JenkinsService
    @POST
    public void build( //
       @QueryParam("name") String jobName, //
-      @QueryParam("projectId") String projectId, //
-      @QueryParam("vfsId") String vfsId
-   ) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, //
+      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
@@ -106,9 +103,8 @@ public class JenkinsService
    @Produces(MediaType.APPLICATION_JSON)
    public JobStatus jobStatus( //
       @QueryParam("name") String jobName, //
-      @QueryParam("projectId") String projectId, //
-      @QueryParam("vfsId") String vfsId
-   ) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, //
+      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
@@ -121,9 +117,8 @@ public class JenkinsService
    @Produces(MediaType.TEXT_PLAIN)
    public InputStream consoleOutput( //
       @QueryParam("name") String jobName, //
-      @QueryParam("projectId") String projectId, //
-      @QueryParam("vfsId") String vfsId
-   ) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("projectid") String projectId, //
+      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)

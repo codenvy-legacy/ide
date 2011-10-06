@@ -78,7 +78,7 @@ public class BuildApplicationView extends ViewImpl implements
       if (curText != null && curText != undefined && curText != "") {
          pre.textContent += "\r\n";      
       }
-      pre.textContent += text;
+      pre.innerHTML += text;
    
       this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
    }-*/;

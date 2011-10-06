@@ -18,17 +18,14 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.build;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -52,14 +49,14 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.marshaller.WorkDirResponse;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -68,7 +65,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, ViewClosedHandler, VfsChangedHandler
+   UserInfoReceivedHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -103,15 +100,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    private Status prevStatus = null;
 
-   private String entryPoint;
-
    private boolean buildInProgress = false;
 
    /**
-    * The id of folder, which contains project to build.
-    * If id is null, than get the id of selected folder.
+    * Project for build on Jenkins.
     */
-   private String folderId;
+   private ProjectModel project;
 
    /**
     * @param eventBus
@@ -123,7 +117,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -135,19 +128,55 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       if (buildInProgress)
       {
          String message = "You can not start the build of two projects at the same time.<br>";
-         message += "Building of project <b>" + getProjectDir() + "</b> is performed.";
+         message += "Building of project <b>" + project.getPath() + "</b> is performed.";
 
          Dialogs.getInstance().showError(message);
          return;
       }
 
-      //the id of folder to build can be received from event.
-      //In other case, it will be got from selected items.
-      folderId = event.getFolderId();
-
-      if (makeSelectionCheck())
+      project = event.getProject();
+      if (project == null && makeSelectionCheck())
       {
-         beforeBuild();
+         project = ((ItemContext)selectedItems.get(0)).getProject();
+      }
+      checkIsGitRepository(project);
+
+   }
+
+   private void checkIsGitRepository(final ProjectModel project)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  for (Item item : result)
+                  {
+                     if (".git".equals(item.getName()))
+                     {
+                        beforeBuild();
+                        return;
+                     }
+                  }
+                  initRepository(project.getId());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  initRepository(project.getId());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
       }
    }
 
@@ -157,48 +186,15 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void beforeBuild()
    {
-      String url = "";
-      if (folderId != null)
+      jobName = (String)project.getPropertyValue("jenkins-job");
+      if (jobName != null && !jobName.isEmpty())
       {
-         url = folderId;
+         build(jobName);
       }
       else
       {
-         Item item = selectedItems.get(0);
-         if (item instanceof FolderModel)
-            url = item.getId();
-         else
-            url = item.getParentId();
+         createJob(GitClientUtil.getPublicGitRepoUrl(project.getPath(), restContext));
       }
-      
-      final String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      JenkinsService.get().getFileContent(url, ".jenkins-job", new AsyncRequestCallback<String>()
-      {
-         @Override
-         protected void onSuccess(String result)
-         {
-            jobName = result;
-            build(result);
-         }
-
-         /**
-           * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-           */
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
-            {
-               ServerException ex = (ServerException)exception;
-               if (ex.getHTTPStatus() == HTTPStatus.NOT_FOUND)
-               {
-                  createJob(GitClientUtil.getPublicGitRepoUrl(workdir, restContext));
-                  return;
-               }
-            }
-            super.onFailure(exception);
-         }
-      });
    }
 
    /**
@@ -213,10 +209,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-      String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       String uName = userInfo.getName().split("@")[0];//Jenkins don't alow in job name '@' character
       JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
-         repository, uName, mail, workdir, new AsyncRequestCallback<Job>()
+         repository, uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
          {
             @Override
             protected void onSuccess(Job result)
@@ -233,7 +228,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    */
    private String getProjectName()
    {
-      String projectName = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      String projectName = project.getPath();
       if (projectName.endsWith("/"))
       {
          projectName = projectName.substring(0, projectName.length() - 1);
@@ -243,45 +238,20 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * Get project's directory ( from root of workspace ).
-    * 
-    * @return
-    */
-   private String getProjectDir()
-   {
-      String wd = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      if (wd.endsWith("/"))
-      {
-         wd = wd.substring(0, wd.length() - 1);
-      }
-      wd = wd.substring(entryPoint.length() - 1);
-      //      wd = wd.substring(0, wd.lastIndexOf("/"));
-      //
-      //      String ep = entryPoint;
-      //      if (ep.endsWith("/"))
-      //      {
-      //         ep = ep.substring(0, ep.length() - 1);
-      //      }
-      //      ep = ep.substring(0, ep.lastIndexOf("/"));
-
-      return wd;//.substring(ep.length());
-   }
-
-   /**
     * Start building application
     * @param jobName name of Jenkins job
     */
    private void build(String jobName)
    {
-      JenkinsService.get().buildJob(jobName, new AsyncRequestCallback<String>()
+      String projectId = "";
+      JenkinsService.get().buildJob(vfs.getId(), projectId, jobName, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
          {
             buildInProgress = true;
 
-            String projectDir = getProjectDir();
-            showBuildMessage("Building project <b>" + projectDir + "</b>");
+            showBuildMessage("Building project <b>" + project.getPath() + "</b>");
 
             display.startAnimation();
             display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
@@ -340,11 +310,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
       prevStatus = Status.END;
 
-      String projectDir = getProjectDir();
-
       String message =
-         "Building project <b>" + projectDir + "</b> has been finished.\r\nResult: " + status.getLastBuildResult() == null
-            ? "Unknown" : status.getLastBuildResult();
+         "Building project <b>" + project.getPath() + "</b> has been finished.\r\nResult: "
+            + status.getLastBuildResult() == null ? "Unknown" : status.getLastBuildResult();
 
       showBuildMessage(message);
       display.stopAnimation();
@@ -402,7 +370,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       public void run()
       {
-         JenkinsService.get().jobStatus(jobName, new AsyncRequestCallback<JobStatus>()
+         JenkinsService.get().jobStatus(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<JobStatus>()
          {
             @Override
             protected void onSuccess(JobStatus status)
@@ -413,14 +381,15 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                {
                   IDE.EVENT_BUS.fireEvent(new ApplicationBuiltEvent(status));
 
-                  JenkinsService.get().getJenkinsOutput(jobName, new AsyncRequestCallback<String>()
-                  {
-                     @Override
-                     protected void onSuccess(String result)
+                  JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
+                     new AsyncRequestCallback<String>()
                      {
-                        showBuildMessage(result);
-                     }
-                  });
+                        @Override
+                        protected void onSuccess(String result)
+                        {
+                           showBuildMessage(result);
+                        }
+                     });
                }
                else
                {
@@ -448,70 +417,29 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.GitPresenter#getWorkDir()
-    *//*
-   @Override
-   public void getWorkDir()
-   {
-      //the id of folder, that is the start point to get the workDir.
-      final String startDirId;
-      if (folderId != null)
-      {
-         startDirId = folderId;
-      }
-      else if (selectedItems != null && selectedItems.size() > 0)
-      {
-         startDirId = selectedItems.get(0).getId();
-      }
-      else
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
-         return;
-      }
-
-      //First get the working directory of the repository if exists:
-      GitClientService.getInstance().getWorkDir(startDirId, new AsyncRequestCallback<WorkDirResponse>()
-      {
-         @Override
-         protected void onSuccess(WorkDirResponse result)
-         {
-            workDir = result.getWorkDir();
-            workDir = (workDir.endsWith("/.git")) ? workDir.substring(0, workDir.lastIndexOf("/.git")) : workDir;
-            onWorkDirReceived();
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            initRepository(startDirId);
-         }
-      });
-   }*/
-
-   /**
     * Initialize Git repository.
     * 
     * @param path working directory of the repository
     */
-   /*private void initRepository(final String path)
+   private void initRepository(final String projectId)
    {
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), path, false,
+         GitClientService.getInstance().init(vfs.getId(), projectId, false,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  //eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
                   showBuildMessage(GitExtension.MESSAGES.initSuccess());
                   eventBus.fireEvent(new RefreshBrowserEvent());
-                  onWorkDirReceived();
+                  createJob(GitClientUtil.getPublicGitRepoUrl(project.getPath(), restContext));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
+                  exception.printStackTrace();
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
@@ -528,7 +456,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
    }
-*/
+
    private void showBuildMessage(String message)
    {
       if (display != null)
@@ -557,12 +485,4 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          closed = true;
       }
    }
-
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      //TODO not url
-      entryPoint = event.getVfsInfo().getId();
-   }
-
 }
