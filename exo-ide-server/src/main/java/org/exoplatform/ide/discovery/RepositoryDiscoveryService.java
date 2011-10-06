@@ -23,8 +23,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.config.WorkspaceEntry;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,9 +56,6 @@ public class RepositoryDiscoveryService
    public static final String DEF_WS = "dev-monit";
 
    public static final String VFS_CONTEXT = "vfs/jcr";
-
-   /** See {@link SessionProviderService} */
-   private ThreadLocalSessionProviderService sessionProviderService;
 
    private static String entryPoint;
 
@@ -112,7 +107,7 @@ public class RepositoryDiscoveryService
          for (WorkspaceEntry workspaceEntry : repository.getConfiguration().getWorkspaceEntries())
          {
             String workspace = workspaceEntry.getName();
-            //TODO: maybe not good use directly imlementation JcrFileSystemFactory.class
+            //TODO: maybe not good use directly implementation JcrFileSystemFactory.class
             String href =
                uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(workspace).build().toString();
             HashMap<String, String> point = new HashMap<String, String>(2);
