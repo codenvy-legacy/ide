@@ -78,12 +78,12 @@ public class JenkinsService
     * @param workDir Git working directory
     * @param callback
     */
-   public void createJenkinsJob(String name, String git, String user, String mail, String vfsId, String projectId,
+   public void createJenkinsJob(String name, String user, String mail, String vfsId, String projectId,
       AsyncRequestCallback<Job> callback)
    {
       String url =
          restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&vfsid=" + vfsId
-            + "&projectid=" + projectId + "&git=" + git;
+            + "&projectid=" + projectId;
       Job job = new Job();
       JenkinsJobUnmarshaller unmarshaller = new JenkinsJobUnmarshaller(job);
       callback.setEventBus(IDE.EVENT_BUS);

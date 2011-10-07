@@ -77,9 +77,8 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
          result.append(uriInfo.getBaseUri().getScheme())
                .append("://")
                .append(uriInfo.getBaseUri().getHost());
-
          int port = uriInfo.getBaseUri().getPort();
-         if (port != 80)
+         if (port != 80 && port != -1)
          {
             result.append(':').append(port);
          }

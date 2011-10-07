@@ -46,7 +46,6 @@ import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus.Status;
 import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitClientUtil;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -96,8 +95,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private static final int delay = 10000;
 
-   private String restContext;
-
    private Status prevStatus = null;
 
    private boolean buildInProgress = false;
@@ -110,10 +107,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    /**
     * @param eventBus
     */
-   public BuildApplicationPresenter(String restContext)
+   public BuildApplicationPresenter()
    {
       super(IDE.EVENT_BUS);
-      this.restContext = restContext;
       IDE.EVENT_BUS.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
@@ -193,7 +189,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       }
       else
       {
-         createJob(GitClientUtil.getPublicGitRepoUrl(project.getPath(), restContext));
+         createJob();
       }
    }
 
@@ -201,17 +197,13 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     * Create new Jenkins job.
     * @param repository repository URL (public location of local repository)
     */
-   private void createJob(String repository)
+   private void createJob()
    {
-      //for test
-      //repository = "git://github.com/EvgenVidolob/TestJavaProject.git";
-
       //dummy check that user name is e-mail.
       //Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
       String uName = userInfo.getName().split("@")[0];//Jenkins don't alow in job name '@' character
-      JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE),
-         repository, uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
+      JenkinsService.get().createJenkinsJob(uName + "-" + getProjectName() + "-" + Random.nextInt(Integer.MAX_VALUE), uName, mail, vfs.getId(), project.getId(), new AsyncRequestCallback<Job>()
          {
             @Override
             protected void onSuccess(Job result)
@@ -433,7 +425,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                {
                   showBuildMessage(GitExtension.MESSAGES.initSuccess());
                   eventBus.fireEvent(new RefreshBrowserEvent());
-                  createJob(GitClientUtil.getPublicGitRepoUrl(project.getPath(), restContext));
+                  createJob();
                }
 
                @Override
