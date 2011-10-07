@@ -51,7 +51,7 @@ public class ExpressService
 {
    @Inject
    private Express express;
-   
+
    @Inject
    private LocalPathResolver localPathResolver;
 
@@ -104,14 +104,15 @@ public class ExpressService
    @Path("apps/create")
    @Produces(MediaType.APPLICATION_JSON)
    public AppInfo createApplication(@QueryParam("type") String type) throws ExpressException, IOException,
- ParsingResponseException, VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return express.createApplication(appName, type, new File(localPathResolver.resolve(vfs, projectId)));
+      return express.createApplication(appName, type,
+         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
-   
+
    @GET
    @Path("apps/type")
    @Produces(MediaType.APPLICATION_JSON)
@@ -123,22 +124,26 @@ public class ExpressService
    @GET
    @Path("apps/info")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo applicationInfo() throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+   public AppInfo applicationInfo() throws ExpressException, IOException, ParsingResponseException,
+      VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return express.applicationInfo(appName, new File(localPathResolver.resolve(vfs, projectId)));
+      return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null);
    }
 
    @POST
    @Path("apps/destroy")
-   public void destroyApplication() throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+   public void destroyApplication() throws ExpressException, IOException, ParsingResponseException,
+      VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      express.destroyApplication(appName, new File(localPathResolver.resolve(vfs, projectId)));
+      express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null);
    }
 
    @GET

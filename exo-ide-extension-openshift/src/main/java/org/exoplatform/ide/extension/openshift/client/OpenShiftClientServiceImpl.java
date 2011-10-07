@@ -160,7 +160,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       callback.setEventBus(eventBus);
-      String params = "?name=" + name + "&vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "?name=" + name + "&vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
       AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
@@ -196,7 +197,8 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += "vfsid=" + vfsId + "&projectid=" + projectId;
+      params += "vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
       AsyncRequest.build(RequestBuilder.GET, url + "?" + params, loader).send(callback);
    }
 

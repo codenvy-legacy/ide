@@ -204,10 +204,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
    @Override
    public void onShowUserInfo(ShowUserInfoEvent event)
    {
-      if (makeSelectionCheck())
-      {
-         getUserInfo();
-      }
+      getUserInfo();
    }
 
    /**
@@ -325,7 +322,7 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
     */
    protected void doDeleteApplication(final String name)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
       OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), projectId,
          new AsyncRequestCallback<String>()
          {
