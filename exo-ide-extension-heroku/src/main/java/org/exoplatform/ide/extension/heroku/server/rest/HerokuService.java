@@ -115,7 +115,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.createApplication(appName, remote, new File(localPathResolver.resolve(vfs, projectId)));
+      return heroku.createApplication(appName, remote,
+         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
 
    @Path("apps/destroy")
@@ -125,7 +126,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      heroku.destroyApplication(appName, new File(localPathResolver.resolve(vfs, projectId)));
+      heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null);
    }
 
    @Path("apps/info")
@@ -137,7 +139,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.applicationInfo(appName, inRawFormat, new File(localPathResolver.resolve(vfs, projectId)));
+      return heroku.applicationInfo(appName, inRawFormat,
+         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
 
    @Path("apps/rename")
@@ -149,7 +152,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.renameApplication(appName, newname, new File(localPathResolver.resolve(vfs, projectId)));
+      return heroku.renameApplication(appName, newname,
+         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
 
    @Path("apps/stack")
@@ -161,7 +165,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.getStacks(appName, new File(localPathResolver.resolve(vfs, projectId)));
+      return heroku
+         .getStacks(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
 
    @Path("apps/stack-migrate")
@@ -173,7 +178,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.stackMigrate(appName, new File(localPathResolver.resolve(vfs, projectId)), stack);
+      return heroku.stackMigrate(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
+         : null, stack);
    }
 
    @Path("apps/logs")
@@ -185,7 +191,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      return heroku.logs(appName, new File(localPathResolver.resolve(vfs, projectId)), logLines);
+      return heroku.logs(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
+         logLines);
    }
 
    @Path("apps/run")
@@ -198,7 +205,8 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new VirtualFileSystemException("Virtual file system not initialized");
-      final HttpChunkReader chunkReader = heroku.run(appName, new File(localPathResolver.resolve(vfs, projectId)), command);
+      final HttpChunkReader chunkReader =
+         heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, command);
       return new StreamingOutput()
       {
          @Override
