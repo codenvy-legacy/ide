@@ -302,6 +302,7 @@
                <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
+               <extraJvmArgs>-Xmx1024m</extraJvmArgs>
             </configuration>
             <executions>
                <execution>

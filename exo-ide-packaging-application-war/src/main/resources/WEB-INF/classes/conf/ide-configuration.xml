@@ -243,6 +243,16 @@
          </values-param>
       </init-params>
    </component>
+   
+   <component>
+      <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+   </component>
+   
+    <component>
+      <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
+      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+   </component>
 
    <external-component-plugins>
       <target-component>org.exoplatform.services.organization.OrganizationService</target-component>

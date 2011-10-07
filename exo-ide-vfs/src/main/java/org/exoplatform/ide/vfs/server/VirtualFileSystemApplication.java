@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintExceptionMapper;
+import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistExceptionMapper;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundExceptionMapper;
@@ -53,6 +54,7 @@ public class VirtualFileSystemApplication extends Application
       singletons.add(new NotSupportedExceptionMapper());
       singletons.add(new PermissionDeniedExceptionMapper());
       singletons.add(new LocalPathResolveExceptionMapper());
+      singletons.add(new GitUrlResolveExceptionMapper());
    }
 
    /**

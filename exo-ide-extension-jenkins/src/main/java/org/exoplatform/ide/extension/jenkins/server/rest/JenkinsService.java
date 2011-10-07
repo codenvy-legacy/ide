@@ -22,6 +22,7 @@ import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
 import org.exoplatform.ide.extension.jenkins.shared.Job;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
+import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -50,18 +51,24 @@ public class JenkinsService
 {
    @Inject
    private JenkinsClient jenkins;
-
+   
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-
+   
+   @Inject
+   private GitUrlResolver gitUrlResolver;
+   
+   
    public JenkinsService()
    {
    }
 
-   protected JenkinsService(JenkinsClient jenkins)
+   protected JenkinsService(JenkinsClient jenkins, VirtualFileSystemRegistry vfsRegistry, GitUrlResolver gitUrlResolver)
    {
       // Use this constructor when deploy JenkinsService as singleton resource.
       this.jenkins = jenkins;
+      this.vfsRegistry = vfsRegistry;
+      this.gitUrlResolver = gitUrlResolver;
    }
 
    @Path("job/create")
@@ -69,7 +76,6 @@ public class JenkinsService
    @Produces(MediaType.APPLICATION_JSON)
    public Job createJob( //
       @QueryParam("name") String name, //
-      @QueryParam("git") String git, //
       @QueryParam("user") String user, //
       @QueryParam("email") String email, //
       @QueryParam("projectid") String projectId, //
@@ -79,6 +85,7 @@ public class JenkinsService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
       if (vfs == null)
          throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
+      String git = gitUrlResolver.resolve(uriInfo, vfs, projectId);
       jenkins.createJob(name, git, user, email, projectId, vfs);
       String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
       String statusUrl = uriInfo.getBaseUriBuilder().path(getClass(), "jobStatus").build(name).toString();
