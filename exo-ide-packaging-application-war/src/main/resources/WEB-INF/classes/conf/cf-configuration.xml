@@ -162,8 +162,8 @@
       <type>org.exoplatform.services.jcr.ext.resource.jcr.Handler</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
+  <component>
+      <type>org.everrest.services.RestServicesList</type>
    </component>
 
    <external-component-plugins>
