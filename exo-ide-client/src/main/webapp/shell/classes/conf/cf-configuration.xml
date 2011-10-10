@@ -40,7 +40,7 @@
          </properties-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.services.rest.ext.provider.HierarchicalPropertyEntityProvider</type>
    </component>
@@ -48,9 +48,12 @@
    <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
+
    <component>
+      <key>org.everrest.core.ResourceBinder</key>
       <type>org.everrest.core.impl.ResourceBinderImpl</type>
    </component>
+
    <component>
       <type>org.everrest.exoplatform.ProvidersRegistry</type>
    </component>
@@ -75,11 +78,11 @@
    <component>
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
-   
+
    <component>
-   	<type>org.everrest.proxy.ProxyService</type>
+      <type>org.everrest.proxy.ProxyService</type>
    </component>
-   
+
    <component>
       <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
       <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>
@@ -212,7 +215,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.rest.ext.service.RestServicesListApplication</type>
+      <type>org.everrest.services.RestServicesList</type>
    </component>
 
    <external-component-plugins>
@@ -249,7 +252,7 @@
                <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
                <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
                <property name="exoide" value="http://exoplatform.org/ide/1.2.x/" />
-               <property name="vfs" value="http://exoplatform.org/vfs"/>
+               <property name="vfs" value="http://exoplatform.org/vfs" />
             </properties-param>
          </init-params>
       </component-plugin>
@@ -286,7 +289,7 @@
       </component-plugin>
    </external-component-plugins>
 
-  
+
    <remove-configuration>org.exoplatform.services.rest.impl.ApplicationRegistry</remove-configuration>
    <remove-configuration>org.exoplatform.services.rest.impl.StartableApplication</remove-configuration>
    <remove-configuration>org.exoplatform.services.rest.impl.ProvidersRegistry</remove-configuration>
@@ -294,5 +297,5 @@
    <remove-configuration>org.exoplatform.services.rest.impl.RequestDispatcher</remove-configuration>
    <remove-configuration>org.exoplatform.services.rest.impl.ResourceBinder</remove-configuration>
    <remove-configuration>org.exoplatform.services.rest.impl.provider.JAXBContextResolver</remove-configuration>
-   
+
 </configuration>
