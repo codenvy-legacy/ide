@@ -55,6 +55,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String APPS_INFO = BASE_URL + "/apps/info";
 
    private static final String APPS_DELETE = BASE_URL + "/apps/delete";
+   
+   private static final String APPS_UPDATE = BASE_URL + "/apps/update";
 
    private static final String LOGIN = BASE_URL + "/login";
 
@@ -245,6 +247,33 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       callback.setPayload(unmarshaler);
       callback.setResult(result);
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#updateApplication(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
+    */
+   @Override
+   public void updateApplication(String appId, String vfsId, String projectId, String warFile, String message,
+      CloudBeesAsyncRequestCallback<Map<String, String>> callback)
+   {
+      final String url = restServiceContext + APPS_UPDATE;
+
+      String params = "appid=" + appId + "&";
+      params += "war=" + warFile;
+      params += "&vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      if (message != null && !message.isEmpty())
+         params += "&message=" + message;
+
+      Map<String, String> responseMap = new HashMap<String, String>();
+      callback.setResult(responseMap);
+      callback.setEventBus(eventBus);
+
+      DeployWarUnmarshaller unmarshaller = new DeployWarUnmarshaller(responseMap);
+      callback.setPayload(unmarshaller);
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
 }

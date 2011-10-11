@@ -78,6 +78,15 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("control.deleteApp.prompt")
    String deleteApplicationControlPrompt();
    
+   @Key("control.updateApp.id")
+   String updateApplicationControlId();
+   
+   @Key("control.updateApp.title")
+   String updateApplicationControlTitle();
+   
+   @Key("control.updateApp.prompt")
+   String updateApplicationControlPrompt();
+   
    @Key("control.appList.id")
    String controlAppListId();
    
@@ -161,6 +170,21 @@ public interface CloudBeesLocalizationConstant extends Messages
    
    @Key("applicationDeleted")
    String applicationDeletedMsg(String applicationTitle);
+   
+   /*
+    * UpdateApplicationPresenter
+    */
+   @Key("applicationUpdated")
+   String applicationUpdatedMsg(String applicationTitle);
+   
+   @Key("appUpdate.askForMsg.title")
+   String updateAppAskForMsgTitle();
+   
+   @Key("appUpdate.askForMsg.text")
+   String updateAppAskForMsgText();
+   
+   @Key("appUpdate.selectFolderToUpdate")
+   String selectFolderToUpdate();
 
    /*
     * AppListView

@@ -27,11 +27,13 @@ import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListCon
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.DeleteApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
+import org.exoplatform.ide.extension.cloudbees.client.control.UpdateApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
@@ -73,6 +75,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       IDE.getInstance().addControl(new CloudBeesControl());
       IDE.getInstance().addControl(new InitializeApplicationControl());
       IDE.getInstance().addControl(new ApplicationInfoControl());
+      IDE.getInstance().addControl(new UpdateApplicationControl());
       IDE.getInstance().addControl(new DeleteApplicationControl());
       IDE.getInstance().addControl(new ApplicationListControl());
       
@@ -81,6 +84,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationInfoPresenter(eventBus);
       new DeleteApplicationPresenter(eventBus);
       new ApplicationListPresenter(eventBus);
+      new UpdateApplicationPresenter(eventBus);
    }
 
 }

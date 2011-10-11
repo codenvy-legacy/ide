@@ -103,6 +103,19 @@ public abstract class CloudBeesClientService
     */
    public abstract void deleteApplication(String appId, String vfsId, String projectId,
       CloudBeesAsyncRequestCallback<String> callback);
+   
+   /**
+    * Update application on CloudBees.
+    * 
+    * @param appId application's id
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param warFile location of the build war with application
+    * @param message initialization message
+    * @param callback callback
+    */
+   public abstract void updateApplication(String appId, String vfsId, String projectId, String warFile,
+      String message, CloudBeesAsyncRequestCallback<Map<String, String>> callback);
 
    /**
     * Deploy war with the application.

@@ -16,68 +16,105 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.client.delete;
+package org.exoplatform.ide.extension.cloudbees.client.update;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
+import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
+import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
+import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.Map;
 
 /**
- * Presenter for deleting application from CloudBees.
- * Performs following actions on delete:
- * 1. Gets application id (application info) by work dir (location on file system).
- * 2. Asks user to confirm the deleting of the application.
- * 3. When user confirms - performs deleting the application.
+ * Presenter for updating application on CloudBees.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: DeleteApplicationPresenter.java Jul 1, 2011 12:59:52 PM vereshchaka $
- *
+ * @version $Id: UpdateApplicationPresenter.java Oct 10, 2011 5:07:40 PM vereshchaka $
  */
-public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler
+public class UpdateApplicationPresenter extends GitPresenter implements UpdateApplicationHandler,
+   ApplicationBuiltHandler
 {
+   private CloudBeesLocalizationConstant lb = CloudBeesExtension.LOCALIZATION_CONSTANT;
+
    private String appId;
 
    private String appTitle;
 
    /**
+    * Message for git commit.
+    */
+   private String updateMessage;
+
+   /**
+    * Location of war file (Java only).
+    */
+   private String warUrl;
+
+   /**
     * @param eventBus
     */
-   public DeleteApplicationPresenter(HandlerManager eventBus)
+   public UpdateApplicationPresenter(HandlerManager eventBus)
    {
       super(eventBus);
 
-      eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
+      eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationHandler#onDeleteApplication(org.exoplatform.ide.extension.heroku.client.delete.DeleteApplicationEvent)
+    * @see org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationEvent)
     */
    @Override
-   public void onDeleteApplication(DeleteApplicationEvent event)
+   public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      //application id and applicaiton title can be received from event
-      //e.g.when, delete from application manager form
+
       if (event.getAppId() != null && event.getAppTitle() != null)
       {
          appId = event.getAppId();
          appTitle = event.getAppTitle();
-         askForDelete(appTitle);
+         askForMessage();
       }
       else if (makeSelectionCheck())
       {
          getApplicationInfo();
       }
+   }
+
+   private void askForMessage()
+   {
+      Dialogs.getInstance().askForValue(lb.updateAppAskForMsgTitle(), lb.updateAppAskForMsgText(), "",
+         new StringValueReceivedHandler()
+         {
+            @Override
+            public void stringValueReceived(String value)
+            {
+               if (value == null)
+               {
+                  updateMessage = null;
+                  return;
+               }
+               else if (value.isEmpty())
+               {
+                  updateMessage = null;
+               }
+               else
+               {
+                  updateMessage = value;
+               }
+               buildApplication();
+            }
+         });
    }
 
    /**
@@ -102,65 +139,58 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
             {
                appId = result.get("id");
                appTitle = result.get("title");
-               askForDelete(appTitle);
+               askForMessage();
             }
          });
    }
 
-   /**
-    * Show confirmation message before delete.
-    * 
-    * @param gitWorkDir
-    */
-   protected void askForDelete(final String applicationTitle)
-   {
-      String title = (applicationTitle != null) ? applicationTitle : "";
-      title =
-         (title.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems
-            .get(0)).getProject().getPath() : title;
-
-      Dialogs.getInstance().ask(CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-         CloudBeesExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(title), new BooleanValueReceivedHandler()
-         {
-
-            @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && value)
-               {
-                  doDelete();
-               }
-            }
-         });
-   }
-
-   /**
-    * Perform deleting the application on CloudBees.
-    *
-    */
-   protected void doDelete()
+   private void doUpdate()
    {
       String projectId = null;
       if (((ItemContext)selectedItems.get(0)).getProject() != null)
       {
          projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       }
-      CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,
-         new CloudBeesAsyncRequestCallback<String>(eventBus, new LoggedInHandler()
+
+      CloudBeesClientService.getInstance().updateApplication(appId, vfs.getId(), projectId, warUrl, updateMessage,
+         new CloudBeesAsyncRequestCallback<Map<String, String>>(eventBus, new LoggedInHandler()
          {
+
             @Override
             public void onLoggedIn()
             {
-               doDelete();
+               doUpdate();
             }
          }, null)
          {
+
             @Override
-            protected void onSuccess(String result)
+            protected void onSuccess(Map<String, String> result)
             {
                eventBus.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                  .applicationDeletedMsg(appTitle), Type.INFO));
+                  .applicationUpdatedMsg(appTitle), Type.INFO));
             }
          });
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
+    */
+   @Override
+   public void onApplicationBuilt(ApplicationBuiltEvent event)
+   {
+      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getJobStatus().getArtifactUrl() != null)
+      {
+         warUrl = event.getJobStatus().getArtifactUrl();
+         doUpdate();
+      }
+   }
+
+   private void buildApplication()
+   {
+      eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildApplicationEvent());
+   }
+
 }
