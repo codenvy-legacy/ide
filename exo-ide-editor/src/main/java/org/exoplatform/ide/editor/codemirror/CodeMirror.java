@@ -68,7 +68,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
-   private boolean needValidateCode = true; // validate code at start after the "initCallback" handler has been called
+   private boolean needValidateCode = false;
 
    private boolean showLineNumbers = true;
 
@@ -129,6 +129,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
 
       codeAssistant = configuration.getCodeAssistant();
+
+      // validate code at start after the "initCallback" handler has been called
+      if (configuration.canBeValidated())
+      {
+         needValidateCode = true;
+      }
       
       eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
    }
