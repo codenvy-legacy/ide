@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.services.security.IdentityConstants;
 
 import java.util.ArrayList;

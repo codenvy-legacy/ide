@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
-import org.exoplatform.services.rest.impl.ContainerResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -64,7 +64,7 @@ public class ImportTest extends JcrFileSystemTest
          .append("import/") //
          .append(importFolderId) //
          .toString();
-      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
+      Map<String, List<String>> headers = new HashMap<String, List<String>>();
       headers.put("Content-Type", Arrays.asList("application/zip"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);
       assertEquals(204, response.getStatus());

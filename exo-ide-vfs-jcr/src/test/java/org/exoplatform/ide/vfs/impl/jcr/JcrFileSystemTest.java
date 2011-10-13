@@ -20,6 +20,12 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import junit.framework.TestCase;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.impl.ApplicationContextImpl;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.ProviderBinder;
+import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -34,12 +40,6 @@ import org.exoplatform.services.jcr.core.ExtendedSession;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.RequestHandler;
-import org.exoplatform.services.rest.impl.ApplicationContextImpl;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.impl.ProviderBinder;
-import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.services.rest.tools.ResourceLauncher;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
@@ -72,9 +72,6 @@ public abstract class JcrFileSystemTest extends TestCase
    protected Node testRoot;
    protected ResourceLauncher launcher;
 
-   
-   StandaloneContainer container;
-   
    /**
     * @see junit.framework.TestCase#setUp()
     */
@@ -85,7 +82,7 @@ public abstract class JcrFileSystemTest extends TestCase
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
       String conf = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
       StandaloneContainer.setConfigurationURL(conf);
-      /*StandaloneContainer*/ container = StandaloneContainer.getInstance();
+      StandaloneContainer container = StandaloneContainer.getInstance();
 
       String loginConf = getClass().getResource("/login.conf").toString();
       if (System.getProperty("java.security.auth.login.config") == null)

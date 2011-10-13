@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
-import org.exoplatform.services.rest.impl.ContainerResponse;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;

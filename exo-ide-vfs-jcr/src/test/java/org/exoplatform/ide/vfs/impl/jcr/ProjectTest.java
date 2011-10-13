@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

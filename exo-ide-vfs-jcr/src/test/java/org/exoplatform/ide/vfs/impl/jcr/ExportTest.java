@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.rest.impl.ContainerResponse;
-import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;

@@ -26,6 +26,7 @@
    </component>
 
 	<component>
+      <key>org.exoplatform.ide.vfs.impl.jcr.VirtualFileSystemRegistry</key>
 		<type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemRegistry</type>
 		<init-params>
 		 <values-param>
@@ -190,31 +191,25 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.rest.impl.ApplicationRegistry</type>
+      <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.StartableApplication</type>
+      <type>org.everrest.exoplatform.StartableApplication</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.ProvidersRegistry</type>
+      <type>org.everrest.exoplatform.ProvidersRegistry</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.RequestHandlerImpl</type>
+      <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.RequestDispatcher</type>
+      <type>org.everrest.exoplatform.ExoRequestDispatcher</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.ResourceBinder</type>
+      <type>org.everrest.exoplatform.ExoRequestHandler</type>
    </component>
-
    <component>
-      <type>org.exoplatform.services.rest.impl.provider.JAXBContextResolver</type>
+      <type>org.everrest.core.impl.ResourceBinderImpl</type>
    </component>
 
    <external-component-plugins>

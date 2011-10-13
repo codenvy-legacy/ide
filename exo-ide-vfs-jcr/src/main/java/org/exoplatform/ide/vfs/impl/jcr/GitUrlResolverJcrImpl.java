@@ -22,7 +22,6 @@ import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveException;
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
