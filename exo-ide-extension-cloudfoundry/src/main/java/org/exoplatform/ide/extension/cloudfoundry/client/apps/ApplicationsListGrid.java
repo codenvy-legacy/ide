@@ -65,6 +65,8 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
     */
    public ApplicationsListGrid()
    {
+      setID("applicationsListGrid");
+      
       TextCell textCell = new TextCell();
       nameColumn = new Column<CloudfoundryApplication, String>(textCell)
       {

@@ -33,7 +33,7 @@
                
                <td style="width:150px;">
                   <f:ComboBoxField ui:field="serverField" title="{locale.appsServerLabel}" height="22px" width="320px"
-                     pickListWidth="250px" pickListHeight="100" titleOrientation="LEFT" ></f:ComboBoxField>
+                     pickListWidth="250px" pickListHeight="100" titleOrientation="LEFT" name="applicationsTarget" ></f:ComboBoxField>
                </td>
                
                <td style="width:3px;"><div style="width:3px; height:1px;"></div></td>
@@ -41,14 +41,16 @@
                <td style="width:90px">
                   <f:ImageButton ui:field="showButton" width="90" height="22" text="{locale.showButton}" 
                      imageResource="{resource.okButton}"
-                     disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+                     disabledImageResource="{resource.okButtonDisabled}"
+                     buttonId="applicationsShowButton"
+                     ></f:ImageButton>
                </td>
                
                <td style="width:100%;"><div style="width:100%; height:1px;"></div></td>
                
                <td style="width:90px">
                   <f:ImageButton ui:field="closeButton" width="100" height="22" text="{locale.closeButton}" imageResource="{resource.cancelButton}"
-                        disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+                        disabledImageResource="{resource.cancelButtonDisabled}" buttonId="applicationsCloseButton"></f:ImageButton>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
