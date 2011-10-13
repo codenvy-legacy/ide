@@ -28,6 +28,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -41,6 +43,7 @@ import org.exoplatform.ide.extension.ruby.client.RubyExtension;
 import org.exoplatform.ide.extension.ruby.client.RubyService;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
 
@@ -52,7 +55,7 @@ import java.util.List;
  * @version $Id: CreateJavaProjectPresenter.java Jun 22, 2011 9:52:37 AM vereshchaka $
  *
  */
-public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRubyProjectHandler, ItemsSelectedHandler
+public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRubyProjectHandler, ItemsSelectedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -107,6 +110,11 @@ public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRuby
     * Selected items in navigation tree.
     */
    private List<Item> selectedItems;
+   
+   /**
+    * Current virtual file system.
+    */
+   protected VirtualFileSystemInfo vfs;
 
    public CreateRubyProjectPresenter(HandlerManager eventbus)
    {
@@ -115,6 +123,7 @@ public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRuby
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreateRubyProjectEvent.TYPE, this);
+      eventBus.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    private void bindDisplay()
@@ -161,12 +170,12 @@ public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRuby
    {
       final String name = display.getProjectNameField().getValue();
       Item item = selectedItems.get(0);
-      String workDir = item.getId();
+      String parentId = item.getId();
       if (item instanceof FileModel)
       {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
+         parentId = parentId.substring(0, parentId.lastIndexOf("/") + 1);
       }
-      RubyService.get().createProject(name, workDir, new AsyncRequestCallback<Object>()
+      RubyService.get().createProject(name, parentId, vfs.getId() , new AsyncRequestCallback<Object>()
       {
 
          @Override
@@ -220,6 +229,12 @@ public class CreateRubyProjectPresenter implements ViewClosedHandler, CreateRuby
    public void onCreateRubyProject(CreateRubyProjectEvent event)
    {
       openView();
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfs = event.getVfsInfo();
    }
 
 }

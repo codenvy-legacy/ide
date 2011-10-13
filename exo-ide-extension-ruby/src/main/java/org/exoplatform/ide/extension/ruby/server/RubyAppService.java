@@ -18,23 +18,21 @@
  */
 package org.exoplatform.ide.extension.ruby.server;
 
-import java.io.File;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
-import org.apache.commons.io.FileUtils;
-import org.exoplatform.ide.FSLocation;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
-import sun.net.www.protocol.jar.JarURLConnection;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -44,48 +42,28 @@ import sun.net.www.protocol.jar.JarURLConnection;
 @Path("ide/application/ruby")
 public class RubyAppService
 {
-   /** Logger. */
-   private static final Log LOG = ExoLogger.getLogger(RubyAppService.class);
+
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   @Inject
+   private RubyProjectArchetype archetype;
 
    @POST
    @Path("create")
-   public Response createApp(@QueryParam("workdir") FSLocation baseDir, @QueryParam("name") String name,
-      @Context UriInfo uriInfo)
+   @Produces(MediaType.APPLICATION_JSON)
+   public Project createApp(@QueryParam("parentId") String parentId,//
+                             @QueryParam("vfsid") String vfsId,//
+                             @QueryParam("name") String name) throws VirtualFileSystemException, IOException, URISyntaxException
    {
-      File dir = new File(baseDir.getLocalPath());
-      try
-      {
-         if (dir.exists())
-         {
-            File app = new File(dir, name);
-            URL url = Thread.currentThread().getContextClassLoader().getResource("RailsDemo");
-            if (url.getProtocol().startsWith("jar"))
-            {
-               JarURLConnection con = new JarURLConnection(url, null);
-
-               org.exoplatform.ide.extension.ruby.server.FileUtils.copyJarResourcesRecursively(app, con);
-               //            InputStream inputStream = url.openStream();
-            }
-            else
-            {
-               File template = new File(url.getFile());
-               if (template.exists())
-                  FileUtils.copyDirectory(template, app);
-               else
-                  throw new IllegalStateException("Can't find template dir. ");
-            }
-         }
-         else
-            throw new IllegalStateException("Can't find work dir. ");
-      }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-            LOG.error(e);
-
-         return Response.serverError().entity(e).build();
-      }
-      return Response.ok().build();
+      URL url = Thread.currentThread().getContextClassLoader().getResource("RailsDemo");
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      if (vfs == null)
+         throw new VirtualFileSystemException("Virtual file system not initialized");
+      Project project = archetype.exportResources(url, name, "exo.ide.rubyonrails.project",  parentId, vfs);
+      //TODO: 
+      //GitHelper.addToGitIgnore(dir, "/target"); 
+      return project;
    }
 
 }

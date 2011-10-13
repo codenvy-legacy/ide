@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.ruby.client;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.safehtml.shared.UriUtils;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -65,11 +67,13 @@ public class RubyService
       instance = this;
    }
 
-   public void createProject(String name, String workDir, AsyncRequestCallback<?> callback)
+   public void createProject(String name, String parentId, String vfsId, AsyncRequestCallback<?> callback)
    {
+      
       final String url = restContext + CREATE_PROJECT;
       String params = "name=" + name + "&";
-      params += "workdir=" + workDir;
+      params += "parentId=" + parentId + "&";
+      params += "vfsid=" + vfsId;
       callback.setEventBus(IDE.EVENT_BUS);
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader).send(callback);
    }
