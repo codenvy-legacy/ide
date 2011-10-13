@@ -43,7 +43,6 @@ public class Workspace extends AbstractTestModule
    {
       waitForItem(itemHref);
       selenium().clickAt(getItemId(itemHref), "0");
-
    }
 
    /**
@@ -63,10 +62,12 @@ public class Workspace extends AbstractTestModule
 
    public void waitForRootItem() throws Exception
    {
-
-      waitForElementPresent(getItemId(IDE().getWorkspaceURL()));
+      System.out.println("\r\n\r\nwaiting for ITEM >>> [" + IDE().getWorkspaceURL() +"]\r\n\r\n");
+      String locator = getItemId(IDE().getWorkspaceURL());
+      System.out.println("\r\n\r\nWORKSPACE URL LOCATOR [ " + locator + " ]\r\n\r\n");
+      waitForElementPresent(locator);
    }
-
+   
    /**
     * Generate item id 
     * @param href of item 
@@ -74,17 +75,17 @@ public class Workspace extends AbstractTestModule
     */
    public String getItemId(String href) throws Exception
    {
-      String itemId = href.substring(BaseTest.WS_URL.length());
-      if (itemId.endsWith("/"))
-         itemId = itemId.substring(0, itemId.length() - 1);
-      itemId = itemId.replaceAll("/", "-");
-      itemId = itemId.replaceAll(" ", "_");
-      return TREE_PREFIX_ID + itemId;
+//      String itemId = href.substring(BaseTest.WS_URL.length());
+//      if (itemId.endsWith("/"))
+//         itemId = itemId.substring(0, itemId.length() - 1);
+//      itemId = itemId.replaceAll("/", "-");
+//      itemId = itemId.replaceAll(" ", "_");
+//      return TREE_PREFIX_ID + itemId;      
+      return TREE_PREFIX_ID + Utils.md5(href);
    }
 
    public void doubleClickOnFolder(String folderURL) throws Exception
    {
-
       //add timeout for reading content from folder (fix for cloud-IDE-assembly)
       IDE().WORKSPACE.waitForItem(folderURL);
       String locator = "//div[@id='" + getItemId(folderURL) + "']/table/tbody/tr/td[2]";

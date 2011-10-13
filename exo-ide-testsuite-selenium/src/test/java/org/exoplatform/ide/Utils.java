@@ -55,7 +55,7 @@ public class Utils
       HTTPConnection connection = new HTTPConnection(url);
       connection.setAllowUserInteraction(false);
       connection.removeModule(CookieModule.class);
-      connection.addBasicAuthorization(null, BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
+      connection.addBasicAuthorization(AuthScope.ANY_REALM, BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
       return connection;
    }
 
@@ -75,7 +75,7 @@ public class Utils
    {
       HttpClient client = new HttpClient();
       client.getParams().setAuthenticationPreemptive(true);
-      Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
+      Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest. USER_NAME, BaseTest.USER_PASSWORD);
       client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
          defaultcreds);
       return client;

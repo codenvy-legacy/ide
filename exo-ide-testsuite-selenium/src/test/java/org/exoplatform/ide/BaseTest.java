@@ -87,8 +87,6 @@ public abstract class BaseTest
 
    public static String BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
 
-   //   protected static final String USER_NAME = "__anonim";
-   // For portal 
    public static final String USER_NAME = IDE_SETTINGS.getString("ide.user.root.name");
 
    public static final String USER_PASSWORD = IDE_SETTINGS.getString("ide.user.root.password");
@@ -101,23 +99,23 @@ public abstract class BaseTest
 
    public static final String WEBDAV_CONTEXT = IDE_SETTINGS.getString("ide.webdav.context");
 
-   public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    //this two variables add after change in URL IDE
-   public static final String REST_CONTEXT_IDE = IDE_SETTINGS.getString("ide.rest.contenxt.ide");
+   public static String REST_CONTEXT_IDE = IDE_SETTINGS.getString("ide.rest.contenxt.ide");
 
-   public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
-      + "/";
+   public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
+   
+   public static String WS_URL_IDE = ENTRY_POINT_URL_IDE + WS_NAME + "/";
+
+   public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
    /**
     * Default workspace URL.
     */
    public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/";
 
-   //this variable add after change in URL IDE
-   public static final String WS_URL_IDE = ENTRY_POINT_URL_IDE + WS_NAME + "/";
-
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
+   
 
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.valueOf(IDE_SETTINGS
       .getString("selenium.browser.commad"));
@@ -138,8 +136,13 @@ public abstract class BaseTest
 
    private static boolean beforeClass = false;
    
-   public IDE IDE = new IDE(selenium(), WS_URL);
-
+   public static String REST_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   public static String IDE_WORKSPACE_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+   
+   //public IDE IDE = new IDE(selenium(), WS_URL);
+   public IDE IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
+   
    @Before
    public void startSelenium() throws Exception
    {
@@ -148,7 +151,8 @@ public abstract class BaseTest
 
       beforeClass = true;
       startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
-      IDE = new IDE(selenium(), WS_URL);
+      //IDE = new IDE(selenium(), WS_URL);
+      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
       
       switch (BROWSER_COMMAND)
       {

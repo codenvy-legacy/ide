@@ -72,6 +72,12 @@ public class Output extends AbstractTestModule
       waitForElementPresent("ideOutputContent");
    }
 
+   public void waitForMessageShow(int messageIndex, int timeOut) throws Exception
+   {
+      String locator = String.format(IDE_OUTPUT_CONTENT_DIV_1S, messageIndex);
+      waitForElementPresent(locator, timeOut);      
+   }
+   
    /**
     *  Wait for Output message present
     * @param messageIndex of message. <b>Message count starts with 1 !</b>

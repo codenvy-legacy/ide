@@ -37,6 +37,7 @@ import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.Preview;
+import org.exoplatform.ide.core.Project;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.RenameDialog;
@@ -76,6 +77,10 @@ public class IDE
 
    public IDE(Selenium selenium, String workspaceURL)
    {
+      System.out.println("\r\n\r\n\r\n\r\n" +
+      		"Initializing IDE ( Selenium )\r\n" +
+      		"Workspace URL > " + workspaceURL + "\r\n\r\n\r\n");
+      
       this.selenium = selenium;
       this.workspaceURL = workspaceURL;
       instance = this;
@@ -153,6 +158,8 @@ public class IDE
    public Heroku HEROKU = new Heroku();
    
    public OpenShift OPENSHIFT = new OpenShift();
+   
+   public Project PROJECT = new Project();
 
    /**
     * Select main frame of IDE.

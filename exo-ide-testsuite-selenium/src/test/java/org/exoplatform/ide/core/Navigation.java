@@ -279,6 +279,7 @@ public class Navigation extends AbstractTestModule
 
       selenium().click("ideCreateFolderFormCreateButton");
       waitForElementNotPresent("ideCreateFolderForm");
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

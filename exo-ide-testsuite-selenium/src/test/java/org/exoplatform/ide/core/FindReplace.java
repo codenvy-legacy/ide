@@ -153,7 +153,6 @@ public class FindReplace extends AbstractTestModule
 
    public void typeInFindField(String text) throws InterruptedException
    {
-
       if (text == "")
       {
          selenium().click(FIND_FIELD_ID);

@@ -19,10 +19,10 @@
 
 package org.exoplatform.ide.paas.cloudfoundry;
 
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
-import org.junit.Before;
+import junit.framework.Assert;
+
+import org.exoplatform.ide.TestConstants;
+import org.exoplatform.ide.paas.cloudfoundry.core.CloudFoundry;
 import org.junit.Test;
 
 /**
@@ -33,45 +33,34 @@ import org.junit.Test;
  * @version $
  */
 
-public class TestShowApplications extends BaseTest
+public class TestShowApplications extends CloudFoundryTest
 {
    
-   private static final String TEST_FOLDER = "CloudFoundry-TestShowApplications";
-
-   private static final String APP_NAME = "test_show_applications";
-/*
-   @Before
-   public void setUp() throws Exception
-   {
-      try
-      {
-         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-
-   @After
-   public void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }   
-   */
    @Test
-   public void testCreateApplication() throws Exception
+   public void testShowApplications() throws Exception
    {
-      //IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForRootItem();
       
-//      Thread.sleep(Integer.MAX_VALUE);
+      CloudFoundry.APPLICATIONS.openFromMenu();
+      CloudFoundry.APPLICATIONS.waitForOpened();
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      
+      int appCount = CloudFoundry.APPLICATIONS.getApplicationsCount();
+      Assert.assertEquals(2, appCount);
+      
+      Assert.assertEquals("test-app1", CloudFoundry.APPLICATIONS.getApplicationName(1));
+      Assert.assertEquals("test-app2", CloudFoundry.APPLICATIONS.getApplicationName(2));
+      
+      Assert.assertEquals("1", CloudFoundry.APPLICATIONS.getAppplicationInstances(1));
+      Assert.assertEquals("1", CloudFoundry.APPLICATIONS.getAppplicationInstances(2));
+      
+      Assert.assertEquals("STOPPED", CloudFoundry.APPLICATIONS.getApplicationState(1));
+      Assert.assertEquals("STOPPED", CloudFoundry.APPLICATIONS.getApplicationState(2));
+      
+      Assert.assertEquals("test-app1.cloudfoundry.com", CloudFoundry.APPLICATIONS.getApplicationURL(1));
+      Assert.assertEquals("test-app2.cloudfoundry.com", CloudFoundry.APPLICATIONS.getApplicationURL(2));
+      
+      CloudFoundry.APPLICATIONS.clickCloseButton();
    }
 
 }

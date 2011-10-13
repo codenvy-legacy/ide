@@ -115,6 +115,8 @@ public class VirtualFileSystemUtils
     */
    public static int delete(String storageUrl) throws IOException, ModuleException
    {
+      System.out.println("DELETE RESOURCE [" + storageUrl + "]");
+      
       URL url = new URL(storageUrl);
       HTTPConnection connection = Utils.getConnection(url);
       HTTPResponse response = connection.Delete(url.getFile());
@@ -152,13 +154,11 @@ public class VirtualFileSystemUtils
 
    public static int upoadZipFolder(String zipPath, String storageUrl) throws HttpException, IOException
    {
-
       File f = new File(zipPath);
       PostMethod filePost = new PostMethod(BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/upload/folder");
       Part[] parts = {new StringPart("location", storageUrl), new FilePart("file", f)};
       filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
       HttpClient client = Utils.getHttpClient();
       return client.executeMethod(filePost);
-
    }
 }

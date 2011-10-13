@@ -59,6 +59,8 @@ public interface MenuCommands
       
       String JAVA_PROJECT = "Java Project...";
 
+      String JAVA_SPRING_PROJECT = "Java Spring Project...";
+
       String CHROMATTIC = "Data Object";
 
       String PROJECT_TEMPLATE = "Project Template...";
@@ -70,7 +72,6 @@ public interface MenuCommands
       String RUBY = "Ruby File";
 
       String PHP = "PHP File";
-
    }
 
    public interface Run
@@ -316,6 +317,37 @@ public interface MenuCommands
          String APPLICATION_INFO = "Application info...";
          
          String USER_INFO = "User info...";
+      }
+      
+      public interface CloudFoundry
+      {
+         
+         String CLOUDFOUNDRY = "CloudFoundry";
+         
+         String CREATE_APPLICATION = "Create Application";
+         
+         String UPDATE_APPLICATION = "Update Application";
+         
+         String DELETE_APPLICATION = "Delete Application...";
+         
+         String APPLICATION_INFO = "Application Info...";
+         
+         String START_APPLICATION = "Start Application";
+         
+         String STOP_APPLICATION = "Stop Application";
+         
+         String RESTART_APPLICATION = "Restart Application";
+         
+         String APPLICATION_URLS = "Application URLs";
+         
+         String UPDATE_MEMORY = "Update Memory...";
+            
+         String UPDATE_INSTANCES = "Update Instances...";
+         
+         String SWITCH_ACCOUNT = "Switch Account...";
+         
+         String APPPLICATIONS = "Applications";
+         
       }
       
    }

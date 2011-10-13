@@ -46,13 +46,18 @@ public abstract class AbstractTestModule
       return IDE.getInstance();
    }
 
+   protected void waitForElementPresent(String locator) throws Exception
+   {
+      waitForElementPresent(locator, TestConstants.TIMEOUT);
+   }
+   
    /**
     * Wait while element present.
     * 
     * @param locator - element locator
     * @throws Exception
     */
-   protected void waitForElementPresent(String locator) throws Exception
+   protected void waitForElementPresent(String locator, int timeOut) throws Exception
    {
       long startTime = System.currentTimeMillis();
       while (true)
@@ -63,7 +68,7 @@ public abstract class AbstractTestModule
          }
 
          long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT)
+         if (time > timeOut)
          {
             fail("Timeout waiting for element > " + locator);
          }
@@ -157,13 +162,18 @@ public abstract class AbstractTestModule
       //      }
    }
 
+   protected void waitForElementNotPresent(String locator) throws Exception
+   {
+      waitForElementNotPresent(locator, TestConstants.TIMEOUT);
+   }
+   
    /**
     * Wait while element not present.
     * 
     * @param locator - element locator
     * @throws Exception
     */
-   protected void waitForElementNotPresent(String locator) throws Exception
+   protected void waitForElementNotPresent(String locator, int timeOut) throws Exception
    {
       long startTime = System.currentTimeMillis();
       while (true)
@@ -174,30 +184,13 @@ public abstract class AbstractTestModule
          }
 
          long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT)
+         if (time > timeOut)
          {
             fail("Timeout for element > " + locator);
          }
 
          Thread.sleep(1);
       }
-
-      //      int WAITING_MAX_SECONDS = 10;
-      //
-      //      for (int second = 0;; second++)
-      //      {
-      //         if (second >= WAITING_MAX_SECONDS * 10)
-      //         {
-      //            fail("timeout for element " + locator);
-      //         }
-      //
-      //         if (!selenium().isElementPresent(locator))
-      //         {
-      //            break;
-      //         }
-      //
-      //         Thread.sleep(100);
-      //      }
    }
 
    /**
