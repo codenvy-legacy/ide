@@ -50,8 +50,7 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandle
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
@@ -317,9 +316,9 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          eventBus.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
-      if (selectedItems.get(0) instanceof Folder)
+      if (selectedItems.get(0) instanceof ProjectModel)
       {
-         checkIsProject((FolderModel)selectedItems.get(0));
+         checkIsProject((ProjectModel)selectedItems.get(0));
       }
       else
       {
@@ -621,18 +620,18 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    /**
     * Check is selected item project and can be built.
     */
-   private void checkIsProject(final FolderModel folder)
+   private void checkIsProject(final ProjectModel project)
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(folder,
+         VirtualFileSystem.getInstance().getChildren(project,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  folder.getChildren().setItems(result);
+                  project.getChildren().setItems(result);
                   for (Item i : result)
                   {
                      if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
@@ -641,7 +640,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
                         return;
                      }
                   }
-                  eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(folder.getName())));
+                  eventBus.fireEvent(new ExceptionThrownEvent(lb.createApplicationForbidden(project.getName())));
                }
 
                @Override
