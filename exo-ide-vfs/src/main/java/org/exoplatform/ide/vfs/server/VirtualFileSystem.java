@@ -35,6 +35,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -624,4 +625,39 @@ public interface VirtualFileSystem
    @Consumes({MediaType.APPLICATION_JSON})
    void updateItem(String id, List<ConvertibleProperty> properties, String lockToken) throws ItemNotFoundException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Export content of <code>folderId</code> to ZIP archive.
+    * 
+    * @param folderId folder for ZIP
+    * @return ZIP as stream
+    * @throws ItemNotFoundException if <code>folderId</code> does not exist
+    * @throws InvalidArgumentException if <code>folderId</code> item is not a Folder
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws IOException if any i/o errors occur
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @GET
+   @Path("export")
+   @Produces("application/zip")
+   InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException;
+
+   /**
+    * Import ZIP content.
+    * 
+    * @param parentId id of folder to unzip
+    * @param in ZIP content
+    * @param overwrite overwrite or not existing files
+    * @throws ItemNotFoundException if <code>parentId</code> does not exist
+    * @throws InvalidArgumentException if <code>parentId</code> item is not a Folder
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws IOException if any i/o errors occur
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @POST
+   @Path("import")
+   @Consumes("application/zip")
+   public void importZip(String parentId, InputStream in, boolean overwrite) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
 }

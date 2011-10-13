@@ -427,4 +427,17 @@ public class MockVFS implements VirtualFileSystem
       PermissionDeniedException, VirtualFileSystemException
    {
    }
+
+   @Override
+   public InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   public void importZip(String parentId, InputStream in, boolean overwrite) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+   }
 }

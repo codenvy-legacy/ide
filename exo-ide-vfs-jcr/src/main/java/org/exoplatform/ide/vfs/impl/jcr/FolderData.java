@@ -145,6 +145,38 @@ public class FolderData extends ItemData
       }
    }
 
+   final boolean hasChild(String name) throws VirtualFileSystemException
+   {
+      try
+      {
+         return node.hasNode(name);
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
+   final ItemData getChild(String name) throws VirtualFileSystemException
+   {
+      try
+      {
+         return fromNode(node.getNode(name));
+      }
+      catch (PathNotFoundException e)
+      {
+         return null;
+      }
+      catch (AccessDeniedException e)
+      {
+         throw new PermissionDeniedException("Access denied to content of folder " + getName() + ". ");
+      }
+      catch (RepositoryException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+   }
+
    FileData createFile(String name, String nodeType, String contentNodeType, MediaType mediaType, String[] mixinTypes,
       List<ConvertibleProperty> properties, InputStream content) throws InvalidArgumentException,
       ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException

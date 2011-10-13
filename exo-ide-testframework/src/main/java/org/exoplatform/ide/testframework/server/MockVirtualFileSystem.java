@@ -38,6 +38,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -226,6 +227,19 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    @Override
    public void updateItem(String id, List<ConvertibleProperty> properties, String lockToken)
       throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
+   {
+   }
+
+   @Override
+   public InputStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
+   public void importZip(String parentId, InputStream in, boolean overwrite) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
    {
    }
 }

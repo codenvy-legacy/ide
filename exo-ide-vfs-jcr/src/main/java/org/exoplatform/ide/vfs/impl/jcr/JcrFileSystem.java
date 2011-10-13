@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonGenerator;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonWriter;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
@@ -47,17 +53,25 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.services.jcr.core.ExtendedSession;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Node;
@@ -88,6 +102,22 @@ import javax.ws.rs.core.UriBuilder;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
+   public enum Resolver {
+      INSTANCE;
+      /*=====================================*/
+      private final MimeTypeResolver resolver;
+
+      private Resolver()
+      {
+         resolver = new MimeTypeResolver();
+      };
+
+      public MediaType getMediaType(String filename)
+      {
+         return MediaType.valueOf(resolver.getMimeType(filename));
+      }
+   };
+
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
 
    protected final Repository repository;
@@ -976,6 +1006,325 @@ public class JcrFileSystem implements VirtualFileSystem
       finally
       {
          ses.logout();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#exportZip(java.lang.String)
+    */
+   @Path("export/{folderId}")
+   public InputStream exportZip(@PathParam("folderId") String folderId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   {
+      Session ses = session();
+      try
+      {
+         ItemData data = getItemData(ses, folderId);
+         if (ItemType.FOLDER != data.getType())
+         {
+            throw new InvalidArgumentException("Unable export to zip. Item is not a folder. ");
+         }
+         FolderData exportFolder = (FolderData)data;
+         java.io.File fzip = java.io.File.createTempFile("export", ".zip");
+         FileOutputStream out = new FileOutputStream(fzip);
+         try
+         {
+            ZipOutputStream zipOut = new ZipOutputStream(out);
+            LinkedList<FolderData> q = new LinkedList<FolderData>();
+            q.add(exportFolder);
+            final String rootZipPath = exportFolder.getPath();
+            byte[] b = new byte[8192];
+            while (!q.isEmpty())
+            {
+               LazyIterator<ItemData> children = q.pop().getChildren();
+               while (children.hasNext())
+               {
+                  ItemData current = children.next();
+                  final String zipEntryName = current.getPath().substring(rootZipPath.length() + 1).replace('\\', '/');
+                  if (current.getType() == ItemType.FILE)
+                  {
+                     zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                     InputStream in = null;
+                     try
+                     {
+                        in = ((FileData)current).getContent();
+                        int r;
+                        while ((r = in.read(b)) != -1)
+                        {
+                           zipOut.write(b, 0, r);
+                        }
+                     }
+                     finally
+                     {
+                        if (in != null)
+                        {
+                           in.close();
+                        }
+                     }
+                  }
+                  else if (".project".equals(current.getName()))
+                  {
+                     zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                     try
+                     {
+                        JsonWriter jw = new JsonWriter(zipOut);
+                        JsonGenerator.createJsonArray(current.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
+                        jw.flush();
+                     }
+                     catch (JsonException e)
+                     {
+                        throw new RuntimeException(e.getMessage(), e);
+                     }
+                  }
+                  else
+                  {
+                     zipOut.putNextEntry(new ZipEntry(zipEntryName + "/"));
+                     q.add((FolderData)current);
+                  }
+                  zipOut.closeEntry();
+               }
+            }
+            zipOut.close();
+         }
+         finally
+         {
+            out.close();
+         }
+         return new DeleteOnCloseFileInputStream(fzip);
+      }
+      finally
+      {
+         ses.logout();
+      }
+   }
+
+   /**
+    * Delete java.io.File after close.
+    */
+   private static final class DeleteOnCloseFileInputStream extends FileInputStream
+   {
+      private final java.io.File file;
+      private boolean deleted = false;
+
+      public DeleteOnCloseFileInputStream(java.io.File file) throws FileNotFoundException
+      {
+         super(file);
+         this.file = file;
+      }
+
+      /**
+       * @see java.io.FileInputStream#close()
+       */
+      @Override
+      public void close() throws IOException
+      {
+         try
+         {
+            super.close();
+         }
+         finally
+         {
+            if (!deleted)
+            {
+               deleted = file.delete();
+            }
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, boolean)
+    */
+   @Path("import/{parentId}")
+   public void importZip(@PathParam("parentId") String parentId, //
+      InputStream in, //
+      @QueryParam("overwrite") boolean overwrite //
+   ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
+   {
+      Session ses = session();
+      ZipInputStream zip = new ZipInputStream(in);
+      try
+      {
+         ItemData data = getItemData(ses, parentId);
+         if (ItemType.FOLDER != data.getType())
+         {
+            throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder. ");
+         }
+         FolderData parentFolder = (FolderData)data;
+         ZipEntry zipEntry;
+         while ((zipEntry = zip.getNextEntry()) != null)
+         {
+            String zipEntryName = zipEntry.getName();
+            String[] segments = zipEntryName.split("/");
+            FolderData current = parentFolder;
+            for (int i = 0; i < segments.length - 1; i++)
+            {
+               ItemData child = current.getChild(segments[i]);
+               if (child == null)
+               {
+                  child = current.createFolder(segments[i], //
+                     itemType2NodeTypeResolver.getFolderNodeType((String)null), //
+                     itemType2NodeTypeResolver.getFolderMixins((String)null), //
+                     null);
+               }
+               current = (FolderData)child;
+            }
+
+            final String name = segments[segments.length - 1];
+            if (zipEntry.isDirectory())
+            {
+               if (!current.hasChild(name))
+               {
+                  current.createFolder(name, //
+                     itemType2NodeTypeResolver.getFolderNodeType((String)null), //
+                     itemType2NodeTypeResolver.getFolderMixins((String)null), //
+                     null);
+               }
+            }
+            else if (".project".equals(name))
+            {
+               // If project has other media type it will be updated later.
+               final MediaType mediaType = MediaType.valueOf(Project.PROJECT_MIME_TYPE);
+               current.rename(null, //
+                  mediaType, //
+                  null, //
+                  itemType2NodeTypeResolver.getFolderMixins(mediaType), //
+                  itemType2NodeTypeResolver.getFolderMixins((String)null));
+               List<ConvertibleProperty> properties;
+               try
+               {
+                  JsonParser jp = new JsonParser();
+                  jp.parse(new NotClosableInputStream(zip));
+                  ConvertibleProperty[] array =
+                     (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
+                  properties = Arrays.asList(array);
+               }
+               catch (JsonException e)
+               {
+                  throw new RuntimeException(e.getMessage(), e);
+               }
+               current.updateProperties(properties, null);
+            }
+            else
+            {
+               final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
+               ItemData child = current.getChild(name);
+               if (child != null && overwrite && ItemType.FILE == child.getType())
+               {
+                  ((FileData)child).setContent(new NotClosableInputStream(zip), child.getMediaType(), null);
+               }
+               else
+               {
+                  current.createFile(name, //
+                     itemType2NodeTypeResolver.getFileNodeType(mediaType), //
+                     itemType2NodeTypeResolver.getFileContentNodeType(mediaType), //
+                     mediaType, //
+                     itemType2NodeTypeResolver.getFileMixins(mediaType), //
+                     null, //
+                     new NotClosableInputStream(zip));
+               }
+            }
+            zip.closeEntry();
+         }
+      }
+      finally
+      {
+         ses.logout();
+         zip.closeEntry();
+         zip.close();
+      }
+   }
+
+   /**
+    * Wrapper for ZipInputStream that make possible read content of ZipEntry but prevent close ZipInputStream.
+    */
+   private static final class NotClosableInputStream extends InputStream
+   {
+      private final InputStream delegate;
+
+      public NotClosableInputStream(InputStream delegate)
+      {
+         this.delegate = delegate;
+      }
+
+      /**
+       * @see java.io.InputStream#read()
+       */
+      @Override
+      public int read() throws IOException
+      {
+         return delegate.read();
+      }
+
+      /**
+       * @see java.io.InputStream#read(byte[])
+       */
+      @Override
+      public int read(byte[] b) throws IOException
+      {
+         return delegate.read(b);
+      }
+
+      /**
+       * @see java.io.InputStream#read(byte[], int, int)
+       */
+      @Override
+      public int read(byte[] b, int off, int len) throws IOException
+      {
+         return delegate.read(b, off, len);
+      }
+
+      /**
+       * @see java.io.InputStream#skip(long)
+       */
+      @Override
+      public long skip(long n) throws IOException
+      {
+         return delegate.skip(n);
+      }
+
+      /**
+       * @see java.io.InputStream#available()
+       */
+      @Override
+      public int available() throws IOException
+      {
+         return delegate.available();
+      }
+
+      /**
+       * @see java.io.InputStream#close()
+       */
+      @Override
+      public void close() throws IOException
+      {
+      }
+
+      /**
+       * @see java.io.InputStream#mark(int)
+       */
+      @Override
+      public void mark(int readlimit)
+      {
+         delegate.mark(readlimit);
+      }
+
+      /**
+       * @see java.io.InputStream#reset()
+       */
+      @Override
+      public void reset() throws IOException
+      {
+         delegate.reset();
+      }
+
+      /**
+       * @see java.io.InputStream#markSupported()
+       */
+      @Override
+      public boolean markSupported()
+      {
+         return delegate.markSupported();
       }
    }
 
