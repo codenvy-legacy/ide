@@ -290,26 +290,6 @@
   <session-timeout>30</session-timeout>
 </session-config>
 
-
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>IDE</web-resource-name>
-      <url-pattern>/rest/private/*</url-pattern>
-      <url-pattern>/Application.html</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>users</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint> 
-
-  <login-config>
-    <auth-method>BASIC</auth-method>
-    <realm-name>exo-domain</realm-name>
-  </login-config>
-
   <security-role>
     <description>the user role</description>
     <role-name>users</role-name>
