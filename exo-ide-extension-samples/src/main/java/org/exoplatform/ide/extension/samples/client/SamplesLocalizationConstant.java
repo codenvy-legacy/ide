@@ -155,6 +155,9 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("wizard.deployment.cloudfoundry.url")
    String cloudFoundryAppUrlField();
    
+   @Key("wizard.deployment.cloudfoundry.target")
+   String cloudFoundryAppTargetField();
+   
    /*
     * WizardFinishStepView
     */

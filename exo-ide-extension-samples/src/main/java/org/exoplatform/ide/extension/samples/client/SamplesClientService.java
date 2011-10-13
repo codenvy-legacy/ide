@@ -111,5 +111,11 @@ public abstract class SamplesClientService
     */
    public abstract void createCloudFoundryApplication(String name, String url, String workDir, String war,
       CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+   
+   /**
+    * Get the list of CloudFoundry targets.
+    * @param callback
+    */
+   public abstract void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback);
 
 }

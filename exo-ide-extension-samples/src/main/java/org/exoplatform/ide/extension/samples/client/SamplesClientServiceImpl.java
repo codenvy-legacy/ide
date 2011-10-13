@@ -35,6 +35,7 @@ import org.exoplatform.ide.extension.samples.client.paas.marshal.CloudfoundryApp
 import org.exoplatform.ide.extension.samples.client.paas.marshal.CredentailsMarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DeployWarUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.paas.marshal.DomainsUnmarshaller;
+import org.exoplatform.ide.extension.samples.client.paas.marshal.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String VALIDATE_ACTION = "/ide/cloudfoundry/apps/validate-action";
    
    private static final String CLOUDFOUNDRY_CREATE = "/ide/cloudfoundry/apps/create";
+   
+   private static final String CF_TARGETS = "/ide/cloudfoundry/target/all";
 
    
    /**
@@ -252,6 +255,23 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getCloudFoundryTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getCloudFoundryTargets(AsyncRequestCallback<List<String>> callback)
+   {
+      String url = restServiceContext + CF_TARGETS;
+      callback.setEventBus(eventBus);
+      List<String> targes = new ArrayList<String>();
+      callback.setResult(targes);
+      TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(targes);
+      callback.setPayload(unmarshaller);
+      
+      AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      .send(callback);
    }
 
 }

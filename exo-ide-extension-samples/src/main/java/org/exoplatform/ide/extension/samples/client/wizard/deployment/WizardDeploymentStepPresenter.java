@@ -28,6 +28,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -71,9 +72,13 @@ ProjectCreationFinishedHandler
       
       HasValue<String> getCloudFoundryUrlField();
       
+      HasValue<String> getCloudFoundryTargetField();
+      
       HasValue<String> getCloudBeesNameField();
       
       HasValue<String> getCloudBeesIdField();
+      
+      void setCloudFoundryAvailableTargets(String[] targets);
       
       void setPaasValueMap(String[] values, String selected);
       
@@ -85,6 +90,11 @@ ProjectCreationFinishedHandler
       
       void enableNextButton(boolean enable);
    }
+   
+   /**
+    * Default CloudFoundry target.
+    */
+   public static final String DEFAULT_CLOUDFOUNDRY_TARGET = "http://api.cloudfoundry.com";
    
    private static final String[] PAAS;
    
@@ -362,6 +372,7 @@ ProjectCreationFinishedHandler
       {
          display.enableNextButton(true);
       }
+      getCloudFoundryTargets();
    }
    
    /**
@@ -445,6 +456,31 @@ ProjectCreationFinishedHandler
                closeView();               
             }
          });
+   }
+   
+   /**
+    * Get the list of targes and put them to select field.
+    */
+   private void getCloudFoundryTargets()
+   {
+      SamplesClientService.getInstance().getCloudFoundryTargets(new AsyncRequestCallback<List<String>>()
+      {
+         @Override
+         protected void onSuccess(List<String> result)
+         {
+            if (result.isEmpty())
+            {
+               display.setCloudFoundryAvailableTargets(new String[]{DEFAULT_CLOUDFOUNDRY_TARGET});
+               display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
+            }
+            else
+            {
+               String[] servers = result.toArray(new String[result.size()]);
+               display.setCloudFoundryAvailableTargets(servers);
+               display.getCloudFoundryTargetField().setValue(servers[0]);
+            }
+         }
+      });
    }
 
 }

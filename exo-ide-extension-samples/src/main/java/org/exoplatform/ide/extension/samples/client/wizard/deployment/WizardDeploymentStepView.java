@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
@@ -73,6 +74,9 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    
    @UiField
    HTMLPanel paasPanel;
+   
+   @UiField
+   ComboBoxField cloudFoundryTargetField;
    
    @UiField
    TextField cloudFoundryNameField;
@@ -237,6 +241,24 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    public void enableNextButton(boolean enable)
    {
       nextButton.setEnabled(enable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#getCloudFoundryTargetField()
+    */
+   @Override
+   public HasValue<String> getCloudFoundryTargetField()
+   {
+      return cloudFoundryTargetField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display#setCloudFoundryAvailableTargets(java.lang.String[])
+    */
+   @Override
+   public void setCloudFoundryAvailableTargets(String[] targets)
+   {
+      cloudFoundryTargetField.setValueMap(targets);
    }
 
 }

@@ -16,10 +16,10 @@
          
       <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
       
-      <g:FlowPanel height="30px"></g:FlowPanel>
+      <g:FlowPanel height="30px" width="100%"></g:FlowPanel>
 
       <!-- panel to select source of project -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%">
          
          <table class="{resource.css.table}">
             <tr>
@@ -42,12 +42,29 @@
          
       </g:HTMLPanel>
       
-      <g:FlowPanel height="10px"></g:FlowPanel>
+      <g:FlowPanel height="10px" width="100%"></g:FlowPanel>
       
-      <g:HTMLPanel ui:field="paasPanel">
+      <g:HTMLPanel ui:field="paasPanel" width="100%">
          
          <!-- CloudFoudry deployment form: show only when CloudFoundry selected from list -->
          <table class="{resource.css.cloudfoundryTable}" id="cloudFoundryTable">
+            <tr>
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+               <td style="width:90px;">
+                  <g:Label text="{locale.cloudFoundryAppTargetField}" height="18px" width="90px"></g:Label>
+               </td>
+               
+               <td><div style="width:1px; height:1px;"></div></td>
+               
+               <td style="width:100%; height:22px">
+                  <f:ComboBoxField ui:field="cloudFoundryTargetField" width="100%" height="22px" showTitle="false"></f:ComboBoxField>
+               </td>
+               
+               <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
+               
+            </tr>
+            
             <tr>
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
                
@@ -145,7 +162,7 @@
       </g:HTMLPanel>
       
       <!-- Buttons -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%">
          
          <table class="{resource.css.table}">
             <tr>
@@ -181,6 +198,6 @@
          
       </g:HTMLPanel>
 
-      <g:FlowPanel height="10px"></g:FlowPanel>
+      <g:FlowPanel height="10px" width="100%"></g:FlowPanel>
    </g:FlowPanel>
 </ui:UiBinder> 
