@@ -45,21 +45,22 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class UploadZipView extends ViewImpl implements org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display
+public class UploadZipView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display
 {
-   
+
    private static final String ID = "ideUploadForm";
-   
+
    /**
     * Initial width of this view.
     */
-   private static final int WIDTH = 550;
+   private static final int WIDTH = 450;
 
    /**
     * Initial height of this view.
     */
-   private static final int HEIGHT = 190;
-   
+   private static final int HEIGHT = 150;
+
    private static final String UPLOAD_FOLDER_TITLE = IDE.UPLOAD_CONSTANT.uploadFolderTitle();
 
    private static UploadZipViewUiBinder uiBinder = GWT.create(UploadZipViewUiBinder.class);
@@ -67,31 +68,31 @@ public class UploadZipView extends ViewImpl implements org.exoplatform.ide.clien
    interface UploadZipViewUiBinder extends UiBinder<Widget, UploadZipView>
    {
    }
-   
+
    @UiField
    FormPanel uploadForm;
-   
+
    @UiField
    TextField fileNameField;
-   
+
    @UiField
    HorizontalPanel postFieldsPanel;
-   
+
    @UiField
    FileUploadInput fileUploadInput;
-   
+
    @UiField
    ImageButton uploadButton;
-   
+
    @UiField
    ImageButton cancelButton;
 
    public UploadZipView()
    {
-      super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT);
+      super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT,false);
       add(uiBinder.createAndBindUi(this));
    }
-   
+
    @Override
    public HasClickHandlers getUploadButton()
    {
@@ -126,7 +127,7 @@ public class UploadZipView extends ViewImpl implements org.exoplatform.ide.clien
    public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
    {
       Hidden locationField = new Hidden(FormFields.LOCATION, location);
-      postFieldsPanel.add(locationField);      
+      postFieldsPanel.add(locationField);
    }
 
    @Override

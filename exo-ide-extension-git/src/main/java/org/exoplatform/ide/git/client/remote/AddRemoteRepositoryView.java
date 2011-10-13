@@ -18,21 +18,19 @@
  */
 package org.exoplatform.ide.git.client.remote;
 
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.gwtframework.ui.client.component.VPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitClientBundle;
@@ -90,7 +88,7 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
    public AddRemoteRepositoryView(String title)
    {
       super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
-      VPanel mainPanel = new VPanel();
+      FlowPanel mainPanel = new FlowPanel();
 
       nameField = new TextField(NAME_FIELD_ID, GitExtension.MESSAGES.remoteNameField());
       nameField.setTitleOrientation(TitleOrientation.TOP);

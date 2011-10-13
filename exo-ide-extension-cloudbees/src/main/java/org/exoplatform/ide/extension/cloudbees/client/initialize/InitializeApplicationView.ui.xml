@@ -7,7 +7,8 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant"></ui:with>
    
    <f:Border margin="7" borderColor="transparent">
-      <g:VerticalPanel spacing="3" horizontalAlignment="center">
+   <f:layer>
+      <g:VerticalPanel spacing="3" horizontalAlignment="center" width="100%">
       <!-- g:HorizontalPanel width="100%" spacing="0">
             <g:cell verticalAlignment="middle" width="150px">
                <g:Label text="{locale.appNameDomainField}" height="18px"></g:Label>
@@ -27,5 +28,6 @@
             			   imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
          </g:HorizontalPanel>
       </g:VerticalPanel>
+      </f:layer>
    </f:Border>
 </ui:UiBinder> 

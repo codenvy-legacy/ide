@@ -18,7 +18,17 @@
  */
 package org.exoplatform.ide.client.framework.ui.impl;
 
-import org.exoplatform.gwtframework.ui.client.Resizeable;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -36,17 +46,6 @@ import org.exoplatform.ide.client.framework.ui.impl.event.HasSetViewVisibleHandl
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleEvent;
 import org.exoplatform.ide.client.framework.ui.impl.event.SetViewVisibleHandler;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -54,8 +53,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
-   HasSetViewVisibleHandler, Resizeable
+public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeViewTitleHandler, HasChangeViewIconHandler,
+   HasSetViewVisibleHandler
 {
 
    /**
@@ -175,17 +174,18 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       getElement().setAttribute("view-id", id);
       getElement().setAttribute("is-active", "false");
       getElement().getStyle().setOverflow(Overflow.HIDDEN);
-      getElement().getStyle().setLeft(-1000, Unit.PT);
-      getElement().getStyle().setTop(-1000, Unit.PT);
+      getElement().getStyle().setPosition(Position.RELATIVE);
+      if (canResize)
+         getElement().getStyle().setHeight(100, Unit.PCT);
+      else
+         getElement().getStyle().setHeight(defaultHeight, Unit.PX);
 
       viewBorder = GWT.create(Border.class);
       viewBorder.setBorderSize(3);
-
+      viewBorder.getElement().getStyle().setMargin(1, Unit.PX);
       super.add(viewBorder);
-      viewBorder.setWidth("100%");
-      viewBorder.setHeight("100%");
-
-      sinkEvents(Event.ONMOUSEDOWN);      
+      setWidgetTopHeight(viewBorder, 0, Unit.PX, 100, Unit.PCT);
+      sinkEvents(Event.ONMOUSEDOWN);
    }
 
    /**
@@ -214,6 +214,9 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    {
       viewWidget = w;
       viewBorder.add(viewWidget);
+      //      super.add();
+      viewBorder.setWidgetTopHeight(w, 0, Unit.PX, 100, Unit.PCT);
+      //      setWidgetBottomHeight(w, 100, Unit.PCT, 100, Unit.PCT);
    }
 
    /**
@@ -397,6 +400,7 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    {
       this.activated = activated;
       viewBorder.setBorderColor(activated ? "#B6CCE8" : "transparent");
+      //      getElement().getStyle().setBorderColor(activated ? "#B6CCE8" : "transparent");
 
       /*
        *  Attribute for Selenium Tests
@@ -454,39 +458,6 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
       fireEvent(event);
    }
 
-   /**
-    * Resize this view.
-    * 
-    * @see org.exoplatform.gwtframework.ui.client.Resizeable#resize(int, int)
-    */
-   @Override
-   public void resize(int width, int height)
-   {
-      setSize(width + "px", height + "px");
-
-      if (viewWidget == null)
-      {
-         return;
-      }
-
-      int viewWidth = width - 6;
-      int viewHeight = height - 6;
-      viewWidth = viewWidth < 0 ? 0 : viewWidth;
-      viewHeight = viewHeight < 0 ? 0 : viewHeight;
-
-      viewWidget.setSize(viewWidth + "px", viewHeight + "px");
-      if (viewWidget instanceof Resizeable)
-      {
-         ((Resizeable)viewWidget).resize(viewWidth, viewHeight);
-      }
-
-      if (viewWidget instanceof RequiresResize)
-      {
-         ((RequiresResize)viewWidget).onResize();
-         return;
-      }
-   }
-
    @Override
    public boolean isActive()
    {
@@ -494,7 +465,8 @@ public class ViewImpl extends FlowPanel implements View, IsView, HasChangeViewTi
    }
 
    @Override
-   public HandlerRegistration addBeforeViewLoseActivityHandler(BeforeViewLoseActivityHandler beforeViewLoseActivityHandler)
+   public HandlerRegistration addBeforeViewLoseActivityHandler(
+      BeforeViewLoseActivityHandler beforeViewLoseActivityHandler)
    {
       return addHandler(beforeViewLoseActivityHandler, BeforeViewLoseActivityEvent.TYPE);
    }

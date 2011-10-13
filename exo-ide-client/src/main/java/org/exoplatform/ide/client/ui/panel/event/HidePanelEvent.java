@@ -16,9 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
-
-import org.exoplatform.ide.client.framework.ui.api.Panel;
+package org.exoplatform.ide.client.ui.panel.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -30,33 +28,33 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class RestorePanelEvent extends GwtEvent<RestorePanelHandler>
+public class HidePanelEvent extends GwtEvent<HidePanelHandler>
 {
 
-   public static final GwtEvent.Type<RestorePanelHandler> TYPE = new GwtEvent.Type<RestorePanelHandler>();
+   public static final GwtEvent.Type<HidePanelHandler> TYPE = new GwtEvent.Type<HidePanelHandler>();
 
-   private Panel panel;
+   private String panelId;
 
-   public RestorePanelEvent(Panel panel)
+   public HidePanelEvent(String panelId)
    {
-      this.panel = panel;
+      this.panelId = panelId;
    }
 
-   public Panel getPanel()
+   public String getPanelId()
    {
-      return panel;
+      return panelId;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestorePanelHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<HidePanelHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(RestorePanelHandler handler)
+   protected void dispatch(HidePanelHandler handler)
    {
-      handler.onRestorePanel(this);
+      handler.onHidePanel(this);
    }
 
 }

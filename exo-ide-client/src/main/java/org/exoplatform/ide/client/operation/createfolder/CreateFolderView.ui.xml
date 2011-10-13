@@ -25,7 +25,8 @@
    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    
    <f:Border margin="15" borderColor="transparent">
-      <g:VerticalPanel spacing="3" horizontalAlignment="center">
+    <f:layer>
+      <g:FlowPanel>
          
          <f:TextField ui:field="folderNameField" width="100%" title="{ideLocale.createFolderFormFieldTitle}" height="22px"></f:TextField>         
          
@@ -35,7 +36,8 @@
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}" 
                         disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
          </g:HorizontalPanel>
-      </g:VerticalPanel>
+      </g:FlowPanel> 
+     </f:layer>
    </f:Border>
    
 </ui:UiBinder>

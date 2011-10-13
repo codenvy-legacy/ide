@@ -16,20 +16,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
+package org.exoplatform.ide.client.ui.panel.event;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import org.exoplatform.ide.client.framework.ui.api.Panel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasMaximizePanelHandler
+public class RestorePanelEvent extends GwtEvent<RestorePanelHandler>
 {
 
-   HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler);
-   
+   public static final GwtEvent.Type<RestorePanelHandler> TYPE = new GwtEvent.Type<RestorePanelHandler>();
+
+   private Panel panel;
+
+   public RestorePanelEvent(Panel panel)
+   {
+      this.panel = panel;
+   }
+
+   public Panel getPanel()
+   {
+      return panel;
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RestorePanelHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(RestorePanelHandler handler)
+   {
+      handler.onRestorePanel(this);
+   }
+
 }

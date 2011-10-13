@@ -13,16 +13,16 @@
    </ui:style>
 
    <c:Border margin="1" borderColor="transparent">
+      <c:layer>
+         <g:FlowPanel ui:field="basePanel">
+            <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
 
-      <c:VPanel ui:field="basePanel">
-         <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
-
-         <g:ScrollPanel ui:field="scrollPanel">
-            <g:HTML>
-               <pre ui:field="content" class='{style.content}'></pre>
-            </g:HTML>
-         </g:ScrollPanel>
-      </c:VPanel>
-
+            <g:ScrollPanel ui:field="scrollPanel">
+               <g:HTML>
+                  <pre ui:field="content" class='{style.content}'></pre>
+               </g:HTML>
+            </g:ScrollPanel>
+         </g:FlowPanel>
+      </c:layer>
    </c:Border>
 </ui:UiBinder> 

@@ -16,17 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl;
+package org.exoplatform.ide.client.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.DockLayoutPanel.Direction;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
+import org.exoplatform.gwtframework.ui.client.window.ResizeableWindow;
+import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.ListBasedHandlerRegistration;
-import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.HasViews;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
@@ -40,40 +41,40 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.ui.impl.panel.HidePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.HidePanelHandler;
-import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.MaximizePanelHandler;
-import org.exoplatform.ide.client.ui.impl.panel.PanelImpl;
-import org.exoplatform.ide.client.ui.impl.panel.RestorePanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.RestorePanelHandler;
-import org.exoplatform.ide.client.ui.impl.panel.ShowPanelEvent;
-import org.exoplatform.ide.client.ui.impl.panel.ShowPanelHandler;
+import org.exoplatform.ide.client.ui.panel.PanelImpl;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.HidePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.MaximizePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.RestorePanelHandler;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelEvent;
+import org.exoplatform.ide.client.ui.panel.event.ShowPanelHandler;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:  Oct 4, 2011 evgen $
+ *
  */
-
-public class PerspectiveImpl extends Layer implements Perspective
+public class StandartPerspective extends FlowPanel implements Perspective
 {
 
    /**
-    * Layer for placing popup windows.
+    * 
     */
-   private WindowsLayer popupWindowsLayer;
+   private static final int ANIMATION_PERIOD = 400;
+
+   private SplitLayoutPanel layoutPanel;
 
    /**
-    * Layer for placing modal windows.
+    * Map of the opened panels.
     */
-   private WindowsLayer modalWindowsLayer;
+   private Map<String, Panel> panels = new HashMap<String, Panel>();
 
    /**
     * List of ViewVisibilityChanged handlers.
@@ -97,105 +98,34 @@ public class PerspectiveImpl extends Layer implements Perspective
    private List<ViewClosedHandler> viewClosedHandlers = new ArrayList<ViewClosedHandler>();
 
    /**
-    * Layer for placing views that are controlled by panels.
-    */
-   private Layer viewsLayer;
-
-   /**
-    * Layer for placing panels.
-    */
-   private Layer panelsLayer;
-
-   /**
-    * Layer for placing IDE layout.
-    */
-   private LayoutLayer layoutLayer;
-
-   /**
     * Map of opened views.
     */
    private Map<String, View> views = new HashMap<String, View>();
-
-   /**
-    * Map op opened panels.
-    */
-   private Map<String, Panel> panels = new HashMap<String, Panel>();
 
    /**
     * Map that specifies target panel or window where a view is opened.
     */
    private Map<String, HasViews> viewTargets = new HashMap<String, HasViews>();
 
-   /**
-    * Creates a new instance of this Perspective.
-    */
-   public PerspectiveImpl()
+   private Map<Panel, Integer> panelsSizes = new HashMap<Panel, Integer>();
+
+   private WindowsPanel popupWindowsPanel;
+
+   private WindowsPanel modalWindowsPanel;
+
+   public StandartPerspective()
    {
-      super("test-perspective");
+      layoutPanel = new SplitLayoutPanel();
+      add(layoutPanel);
+      layoutPanel.setWidth("100%");
+      layoutPanel.setHeight("100%");
+      popupWindowsPanel = new WindowsPanel();
+      popupWindowsPanel.addClosingViewHandler(closingViewHandler);
+      modalWindowsPanel = new WindowsPanel(true);
+      modalWindowsPanel.addClosingViewHandler(closingViewHandler);
 
-      layoutLayer = new LayoutLayer();
-      addLayer(layoutLayer);
+//      new GWTDialogs(modalWindowsPanel);
 
-      panelsLayer = new Layer("panels");
-      addLayer(panelsLayer);
-
-      viewsLayer = new Layer("views");
-      addLayer(viewsLayer);
-
-      popupWindowsLayer = new WindowsLayer("popup-windows");
-      popupWindowsLayer.addClosingViewHandler(closingViewHandler);
-      addLayer(popupWindowsLayer);
-
-      modalWindowsLayer = new WindowsLayer("modal-windows", true);
-      modalWindowsLayer.addClosingViewHandler(closingViewHandler);
-      addLayer(modalWindowsLayer);
-
-      new GWTDialogs(modalWindowsLayer);
-      //IDEDialogWindow.setIdeDialogWindowsRootPanel(modalWindowsLayer);
-   }
-
-   /**
-    * Creates and adds a new panel to perspective's layout.
-    * 
-    * @param panelId
-    * @param direction
-    * @param initialSize
-    * @return
-    */
-   public Panel addPanel(String panelId, Direction direction, int initialSize)
-   {
-      PanelImpl panel = new PanelImpl(panelId);
-      panelsLayer.add(panel);
-      panels.put(panelId, panel);
-
-      if (direction == Direction.WEST)
-      {
-         layoutLayer.addWest(panel, initialSize);
-      }
-      else if (direction == Direction.EAST)
-      {
-         layoutLayer.addEast(panel, initialSize);
-      }
-      else if (direction == Direction.NORTH)
-      {
-         layoutLayer.addNorth(panel, initialSize);
-      }
-      else if (direction == Direction.SOUTH)
-      {
-         layoutLayer.addSouth(panel, initialSize);
-      }
-      else
-      {
-         layoutLayer.addCenter(panel);
-      }
-
-      panel.addMaximizePanelHandler(maximizePanelHandler);
-      panel.addRestorePanelHandler(restorePanelHandler);
-      panel.addShowPanelHandler(showPanelHandler);
-      panel.addHidePanelHandler(hidePanelHandler);
-      panel.addViewVisibilityChangedHandler(viewVisibilityChangedHandler);
-      panel.addClosingViewHandler(closingViewHandler);
-      return panel;
    }
 
    /**
@@ -244,53 +174,35 @@ public class PerspectiveImpl extends Layer implements Perspective
    @Override
    public void openView(View view)
    {
-      if (views.containsKey(view.getId()))
-      {
-         String message = "View <b>" + view.getId() + "</b> already opened!";
-         Window.alert(message);
-         return;
-      }
-
       views.put(view.getId(), view);
-      Widget viewWidget = (Widget)view;
-      DOM.setStyleAttribute(viewWidget.getElement(), "zIndex", "0");
-
       for (Panel panel : panels.values())
       {
          if (panel.getAcceptedTypes().contains(view.getType()))
          {
-            layoutLayer.restore();
-
-            viewsLayer.add(viewWidget, -10000, -10000);
-
+            restorePanelHandler.onRestorePanel(null);
             panel.addView(view);
-
             viewTargets.put(view.getId(), panel);
             fireViewOpenedEvent(view);
             activateView(view);
             return;
          }
       }
+      if (view.getType().equals(ViewType.POPUP))
+      {
 
-      if (ViewType.POPUP.equals(view.getType()))
-      {
-         popupWindowsLayer.addView(view);
-         viewTargets.put(view.getId(), popupWindowsLayer);
+         popupWindowsPanel.addView(view);
+         viewTargets.put(view.getId(), popupWindowsPanel);
          fireViewOpenedEvent(view);
          activateView(view);
       }
-      else if (ViewType.MODAL.equals(view.getType()))
+      else if (view.getType().equals(ViewType.MODAL))
       {
-         modalWindowsLayer.addView(view);
-         viewTargets.put(view.getId(), modalWindowsLayer);
+         modalWindowsPanel.addView(view);
+         viewTargets.put(view.getId(), modalWindowsPanel);
          fireViewOpenedEvent(view);
          activateView(view);
       }
-      else
-      {
-         String message = "Can't open view <b>" + view.getId() + "</b> of type <b>" + view.getType() + "</b>";
-         Dialogs.getInstance().showError("IDE", message);
-      }
+
    }
 
    /**
@@ -302,47 +214,47 @@ public class PerspectiveImpl extends Layer implements Perspective
    }
 
    /**
-    * @param view
+    * Creates and adds a new panel to perspective's layout.<br>
+    * <b>Note : add panel with {@link Direction#CENTER} LAST of the all panel!</b>
+    * @param panelId
+    * @param direction
+    * @param initialSize
+    * @return
     */
-   private void fireViewOpenedEvent(View view)
+   public Panel addPanel(String panelId, Direction direction, int initialSize)
    {
-      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
-      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
+      PanelImpl panel = new PanelImpl(panelId);
+      panels.put(panelId, panel);
+
+      if (direction == Direction.WEST)
       {
-         viewOpenedHandler.onViewOpened(viewOpenedEvent);
+         layoutPanel.addWest(panel, initialSize);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#closeView(java.lang.String)
-    */
-   @Override
-   public void closeView(String viewId)
-   {
-      View view = views.get(viewId);
-      HasViews viewTarget = viewTargets.get(viewId);
-      if (view == null)
+      else if (direction == Direction.EAST)
       {
-         return;
+         layoutPanel.addEast(panel, initialSize);
       }
-
-      if (layoutLayer.isMaximized())
+      else if (direction == Direction.NORTH)
       {
-         layoutLayer.restore();
+         layoutPanel.addNorth(panel, initialSize);
       }
-
-      Widget viewWidget = (Widget)view;
-      viewWidget.removeFromParent();
-
-      viewTarget.removeView(view);
-      views.remove(view.getId());
-      viewTargets.remove(view.getId());
-
-      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
-      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
+      else if (direction == Direction.SOUTH)
       {
-         viewClosedHandler.onViewClosed(viewClosedEvent);
+         layoutPanel.addSouth(panel, initialSize);
       }
+      else
+      {
+         //center 
+         layoutPanel.add(panel);
+      }
+      panel.addMaximizePanelHandler(maximizePanelHandler);
+      panel.addRestorePanelHandler(restorePanelHandler);
+      panel.addShowPanelHandler(showPanelHandler);
+      panel.addHidePanelHandler(hidePanelHandler);
+      panel.addViewVisibilityChangedHandler(viewVisibilityChangedHandler);
+      panel.addClosingViewHandler(closingViewHandler);
+      panel.hide();
+      return panel;
    }
 
    /**
@@ -388,7 +300,37 @@ public class PerspectiveImpl extends Layer implements Perspective
       @Override
       public void onMaximizePanel(MaximizePanelEvent event)
       {
-         layoutLayer.maximizePanel(event.getPanel().getPanelId());
+         panelsSizes.clear();
+         for (Panel p : panels.values())
+         {
+            if (layoutPanel.getWidgetDirection(p.asWidget()) != Direction.CENTER)
+            {
+               if (layoutPanel.getWidgetDirection(p.asWidget()) == Direction.SOUTH)
+               {
+                  panelsSizes.put(p, p.asWidget().getOffsetHeight());
+               }
+               else
+                  panelsSizes.put(p, p.asWidget().getOffsetWidth());
+               if (p != event.getPanel())
+               {
+                  layoutPanel.setWidgetSize(p.asWidget(), 0);
+                  layoutPanel.animate(ANIMATION_PERIOD);
+               }
+            }
+         }
+         if (layoutPanel.getWidgetDirection(event.getPanel().asWidget()) != Direction.CENTER)
+         {
+            if (layoutPanel.getWidgetDirection(event.getPanel().asWidget()) == Direction.SOUTH)
+            {
+               layoutPanel.setWidgetSize(event.getPanel().asWidget(), layoutPanel.getElement().getClientHeight());
+               layoutPanel.animate(ANIMATION_PERIOD);
+            }
+            else
+            {
+               layoutPanel.setWidgetSize(event.getPanel().asWidget(), layoutPanel.getElement().getClientWidth());
+               layoutPanel.animate(ANIMATION_PERIOD);
+            }
+         }
       }
    };
 
@@ -400,7 +342,15 @@ public class PerspectiveImpl extends Layer implements Perspective
       @Override
       public void onRestorePanel(RestorePanelEvent event)
       {
-         layoutLayer.restore();
+         for (Panel p : panelsSizes.keySet())
+         {
+            if (layoutPanel.getWidgetDirection(p.asWidget()) != Direction.CENTER)
+            {
+               layoutPanel.setWidgetSize(p.asWidget(), panelsSizes.get(p));
+               layoutPanel.animate(ANIMATION_PERIOD);
+            }
+         }
+
       }
    };
 
@@ -412,7 +362,12 @@ public class PerspectiveImpl extends Layer implements Perspective
       @Override
       public void onShowPanel(ShowPanelEvent event)
       {
-         layoutLayer.showPanel(event.getPanelId());
+         Panel p = panels.get(event.getPanelId());
+         if (layoutPanel.getWidgetDirection(p.asWidget()) != Direction.CENTER)
+         {
+            layoutPanel.setWidgetSize(p.asWidget(), 300);
+            layoutPanel.animate(ANIMATION_PERIOD);
+         }
       }
    };
 
@@ -424,9 +379,59 @@ public class PerspectiveImpl extends Layer implements Perspective
       @Override
       public void onHidePanel(HidePanelEvent event)
       {
-         layoutLayer.hidePanel(event.getPanelId());
+         Panel p = panels.get(event.getPanelId());
+         if (layoutPanel.getWidgetDirection(p.asWidget()) != Direction.CENTER)
+         {
+            layoutPanel.setWidgetSize(p.asWidget(), 0);
+            layoutPanel.animate(ANIMATION_PERIOD);
+         }
       }
    };
+
+   /**
+    * @param view
+    */
+   private void fireViewOpenedEvent(View view)
+   {
+      ViewOpenedEvent viewOpenedEvent = new ViewOpenedEvent(view);
+      for (ViewOpenedHandler viewOpenedHandler : viewOpenedHandlers)
+      {
+         viewOpenedHandler.onViewOpened(viewOpenedEvent);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.Perspective#closeView(java.lang.String)
+    */
+   @Override
+   public void closeView(String viewId)
+   {
+      View view = views.get(viewId);
+      HasViews viewTarget = viewTargets.get(viewId);
+      if (view == null)
+      {
+         return;
+      }
+
+      //TODO
+      //      if (layoutLayer.isMaximized())
+      //      {
+      //         layoutLayer.restore();
+      //      }
+
+      Widget viewWidget = (Widget)view;
+      viewWidget.removeFromParent();
+
+      viewTarget.removeView(view);
+      views.remove(view.getId());
+      viewTargets.remove(view.getId());
+
+      ViewClosedEvent viewClosedEvent = new ViewClosedEvent(view);
+      for (ViewClosedHandler viewClosedHandler : viewClosedHandlers)
+      {
+         viewClosedHandler.onViewClosed(viewClosedEvent);
+      }
+   }
 
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.Perspective#getViews()
@@ -443,7 +448,7 @@ public class PerspectiveImpl extends Layer implements Perspective
    @Override
    public Map<String, Panel> getPanels()
    {
-      return panels;
-   };
-
+      // TODO Auto-generated method stub
+      return null;
+   }
 }

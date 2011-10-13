@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.editor;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -28,10 +28,9 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
-import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -72,7 +71,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    HandlerManager eventBus;
 
-   VerticalPanel editorArea;
+   private LayoutPanel  editorArea;
 
    int lastEditorHeight = 0;
    
@@ -122,7 +121,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
       HorizontalPanel editorSwitcher = new HorizontalPanel();
 
-      this.editorArea = new VerticalPanel();
+      this.editorArea = new LayoutPanel();
 
       // to respect of button position
       EditorType[] editorSequence = new EditorType[this.supportedEditors.size()];
@@ -156,8 +155,10 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       {
          EditorType editorType = editorSequence[i];
          editorSwitcher.add(buttons.get(editorType));
-         editorArea.add(editors.get(editorType));
-         
+         Editor editor = editors.get(editorType);
+         editorArea.add(editor);
+         editorArea.setWidgetTopBottom(editor, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
+         editor.setHeight("100%");
          if (editors.get(editorType) == this.supportedEditors.get(currentEditorIndex))
          {
             currentEditorType = editorType;
@@ -174,50 +175,33 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       editorSwitcherContainer.setHeight("" + BUTTON_HEIGHT);
 
       editorArea.add(editorSwitcherContainer);
-      editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
+//      editorArea.setCellHeight(editorSwitcherContainer, "" + BUTTON_HEIGHT);
+      editorArea.setWidgetBottomHeight(editorSwitcherContainer, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
       
       add(editorArea);
    }
 
-   private void showEditor(EditorType editorType)
+   private void showEditor(final EditorType editorType)
    {
-      // to fix bug with displaying within the Google Chrome and IE
-      NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
-      if (editorAreaRows != null
-               && editorAreaRows.getLength() >= editorType.getPosition())
-      {
-         if (BrowserResolver.CURRENT_BROWSER.equals(BrowserResolver.Browser.IE))
-         {
-            setDisplayBlock(editorAreaRows.getItem(editorType.getPosition()));
-         }
-         else
-         {
-            editorAreaRows.getItem(editorType.getPosition()).removeAttribute("style");
-         }
-      }
-      
+    
+      editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), true);
       restoreEditorHeight(editorType);
       
       editors.get(editorType).setFocus();
+      new Timer()
+      {
+         
+         @Override
+         public void run()
+         {
+            editors.get(editorType).setFocus();
+         }
+      }.schedule(50);
    }
 
    private void hideEditor(EditorType editorType)
    {
-      // to fix bug with displaing within the Google Chrome
-      NodeList<com.google.gwt.dom.client.Element> editorAreaRows = editorArea.getElement().getElementsByTagName("tr");
-      if (editorAreaRows != null
-               && editorAreaRows.getLength() >= editorType.getPosition())
-      {
-         if (BrowserResolver.CURRENT_BROWSER.equals(BrowserResolver.Browser.IE))
-         {
-            setDisplayNone(editorAreaRows.getItem(editorType.getPosition()));
-         }
-         else
-         {
-            editorAreaRows.getItem(editorType.getPosition()).setAttribute("style", "display: none");
-         }
-      }
-      
+      editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), false);
    }
 
    private native void setDisplayBlock(JavaScriptObject element) /*-{
@@ -426,13 +410,13 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       onViewInnerEditorSwitched(nextEditor);
    }
 
-   @Override
-   public void resize(int width, int height)
-   {
-      super.resize(width, height);
-
-      restoreEditorHeight(currentEditorType);
-   }
+//   @Override
+//   public void resize(int width, int height)
+//   {
+//      super.resize(width, height);
+//
+//      restoreEditorHeight(currentEditorType);
+//   }
 
    /**
     * restore CKEditor height on resize

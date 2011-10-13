@@ -19,28 +19,31 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-          xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="ideTemplateLocale" type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant"></ui:with>
-   
+
    <f:Border margin="15" borderColor="transparent">
-      <g:VerticalPanel spacing="3" horizontalAlignment="center">
-         
-         <f:TextField ui:field="nameField" width="100%" title="{ideTemplateLocale.saveAsTemplateName}" height="22px"></f:TextField>
-         
-         <f:TextAreaItem ui:field="descriptionField" width="100%" title="{ideTemplateLocale.saveAsTemplateDescription}" height="22px"></f:TextAreaItem>
-         
-         <f:TextField ui:field="typeField" width="100%" title="{ideTemplateLocale.saveAsTemplateType}" height="22px"></f:TextField>
-         
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="saveButton" width="90" height="22" text="{ideLocale.saveButton}" imageResource="{resource.ok}" 
-                        disabledImageResource="{resource.okDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}" 
-                        disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-      </g:VerticalPanel>
+      <f:layer>
+         <g:VerticalPanel spacing="3" horizontalAlignment="center">
+
+            <f:TextField ui:field="nameField" width="100%" title="{ideTemplateLocale.saveAsTemplateName}" height="22px"></f:TextField>
+
+            <f:TextAreaItem ui:field="descriptionField" width="100%" title="{ideTemplateLocale.saveAsTemplateDescription}"
+               height="22px"></f:TextAreaItem>
+
+            <f:TextField ui:field="typeField" width="100%" title="{ideTemplateLocale.saveAsTemplateType}" height="22px"></f:TextField>
+
+            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+               <f:ImageButton ui:field="saveButton" width="90" height="22" text="{ideLocale.saveButton}"
+                  imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></f:ImageButton>
+               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}"
+                  imageResource="{resource.cancel}" disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
+            </g:HorizontalPanel>
+         </g:VerticalPanel>
+      </f:layer>
    </f:Border>
-   
+
 </ui:UiBinder>

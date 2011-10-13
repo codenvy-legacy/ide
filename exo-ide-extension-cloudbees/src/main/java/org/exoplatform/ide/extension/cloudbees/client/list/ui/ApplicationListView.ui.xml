@@ -3,18 +3,22 @@
    xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:e="urn:import:org.exoplatform.ide.extension.cloudbees.client.list.ui">
    <ui:with field='resource' type='org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant"></ui:with>
-   <f:VPanel>
-      <f:Border margin="5">
-      
-      <g:ScrollPanel>
-         <e:ApplicationListGrid width="100%" ui:field="applicationGrid">
-         </e:ApplicationListGrid>
-
-      </g:ScrollPanel>
-     </f:Border>
-      <g:HorizontalPanel height="30px" horizontalAlignment="center">
-         <f:ImageButton ui:field="okButton" width="100" height="22" text="{locale.okButton}" imageResource="{resource.okButton}"
-            disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-      </g:HorizontalPanel>
-   </f:VPanel>
+   <g:LayoutPanel>
+      <g:layer top="0px" bottom="30px">
+         <f:Border margin="5">
+            <f:layer>
+               <g:ScrollPanel>
+                  <e:ApplicationListGrid width="100%" ui:field="applicationGrid">
+                  </e:ApplicationListGrid>
+               </g:ScrollPanel>
+            </f:layer>
+         </f:Border>
+      </g:layer>
+      <g:layer bottom="0px" height="30px">
+         <g:HorizontalPanel height="30px" horizontalAlignment="center">
+            <f:ImageButton ui:field="okButton" width="100" height="22" text="{locale.okButton}" imageResource="{resource.okButton}"
+               disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+         </g:HorizontalPanel>
+      </g:layer>
+   </g:LayoutPanel>
 </ui:UiBinder> 

@@ -18,22 +18,18 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.framework.ui.api.Direction;
 import org.exoplatform.ide.client.framework.ui.api.Panel;
 import org.exoplatform.ide.client.framework.ui.api.Perspective;
 import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.MenuImpl;
-import org.exoplatform.ide.client.ui.impl.Layer;
-import org.exoplatform.ide.client.ui.impl.PerspectiveImpl;
+import org.exoplatform.ide.client.ui.StandartPerspective;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,10 +38,10 @@ import org.exoplatform.ide.client.ui.impl.PerspectiveImpl;
  * @version $
  */
 
-public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandler
+public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display
 {
 
-   private PerspectiveImpl perspective;
+   private StandartPerspective perspective;
 
    private MenuImpl menu;
 
@@ -55,15 +51,18 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
 
    public IDEForm()
    {
-      super("ide");
-      AbsolutePanel ideRootPanel = new AbsolutePanel();
-      DOM.setStyleAttribute(ideRootPanel.getElement(), "overflow", "hidden");
-      DOM.setStyleAttribute(ideRootPanel.getElement(), "background", "#FFFFFF");
-      ideRootPanel.setWidth("100%");
-      ideRootPanel.setHeight("100%");
-
-      RootPanel.get().add(ideRootPanel);
-
+      super(Unit.PX);
+//      super("ide");
+//      DockPanel ideRootPanel = new DockPanel();
+//      DOM.setStyleAttribute(ideRootPanel.getElement(), "overflow", "visible");
+      DOM.setStyleAttribute(getElement(), "background", "#FFFFFF");
+//      ideRootPanel.setWidth("100%");
+//      ideRootPanel.setHeight("100%");
+//      setWidth("100%");
+//      setHeight("100%");
+      RootLayoutPanel.get().add(this);
+//      setSpacing(0);
+//      setBorderWidth(0);
       createMenu();
       createToolbar();
       createStatusbar();
@@ -72,10 +71,10 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
       //      DebugLayer debugController = new DebugLayer();
       //      addLayer(debugController);      
 
-      ideRootPanel.add(this, 0, 0);
+//      ideRootPanel.add(this, 0, 0);
 
-      resize(Window.getClientWidth(), Window.getClientHeight());
-      Window.addResizeHandler(this);
+//      resize(Window.getClientWidth(), Window.getClientHeight());
+//      Window.addResizeHandler(this);
    }
 
    /**
@@ -84,7 +83,7 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
    private void createMenu()
    {
       menu = new MenuImpl();
-      add(menu);
+      addNorth(menu, 20);
    }
 
    /**
@@ -93,7 +92,7 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
    private void createToolbar()
    {
       toolbar = new Toolbar("exoIDEToolbar");
-      add(toolbar, 0, 20);
+      addNorth(toolbar, 32);
    }
 
    /**
@@ -107,7 +106,7 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
          UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
       statusbar.setBackgroundImage(background);
       statusbar.setItemsTopPadding(3);
-      add(statusbar, 0, 100);
+      addSouth(statusbar, 30);
    }
 
    /**
@@ -115,9 +114,9 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
     */
    private void createPerspective()
    {
-      perspective = new PerspectiveImpl();
-      addLayer(perspective);
-
+      perspective = new StandartPerspective();
+//      addLayer((Layer)perspective);
+      add(perspective);
       Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
       navigationPanel.acceptType("navigation");
 
@@ -129,32 +128,33 @@ public class IDEForm extends Layer implements IDEPresenter.Display, ResizeHandle
 
       Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
       editorPanel.acceptType("editor");
+      
+//      Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
+//      navigationPanel.acceptType("navigation");
+//
+//      Panel informationPanel = perspective.addPanel("information", Direction.EAST, 200);
+//      informationPanel.acceptType("information");
+//
+//      Panel operationPanel = perspective.addPanel("operation", Direction.SOUTH, 150);
+//      operationPanel.acceptType("operation");
+//
+//      Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
+//      editorPanel.acceptType("editor");
    }
 
-   /**
-    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
-    */
-   @Override
-   public void onResize(ResizeEvent event)
-   {
-      int width = Window.getClientWidth();
-      int height = Window.getClientHeight();
-      resize(width, height);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.ui.impl.Layer#onResize(int, int)
-    */
-   @Override
-   public void onResize(int width, int height)
-   {
-      menu.setWidth("" + width + "px");
-
-      toolbar.setWidth("" + width + "px");
-
-      statusbar.setWidth("" + width + "px");
-      DOM.setStyleAttribute(statusbar.getElement(), "top", "" + (height - 30) + "px");
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.ui.impl.Layer#onResize(int, int)
+//    */
+//   @Override
+//   public void onResize(int width, int height)
+//   {
+//      menu.setWidth("" + width + "px");
+//
+//      toolbar.setWidth("" + width + "px");
+//
+//      statusbar.setWidth("" + width + "px");
+//      DOM.setStyleAttribute(statusbar.getElement(), "top", "" + (height - 30) + "px");
+//   }
 
    /**
     * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getMenu()

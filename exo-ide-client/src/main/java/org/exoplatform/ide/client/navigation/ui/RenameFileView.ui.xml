@@ -19,31 +19,33 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
-             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="ideNavigationLocale" type="org.exoplatform.ide.client.messages.IdeNavigationLocalizationConstant"></ui:with>
 
    <f:Border margin="15" borderColor="transparent">
-      <g:VerticalPanel spacing="3" horizontalAlignment="center">
+      <f:layer>
+         <g:VerticalPanel spacing="3" horizontalAlignment="center">
 
-         <f:TextField ui:field="nameField" width="100%" title="{ideNavigationLocale.renameItemTo}" height="22px"></f:TextField>
+            <f:TextField ui:field="nameField" width="100%" title="{ideNavigationLocale.renameItemTo}" height="22px"></f:TextField>
 
-         <f:ComboBoxField ui:field="mimeTypesField" width="100%" title="{ideNavigationLocale.renameItemSelectMimeType}" height="22px"></f:ComboBoxField>
+            <f:ComboBoxField ui:field="mimeTypesField" width="100%" title="{ideNavigationLocale.renameItemSelectMimeType}"
+               height="22px"></f:ComboBoxField>
 
-         <g:cell verticalAlignment="middle" width="100%">
-            <f:Label ui:field="warningLabel" height="18px"></f:Label>
-         </g:cell>
+            <g:cell verticalAlignment="middle" width="100%">
+               <f:Label ui:field="warningLabel" height="18px"></f:Label>
+            </g:cell>
 
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="renameButton" width="90" height="22" text="{ideNavigationLocale.renameItemRenameBtn}"
-               imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}"
-               disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-      </g:VerticalPanel>
+            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+               <f:ImageButton ui:field="renameButton" width="90" height="22" text="{ideNavigationLocale.renameItemRenameBtn}"
+                  imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></f:ImageButton>
+               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}"
+                  imageResource="{resource.cancel}" disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
+            </g:HorizontalPanel>
+         </g:VerticalPanel>
+      </f:layer>
    </f:Border>
 
 </ui:UiBinder>

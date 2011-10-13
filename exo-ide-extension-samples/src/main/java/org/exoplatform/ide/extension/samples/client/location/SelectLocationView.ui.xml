@@ -23,12 +23,14 @@
       }
    </ui:style>
 
-   <f:VPanel>
+   <g:FlowPanel>
       <!-- navigation tree -->
       <f:Border margin="10">
+      <f:layer>
          <g:ScrollPanel>
             <n:ItemTree styleName="{style.itemsTree}" ui:field="navigationTreeGrid"></n:ItemTree>
          </g:ScrollPanel>
+         </f:layer>
       </f:Border>
       
       <!-- panel to create new folder -->
@@ -104,5 +106,5 @@
       </g:HTMLPanel>
       
       <g:FlowPanel height="10px"></g:FlowPanel>
-   </f:VPanel>
+   </g:FlowPanel>
 </ui:UiBinder> 

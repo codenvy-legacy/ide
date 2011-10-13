@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 import org.exoplatform.ide.client.framework.ui.api.event.HasBeforeViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewLostActivityHandler;
 
@@ -32,7 +34,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActivityHandler
+public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActivityHandler, IsWidget
 {
    
    /**

@@ -16,21 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
+package org.exoplatform.ide.client.ui.panel.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * 
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface RestorePanelHandler extends EventHandler
+public interface HasShowPanelHandler
 {
-   
-   void onRestorePanel(RestorePanelEvent event);
 
+   HandlerRegistration addShowPanelHandler(ShowPanelHandler showPanelHandler);
+   
 }

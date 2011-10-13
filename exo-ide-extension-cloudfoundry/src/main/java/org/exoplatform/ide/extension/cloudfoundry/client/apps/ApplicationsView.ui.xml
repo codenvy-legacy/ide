@@ -15,12 +15,14 @@
       }
    </ui:style>
    
-   <f:VPanel>
+   <g:FlowPanel>
    
       <f:Border margin="5">
+      <f:layer>
          <g:ScrollPanel>
             <e:ApplicationsListGrid width="100%" ui:field="applicationsGrid" ></e:ApplicationsListGrid>
          </g:ScrollPanel>
+         </f:layer>
       </f:Border>
       
       <!-- Bottom panel -->
@@ -55,5 +57,5 @@
       </g:HTMLPanel>
       
       <g:FlowPanel height="10px"></g:FlowPanel>
-   </f:VPanel>
+   </g:FlowPanel>
 </ui:UiBinder> 

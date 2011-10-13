@@ -1,5 +1,11 @@
-BODY {
-	background-color:#ebebeb;
+html,body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
+body {
+	background-color: #ebebeb;
 }
 
 .DevTool_contentEditorBorder {
@@ -13,42 +19,35 @@ BODY {
 /*
 CUSTOMIZE TOOLBAR
 */
-.exo-customizeToolbar-delimiter,
-.exo-customizeToolbar-spacer,
-.exo-customizeToolbar-commandGroup
-{
-	width:10px;
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
-    font-weight: normal;
-    font-style: normal;	
+.exo-customizeToolbar-delimiter,.exo-customizeToolbar-spacer,.exo-customizeToolbar-commandGroup
+	{
+	width: 10px;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	font-style: normal;
 }
 
-.exo-customizeToolbar-delimiter
-{
-	color:blue;
+.exo-customizeToolbar-delimiter {
+	color: blue;
 }
 
-.exo-customizeToolbar-spacer
-{
-	color:red;
+.exo-customizeToolbar-spacer {
+	color: red;
 }
 
-.exo-customizeToolbar-commandGroup
-{
-	color:#333333;
+.exo-customizeToolbar-commandGroup {
+	color: #333333;
 }
 
-.exo-cutomizeHotKey-label-error
-{
-	color:#db0000;
+.exo-cutomizeHotKey-label-error {
+	color: #db0000;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
 
-.exo-cutomizeHotKey-label-info
-{
-	color:#0059bc;
+.exo-cutomizeHotKey-label-info {
+	color: #0059bc;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
@@ -57,108 +56,89 @@ CUSTOMIZE TOOLBAR
  
  style prefix: exo-auto-
  ****************************************************************************************/
-
-.exo-autocomplete-panel
-{
-  background-color: #FFFFFF;
-  border: #A7ABB4 1px solid;
+.exo-autocomplete-panel {
+	background-color: #FFFFFF;
+	border: #A7ABB4 1px solid;
 }
 
-
-.exo-autocomplete-edit,
-.exo-autocomplete-list-item,
-.exo-autocomplete-list-item-overed,
-.exo-autocomplete-list-item-selected
-{
+.exo-autocomplete-edit,.exo-autocomplete-list-item,.exo-autocomplete-list-item-overed,.exo-autocomplete-list-item-selected
+	{
 	background-color: #FFFFFF;
 	font-family: monospace;
-    font-size: 10pt;
-    border: 0 none;
-    padding: 0px;
+	font-size: 10pt;
+	border: 0 none;
+	padding: 0px;
 }
 
-.exo-autocomplete-list-item TBODY TR TD DIV,
-.exo-autocomplete-list-item-overed TBODY TR TD DIV,
-.exo-autocomplete-list-item-selected TBODY TR TD DIV
-{
+.exo-autocomplete-list-item TBODY TR TD DIV,.exo-autocomplete-list-item-overed TBODY TR TD DIV,.exo-autocomplete-list-item-selected TBODY TR TD DIV
+	{
 	font-family: monospace;
-    font-size: 10pt;
-    border: 0 none;
-    padding: 0px;
+	font-size: 10pt;
+	border: 0 none;
+	padding: 0px;
 }
-.exo-autocomplete-edit
-{
+
+.exo-autocomplete-edit {
 	height: 20px;
 	border-bottom: #A7ABB4 1px solid;
 }
 
-
-.exo-autocomplete-list
-{
+.exo-autocomplete-list {
 	border: 0 none;
-	background:white;
+	background: white;
 }
 
-.exo-autocomplete-list option
-{
-	cursor:default;
-    font-family: monospace;
-    font-size: 10pt;
-    color: #333333;
+.exo-autocomplete-list option {
+	cursor: default;
+	font-family: monospace;
+	font-size: 10pt;
+	color: #333333;
 }
 
-.exo-autocomplete-list-item,
-.exo-autocomplete-list-item-selected,
-.exo-autocomplete-list-item-overed
-{
+.exo-autocomplete-list-item,.exo-autocomplete-list-item-selected,.exo-autocomplete-list-item-overed
+	{
 	height: 20px;
 	border-collapse: collapse;
 	cursor: default;
 	outline: none;
 }
-.exo-autocomplete-list-item-selected
-{
+
+.exo-autocomplete-list-item-selected {
 	background-image: url("images/autoComplete/row-selected.png");
 	background-repeat: repeat-x;
 }
 
-.exo-autocomplete-list-item-overed
-{
+.exo-autocomplete-list-item-overed {
 	background-image: url("images/autoComplete/row_over.png");
 	background-repeat: repeat-x;
 }
 
-.exo-autocomplete-description
-{
+.exo-autocomplete-description {
 	border: #A7ABB4 1px solid;
 	background-color: #e0e9ee;
 	font-family: monospace;
-    font-size: 10pt;
-    overflow: scroll;
+	font-size: 10pt;
+	overflow: scroll;
 }
 
-.exo-autocomplete-list-variable
-{
+.exo-autocomplete-list-variable {
 	background-color: #ecbeae;
 }
-.exo-autocomplete-list-function
-{
+
+.exo-autocomplete-list-function {
 	background-color: #b1d4b4;
 }
 
-.exo-autocomplete-list-keyword
-{
+.exo-autocomplete-list-keyword {
 	background-color: #FFFFFF;
 }
 
-.exo-autocomplete-list-template
-{
+.exo-autocomplete-list-template {
 	background-color: #efebb1;
 }
 
-.exo-rename-warning-msg
-{
+.exo-rename-warning-msg {
 	color: #7d7d7d;
-	font-family: Verdana,Bitstream Vera Sans,sans-serif;
-    font-size: 12px;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 12px;
 }

@@ -1,58 +1,64 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:t="urn:import:org.exoplatform.ide.client.navigation.template"
-	>
-	<ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
-	<ui:with type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant" field="ideTemplateConst"></ui:with>
-	
-	<ui:style>
-		.table
-		{
-			width:100%;
-			height:100%;
-			border-collapse: collapse;
-		}
-	</ui:style>
-	
-	<c:VPanel>
-	
-		<c:Border margin="5">
-			<t:FileTemplateListGrid ui:field="fileTemplateListGrid"></t:FileTemplateListGrid>
-		</c:Border>
-		
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:t="urn:import:org.exoplatform.ide.client.navigation.template">
+   <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+   <ui:with type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant" field="ideTemplateConst"></ui:with>
 
-		<g:HTMLPanel height="40px">
-			
-			<table class="{style.table}">
-				<tr>
-					<td style="width:2px;"><div style="width:2px; height:1px;"></div></td>
-					
-					<td style="width:210px;">
-						<c:TextField ui:field="fileNameField" title="{ideTemplateConst.createFileFromTemplateName}" titleOrientation="left" name="ideCreateFileFromTemplateFormFileNameField"></c:TextField>
-					</td>
-					
-					<td><div style="width:1px; height:1px;"></div></td>
-					
-					<td style="width:100px;">
-						<c:ImageButton ui:field="deleteButton" text="{idelocal.deleteButton}" imageName="delete" buttonId="ideCreateFileFromTemplateFormDeleteButton"></c:ImageButton>
-					</td>
-					
-					<td style="width:100px">
-						<c:ImageButton ui:field="createButton" text="{idelocal.createButton}" imageName="ok" buttonId="ideCreateFileFromTemplateFormCreateButton"></c:ImageButton>
-					</td>
-					
-					<td style="width:94px;">	
-						<c:ImageButton ui:field="cancelButton" text="{idelocal.cancelButton}" imageName="cancel" buttonId="ideCreateFileFromTemplateFormCancelButton"></c:ImageButton>
-					</td>
-					
-				</tr>
-			</table>
-			
-		</g:HTMLPanel>
-		
-	</c:VPanel>
-	
+   <ui:style>
+      .table {
+      	width: 100%;
+      	height: 100%;
+      	border-collapse: collapse;
+      }
+   </ui:style>
+
+   <g:LayoutPanel>
+      <g:layer top="0px" bottom="40px">
+         <c:Border margin="5">
+            <c:layer>
+               <t:FileTemplateListGrid ui:field="fileTemplateListGrid" width="100%"></t:FileTemplateListGrid>
+            </c:layer>
+         </c:Border>
+      </g:layer>
+      <g:layer bottom="0px" height="40px">
+         <g:HTMLPanel height="40px">
+
+            <table class="{style.table}">
+               <tr>
+                  <td style="width:2px;">
+                     <div style="width:2px; height:1px;"></div>
+                  </td>
+
+                  <td style="width:210px;">
+                     <c:TextField ui:field="fileNameField" title="{ideTemplateConst.createFileFromTemplateName}"
+                        titleOrientation="left" name="ideCreateFileFromTemplateFormFileNameField"></c:TextField>
+                  </td>
+
+                  <td>
+                     <div style="width:1px; height:1px;"></div>
+                  </td>
+
+                  <td style="width:100px;">
+                     <c:ImageButton ui:field="deleteButton" text="{idelocal.deleteButton}" imageName="delete"
+                        buttonId="ideCreateFileFromTemplateFormDeleteButton"></c:ImageButton>
+                  </td>
+
+                  <td style="width:100px">
+                     <c:ImageButton ui:field="createButton" text="{idelocal.createButton}" imageName="ok"
+                        buttonId="ideCreateFileFromTemplateFormCreateButton"></c:ImageButton>
+                  </td>
+
+                  <td style="width:94px;">
+                     <c:ImageButton ui:field="cancelButton" text="{idelocal.cancelButton}" imageName="cancel"
+                        buttonId="ideCreateFileFromTemplateFormCancelButton"></c:ImageButton>
+                  </td>
+
+               </tr>
+            </table>
+
+         </g:HTMLPanel>
+      </g:layer>
+   </g:LayoutPanel>
+
 </ui:UiBinder>
  

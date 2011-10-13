@@ -48,16 +48,17 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class UploadFileView extends ViewImpl implements org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
+public class UploadFileView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
 {
-   
+
    public static final int WIDTH = 500;
 
    public static final int HEIGHT = 220;
 
    private static final String ID = "ideUploadForm";
 
-   private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();   
+   private static final String TITLE = IDE.UPLOAD_CONSTANT.uploadFileTitle();
 
    private static UploadFileViewUiBinder uiBinder = GWT.create(UploadFileViewUiBinder.class);
 
@@ -85,7 +86,7 @@ public class UploadFileView extends ViewImpl implements org.exoplatform.ide.clie
 
    public UploadFileView()
    {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -121,10 +122,10 @@ public class UploadFileView extends ViewImpl implements org.exoplatform.ide.clie
 
       Hidden parentIdField = new Hidden(FormFields.PARENT_ID, parentId);
       postFieldsPanel.add(parentIdField);
-      
+
       Hidden nameField = new Hidden(FormFields.NAME, name);
       postFieldsPanel.add(nameField);
-      
+
       Hidden vfsIdField = new Hidden(FormFields.VFS_ID, vfsId);
       postFieldsPanel.add(vfsIdField);
    }
@@ -183,6 +184,6 @@ public class UploadFileView extends ViewImpl implements org.exoplatform.ide.clie
    {
       Hidden actionIdField = new Hidden(FormFields.ACTION_UPDATE, action);
       postFieldsPanel.add(actionIdField);
-   }   
+   }
 
 }

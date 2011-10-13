@@ -22,8 +22,8 @@
    </ui:style>
 
    <c:Border margin="1" borderColor="transparent">
-
-      <c:VPanel ui:field="basePanel">
+       <c:layer>
+      <g:FlowPanel ui:field="basePanel">
          <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="1">
             <g:HorizontalPanel styleName="{style.logLines}" spacing="0" verticalAlignment="middle" height="28px">
                <c:Label value="{locale.logsViewLogLinesField}" height="18px" isHTML="true" styleName="{style.label}"></c:Label>
@@ -36,7 +36,7 @@
                <pre ui:field="content" class='{style.content}'></pre>
             </g:HTML>
          </g:ScrollPanel>
-      </c:VPanel>
-
+      </g:FlowPanel> 
+</c:layer>
    </c:Border>
 </ui:UiBinder> 

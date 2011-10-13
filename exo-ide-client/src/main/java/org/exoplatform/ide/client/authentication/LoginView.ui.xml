@@ -9,7 +9,8 @@
 	</ui:style>
 	
 	<c:Border margin="1" borderColor="transparent">
-		<c:VPanel>
+      <c:layer>
+		<g:FlowPanel>
 		
 			<g:HTMLPanel height="90px">
 				<table style="width:100%; height:100%;">
@@ -21,7 +22,7 @@
 				</table>
 			</g:HTMLPanel>
 			
-			<c:HPanel height="110px">
+			<g:HorizontalPanel height="110px">
 				
 				<g:SimplePanel></g:SimplePanel>
 				
@@ -57,11 +58,12 @@
 				
 				<g:SimplePanel></g:SimplePanel>
 				
-			</c:HPanel>
+			</g:HorizontalPanel>
 			
 			<g:SimplePanel></g:SimplePanel>			
 		
-		</c:VPanel>
+		</g:FlowPanel>
+      </c:layer>
 	</c:Border>
 	
 </ui:UiBinder>

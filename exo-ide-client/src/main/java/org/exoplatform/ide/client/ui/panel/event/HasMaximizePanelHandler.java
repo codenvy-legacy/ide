@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
+package org.exoplatform.ide.client.ui.panel.event;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -27,9 +27,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
-public interface HasRestorePanelHandler
+public interface HasMaximizePanelHandler
 {
 
-   HandlerRegistration addRestorePanelHandler(RestorePanelHandler restorePanelHandler);
-
+   HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler);
+   
 }

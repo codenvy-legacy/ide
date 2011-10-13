@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 import java.util.Map;
 
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
@@ -33,7 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChange
  */
 
 public interface Perspective extends HasViewVisibilityChangedHandler, 
-HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler
+HasViewOpenedHandler, HasViewClosedHandler, HasClosingViewHandler, IsWidget
 {
 
    /**

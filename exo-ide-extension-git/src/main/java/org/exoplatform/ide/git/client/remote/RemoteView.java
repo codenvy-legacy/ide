@@ -19,21 +19,18 @@
 package org.exoplatform.ide.git.client.remote;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.VPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitClientBundle;
@@ -92,7 +89,7 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
 
-      VPanel vPanel = new VPanel();
+      FlowPanel vPanel = new FlowPanel();
       Border border = GWT.create(Border.class);
       vPanel.add(border);
 

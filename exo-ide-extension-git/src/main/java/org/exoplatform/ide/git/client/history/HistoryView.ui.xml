@@ -1,9 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:c="urn:import:org.exoplatform.ide.git.client.commit"
-	xmlns:e="urn:import:org.exoplatform.ide.editor.api">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:c="urn:import:org.exoplatform.ide.git.client.commit"
+   xmlns:e="urn:import:org.exoplatform.ide.editor.api">
    <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle' />
 
    <ui:style>
@@ -20,57 +18,62 @@
    </ui:style>
 
 
-   <f:VPanel>
-      <f:Toolbar height="28px" ui:field="toolbar">
-      </f:Toolbar>
-
-      <g:SplitLayoutPanel>
-         <g:north size="100">
-            <f:StretchPanel>
+   <g:LayoutPanel>
+      <g:layer top="0" height="28px">
+         <f:Toolbar height="28px" ui:field="toolbar">
+         </f:Toolbar>
+      </g:layer>
+      <g:layer top="28px" bottom="0px">
+         <g:SplitLayoutPanel>
+            <g:north size="100">
                <f:Border margin="5">
-                  <c:RevisionGrid ui:field="revisionGrid"></c:RevisionGrid>
+                  <f:layer>
+                     <c:RevisionGrid ui:field="revisionGrid"></c:RevisionGrid>
+                  </f:layer>
                </f:Border>
-            </f:StretchPanel>
-         </g:north>
-         <g:center>
-            <f:StretchPanel>
-               <f:VPanel>
+            </g:north>
+            <g:center>
+               <g:FlowPanel>
                   <f:Border margin="5" borderColor="transparent" height="70">
-                     <g:HTMLPanel>
-                        <table width="100%">
-                           <tr>
-                              <td class="{style.title}" ui:field="revisionADate"></td>
-                              <td>
-                                 <f:TextField ui:field="comitADate" width="100%"></f:TextField>
-                              </td>
-                              <td width="40px" rowspan="2" align="center">
-                                 <img src="{resource.arrows.getURL}"></img>
-                              </td>
-                              <td class="{style.title}" ui:field="revisionBDate"></td>
-                              <td>
-                                 <f:TextField ui:field="comitBDate" width="100%"></f:TextField>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td class="{style.title}" ui:field="revisionATitle"></td>
-                              <td>
-                                 <f:TextField ui:field="comitARevision" width="100%"></f:TextField>
-                              </td>
-                              <td class="{style.title}" ui:field="revisionBTitle"></td>
-                              <td>
-                                 <f:TextField ui:field="comitBRevision" width="100%"></f:TextField>
-                              </td>
-                           </tr>
-                        </table>
-                     </g:HTMLPanel>
+                     <f:layer>
+                        <g:HTMLPanel>
+                           <table width="100%">
+                              <tr>
+                                 <td class="{style.title}" ui:field="revisionADate"></td>
+                                 <td>
+                                    <f:TextField ui:field="comitADate" width="100%"></f:TextField>
+                                 </td>
+                                 <td width="40px" rowspan="2" align="center">
+                                    <img src="{resource.arrows.getURL}"></img>
+                                 </td>
+                                 <td class="{style.title}" ui:field="revisionBDate"></td>
+                                 <td>
+                                    <f:TextField ui:field="comitBDate" width="100%"></f:TextField>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td class="{style.title}" ui:field="revisionATitle"></td>
+                                 <td>
+                                    <f:TextField ui:field="comitARevision" width="100%"></f:TextField>
+                                 </td>
+                                 <td class="{style.title}" ui:field="revisionBTitle"></td>
+                                 <td>
+                                    <f:TextField ui:field="comitBRevision" width="100%"></f:TextField>
+                                 </td>
+                              </tr>
+                           </table>
+                        </g:HTMLPanel>
+                     </f:layer>
                   </f:Border>
                   <f:Border margin="5">
-                     <f:Panel ui:field="editorPanel"></f:Panel>
+                     <f:layer>
+                        <g:SimplePanel ui:field="editorPanel"></g:SimplePanel>
+                     </f:layer>
                   </f:Border>
-               </f:VPanel>
-            </f:StretchPanel>
-         </g:center>
-      </g:SplitLayoutPanel>
-   </f:VPanel>
+               </g:FlowPanel>
+            </g:center>
+         </g:SplitLayoutPanel>
+      </g:layer>
+   </g:LayoutPanel>
 
 </ui:UiBinder>

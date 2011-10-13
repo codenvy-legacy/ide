@@ -5,16 +5,16 @@
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	>
 
-	<c:Border margin="1" borderColor="transparent">
-		
-		<c:VPanel>
+	<c:Border margin="1">
+		<c:layer width="100%" hetight="100%">
+		<g:FlowPanel>
 			<c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
 
 			<g:ScrollPanel ui:field="scrollPanel">
 				<g:FlowPanel width="100%" ui:field="contentPanel"></g:FlowPanel>
 			</g:ScrollPanel>
-		</c:VPanel>
-		
+		</g:FlowPanel>
+		</c:layer>
 	</c:Border>
 
 </ui:UiBinder>

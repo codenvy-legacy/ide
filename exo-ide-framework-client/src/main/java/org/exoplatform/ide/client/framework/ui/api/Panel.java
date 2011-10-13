@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ import java.util.Map;
  * @version $
  */
 
-public interface Panel extends HasViews
+public interface Panel extends HasViews, IsWidget
 {
 
    /**
@@ -63,5 +65,6 @@ public interface Panel extends HasViews
    void setPanelHidden(boolean panelHidden);
 
    boolean isPanelHidden();
+
 
 }

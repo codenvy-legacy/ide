@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.ui.impl.panel;
+package org.exoplatform.ide.client.ui.panel.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
@@ -28,33 +28,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ShowPanelEvent extends GwtEvent<ShowPanelHandler>
+public interface MaximizePanelHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<ShowPanelHandler> TYPE = new GwtEvent.Type<ShowPanelHandler>();
-
-   private String panelId;
-
-   public ShowPanelEvent(String panelId)
-   {
-      this.panelId = panelId;
-   }
-
-   public String getPanelId()
-   {
-      return panelId;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowPanelHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(ShowPanelHandler handler)
-   {
-      handler.onShowPanel(this);
-   }
+   
+   void onMaximizePanel(MaximizePanelEvent event);
 
 }

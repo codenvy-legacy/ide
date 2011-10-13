@@ -3,15 +3,15 @@
    xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
    <c:Border margin="1" borderColor="transparent">
+      <c:layer width="100%" hetight="100%">
+         <g:FlowPanel>
+            <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
 
-      <c:VPanel>
-         <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
-
-         <g:ScrollPanel ui:field="scrollPanel">
-            <g:FlowPanel width="100%" ui:field="contentPanel"></g:FlowPanel>
-         </g:ScrollPanel>
-      </c:VPanel>
-
+            <g:ScrollPanel ui:field="scrollPanel">
+               <g:FlowPanel width="100%" ui:field="contentPanel"></g:FlowPanel>
+            </g:ScrollPanel>
+         </g:FlowPanel>
+      </c:layer>
    </c:Border>
 
 </ui:UiBinder>
