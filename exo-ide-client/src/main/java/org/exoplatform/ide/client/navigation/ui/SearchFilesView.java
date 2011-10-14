@@ -43,9 +43,9 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
    
    private static final String ID = "ideSearchView";
 
-   private static final int WIDTH = 450;
+   private static final int WIDTH = 470;
 
-   private static final int HEIGHT = 200;
+   private static final int HEIGHT = 220;
 
    private static final String ID_SEARCH_BUTTON = "ideSearchFormSearchButton";
 
@@ -63,7 +63,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
    private static int FIELD_WIDTH = 300;
 
-   private static int FIELD_HEIGHT = 20;
+   private static int FIELD_HEIGHT = 18;
 
    private TextField contentField;
 
@@ -114,7 +114,7 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       VerticalPanel mainLayout = new VerticalPanel();
       mainLayout.setHeight("100%");
       mainLayout.setWidth("100%");
-      mainLayout.setSpacing(10);
+      mainLayout.setSpacing(20);
       mainLayout.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
 
       mainLayout.add(createSearchForm());

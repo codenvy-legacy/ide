@@ -26,7 +26,7 @@
       }
       
       .spacing {
-      	margin-bottom: 10px;
+      	margin-bottom: 15px;
       }
    </ui:style>
 
@@ -45,7 +45,7 @@
 
                      <tr style="height:22px;">
                         <td width="100%">
-                           <c:TextField showTitle="false" height="22" width="100%" ui:field="fileNameField"
+                           <c:TextField showTitle="false" textItemHeight="18" width="100%" ui:field="fileNameField"
                               textFieldId="ideUploadFormFilenameField" readOnly="true"></c:TextField>
                         </td>
 

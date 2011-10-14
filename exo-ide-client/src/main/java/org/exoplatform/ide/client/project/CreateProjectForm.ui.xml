@@ -4,11 +4,11 @@
    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:style>
       .spacing {
-      	margin-bottom: 10px;
+      	margin-top: 15px;
       }
       
       .spacingFields {
-      	margin-bottom: 5px;
+      	margin-bottom: 7px;
       }
       
       .label {
@@ -21,14 +21,14 @@
       }
    </ui:style>
 
-   <f:Border margin="15" borderColor="transparent">
+   <f:Border margin="20" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
             <g:Label text="{locale.projectName}" styleName="{style.label}"></g:Label>
-            <f:TextField ui:field="projectName" width="99%" height="22px" styleName="{style.spacingFields}"></f:TextField>
+            <f:TextField ui:field="projectName" width="99%" textItemHeight="18" styleName="{style.spacingFields}"></f:TextField>
             <g:Label text="{locale.projectType}" styleName="{style.label}"></g:Label>
-            <f:TextField ui:field="projectType" width="99%" height="22px" styleName="{style.spacing}"></f:TextField>
-            <g:HorizontalPanel height="40" width="100%" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+            <f:TextField ui:field="projectType" width="99%" textItemHeight="18"></f:TextField>
+            <g:HorizontalPanel height="40" width="100%" spacing="5" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageResource="{resource.ok}"
                      disabledImageResource="{resource.okDisabled}"></f:ImageButton>

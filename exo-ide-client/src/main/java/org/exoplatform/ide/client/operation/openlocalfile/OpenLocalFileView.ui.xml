@@ -23,27 +23,27 @@
       	font-weight: normal;
       }
       
-      .horiz {
-      	float: left;
+      .spacing {
+         margin-bottom: 15px;
       }
    </ui:style>
-
-   <c:Border margin="5" borderColor="transparent">
-      <c:layer left="40px" right="40px">
+   
+   <c:Border margin="20" borderColor="transparent">
+      <c:layer>
          <g:FlowPanel>
-            <g:FlowPanel styleName="{style.horiz}" height="100px" width="100%">
+            <g:FlowPanel height="100px" width="100%" styleName="{style.spacing}">
                <g:HTMLPanel>
                   <table style="width:100%; height:100%;" border="0" cellpadding="0">
 
-                     <tr style="height:20px;">
-                        <td colspan="2" style="height:20px; vertical-align: middle;" class="{style.labels}">
+                     <tr>
+                        <td colspan="2" style="vertical-align: middle;" class="{style.labels}">
                            <c:Label text="{ideUploadLocale.fileToOpen}"></c:Label>
                         </td>
                      </tr>
 
-                     <tr style="height:24px;">
-                        <td>
-                           <c:TextField showTitle="false" textItemHeight="22" width="100%" ui:field="fileNameField"
+                     <tr>
+                        <td width="100%">
+                           <c:TextField showTitle="false" textItemHeight="18" width="100%" ui:field="fileNameField"
                               textFieldId="ideUploadFormFilenameField" readOnly="true"></c:TextField>
                         </td>
 
@@ -62,13 +62,13 @@
                         </td>
                      </tr>
 
-                     <tr style="height:20px;">
-                        <td colspan="2" style="height:20px; vertical-align: middle;" class="{style.labels}">
+                     <tr>
+                        <td colspan="2" style="vertical-align: middle;" class="{style.labels}">
                            <c:Label text="{ideUploadLocale.uploadFileMimeType}"></c:Label>
                         </td>
                      </tr>
 
-                     <tr style="height:24px;">
+                     <tr>
                         <td colspan="2">
                            <c:ComboBoxField ui:field="mimeTypesField" name="ideUploadFormMimeTypeField"
                               pickListHeight="100" showTitle="false" width="100%"></c:ComboBoxField>
@@ -80,7 +80,7 @@
                <g:FlowPanel width="40px"></g:FlowPanel>
             </g:FlowPanel>
 
-            <g:HorizontalPanel spacing="10" height="60px" width="100%">
+            <g:HorizontalPanel spacing="5" height="24px" width="100%">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <c:ImageButton ui:field="openButton" text="{ideUploadLocale.openButton}" imageName="upload"
                      buttonId="ideUploadFormUploadButton"></c:ImageButton>

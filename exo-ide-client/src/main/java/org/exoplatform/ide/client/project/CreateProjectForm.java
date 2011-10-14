@@ -42,9 +42,9 @@ import com.google.gwt.user.client.ui.Widget;
 */
 public class CreateProjectForm extends ViewImpl implements Display
 {
-   private static final int WIDTH = 350;
+   private static final int WIDTH = 370;
 
-   private static final int HEIGHT = 200;
+   private static final int HEIGHT = 210;
    
    private static final String ID = CreateProjectForm.class.getName();
    

@@ -54,7 +54,7 @@ public class OpenLocalFileView extends ViewImpl implements
 
    public static final int WIDTH = 500;
 
-   public static final int HEIGHT = 220;
+   public static final int HEIGHT = 200;
 
    private static final String ID = "ideOpenLocalFile";
 

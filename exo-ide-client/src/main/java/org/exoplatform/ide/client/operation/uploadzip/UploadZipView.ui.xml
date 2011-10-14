@@ -16,6 +16,10 @@
       	cursor: default;
       }
       
+      .spacing {
+      	margin-top : 15px;
+      }
+      
    </ui:style>
 
    <c:Border margin="20" borderColor="transparent" height="150px">
@@ -59,7 +63,7 @@
 
             </g:FlowPanel>
 
-            <g:HorizontalPanel spacing="5" height="60px" width="100%">
+            <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <c:ImageButton ui:field="uploadButton" text="{uploadLocale.uploadButton}" imageName="upload"
                      buttonId="ideUploadFormUploadButton"></c:ImageButton>

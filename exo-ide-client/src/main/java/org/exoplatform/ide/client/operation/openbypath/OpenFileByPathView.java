@@ -26,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
@@ -42,7 +43,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
 
    public static final int WIDTH = 500;
 
-   public static final int HEIGHT = 150;
+   public static final int HEIGHT = 165;
 
    private static final String ID = "ideOpenFileByPathWindow";
 
@@ -105,7 +106,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
       return openButton;
    }
 
-   public TextField getFilePathFieldOrigin()
+   public TextFieldItem getFilePathFieldOrigin()
    {
       return filePathField;
    }

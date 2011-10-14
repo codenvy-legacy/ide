@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.createfolder;
 
+import com.google.gwt.user.client.ui.TextBox;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.IDE;
@@ -49,7 +51,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
 
    public static final int WIDTH = 400;
 
-   public static final int HEIGHT = 160;
+   public static final int HEIGHT = 170;
 
    public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
 
@@ -62,7 +64,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderFormTitle();
 
    @UiField
-   TextField folderNameField;
+   TextBox folderNameField;
 
    @UiField
    ImageButton createButton;
@@ -117,7 +119,7 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
    @Override
    public void setFocusInNameField()
    {
-      folderNameField.focusInItem();
+      folderNameField.setFocus(true);
    }
 
 }

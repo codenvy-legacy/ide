@@ -57,7 +57,7 @@ public class OpenFileByURLView extends ViewImpl implements org.exoplatform.ide.c
    /**
     * Initial height of this view
     */
-   private static int HEIGHT = 175;   
+   private static int HEIGHT = 170;   
 
    private static OpenFileByURLViewUiBinder uiBinder = GWT.create(OpenFileByURLViewUiBinder.class);
 
