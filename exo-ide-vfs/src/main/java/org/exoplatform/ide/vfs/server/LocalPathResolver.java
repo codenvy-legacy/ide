@@ -24,7 +24,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 /**
  * Need for resolving location for file/folders on real-life file system. 
  * It can be need for using Git or some other services that work with file system.
- * Implementation depend on VirtualFileSyetm implementation.    
+ * Implementation depend on VirtualFileSystem implementation.    
  * 
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
