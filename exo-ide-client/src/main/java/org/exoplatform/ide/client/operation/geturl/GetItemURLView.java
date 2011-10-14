@@ -18,17 +18,17 @@
  */
 package org.exoplatform.ide.client.operation.geturl;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.DynamicForm;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -41,92 +41,53 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @version @version $Id: $
  */
 
-public class GetItemURLView extends ViewImpl implements org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display
+public class GetItemURLView extends ViewImpl implements
+   org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display
 {
-   
+
    private static final String ID = "ideGetItemURLForm";
 
    private static final int DEFAULT_WIDTH = 500;
 
-   private static final int DEFAULT_HEIGHT = 150;
-   
-   private static final int BUTTON_HEIGHT = 22;
+   private static final int DEFAULT_HEIGHT = 160;
 
    public static final String URL_FIELD = "ideGetItemURLFormURLField";
 
-   public static final String ID_DYNAMIC_FORM = "ideGetItemURLFormDynamicForm";
-
    public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
 
-   private TextField urlField;
+   @UiField
+   TextBox urlField;
 
-   //private IButton okButton;
-   private ImageButton okButton;
-   
-   private VerticalPanel mainPanel;
-   
+   @UiField
+   ImageButton okButton;
+
    private static final String TITLE = IDE.NAVIGATION_CONSTANT.getItemUrlTitle();
-   
-   private static final String WEB_DAV_ITEMS_URL = IDE.NAVIGATION_CONSTANT.getItemUrlWebdavItemsUrl();
+
+   interface GetItemURLViewUiBinder extends UiBinder<Widget, GetItemURLView>
+   {
+   }
+
+   private static GetItemURLViewUiBinder uiBinder = GWT.create(GetItemURLViewUiBinder.class);
 
    public GetItemURLView()
    {
       super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-      mainPanel = new VerticalPanel();
-      mainPanel.setWidth("100%");
-      mainPanel.setHeight("100%");
-      mainPanel.setSpacing(5);      
-      add(mainPanel);
-      
-      createFieldForm();
-      createButtons();
-      
+      add(uiBinder.createAndBindUi(this));
+      okButton.setButtonId(ID_OK_BUTTON);
+      urlField.setName(URL_FIELD);
+
       new Timer()
       {
 
          @Override
          public void run()
          {
-            urlField.selectValue();
-            urlField.focusInItem();
+            urlField.selectAll();
+            urlField.setFocus(true);
          }
 
       }.schedule(500);
-   }
-
-   private void createFieldForm()
-   {
-      DynamicForm paramsForm = new DynamicForm();
-      paramsForm.setID(ID_DYNAMIC_FORM);
-      paramsForm.setPadding(5);
-      paramsForm.setWidth(450);
-
-      urlField = new TextField(URL_FIELD, WEB_DAV_ITEMS_URL);
-      urlField.setWidth(450);
-      urlField.setHeight(22);
-      urlField.setTitleOrientation(TitleOrientation.TOP);
-      paramsForm.add(urlField);
-      urlField.focusInItem();
-      
-      mainPanel.add(paramsForm);
-      mainPanel.setCellHorizontalAlignment(paramsForm, HorizontalPanel.ALIGN_CENTER);
-      mainPanel.setCellVerticalAlignment(paramsForm, HorizontalPanel.ALIGN_MIDDLE);
-      //urlField.setValue(url);
-   }
-
-   private void createButtons()
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
-
-      okButton = new ImageButton(IDE.IDE_LOCALIZATION_CONSTANT.okButton(), "ok");
-      okButton.setId(ID_OK_BUTTON);
-      buttonsLayout.add(okButton);
-      
-      mainPanel.add(buttonsLayout);
-      mainPanel.setCellHorizontalAlignment(buttonsLayout, HorizontalPanel.ALIGN_CENTER);
-      mainPanel.setCellVerticalAlignment(buttonsLayout, HorizontalPanel.ALIGN_MIDDLE);
    }
 
    @Override
