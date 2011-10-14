@@ -16,27 +16,24 @@
       	cursor: default;
       }
       
-      .horiz {
-      	float: left;
-      }
    </ui:style>
 
-   <c:Border margin="5" borderColor="transparent" height="150px">
-      <c:layer left="40px" right="40px">
+   <c:Border margin="20" borderColor="transparent" height="150px">
+      <c:layer>
          <g:FlowPanel>
-            <g:FlowPanel styleName="{style.horiz}" height="50px" width="100%">
+            <g:FlowPanel height="50px" width="100%">
                <g:HTMLPanel>
                   <table style="width:100%; height:100%;" border="0" cellpadding="0">
 
                      <tr style="height:20px;">
-                        <td colspan="2" style="height:20px; vertical-align: middle;">
-                           <c:Label height="20px" value="{uploadLocale.folderToUpload}"></c:Label>
+                        <td colspan="2" style="vertical-align: middle;">
+                           <c:Label value="{uploadLocale.folderToUpload}"></c:Label>
                         </td>
                      </tr>
 
                      <tr>
-                        <td>
-                           <c:TextField showTitle="false" textItemHeight="22" width="100%" ui:field="fileNameField"
+                        <td width="100%">
+                           <c:TextField showTitle="false" textItemHeight="18" width="100%" ui:field="fileNameField"
                               textFieldId="ideUploadFormFilenameField" readOnly="true"></c:TextField>
                         </td>
 
@@ -62,7 +59,7 @@
 
             </g:FlowPanel>
 
-            <g:HorizontalPanel spacing="10" height="60px" width="100%">
+            <g:HorizontalPanel spacing="5" height="60px" width="100%">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <c:ImageButton ui:field="uploadButton" text="{uploadLocale.uploadButton}" imageName="upload"
                      buttonId="ideUploadFormUploadButton"></c:ImageButton>

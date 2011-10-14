@@ -59,7 +59,7 @@ public class UploadZipView extends ViewImpl implements
    /**
     * Initial height of this view.
     */
-   private static final int HEIGHT = 150;
+   private static final int HEIGHT = 145;
 
    private static final String UPLOAD_FOLDER_TITLE = IDE.UPLOAD_CONSTANT.uploadFolderTitle();
 

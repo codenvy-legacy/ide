@@ -19,25 +19,42 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-          xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
-   
+
+   <ui:style>
+      .spacing {
+      	margin-bottom: 10px;
+      }
+      
+      .label {
+      	margin-bottom: 5px;
+      	cursor: default;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      }
+   </ui:style>
+
    <f:Border margin="15" borderColor="transparent">
-    <f:layer>
-      <g:FlowPanel>
-         
-         <f:TextField ui:field="folderNameField" width="100%" title="{ideLocale.createFolderFormFieldTitle}" height="22px"></f:TextField>         
-         
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="createButton" width="90" height="22" text="{ideLocale.createButton}" imageResource="{resource.ok}" 
-                        disabledImageResource="{resource.okDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}" 
-                        disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-      </g:FlowPanel> 
-     </f:layer>
+      <f:layer>
+         <g:FlowPanel>
+            <g:Label text="{ideLocale.createFolderFormFieldTitle}" styleName="{style.label}"></g:Label>
+            <f:TextField ui:field="folderNameField" width="99%" height="24px" styleName="{style.spacing}"></f:TextField>
+            <g:HorizontalPanel height="40" width="100%" spacing="5">
+               <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
+                  <f:ImageButton ui:field="createButton" width="90" height="22" text="{ideLocale.createButton}" imageResource="{resource.ok}"
+                     disabledImageResource="{resource.okDisabled}"></f:ImageButton>
+               </g:cell>
+               <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
+                  <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}"
+                     disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
+               </g:cell>
+            </g:HorizontalPanel>
+         </g:FlowPanel>
+      </f:layer>
    </f:Border>
-   
+
 </ui:UiBinder>

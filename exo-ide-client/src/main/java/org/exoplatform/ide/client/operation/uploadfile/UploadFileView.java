@@ -52,9 +52,9 @@ public class UploadFileView extends ViewImpl implements
    org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display
 {
 
-   public static final int WIDTH = 500;
+   public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 220;
+   public static final int HEIGHT = 190;
 
    private static final String ID = "ideUploadForm";
 
