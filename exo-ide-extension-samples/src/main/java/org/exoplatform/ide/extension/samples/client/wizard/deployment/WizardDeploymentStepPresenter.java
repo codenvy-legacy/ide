@@ -223,6 +223,19 @@ ProjectCreationFinishedHandler
          }
       });
       
+      display.getCloudFoundryTargetField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
+            {
+               updateUrlField();
+               projectProperties.getProperties().put("target", display.getCloudFoundryTargetField().getValue());
+            }
+         }
+      });
+      
       display.getCloudFoundryNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -359,19 +372,15 @@ ProjectCreationFinishedHandler
          projectProperties.getProperties().put("cf-name", name);
       }
       final String url =
-         projectProperties.getProperties().get("url") != null ? projectProperties.getProperties().get("url") : "";
+         projectProperties.getProperties().get("url") != null ? projectProperties.getProperties().get("url")
+            : "<name>.cloudfoundry.com";
       
       display.getCloudFoundryNameField().setValue(name);
       display.getCloudFoundryUrlField().setValue(url);
       
-      if (name == null || name.isEmpty() || url == null || url.isEmpty())
-      {
-         display.enableNextButton(false);
-      }
-      else
-      {
-         display.enableNextButton(true);
-      }
+      final String target =
+         projectProperties.getProperties().get("target") != null ? projectProperties.getProperties().get("target") : "";
+         display.getCloudFoundryTargetField().setValue(target);
       getCloudFoundryTargets();
    }
    
@@ -446,8 +455,8 @@ ProjectCreationFinishedHandler
     */
    private void validateCloudFoundryParams()
    {
-      SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("cf-name"), 
-         null, new CloudFoundryAsyncRequestCallback<String>(eventBus, validationLoggedInHandler)
+      SamplesClientService.getInstance().validateCloudfoundryAction(projectProperties.getProperties().get("target"), 
+         projectProperties.getProperties().get("cf-name"), null, new CloudFoundryAsyncRequestCallback<String>(eventBus, validationLoggedInHandler)
          {
             @Override
             protected void onSuccess(String result)
@@ -471,16 +480,49 @@ ProjectCreationFinishedHandler
             if (result.isEmpty())
             {
                display.setCloudFoundryAvailableTargets(new String[]{DEFAULT_CLOUDFOUNDRY_TARGET});
-               display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
+               if (display.getCloudFoundryTargetField().getValue().isEmpty())
+               {
+                  display.getCloudFoundryTargetField().setValue(DEFAULT_CLOUDFOUNDRY_TARGET);
+               }
             }
             else
             {
                String[] servers = result.toArray(new String[result.size()]);
                display.setCloudFoundryAvailableTargets(servers);
-               display.getCloudFoundryTargetField().setValue(servers[0]);
+               if (display.getCloudFoundryTargetField().getValue().isEmpty())
+               {
+                  display.getCloudFoundryTargetField().setValue(servers[0]);
+               }
             }
+            projectProperties.getProperties().put("target", display.getCloudFoundryTargetField().getValue());
+            updateUrlField();
          }
       });
+   }
+   
+   /**
+    * Update the URL field, using values from server and name field.
+    */
+   private void updateUrlField()
+   {
+      final String url =
+         getUrlByServerAndName(display.getCloudFoundryTargetField().getValue(), display.getCloudFoundryNameField()
+            .getValue());
+      display.getCloudFoundryUrlField().setValue(url);
+      
+      //TODO
+      display.enableNextButton(true);
+   }
+   
+   private String getUrlByServerAndName(String serverUrl, String name)
+   {
+      int index = serverUrl.indexOf(".");
+      if (index < 0)
+      {
+         return name.toLowerCase();
+      }
+      final String domain = serverUrl.substring(index, serverUrl.length());
+      return "http://" + name.toLowerCase() + domain;
    }
 
 }

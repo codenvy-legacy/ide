@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.samples.client.wizard.deployment;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -170,8 +171,9 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    {
       if (visible)
       {
-         paasPanel.getElementById("cloudFoundryTable").removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         paasPanel.getElementById("cloudFoundryTable").addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+         Element el = paasPanel.getElementById("cloudFoundryTable");
+         el.removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         el.addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
       }
       else
       {

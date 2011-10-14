@@ -216,12 +216,13 @@ public class SamplesClientServiceImpl extends SamplesClientService
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#validateCloudfoundryAction(java.lang.String, java.lang.String, boolean, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void validateCloudfoundryAction(String appName, String workDir, 
-      CloudFoundryAsyncRequestCallback<String> callback)
+   public void validateCloudfoundryAction(String server, String appName, 
+      String workDir, CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
       String params = "action=create";
+      params += (server == null) ? "" : "&server=" + server;
       params += (appName == null) ? "" : "&name=" + appName;
       params += (workDir == null) ? "" : "&workdir=" + workDir;
 
@@ -231,11 +232,11 @@ public class SamplesClientServiceImpl extends SamplesClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(java.lang.String, boolean, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#createCloudFoundryApplication(String, java.lang.String, boolean, java.lang.String, java.lang.String, org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void createCloudFoundryApplication(String name, String url, String workDir, String war,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+   public void createCloudFoundryApplication(String server, String name, String url, String workDir,
+      String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String requestUrl = restServiceContext + CLOUDFOUNDRY_CREATE;
 
@@ -250,6 +251,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
       String params = "name=" + name;
       params += "&workdir=" + workDir;
+      params += (server != null) ? "&server=" + server : "";
       params += (war != null) ? "&war=" + war : "";
       params += (url != null) ? "&url=" + url : "";
 

@@ -93,24 +93,25 @@ public abstract class SamplesClientService
 
    /**
     * Validates <code>create</code> CloudFoundry action before building project.
+    * @param server server
     * @param appName the name of application (if create - than required, if update - <code>null</code>)
     * @param workDir the work dir of application
     * @param callback callback, that client has to implement to handle response from server.
     */
-   public abstract void validateCloudfoundryAction(String appName, String workDir,
-      CloudFoundryAsyncRequestCallback<String> callback);
+   public abstract void validateCloudfoundryAction(String server, String appName,
+      String workDir, CloudFoundryAsyncRequestCallback<String> callback);
 
    /**
     * Create application on CloudFoundry.
-    * 
+    * @param server server
     * @param name - application name. This parameter is mandatory.
     * @param url - application URL.
     * @param workDir - directory that contains source code of java web application
     * @param war - URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void createCloudFoundryApplication(String name, String url, String workDir, String war,
-      CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
+   public abstract void createCloudFoundryApplication(String server, String name, String url, String workDir,
+      String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback);
    
    /**
     * Get the list of CloudFoundry targets.

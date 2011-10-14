@@ -358,9 +358,10 @@ ApplicationBuiltHandler
    {
       String name = projectProperties.getProperties().get("cf-name");
       String url = projectProperties.getProperties().get("url");
-      //TODO Fix cloud foundry
-      SamplesClientService.getInstance().createCloudFoundryApplication(name, url, project.getPath(), warUrl,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, deployToCloudFoundryLoggedInHandler)
+      String server = projectProperties.getProperties().get("target");
+      
+      SamplesClientService.getInstance().createCloudFoundryApplication(server, name, url, project.getPath(),
+         warUrl, new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, deployToCloudFoundryLoggedInHandler)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
