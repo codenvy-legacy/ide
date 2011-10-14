@@ -446,40 +446,33 @@ abstract class ItemData
       String name = property.getName();
       String[] value = property.valueToArray(String[].class);
 
-      if (value == null)
-      {
-         value = new String[0];
-      }
-
       try
       {
-         if (value.length == 0)
+         if (value == null || value.length == 0)
          {
             theNode.setProperty(name, (Value)null);
          }
          else
          {
+            Value[] jcrValue = new Value[value.length];
+            for (int i = 0; i < value.length; i++)
             {
-               Value[] jcrValue = new Value[value.length];
-               for (int i = 0; i < value.length; i++)
+               jcrValue[i] = new StringValue(value[i]);
+            }
+            if (jcrValue.length > 1)
+            {
+               try
                {
-                  jcrValue[i] = new StringValue(value[i]);
+                  theNode.setProperty(name, jcrValue);
                }
-               if (jcrValue.length > 1)
-               {
-                  try
-                  {
-                     theNode.setProperty(name, jcrValue);
-                  }
-                  catch (ValueFormatException e)
-                  {
-                     theNode.setProperty(name, jcrValue[0]);
-                  }
-               }
-               else
+               catch (ValueFormatException e)
                {
                   theNode.setProperty(name, jcrValue[0]);
                }
+            }
+            else
+            {
+               theNode.setProperty(name, jcrValue[0]);
             }
          }
       }
