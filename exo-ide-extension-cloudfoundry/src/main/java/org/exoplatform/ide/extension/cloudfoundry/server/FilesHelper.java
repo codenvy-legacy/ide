@@ -18,18 +18,24 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,114 +49,384 @@ import java.util.zip.ZipOutputStream;
  */
 class FilesHelper
 {
-   static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
-   static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
-   static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
-   static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
+   private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
+   private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
+   private static final Pattern GRAILS = Pattern.compile("WEB-INF/lib/grails-web.*\\.jar");
+   private static final Pattern SINATRA = Pattern.compile("^\\s*require\\s*[\"']sinatra[\"']");
 
-   static final FilenameFilter UPLOAD_FILE_FILTER = new FilenameFilter()
+   static interface NameFilter
+   {
+      boolean accept(String name);
+   }
+
+   static final NameFilter UPLOAD_FILTER = new NameFilter()
    {
       @Override
-      public boolean accept(File dir, String name)
+      public boolean accept(String name)
       {
-         return !(".cloudfoundry-application".equals(name) // eXo IDE specific.  
+         return !(".cloudfoundry-application".equals(name) || ".vmc_target".equals(name) || ".project".equals(name) // eXo IDE specific.  
             || name.endsWith("~") || name.endsWith(".log")); // Do the same as cloud foundry command line tool does. 
       }
    };
 
-   static final FilenameFilter WAR_FILE_FILTER = new TypeFileFilter(".war");
-   static final FilenameFilter RUBY_FILE_FILTER = new TypeFileFilter(".rb");
-   static final FilenameFilter JS_FILE_FILTER = new TypeFileFilter(".js");
-   static final FilenameFilter JAVA_FILE_FILTER = new TypeFileFilter(".java");
-   static final FilenameFilter GROOVY_FILE_FILTER = new TypeFileFilter(".groovy");
+   static final NameFilter WAR_FILTER = new TypeFilter(".war");
+   static final NameFilter RUBY_FILTER = new TypeFilter(".rb");
+   static final NameFilter JS_FILTER = new TypeFilter(".js");
 
-   private static class TypeFileFilter implements FilenameFilter
+   private static class TypeFilter implements NameFilter
    {
       private final String ext;
 
-      public TypeFileFilter(String ext)
+      public TypeFilter(String ext)
       {
          this.ext = ext;
       }
 
       @Override
-      public boolean accept(File dir, String name)
+      public boolean accept(String name)
       {
          return name.endsWith(ext);
       }
    }
 
-   static void copyDir(File source, File target, FilenameFilter filter) throws IOException
+   static void copy(VirtualFileSystem vfs, String source, java.io.File target) throws VirtualFileSystemException,
+      IOException
    {
-      if (source.isDirectory())
+      InputStream zip = vfs.exportZip(source);
+      unzip(zip, target);
+   }
+
+   static List<java.io.File> list(java.io.File dir, NameFilter filter)
+   {
+      if (!dir.isDirectory())
       {
-         if (!target.exists())
-            target.mkdir();
-         String[] files = source.list();
-         for (int i = 0; i < files.length; i++)
+         throw new IllegalArgumentException("Not a directory. ");
+      }
+      List<java.io.File> files = new ArrayList<java.io.File>();
+      LinkedList<java.io.File> q = new LinkedList<java.io.File>();
+      q.add(dir);
+      while (!q.isEmpty())
+      {
+         java.io.File current = q.pop();
+         java.io.File[] list = current.listFiles();
+         if (list != null)
          {
-            if (filter.accept(target, files[i]))
-               copyDir(new File(source, files[i]), new File(target, files[i]), filter);
+            for (int i = 0; i < list.length; i++)
+            {
+               if (list[i].isDirectory())
+               {
+                  q.push(list[i]);
+               }
+               else if (filter.accept(list[i].getName()))
+               {
+                  files.add(list[i]);
+               }
+            }
          }
       }
-      else
+      return files;
+   }
+
+   static void zipDir(String zipRootPath, List<java.io.File> files, java.io.File zip) throws IOException
+   {
+      FileOutputStream fos = null;
+      ZipOutputStream zipOut = null;
+      try
       {
-         FileInputStream fi = null;
-         FileOutputStream fo = null;
-         try
+         byte[] b = new byte[8192];
+         fos = new FileOutputStream(zip);
+         zipOut = new ZipOutputStream(fos);
+         for (java.io.File f : files)
          {
-            fi = new FileInputStream(source);
-            fo = new FileOutputStream(target);
-            byte[] b = new byte[1024];
-            int r;
-            while ((r = fi.read(b)) != -1)
-               fo.write(b, 0, r);
-         }
-         finally
-         {
+            final String zipEntryName = f.getAbsolutePath().substring(zipRootPath.length() + 1).replace('\\', '/');
+            zipOut.putNextEntry(new ZipEntry(zipEntryName));
+            FileInputStream in = null;
             try
             {
-               if (fi != null)
-                  fi.close();
+               in = new FileInputStream(f);
+               int r;
+               while ((r = in.read(b)) != -1)
+               {
+                  zipOut.write(b, 0, r);
+               }
             }
             finally
             {
-               if (fo != null)
-                  fo.close();
+               if (in != null)
+               {
+                  in.close();
+               }
+               zipOut.closeEntry();
             }
          }
       }
-   }
-
-   static void fileList(File dir, Collection<File> files, FilenameFilter filter)
-   {
-      File[] list = dir.listFiles();
-      if (list != null)
+      finally
       {
-         for (int i = 0; i < list.length; i++)
+         if (zipOut != null)
          {
-            if (list[i].isDirectory())
-               fileList(list[i], files, filter);
-            else if (filter.accept(dir, list[i].getName()))
-               files.add(list[i]);
+            zipOut.close();
+         }
+         if (fos != null)
+         {
+            fos.close();
          }
       }
    }
 
-   static String countFileHash(File file, MessageDigest digest) throws IOException
+   static void unzip(java.io.File zip, java.io.File targetDir) throws IOException
    {
-      DigestInputStream d = null;
+      unzip(new FileInputStream(zip), targetDir);
+   }
+
+   /**
+    * Read the first line from file or <code>null</code> if file not found.
+    */
+   static String readFile(VirtualFileSystem vfs, Item parent, String name) throws VirtualFileSystemException,
+      IOException
+   {
+      String projectPath = parent.getPath();
+      Item file = null;
+      String line = null;
       try
       {
-         d = new DigestInputStream(new FileInputStream(file), digest);
-         while (d.read() != -1) //
-         ;
+         file = vfs.getItemByPath(projectPath + "/" + name, null, PropertyFilter.NONE_FILTER);
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
+      if (file != null)
+      {
+         ContentStream content = vfs.getContent(file.getId());
+         InputStream in = null;
+         BufferedReader r = null;
+         try
+         {
+            in = content.getStream();
+            r = new BufferedReader(new InputStreamReader(in));
+            line = r.readLine();
+         }
+         finally
+         {
+            if (r != null)
+            {
+               r.close();
+            }
+            if (in != null)
+            {
+               in.close();
+            }
+         }
+      }
+      return line;
+   }
+
+   static void delete(VirtualFileSystem vfs, String parentId, String name) throws VirtualFileSystemException
+   {
+      Item item = vfs.getItem(parentId, PropertyFilter.NONE_FILTER);
+      String parentPath = item.getPath();
+      try
+      {
+         Item file = vfs.getItemByPath(parentPath + "/" + name, null, PropertyFilter.NONE_FILTER);
+         vfs.delete(file.getId(), null);
+      }
+      catch (ItemNotFoundException ignored)
+      {
+      }
+   }
+
+   static void unzip(InputStream in, java.io.File targetDir) throws IOException
+   {
+      ZipInputStream zipIn = null;
+      try
+      {
+         zipIn = new ZipInputStream(in);
+         byte[] b = new byte[8192];
+         ZipEntry zipEntry;
+         while ((zipEntry = zipIn.getNextEntry()) != null)
+         {
+            if (!zipEntry.isDirectory())
+            {
+               java.io.File file = new java.io.File(targetDir, zipEntry.getName());
+               java.io.File parent = file.getParentFile();
+               if (!parent.exists())
+               {
+                  parent.mkdirs();
+               }
+               FileOutputStream fos = new FileOutputStream(file);
+               try
+               {
+                  int r;
+                  while ((r = zipIn.read(b)) != -1)
+                  {
+                     fos.write(b, 0, r);
+                  }
+               }
+               finally
+               {
+                  fos.close();
+               }
+            }
+            zipIn.closeEntry();
+         }
+      }
+      finally
+      {
+         if (zipIn != null)
+         {
+            zipIn.close();
+         }
+         in.close();
+      }
+   }
+
+   static boolean delete(java.io.File fileOrDir)
+   {
+      if (fileOrDir.isDirectory())
+      {
+         for (java.io.File f : fileOrDir.listFiles())
+         {
+            if (!delete(f))
+            {
+               return false;
+            }
+         }
+      }
+      return fileOrDir.delete();
+   }
+
+   static String detectFramework(java.io.File war) throws IOException
+   {
+      if (war.isFile() && WAR_FILTER.accept(war.getName()))
+      {
+         FileInputStream fis = null;
+         ZipInputStream zipIn = null;
+         try
+         {
+            fis = new FileInputStream(war);
+            zipIn = new ZipInputStream(fis);
+            Matcher m1 = null;
+            Matcher m2 = null;
+            Matcher m3 = null;
+            for (ZipEntry e = zipIn.getNextEntry(); e != null; e = zipIn.getNextEntry())
+            {
+               String name = e.getName();
+               m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
+               if (m1.matches())
+               {
+                  return "spring";
+               }
+               m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
+               if (m2.matches())
+               {
+                  return "spring";
+               }
+               m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
+               if (m3.matches())
+               {
+                  return "grails";
+               }
+            }
+         }
+         finally
+         {
+            if (zipIn != null)
+            {
+               zipIn.close();
+            }
+            if (fis != null)
+            {
+               fis.close();
+            }
+         }
+         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
+         return "spring";
+      }
+      return null;
+   }
+
+   static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
+      IOException
+   {
+      Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+      try
+      {
+         vfs.getItemByPath(project.getPath() + "/config/environment.rb", null, PropertyFilter.NONE_FILTER);
+         return "rails3";
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
+      List<Item> children = vfs.getChildren(projectId, -1, 0, PropertyFilter.NONE_FILTER).getItems();
+      Matcher m = null;
+      // Check each ruby file to include "sinatra" import. 
+      for (Item i : children)
+      {
+         if (ItemType.FILE == i.getItemType() && RUBY_FILTER.accept(i.getName()))
+         {
+            InputStream in = null;
+            BufferedReader reader = null;
+            try
+            {
+               in = vfs.getContent(i.getId()).getStream();
+               reader = new BufferedReader(new InputStreamReader(in));
+               String line;
+               while ((line = reader.readLine()) != null)
+               {
+                  m = m == null ? SINATRA.matcher(line) : m.reset(line);
+                  if (m.matches())
+                  {
+                     return "sinatra";
+                  }
+               }
+            }
+            finally
+            {
+               if (reader != null)
+               {
+                  reader.close();
+               }
+               if (in != null)
+               {
+                  in.close();
+               }
+            }
+         }
+      }
+      // Lookup app.js, index.js or main.js files.
+      for (Item i : children)
+      {
+         if (ItemType.FILE == i.getItemType() //
+            && ("app.js".equals(i.getName()) || "index.js".equals(i.getName()) || "main.js".equals(i.getName())))
+         {
+            return "node";
+         }
+      }
+      return null;
+   }
+
+   static String countFileHash(java.io.File file, MessageDigest digest) throws IOException
+   {
+      FileInputStream fis = null;
+      DigestInputStream dis = null;
+      try
+      {
+         fis = new FileInputStream(file);
+         dis = new DigestInputStream(fis, digest);
+         while (dis.read() != -1)
+         {
+         }
          return toHex(digest.digest());
       }
       finally
       {
-         if (d != null)
-            d.close();
+         if (dis != null)
+         {
+            dis.close();
+         }
+         if (fis != null)
+         {
+            dis.close();
+         }
       }
    }
 
@@ -166,245 +442,5 @@ class FilesHelper
          b.append(hex[hash[i] & 0x0f]);
       }
       return b.toString();
-   }
-
-   static void zipDir(File dir, File zip, FilenameFilter filter) throws IOException
-   {
-      ZipOutputStream zipOut = null;
-      try
-      {
-         zipOut = new ZipOutputStream(new FileOutputStream(zip));
-         List<File> files = new ArrayList<File>();
-         fileList(dir, files, filter);
-
-         String dirPath = dir.getAbsolutePath() + "/";
-         for (File f : files)
-         {
-            zipOut.putNextEntry(new ZipEntry(f.getAbsolutePath().replace(dirPath, "")));
-            FileInputStream in = null;
-            try
-            {
-               in = new FileInputStream(f);
-               byte[] b = new byte[1024];
-               int r;
-               while ((r = in.read(b)) != -1)
-                  zipOut.write(b, 0, r);
-            }
-            finally
-            {
-               try
-               {
-                  if (in != null)
-                     in.close();
-               }
-               finally
-               {
-                  zipOut.closeEntry();
-               }
-            }
-         }
-      }
-      finally
-      {
-         if (zipOut != null)
-            zipOut.close();
-      }
-   }
-
-   static void unzip(File zip, File targetDir) throws IOException
-   {
-      ZipInputStream zipIn = null;
-      try
-      {
-         zipIn = new ZipInputStream(new FileInputStream(zip));
-         ZipEntry zipEntry;
-         while ((zipEntry = zipIn.getNextEntry()) != null)
-         {
-            if (!zipEntry.isDirectory())
-            {
-               File file = new File(targetDir, zipEntry.getName());
-               if (!file.getParentFile().exists())
-                  file.getParentFile().mkdirs();
-
-               FileOutputStream fo = null;
-               try
-               {
-                  fo = new FileOutputStream(file);
-                  byte[] b = new byte[1024];
-                  int r;
-                  while ((r = zipIn.read(b)) != -1)
-                     fo.write(b, 0, r);
-               }
-               finally
-               {
-                  try
-                  {
-                     if (fo != null)
-                        fo.close();
-                  }
-                  finally
-                  {
-                     zipIn.closeEntry();
-                  }
-               }
-            }
-         }
-      }
-      finally
-      {
-         if (zipIn != null)
-            zipIn.close();
-      }
-   }
-
-   static boolean delete(File fileOrDir)
-   {
-      if (fileOrDir.isDirectory())
-      {
-         for (File innerFile : fileOrDir.listFiles())
-         {
-            if (!delete(innerFile))
-               return false;
-         }
-      }
-      return fileOrDir.delete();
-   }
-
-   static String detectFramework(File path) throws IOException
-   {
-      if (path.isFile() && WAR_FILE_FILTER.accept(path.getParentFile(), path.getName()))
-      {
-         // Spring application ?
-         ZipInputStream zip = null;
-         try
-         {
-            zip = new ZipInputStream(new FileInputStream(path));
-            Matcher m1 = null;
-            Matcher m2 = null;
-            Matcher m3 = null;
-            for (ZipEntry e = zip.getNextEntry(); e != null; e = zip.getNextEntry())
-            {
-               String name = e.getName();
-               m1 = m1 == null ? SPRING1.matcher(name) : m1.reset(name);
-               if (m1.matches())
-                  return "spring";
-
-               m2 = m2 == null ? SPRING2.matcher(name) : m2.reset(name);
-               if (m2.matches())
-                  return "spring";
-
-               m3 = m3 == null ? GRAILS.matcher(name) : m3.reset(name);
-               if (m3.matches())
-                  return "grails";
-            }
-         }
-
-         finally
-         {
-            if (zip != null)
-               zip.close();
-         }
-
-         // Java web application if Spring or Grails frameworks is not detected. But use Spring settings for it.
-         return "spring";
-      }
-
-      if (new File(path, "config/environment.rb").exists())
-         return "rails3";
-
-      // Lookup *.rb files. 
-      File[] files = path.listFiles(RUBY_FILE_FILTER);
-
-      if (files != null && files.length > 0)
-      {
-         Matcher m = null;
-         // Check each ruby file to include "sinatra" import. 
-         for (int i = 0; i < files.length; i++)
-         {
-            BufferedReader freader = null;
-            try
-            {
-               freader = new BufferedReader(new FileReader(files[i]));
-
-               String line;
-               while ((line = freader.readLine()) != null)
-               {
-                  m = m == null ? SINATRA.matcher(line) : m.reset(line);
-                  if (m.matches())
-                     return "sinatra";
-               }
-            }
-            finally
-            {
-               if (freader != null)
-                  freader.close();
-            }
-         }
-      }
-
-      // Lookup app.js, index.js or main.js files. 
-      files = path.listFiles(JS_FILE_FILTER);
-
-      if (files != null && files.length > 0)
-      {
-         for (int i = 0; i < files.length; i++)
-         {
-            if ("app.js".equals(files[i].getName()) //
-               || "index.js".equals(files[i].getName()) //
-               || "main.js".equals(files[i].getName()))
-               return "node";
-         }
-      }
-
-      List<File> tmp = new ArrayList<File>();
-      fileList(path, tmp, JAVA_FILE_FILTER);
-      if (tmp.size() > 0)
-         return "spring";
-
-      tmp.clear();
-      fileList(path, tmp, GROOVY_FILE_FILTER);
-      if (tmp.size() > 0)
-         return "grails";
-
-      tmp.clear();
-
-      return null;
-   }
-
-   static String readFile(File file) throws IOException
-   {
-      String line = null;
-      if (file.exists())
-      {
-         BufferedReader r = null;
-         try
-         {
-            r = new BufferedReader(new FileReader(file));
-            line = r.readLine();
-         }
-         finally
-         {
-            if (r != null)
-               r.close();
-         }
-      }
-      return line;
-   }
-
-   static void writeFile(File file, String data) throws IOException
-   {
-      FileWriter w = null;
-      try
-      {
-         w = new FileWriter(file);
-         w.write(data);
-         w.write('\n');
-         w.flush();
-      }
-      finally
-      {
-         if (w != null)
-            w.close();
-      }
    }
 }
