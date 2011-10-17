@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
-import com.google.gwt.uibinder.client.UiFactory;
-
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -56,7 +53,7 @@ public class SshPublicKeyView extends ViewImpl implements Display
    }
    
    @UiField
-   TextAreaItem publicSshKeyField;
+   TextArea publicSshKeyField;
    
    @UiField
    ImageButton closeButton;

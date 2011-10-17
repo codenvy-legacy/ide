@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
@@ -65,7 +66,7 @@ public class UploadSshKeyView extends ViewImpl implements Display
    }
 
    @UiField
-   TextField hostField;
+   TextInput hostField;
 
    @UiField
    FileUploadInput fileField;
@@ -77,7 +78,7 @@ public class UploadSshKeyView extends ViewImpl implements Display
    ImageButton uploadButton;
    
    @UiField
-   TextField fileNameField;
+   TextInput fileNameField;
    
    @UiField
    Label messageLabel;
