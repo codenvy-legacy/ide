@@ -480,6 +480,10 @@ abstract class ItemData
       {
          throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
       }
+      catch (javax.jcr.nodetype.ConstraintViolationException e)
+      {
+         throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+      }
       catch (javax.jcr.lock.LockException e)
       {
          throw new LockException("Unable to update property " + name + ". Item is locked. ");
