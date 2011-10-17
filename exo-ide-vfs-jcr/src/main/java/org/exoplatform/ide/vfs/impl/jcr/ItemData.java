@@ -490,6 +490,13 @@ abstract class ItemData
       }
       catch (RepositoryException e)
       {
+         String message = e.getMessage();
+         // TODO : Incorrect type of exception from JCR layer, EXOJCR-1589.
+         // Remove this workaround after fixing the bug in JCR.
+         if (("Property definition '[]" + name + "' is not found.").equals(message))
+         {
+            throw new ConstraintException("Unable update property " + name + ". Specified value is not allowed. ");
+         }
          throw new VirtualFileSystemException("Unable update property " + name + ". " + e.getMessage(), e);
       }
       catch (IOException e)
