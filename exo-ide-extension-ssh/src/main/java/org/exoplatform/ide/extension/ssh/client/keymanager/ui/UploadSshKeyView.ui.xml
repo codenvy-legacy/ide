@@ -7,46 +7,58 @@
       .pad {
       	padding: 5px;
       }
+      
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .left-float {
+      	float: left;
+      }
    </ui:style>
-   <g:LayoutPanel styleName="{style.pad}">
-      <g:layer>
-         <g:FlowPanel>
+   <c:Border margin="5" borderColor="transparent">
+      <c:layer top="0" bottom="30px">
+         <g:FlowPanel width="100%" height="100%">
             <g:FlowPanel>
                <g:Label text='{con.hostFieldTitle}'></g:Label>
                <c:TextField ui:field="hostField" name="ideUploadSshKeyHostField" showDisabled="true" visible="true"
                   height="22px" width="100%"></c:TextField>
             </g:FlowPanel>
 
-            <g:HorizontalPanel width="330px" height="65px">
-               <c:TextField ui:field="fileNameField" name="ideUploadSshKeyFileNameField" width="245px" height="22px"
-                  title='{con.fileNameFieldTitle}' showDisabled="true" visible="true" titleOrientation="top" readOnly="true">
-               </c:TextField>
-               <g:AbsolutePanel width="80px" height="42px">
-                  <g:at top="17" left="0">
-                     <c:ImageButton text='{con.browseButton}' width="80px" height="22px"></c:ImageButton>
-                  </g:at>
-                  <g:at top="17" left="0">
-                     <g:FormPanel ui:field="formPanel" method="POST">
-                        <x:FileUploadInput ui:field="fileField" styleName='{res.css.transparent}' width="80px"
-                           height="20px"></x:FileUploadInput>
-                     </g:FormPanel>
-                  </g:at>
-               </g:AbsolutePanel>
-            </g:HorizontalPanel>
+            <g:DockLayoutPanel width="320px" height="65px" unit="PX">
+               <g:west size="235">
+                  <c:TextField ui:field="fileNameField" name="ideUploadSshKeyFileNameField" width="235px" height="22px"
+                     title='{con.fileNameFieldTitle}' showDisabled="true" visible="true" titleOrientation="top" readOnly="true">
+                  </c:TextField>
+               </g:west>
+               <g:center>
+                  <g:AbsolutePanel width="90px" height="42px">
+                     <g:at top="17" left="3">
+                        <c:ImageButton text='{con.browseButton}' width="80px" height="22px"></c:ImageButton>
+                     </g:at>
+                     <g:at top="17" left="3">
+                        <g:FormPanel ui:field="formPanel" method="POST">
+                           <x:FileUploadInput ui:field="fileField" styleName='{res.css.transparent}' width="80px"
+                              height="20px"></x:FileUploadInput>
+                        </g:FormPanel>
+                     </g:at>
+                  </g:AbsolutePanel>
+               </g:center>
+            </g:DockLayoutPanel>
             <g:Label ui:field="messageLabel"></g:Label>
          </g:FlowPanel>
-      </g:layer>
-      <g:layer height="40px" bottom="0">
-         <g:HorizontalPanel spacing="5" width="100%" height="100%">
-            <g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
-               <c:ImageButton text='{con.uploadButton}' ui:field="uploadButton" enabled="false"
-                  buttonId="ideUploadSshKeyUploadButton"></c:ImageButton>
-            </g:cell>
-            <g:cell horizontalAlignment='ALIGN_CENTER' verticalAlignment="ALIGN_MIDDLE">
-               <c:ImageButton text='{con.cancelButton}' ui:field="cancelButton" buttonId="ideUploadSshKeyCloseButton"></c:ImageButton>
-            </g:cell>
-         </g:HorizontalPanel>
-      </g:layer>
-   </g:LayoutPanel>
+      </c:layer>
+      <c:layer height="30px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <c:ImageButton text='{con.uploadButton}' styleName="{style.left-float}" ui:field="uploadButton" enabled="false"
+               buttonId="ideUploadSshKeyUploadButton" width="90px"></c:ImageButton>
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <c:ImageButton text='{con.cancelButton}' styleName="{style.left-float}" ui:field="cancelButton"
+               buttonId="ideUploadSshKeyCloseButton" width="90px"></c:ImageButton>
+         </g:FlowPanel>
+      </c:layer>
+   </c:Border>
 
 </ui:UiBinder> 
