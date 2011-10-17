@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -56,7 +56,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    private static final String TITLE = IDE.UPLOAD_CONSTANT.openFileByPathTitle();
    
    @UiField
-   TextField filePathField;
+   TextInput filePathField;
 
    @UiField
    ImageButton openButton;
@@ -117,7 +117,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    @Override
    public void selectPathField()
    {
-      filePathField.selectValue();
+      filePathField.selectAll();
    }
 
    /**
@@ -126,7 +126,7 @@ public class OpenFileByPathView extends ViewImpl implements org.exoplatform.ide.
    @Override
    public void focusInPathField()
    {
-      filePathField.focusInItem();
+      filePathField.setFocus(true);
    }
    
 }

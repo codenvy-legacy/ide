@@ -28,16 +28,20 @@
       	margin-top: 15px;
       }
       
-      .labelSpacing {
-      	margin-bottom: 10px;
+      .label {
+      	margin-bottom: 5px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
       }
    </ui:style>
 
    <f:Border margin="20" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
-            <f:Label text="{ideUploadLocale.openFileByPathFileUrl}"></f:Label>
-            <f:TextField ui:field="filePathField" width="99%" textItemHeight="18"></f:TextField>
+            <g:Label text="{ideUploadLocale.openFileByPathFileUrl}" styleName="{style.label}"></g:Label>
+            <f:TextInput ui:field="filePathField" width="100%" height="20px"></f:TextInput>
 
             <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
