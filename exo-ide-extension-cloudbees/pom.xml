@@ -10,18 +10,23 @@
    <artifactId>exo-ide-extension-cloudbees</artifactId>
    <name>eXo IDE :: Extension :: CLOUDBEES</name>
    <dependencies>
+      <!-- <dependency> -->
+      <!-- <groupId>org.exoplatform.ide</groupId> -->
+      <!-- <artifactId>exo-ide-maven</artifactId> -->
+      <!-- </dependency> -->
+      <!-- <dependency> -->
+      <!-- <groupId>org.exoplatform.ide</groupId> -->
+      <!-- <artifactId>exo-ide-extension-git</artifactId> -->
+      <!-- </dependency> -->
+      <!-- <dependency> -->
+      <!-- <groupId>org.exoplatform.ide</groupId> -->
+      <!-- <artifactId>exo-ide-extension-java</artifactId> -->
+      <!-- </dependency> -->
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-maven</artifactId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-git</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-java</artifactId>
-      </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>
          <artifactId>exo.jcr.component.core</artifactId>
@@ -32,24 +37,29 @@
             </exclusion>
          </exclusions>
       </dependency>
+      
       <dependency>
          <groupId>com.cloudbees</groupId>
          <artifactId>cloudbees-api-client</artifactId>
          <version>0.8.0</version>
       </dependency>
+      
       <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-jenkins</artifactId>
       </dependency>
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>

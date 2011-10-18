@@ -401,6 +401,44 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String, java.lang.String)
+    */
+   @Override
+   public ContentStream getContent(String path, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      Session ses = session();
+      try
+      {
+         ItemData data = getItemDataByPath(ses, path);
+         if (ItemType.FILE != data.getType())
+         {
+            throw new InvalidArgumentException("Unable get content. Item " + data.getName() + " is not a file. ");
+         }
+         FileData fileData = (FileData)data;
+         ContentStream stream;
+         if (versionId != null)
+         {
+            FileData version = ((FileData)data).getVersion(versionId);
+            stream =
+               new ContentStream(version.getContent(), version.getMediaType().toString(), version.getContenLength(),
+                  new java.util.Date(version.getLastModificationDate()));
+         }
+         else
+         {
+            stream =
+               new ContentStream(fileData.getContent(), fileData.getMediaType().toString(), fileData.getContenLength(),
+                  new java.util.Date(fileData.getLastModificationDate()));
+         }
+         return stream;
+      }
+      finally
+      {
+         ses.logout();
+      }
+   }
+
+   /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String)
     */
    @Path("content/{id}")
@@ -408,6 +446,18 @@ public class JcrFileSystem implements VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       ContentStream content = getContent(id);
+      return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
+         .header("Content-Length", Long.toString(content.getLength())).build();
+   }
+
+   /**
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContentResponse(java.lang.String, java.lang.String)
+    */
+   public Response getContentResponse(@QueryParam("path") String path, //
+      @QueryParam("versionId") String versionId //
+   ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      ContentStream content = getContent(path, versionId);
       return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
          .header("Content-Length", Long.toString(content.getLength())).build();
    }

@@ -200,6 +200,13 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
+   public ContentStream getContent(String path, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
+   }
+
+   @Override
    @Path("content/{id:.*}")
    public Response getContentResponse(@PathParam("id") String id) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
@@ -207,6 +214,13 @@ public class MockVFS implements VirtualFileSystem
       ContentStream content = getContent(id);
       return Response.ok(content.getStream(), content.getMimeType()).lastModified(content.getLastModificationDate())
          .build();
+   }
+
+   @Override
+   public Response getContentResponse(String path, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;
    }
 
    @Override

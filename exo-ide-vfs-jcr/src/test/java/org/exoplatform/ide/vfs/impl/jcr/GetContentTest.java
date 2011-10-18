@@ -22,6 +22,7 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ExtendedSession;
 
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;
@@ -42,6 +43,7 @@ public class GetContentTest extends JcrFileSystemTest
    private String fileID;
    private String folderID;
    private String content = "__GetContentTest__";
+   private String filePath;
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
@@ -61,6 +63,7 @@ public class GetContentTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(content.getBytes()));
       fileID = ((ExtendedNode)fileNode).getIdentifier();
+      filePath = fileNode.getPath();
 
       Node folderNode = getContentTestNode.addNode("GetContentTest_FOLDER", "nt:folder");
       folderID = ((ExtendedNode)folderNode).getIdentifier();
@@ -111,4 +114,48 @@ public class GetContentTest extends JcrFileSystemTest
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
    }
+
+   public void testGetContentByPath() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("contentbypath") //
+         .append("?path=") //
+         .append(filePath).toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      //log.info(new String(writer.getBody()));
+      assertEquals(content, new String(writer.getBody()));
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
+         response.getContentType());
+   }
+
+   public void testGetContentByPathWithVersionID() throws Exception
+   {
+      Node fileNode = ((ExtendedSession)session).getNodeByIdentifier(fileID);
+      fileNode.addMixin("mix:versionable");
+      session.save();
+      fileNode.checkin();
+      fileNode.checkout();
+      Node contentNode = fileNode.getNode("jcr:content");
+      contentNode.setProperty("jcr:data", new ByteArrayInputStream("__GetContentTest__UPDATED".getBytes()));
+      session.save();
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("contentbypath") //
+         .append("?path=") //
+         .append(filePath) //
+         .append("&versionId=") //
+         .append("1").toString();
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+      assertEquals(200, response.getStatus());
+      //log.info(new String(writer.getBody()));
+      // Still have original content, version '1'. Latest version has ID '0'. 
+      assertEquals(content, new String(writer.getBody()));
+      assertEquals(new MediaType("text", "plain", Collections.singletonMap("charset", "utf8")),
+         response.getContentType());
+   }
+
 }

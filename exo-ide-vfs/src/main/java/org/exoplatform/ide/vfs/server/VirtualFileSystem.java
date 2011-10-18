@@ -243,8 +243,32 @@ public interface VirtualFileSystem
    ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, PropertyFilter propertyFilter)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
+   /**
+    * Get binary content of File.
+    * 
+    * @param id id of File
+    * @return content
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
+    */
    ContentStream getContent(String id) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Get binary content of File by path.
+    * 
+    * @param path path of File
+    * @param versionId version id for File item. If<code>null</code> content of latest version returned.
+    * @return content
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   ContentStream getContent(String path, String versionId) throws ItemNotFoundException,
+      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get binary content of File.
@@ -259,6 +283,22 @@ public interface VirtualFileSystem
    @GET
    @Path("content")
    Response getContentResponse(String id) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Get binary content of File.
+    * 
+    * @param path path of File
+    * @param versionId version id for File item. If<code>null</code> content of latest version returned.
+    * @return content response
+    * @throws ItemNotFoundException if <code>id</code> does not exist
+    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws PermissionDeniedException if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException if any other errors occur
+    */
+   @GET
+   @Path("contentbypath")
+   Response getContentResponse(String path, String versionId) throws ItemNotFoundException, InvalidArgumentException,
       PermissionDeniedException, VirtualFileSystemException;
 
    /**
