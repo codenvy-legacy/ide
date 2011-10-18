@@ -49,8 +49,9 @@ import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyn
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudfoundryApplication;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -71,8 +72,8 @@ import java.util.Map.Entry;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
-public class WizardFinishStepPresenter extends GitPresenter  implements ShowWizardFinishStepHandler, ViewClosedHandler, 
-ApplicationBuiltHandler
+public class WizardFinishStepPresenter extends GitPresenter implements ViewClosedHandler, ApplicationBuiltHandler,
+   WizardContinuable
 {
    public interface Display extends IsView
    {
@@ -106,13 +107,22 @@ ApplicationBuiltHandler
    
    private ProjectModel project;
    
+   private WizardReturnable wizard;
+   
    public WizardFinishStepPresenter(HandlerManager eventBus)
    {
       super(eventBus);
       
-      eventBus.addHandler(ShowWizardFinishStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
+   }
+   
+   /**
+    * @param wizard the wizard to set
+    */
+   public void setWizardReturnable(WizardReturnable wizard)
+   {
+      this.wizard = wizard;
    }
    
    private void bindDisplay()
@@ -132,7 +142,7 @@ ApplicationBuiltHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardDeploymentStepEvent());
+            wizard.onReturn();
             closeView();
          }
       });
@@ -182,24 +192,6 @@ ApplicationBuiltHandler
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceHandler#onShowWizardDefinition(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent)
-    */
-   @Override
-   public void onShowFinishWizard(ShowWizardFinishStepEvent event)
-   {
-      if (event.getProjectProperties() != null)
-      {
-         projectProperties = event.getProjectProperties();
-      }
-      else
-      {
-         Dialogs.getInstance().showError("Project properties are null. Fix the error");
-         return;
-      }
-      openView();
-   }
-   
    /**
     * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
     */
@@ -256,7 +248,7 @@ ApplicationBuiltHandler
                }
                //TODO check this works:
                eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(parent), parent));
-             //  eventBus.fireEvent(new RefreshBrowserEvent(parent));
+               //eventBus.fireEvent(new RefreshBrowserEvent(parent));
                eventBus.fireEvent(new ProjectCreationFinishedEvent(false));
                closeView();
             }
@@ -431,6 +423,16 @@ ApplicationBuiltHandler
          appUris = appUris.substring(2);
       }
       return appUris;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
+    */
+   @Override
+   public void onContinue(ProjectProperties projectProperties)
+   {
+      this.projectProperties = projectProperties;
+      openView();
    }
    
 }

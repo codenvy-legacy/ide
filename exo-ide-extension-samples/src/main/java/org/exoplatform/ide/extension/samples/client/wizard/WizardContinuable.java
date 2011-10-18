@@ -16,19 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.event;
+package org.exoplatform.ide.extension.samples.client.wizard;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 
 /**
- * Handler for {@link ProjectCreationFinishedEvent}.
+ * Interface for wizard step.
+ * <p/>
+ * Used to navigate between wizard steps:
+ * what to do on current step.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ProjectCreationFinishedHandler.java Sep 9, 2011 11:10:54 AM vereshchaka $
+ * @version $Id: WizardContinuable.java Oct 17, 2011 2:59:03 PM vereshchaka $
  */
-public interface ProjectCreationFinishedHandler extends EventHandler
+public interface WizardContinuable
 {
-   
-   void onProjectCreationFinished(ProjectCreationFinishedEvent event);
-
+   /**
+    * Continue wizard on next step.
+    * @param projectProperties project properties, which were enter by user.
+    */
+   void onContinue(ProjectProperties projectProperties);
 }

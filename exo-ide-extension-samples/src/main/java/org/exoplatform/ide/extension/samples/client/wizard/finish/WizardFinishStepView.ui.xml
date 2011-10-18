@@ -14,8 +14,6 @@
          <g:Label text="{locale.wizardFinishText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
          
-      <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
-      
       <g:FlowPanel height="30px"></g:FlowPanel>
       
       <g:HTMLPanel height="30px">
@@ -84,7 +82,7 @@
       </g:HTMLPanel>
       
       <!-- Buttons -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%" stylePrimaryName="{resource.css.footer}">
          
          <table class="{resource.css.table}">
             <tr>

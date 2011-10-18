@@ -13,7 +13,6 @@
          <g:Label text="{locale.wizardSourceTitle}" styleName="{resource.css.labelTitle}"></g:Label>
          <g:Label text="{locale.wizardSourceText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
-      <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
       
       <g:FlowPanel height="30px"></g:FlowPanel>
 
@@ -52,7 +51,7 @@
       </g:HTMLPanel>
       
       <!-- Buttons -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%" stylePrimaryName="{resource.css.footer}">
 
          <table class="{resource.css.table}">
             <tr>

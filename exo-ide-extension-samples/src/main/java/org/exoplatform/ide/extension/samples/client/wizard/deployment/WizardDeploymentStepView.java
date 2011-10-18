@@ -19,10 +19,10 @@
 package org.exoplatform.ide.extension.samples.client.wizard.deployment;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
@@ -80,19 +80,19 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    ComboBoxField cloudFoundryTargetField;
    
    @UiField
-   TextField cloudFoundryNameField;
+   TextInput cloudFoundryNameField;
    
    @UiField
-   TextField cloudFoundryUrlField;
+   TextInput cloudFoundryUrlField;
    
    @UiField
    SelectItem selectDomainField;
    
    @UiField
-   TextField cloudBeesNameField;
+   TextInput cloudBeesNameField;
    
    @UiField
-   TextField cloudBeesIdField;
+   TextInput cloudBeesIdField;
    
    public WizardDeploymentStepView()
    {

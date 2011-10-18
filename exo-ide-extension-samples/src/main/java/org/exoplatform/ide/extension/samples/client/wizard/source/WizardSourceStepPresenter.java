@@ -31,8 +31,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLocationStepEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 
 /**
  * Presenter for Step1 (Source) of Wizard for creation Java Project.
@@ -40,7 +42,7 @@ import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLo
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
-public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewClosedHandler
+public class WizardSourceStepPresenter implements ShowWizardHandler, ViewClosedHandler, WizardReturnable
 {
    public interface Display extends IsView
    {
@@ -61,12 +63,22 @@ public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewC
    
    private Display display;
    
+   private WizardContinuable wizard;
+   
    public WizardSourceStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       
-      eventBus.addHandler(ShowWizardSourceEvent.TYPE, this);
+      eventBus.addHandler(ShowWizardEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
+   }
+   
+   /**
+    * @param wizard the wizard to set
+    */
+   public void setWizardContinuable(WizardContinuable wizard)
+   {
+      this.wizard = wizard;
    }
    
    private void bindDisplay()
@@ -87,7 +99,7 @@ public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewC
          {
             if (SOURCE_SCRATCH.equals(display.getSelectSourceField().getValue()))
             {
-               eventBus.fireEvent(new ShowWizardLocationStepEvent());
+               wizard.onContinue(new ProjectProperties());
             }
             else if (SOURCE_IMPORT.equals(display.getSelectSourceField().getValue()))
             {
@@ -115,10 +127,10 @@ public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewC
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceHandler#onShowWizardDefinition(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardHandler#onShowWizardDefinition(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent)
     */
    @Override
-   public void onShowWizard(ShowWizardSourceEvent event)
+   public void onShowWizard(ShowWizardEvent event)
    {
       openView();
    }
@@ -142,6 +154,15 @@ public class WizardSourceStepPresenter implements ShowWizardSourceHandler, ViewC
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable#onReturn()
+    */
+   @Override
+   public void onReturn()
+   {
+      openView();
    }
 
 }

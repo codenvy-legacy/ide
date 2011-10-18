@@ -49,7 +49,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
     * Events handler.
     */
    private HandlerManager eventBus;
-
+   
    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(SamplesLocalizationConstant.class);
 
@@ -76,11 +76,20 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new SelectLocationPresenter(eventBus);
       new ShowSamplesPresenter(eventBus);
       
-      new WizardSourceStepPresenter(eventBus);
-      new WizardLocationStepPresenter(eventBus);
-      new WizardDefinitionStepPresenter(eventBus);
-      new WizardDeploymentStepPresenter(eventBus);
-      new WizardFinishStepPresenter(eventBus);
+      WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter(eventBus);
+      WizardLocationStepPresenter wizardLocationStep = new WizardLocationStepPresenter(eventBus);
+      WizardDefinitionStepPresenter wizardDefinitionStep = new WizardDefinitionStepPresenter(eventBus);
+      WizardDeploymentStepPresenter wizardDeploymentStep = new WizardDeploymentStepPresenter(eventBus);
+      WizardFinishStepPresenter wizardFinishStep = new WizardFinishStepPresenter(eventBus);
+      
+      wizardSourceStep.setWizardContinuable(wizardLocationStep);
+      wizardLocationStep.setWizardReturn(wizardSourceStep);
+      wizardLocationStep.setWizardContinue(wizardDefinitionStep);
+      wizardDefinitionStep.setWizardReturnable(wizardLocationStep);
+      wizardDefinitionStep.setWizardContinuable(wizardDeploymentStep);
+      wizardDeploymentStep.setWizardReturnable(wizardDefinitionStep);
+      wizardDeploymentStep.setWizardContinuable(wizardFinishStep);
+      wizardFinishStep.setWizardReturnable(wizardDeploymentStep);
       
       new LoginPresenter(eventBus);
       

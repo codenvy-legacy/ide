@@ -39,22 +39,25 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.paas.cloudbees.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.cloudfoundry.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoggedInHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.finish.ShowWizardFinishStepEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 
 import java.util.List;
 
 /**
  * Presenter for Step3 (Deployment) of Wizard for creation Java Project.
  * 
+ * If user have already been on this step, than data, that he enetered, will be restored
+ * and displayed in fields.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WizardDeploymentStepPresenter.java Sep 9, 2011 3:01:50 PM vereshchaka $
  *
  */
-public class WizardDeploymentStepPresenter implements ShowWizardDeploymentStepHandler, ViewClosedHandler, 
-ProjectCreationFinishedHandler
+public class WizardDeploymentStepPresenter implements ViewClosedHandler, 
+ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
 {
    public interface Display extends IsView
    {
@@ -96,6 +99,8 @@ ProjectCreationFinishedHandler
     */
    public static final String DEFAULT_CLOUDFOUNDRY_TARGET = "http://api.cloudfoundry.com";
    
+   public static final String DEFAULT_URL_PREFIX = "<name>.";
+   
    private static final String[] PAAS;
    
    private HandlerManager eventBus;
@@ -116,13 +121,32 @@ ProjectCreationFinishedHandler
       PAAS[2] = ProjectProperties.Paas.CLOUDBEES;
    }
    
+   private WizardContinuable wizardContinuable;
+   
+   private WizardReturnable wizardReturnable;
+   
    public WizardDeploymentStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
-      eventBus.addHandler(ShowWizardDeploymentStepEvent.TYPE, this);
+
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+   }
+   
+   /**
+    * @param wizardContinuable the wizardContinuable to set
+    */
+   public void setWizardContinuable(WizardContinuable wizardContinuable)
+   {
+      this.wizardContinuable = wizardContinuable;
+   }
+   
+   /**
+    * @param wizardReturnable the wizardReturnable to set
+    */
+   public void setWizardReturnable(WizardReturnable wizardReturnable)
+   {
+      this.wizardReturnable = wizardReturnable;
    }
    
    private void bindDisplay()
@@ -143,13 +167,13 @@ ProjectCreationFinishedHandler
          public void onClick(ClickEvent event)
          {
             //if one of field are changed, the new value must be saved in projectProperties.
-            //That's why, when Nex button is clicked, the actual state are send to next step.
+            //That's why, when Next button is clicked, the actual state are send to next step.
             if (projectProperties.getPaas().equals(ProjectProperties.Paas.CLOUDFOUNDRY))
             {
                validateCloudFoundryParams();
                return;
             }
-            eventBus.fireEvent(new ShowWizardFinishStepEvent(projectProperties));
+            wizardContinuable.onContinue(projectProperties);
             closeView();
          }
       });
@@ -159,7 +183,7 @@ ProjectCreationFinishedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardDefinitionStepEvent(null));
+            wizardReturnable.onReturn();
             closeView();
          }
       });
@@ -175,7 +199,7 @@ ProjectCreationFinishedHandler
             {
                display.setVisibleCloudBeesPanel(false);
                display.setVisibleCloudFoundryPanel(true);
-               fillCloudFoundryFields();
+               getCloudFoundryTargets();
             }
             else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
             {
@@ -230,8 +254,17 @@ ProjectCreationFinishedHandler
          {
             if (ProjectProperties.Paas.CLOUDFOUNDRY.equals(display.getSelectPaasField().getValue()))
             {
-               updateUrlField();
-               projectProperties.getProperties().put("target", display.getCloudFoundryTargetField().getValue());
+               String target = display.getCloudFoundryTargetField().getValue();
+               String sufix = target.substring(target.indexOf("."));
+               String oldUrl = display.getCloudFoundryUrlField().getValue();
+               String prefix = "<name>";
+               if (!oldUrl.isEmpty() && oldUrl.contains("."))
+               {
+                  prefix = oldUrl.substring(0, oldUrl.indexOf("."));
+               }
+               String url = prefix + sufix;
+               display.getCloudFoundryUrlField().setValue(url);
+               projectProperties.getProperties().put("target", target);
             }
          }
       });
@@ -308,26 +341,7 @@ ProjectCreationFinishedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceHandler#onShowWizardDefinition(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent)
-    */
-   @Override
-   public void onShowDeploymentWizard(ShowWizardDeploymentStepEvent event)
-   {
-      if (event.getProjectProperties() != null)
-      {
-         //update project properties, if new values are received
-         //from previous step
-         projectProperties = event.getProjectProperties();
-         
-         //if no project properties are received, than
-         //the saved will be used.
-         //If Back button was pressed, then project properties are null
-      }
-      openView();
-   }
-   
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent)
     */
    @Override
    public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
@@ -357,11 +371,8 @@ ProjectCreationFinishedHandler
    }
 
    /**
-    * Fill cloudfoundry name and domain fields with values, that user
-    * entered before (they are stored in Map in projectProperties variable).
-    * <p/>
-    * If no values are stored, than get the deploy name from the name of project
-    * and leave url field empty.
+    * Fill cloudfoundry fields by values stored in project properties variable
+    * or by default values.
     */
    private void fillCloudFoundryFields()
    {
@@ -371,17 +382,34 @@ ProjectCreationFinishedHandler
          name = projectProperties.getName();
          projectProperties.getProperties().put("cf-name", name);
       }
-      final String url =
-         projectProperties.getProperties().get("url") != null ? projectProperties.getProperties().get("url")
-            : "<name>.cloudfoundry.com";
-      
       display.getCloudFoundryNameField().setValue(name);
-      display.getCloudFoundryUrlField().setValue(url);
       
-      final String target =
-         projectProperties.getProperties().get("target") != null ? projectProperties.getProperties().get("target") : "";
-         display.getCloudFoundryTargetField().setValue(target);
-      getCloudFoundryTargets();
+      if (projectProperties.getProperties().get("target") != null)
+      {
+         display.getCloudFoundryTargetField().setValue(projectProperties.getProperties().get("target"));
+      }
+      if (projectProperties.getProperties().get("url") != null)
+      {
+         display.getCloudFoundryUrlField().setValue(projectProperties.getProperties().get("url"));
+      }
+      else
+      {
+         final String target = display.getCloudFoundryTargetField().getValue();
+         String urlSufix = target.substring(target.indexOf("."));
+         final String oldUrl = display.getCloudFoundryUrlField().getValue();
+         String prefix = "<name>";
+         if (!oldUrl.isEmpty() && oldUrl.contains("."))
+         {
+            prefix = oldUrl.substring(0, oldUrl.indexOf("."));
+         }
+         if (urlSufix.isEmpty())
+         {
+            urlSufix = DEFAULT_CLOUDFOUNDRY_TARGET.substring(DEFAULT_CLOUDFOUNDRY_TARGET.indexOf("."));
+         }
+         String url = prefix + urlSufix;
+         display.getCloudFoundryUrlField().setValue(url);
+      }
+      
    }
    
    /**
@@ -461,7 +489,7 @@ ProjectCreationFinishedHandler
             @Override
             protected void onSuccess(String result)
             {
-               eventBus.fireEvent(new ShowWizardFinishStepEvent(projectProperties));
+               wizardContinuable.onContinue(projectProperties);
                closeView();               
             }
          });
@@ -495,34 +523,28 @@ ProjectCreationFinishedHandler
                }
             }
             projectProperties.getProperties().put("target", display.getCloudFoundryTargetField().getValue());
-            updateUrlField();
+            fillCloudFoundryFields();
          }
       });
    }
    
    /**
-    * Update the URL field, using values from server and name field.
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
     */
-   private void updateUrlField()
+   @Override
+   public void onContinue(ProjectProperties projectProperties)
    {
-      final String url =
-         getUrlByServerAndName(display.getCloudFoundryTargetField().getValue(), display.getCloudFoundryNameField()
-            .getValue());
-      display.getCloudFoundryUrlField().setValue(url);
-      
-      //TODO
-      display.enableNextButton(true);
+      this.projectProperties = projectProperties;
+      openView();
    }
-   
-   private String getUrlByServerAndName(String serverUrl, String name)
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable#onReturn()
+    */
+   @Override
+   public void onReturn()
    {
-      int index = serverUrl.indexOf(".");
-      if (index < 0)
-      {
-         return name.toLowerCase();
-      }
-      final String domain = serverUrl.substring(index, serverUrl.length());
-      return "http://" + name.toLowerCase() + domain;
+      openView();
    }
 
 }

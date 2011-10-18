@@ -16,18 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.location;
+package org.exoplatform.ide.extension.samples.client.wizard.source;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ShowWizardLocationStepEvent}.
+ * Handler for {@link ShowWizardEvent}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SelectLocationHandler.java Aug 31, 2011 12:03:07 PM vereshchaka $
- *
+ * @version $Id: ShowWizardHandler.java Sep 7, 2011 3:29:47 PM vereshchaka $
  */
-public interface ShowWizardLocationStepHandler extends EventHandler
+public interface ShowWizardHandler extends EventHandler
 {
-   void onSelectLocation(ShowWizardLocationStepEvent event);
+   
+   void onShowWizard(ShowWizardEvent event);
+
 }

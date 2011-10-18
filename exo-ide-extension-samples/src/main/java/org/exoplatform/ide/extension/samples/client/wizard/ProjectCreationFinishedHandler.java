@@ -16,19 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.source;
+package org.exoplatform.ide.extension.samples.client.wizard;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link ShowWizardSourceEvent}.
+ * Handler for {@link ProjectCreationFinishedEvent}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ShowWizardHandler.java Sep 7, 2011 3:29:47 PM vereshchaka $
+ * @version $Id: ProjectCreationFinishedHandler.java Sep 9, 2011 11:10:54 AM vereshchaka $
  */
-public interface ShowWizardSourceHandler extends EventHandler
+public interface ProjectCreationFinishedHandler extends EventHandler
 {
    
-   void onShowWizard(ShowWizardSourceEvent event);
+   void onProjectCreationFinished(ProjectCreationFinishedEvent event);
 
 }

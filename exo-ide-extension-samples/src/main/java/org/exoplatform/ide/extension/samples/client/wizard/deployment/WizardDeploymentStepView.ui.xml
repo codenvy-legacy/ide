@@ -14,8 +14,6 @@
          <g:Label text="{locale.wizardDeploymentText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
          
-      <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
-      
       <g:FlowPanel height="30px" width="100%"></g:FlowPanel>
 
       <!-- panel to select source of project -->
@@ -32,7 +30,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:SelectItem ui:field="selectPaasField" width="100%" height="22px" showTitle="false"></f:SelectItem>
+                  <f:SelectItem ui:field="selectPaasField" width="100%" height="22px"></f:SelectItem>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -75,7 +73,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="cloudFoundryNameField" width="100%" height="22px" showTitle="false"></f:TextField>
+                  <f:TextInput ui:field="cloudFoundryNameField" width="100%" height="22px"></f:TextInput>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -92,7 +90,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="cloudFoundryUrlField" width="100%" height="22px" showTitle="false"></f:TextField>
+                  <f:TextInput ui:field="cloudFoundryUrlField" width="100%" height="22px"></f:TextInput>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -128,7 +126,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="cloudBeesNameField" width="100%" height="22px"></f:TextField>
+                  <f:TextInput ui:field="cloudBeesNameField" width="100%" height="22px"></f:TextInput>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -144,7 +142,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="cloudBeesIdField" width="100%" height="22px" enabled="false"></f:TextField>
+                  <f:TextInput ui:field="cloudBeesIdField" width="100%" height="22px" enabled="false"></f:TextInput>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -162,7 +160,7 @@
       </g:HTMLPanel>
       
       <!-- Buttons -->
-      <g:HTMLPanel height="30px" width="100%">
+      <g:HTMLPanel height="30px" width="100%" stylePrimaryName="{resource.css.footer}">
          
          <table class="{resource.css.table}">
             <tr>

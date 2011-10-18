@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardEvent;
 
 /**
  * Presenter for welcome view.
@@ -77,7 +77,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardSourceEvent());
+            eventBus.fireEvent(new ShowWizardEvent());
          }
       });
    }

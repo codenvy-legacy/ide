@@ -7,17 +7,15 @@
    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
-   <g:FlowPanel>
+   <g:HTMLPanel stylePrimaryName="{resource.css.wizard}">
       <g:VerticalPanel spacing="3" horizontalAlignment="left" verticalAlignment="middle"
                width="100%" height="60px" stylePrimaryName="{resource.css.topBox}">
          <g:Label text="{locale.wizardDefinitionTitle}" styleName="{resource.css.labelTitle}"></g:Label>
          <g:Label text="{locale.wizardDefinitionText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
       
-      <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
+      <g:FlowPanel height="30px" width="100%"></g:FlowPanel>
       
-      <g:FlowPanel height="30px"></g:FlowPanel>
-
       <!-- panel to select source of project -->
       <g:HTMLPanel height="30px">
          
@@ -32,7 +30,7 @@
                <td><div style="width:1px; height:1px;"></div></td>
                
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="nameProjectField" width="100%" height="22" ></f:TextField>
+                  <f:TextInput ui:field="nameProjectField" width="100%" height="22" ></f:TextInput>
                </td>
                
                <td style="width:10px;"><div style="width:10px; height:1px;"></div></td>
@@ -59,18 +57,7 @@
          
       </g:HTMLPanel>
       
-      <g:HTMLPanel>
-         <table class="{resource.css.table}">
-            <tr>
-               <td style="width:10px;">
-                  <div style="width:10px; height:100%;"></div>
-               </td>
-            </tr>
-         </table>
-      </g:HTMLPanel>
-      
-      <!-- Buttons -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%"  stylePrimaryName="{resource.css.footer}">
          
          <table class="{resource.css.table}">
             <tr>
@@ -105,7 +92,5 @@
          </table>
          
       </g:HTMLPanel>
-
-      <g:FlowPanel height="10px"></g:FlowPanel>
-   </g:FlowPanel>
+   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -62,6 +62,7 @@ public class ProjectProperties
     * <ul>
     * <li><code>name</code> - the name to deploy to CloudFoundry</li>
     * <li><code>url</code> - the url to deploy to CloudFoundry</li>
+    * <li><code>target</code> - the target(server) to deploy on CloudFoundry</li>
     * </ul>
     * <p/>
     * If project will be deploy to CloudBees, than:

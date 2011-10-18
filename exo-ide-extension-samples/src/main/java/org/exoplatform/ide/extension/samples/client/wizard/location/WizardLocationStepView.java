@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -71,7 +71,7 @@ public class WizardLocationStepView extends ViewImpl implements WizardLocationSt
    ItemTree navigationTreeGrid;
    
    @UiField
-   TextField newFolderField;
+   TextInput newFolderField;
    
    @UiField
    ImageButton newFolderButton;
@@ -89,7 +89,6 @@ public class WizardLocationStepView extends ViewImpl implements WizardLocationSt
    {
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
-      newFolderField.setHeight(22);
    }
 
    /**
@@ -179,7 +178,7 @@ public class WizardLocationStepView extends ViewImpl implements WizardLocationSt
    @Override
    public void focusInFolderNameField()
    {
-      newFolderField.focusInItem();
+      newFolderField.setFocus(true);
    }
 
    /**

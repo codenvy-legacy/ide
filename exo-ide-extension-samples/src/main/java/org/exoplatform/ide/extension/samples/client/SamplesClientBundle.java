@@ -98,9 +98,11 @@ public interface SamplesClientBundle extends ClientBundle
       
       String labelDescription();
       
+      String wizard();
+      
       String topBox();
       
-      String line();
+      String footer();
       
       String labelValue();
       

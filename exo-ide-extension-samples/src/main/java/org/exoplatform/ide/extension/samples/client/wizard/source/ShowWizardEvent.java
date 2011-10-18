@@ -16,19 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.definition;
+package org.exoplatform.ide.extension.samples.client.wizard.source;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handler for {@link ShowWizardDefinitionStepEvent}.
+ * Event, to call Wizard for creation Java project.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ShowWizardHandler.java Sep 7, 2011 3:29:47 PM vereshchaka $
+ * @version $Id: ShowWizardEvent.java Sep 7, 2011 3:29:39 PM vereshchaka $
  */
-public interface ShowWizardDefinitionStepHandler extends EventHandler
+public class ShowWizardEvent extends GwtEvent<ShowWizardHandler>
 {
    
-   void onShowWizard(ShowWizardDefinitionStepEvent event);
+   public static final GwtEvent.Type<ShowWizardHandler> TYPE = new GwtEvent.Type<ShowWizardHandler>();
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowWizardHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(ShowWizardHandler handler)
+   {
+      handler.onShowWizard(this);
+   }
 
 }

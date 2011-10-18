@@ -16,40 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.deployment;
-
-import org.exoplatform.ide.extension.samples.client.ProjectProperties;
+package org.exoplatform.ide.extension.samples.client.wizard;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event, to call Step 3 of Wizard for creation Java project (Deployment)
+ * Event to notify, that project creation finished:
+ * Finish button (success finish) or cancel button (creation was cancesls) 
+ * was pressed.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ShowDeploymentWizardEvent.java Sep 7, 2011 5:37:50 PM vereshchaka $
- *
+ * @version $Id: ProjectCreationFinishedEvent.java Sep 9, 2011 11:09:35 AM vereshchaka $
  */
-public class ShowWizardDeploymentStepEvent extends GwtEvent<ShowWizardDeploymentStepHandler>
+public class ProjectCreationFinishedEvent extends GwtEvent<ProjectCreationFinishedHandler>
 {
    
-   private ProjectProperties projectProperties;
+   /**
+    * Is project creation canceled (cancel button was clicked)
+    * or finish button was clicked.
+    */
+   private boolean canceled;
    
-   public ShowWizardDeploymentStepEvent()
+   public ProjectCreationFinishedEvent(boolean canceled)
    {
+      this.canceled = canceled;
    }
    
-   public ShowWizardDeploymentStepEvent(ProjectProperties projectProperties)
-   {
-      this.projectProperties = projectProperties;
-   }
-   
-   public static final GwtEvent.Type<ShowWizardDeploymentStepHandler> TYPE = new GwtEvent.Type<ShowWizardDeploymentStepHandler>();
+   public static final GwtEvent.Type<ProjectCreationFinishedHandler> TYPE = new GwtEvent.Type<ProjectCreationFinishedHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowWizardDeploymentStepHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ProjectCreationFinishedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -58,17 +57,16 @@ public class ShowWizardDeploymentStepEvent extends GwtEvent<ShowWizardDeployment
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ShowWizardDeploymentStepHandler handler)
+   protected void dispatch(ProjectCreationFinishedHandler handler)
    {
-      handler.onShowDeploymentWizard(this);
+      handler.onProjectCreationFinished(this);
    }
    
    /**
-    * @return the projectProperties
+    * @return the canceled
     */
-   public ProjectProperties getProjectProperties()
+   public boolean isCanceled()
    {
-      return projectProperties;
+      return canceled;
    }
-
 }

@@ -34,10 +34,10 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.ProjectProperties;
-import org.exoplatform.ide.extension.samples.client.wizard.deployment.ShowWizardDeploymentStepEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLocationStepEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 
 /**
  * Presenter for Step2 (Definition) of Wizard for creation Java Project.
@@ -45,7 +45,8 @@ import org.exoplatform.ide.extension.samples.client.wizard.location.ShowWizardLo
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SourceWizardPresenter.java Sep 7, 2011 3:00:58 PM vereshchaka $
  */
-public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHandler, ViewClosedHandler, ProjectCreationFinishedHandler
+public class WizardDefinitionStepPresenter implements ViewClosedHandler, ProjectCreationFinishedHandler,
+   WizardContinuable, WizardReturnable
 {
    public interface Display extends IsView
    {
@@ -74,6 +75,10 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
    
    private ProjectProperties projectProperties;
    
+   private WizardContinuable wizardContinuable;
+   
+   private WizardReturnable wizardReturnable;
+   
    static
    {
       TYPES = new String[2];
@@ -84,10 +89,25 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
    public WizardDefinitionStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
-      eventBus.addHandler(ShowWizardDefinitionStepEvent.TYPE, this);
+
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
+   }
+   
+   /**
+    * @param wizardContinuable the wizardContinuable to set
+    */
+   public void setWizardContinuable(WizardContinuable wizardContinuable)
+   {
+      this.wizardContinuable = wizardContinuable;
+   }
+   
+   /**
+    * @param wizardReturnable the wizardReturnable to set
+    */
+   public void setWizardReturnable(WizardReturnable wizardReturnable)
+   {
+      this.wizardReturnable = wizardReturnable;
    }
    
    private void bindDisplay()
@@ -109,7 +129,7 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          {
             projectProperties.setName(display.getNameField().getValue());
             projectProperties.setType(display.getSelectTypeField().getValue());
-            eventBus.fireEvent(new ShowWizardDeploymentStepEvent(projectProperties));
+            wizardContinuable.onContinue(projectProperties);
             closeView();
          }
       });
@@ -119,7 +139,7 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardLocationStepEvent());
+            wizardReturnable.onReturn();
             closeView();
          }
       });
@@ -151,22 +171,6 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          }
       });
       
-      display.setTypes(TYPES);
-      display.focusInNameField();
-      
-      if (projectProperties != null)
-      {
-         display.getNameField().setValue(projectProperties.getName());
-         display.getSelectTypeField().setValue(projectProperties.getType());
-      }
-      if (display.getNameField().getClass() == null || display.getNameField().getValue().isEmpty())
-      {
-         display.enableNextButton(false);
-      }
-      else
-      {
-         display.enableNextButton(true);
-      }
    }
 
    /**
@@ -181,25 +185,6 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceHandler#onShowWizardDefinition(org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardDefinitionStepEvent)
-    */
-   @Override
-   public void onShowWizard(ShowWizardDefinitionStepEvent event)
-   {
-      if (event.getProjectProperties() != null)
-      {
-         //update project properties, if new values are received
-         //from previous step
-         projectProperties = event.getProjectProperties();
-         
-         //if no project properties are received, than
-         //the saved will be used.
-         //If Back button was pressed, then project properties are null
-      }
-      openView();
-   }
-   
    private void openView()
    {
       if (display == null)
@@ -208,6 +193,22 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
          IDE.getInstance().openView((View)d);
          display = d;
          bindDisplay();
+         display.setTypes(TYPES);
+         
+         if (projectProperties != null)
+         {
+            display.getNameField().setValue(projectProperties.getName());
+            display.getSelectTypeField().setValue(projectProperties.getType());
+         }
+         if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
+         {
+            display.enableNextButton(false);
+         }
+         else
+         {
+            display.enableNextButton(true);
+         }
+         display.focusInNameField();
          return;
       }
       else
@@ -222,12 +223,31 @@ public class WizardDefinitionStepPresenter implements ShowWizardDefinitionStepHa
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent)
     */
    @Override
    public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
    {
       projectProperties = null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable#onReturn()
+    */
+   @Override
+   public void onReturn()
+   {
+      openView();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
+    */
+   @Override
+   public void onContinue(ProjectProperties projectProperties)
+   {
+      this.projectProperties = projectProperties;
+      openView();
    }
 
 }

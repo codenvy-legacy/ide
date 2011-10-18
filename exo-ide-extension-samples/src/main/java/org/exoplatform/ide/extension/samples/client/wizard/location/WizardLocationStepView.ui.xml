@@ -6,19 +6,14 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
    <g:FlowPanel width="100%">
-      <g:VerticalPanel spacing="0" horizontalAlignment="left" verticalAlignment="middle" width="100%" height="60px">
-      
-         <g:VerticalPanel spacing="3" horizontalAlignment="left" verticalAlignment="middle" width="100%" height="59px"
-            stylePrimaryName="{resource.css.topBox}">
-            <g:Label text="{locale.wizardLocationTitle}" styleName="{resource.css.labelTitle}"></g:Label>
-            <g:Label text="{locale.wizardLocationText}" styleName="{resource.css.labelDescription}"></g:Label>
-         </g:VerticalPanel>
-
-         <g:FlowPanel height="1px" width="100%" styleName="{resource.css.line}"></g:FlowPanel>
+      <g:VerticalPanel spacing="3" horizontalAlignment="left" verticalAlignment="middle" 
+         stylePrimaryName="{resource.css.topBox}">
+         <g:Label text="{locale.wizardLocationTitle}" styleName="{resource.css.labelTitle}"></g:Label>
+         <g:Label text="{locale.wizardLocationText}" styleName="{resource.css.labelDescription}"></g:Label>
       </g:VerticalPanel>
       
       <!-- navigation tree -->
-      <f:Border margin="10" width="100%" height="100px">
+      <f:Border margin="10" height="150px">
          <f:layer>
             <g:ScrollPanel>
                <n:ItemTree styleName="{resource.css.itemsTree}" ui:field="navigationTreeGrid"></n:ItemTree>
@@ -44,7 +39,7 @@
                </td>
 
                <td style="width:100%; height:22px">
-                  <f:TextField ui:field="newFolderField" width="100%" height="22" name="ideSelectLocationNewFolderFieldName"></f:TextField>
+                  <f:TextInput ui:field="newFolderField" width="100%" height="22" name="ideSelectLocationNewFolderFieldName"></f:TextInput>
                </td>
 
                <td>
@@ -68,7 +63,7 @@
       <g:FlowPanel height="10px"></g:FlowPanel>
 
       <!-- Buttons panel -->
-      <g:HTMLPanel height="30px">
+      <g:HTMLPanel height="30px" width="100%" stylePrimaryName="{resource.css.footer}">
 
          <table class="{resource.css.table}">
             <tr>

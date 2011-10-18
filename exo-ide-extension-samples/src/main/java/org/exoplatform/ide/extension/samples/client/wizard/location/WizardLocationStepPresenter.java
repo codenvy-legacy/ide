@@ -48,10 +48,10 @@ import org.exoplatform.ide.extension.samples.client.ProjectProperties;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
 import org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter;
-import org.exoplatform.ide.extension.samples.client.wizard.definition.ShowWizardDefinitionStepEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent;
-import org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler;
-import org.exoplatform.ide.extension.samples.client.wizard.source.ShowWizardSourceEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent;
+import org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable;
+import org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -81,8 +81,9 @@ import java.util.List;
  * @version $Id: WizardLocationStepPresenter.java Sep 12, 2011 12:09:31 PM vereshchaka $
  *
  */
-public class WizardLocationStepPresenter implements ShowWizardLocationStepHandler, ViewClosedHandler,
-   VfsChangedHandler, ProjectCreationFinishedHandler, ConfigurationReceivedSuccessfullyHandler
+public class WizardLocationStepPresenter implements ViewClosedHandler,
+   VfsChangedHandler, ProjectCreationFinishedHandler, ConfigurationReceivedSuccessfullyHandler, WizardContinuable,
+   WizardReturnable
 {
    public interface Display extends IsView
    {
@@ -140,16 +141,35 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private ProjectProperties projectProperties = new ProjectProperties();
+   
+   private WizardContinuable wizardContinue;
+   
+   private WizardReturnable wizardReturn;
 
    public WizardLocationStepPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
 
-      eventBus.addHandler(ShowWizardLocationStepEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(VfsChangedEvent.TYPE, this);
       eventBus.addHandler(ProjectCreationFinishedEvent.TYPE, this);
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+   }
+   
+   /**
+    * @param wizardContinue the wizardContinue to set
+    */
+   public void setWizardContinue(WizardContinuable wizardContinue)
+   {
+      this.wizardContinue = wizardContinue;
+   }
+   
+   /**
+    * @param wizardReturn the wizardReturn to set
+    */
+   public void setWizardReturn(WizardReturnable wizardReturn)
+   {
+      this.wizardReturn = wizardReturn;
    }
 
    private void bindDisplay()
@@ -189,7 +209,7 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
          public void onClick(ClickEvent event)
          {
             projectProperties.setParenFolder((FolderModel)selectedItems.get(0));
-            eventBus.fireEvent(new ShowWizardDefinitionStepEvent(projectProperties));
+            wizardContinue.onContinue(projectProperties);
             closeView();
          }
       });
@@ -209,7 +229,7 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
          @Override
          public void onClick(ClickEvent event)
          {
-            eventBus.fireEvent(new ShowWizardSourceEvent());
+            wizardReturn.onReturn();
             closeView();
          }
       });
@@ -243,15 +263,6 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
       display.enableNewFolderButton(false);
 
       getFolders();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.ShowWizardLocationStepHandler.selectlocation.SelectLocationHandler#onSelectLocation(org.exoplatform.ide.client.ShowWizardLocationStepEvent.selectlocation.SelectLocationEvent)
-    */
-   @Override
-   public void onSelectLocation(ShowWizardLocationStepEvent event)
-   {
-      openView();
    }
 
    /**
@@ -478,7 +489,7 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.event.ProjectCreationFinishedEvent)
+    * @see org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedHandler#onProjectCreationFinished(org.exoplatform.ide.extension.samples.client.wizard.ProjectCreationFinishedEvent)
     */
    @Override
    public void onProjectCreationFinished(ProjectCreationFinishedEvent event)
@@ -495,6 +506,24 @@ public class WizardLocationStepPresenter implements ShowWizardLocationStepHandle
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardReturnable#onReturn()
+    */
+   @Override
+   public void onReturn()
+   {
+      openView();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.wizard.WizardContinuable#onContinue(ProjectProperties)
+    */
+   @Override
+   public void onContinue(ProjectProperties projectProperties)
+   {
+      openView();
    }
 
 }

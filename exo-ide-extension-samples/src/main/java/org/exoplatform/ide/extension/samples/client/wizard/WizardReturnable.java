@@ -16,20 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.wizard.deployment;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.samples.client.wizard;
 
 /**
- * Handler for {@link ShowWizardDeploymentStepEvent}.
+ * Interface for wizard step.<p/>
+ * If presenter implements this step, 
+ * than you can return to this step.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ShowDeploymentWizardHandler.java Sep 7, 2011 5:37:35 PM vereshchaka $
- *
+ * @version $Id: WizardReturnable.java Oct 17, 2011 3:56:14 PM vereshchaka $
  */
-public interface ShowWizardDeploymentStepHandler extends EventHandler
+public interface WizardReturnable
 {
-   
-   void onShowDeploymentWizard(ShowWizardDeploymentStepEvent event);
-
+   /**
+    * What to do, when you return to this step from next.
+    */
+   void onReturn();
 }
