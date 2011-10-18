@@ -93,7 +93,7 @@
 
      <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-groovy</artifactId>
+         <artifactId>exo-ide-extension-java</artifactId>
       </dependency>
 
       <dependency>
