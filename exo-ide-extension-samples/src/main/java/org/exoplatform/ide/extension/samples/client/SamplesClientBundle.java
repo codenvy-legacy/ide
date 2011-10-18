@@ -117,6 +117,20 @@ public interface SamplesClientBundle extends ClientBundle
       String hiddenTable();
       
       String loginLable();
+      
+      String bottomBox();
+
+      String leftFloat();
+      
+      String innerBox();
+
+      String right();
+
+      String middle();
+
+      String newFolderDivInput();
+
+      String label();
    }
 
 }

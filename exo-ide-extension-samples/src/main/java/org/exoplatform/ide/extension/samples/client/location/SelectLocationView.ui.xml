@@ -67,7 +67,7 @@
       <g:layer height="30px" bottom="35px">
          <g:FlowPanel width="auto" styleName="{style.bottomBox}">
 
-            <g:Label text="New Folder" width="90px" styleName="{style.label}"></g:Label>
+            <g:Label text="{locale.wizardLocationNewFolder}" width="90px" styleName="{style.label}"></g:Label>
 
             <g:SimplePanel styleName="{style.newFolderDivInput}">
                <f:TextInput ui:field="newFolderField" width="100%" name="ideSelectLocationNewFolderFieldName"></f:TextInput>
