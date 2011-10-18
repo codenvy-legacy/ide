@@ -129,6 +129,8 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       eventFiredOnNoButtonPressed = event.getEventFiredOnNo();
 
       fileToSave = file;
+      
+      sourceId = file.getId();
 
       askForNewFileName(event.getDialogType());
    }

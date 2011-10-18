@@ -3,18 +3,34 @@
    xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='resource' type='org.exoplatform.ide.extension.openshift.client.OpenShiftClientBundle' />
    <ui:with field='locale' type='org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant' />
+   <ui:style>
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      	
+      }
+      
+      .left-float {
+      	float: left;
+      }
+   </ui:style>
    <f:Border margin="5" borderColor="transparent">
       <f:layer>
-         <g:VerticalPanel spacing="3" horizontalAlignment="center">
-            <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
-            <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
-            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+         <g:FlowPanel>
+            <g:Label text="{locale.loginViewEmailField}" width="100%"></g:Label>
+            <f:TextInput ui:field="emailField" height="22" width="100%"></f:TextInput>
+            <g:Label text="{locale.loginViewPasswordField}"></g:Label>
+            <f:PasswordTextInput ui:field="passwordField" height="22" width="100%"></f:PasswordTextInput>
+            <g:FlowPanel height="20px" width="100%"></g:FlowPanel>
+            <g:FlowPanel width="190px" styleName="{style.center}">
                <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageResource="{resource.okButton}"
-                  disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancelButton}"
+                  disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.left-float}"></f:ImageButton>
+               <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+               <f:ImageButton ui:field="cancelButton" width="90" height="22" addStyleNames="{style.left-float}" text="Cancel" imageResource="{resource.cancelButton}"
                   disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
-            </g:HorizontalPanel>
-         </g:VerticalPanel>
+            </g:FlowPanel>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 

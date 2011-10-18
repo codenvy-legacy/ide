@@ -27,8 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -46,7 +46,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 
    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 190;
+   private static final int HEIGHT = 170;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -69,13 +69,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Email field.
     */
    @UiField
-   TextField emailField;
+   TextInput emailField;
 
    /**
     * Password field.
     */
    @UiField
-   PasswordField passwordField;
+   PasswordTextInput passwordField;
 
    /**
     * Login button.
@@ -95,9 +95,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);
-      emailField.setHeight(22);
+      emailField.setHeight("22px");
       passwordField.setName(PASSWORD_FIELD_ID);
-      passwordField.setHeight(22);
+      passwordField.setHeight("22px");
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -153,6 +153,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.focusInItem();
+      emailField.getElement().focus();
    }
 }

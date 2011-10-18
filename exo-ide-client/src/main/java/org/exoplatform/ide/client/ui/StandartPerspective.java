@@ -419,8 +419,8 @@ public class StandartPerspective extends FlowPanel implements Perspective
       //         layoutLayer.restore();
       //      }
 
-      Widget viewWidget = (Widget)view;
-      viewWidget.removeFromParent();
+//      Widget viewWidget = view.asWidget();
+//      viewWidget.removeFromParent();
 
       viewTarget.removeView(view);
       views.remove(view.getId());

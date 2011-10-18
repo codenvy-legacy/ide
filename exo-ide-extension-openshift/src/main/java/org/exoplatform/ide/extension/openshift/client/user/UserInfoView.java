@@ -1,18 +1,16 @@
 package org.exoplatform.ide.extension.openshift.client.user;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -51,13 +49,13 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
     * User's login field.
     */
    @UiField
-   TextField loginField;
+   TextInput loginField;
 
    /**
     * User's domain.
     */
    @UiField
-   TextField domainField;
+   TextInput domainField;
 
    /**
     * Grid with user's applications.
@@ -82,9 +80,9 @@ public class UserInfoView extends ViewImpl implements UserInfoPresenter.Display
       super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.userInfoViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       domainField.setName(DOMAIN_FIELD_ID);
-      domainField.setHeight(22);
+      domainField.setHeight("22px");
       loginField.setName(LOGIN_FIELD_ID);
-      loginField.setHeight(22);
+      loginField.setHeight("22px");
    }
 
    /**

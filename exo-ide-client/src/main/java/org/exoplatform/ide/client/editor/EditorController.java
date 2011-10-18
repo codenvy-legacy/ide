@@ -524,7 +524,17 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
          {
             file.setPath(event.getSourceHref());
          }
-         closeFile(file);
+         if(event.getSourceHref() == null)
+         {
+           closeFile(file);
+         }
+         else
+         {
+           //closing file Saved "As" ...
+           FileModel oldFile=new FileModel(event.getFile());
+           oldFile.setId(event.getSourceHref());
+           closeFile(oldFile);
+         }
          closeFileAfterSaving = false;
       }
       else
