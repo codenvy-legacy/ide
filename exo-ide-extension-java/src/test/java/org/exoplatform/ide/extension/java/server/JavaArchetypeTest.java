@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.everrest.core.impl.RuntimeDelegateImpl;
 import org.exoplatform.ide.testframework.server.MockVirtualFileSystem;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -43,13 +45,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.RuntimeDelegate;
 
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class JavaArchetypeTest extends Base
+public class JavaArchetypeTest 
 {
 
    private Map<String, Item> items = new HashMap<String, Item>();
@@ -68,6 +71,12 @@ public class JavaArchetypeTest extends Base
    private String versionId = UUID.randomUUID().toString();
 
    private String modifiedPom;
+   
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+   }
 
    @Test
    public void createProject() throws Exception

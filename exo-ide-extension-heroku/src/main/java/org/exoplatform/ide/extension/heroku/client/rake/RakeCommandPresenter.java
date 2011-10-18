@@ -182,8 +182,8 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onRakeCommand(RakeCommandEvent event)
    {
-      if (makeSelectionCheck())
-      {
+//      if (makeSelectionCheck())
+//      {
 
          if (display == null)
          {
@@ -193,7 +193,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
             display.enableRunButton(false);
             display.focusInCommandField();
          }
-      }
+//      }
    }
 
    /**

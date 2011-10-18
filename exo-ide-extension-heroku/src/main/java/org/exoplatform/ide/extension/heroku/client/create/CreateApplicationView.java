@@ -10,7 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -28,7 +28,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 520;
 
-   private static final int HEIGHT = 240;
+   private static final int HEIGHT = 220;
 
    private static final String CREATE_BUTTON_ID = "ideCreateApplicationViewCreateButton";
 
@@ -50,19 +50,19 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     * Application name field.
     */
    @UiField
-   TextField nameField;
+   TextInput nameField;
    
    /**
     * Remote repository name field.
     */
    @UiField
-   TextField remoteField;
+   TextInput remoteField;
 
    /**
     * Git repository location field.
     */
    @UiField
-   TextField gitRepoField;
+   TextInput gitRepoField;
 
    /**
     * Create application button.
@@ -78,15 +78,12 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    public CreateApplicationView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT,false);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
       remoteField.setName(REMOTE_NAME_FIELD_ID);
-      remoteField.setHeight(22);
       gitRepoField.setName(WORK_DIR_FIELD_ID);
-      gitRepoField.setHeight(22);
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -142,7 +139,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInApplicationNameField()
    {
-      nameField.focusInItem();
+      nameField.setFocus(true);
    }
 
    /**

@@ -27,8 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -74,13 +74,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Email field.
     */
    @UiField
-   TextField emailField;
+   TextInput emailField;
 
    /**
     * Password field.
     */
    @UiField
-   PasswordField passwordField;
+   PasswordTextInput passwordField;
 
    /**
     * Login button.
@@ -99,13 +99,11 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 
    public LoginView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT,false);
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);
-      emailField.setHeight(22);
       passwordField.setName(PASSWORD_FIELD_ID);
-      passwordField.setHeight(22);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
       loginDemoButton.setButtonId(LOGIN_DEMO_BUTTON_ID);
@@ -162,7 +160,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.focusInItem();
+      emailField.setFocus(true);
    }
 
    /**

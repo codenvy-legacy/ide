@@ -1,8 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:e="urn:import:org.exoplatform.ide.extension.heroku.client.info">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.heroku.client.info">
    <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .center {
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+   </ui:style>
+
    <g:LayoutPanel>
       <g:layer top="0" bottom="30px">
          <f:Border margin="10">
@@ -12,10 +20,10 @@
          </f:Border>
       </g:layer>
       <g:layer bottom="0" height="30px">
-         <g:HorizontalPanel height="30px" horizontalAlignment="center">
+         <g:LayoutPanel height="30px" width="90px" styleName="{style.center}">
             <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" imageResource="{resource.okButton}"
                disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
+         </g:LayoutPanel>
       </g:layer>
    </g:LayoutPanel>
 </ui:UiBinder> 

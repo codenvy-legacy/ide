@@ -5,7 +5,7 @@
 
    <ui:style>
       .spacing {
-      	margin-bottom: 10px;
+      	margin-top: 15px;
       }
       
       .label {
@@ -22,13 +22,13 @@
    <f:Border margin="7" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
-            <g:FlowPanel styleName="{style.spacing}" height="50%">
+            <g:FlowPanel>
                <g:Label styleName="{style.label}" text="{locale.createRubyProjectNameFieldTitle}" height="22" width="100%"></g:Label>
                <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
             </g:FlowPanel>
-            <g:DockLayoutPanel unit="PCT" width="100%" height="50%">
+            <g:DockLayoutPanel unit="PCT" width="100%" height="40px">
                <g:west size="50">
-                  <g:LayoutPanel width="100%" height="100%">
+                  <g:LayoutPanel width="100%" height="100%" styleName="{style.spacing}">
                      <g:layer right="5px" width="90px">
                         <f:ImageButton ui:field="createButton" height="22" text="{locale.createButton}" imageResource="{resource.ok}"
                            disabledImageResource="{resource.ok_Disabled}"></f:ImageButton>
@@ -36,7 +36,7 @@
                   </g:LayoutPanel>
                </g:west>
                <g:east size="50">
-                  <g:LayoutPanel width="100%" height="100%">
+                  <g:LayoutPanel width="100%" height="100%" styleName="{style.spacing}">
                      <g:layer left="5px" width="90px">
                         <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancel}"
                            disabledImageResource="{resource.cancel_Disabled}"></f:ImageButton>

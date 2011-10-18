@@ -1,8 +1,24 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:s="urn:import:org.exoplatform.ide.extension.heroku.client.stack">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:s="urn:import:org.exoplatform.ide.extension.heroku.client.stack">
    <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .spacing {
+      	margin-top: 15px;
+      }
+      
+      .label {
+      	margin-bottom: 5px;
+      	cursor: default;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      }
+   </ui:style>
+
    <g:LayoutPanel>
       <g:layer top="0" bottom="40px">
          <f:Border margin="10">
@@ -12,16 +28,24 @@
          </f:Border>
       </g:layer>
       <g:layer bottom="0" height="40px">
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="middle">
-            <g:cell horizontalAlignment="right">
-               <f:ImageButton ui:field="changeButton" width="90" height="22" text="{locale.changeButton}"
-                  imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-            </g:cell>
-            <g:cell horizontalAlignment="left">
-               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
-                  imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
-            </g:cell>
-         </g:HorizontalPanel>
+         <g:DockLayoutPanel unit="PCT" width="100%" height="40px">
+            <g:west size="50">
+               <g:LayoutPanel width="100%" height="100%" styleName="{style.spacing}">
+                  <g:layer right="5px" width="90px">
+                     <f:ImageButton ui:field="changeButton" width="90" height="22" text="{locale.changeButton}" imageResource="{resource.okButton}"
+                        disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:west>
+            <g:east size="50">
+               <g:LayoutPanel width="100%" height="100%" styleName="{style.spacing}">
+                  <g:layer left="5px" width="90px">
+                     <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
+                        disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+                  </g:layer>
+               </g:LayoutPanel>
+            </g:east>
+         </g:DockLayoutPanel>
       </g:layer>
    </g:LayoutPanel>
 </ui:UiBinder> 

@@ -18,18 +18,18 @@
  */
 package org.exoplatform.ide.extension.heroku.client.rename;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for renaming Heroku application.
@@ -57,7 +57,7 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
     * Application name field.
     */
    @UiField
-   TextField nameField;
+   TextInput nameField;
 
    /**
     * Rename button.
@@ -79,11 +79,10 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
 
    public RenameApplicationView()
    {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
       renameButton.setButtonId(RENAME_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -121,8 +120,7 @@ public class RenameApplicationView extends ViewImpl implements RenameApplication
    @Override
    public void selectValueInRenameField()
    {
-      nameField.focusInItem();
-      nameField.selectValue();
+      nameField.setFocus(true);
    }
 
    /**

@@ -133,6 +133,10 @@
    <component>
       <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
    </component>
+   
+    <component>
+      <type>org.exoplatform.ide.extension.ruby.server.RubyProjectArchetype</type>
+   </component>
 
    <component>
       <key>org.exoplatform.ide.extension.netvibes.server.NetvibesServiceApplication</key>

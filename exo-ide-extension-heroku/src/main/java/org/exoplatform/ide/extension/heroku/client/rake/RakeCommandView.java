@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -45,7 +46,7 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
 
    private static final int WIDTH = 480;
 
-   private static final int HEIGHT = 170;
+   private static final int HEIGHT = 120;
 
    private static final String RUN_BUTTON_ID = "ideRakeCommandViewRunButton";
 
@@ -65,7 +66,7 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
     *Rake command field.
     */
    @UiField
-   TextField commandField;
+   TextInput commandField;
 
    /**
     *Run rake command button.
@@ -87,11 +88,10 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
 
    public RakeCommandView()
    {
-      super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT,false);
       add(uiBinder.createAndBindUi(this));
 
       commandField.setName(COMMAND_FIELD_ID);
-      commandField.setHeight(22);
       runButton.setButtonId(RUN_BUTTON_ID);
       helpButton.setButtonId(HELP_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);
@@ -148,6 +148,6 @@ public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Di
    @Override
    public void focusInCommandField()
    {
-      commandField.focusInItem();
+      commandField.setFocus(true);
    }
 }
