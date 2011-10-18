@@ -18,13 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.impl.ObjectBuilder;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
 import java.io.StringReader;
 
@@ -38,20 +35,17 @@ public class ConvertiblePropertyTest extends JcrFileSystemTest
 {
    private JsonParser parser;
 
-   private JsonHandler handler;
-
    protected void setUp() throws Exception
    {
       super.setUp();
-      parser = new JsonParserImpl();
-      handler = new JsonDefaultHandler();
+      parser = new JsonParser();
    }
 
    public void testRestoreFromJson() throws Exception
    {
       String json = "{\"name\":\"mediaType\", \"value\":[\"text/plain;charset=utf8\"]}";
-      parser.parse(new StringReader(json), handler);
-      JsonValue jsonValue = handler.getJsonObject();
+      parser.parse(new StringReader(json));
+      JsonValue jsonValue = parser.getJsonObject();
       ConvertibleProperty inputProperty = ObjectBuilder.createObject(ConvertibleProperty.class, jsonValue);
       MediaType[] mediaTypes = inputProperty.valueToArray(MediaType[].class);
       assertNotNull(mediaTypes);

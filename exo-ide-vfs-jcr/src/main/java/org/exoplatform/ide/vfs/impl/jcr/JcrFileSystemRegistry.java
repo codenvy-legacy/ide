@@ -48,13 +48,13 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
    private static final Log LOG = ExoLogger.getExoLogger(JcrFileSystemRegistry.class);
 
    private final RepositoryService repositoryService;
-   private final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
+   private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
 
    /** Names of JCR workspaces for which need have access via VFS. */
    private final Set<String> workspaces = new HashSet<String>();
 
    public JcrFileSystemRegistry(InitParams initParams, RepositoryService repositoryService,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+      MediaType2NodeTypeResolver itemType2NodeTypeResolver)
    {
       this(repositoryService, itemType2NodeTypeResolver, getWorkspaces(initParams));
    }
@@ -84,23 +84,27 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
 
    public JcrFileSystemRegistry(InitParams initParams, RepositoryService repositoryService)
    {
-      this(initParams, repositoryService, new ItemType2NodeTypeResolver());
+      this(initParams, repositoryService, new MediaType2NodeTypeResolver());
    }
 
    public JcrFileSystemRegistry(RepositoryService repositoryService, Collection<String> workspaces)
    {
-      this(repositoryService, new ItemType2NodeTypeResolver(), workspaces);
+      this(repositoryService, new MediaType2NodeTypeResolver(), workspaces);
    }
 
    public JcrFileSystemRegistry(RepositoryService repositoryService,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver, Collection<String> workspaces)
+      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<String> workspaces)
    {
       this.repositoryService = repositoryService;
-      if (itemType2NodeTypeResolver == null)
-         throw new NullPointerException("ItemType2NodeTypeResolver may not be null. ");
-      this.itemType2NodeTypeResolver = new ItemType2NodeTypeResolver();
+      if (mediaType2NodeTypeResolver == null)
+      {
+         throw new NullPointerException("MediaType2NodeTypeResolver may not be null. ");
+      }
+      this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
       if (workspaces != null && workspaces.size() > 0)
+      {
          this.workspaces.addAll(workspaces);
+      }
       addProviders();
    }
 
@@ -124,7 +128,7 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
                   {
                      throw new VirtualFileSystemException(re.getMessage(), re);
                   }
-                  return new JcrFileSystem(repository, ws, itemType2NodeTypeResolver, requestContext != null
+                  return new JcrFileSystem(repository, ws, mediaType2NodeTypeResolver, requestContext != null
                      ? requestContext.getUriInfo().getBaseUri() : URI.create(""));
                }
             });

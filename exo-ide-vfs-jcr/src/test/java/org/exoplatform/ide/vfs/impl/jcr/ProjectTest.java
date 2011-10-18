@@ -233,7 +233,7 @@ public class ProjectTest extends JcrFileSystemTest
       for (Item i : children.getItems())
       {
          validateLinks(i);
-         if (i.getMimeType().equals(Project.PROJECT_MIME_TYPE))
+         if (Project.PROJECT_MIME_TYPE.equals(i.getMimeType()))
          {
             assertTrue(i instanceof Project);
             assertNotNull(((Project)i).getProjectType());

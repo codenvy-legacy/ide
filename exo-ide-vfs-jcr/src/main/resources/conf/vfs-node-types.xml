@@ -51,5 +51,14 @@
          </childNodeDefinition>
       </childNodeDefinitions>
    </nodeType>
-   
+
+   <nodeType name="vfs:folder" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+      <propertyDefinitions>
+         <propertyDefinition name="vfs:mimeType" requiredType="String" autoCreated="true" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+            <defaultValues>
+               <defaultValue>text/directory</defaultValue>
+            </defaultValues>
+         </propertyDefinition>
+      </propertyDefinitions>
+   </nodeType>
 </nodeTypes>

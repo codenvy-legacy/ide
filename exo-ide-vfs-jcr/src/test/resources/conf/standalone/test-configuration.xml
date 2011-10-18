@@ -54,14 +54,14 @@
             <property name="log4j.rootLogger" value="INFO, stdout, file" />
             <property name="log4j.appender.stdout" value="org.apache.log4j.ConsoleAppender" />
             <property name="log4j.appender.stdout.threshold" value="INFO" />
+            <!--  <property name="log4j.appender.stdout.threshold" value="DEBUG" /> -->
             <property name="log4j.appender.stdout.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.stdout.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
             <property name="log4j.appender.file" value="org.apache.log4j.FileAppender" />
             <property name="log4j.appender.file.File" value="target/jcr.log" />
             <property name="log4j.appender.file.layout" value="org.apache.log4j.PatternLayout" />
             <property name="log4j.appender.file.layout.ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} *%-5p* [%t] %c{1}: %m (%F, line %L) %n" />
-            <property name="log4j.category.exo.ws.rest.core.DefaultMethodInvoker" value="DEBUG" />
-            <!-- <property name="log4j.category.exo.ws.rest.core.RequestHandlerImpl" value="DEBUG" /> -->
+            <!-- <property name="log4j.category.org.everrest.core.impl.method.DefaultMethodInvoker" value="DEBUG" /> -->
          </properties-param>
       </init-params>
    </component>
@@ -187,10 +187,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
-   </component>
-
-   <component>
       <type>org.everrest.exoplatform.EverrestInitializer</type>
    </component>
    <component>
@@ -242,20 +238,4 @@
          </init-params>
       </component-plugin>
    </external-component-plugins>
-
-   <external-component-plugins>
-      <target-component>org.exoplatform.services.rest.impl.provider.JAXBContextResolver</target-component>
-      <component-plugin>
-         <name>ws.rs.jaxb.context</name>
-         <set-method>addPlugin</set-method>
-         <type>org.exoplatform.services.rest.impl.provider.JAXBContextComponentPlugin</type>
-         <init-params>
-            <value-param>
-               <name>wadl.application</name>
-               <value>org.exoplatform.services.rest.wadl.research.Application</value>
-            </value-param>
-         </init-params>
-      </component-plugin>
-   </external-component-plugins>
-
 </configuration>

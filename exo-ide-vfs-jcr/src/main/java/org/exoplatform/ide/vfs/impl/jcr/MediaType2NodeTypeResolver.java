@@ -23,12 +23,12 @@ import org.exoplatform.ide.vfs.shared.Project;
 import javax.ws.rs.core.MediaType;
 
 /**
- * Provide JCR node type name dependent to specified media or item type.
+ * Provide JCR node types name dependent to specified media type.
  * 
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id$
  */
-public class ItemType2NodeTypeResolver
+public class MediaType2NodeTypeResolver
 {
    /**
     * By default return 'nt:file' always.
@@ -117,7 +117,7 @@ public class ItemType2NodeTypeResolver
       {
          return new String[]{"vfs:project"};
       }
-      return null;
+      return new String[]{"vfs:folder"};
    }
 
    public final String[] getFolderMixins(MediaType mediaType)

@@ -31,10 +31,6 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.ext</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>      

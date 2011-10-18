@@ -46,6 +46,7 @@ public class Link
    public static String REL_ITEM = "item";
    public static String REL_ITEM_BY_PATH = "item-by-path";
    public static String REL_ACL = "acl";
+   public static String REL_RENAME = "rename";
 
    public static String REL_SEARCH = "search";
    public static String REL_SEARCH_FORM = "search-form";

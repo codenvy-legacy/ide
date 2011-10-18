@@ -19,6 +19,8 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.everrest.core.impl.ContainerResponse;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
 
@@ -40,6 +42,7 @@ public class UpdateTest extends JcrFileSystemTest
    private Node updatePropertiesTestNode;
 
    private String fileID;
+   private String folderID;
 
    @Override
    protected void setUp() throws Exception
@@ -58,13 +61,16 @@ public class UpdateTest extends JcrFileSystemTest
       fileNode.addMixin("exo:unstructuredMixin");
       fileID = ((ExtendedNode)fileNode).getIdentifier();
 
+      Node folderNode = updatePropertiesTestNode.addNode("UpdatePropertiesTest_FOLDER", "nt:folder");
+      folderID = ((ExtendedNode)folderNode).getIdentifier();
+
       session.save();
    }
 
    public void testUpdatePropertiesFile() throws Exception
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
-      doUpdate(properties);
+      doUpdate(fileID, properties);
       Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals("MyValue", file.getProperty("MyProperty").getString());
    }
@@ -72,7 +78,7 @@ public class UpdateTest extends JcrFileSystemTest
    public void testUpdatePropertiesFile2() throws Exception
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[123]}]";
-      doUpdate(properties);
+      doUpdate(fileID, properties);
       Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(123L, file.getProperty("MyProperty").getLong());
    }
@@ -80,17 +86,44 @@ public class UpdateTest extends JcrFileSystemTest
    public void testUpdatePropertiesFile3() throws Exception
    {
       String properties = "[{\"name\":\"MyProperty\", \"value\":[true]}]";
-      doUpdate(properties);
+      doUpdate(fileID, properties);
       Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       assertEquals(true, file.getProperty("MyProperty").getBoolean());
    }
 
-   public void doUpdate(String rawData) throws Exception
+   public void testUpdatePropertiesAndChangeFolderType() throws Exception
+   {
+      String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/vnd.ideproject+directory\"]}]";
+      doUpdate(folderID, properties);
+      Node folderNode = ((ExtendedSession)session).getNodeByIdentifier(folderID);
+      assertTrue(folderNode.isNodeType("vfs:project"));
+      assertTrue(folderNode.hasNode(".project"));
+      Project project = (Project)getItem(folderID);
+      assertEquals("text/vnd.ideproject+directory", project.getMimeType());
+      assertEquals("default", project.getProjectType());
+   }
+
+   public void testUpdatePropertiesAndChangeFolderType2() throws Exception
+   {
+      Node folderNode = ((ExtendedSession)session).getNodeByIdentifier(folderID);
+      folderNode.addMixin("vfs:project");
+      session.save();
+      String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/directory\"]}]";
+      doUpdate(folderID, properties);
+      folderNode = ((ExtendedSession)session).getNodeByIdentifier(folderID);
+      assertTrue(folderNode.isNodeType("nt:folder"));
+      assertFalse(folderNode.isNodeType("vfs:project"));
+      assertFalse(folderNode.hasNode(".project"));
+      Folder folder = (Folder)getItem(folderID);
+      assertEquals("text/directory", folder.getMimeType());
+   }
+
+   public void doUpdate(String id, String rawData) throws Exception
    {
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("item/") //
-         .append(fileID) //
+         .append(id) //
          .toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));

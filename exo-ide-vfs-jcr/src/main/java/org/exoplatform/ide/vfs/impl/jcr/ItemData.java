@@ -390,6 +390,10 @@ abstract class ItemData
     * Update properties.
     * 
     * @param properties set of properties that should be updated.
+    * @param addMixinTypes mixin types that must be added to be able set all <code>properties</code>. Should be
+    *           <code>null</code> if there is no additional mixins
+    * @param removeMixinTypes mixin types that must be removed to be able set all <code>properties</code>. Should be
+    *           <code>null</code> if there is no mixins to remove
     * @param lockToken lock token. This lock token will be used if item is locked. Pass <code>null</code> if there is no
     *           lock token
     * @throws ConstraintException if any of following conditions are met:
@@ -401,8 +405,9 @@ abstract class ItemData
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   final void updateProperties(List<ConvertibleProperty> properties, String lockToken) throws ConstraintException,
-      LockException, PermissionDeniedException, VirtualFileSystemException
+   final void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
+      String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
+      VirtualFileSystemException
    {
       if (properties == null || properties.size() == 0)
       {
@@ -415,6 +420,25 @@ abstract class ItemData
          if (lockToken != null)
          {
             session.addLockToken(lockToken);
+         }
+
+         if (removeMixinTypes != null && removeMixinTypes.length > 0)
+         {
+            for (int i = 0; i < removeMixinTypes.length; i++)
+            {
+               node.removeMixin(removeMixinTypes[i]);
+            }
+         }
+
+         if (addMixinTypes != null)
+         {
+            for (int i = 0; i < addMixinTypes.length; i++)
+            {
+               if (node.canAddMixin(addMixinTypes[i]))
+               {
+                  node.addMixin(addMixinTypes[i]);
+               }
+            }
          }
 
          for (ConvertibleProperty property : properties)

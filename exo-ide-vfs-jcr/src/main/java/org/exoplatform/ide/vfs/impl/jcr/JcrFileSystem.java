@@ -122,21 +122,22 @@ public class JcrFileSystem implements VirtualFileSystem
 
    protected final Repository repository;
    protected final String workspaceName;
-   protected final ItemType2NodeTypeResolver itemType2NodeTypeResolver;
+   protected final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    protected final URI baseUri;
 
    private VirtualFileSystemInfo vfsInfo;
 
    public JcrFileSystem(Repository repository, String workspaceName,
-      ItemType2NodeTypeResolver itemType2NodeTypeResolver, URI baseUri)
+      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
-      this.itemType2NodeTypeResolver = itemType2NodeTypeResolver;
+      this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
       this.baseUri = baseUri;
    }
 
-   public JcrFileSystem(Repository repository, String workspaceName, ItemType2NodeTypeResolver itemType2NodeTypeResolver)
+   public JcrFileSystem(Repository repository, String workspaceName,
+      MediaType2NodeTypeResolver itemType2NodeTypeResolver)
    {
       this(repository, workspaceName, itemType2NodeTypeResolver, URI.create(""));
    }
@@ -191,10 +192,10 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable create file. Item specified as parent is not a folder. ");
          }
          FileData newfile = ((FolderData)parentData).createFile(name, //
-            itemType2NodeTypeResolver.getFileNodeType(mediaType), //
-            itemType2NodeTypeResolver.getFileContentNodeType(mediaType), //
+            mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
+            mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
             mediaType, //
-            itemType2NodeTypeResolver.getFileMixins(mediaType), //
+            mediaType2NodeTypeResolver.getFileMixins(mediaType), //
             null, //
             content);
          return (File)fromItemData(newfile, PropertyFilter.ALL_FILTER);
@@ -224,8 +225,8 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
          }
          FolderData newfolder = ((FolderData)parentData).createFolder(name, //
-            itemType2NodeTypeResolver.getFolderNodeType((String)null), //
-            itemType2NodeTypeResolver.getFolderMixins((String)null), //
+            mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
+            mediaType2NodeTypeResolver.getFolderMixins((String)null), //
             null);
          return (Folder)fromItemData(newfolder, PropertyFilter.ALL_FILTER);
       }
@@ -269,8 +270,8 @@ public class JcrFileSystem implements VirtualFileSystem
          properties.add(new ConvertibleProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE));
 
          FolderData newproject = ((FolderData)parentData).createFolder(name, //
-            itemType2NodeTypeResolver.getFolderNodeType((String)null), //
-            itemType2NodeTypeResolver.getFolderMixins(Project.PROJECT_MIME_TYPE), //
+            mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
+            mediaType2NodeTypeResolver.getFolderMixins(Project.PROJECT_MIME_TYPE), //
             properties);
          return (Project)fromItemData(newproject, PropertyFilter.ALL_FILTER);
       }
@@ -698,7 +699,7 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("rename/{id}")
    public Item rename(@PathParam("id") String id, //
-      @QueryParam("mediaType") MediaType mediaType, //
+      @QueryParam("mediaType") MediaType newMediaType, //
       @QueryParam("newname") String newname, //
       @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, InvalidArgumentException, LockException, PermissionDeniedException,
@@ -709,13 +710,18 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          ItemData data = getItemData(ses, id);
          MediaType currentMediaType = data.getMediaType();
-         String[] removeMixinTypes =
-            data.getType() == ItemType.FILE ? itemType2NodeTypeResolver.getFileMixins(currentMediaType)
-               : itemType2NodeTypeResolver.getFolderMixins(currentMediaType);
-         String[] addMixinTypes =
-            data.getType() == ItemType.FILE ? itemType2NodeTypeResolver.getFileMixins(mediaType)
-               : itemType2NodeTypeResolver.getFolderMixins(mediaType);
-         String renamedId = data.rename(newname, mediaType, lockToken, addMixinTypes, removeMixinTypes);
+         String[] removeMixinTypes = null;
+         String[] addMixinTypes = null;
+         if (newMediaType != null && !compareMediaTypeIgnoreParameters(currentMediaType, newMediaType))
+         {
+            removeMixinTypes =
+               data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(currentMediaType)
+                  : mediaType2NodeTypeResolver.getFolderMixins(currentMediaType);
+            addMixinTypes =
+               data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
+                  : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
+         }
+         String renamedId = data.rename(newname, newMediaType, lockToken, addMixinTypes, removeMixinTypes);
          return fromItemData(getItemData(ses, renamedId), PropertyFilter.ALL_FILTER);
       }
       finally
@@ -1001,7 +1007,33 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData data = getItemData(ses, id);
-         data.updateProperties(properties, lockToken);
+         if (properties != null && properties.size() > 0)
+         {
+            String[] removeMixinTypes = null;
+            String[] addMixinTypes = null;
+            for (ConvertibleProperty property : properties)
+            {
+               if ("vfs:mimeType".equals(property.getName()))
+               {
+                  MediaType[] value = property.valueToArray(MediaType[].class);
+                  if (value != null && value.length > 0)
+                  {
+                     MediaType newMediaType = value[0];
+                     MediaType currentMediaType = data.getMediaType();
+                     if (!compareMediaTypeIgnoreParameters(currentMediaType, newMediaType))
+                     {
+                        removeMixinTypes =
+                           data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(currentMediaType)
+                              : mediaType2NodeTypeResolver.getFolderMixins(currentMediaType);
+                        addMixinTypes =
+                           data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
+                              : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
+                     }
+                  }
+               }
+            }
+            data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
+         }
       }
       finally
       {
@@ -1163,8 +1195,8 @@ public class JcrFileSystem implements VirtualFileSystem
                if (child == null)
                {
                   child = current.createFolder(segments[i], //
-                     itemType2NodeTypeResolver.getFolderNodeType((String)null), //
-                     itemType2NodeTypeResolver.getFolderMixins((String)null), //
+                     mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
+                     mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
                }
                current = (FolderData)child;
@@ -1176,8 +1208,8 @@ public class JcrFileSystem implements VirtualFileSystem
                if (!current.hasChild(name))
                {
                   current.createFolder(name, //
-                     itemType2NodeTypeResolver.getFolderNodeType((String)null), //
-                     itemType2NodeTypeResolver.getFolderMixins((String)null), //
+                     mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
+                     mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
                }
             }
@@ -1188,8 +1220,8 @@ public class JcrFileSystem implements VirtualFileSystem
                current.rename(null, //
                   mediaType, //
                   null, //
-                  itemType2NodeTypeResolver.getFolderMixins(mediaType), //
-                  itemType2NodeTypeResolver.getFolderMixins((String)null));
+                  mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
+                  mediaType2NodeTypeResolver.getFolderMixins((String)null));
                List<ConvertibleProperty> properties;
                try
                {
@@ -1203,7 +1235,7 @@ public class JcrFileSystem implements VirtualFileSystem
                {
                   throw new RuntimeException(e.getMessage(), e);
                }
-               current.updateProperties(properties, null);
+               current.updateProperties(properties, null, null, null);
             }
             else
             {
@@ -1216,10 +1248,10 @@ public class JcrFileSystem implements VirtualFileSystem
                else
                {
                   current.createFile(name, //
-                     itemType2NodeTypeResolver.getFileNodeType(mediaType), //
-                     itemType2NodeTypeResolver.getFileContentNodeType(mediaType), //
+                     mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
+                     mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
                      mediaType, //
-                     itemType2NodeTypeResolver.getFileMixins(mediaType), //
+                     mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                      null, //
                      new NotClosableInputStream(zip));
                }
@@ -1358,9 +1390,9 @@ public class JcrFileSystem implements VirtualFileSystem
       }
 
       MediaType mediaType = data.getMediaType();
-      return new Folder(data.getId(), data.getName(), mediaType == null ? Folder.FOLDER_MIME_TYPE
-         : mediaType.toString(), data.getPath(), data.getParentId(), data.getCreationDate(),
-         data.getProperties(propertyFilter), createFolderLinks((FolderData)data));
+      return new Folder(data.getId(), data.getName(), mediaType == null ? null : mediaType.toString(), data.getPath(),
+         data.getParentId(), data.getCreationDate(), data.getProperties(propertyFilter),
+         createFolderLinks((FolderData)data));
    }
 
    private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
@@ -1463,6 +1495,11 @@ public class JcrFileSystem implements VirtualFileSystem
 
          links.put(Link.REL_PARENT, //
             new Link(createURI("item", parentId), Link.REL_PARENT, MediaType.APPLICATION_JSON));
+
+         links.put(
+            Link.REL_RENAME, //
+            new Link(createURI("rename", id, "newname", "[newname]", "mediaType", "[mediaType]", "lockToken",
+               "[lockToken]"), Link.REL_RENAME, MediaType.APPLICATION_JSON));
       }
       return links;
    }
@@ -1542,5 +1579,18 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          throw new VirtualFileSystemException(e.getMessage(), e);
       }
+   }
+
+   private boolean compareMediaTypeIgnoreParameters(MediaType a, MediaType b)
+   {
+      if (a == null && b == null)
+      {
+         return true;
+      }
+      if (a == null || b == null)
+      {
+         return false;
+      }
+      return a.getType().equalsIgnoreCase(b.getType()) && a.getSubtype().equalsIgnoreCase(b.getSubtype());
    }
 }
