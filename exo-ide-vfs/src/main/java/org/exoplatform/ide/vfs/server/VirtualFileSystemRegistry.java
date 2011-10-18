@@ -42,7 +42,7 @@ public class VirtualFileSystemRegistry
    {
       if (providers.putIfAbsent(vfsId, provider) != null)
       {
-         throw new VirtualFileSystemException("Provider " + vfsId + " already registered. ");
+         throw new VirtualFileSystemException("Virtual file system " + vfsId + " already registered. ");
       }
    }
 
@@ -56,7 +56,7 @@ public class VirtualFileSystemRegistry
       VirtualFileSystemProvider provider = providers.get(vfsId);
       if (provider == null)
       {
-         throw new VirtualFileSystemException("Provider " + vfsId + "does not exist. ");
+         throw new VirtualFileSystemException("Virtual file system " + vfsId + " does not exist. ");
       }
       return provider;
    }
