@@ -9,7 +9,7 @@
       <f:layer>
          <g:VerticalPanel spacing="3" horizontalAlignment="center">
             <f:Label ui:field="loginLabel" width="100%" styleName="{resource.css.loginLable}"></f:Label>
-            <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
+            <f:TextInput ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextInput>
             <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
 
             <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
