@@ -105,7 +105,9 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
       {
          JSONObject object = itemsArray.get(i).isObject();
          ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
-         String mimeType = object.get(MIME_TYPE).isString().stringValue();
+         String mimeType = null;
+         if(object.get(MIME_TYPE).isString() != null)
+          mimeType = object.get(MIME_TYPE).isString().stringValue();
 
          if (type == ItemType.FOLDER)
          {
