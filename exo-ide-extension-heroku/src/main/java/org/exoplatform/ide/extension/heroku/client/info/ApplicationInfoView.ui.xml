@@ -20,10 +20,10 @@
          </f:Border>
       </g:layer>
       <g:layer bottom="0" height="30px">
-         <g:LayoutPanel height="30px" width="90px" styleName="{style.center}">
+         <g:FlowPanel height="30px" width="90px" styleName="{style.center}">
             <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" imageResource="{resource.okButton}"
                disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-         </g:LayoutPanel>
+         </g:FlowPanel>
       </g:layer>
    </g:LayoutPanel>
 </ui:UiBinder> 
