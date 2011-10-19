@@ -28,18 +28,22 @@ import com.cloudbees.api.UploadProgress;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.git.server.GitHelper;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.access.PermissionType;
-import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.security.IdentityConstants;
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,17 +51,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -75,28 +74,32 @@ public class CloudBees
 
    private static UploadProgress UPLOAD_PROGRESS = new DummyUploadProgress();
 
-   private RepositoryService repositoryService;
-
-   private String workspace;
+   private final String workspace;
 
    private String config = "/ide-home/users/";
 
-   public CloudBees(RepositoryService repositoryService, InitParams initParams)
+   private final VirtualFileSystemRegistry vfsRegistry;
+
+   public CloudBees(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
    {
-      this(repositoryService, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
+      this(vfsRegistry, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
    }
 
-   protected CloudBees(RepositoryService repositoryService, String workspace, String config)
+   public CloudBees(VirtualFileSystemRegistry vfsRegistry, String workspace, String config)
    {
-      this.repositoryService = repositoryService;
+      this.vfsRegistry = vfsRegistry;
       this.workspace = workspace;
       if (config != null)
       {
          if (!(config.startsWith("/")))
+         {
             throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
+         }
          this.config = config;
          if (!this.config.endsWith("/"))
+         {
             this.config += "/";
+         }
       }
    }
 
@@ -106,24 +109,26 @@ public class CloudBees
       {
          ValueParam vp = initParams.getValueParam(paramName);
          if (vp != null)
+         {
             return vp.getValue();
+         }
       }
       return null;
    }
 
-   public void login(String domain, String email, String password) throws Exception /* from BeesClient */
+   public void login(String domain, String email, String password) throws Exception
    {
       BeesClient beesClient = getBeesClient();
       AccountKeysResponse r = beesClient.accountKeys(domain, email, password);
       writeCredentials(new CloudBeesCredentials(r.getKey(), r.getSecret()));
    }
 
-   public void logout()
+   public void logout() throws Exception
    {
       removeCredentials();
    }
 
-   public List<String> getDomains() throws Exception /* from BeesClient */
+   public List<String> getDomains() throws Exception
    {
       BeesClient beesClient = getBeesClient();
       List<AccountInfo> accounts = beesClient.accountList().getAccounts();
@@ -136,59 +141,150 @@ public class CloudBees
    /**
     * @param appId id of application
     * @param message message that describes application
-    * @param workDir directory that contains source code
+    * @param vfs VirtualFileSystem
+    * @param projectId identifier of project directory that contains source code
     * @param war URL to pre-builded war file
     * @return
     * @throws Exception any error from BeesClient
     */
-   public Map<String, String> createApplication(String appId, String message, File workDir, URL war) throws Exception /* from BeesClient */
+   public Map<String, String> createApplication(String appId, String message, VirtualFileSystem vfs, String projectId,
+      URL war) throws Exception
    {
+      if (appId == null || appId.isEmpty())
+      {
+         throw new IllegalArgumentException("Application ID required. ");
+      }
       if (war == null)
+      {
          throw new IllegalArgumentException("Location to WAR file required. ");
-
-      File warFile = downloadWarFile(appId, war);
+      }
+      java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
       beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(ainfo);
-      if (workDir != null && workDir.exists())
-         writeApplicationId(workDir, appId);
+      if (vfs != null && projectId != null)
+      {
+         writeApplicationId(vfs, projectId, appId);
+      }
       if (warFile.exists())
+      {
          warFile.delete();
+      }
       return info;
    }
 
    /**
     * @param appId id of application
     * @param message message that describes update
-    * @param workDir directory that contains source code
+    * @param vfs VirtualFileSystem
+    * @param projectId identifier of project directory that contains source code
     * @param war URL to pre-builded war file
     * @return
     * @throws Exception any error from BeesClient
     */
-   public Map<String, String> updateApplication(String appId, String message, File workDir, URL war) throws Exception /* from BeesClient */
+   public Map<String, String> updateApplication(String appId, String message, VirtualFileSystem vfs, String projectId,
+      URL war) throws Exception
    {
       if (war == null)
+      {
          throw new IllegalArgumentException("Location to WAR file required. ");
+      }
       if (appId == null || appId.isEmpty())
       {
-         appId = detectApplicationId(workDir);
+         appId = detectApplicationId(vfs, projectId);
          if (appId == null || appId.isEmpty())
-            throw new IllegalStateException("Not cloudbees application. ");
+         {
+            throw new IllegalStateException(
+               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
+         }
       }
-      File warFile = downloadWarFile(appId, war);
+      java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
       beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(ainfo);
       if (warFile.exists())
+      {
          warFile.delete();
+      }
       return info;
    }
 
-   private File downloadWarFile(String app, URL url) throws IOException
+   public Map<String, String> applicationInfo(String appId, VirtualFileSystem vfs, String projectId) throws Exception
    {
-      File war = File.createTempFile("bees_" + app.replace('/', '_'), ".war");
+      if (appId == null || appId.isEmpty())
+      {
+         appId = detectApplicationId(vfs, projectId);
+         if (appId == null || appId.isEmpty())
+         {
+            throw new IllegalStateException(
+               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
+         }
+      }
+      BeesClient beesClient = getBeesClient();
+      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
+      return toMap(ainfo);
+   }
+
+   public void deleteApplication(String appId, VirtualFileSystem vfs, String projectId) throws Exception
+   {
+      if (appId == null || appId.isEmpty())
+      {
+         appId = detectApplicationId(vfs, projectId);
+         if (appId == null || appId.isEmpty())
+         {
+            throw new IllegalStateException(
+               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
+         }
+      }
+      BeesClient beesClient = getBeesClient();
+      ApplicationDeleteResponse r = beesClient.applicationDelete(appId);
+      if (!r.isDeleted())
+      {
+         throw new RuntimeException("Unable delete application " + appId + ". ");
+      }
+      if (vfs != null && projectId != null)
+      {
+         writeApplicationId(vfs, projectId, null);
+      }
+   }
+
+   public List<Map<String, String>> listApplications() throws Exception
+   {
+      BeesClient beesClient = getBeesClient();
+      List<ApplicationInfo> ainfos = beesClient.applicationList().getApplications();
+      List<Map<String, String>> ids = new ArrayList<Map<String, String>>(ainfos.size());
+      for (ApplicationInfo i : ainfos)
+         ids.add(toMap(i));
+      return ids;
+   }
+
+   private BeesClient getBeesClient() throws Exception
+   {
+      CloudBeesCredentials credentials = readCredentials();
+      final String apiKey;
+      final String secret;
+      if (credentials != null)
+      {
+         apiKey = credentials.getApiKey();
+         secret = credentials.getSecret();
+      }
+      else
+      {
+         apiKey = "";
+         secret = "";
+      }
+      BeesClientConfiguration configuration =
+         new BeesClientConfiguration("https://api.cloudbees.com/api", apiKey, secret, "xml", "1.0");
+      BeesClient beesClient = new BeesClient(configuration);
+      beesClient.setVerbose(false);
+      return beesClient;
+   }
+
+   private java.io.File downloadWarFile(String app, URL url) throws IOException
+   {
+      java.io.File war = java.io.File.createTempFile("bees_" + app.replace('/', '_'), ".war");
       URLConnection conn = null;
       String protocol = url.getProtocol().toLowerCase();
       try
@@ -208,14 +304,18 @@ public class CloudBees
             byte[] b = new byte[1024];
             int r;
             while ((r = input.read(b)) != -1)
+            {
                foutput.write(b, 0, r);
+            }
          }
          finally
          {
             try
             {
                if (foutput != null)
+               {
                   foutput.close();
+               }
             }
             finally
             {
@@ -226,73 +326,11 @@ public class CloudBees
       finally
       {
          if (conn != null && ("http".equals(protocol) || "https".equals(protocol)))
+         {
             ((HttpURLConnection)conn).disconnect();
+         }
       }
       return war;
-   }
-
-   public Map<String, String> applicationInfo(String appId, File workDir) throws Exception /* from BeesClient */
-   {
-      if (appId == null || appId.isEmpty())
-      {
-         appId = detectApplicationId(workDir);
-         if (appId == null || appId.isEmpty())
-            throw new IllegalStateException("Not cloudbees application. ");
-      }
-      BeesClient beesClient = getBeesClient();
-      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
-      return toMap(ainfo);
-   }
-
-   public void deleteApplication(String appId, File workDir) throws Exception /* from BeesClient */
-   {
-      if (appId == null || appId.isEmpty())
-      {
-         appId = detectApplicationId(workDir);
-         if (appId == null || appId.isEmpty())
-            throw new IllegalStateException("Not cloudbees application. ");
-      }
-      BeesClient beesClient = getBeesClient();
-      ApplicationDeleteResponse r = beesClient.applicationDelete(appId);
-      if (!r.isDeleted())
-         throw new RuntimeException("Unable delete application " + appId + ". ");
-      String filename = ".cloudbees-application";
-      File idfile = new File(workDir, filename);
-      if (idfile.exists())
-         idfile.delete();
-   }
-
-   public List<Map<String, String>> listApplications() throws Exception /* from BeesClient */
-   {
-      BeesClient beesClient = getBeesClient();
-      List<ApplicationInfo> ainfos = beesClient.applicationList().getApplications();
-      List<Map<String, String>> ids = new ArrayList<Map<String, String>>(ainfos.size());
-      for (ApplicationInfo i : ainfos)
-         ids.add(toMap(i));
-      return ids;
-   }
-
-   private BeesClient getBeesClient()
-   {
-      CloudBeesCredentials credentials = readCredentials();
-      final String apiKey;
-      final String secret;
-      if (credentials != null)
-      {
-         apiKey = credentials.getApiKey();
-         secret = credentials.getSecret();
-      }
-      else
-      {
-         apiKey = "";
-         secret = "";
-      }
-      BeesClientConfiguration configuration =
-         new BeesClientConfiguration("https://api.cloudbees.com/api", apiKey, secret, "xml", "1.0");
-      BeesClient beesClient = new BeesClient(configuration);
-      beesClient.setVerbose(false);
-
-      return beesClient;
    }
 
    private Map<String, String> toMap(ApplicationInfo ainfo)
@@ -308,226 +346,178 @@ public class CloudBees
       return info;
    }
 
-   private void writeApplicationId(File workDir, String id) throws IOException
+   private void writeApplicationId(VirtualFileSystem vfs, String projectId, String appId)
+      throws VirtualFileSystemException
    {
-      String filename = ".cloudbees-application";
-      File idfile = new File(workDir, filename);
-      FileWriter w = null;
+      ConvertibleProperty jenkinsJob = new ConvertibleProperty("cloudbees-application", appId);
+      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      properties.add(jenkinsJob);
       try
       {
-         w = new FileWriter(idfile);
-         w.write(id);
-         w.write('\n');
-         w.flush();
+         vfs.updateItem(projectId, properties, null);
       }
-      finally
+      catch (ConstraintException e)
       {
-         if (w != null)
-            w.close();
-      }
-      // Add file to .gitignore
-      GitHelper.addToGitIgnore(workDir, filename);
-   }
-
-   private String detectApplicationId(File workDir) throws IOException
-   {
-      String filename = ".cloudbees-application";
-      File idfile = new File(workDir, filename);
-      String id = null;
-      if (idfile.exists())
-      {
-         BufferedReader r = null;
-         try
+         // TODO : Remove in future versions.
+         // We do not create new projects in regular folders (folder MUST be a Project).
+         // But still need need have possibility to delete existed Cloud Bees projects.
+         // If cannot update property of project try to remove file with application name.
+         if (appId == null)
          {
-            r = new BufferedReader(new FileReader(idfile));
-            id = r.readLine();
-         }
-         finally
-         {
-            if (r != null)
-               r.close();
-         }
-      }
-      return id;
-   }
-
-   private CloudBeesCredentials readCredentials()
-   {
-      Session session = null;
-      try
-      {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         session = repository.login(workspace);
-         String user = session.getUserID();
-         String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
-
-         Item item = null;
-         try
-         {
-            item = session.getItem(keyPath);
-            return readCredentials((Node)item);
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            // TODO : remove in future versions. Need it to back compatibility with existed data.
+            Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
             try
             {
-               item = session.getItem("/PaaS/cloudbees-config/" + user + "/cloudbees-credentials");
-               CloudBeesCredentials credentials = readCredentials((Node)item);
-               writeCredentials(credentials); // write in new place.
-               return credentials;
+               Item file =
+                  vfs.getItemByPath(project.getPath() + "/.cloudbees-application", null, PropertyFilter.NONE_FILTER);
+               vfs.delete(file.getId(), null);
             }
-            catch (PathNotFoundException pnfe2)
+            catch (ItemNotFoundException ignored)
             {
             }
          }
-
-         return null;
-      }
-      catch (RepositoryException re)
-      {
-         throw new RuntimeException(re.getMessage(), re);
-      }
-      finally
-      {
-         if (session != null)
-            session.logout();
+         else
+         {
+            // If property value is not null it must be saved as property of IDE Project!!!
+            throw e;
+         }
       }
    }
 
-   private CloudBeesCredentials readCredentials(Node node) throws RepositoryException
+   private String detectApplicationId(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
+      IOException
    {
-      Property property = node.getNode("jcr:content").getProperty("jcr:data");
-      BufferedReader credentialsReader = new BufferedReader(new InputStreamReader(property.getStream()));
+      String app = null;
+      if (vfs != null && projectId != null)
+      {
+         Item project = vfs.getItem(projectId, PropertyFilter.valueOf("cloudbees-application"));
+         app = (String)project.getPropertyValue("cloudbees-application");
+         /* TODO : remove in future versions.
+          * Need it to back compatibility with existed projects which have configuration in plain files. */
+         if (app == null)
+         {
+            InputStream in = null;
+            BufferedReader r = null;
+            try
+            {
+               ContentStream content = vfs.getContent(project.getPath() + "/.cloudbees-application", null);
+               in = content.getStream();
+               r = new BufferedReader(new InputStreamReader(in));
+               app = r.readLine();
+            }
+            catch (ItemNotFoundException e)
+            {
+            }
+            finally
+            {
+               if (r != null)
+               {
+                  r.close();
+               }
+               if (in != null)
+               {
+                  in.close();
+               }
+            }
+         }
+      }
+      return app;
+   }
+
+   private CloudBeesCredentials readCredentials() throws VirtualFileSystemException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
+      ContentStream content = null;
       try
       {
-         String apiKey = credentialsReader.readLine();
-         String secret = credentialsReader.readLine();
+         content = vfs.getContent(keyPath, null);
+         return readCredentials(content);
+      }
+      catch (ItemNotFoundException e)
+      {
+         // TODO : remove in future versions. Need it to back compatibility with existed data.
+         keyPath = "/PaaS/cloudbees-config/" + user + "/cloudbees-credentials";
+         try
+         {
+            content = vfs.getContent(keyPath, null);
+            CloudBeesCredentials credentials = readCredentials(content);
+            writeCredentials(credentials); // write in new place.
+            return credentials;
+         }
+         catch (ItemNotFoundException e1)
+         {
+         }
+      }
+      return null;
+   }
+
+   private CloudBeesCredentials readCredentials(ContentStream content) throws IOException
+   {
+      InputStream in = null;
+      BufferedReader r = null;
+      try
+      {
+         in = content.getStream();
+         r = new BufferedReader(new InputStreamReader(in));
+         String apiKey = r.readLine();
+         String secret = r.readLine();
          return new CloudBeesCredentials(apiKey, secret);
       }
-      catch (IOException ioe)
-      {
-         throw new RuntimeException(ioe.getMessage(), ioe);
-      }
       finally
       {
-         try
+         if (r != null)
          {
-            credentialsReader.close();
+            r.close();
          }
-         catch (IOException ignored)
+         if (in != null)
          {
+            in.close();
          }
       }
    }
 
-   private void writeCredentials(CloudBeesCredentials credentials)
+   private void writeCredentials(CloudBeesCredentials credentials) throws VirtualFileSystemException
    {
-      Session session = null;
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String cloudBeesPath = config + user + "/cloud_bees";
+      VirtualFileSystemInfo info = vfs.getInfo();
+      Item cloudBees = null;
       try
       {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         checkConfigNode(repository);
-         session = repository.login(workspace);
-         String user = session.getUserID();
-         String cloudBeesPath = config + user + "/cloud_bees";
-
-         Node cloudBees;
-         try
-         {
-            cloudBees = (Node)session.getItem(cloudBeesPath);
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            org.exoplatform.ide.Utils.putFolders(session, cloudBeesPath);
-            cloudBees = (Node)session.getItem(cloudBeesPath);
-         }
-
-         ExtendedNode fileNode;
-         Node contentNode;
-         try
-         {
-            fileNode = (ExtendedNode)cloudBees.getNode("cloudbees-credentials");
-            contentNode = fileNode.getNode("jcr:content");
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            fileNode = (ExtendedNode)cloudBees.addNode("cloudbees-credentials", "nt:file");
-            contentNode = fileNode.addNode("jcr:content", "nt:resource");
-         }
-
-         contentNode.setProperty("jcr:mimeType", "text/plain");
-         contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-         contentNode.setProperty("jcr:data", //
-            credentials.getApiKey() + "\n" + credentials.getSecret());
-         // Make file accessible for current user only.
-         if (!fileNode.isNodeType("exo:privilegeable"))
-            fileNode.addMixin("exo:privilegeable");
-         fileNode.clearACL();
-         fileNode.setPermission(user, PermissionType.ALL);
-         fileNode.removePermission(IdentityConstants.ANY);
-
-         session.save();
+         cloudBees = vfs.getItemByPath(cloudBeesPath, null, PropertyFilter.NONE_FILTER);
       }
-      catch (RepositoryException re)
+      catch (ItemNotFoundException e)
       {
-         throw new RuntimeException(re.getMessage(), re);
+         cloudBees = vfs.createFolder(info.getRoot().getId(), cloudBeesPath.substring(1));
       }
-      finally
+      try
       {
-         if (session != null)
-            session.logout();
+         Item credentialsFile =
+            vfs.getItemByPath(cloudBees.getPath() + "/cloudbees-credentials", null, PropertyFilter.NONE_FILTER);
+         InputStream newcontent =
+            new ByteArrayInputStream((credentials.getApiKey() + "\n" + credentials.getSecret()).getBytes());
+         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         InputStream content =
+            new ByteArrayInputStream((credentials.getApiKey() + "\n" + credentials.getSecret()).getBytes());
+         Item credentialsFile =
+            vfs.createFile(cloudBees.getId(), "cloudbees-credentials", MediaType.TEXT_PLAIN_TYPE, content);
+         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
+         acl.add(new AccessControlEntry(user, new HashSet<String>(info.getPermissions())));
+         vfs.updateACL(credentialsFile.getId(), acl, true, null);
       }
    }
 
-   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   private void removeCredentials() throws VirtualFileSystemException
    {
-      String _workspace = workspace;
-      if (_workspace == null)
-         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
-
-      Session sys = null;
-      try
-      {
-         // Create node for users configuration under system session.
-         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-         if (!(sys.itemExists(config)))
-         {
-            org.exoplatform.ide.Utils.putFolders(sys, config);
-            sys.save();
-         }
-      }
-      finally
-      {
-         if (sys != null)
-            sys.logout();
-      }
-   }
-
-   private void removeCredentials()
-   {
-      Session session = null;
-      try
-      {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         session = repository.login(workspace);
-         String user = session.getUserID();
-         String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
-         Item item = session.getItem(keyPath);
-         item.remove();
-         session.save();
-      }
-      catch (PathNotFoundException pnfe)
-      {
-      }
-      catch (RepositoryException re)
-      {
-         throw new RuntimeException(re.getMessage(), re);
-      }
-      finally
-      {
-         if (session != null)
-            session.logout();
-      }
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
+      Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);
+      vfs.delete(credentialsFile.getId(), null);
    }
 }
