@@ -67,7 +67,7 @@ public class WizardSourceStepView extends ViewImpl implements WizardSourceStepPr
    
    public WizardSourceStepView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 

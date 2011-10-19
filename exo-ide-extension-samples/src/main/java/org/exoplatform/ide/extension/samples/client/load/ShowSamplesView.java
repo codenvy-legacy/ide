@@ -72,7 +72,7 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    
    public ShowSamplesView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 

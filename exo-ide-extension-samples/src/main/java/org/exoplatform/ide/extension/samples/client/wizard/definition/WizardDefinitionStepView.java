@@ -74,7 +74,7 @@ public class WizardDefinitionStepView extends ViewImpl implements WizardDefiniti
    
    public WizardDefinitionStepView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 

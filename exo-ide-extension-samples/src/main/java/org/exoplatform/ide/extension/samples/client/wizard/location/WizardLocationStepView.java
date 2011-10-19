@@ -87,7 +87,7 @@ public class WizardLocationStepView extends ViewImpl implements WizardLocationSt
    
    public WizardLocationStepView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 

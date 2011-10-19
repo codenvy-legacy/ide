@@ -87,7 +87,7 @@ public class SelectLocationView extends ViewImpl implements SelectLocationPresen
    
    public SelectLocationView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 

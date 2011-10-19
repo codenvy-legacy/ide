@@ -15,12 +15,14 @@
 	font-weight: bold;
 	vertical-align: middle;
 	padding-left: 10px;
+	padding-top: 10px;
 }
 
 .labelDescription {
 	font-style: italic;
 	vertical-align: middle;
 	padding-left: 10px;
+	padding-top: 5px;
 }
 
 .wizard {
@@ -43,7 +45,7 @@
 	vertical-align: middle;
 	border-bottom: 1px solid #A6ABAF;
 	width: 100%;
-	height: 59px;
+	height: 60px;
 }
 
 .labelValue {
@@ -55,36 +57,20 @@
 	font-align: center;
 }
 
-.cloudfoundryTable {
-	width: 100%;
-	height: 30px;
-	border-collapse: collapse;
-}
-
-.cloudbeesTable {
-	width: 100%;
-	height: 60px;
-	border-collapse: collapse;
-}
-
 .visibleTable {
-	display: block;
+	display: block !important;
 }
 
 .hiddenTable {
-	display: none;
+	display: none !important;
 }
 
 .loginLable {
 	
 }
 
+/* Styles for positioning of elements in dialogs */
 .innerBox {
-	display: block;
-	margin: 0 8px;
-}
-
-.bottomBox {
 	display: block;
 	margin: 0 8px;
 }
@@ -107,9 +93,4 @@
 	position: absolute;
 	right: 100px;
 	left: 100px;
-}
-
-.label {
-	margin-top: 5px;
-	float: left;
 }

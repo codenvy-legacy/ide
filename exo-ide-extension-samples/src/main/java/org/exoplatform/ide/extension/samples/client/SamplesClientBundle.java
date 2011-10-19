@@ -108,18 +108,12 @@ public interface SamplesClientBundle extends ClientBundle
       
       String labelSubtitle();
       
-      String cloudfoundryTable();
-      
-      String cloudbeesTable();
-      
       String visibleTable();
       
       String hiddenTable();
       
       String loginLable();
       
-      String bottomBox();
-
       String leftFloat();
       
       String innerBox();
@@ -129,8 +123,6 @@ public interface SamplesClientBundle extends ClientBundle
       String middle();
 
       String newFolderDivInput();
-
-      String label();
    }
 
 }

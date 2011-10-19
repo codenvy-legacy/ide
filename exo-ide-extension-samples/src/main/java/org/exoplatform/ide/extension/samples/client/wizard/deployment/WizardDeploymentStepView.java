@@ -22,8 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -74,7 +73,10 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    ImageButton backButton;
    
    @UiField
-   HTMLPanel paasPanel;
+   FlowPanel cloudFoundryPanel;
+   
+   @UiField
+   FlowPanel cloudBeesPanel;
    
    @UiField
    ComboBoxField cloudFoundryTargetField;
@@ -96,7 +98,7 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    
    public WizardDeploymentStepView()
    {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT);
+      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -153,13 +155,13 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    {
       if (visible)
       {
-         paasPanel.getElementById("cloudBeesTable").removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         paasPanel.getElementById("cloudBeesTable").addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+         cloudBeesPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudBeesPanel.addStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
       }
       else
       {
-         paasPanel.getElementById("cloudBeesTable").removeClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
-         paasPanel.getElementById("cloudBeesTable").addClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudBeesPanel.addStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudBeesPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
       }
    }
 
@@ -171,14 +173,13 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    {
       if (visible)
       {
-         Element el = paasPanel.getElementById("cloudFoundryTable");
-         el.removeClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         el.addClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
+         cloudFoundryPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudFoundryPanel.addStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
       }
       else
       {
-         paasPanel.getElementById("cloudFoundryTable").removeClassName(SamplesClientBundle.INSTANCE.css().visibleTable());
-         paasPanel.getElementById("cloudFoundryTable").addClassName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudFoundryPanel.addStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
+         cloudFoundryPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
       }
    }
 
