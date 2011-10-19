@@ -103,7 +103,7 @@ public interface VirtualFileSystem
     * Create new folder in specified folder.
     * 
     * @param parentId id of parent for new folder
-    * @param name name of new folder
+    * @param name name of new folder. If name is string separated by '/' all nonexistent parent folders must be created.
     * @return newly created folder
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if any of following conditions are met:
