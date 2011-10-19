@@ -249,7 +249,7 @@ public class Cloudfoundry
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
-         throw new IllegalStateException("Application name required. ");
+         throw new IllegalArgumentException("Application name required. ");
       if ((vfs == null || projectId == null) && war == null)
          throw new IllegalArgumentException("Project directory or location to WAR file required. ");
       if (server == null || server.isEmpty())
@@ -1479,7 +1479,7 @@ public class Cloudfoundry
       {
          if (app == null || app.isEmpty())
          {
-            throw new IllegalStateException("Application name required. ");
+            throw new IllegalArgumentException("Application name required. ");
          }
 
          String name = detectApplicationName(vfs, projectId);

@@ -185,39 +185,31 @@ class FilesHelper
       IOException
    {
       String projectPath = parent.getPath();
-      Item file = null;
-      String line = null;
+      InputStream in = null;
+      BufferedReader r = null;
       try
       {
-         file = vfs.getItemByPath(projectPath + "/" + name, null, PropertyFilter.NONE_FILTER);
+         ContentStream content = vfs.getContent(projectPath + "/" + name, null);
+         in = content.getStream();
+         r = new BufferedReader(new InputStreamReader(in));
+         String line = r.readLine();
+         return line;
       }
       catch (ItemNotFoundException e)
       {
       }
-      if (file != null)
+      finally
       {
-         ContentStream content = vfs.getContent(file.getId());
-         InputStream in = null;
-         BufferedReader r = null;
-         try
+         if (r != null)
          {
-            in = content.getStream();
-            r = new BufferedReader(new InputStreamReader(in));
-            line = r.readLine();
+            r.close();
          }
-         finally
+         if (in != null)
          {
-            if (r != null)
-            {
-               r.close();
-            }
-            if (in != null)
-            {
-               in.close();
-            }
+            in.close();
          }
       }
-      return line;
+      return null;
    }
 
    static void delete(VirtualFileSystem vfs, String parentId, String name) throws VirtualFileSystemException
