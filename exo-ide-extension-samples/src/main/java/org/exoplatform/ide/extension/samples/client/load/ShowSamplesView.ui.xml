@@ -22,7 +22,7 @@
    </ui:style>
 
    <g:LayoutPanel>
-      <g:layer top="0" bottom="30px">
+      <g:layer top="0" bottom="33px">
          <f:Border margin="8">
             <f:layer>
                <g:ScrollPanel>
@@ -32,7 +32,7 @@
          </f:Border>
       </g:layer>
 
-      <g:layer height="30px" bottom="0">
+      <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{style.buttonsBox}">
             <f:ImageButton ui:field="cancelButton" styleName="{style.left-float}" width="90px" text="{locale.cancelButton}" imageName="cancel"
                buttonId="ideImportSamplesCloseButtonId"></f:ImageButton>

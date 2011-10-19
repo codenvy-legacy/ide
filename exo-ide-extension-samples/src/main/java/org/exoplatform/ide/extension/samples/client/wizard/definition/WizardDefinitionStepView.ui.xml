@@ -42,7 +42,7 @@
       </g:layer>
 
       <!-- Buttons panel -->
-      <g:layer height="30px" bottom="0">
+      <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
             <f:ImageButton ui:field="cancelButton" styleName="{resource.css.leftFloat}" width="90px" text="{locale.cancelButton}"
                imageName="cancel" buttonId="ideWizardDefinitionCancelButtonId"></f:ImageButton>

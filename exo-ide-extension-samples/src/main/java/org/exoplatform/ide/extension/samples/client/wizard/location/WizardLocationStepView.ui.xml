@@ -58,7 +58,7 @@
       </g:layer>
       
       <!-- panel to create new folder -->
-      <g:layer height="30px" bottom="35px">
+      <g:layer height="30px" bottom="37px">
          <g:FlowPanel width="auto" styleName="{style.bottomBox}">
 
             <g:Label text="{locale.wizardLocationNewFolder}" width="90px" styleName="{style.leftFloat}"></g:Label>
@@ -74,7 +74,7 @@
       </g:layer>
       
       <!-- Buttons panel -->
-      <g:layer height="30px" bottom="0">
+      <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{style.bottomBox}">
             <f:ImageButton ui:field="cancelButton" styleName="{style.left-float}" width="90px" text="{locale.cancelButton}" imageName="cancel"
                buttonId="ideSelectLocationCancelButtonId"></f:ImageButton>

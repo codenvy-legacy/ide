@@ -5,21 +5,50 @@
    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
-   <f:Border margin="5" borderColor="transparent">
+   <ui:style>
+      .spacing {
+         margin-top: 10px;
+      }
+         
+      .label {
+         margin-bottom: 5px;
+         cursor: default;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         font-size: 11px;
+         font-style: normal;
+         font-weight: normal;
+      }
+      
+      .center {
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+      }
+      
+      .left-float {
+         float: left;
+      }
+   </ui:style>
+   
+   <f:Border margin="7" borderColor="transparent">
       <f:layer>
-         <g:VerticalPanel spacing="3" horizontalAlignment="center">
+         <g:FlowPanel>
             <f:Label ui:field="loginLabel" width="100%" styleName="{resource.css.loginLable}"></f:Label>
-            <f:TextInput ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextInput>
-            <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
-
-            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-               <f:ImageButton ui:field="loginButton" width="90" height="22" text="{locale.loginButton}"
-                  imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
-                  imageResource="{resource.cancel}" disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-            </g:HorizontalPanel>
-
-         </g:VerticalPanel>
+            <g:Label addStyleNames="{style.label} {style.spacing}" text="{locale.loginViewEmailField}" width="100%"></g:Label>
+            <f:TextInput ui:field="emailField" title="" width="100%"></f:TextInput>
+            <g:Label addStyleNames="{style.label} {style.spacing}" text="{locale.loginViewPasswordField}" width="100%"></g:Label>
+            <f:PasswordTextInput ui:field="passwordField" width="100%"></f:PasswordTextInput>
+         </g:FlowPanel>
+      </f:layer>
+      <f:layer height="33px" bottom="0">
+         <g:FlowPanel width="190px" addStyleNames="{style.center} {style.spacing}">
+            <f:ImageButton ui:field="loginButton" width="90px" text="{locale.loginButton}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" styleName="{style.left-float}"></f:ImageButton>
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90px" text="{locale.cancelButton}" imageResource="{resource.cancel}"
+               disabledImageResource="{resource.cancelDisabled}" styleName="{style.left-float}"></f:ImageButton>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
+   
 </ui:UiBinder> 

@@ -203,8 +203,6 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             }
             else if (ProjectProperties.Paas.CLOUDBEES.equals(selectedPaaS))
             {
-               display.setVisibleCloudFoundryPanel(false);
-               display.setVisibleCloudBeesPanel(true);
                getListOfCloudBeesDomains();
             }
             else
@@ -452,6 +450,9 @@ ProjectCreationFinishedHandler, WizardContinuable, WizardReturnable
             @Override
             protected void onSuccess(List<String> result)
             {
+               display.setVisibleCloudFoundryPanel(false);
+               display.setVisibleCloudBeesPanel(true);
+               
                String[] domains = new String[result.size()];
                result.toArray(domains);
                display.setCloudBeesDomainsValueMap(domains);

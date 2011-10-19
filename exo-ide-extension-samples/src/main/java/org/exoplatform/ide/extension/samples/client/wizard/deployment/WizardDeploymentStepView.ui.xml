@@ -25,7 +25,7 @@
       </g:layer>
 
       <!-- panel to select source of project -->
-      <g:layer top="75px" height="30px">
+      <g:layer top="80px" height="30px">
          <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
             <g:Label text="{locale.wizardDeploymentPaas}" width="90px" styleName="{resource.css.leftFloat}"></g:Label>
             <g:FlowPanel width="10px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
@@ -35,7 +35,7 @@
          </g:FlowPanel>
       </g:layer>
 
-      <g:layer top="105px" height="100px">
+      <g:layer top="110px" height="100px">
          <!-- CloudFoudry deployment form: show only when CloudFoundry selected from list -->
          <g:FlowPanel ui:field="cloudFoundryPanel" stylePrimaryName="{resource.css.innerBox}">
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
@@ -65,7 +65,7 @@
          </g:FlowPanel>
       </g:layer>
          
-      <g:layer top="105px" height="100px">
+      <g:layer top="110px" height="100px">
          <!-- CloudBees deployment form: show only when CloudBees selected from list -->
          <g:FlowPanel ui:field="cloudBeesPanel" stylePrimaryName="{resource.css.innerBox}">
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
@@ -96,7 +96,7 @@
       </g:layer>
       
       <!-- Buttons -->
-      <g:layer height="30px" bottom="0">
+      <g:layer height="33px" bottom="0">
          <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
             <f:ImageButton ui:field="cancelButton" styleName="{resource.css.leftFloat}" width="90px" text="{locale.cancelButton}"
                imageName="cancel" buttonId="ideWizardDeploymentCancelButtonId"></f:ImageButton>
