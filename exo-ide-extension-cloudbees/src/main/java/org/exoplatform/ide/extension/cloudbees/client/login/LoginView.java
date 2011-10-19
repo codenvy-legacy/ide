@@ -26,8 +26,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
@@ -68,13 +68,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Email field.
     */
    @UiField
-   TextField emailField;
+   TextInput emailField;
 
    /**
     * Password field.
     */
    @UiField
-   PasswordField passwordField;
+   PasswordTextInput passwordField;
 
    /**
     * Login button.
@@ -94,9 +94,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       add(uiBinder.createAndBindUi(this));
 
       emailField.setName(EMAIL_FIELD_ID);
-      emailField.setHeight(22);
       passwordField.setName(PASSWORD_FIELD_ID);
-      passwordField.setHeight(22);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -152,6 +150,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.focusInItem();
+      emailField.getElement().focus();
    }
 }

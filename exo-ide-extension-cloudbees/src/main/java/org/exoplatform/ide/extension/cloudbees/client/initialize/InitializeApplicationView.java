@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
@@ -55,13 +55,13 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
     * Remote repository name field.
     */
    @UiField
-   TextField nameField;
+   TextInput nameField;
 
    /**
     * Git repository location field.
     */
    @UiField
-   TextField idField;
+   TextInput idField;
 
    /**
     * Create application button.
@@ -83,9 +83,7 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
       domainField.setName(DOMAIN_FIELD_ID);
       domainField.setHeight(22);
       nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
       idField.setName(ID_FIELD_ID);
-      idField.setHeight(22);
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -141,7 +139,7 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
    @Override
    public void focusInApplicationNameField()
    {
-      nameField.focusInItem();
+      nameField.getElement().focus();
    }
 
    /**

@@ -1,33 +1,39 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
-			 xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-			 xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-			 
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
    <ui:with field='resource' type='org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant"></ui:with>
-   
+   <ui:style>
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .left-float {
+      	float: left;
+      }
+   </ui:style>
    <f:Border margin="7" borderColor="transparent">
-   <f:layer>
-      <g:VerticalPanel spacing="3" horizontalAlignment="center" width="100%">
-      <!-- g:HorizontalPanel width="100%" spacing="0">
-            <g:cell verticalAlignment="middle" width="150px">
-               <g:Label text="{locale.appNameDomainField}" height="18px"></g:Label>
-            </g:cell>
-            <g:cell>
-               <f:SelectItem ui:field="domainField" width="100%" height="22px" showTitle="false"></f:SelectItem>
-            </g:cell>
-         </g:HorizontalPanel-->
-         <f:SelectItem ui:field="domainField" title="{locale.appNameDomainField}" width="100%" height="22px"></f:SelectItem>
-         <f:TextField ui:field="nameField" title="{locale.appNameFieldName}" width="100%" height="22px"></f:TextField>
-         <f:TextField ui:field="idField" title="{locale.appNameIdField}" width="100%" height="22px" enabled="false"></f:TextField>
-         
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" 
-            			   imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" 
-            			   imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-      </g:VerticalPanel>
+      <f:layer>
+         <g:FlowPanel>
+            <f:SelectItem ui:field="domainField" title="{locale.appNameDomainField}" width="100%" height="22px"></f:SelectItem>
+            <g:FlowPanel height="10px" width="100%"></g:FlowPanel>
+            <g:Label text="{locale.appNameFieldName}"></g:Label>
+            <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
+            <g:FlowPanel height="10px" width="100%"></g:FlowPanel>
+            <g:Label text="{locale.appNameIdField}"></g:Label>
+            <f:TextInput ui:field="idField" width="100%" height="22px" enabled="false"></f:TextInput>
+            <g:FlowPanel height="20px" width="100%"></g:FlowPanel>
+            <g:FlowPanel width="190px" styleName="{style.center}">
+               <f:ImageButton ui:field="createButton" width="90" height="22" addStyleNames="{style.left-float}" text="{locale.createButton}"
+                  imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+               <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
+                  imageResource="{resource.cancelButton}" addStyleNames="{style.left-float}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+            </g:FlowPanel>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 

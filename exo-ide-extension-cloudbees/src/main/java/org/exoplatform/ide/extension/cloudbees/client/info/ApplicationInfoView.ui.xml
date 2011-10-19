@@ -4,7 +4,13 @@
 
    <ui:with field='resource' type='org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant"></ui:with>
-
+   <ui:style>
+      .center {
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+      }
+   </ui:style>
    <g:LayoutPanel>
       <g:layer top="0px" bottom="30px">
          <f:Border margin="10">
@@ -14,10 +20,10 @@
          </f:Border>
       </g:layer>
       <g:layer bottom="0px" height="30px">
-         <g:HorizontalPanel height="30px" horizontalAlignment="center" width="100%">
+        <g:FlowPanel width="90px" styleName="{style.center}">
             <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" imageResource="{resource.okButton}"
                disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
+         </g:FlowPanel>
       </g:layer>
    </g:LayoutPanel>
 </ui:UiBinder> 
