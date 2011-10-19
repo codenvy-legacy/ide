@@ -20,6 +20,7 @@ package org.exoplatform.ide.vfs.client;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -277,7 +278,9 @@ public abstract class JSONDeserializer<O>
             JSONObject root = jsonObject.get("root").isObject();
             String rootId = root.get("id").isString().stringValue();
             String rootName = root.get("name").isString().stringValue();
-            String rootMimeType = root.get("mimeType").isString().stringValue();
+            String rootMimeType = null;
+            if (root.get("mimeType").isString() != null)
+              rootMimeType = root.get("mimeType").isString().stringValue();
             String rootPath = root.get("path").isString().stringValue();
             long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();
             List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));

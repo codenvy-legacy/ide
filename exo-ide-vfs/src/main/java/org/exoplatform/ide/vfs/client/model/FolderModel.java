@@ -83,7 +83,8 @@ public class FolderModel extends org.exoplatform.ide.vfs.shared.Folder implement
    {
       id = itemObject.get("id").isString().stringValue();
       name = itemObject.get("name").isString().stringValue();
-      mimeType = itemObject.get("mimeType").isString().stringValue();
+      if (itemObject.get("mimeType").isString() != null)
+        mimeType = itemObject.get("mimeType").isString().stringValue();
       path = itemObject.get("path").isString().stringValue();
       parentId = (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
