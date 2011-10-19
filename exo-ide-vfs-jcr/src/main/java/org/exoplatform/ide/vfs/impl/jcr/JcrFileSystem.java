@@ -1621,6 +1621,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    private Session session() throws VirtualFileSystemException
    {
+      // TODO improve Session usage 
       try
       {
          return repository.login(workspaceName);

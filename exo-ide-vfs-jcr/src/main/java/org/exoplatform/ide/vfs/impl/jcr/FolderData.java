@@ -251,7 +251,34 @@ public class FolderData extends ItemData
    {
       try
       {
-         Node folderNode = node.addNode(name, nodeType);
+         if (node.hasNode(name))
+         {
+            throw new ItemAlreadyExistException("Folder '" + name + "' already exists. ");
+         }
+
+         Node folderNode;
+         if (name.indexOf('/') > 0)
+         {
+            String[] nameSegments = name.split("/");
+            Node current = node;
+            for (int i = 0; i < nameSegments.length; i++)
+            {
+               try
+               {
+                  current = current.getNode(nameSegments[i]);
+               }
+               catch (PathNotFoundException e1)
+               {
+                  current = current.addNode(nameSegments[i], nodeType);
+               }
+            }
+            folderNode = current;
+         }
+         else
+         {
+            folderNode = node.addNode(name, nodeType);
+         }
+
          if (mixinTypes != null)
          {
             for (int i = 0; i < mixinTypes.length; i++)
@@ -277,7 +304,7 @@ public class FolderData extends ItemData
       }
       catch (ItemExistsException e)
       {
-         throw new ItemAlreadyExistException("Item with the name: " + name + " already exists. ");
+         throw new ItemAlreadyExistException("Folder '" + name + "' already exists. ");
       }
       catch (AccessDeniedException e)
       {

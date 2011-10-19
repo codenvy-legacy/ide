@@ -36,6 +36,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
+import org.exoplatform.services.security.IdentityConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -714,7 +715,9 @@ abstract class ItemData
 
          if (override)
          {
+            extNode.clearACL();
             extNode.setPermissions(aces);
+            extNode.removePermission(IdentityConstants.ANY);
          }
          else
          {

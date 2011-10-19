@@ -24,6 +24,8 @@ import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -114,6 +116,9 @@ public class UpdateACLTest extends JcrFileSystemTest
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
+      // Set root as current user since 'john' lose 'write' privileges. 
+      ConversationState user = new ConversationState(new Identity("root"));
+      ConversationState.setCurrent(user);
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, acl.getBytes(), writer, null);
       assertEquals(204, response.getStatus());
 

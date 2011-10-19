@@ -295,4 +295,22 @@ public class CreateTest extends JcrFileSystemTest
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
    }
+
+   public void testCreateFolderHierarchy() throws Exception
+   {
+      String name = "testCreateFolderHierarchy/1/2/3/4/5";
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("folder/") //
+         .append(createTestNodeID) //
+         .append("?") //
+         .append("name=") //
+         .append(name).toString();
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = createTestNodePath + "/" + name;
+      assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
+      Node folder = (Node)session.getItem(expectedPath);
+      assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
+   }
 }
