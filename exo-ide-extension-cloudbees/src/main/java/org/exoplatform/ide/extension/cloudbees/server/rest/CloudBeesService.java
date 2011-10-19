@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.cloudbees.server.rest;
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.net.URL;
 import java.util.List;
@@ -93,8 +92,6 @@ public class CloudBeesService
    ) throws Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return cloudbees.createApplication(appId, message, vfs, projectId, war);
    }
 
@@ -108,8 +105,6 @@ public class CloudBeesService
    ) throws Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return cloudbees.updateApplication(appId, message, vfs, projectId, war);
    }
 
@@ -119,8 +114,6 @@ public class CloudBeesService
    public Map<String, String> applicationInfo() throws Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return cloudbees.applicationInfo(appId, vfs, projectId);
    }
 
@@ -129,8 +122,6 @@ public class CloudBeesService
    public void deleteApplication() throws Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       cloudbees.deleteApplication(appId, vfs, projectId);
    }
 
