@@ -39,13 +39,13 @@ import java.net.URL;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudbeesJenkinsClient extends JenkinsClient
+public class CloudBeesJenkinsClient extends JenkinsClient
 {
    private final String loginURL;
    private final String authURL;
    private final byte[] authForm;
 
-   protected CloudbeesJenkinsClient(String baseURL, String user, String password)
+   /*protected*/public CloudBeesJenkinsClient(String baseURL, String user, String password)
    {
       super(baseURL);
       String tmp = baseURL;
@@ -60,7 +60,7 @@ public class CloudbeesJenkinsClient extends JenkinsClient
          CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
    }
 
-   public CloudbeesJenkinsClient(InitParams initParams)
+   public CloudBeesJenkinsClient(InitParams initParams)
    {
       this( //
          readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
@@ -79,21 +79,21 @@ public class CloudbeesJenkinsClient extends JenkinsClient
       }
       return defaultValue;
    }
-   
+
    @Override
-   public void createJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs)
+   public void createJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
       throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      super.createJob(jobName, git, user, email, projectId, vfs);
+      super.createJob(jobName, git, user, email, vfs, projectId);
    }
 
    @Override
-   public void updateJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
-      JenkinsException, VirtualFileSystemException
+   public void updateJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
+      throws IOException, JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      super.updateJob(jobName, git, user, email, projectId, vfs);
+      super.updateJob(jobName, git, user, email, vfs, projectId);
    }
 
    @Override
@@ -104,24 +104,35 @@ public class CloudbeesJenkinsClient extends JenkinsClient
    }
 
    @Override
-   public void build(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public void build(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
+      VirtualFileSystemException
    {
       doLogin();
-      super.build(jobName, projectId,vfs);
+      super.build(jobName, vfs, projectId);
    }
 
    @Override
-   public JobStatus jobStatus(String jobName,String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public JobStatus jobStatus(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      return super.jobStatus(jobName, projectId, vfs);
+      return super.jobStatus(jobName, vfs, projectId);
    }
 
    @Override
-   public InputStream consoleOutput(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public InputStream consoleOutput(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       doLogin();
-      return super.consoleOutput(jobName, projectId, vfs);
+      return super.consoleOutput(jobName, vfs, projectId);
+   }
+
+   @Override
+   public void deleteJob(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
+      VirtualFileSystemException
+   {
+      doLogin();
+      super.deleteJob(jobName, vfs, projectId);
    }
 
    private synchronized void doLogin() throws IOException, JenkinsException

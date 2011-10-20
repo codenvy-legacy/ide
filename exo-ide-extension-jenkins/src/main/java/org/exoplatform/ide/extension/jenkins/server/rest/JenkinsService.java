@@ -36,10 +36,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -51,14 +49,13 @@ public class JenkinsService
 {
    @Inject
    private JenkinsClient jenkins;
-   
+
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-   
+
    @Inject
    private GitUrlResolver gitUrlResolver;
-   
-   
+
    public JenkinsService()
    {
    }
@@ -83,10 +80,8 @@ public class JenkinsService
       VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
       String git = gitUrlResolver.resolve(uriInfo, vfs, projectId);
-      jenkins.createJob(name, git, user, email, projectId, vfs);
+      jenkins.createJob(name, git, user, email, vfs, projectId);
       String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
       String statusUrl = uriInfo.getBaseUriBuilder().path(getClass(), "jobStatus").build(name).toString();
       return new Job(name, buildUrl, statusUrl);
@@ -99,10 +94,7 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
-      jenkins.build(jobName, projectId, vfs);
+      jenkins.build(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
    }
 
    @Path("job/status")
@@ -113,10 +105,8 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
-      return jenkins.jobStatus(jobName, projectId, vfs);
+      return jenkins.jobStatus(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+         : null, projectId);
    }
 
    @Path("job/console-output")
@@ -127,9 +117,17 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new WebApplicationException(Response.serverError().entity("Virtual file system not initialized").build());
-      return jenkins.consoleOutput(jobName, projectId, vfs);
+      return jenkins.consoleOutput(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId);
+   }
+
+   @Path("job/delete")
+   @POST
+   public void deleteJob( //
+      @QueryParam("name") String jobName, //
+      @QueryParam("projectid") String projectId, //
+      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
+   {
+      jenkins.deleteJob(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
    }
 }

@@ -63,7 +63,7 @@
 
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudbeesJenkinsClient</type>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesJenkinsClient</type>
       <init-params>
          <value-param>
             <name>jenkins-user</name>

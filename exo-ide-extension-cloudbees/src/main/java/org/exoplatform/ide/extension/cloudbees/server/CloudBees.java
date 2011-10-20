@@ -334,9 +334,9 @@ public class CloudBees
    private void writeApplicationId(VirtualFileSystem vfs, String projectId, String appId)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty jenkinsJob = new ConvertibleProperty("cloudbees-application", appId);
+      ConvertibleProperty p = new ConvertibleProperty("cloudbees-application", appId);
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(jenkinsJob);
+      properties.add(p);
       try
       {
          vfs.updateItem(projectId, properties, null);

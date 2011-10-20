@@ -24,7 +24,6 @@ import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -131,28 +130,28 @@ public abstract class JenkinsClient
 
    private Templates transfomRules;
 
-
    public JenkinsClient(String baseURL)
    {
       this.baseURL = baseURL;
    }
 
-   public void createJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
-      JenkinsException, VirtualFileSystemException
+   public void createJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
+      throws IOException, JenkinsException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/createItem?name=" + jobName);
       postJob(url, configXml(git, user, email));
-      writeJenkinsJobName(projectId, jobName, vfs);
+      if (vfs != null && projectId != null)
+      {
+         writeJenkinsJobName(vfs, projectId, jobName);
+      }
    }
 
-   public void updateJob(String jobName, String git, String user, String email, String projectId, VirtualFileSystem vfs) throws IOException,
-      JenkinsException, VirtualFileSystemException
+   public void updateJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
+      throws IOException, JenkinsException, VirtualFileSystemException
    {
       if ((jobName == null || jobName.isEmpty()))
       {
-         jobName = readJenkinsJobName(projectId, vfs);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
+         jobName = readJenkinsJobName(vfs, projectId);
       }
       URL url = new URL(baseURL + "/job/" + jobName + "/config.xml");
       postJob(url, configXml(git, user, email));
@@ -327,7 +326,8 @@ public abstract class JenkinsClient
       }
    }
 
-   public void build(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public void build(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
+      VirtualFileSystemException
    {
       ConversationState userState = ConversationState.getCurrent();
       if (userState != null)
@@ -355,9 +355,7 @@ public abstract class JenkinsClient
 
       if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(projectId, vfs);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
+         jobName = readJenkinsJobName(vfs, projectId);
       }
       HttpURLConnection http = null;
       try
@@ -380,13 +378,12 @@ public abstract class JenkinsClient
          userState.setAttribute("org.exoplatform.ide.jenkins.job", jobName);
    }
 
-   public JobStatus jobStatus(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public JobStatus jobStatus(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(projectId, vfs);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
+         jobName = readJenkinsJobName(vfs, projectId);
       }
 
       if (inQueue(jobName))
@@ -532,16 +529,15 @@ public abstract class JenkinsClient
       }
    }
 
-   public InputStream consoleOutput(String jobName, String projectId, VirtualFileSystem vfs) throws IOException, JenkinsException, VirtualFileSystemException
+   public InputStream consoleOutput(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
+      JenkinsException, VirtualFileSystemException
    {
       if (jobName == null || jobName.isEmpty())
       {
-         jobName = readJenkinsJobName(projectId, vfs);
-         if (jobName == null || jobName.isEmpty())
-            throw new IllegalArgumentException("Job name required. ");
+         jobName = readJenkinsJobName(vfs, projectId);
       }
 
-      if (jobStatus(jobName, projectId, vfs).getStatus() != JobStatus.Status.END)
+      if (jobStatus(jobName, vfs, projectId).getStatus() != JobStatus.Status.END)
          return null; // Do not show output if job in queue for build or building now.
 
       HttpURLConnection http = null;
@@ -558,17 +554,39 @@ public abstract class JenkinsClient
             throw fault(http);
          return new HttpStream(http);
       }
-      catch (IOException e)
+      finally
       {
          if (http != null)
             http.disconnect();
-         throw e;
       }
-      catch (JenkinsException e)
+   }
+
+   public void deleteJob(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
+      VirtualFileSystemException
+   {
+      if (jobName == null || jobName.isEmpty())
+      {
+         jobName = readJenkinsJobName(vfs, projectId);
+      }
+      HttpURLConnection http = null;
+      try
+      {
+         URL url = new URL(baseURL + "/job/" + jobName + "/doDelete");
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("POST");
+         authenticate(http);
+         int responseCode = http.getResponseCode();
+         if (responseCode != 302)
+            throw fault(http);
+      }
+      finally
       {
          if (http != null)
             http.disconnect();
-         throw e;
+      }
+      if (vfs != null && projectId != null)
+      {
+         writeJenkinsJobName(vfs, projectId, null);
       }
    }
 
@@ -621,47 +639,21 @@ public abstract class JenkinsClient
 
    protected abstract void authenticate(HttpURLConnection http) throws IOException;
 
-   /* ============================================================ */
-
-//   private void writeJenkinsJobName(File workDir, String jobName) throws IOException
-//   {
-//      String filename = ".jenkins-job";
-//      File idfile = new File(workDir, filename);
-//      FileWriter w = null;
-//      try
-//      {
-//         w = new FileWriter(idfile);
-//         w.write(jobName);
-//         w.write('\n');
-//         w.flush();
-//      }
-//      finally
-//      {
-//         if (w != null)
-//            w.close();
-//      }
-//      // Add file to .gitignore
-//      GitHelper.addToGitIgnore(workDir, filename);
-//   }
-
-   private void writeJenkinsJobName(String projectId, String jobName, VirtualFileSystem vfs) throws VirtualFileSystemException
+   private void writeJenkinsJobName(VirtualFileSystem vfs, String projectId, String jobName)
+      throws VirtualFileSystemException
    {
-      ConvertibleProperty jenkinsJob = new ConvertibleProperty("jenkins-job", jobName);
+      ConvertibleProperty p = new ConvertibleProperty("jenkins-job", jobName);
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(jenkinsJob);
+      properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }
 
-   private String readJenkinsJobName(String projectId, VirtualFileSystem vfs) throws VirtualFileSystemException
+   private String readJenkinsJobName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
    {
       Item item = vfs.getItem(projectId, PropertyFilter.valueOf("jenkins-job"));
-      StringProperty jenkinsJob = (StringProperty)item.getProperty("jenkins-job");
-      if (jenkinsJob == null)
-         return null;
-      List<String> list = jenkinsJob.getValue();
-      if (list == null)
-         return null;
-      return list.get(0);
+      String job = (String)item.getPropertyValue("jenkins-job");
+      if (job == null || job.isEmpty())
+         throw new RuntimeException("Job name required. ");
+      return job;
    }
-
 }
