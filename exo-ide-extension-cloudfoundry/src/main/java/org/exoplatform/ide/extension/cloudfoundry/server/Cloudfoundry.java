@@ -184,7 +184,7 @@ public class Cloudfoundry
     *           user context then use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name to get info about. If <code>null</code> then try to determine application name. To be
     *           able determine application name <code>projectId</code> and <code>vfs</code> must not be
-    *           <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
+    *           <code>null</code> at least. If name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -291,7 +291,7 @@ public class Cloudfoundry
             // If framework cannot be detected.
             if (frameworkName == null)
             {
-               throw new IllegalStateException("Can't detect application type. ");
+               throw new RuntimeException("Can't detect application type. ");
             }
          }
 
@@ -357,7 +357,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name to start. If <code>null</code> then try to determine application name. To be able
     *           determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
-    *           least. If name not specified and cannot be determined IllegalStateException thrown
+    *           least. If name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -426,7 +426,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name to stop. If <code>null</code> then try to determine application name. To be able
     *           determine application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at
-    *           least. If name not specified and cannot be determined IllegalStateException thrown
+    *           least. If name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -473,7 +473,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -514,7 +514,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -560,7 +560,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -626,7 +626,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -688,7 +688,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -737,7 +737,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -800,7 +800,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -869,7 +869,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -923,7 +923,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -1162,7 +1162,7 @@ public class Cloudfoundry
     * @param name provisioned service name
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -1224,7 +1224,7 @@ public class Cloudfoundry
     * @param name provisioned service name
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -1273,7 +1273,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -1336,7 +1336,7 @@ public class Cloudfoundry
     *           use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
     * @param app application name. If <code>null</code> then try to determine application name. To be able determine
     *           application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *           name not specified and cannot be determined IllegalStateException thrown
+    *           name not specified and cannot be determined RuntimeException thrown
     * @param vfs VirtualFileSystem
     * @param projectId IDE project identifier. May be <code>null</code> if command executed out of project directory in
     *           this case <code>app</code> parameter must be not <code>null</code>
@@ -1581,7 +1581,7 @@ public class Cloudfoundry
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {
-         throw new IllegalStateException(
+         throw new RuntimeException(
             "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return app;
