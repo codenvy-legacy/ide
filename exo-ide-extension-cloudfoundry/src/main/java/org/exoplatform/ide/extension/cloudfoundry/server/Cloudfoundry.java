@@ -339,8 +339,11 @@ public class Cloudfoundry
             uploadApplication(credential, app, vfs, projectId, null);
          }
 
-         writeApplicationName(vfs, projectId, app);
-         writeServerName(vfs, projectId, credential.target);
+         if (vfs != null && projectId != null)
+         {
+            writeApplicationName(vfs, projectId, app);
+            writeServerName(vfs, projectId, credential.target);
+         }
 
          if (!nostart)
          {
@@ -1558,9 +1561,9 @@ public class Cloudfoundry
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty jenkinsJob = new ConvertibleProperty("cloudfoundry-application", name);
+      ConvertibleProperty p = new ConvertibleProperty("cloudfoundry-application", name);
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(jenkinsJob);
+      properties.add(p);
       try
       {
          vfs.updateItem(projectId, properties, null);
@@ -1610,9 +1613,9 @@ public class Cloudfoundry
    private void writeServerName(VirtualFileSystem vfs, String projectId, String server)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty jenkinsJob = new ConvertibleProperty("vmc-target", server);
+      ConvertibleProperty p = new ConvertibleProperty("vmc-target", server);
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(jenkinsJob);
+      properties.add(p);
       try
       {
          vfs.updateItem(projectId, properties, null);
