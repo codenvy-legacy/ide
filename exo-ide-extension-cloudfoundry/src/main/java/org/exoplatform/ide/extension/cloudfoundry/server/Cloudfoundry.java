@@ -199,12 +199,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -379,12 +374,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -450,12 +440,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -505,12 +490,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -551,12 +531,7 @@ public class Cloudfoundry
       // Command 'vmc rename appname newname' HAS NOT any effects for application. 
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (newname == null || newname.isEmpty())
       {
@@ -602,12 +577,7 @@ public class Cloudfoundry
          throw new IllegalArgumentException("Project directory or location to WAR file required. ");
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -674,12 +644,7 @@ public class Cloudfoundry
 
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -741,12 +706,7 @@ public class Cloudfoundry
 
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -796,12 +756,7 @@ public class Cloudfoundry
 
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -865,12 +820,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -935,12 +885,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -995,12 +940,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -1141,7 +1081,7 @@ public class Cloudfoundry
       // to any application.
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
+         app = detectApplicationName(vfs, projectId, false);
       }
       if (server == null || server.isEmpty())
       {
@@ -1236,12 +1176,7 @@ public class Cloudfoundry
    {
       if (app == null || app.isEmpty())
       {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (name == null || name.isEmpty())
       {
@@ -1301,18 +1236,13 @@ public class Cloudfoundry
    public void unbindService(String server, String name, String app, VirtualFileSystem vfs, String projectId)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      if (app == null || app.isEmpty())
-      {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
-      }
       if (name == null || name.isEmpty())
       {
          throw new IllegalArgumentException("Service name required. ");
+      }
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -1357,18 +1287,13 @@ public class Cloudfoundry
    public void environmentAdd(String server, String app, VirtualFileSystem vfs, String projectId, String key, String val)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      if (app == null || app.isEmpty())
-      {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
-      }
       if (key == null || key.isEmpty())
       {
          throw new IllegalArgumentException("Key-value pair required. ");
+      }
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -1424,18 +1349,13 @@ public class Cloudfoundry
    public void environmentDelete(String server, String app, VirtualFileSystem vfs, String projectId, String key)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      if (app == null || app.isEmpty())
-      {
-         app = detectApplicationName(vfs, projectId);
-         if (app == null || app.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
-      }
       if (key == null || key.isEmpty())
       {
          throw new IllegalArgumentException("Key required. ");
+      }
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -1482,7 +1402,7 @@ public class Cloudfoundry
             throw new IllegalArgumentException("Application name required. ");
          }
 
-         String name = detectApplicationName(vfs, projectId);
+         String name = detectApplicationName(vfs, projectId, false);
          if (!(name == null || name.isEmpty()))
          {
             // Working directory may not be used for more then one application.
@@ -1519,12 +1439,7 @@ public class Cloudfoundry
       }
       else if ("update".equals(action))
       {
-         String name = detectApplicationName(vfs, projectId);
-         if (name == null || name.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
-         }
+         String name = detectApplicationName(vfs, projectId, true);
          if (server == null || server.isEmpty())
          {
             server = detectServer(vfs, projectId);
@@ -1648,8 +1563,8 @@ public class Cloudfoundry
       }
    }
 
-   private String detectApplicationName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
-      IOException
+   private String detectApplicationName(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
+      throws VirtualFileSystemException, IOException
    {
       String app = null;
       if (vfs != null && projectId != null)
@@ -1663,6 +1578,11 @@ public class Cloudfoundry
          {
             app = FilesHelper.readFile(vfs, item, ".cloudfoundry-application");
          }
+      }
+      if (failIfCannotDetect && (app == null || app.isEmpty()))
+      {
+         throw new IllegalStateException(
+            "Not a Cloud Foundry application. Please select root folder of Cloud Foundry project. ");
       }
       return app;
    }
