@@ -1,27 +1,58 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
    <ui:with field='resource' type='org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle' />
    <ui:with field='locale' type='org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant' />
 
-   <f:Border margin="5" borderColor="transparent">
+   <ui:style>
+      .label {
+      	margin-bottom: 5px;
+      	cursor: default;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      }
+      
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .spacing {
+      	margin-bottom: 10px;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+   </ui:style>
+
+
+   <f:Border margin="15" borderColor="transparent">
       <f:layer>
-         <g:VerticalPanel spacing="3" horizontalAlignment="center">
+         <g:FlowPanel>
+            <g:Label text="{locale.loginViewTargetField}" styleName="{style.label}"></g:Label>
+            <f:ComboBoxField ui:field="targetField" height="20px" width="100%" addStyleNames="{style.spacing}"></f:ComboBoxField>
 
-            <f:ComboBoxField ui:field="targetField" title="{locale.loginViewTargetField}" height="22px"></f:ComboBoxField>
+            <g:Label text="{locale.loginViewEmailField}" styleName="{style.label}"></g:Label>
+            <g:TextBox ui:field="emailField" height="20" width="100%" addStyleNames="{style.spacing}"></g:TextBox>
 
-            <f:TextField ui:field="emailField" title="{locale.loginViewEmailField}" height="22" width="100%"></f:TextField>
+            <g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}"></g:Label>
+            <f:PasswordTextInput ui:field="passwordField" height="20" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
 
-            <f:PasswordField ui:field="passwordField" title="{locale.loginViewPasswordField}" height="22" width="100%"></f:PasswordField>
+         </g:FlowPanel>
+      </f:layer>
 
-            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-               <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageResource="{resource.okButton}"
-                  disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancelButton}"
-                  disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
-            </g:HorizontalPanel>
-         </g:VerticalPanel>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageResource="{resource.okButton}"
+               disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageResource="{resource.cancelButton}"
+               disabledImageResource="{resource.cancelButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 

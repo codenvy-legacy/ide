@@ -22,10 +22,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -44,7 +44,7 @@ public class DeleteApplicationView extends ViewImpl implements DeleteApplication
 {
    private static final String ID = "ideDeleteApplicationView";
 
-   private static final int WIDTH = 410;
+   private static final int WIDTH = 420;
 
    private static final int HEIGHT = 160;
 
@@ -56,7 +56,7 @@ public class DeleteApplicationView extends ViewImpl implements DeleteApplication
     * Checkbox, that indicates is delete services with application.
     */
    @UiField
-   CheckboxItem deleteServicesField;
+   CheckBox deleteServicesField;
    
    /**
     * Delete button.

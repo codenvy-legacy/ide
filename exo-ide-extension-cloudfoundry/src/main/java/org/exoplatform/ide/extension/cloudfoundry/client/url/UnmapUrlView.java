@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -46,14 +45,16 @@ public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display
    
    public static final String LISTGRID_ID = "ideCloudFoundryRegisteredUrlsGridView";
    
-   private static final int HEIGHT = 345;
+   private static final String MAP_URL_FIELD_ID = "applicationURLsURLField";
+   
+   private static final int HEIGHT = 305;
 
    private static final int WIDTH = 450;
 
    private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
    
    @UiField
-   TextField mapUrlField;
+   TextBox mapUrlField;
    
    @UiField
    ImageButton mapUrlButton;
@@ -73,7 +74,7 @@ public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display
       super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       registeredUrlsGrid.setID(LISTGRID_ID);
-      mapUrlField.setHeight(22);
+      mapUrlField.setName(MAP_URL_FIELD_ID);
    }
 
    /**

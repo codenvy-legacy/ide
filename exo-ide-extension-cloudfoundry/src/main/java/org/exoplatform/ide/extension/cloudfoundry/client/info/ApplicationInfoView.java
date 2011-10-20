@@ -48,7 +48,7 @@ public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPres
    
    public static final String APPLICATION_ENVIRONMENTS_ID = "ideCloudFoundryAppEnvironmentsGridView";
 
-   private static final int HEIGHT = 345;
+   private static final int HEIGHT = 390;
 
    private static final int WIDTH = 500;
 

@@ -19,13 +19,9 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -36,9 +32,14 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,61 +48,30 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OperationsApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateApplicationHandler, ApplicationBuiltHandler
+public class UpdateApplicationPresenter extends GitPresenter implements UpdateApplicationHandler,
+   ApplicationBuiltHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-   
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-   
    /**
     * Location of war file (Java only).
     */
    private String warUrl;
-   
-   /**
-    * Location of working copy of application.
-    */
-   private String workDir;
-   
+
    public UpdateApplicationPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
-      
+      super(eventbus);
+
       eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
    }
-   
+
    LoggedInHandler loggedInHandler = new LoggedInHandler()
    {
-      
+
       @Override
       public void onLoggedIn()
       {
          updateApplication();
       }
    };
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0)
-      {
-         workDir = null;
-         return;
-      }
-
-      workDir = selectedItems.get(0).getId();
-   }
 
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent)
@@ -109,24 +79,22 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      if (workDir == null)
+      if (makeSelectionCheck())
       {
-         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToUpdate();
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
-         return;
+         isBuildApplication();
       }
-      isBuildApplication(workDir);
    }
-   
+
    private void updateApplication()
    {
-      CloudFoundryClientService.getInstance().updateApplication(workDir, null, warUrl,
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudFoundryClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, loggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
                   new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
                   {
 
@@ -154,7 +122,7 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
          updateApplication();
       }
    }
-   
+
    private LoggedInHandler validateHandler = new LoggedInHandler()
    {
       @Override
@@ -163,11 +131,13 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
          validateData();
       }
    };
-   
+
    private void validateData()
    {
-      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, workDir, 0, 0,
-         false, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+      CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null, vfs.getId(), projectId,
+         0, 0, false, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null)
          {
             @Override
             protected void onSuccess(String result)
@@ -176,56 +146,56 @@ public class UpdateApplicationPresenter implements ItemsSelectedHandler, UpdateA
             }
          });
    }
-   
+
    /**
     * Check, is work directory contains <code>pom.xml</code> file.
     * 
     * @param workDir
     */
-   private void isBuildApplication(String workDir)
+   private void isBuildApplication()
    {
-      if (!(selectedItems.get(0) instanceof Folder))
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+
+      try
       {
-         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationNotFolder(selectedItems.get(0).getName());
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
-         return;
-      }
-      
-      final String folderName = selectedItems.get(0).getName();
-      if (!workDir.endsWith("/"))
-      {
-         workDir += "/";
-      }
-      CloudFoundryClientService.getInstance().checkFileExists(workDir + "pom.xml", new AsyncRequestCallback<String>(eventBus)
-      {
-         @Override
-         protected void onSuccess(String result)
-         {
-            validateData();
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            if (exception instanceof ServerException)
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
-               ServerException serverException = (ServerException)exception;
-               if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
+
+               @Override
+               protected void onSuccess(List<Item> result)
                {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(folderName);
+                  for (Item item : result)
+                  {
+                     if ("pom.xml".equals(item.getName()))
+                     {
+                        validateData();
+                        return;
+                     }
+                  }
+                  String msg =
+                     CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
                   eventBus.fireEvent(new ExceptionThrownEvent(msg));
-                  return;
+
                }
-               else
+
+               @Override
+               protected void onFailure(Throwable exception)
                {
-                  super.onFailure(exception);
+                  String msg =
+                     CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
+                  eventBus.fireEvent(new ExceptionThrownEvent(msg));
                }
-            }
-            super.onFailure(exception);
-         }
-      });
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
-   
+
    private void buildApplication()
    {
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);

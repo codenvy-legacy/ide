@@ -182,7 +182,7 @@ public class ApplicationsListGrid extends ListGrid<CloudfoundryApplication> impl
        */
       public ListLink()
       {
-         super(new SafeHtmlListRenderer(), "");
+         super(new SafeHtmlListRenderer());
       }
 
       /**

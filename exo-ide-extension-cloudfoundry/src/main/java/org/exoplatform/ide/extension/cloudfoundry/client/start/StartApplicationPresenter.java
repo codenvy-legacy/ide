@@ -20,8 +20,6 @@ package org.exoplatform.ide.extension.cloudfoundry.client.start;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -29,8 +27,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -41,24 +40,14 @@ import java.util.List;
  * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
  *
  */
-public class StartApplicationPresenter implements ItemsSelectedHandler, StartApplicationHandler,
-   StopApplicationHandler, RestartApplicationHandler
+public class StartApplicationPresenter extends GitPresenter implements StartApplicationHandler, StopApplicationHandler,
+   RestartApplicationHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
 
    public StartApplicationPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
+      super(eventbus);
 
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(StartApplicationEvent.TYPE, this);
       eventBus.addHandler(StopApplicationEvent.TYPE, this);
       eventBus.addHandler(RestartApplicationEvent.TYPE, this);
@@ -66,15 +55,6 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    public void bindDisplay(List<Framework> frameworks)
    {
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
    }
 
    /**
@@ -143,7 +123,7 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
    @Override
    public void onStartApplication(StartApplicationEvent event)
    {
-      if (event.getApplicationName() == null)
+      if (event.getApplicationName() == null && makeSelectionCheck())
          checkIsStarted();
       else
          startApplication(event.getApplicationName());
@@ -151,9 +131,9 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    private void checkIsStarted()
    {
-      String workDir = getWorkDir();
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, checkIsStartedLoggedInHandler, null)
          {
 
@@ -175,9 +155,9 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    private void checkIsStopped()
    {
-      String workDir = getWorkDir();
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, checkIsStoppedLoggedInHandler, null)
          {
 
@@ -199,9 +179,9 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    private void startApplication(String name)
    {
-      String workDir = getWorkDir();
-
-      CloudFoundryClientService.getInstance().startApplication(workDir, name,
+      final String projectId = (((ItemContext)selectedItems.get(0)).getProject() != null) ?  ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      
+      CloudFoundryClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, startLoggedInHandler, null)
          {
             @Override
@@ -249,15 +229,17 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    private void stopApplication(final String name)
    {
-      final String workDir = getWorkDir();
-
-      CloudFoundryClientService.getInstance().stopApplication(workDir, name,
+      final String projectId =
+         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
+            .getId() : null;
+      
+      CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, stopLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, name,
+               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, name, null,
                   new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
                   {
                      @Override
@@ -270,19 +252,6 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
                   });
             }
          });
-   }
-
-   private String getWorkDir()
-   {
-      if (selectedItems.size() == 0)
-         return null;
-
-      String workDir = selectedItems.get(0).getId();
-      if (selectedItems.get(0) instanceof File)
-      {
-         workDir = workDir.substring(0, workDir.lastIndexOf("/") + 1);
-      }
-      return workDir;
    }
 
    /**
@@ -307,9 +276,13 @@ public class StartApplicationPresenter implements ItemsSelectedHandler, StartApp
 
    private void restartApplication(String name)
    {
-      String workDir = getWorkDir();
+      String projectId = null;
+      if (((ItemContext)selectedItems.get(0)).getProject() != null)
+      {
+         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      }
 
-      CloudFoundryClientService.getInstance().restartApplication(workDir, name,
+      CloudFoundryClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, restartLoggedInHandler, null)
          {
             @Override

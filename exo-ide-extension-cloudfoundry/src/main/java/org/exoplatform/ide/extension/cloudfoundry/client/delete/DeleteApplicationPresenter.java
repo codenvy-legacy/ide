@@ -27,8 +27,6 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -39,9 +37,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for delete application operation.
@@ -49,7 +46,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteApplicationHandler, ViewClosedHandler
+public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
@@ -86,31 +83,15 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    private Display display;
 
    /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-
-   /**
-    * Location of working copy of application.
-    */
-   private String workDir;
-
-   /**
     * The name of application.
     */
    private String appName;
 
    public DeleteApplicationPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
+      super(eventbus);
 
       eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -137,28 +118,12 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0)
-      {
-         return;
-      }
-
-      workDir = selectedItems.get(0).getId();
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationHandler#onDeleteApplication(org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent)
     */
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
-      if (event.getApplicationName() == null)
+      if (event.getApplicationName() == null && makeSelectionCheck())
          getApplicationInfo();
       else
       {
@@ -178,7 +143,8 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
 
    private void getApplicationInfo()
    {
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, appInfoLoggedInHandler, null)
          {
             @Override
@@ -202,8 +168,13 @@ public class DeleteApplicationPresenter implements ItemsSelectedHandler, DeleteA
    private void deleteApplication()
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
-      CloudFoundryClientService.getInstance().deleteApplication(workDir, appName, isDeleteServices,
-         new CloudFoundryAsyncRequestCallback<String>(eventBus, deleteAppLoggedInHandler, null)
+      String projectId = null;
+      if (((ItemContext)selectedItems.get(0)).getProject() != null)
+      {
+         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      }
+      CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
+         isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(eventBus, deleteAppLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)

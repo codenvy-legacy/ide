@@ -43,13 +43,13 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication
  */
 public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.Display
 {
-
-   private static ApplicationsViewUiBinder uiBinder = GWT.create(ApplicationsViewUiBinder.class);
-
    interface ApplicationsViewUiBinder extends UiBinder<Widget, ApplicationsView>
    {
    }
 
+   private static ApplicationsViewUiBinder uiBinder = GWT.create(ApplicationsViewUiBinder.class);
+  
+   
    private static final int HEIGHT = 300;
 
    private static final int WIDTH = 820;

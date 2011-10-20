@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.URL;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -34,8 +31,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -46,54 +43,36 @@ import java.util.List;
  * @version $Id: MapUnmapUrlPresenter.java Jul 18, 2011 9:22:02 AM vereshchaka $
  *
  */
-public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMemoryHandler, UpdateInstancesHandler
+public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
 {
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-   
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-   
    private int memory;
-   
+
    private String instances;
-   
+
    public UpdatePropertiesPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
-      
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super(eventbus);
+
       eventBus.addHandler(UpdateMemoryEvent.TYPE, this);
       eventBus.addHandler(UpdateInstancesEvent.TYPE, this);
    }
-   
+
    public void bindDisplay(List<Framework> frameworks)
    {
    }
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
 
-   
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler#onUpdateMemory(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent)
     */
    @Override
    public void onUpdateMemory(UpdateMemoryEvent event)
    {
-      getOldMemoryValue();
+      if (makeSelectionCheck())
+      {
+         getOldMemoryValue();
+      }
    }
-   
+
    /**
     * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
@@ -105,21 +84,27 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
          getOldMemoryValue();
       }
    };
-   
+
    private void getOldMemoryValue()
    {
-      String workDir = getWorkDir();
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldMemoryValueLoggedInHandler, null)
-         {
-            @Override
-            protected void onSuccess(CloudfoundryApplication result)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudFoundryClientService.getInstance()
+         .getApplicationInfo(
+            vfs.getId(),
+            projectId,
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldMemoryValueLoggedInHandler,
+               null)
             {
-               askForNewMemoryValue(result.getResources().getMemory());
-            }
-         });
+               @Override
+               protected void onSuccess(CloudfoundryApplication result)
+               {
+                  askForNewMemoryValue(result.getResources().getMemory());
+               }
+            });
    }
-   
+
    private void askForNewMemoryValue(int oldMemoryValue)
    {
       Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(),
@@ -149,7 +134,7 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
             }
          });
    }
-   
+
    /**
     * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
@@ -161,12 +146,12 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
          updateMemory(memory);
       }
    };
-   
+
    private void updateMemory(final int memory)
    {
-      String workDir = getWorkDir();
-      
-      CloudFoundryClientService.getInstance().updateMemory(workDir, null, memory,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+      CloudFoundryClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, updateMemoryLoggedInHandler, null)
          {
             @Override
@@ -177,19 +162,6 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
             }
          });
    }
-   
-   private String getWorkDir()
-   {
-      if (selectedItems.size() == 0)
-         return null;
-      
-      String workDir = selectedItems.get(0).getId();
-      if (selectedItems.get(0) instanceof FileModel)
-      {
-         workDir = selectedItems.get(0).getParentId();
-      }
-      return workDir;
-   }
 
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesHandler#onUpdateInstances(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent)
@@ -199,7 +171,7 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
    {
       getOldInstancesValue();
    }
-   
+
    /**
     * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
     */
@@ -211,12 +183,18 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
          getOldInstancesValue();
       }
    };
-   
+
    private void getOldInstancesValue()
    {
-      String workDir = getWorkDir();
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
-         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldInstancesValueLoggedInHandler, null)
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+      CloudFoundryClientService.getInstance().getApplicationInfo(
+         vfs.getId(),
+         projectId,
+         null,
+         null,
+         new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, getOldInstancesValueLoggedInHandler,
+            null)
          {
             @Override
             protected void onSuccess(CloudfoundryApplication result)
@@ -225,7 +203,7 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
             }
          });
    }
-   
+
    private void askForInstancesNumber(int oldInstancesValue)
    {
       Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle(),
@@ -258,7 +236,7 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
             }
          });
    }
-   
+
    private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -267,7 +245,7 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
          updateInstances(instances);
       }
    };
-   
+
    /**
     * @param instancesExpression how should we change number of instances. Expected are:
     *           <ul>
@@ -278,17 +256,17 @@ public class UpdatePropertiesPresenter implements ItemsSelectedHandler, UpdateMe
     */
    private void updateInstances(final String instancesExpression)
    {
-      final String workDir = getWorkDir();
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
 
-      CloudFoundryClientService.getInstance().updateInstances(workDir, null, encodedExp,
+      CloudFoundryClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, updateInstancesLoggedInHandler, null)
          {
             @Override
             protected void onSuccess(String result)
             {
-               CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+               CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
                   new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, null, null)
                   {
                      @Override

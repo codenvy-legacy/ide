@@ -30,9 +30,9 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -48,8 +48,11 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -63,75 +66,83 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationPresenter.java Jul 8, 2011 11:57:36 AM vereshchaka $
  */
-public class CreateApplicationPresenter implements CreateApplicationHandler, ItemsSelectedHandler, ViewClosedHandler,
+public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler,
    ApplicationBuiltHandler
 {
    interface Display extends IsView
    {
       HasClickHandlers getCreateButton();
-      
+
       HasClickHandlers getCancelButton();
-      
+
       HasValue<String> getTypeField();
-      
+
       HasValue<Boolean> getAutodetectTypeCheckItem();
-      
+
       HasValue<String> getNameField();
-      
+
       HasValue<String> getUrlField();
-      
+
       /**
        * Get the checkbox, that indicates is user want to enter custom URL.
        * @return
        */
       HasValue<Boolean> getUrlCheckItem();
-      
+
       HasValue<String> getInstancesField();
-      
+
       HasValue<String> getMemoryField();
-      
+
       HasValue<String> getServerField();
-      
+
       HasValue<Boolean> getIsStartAfterCreationCheckItem();
-      
+
       void enableCreateButton(boolean enable);
-      
+
       void focusInNameField();
-      
+
       void setTypeValues(String[] types);
-      
+
       void enableTypeField(boolean enable);
-      
+
       void enableUrlField(boolean enable);
-      
+
       void enableMemoryField(boolean enable);
-      
+
       void setSelectedIndexForTypeSelectItem(int index);
-      
+
       void focusInUrlField();
-      
+
       /**
        * Set the list of servers to ServerSelectField.
        * 
        * @param servers
        */
       void setServerValues(String[] servers);
-      
+
    }
-   
+
    private class AppData
    {
       String server;
+
       String name;
+
       String type;
+
       String url;
+
       int instances;
+
       int memory;
+
       boolean nostart;
-      String workDir;
       
-      public AppData(String server, String name, String type, String url, int instances, int memory,
-         boolean nostart, String workDir)
+      
+      //TODO workdir 
+      String workDir;
+
+      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart, String workDir)
       {
          this.server = server;
          this.name = name;
@@ -143,43 +154,32 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          this.workDir = workDir;
       }
    }
-   
+
    private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
-   
+
    private Display display;
-   
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-   
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-   
+
    private List<Framework> frameworks;
-   
+
    /**
     * Public url to war file of application. 
     */
    private String warUrl;
-   
+
    /**
     * Store application data in format,
     * that convenient to send to server.
     */
    private AppData appData;
-   
+
    public CreateApplicationPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
-      
+      super(eventbus);
+
       eventBus.addHandler(CreateApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    public void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -190,18 +190,18 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             closeView();
          }
       });
-      
+
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
             appData = getAppDataFromForm();
-            
+
             validateData(appData);
          }
       });
-      
+
       display.getAutodetectTypeCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          @Override
@@ -209,7 +209,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          {
             display.enableTypeField(!event.getValue());
             display.enableMemoryField(!event.getValue());
-            
+
             if (event.getValue())
             {
                display.setTypeValues(new String[]{""});
@@ -225,14 +225,14 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          }
       });
-      
+
       display.getUrlCheckItem().addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          @Override
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             display.enableUrlField(event.getValue());
-            
+
             if (event.getValue())
             {
                display.focusInUrlField();
@@ -256,7 +256,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          }
       });
-      
+
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -269,7 +269,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          }
       });
-      
+
       display.getServerField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -282,19 +282,19 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          }
       });
-      
+
       //set the state of fields
       display.enableTypeField(false);
       display.enableUrlField(false);
       display.enableMemoryField(false);
       display.focusInNameField();
-      
+
       //set default values to fields
       display.setTypeValues(new String[]{""});
       display.getInstancesField().setValue("1");
       display.getAutodetectTypeCheckItem().setValue(true);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
     */
@@ -316,9 +316,15 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          eventBus.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
-      if (selectedItems.get(0) instanceof ProjectModel)
+      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
       {
-         checkIsProject((ProjectModel)selectedItems.get(0));
+         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+         return;
+      }
+
+      if ((selectedItems.get(0) instanceof ItemContext) && ((ItemContext)selectedItems.get(0)).getProject() != null)
+      {
+         checkIsProject(((ItemContext)selectedItems.get(0)).getProject());
       }
       else
       {
@@ -327,7 +333,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          return;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
     */
@@ -339,7 +345,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          display = null;
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
     */
@@ -353,9 +359,9 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          createApplication(appData);
       }
    }
-   
+
    //----Implementation------------------------
-   
+
    private String getUrlByServerAndName(String serverUrl, String name)
    {
       int index = serverUrl.indexOf(".");
@@ -366,17 +372,16 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       final String domain = serverUrl.substring(index, serverUrl.length());
       return "http://" + name.toLowerCase() + domain;
    }
-   
+
    /**
     * Update the URL field, using values from server and name field.
     */
    private void updateUrlField()
    {
-      final String url =
-         getUrlByServerAndName(display.getServerField().getValue(), display.getNameField().getValue());
+      final String url = getUrlByServerAndName(display.getServerField().getValue(), display.getNameField().getValue());
       display.getUrlField().setValue(url);
    }
-   
+
    private void validateData(final AppData app)
    {
       LoggedInHandler validateHandler = new LoggedInHandler()
@@ -387,9 +392,12 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             validateData(app);
          }
       };
-      
-      CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url, app.workDir, 
-         app.instances, app.memory, app.nostart, new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null, app.server)
+
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+
+      CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
+         vfs.getId(), project.getId(), app.instances, app.memory, app.nostart,
+         new CloudFoundryAsyncRequestCallback<String>(eventBus, validateHandler, null, app.server)
          {
             @Override
             protected void onSuccess(String result)
@@ -399,7 +407,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          });
    }
-   
+
    private void getFrameworks()
    {
       LoggedInHandler getFrameworksLoggedInHandler = new LoggedInHandler()
@@ -410,7 +418,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             getFrameworks();
          }
       };
-      
+
       CloudFoundryClientService.getInstance().getFrameworks(
          new CloudFoundryAsyncRequestCallback<List<Framework>>(eventBus, getFrameworksLoggedInHandler, null)
          {
@@ -421,13 +429,13 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          });
    }
-   
+
    private void buildApplication()
    {
       eventBus.addHandler(ApplicationBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildApplicationEvent());
    }
-   
+
    private void createApplication(final AppData app)
    {
       LoggedInHandler createAppHandler = new LoggedInHandler()
@@ -438,9 +446,10 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             createApplication(app);
          }
       };
-      
-      CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances, app.memory, 
-         app.nostart, app.workDir, warUrl, 
+
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      CloudFoundryClientService.getInstance().create(app.server, app.name, app.type, app.url, app.instances,
+         app.memory, app.nostart, vfs.getId(), project.getId(), warUrl,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, createAppHandler, null, app.server)
          {
             @Override
@@ -460,7 +469,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
                }
                eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
             }
-            
+
             @Override
             protected void onFailure(Throwable exception)
             {
@@ -469,7 +478,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
             }
          });
    }
-   
+
    /**
     * Get the array of application types from list of frameworks.
     * 
@@ -483,10 +492,10 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       {
          frameworkNames.add(framework.getDisplayName());
       }
-      
+
       return frameworkNames.toArray(new String[frameworkNames.size()]);
    }
-   
+
    /**
     * Find framework from list by name.
     * @param frameworkName
@@ -503,7 +512,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
       return null;
    }
-   
+
    private void openView(List<Framework> frameworks)
    {
       if (display == null)
@@ -520,7 +529,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          eventBus.fireEvent(new ExceptionThrownEvent("View Create Cloudfoundry Application must be null"));
       }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
@@ -544,7 +553,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
       return appUris;
    }
-   
+
    /**
     * Process values from application create form,
     * and store data in bean in format,
@@ -584,12 +593,13 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          }
          catch (NumberFormatException e)
          {
-            eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+            eventBus
+               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
          }
       }
-      
+
       String url;
-      
+
       if (display.getUrlCheckItem().getValue())
       {
          url = display.getUrlField().getValue();
@@ -602,7 +612,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       {
          url = null;
       }
-      
+
       int instances = 0;
       try
       {
@@ -610,13 +620,14 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
       }
       catch (NumberFormatException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         eventBus
+            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
       }
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      
+      //TODO
       return new AppData(server, name, type, url, instances, memory, nostart, selectedItems.get(0).getId());
    }
-   
+
    /**
     * Check is selected item project and can be built.
     */
@@ -624,7 +635,8 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(project,
+         VirtualFileSystem.getInstance().getChildren(
+            project,
             new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
                new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
@@ -657,7 +669,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
          eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    /**
     * Get the list of server and put them to select field.
     */
@@ -679,7 +691,7 @@ public class CreateApplicationPresenter implements CreateApplicationHandler, Ite
                display.setServerValues(servers);
                display.getServerField().setValue(servers[0]);
             }
-            display.getNameField().setValue(selectedItems.get(0).getName());
+            display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
             updateUrlField();
          }
       });

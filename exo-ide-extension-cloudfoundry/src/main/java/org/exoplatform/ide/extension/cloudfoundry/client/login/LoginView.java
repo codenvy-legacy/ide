@@ -23,13 +23,12 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.PasswordField;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -78,13 +77,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Email field.
     */
    @UiField
-   TextField emailField;
+   TextBox emailField;
 
    /**
     * Password field.
     */
    @UiField
-   PasswordField passwordField;
+   PasswordTextInput passwordField;
 
    /**
     * Login button.
@@ -104,16 +103,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       add(uiBinder.createAndBindUi(this));
 
       targetField.setName(TARGET_FIELD_ID);
-      targetField.setHeight(22);
-      targetField.setTitleOrientation(TitleOrientation.TOP);
-      targetField.setPickListHeight(100);
-      //TODO: calculate width
-      targetField.setPickListWidth("349px");
-      targetField.setWidth(350);
       emailField.setName(EMAIL_FIELD_ID);
-      emailField.setHeight(22);
       passwordField.setName(PASSWORD_FIELD_ID);
-      passwordField.setHeight(22);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -169,7 +160,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    @Override
    public void focusInEmailField()
    {
-      emailField.focusInItem();
+      emailField.setFocus(true);
    }
 
    /**

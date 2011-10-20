@@ -88,11 +88,11 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    private static final String VALIDATE_ACTION = BASE_URL + "/apps/validate-action";
 
    private static final String APPS = BASE_URL + "/apps";
-   
+
    private static final String TARGETS = BASE_URL + "/target/all";
-   
+
    private static final String TARGET = BASE_URL + "/target";
-   
+
    /**
     * Events handler.
     */
@@ -122,7 +122,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
-      String workDir, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
+      String vfsId, String projectId, String war, CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String requestUrl = restServiceContext + CREATE;
 
@@ -142,7 +142,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       params += "&instances=" + instances;
       params += "&mem=" + memory;
       params += "&nostart=" + nostart;
-      params += "&workdir=" + workDir;
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
       params += (war != null) ? "&war=" + war : "";
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
@@ -175,35 +176,31 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void logout(AsyncRequestCallback<String> callback)
+   public void logout(String server, AsyncRequestCallback<String> callback)
    {
       String url = restServiceContext + LOGOUT;
 
+      String params = (server != null) ? "?server=" + server : "";
+
       callback.setEventBus(eventBus);
 
-      AsyncRequest.build(RequestBuilder.POST, url, loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + params, loader).send(callback);
    }
 
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void getApplicationInfo(String workDir, String appId,
+   public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
       CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String url = restServiceContext + APPS_INFO;
 
-      String appIdParam = (appId != null) ? "name=" + appId : null;
-      String workDirParam = (workDir != null) ? "workdir=" + workDir : null;
-      String params = "";
-      if (appIdParam != null && workDirParam != null)
-      {
-         params = appIdParam + "&" + workDirParam;
-      }
-      else
-      {
-         params = (appIdParam != null) ? appIdParam : workDirParam;
-      }
+      String params = (appId != null) ? "name=" + appId : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
+      params = (params.startsWith("&")) ? params.substring(1) : params;
 
       callback.setEventBus(eventBus);
 
@@ -220,13 +217,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void deleteApplication(String workDir, String appId, boolean deleteServices,
+   public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
       CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + DELETE;
 
       String params = (appId != null) ? "name=" + appId + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "delete-services=" + String.valueOf(deleteServices);
 
       callback.setEventBus(eventBus);
@@ -258,7 +257,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#startApplication(java.lang.String, java.lang.String)
     */
    @Override
-   public void startApplication(String workDir, String name,
+   public void startApplication(String vfsId, String projectId, String name, String server,
       CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String url = restServiceContext + START;
@@ -273,9 +272,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setResult(cloudfoundryApplication);
 
       String params = (name != null) ? "name=" + name : "";
-      String workDirParam = (params.isEmpty()) ? "" : "&";
-      workDirParam += "workdir=" + workDir;
-      params += (workDir != null) ? workDirParam : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
+      params = (params.startsWith("&")) ? params.substring(1) : params;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -285,16 +285,18 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#stopApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void stopApplication(String workDir, String name, CloudFoundryAsyncRequestCallback<String> callback)
+   public void stopApplication(String vfsId, String projectId, String name, String server,
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + STOP;
 
       callback.setEventBus(eventBus);
 
       String params = (name != null) ? "name=" + name : "";
-      String workDirParam = (params.isEmpty()) ? "" : "&";
-      workDirParam += "workdir=" + workDir;
-      params += (workDir != null) ? workDirParam : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
+      params = (params.startsWith("&")) ? params.substring(1) : params;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -304,7 +306,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#restartApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void restartApplication(String workDir, String name,
+   public void restartApplication(String vfsId, String projectId, String name, String server,
       CloudFoundryAsyncRequestCallback<CloudfoundryApplication> callback)
    {
       final String url = restServiceContext + RESTART;
@@ -319,9 +321,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setResult(cloudfoundryApplication);
 
       String params = (name != null) ? "name=" + name : "";
-      String workDirParam = (params.isEmpty()) ? "" : "&";
-      workDirParam += "workdir=" + workDir;
-      params += (workDir != null) ? workDirParam : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
+      params = (params.startsWith("&")) ? params.substring(1) : params;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -331,20 +334,20 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void updateApplication(String workDir, String name, String war,
+   public void updateApplication(String vfsId, String projectId, String name, String server, String war,
       CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + UPDATE;
       callback.setEventBus(eventBus);
 
-      String result = (workDir != null) ? workDir : name;
-      callback.setResult(result);
+      callback.setResult(name);
 
       String params = (name != null) ? "name=" + name : "";
-      String workDirParam = (params.isEmpty()) ? "" : "&";
-      workDirParam += "workdir=" + workDir;
-      params += (workDir != null) ? workDirParam : "";
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
       params += (war != null) ? "&war=" + war : "";
+      params = (params.startsWith("&")) ? params.substring(1) : params;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -354,13 +357,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void renameApplication(String workDir, String name, String newName,
+   public void renameApplication(String vfsId, String projectId, String name, String server, String newName,
       CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + RENAME;
 
       String params = (name != null) ? "name=" + name + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "newname=" + newName;
 
       callback.setEventBus(eventBus);
@@ -373,12 +378,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#mapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void mapUrl(String workDir, String name, String url, CloudFoundryAsyncRequestCallback<String> callback)
+   public void mapUrl(String vfsId, String projectId, String name, String server, String url,
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String requestUrl = restServiceContext + MAP_URL;
 
       String params = (name != null) ? "name=" + name + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "url=" + url;
 
       callback.setEventBus(eventBus);
@@ -391,16 +399,19 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#unmapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void unmapUrl(String workDir, String name, String url, CloudFoundryAsyncRequestCallback<String> callback)
+   public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String requestUrl = restServiceContext + UNMAP_URL;
 
       String params = (name != null) ? "name=" + name + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "url=" + url;
 
       callback.setEventBus(eventBus);
-      
+
       callback.setResult(url);
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params, loader)
@@ -411,12 +422,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateMemory(java.lang.String, java.lang.String, int, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void updateMemory(String workDir, String name, int mem, CloudFoundryAsyncRequestCallback<String> callback)
+   public void updateMemory(String vfsId, String projectId, String name, String server, int mem,
+      CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + UPDATE_MEMORY;
 
       String params = (name != null) ? "name=" + name + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "mem=" + mem;
 
       callback.setEventBus(eventBus);
@@ -429,13 +443,15 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateInstances(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void updateInstances(String workDir, String name, String expression,
+   public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
       CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String url = restServiceContext + UPDATE_INSTANCES;
 
       String params = (name != null) ? "name=" + name + "&" : "";
-      params += (workDir != null) ? "workdir=" + workDir + "&" : "";
+      params += (vfsId != null) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectId != null) ? "projectid=" + projectId + "&" : "";
+      params += (server != null) ? "server=" + server + "&" : "";
       params += "expr=" + expression;
 
       callback.setEventBus(eventBus);
@@ -448,37 +464,25 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
-   public void validateAction(String action, String server, String appName, String framework, String url,
-      String workDir, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
+   public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
+      String projectId, int instances, int memory, boolean nostart, CloudFoundryAsyncRequestCallback<String> callback)
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
       String params = "action=" + action;
-      params += (server == null) ? "" : "&server=" + server;
       params += (appName == null) ? "" : "&name=" + appName;
       params += (framework == null) ? "" : "&type=" + framework;
       params += (url == null) ? "" : "&url=" + url;
       params += "&instances=" + instances;
       params += "&mem=" + memory;
       params += "&nostart=" + nostart;
-      params += (workDir == null) ? "" : "&workdir=" + workDir;
+      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      params += (server != null) ? "&server=" + server : "";
 
       callback.setEventBus(eventBus);
 
       AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params, loader).send(callback);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#checkFileExists(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void checkFileExists(String location, AsyncRequestCallback<String> callback)
-   {
-      String url = restServiceContext + "/ide/discovery/find/file?location=" + location;
-
-      callback.setEventBus(eventBus);
-
-      AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 
    /**
@@ -490,14 +494,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
       String params = (server == null) ? "" : "?server=" + server;
-      
+
       SystemInfo systemInfo = new SystemInfo();
       SystemInfoUnmarshaller unmarshaller = new SystemInfoUnmarshaller(systemInfo);
-      
+
       callback.setResult(systemInfo);
       callback.setPayload(unmarshaller);
       callback.setEventBus(eventBus);
-      
+
       AsyncRequest.build(RequestBuilder.GET, url + params, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
@@ -506,15 +510,16 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getApplicationList(String server, CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback)
+   public void getApplicationList(String server,
+      CloudFoundryAsyncRequestCallback<List<CloudfoundryApplication>> callback)
    {
       String url = restServiceContext + APPS;
-      
+
       if (server != null && !server.isEmpty())
       {
          url += "?server=" + server;
       }
-      
+
       callback.setEventBus(eventBus);
       List<CloudfoundryApplication> apps = new ArrayList<CloudfoundryApplication>();
       callback.setPayload(new ApplicationListUnmarshaller(apps));
@@ -534,9 +539,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setResult(targes);
       TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(targes);
       callback.setPayload(unmarshaller);
-      
+
       AsyncRequest.build(RequestBuilder.GET, url, loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-      .send(callback);
+         .send(callback);
    }
 
    /**
@@ -546,13 +551,13 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    public void getTarget(AsyncRequestCallback<StringBuilder> callback)
    {
       String url = restServiceContext + TARGET;
-      
+
       callback.setEventBus(eventBus);
       StringBuilder target = new StringBuilder();
       callback.setResult(target);
       TargetUnmarshaller unmarshaller = new TargetUnmarshaller(target);
       callback.setPayload(unmarshaller);
-      
+
       AsyncRequest.build(RequestBuilder.GET, url, loader).send(callback);
    }
 

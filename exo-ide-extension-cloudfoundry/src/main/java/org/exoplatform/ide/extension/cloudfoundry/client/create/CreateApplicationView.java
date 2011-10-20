@@ -4,14 +4,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -71,44 +71,44 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     * or selected by user.
     */
    @UiField
-   CheckboxItem changeTypeField;
+   CheckBox changeTypeField;
    
    /**
     * Application name field.
     */
    @UiField
-   TextField nameField;
+   TextInput nameField;
    
    /**
     * Application URL field.
     */
    @UiField
-   TextField urlField;
+   TextInput urlField;
    
    /**
     * Checkbox, that indicate, is URL will be added automatically
     * or set by user.
     */
    @UiField
-   CheckboxItem customUrlField;
+   CheckBox customUrlField;
    
    /**
     * Number of instanses of application field.
     */
    @UiField
-   TextField instansesField;
+   TextInput instansesField;
    
    /**
     * Memory field (needed for application).
     */
    @UiField
-   TextField memoryField;
+   TextInput memoryField;
    
    /**
     * Is start application after creation.
     */
    @UiField
-   CheckboxItem startAfterCreationField;
+   CheckBox startAfterCreationField;
 
    /**
     * Create application button.
@@ -128,17 +128,11 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       add(uiBinder.createAndBindUi(this));
 
       serverField.setName(SERVER_FIELD_ID);
-      serverField.setWidth(208);
       typeField.setName(TYPE_FIELD_ID);
-      typeField.setHeight(22);
       nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
       urlField.setName(URL_FIELD_ID);
-      urlField.setHeight(22);
       instansesField.setName(INSTANCES_FIELD_ID);
-      instansesField.setHeight(22);
       memoryField.setName(MEMORY_FIELD_ID);
-      memoryField.setHeight(22);
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -194,7 +188,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInNameField()
    {
-      nameField.focusInItem();
+      nameField.setFocus(true);
    }
 
    /**
@@ -277,7 +271,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void enableUrlField(boolean enable)
    {
       urlField.setEnabled(enable);
-      urlField.setShowDisabled(!enable);
    }
 
    /**
@@ -287,7 +280,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void enableMemoryField(boolean enable)
    {
       memoryField.setEnabled(enable);
-      memoryField.setShowDisabled(!enable);
    }
 
    /**
@@ -305,7 +297,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void focusInUrlField()
    {
-      urlField.focusInItem();
+      urlField.setFocus(true);
    }
 
    /**

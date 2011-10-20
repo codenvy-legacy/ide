@@ -30,8 +30,6 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -41,9 +39,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplication;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for rename operation with application.
@@ -52,7 +49,7 @@ import java.util.List;
  * @version $Id: RenameApplicationPresenter.java Jul 15, 2011 11:32:02 AM vereshchaka $
  *
  */
-public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameApplicationHandler, ViewClosedHandler
+public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
@@ -91,39 +88,23 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
    }
 
    private Display display;
-   
-   /**
-    * Events handler.
-    */
-   private HandlerManager eventBus;
-   
-   /**
-    * Selected items in navigation tree.
-    */
-   private List<Item> selectedItems;
-   
-   /**
-    * Location of working copy of application.
-    */
-   private String workDir;
-   
+
    /**
     * The name of application.
     */
    private String applicationName;
-   
+
    /**
     * The new name of application.
     */
    public RenameApplicationPresenter(HandlerManager eventbus)
    {
-      this.eventBus = eventbus;
-      
+      super(eventbus);
+
       eventBus.addHandler(RenameApplicationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
-   
+
    public void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
@@ -170,21 +151,6 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
          }
       });
    }
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      this.selectedItems = event.getSelectedItems();
-      if (selectedItems.size() == 0) {
-         return;
-      }
-      
-      workDir = selectedItems.get(0).getId();
-   }
 
    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
@@ -194,10 +160,12 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
          getApplicationInfo();
       }
    };
-   
+
    private void getApplicationInfo()
    {
-      CloudFoundryClientService.getInstance().getApplicationInfo(workDir, null,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+      CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
          new CloudFoundryAsyncRequestCallback<CloudfoundryApplication>(eventBus, appInfoLoggedInHandler, null)
          {
             @Override
@@ -208,7 +176,7 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
             }
          });
    }
-   
+
    private void showRenameDialog()
    {
       if (display == null)
@@ -221,7 +189,7 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
          display.enableRenameButton(false);
       }
    }
-   
+
    private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -230,11 +198,12 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
          renameApplication();
       }
    };
-   
+
    private void renameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      CloudFoundryClientService.getInstance().renameApplication(workDir, applicationName, newName,
+      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      CloudFoundryClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null, newName,
          new CloudFoundryAsyncRequestCallback<String>(eventBus, renameAppLoggedInHandler, null)
          {
             @Override
@@ -253,9 +222,12 @@ public class RenameApplicationPresenter implements ItemsSelectedHandler, RenameA
    @Override
    public void onRenameApplication(RenameApplicationEvent event)
    {
-      getApplicationInfo();
+      if (makeSelectionCheck())
+      {
+         getApplicationInfo();
+      }
    }
-   
+
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
