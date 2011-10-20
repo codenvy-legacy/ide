@@ -73,14 +73,15 @@ public class CloudfoundryService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void login(Map<String, String> credentials) throws CloudfoundryException, IOException,
-      ParsingResponseException
+      ParsingResponseException, VirtualFileSystemException
    {
       cloudfoundry.login(credentials.get("server"), credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
    @POST
-   public void logout(@QueryParam("server") String server) throws IOException, CloudfoundryException
+   public void logout(@QueryParam("server") String server) throws IOException, CloudfoundryException,
+      VirtualFileSystemException
    {
       cloudfoundry.logout(server);
    }
@@ -89,7 +90,7 @@ public class CloudfoundryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public SystemInfo systemInfo(@QueryParam("server") String server) throws CloudfoundryException, IOException,
-      ParsingResponseException
+      ParsingResponseException, VirtualFileSystemException
    {
       return cloudfoundry.systemInfo(server);
    }
@@ -322,7 +323,7 @@ public class CloudfoundryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryApplication[] listApplications(@QueryParam("server") String server) throws IOException,
-      ParsingResponseException, CloudfoundryException
+      ParsingResponseException, CloudfoundryException, VirtualFileSystemException
    {
       return cloudfoundry.listApplications(server);
    }
@@ -331,7 +332,7 @@ public class CloudfoundryService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public CloudfoundryServices services(@QueryParam("server") String server) throws IOException,
-      ParsingResponseException, CloudfoundryException
+      ParsingResponseException, CloudfoundryException, VirtualFileSystemException
    {
       return cloudfoundry.services(server);
    }
@@ -357,7 +358,7 @@ public class CloudfoundryService
    public void deleteService( //
       @QueryParam("server") String server, //
       @PathParam("name") String name //
-   ) throws IOException, ParsingResponseException, CloudfoundryException
+   ) throws IOException, ParsingResponseException, CloudfoundryException, VirtualFileSystemException
    {
       cloudfoundry.deleteService(server, name);
    }
@@ -411,7 +412,8 @@ public class CloudfoundryService
 
    @Path("target")
    @POST
-   public void target(@QueryParam("target") String target) throws IOException, CloudfoundryException
+   public void target(@QueryParam("target") String target) throws IOException, CloudfoundryException,
+      VirtualFileSystemException
    {
       cloudfoundry.setTarget(target);
    }
@@ -419,7 +421,7 @@ public class CloudfoundryService
    @Path("target")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public String target() throws IOException, CloudfoundryException
+   public String target() throws IOException, CloudfoundryException, VirtualFileSystemException
    {
       return cloudfoundry.getTarget();
    }
@@ -427,7 +429,7 @@ public class CloudfoundryService
    @Path("target/all")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Collection<String> targets() throws IOException, CloudfoundryException
+   public Collection<String> targets() throws IOException, CloudfoundryException, VirtualFileSystemException
    {
       return cloudfoundry.getTargets();
    }

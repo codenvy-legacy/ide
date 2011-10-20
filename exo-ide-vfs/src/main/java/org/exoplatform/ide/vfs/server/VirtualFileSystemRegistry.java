@@ -48,12 +48,12 @@ public class VirtualFileSystemRegistry
 
    public void unregisterProvider(String vfsId) throws VirtualFileSystemException
    {
-      providers.remove(vfsId);
+      providers.remove(id(vfsId));
    }
 
    public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException
    {
-      VirtualFileSystemProvider provider = providers.get(vfsId);
+      VirtualFileSystemProvider provider = providers.get(id(vfsId));
       if (provider == null)
       {
          throw new VirtualFileSystemException("Virtual file system " + vfsId + " does not exist. ");
@@ -64,5 +64,10 @@ public class VirtualFileSystemRegistry
    public Collection<VirtualFileSystemProvider> getRegisteredProviders() throws VirtualFileSystemException
    {
       return Collections.unmodifiableCollection(providers.values());
+   }
+
+   private static final String id(String vfsId)
+   {
+      return vfsId == null ? "default" : vfsId;
    }
 }

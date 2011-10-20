@@ -111,7 +111,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.JcrCloudfoundryAuthenticator</type>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
    </component>
 
    <component>

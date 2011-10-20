@@ -110,33 +110,64 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
 
    private void addProviders()
    {
-      for (final String ws : workspaces)
+      for (String ws : workspaces)
       {
          try
          {
-            registerProvider(ws, new VirtualFileSystemProvider()
-            {
-               @Override
-               public VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException
-               {
-                  ManageableRepository repository;
-                  try
-                  {
-                     repository = repositoryService.getCurrentRepository();
-                  }
-                  catch (RepositoryException re)
-                  {
-                     throw new VirtualFileSystemException(re.getMessage(), re);
-                  }
-                  return new JcrFileSystem(repository, ws, mediaType2NodeTypeResolver, requestContext != null
-                     ? requestContext.getUriInfo().getBaseUri() : URI.create(""));
-               }
-            });
+            registerProvider(ws, new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver, ws, ws));
          }
          catch (VirtualFileSystemException e)
          {
             LOG.error(e.getMessage(), e);
          }
+      }
+      // Register default VFS provider.
+      try
+      {
+         registerProvider("default", new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver, null,
+            "default"));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         LOG.error(e.getMessage(), e);
+      }
+   }
+
+   private static final class JcrFileSystemProvider implements VirtualFileSystemProvider
+   {
+      private final RepositoryService repositoryService;
+      private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
+      private final String workspace;
+      private final String id;
+
+      JcrFileSystemProvider(RepositoryService repositoryService, MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
+         String workspace, String id)
+      {
+         this.repositoryService = repositoryService;
+         this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
+         this.workspace = workspace;
+         this.id = id;
+      }
+
+      @Override
+      public VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException
+      {
+         ManageableRepository repository;
+         String ws = workspace;
+         try
+         {
+            repository = repositoryService.getCurrentRepository();
+            if (ws == null)
+            {
+               ws = repository.getConfiguration().getDefaultWorkspaceName();
+            }
+         }
+         catch (RepositoryException re)
+         {
+            throw new VirtualFileSystemException(re.getMessage(), re);
+         }
+         return new JcrFileSystem(repository, ws, id, mediaType2NodeTypeResolver, requestContext != null
+            ? requestContext.getUriInfo().getBaseUri() : URI.create(""));
       }
    }
 }

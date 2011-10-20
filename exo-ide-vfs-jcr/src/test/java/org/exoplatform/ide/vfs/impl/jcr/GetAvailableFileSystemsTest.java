@@ -46,8 +46,18 @@ public class GetAvailableFileSystemsTest extends JcrFileSystemTest
       @SuppressWarnings("unchecked")
       Collection<VirtualFileSystemInfo> entity = (Collection<VirtualFileSystemInfo>)response.getEntity();
       assertNotNull(entity);
-      assertEquals(1, entity.size());
-      VirtualFileSystemInfo vfsInfo = entity.iterator().next();
+      //assertEquals(1, entity.size());
+      VirtualFileSystemInfo vfsInfo = null;
+      for (VirtualFileSystemInfo e : entity)
+      {
+         if (e.getId().equals(WORKSPACE_NAME))
+         {
+            if (vfsInfo != null)
+               fail("More then one VFS with the same ID found. ");
+            vfsInfo = e;
+         }
+      }
+      assertNotNull(vfsInfo);
       assertEquals(true, vfsInfo.isVersioningSupported());
       assertEquals(true, vfsInfo.isLockSupported());
       assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());

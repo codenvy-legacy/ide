@@ -126,20 +126,22 @@ public class JcrFileSystem implements VirtualFileSystem
    protected final URI baseUri;
 
    private VirtualFileSystemInfo vfsInfo;
+   private final String id;
 
-   public JcrFileSystem(Repository repository, String workspaceName,
+   public JcrFileSystem(Repository repository, String workspaceName, String id,
       MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
+      this.id = id;
       this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
       this.baseUri = baseUri;
    }
 
-   public JcrFileSystem(Repository repository, String workspaceName,
+   public JcrFileSystem(Repository repository, String workspaceName, String id,
       MediaType2NodeTypeResolver itemType2NodeTypeResolver)
    {
-      this(repository, workspaceName, itemType2NodeTypeResolver, URI.create(""));
+      this(repository, workspaceName, id, itemType2NodeTypeResolver, URI.create(""));
    }
 
    /**
@@ -486,8 +488,7 @@ public class JcrFileSystem implements VirtualFileSystem
             ses.logout();
          }
          vfsInfo =
-            new VirtualFileSystemInfo(this.workspaceName, true, true,
-               org.exoplatform.services.security.IdentityConstants.ANONIM,
+            new VirtualFileSystemInfo(this.id, true, true, org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
                QueryCapability.BOTHCOMBINED, createUrlTemplates(), root);
       }

@@ -184,12 +184,20 @@ class FilesHelper
    static String readFile(VirtualFileSystem vfs, Item parent, String name) throws VirtualFileSystemException,
       IOException
    {
-      String projectPath = parent.getPath();
+      return readFile(vfs, (parent.getPath() + "/" + name));
+   }
+
+   /**
+    * Read the first line from file or <code>null</code> if file not found.
+    */
+   static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException,
+      IOException
+   {
       InputStream in = null;
       BufferedReader r = null;
       try
       {
-         ContentStream content = vfs.getContent(projectPath + "/" + name, null);
+         ContentStream content = vfs.getContent(path, null);
          in = content.getStream();
          r = new BufferedReader(new InputStreamReader(in));
          String line = r.readLine();

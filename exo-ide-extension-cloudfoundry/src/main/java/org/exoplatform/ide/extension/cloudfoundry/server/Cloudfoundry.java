@@ -103,17 +103,17 @@ public class Cloudfoundry
       this.authenticator = authenticator;
    }
 
-   public void setTarget(String server) throws IOException, CloudfoundryException
+   public void setTarget(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
    {
       authenticator.writeTarget(server);
    }
 
-   public String getTarget() throws IOException, CloudfoundryException
+   public String getTarget() throws CloudfoundryException, VirtualFileSystemException, IOException
    {
       return authenticator.readTarget();
    }
 
-   public Collection<String> getTargets() throws IOException, CloudfoundryException
+   public Collection<String> getTargets() throws CloudfoundryException, VirtualFileSystemException, IOException
    {
       return authenticator.readCredentials().getTargets();
    }
@@ -127,10 +127,11 @@ public class Cloudfoundry
     * @param password password
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
    public void login(String server, String email, String password) throws CloudfoundryException,
-      ParsingResponseException, IOException
+      ParsingResponseException, VirtualFileSystemException, IOException
    {
       if (server == null)
       {
@@ -143,9 +144,10 @@ public class Cloudfoundry
     * Remove locally saved authentication token. Need use {@link #login(String, String, String)} again.
     * 
     * @param server location of Cloud Foundry instance for logout, e.g. http://api.cloudfoundry.com
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
-   public void logout(String server) throws IOException, CloudfoundryException
+   public void logout(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
    {
       authenticator.logout(server);
    }
@@ -159,9 +161,11 @@ public class Cloudfoundry
     * @return account info
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
-   public SystemInfo systemInfo(String server) throws CloudfoundryException, ParsingResponseException, IOException
+   public SystemInfo systemInfo(String server) throws CloudfoundryException, ParsingResponseException,
+      VirtualFileSystemException, IOException
    {
       if (server == null || server.isEmpty())
       {
@@ -1019,13 +1023,16 @@ public class Cloudfoundry
     * @return list of applications
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
    public CloudfoundryApplication[] listApplications(String server) throws ParsingResponseException,
-      CloudfoundryException, IOException
+      CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (server == null || server.isEmpty())
+      {
          server = authenticator.readTarget();
+      }
       Credential credential = getCredential(server);
       return JsonHelper.fromJson(getJson(credential.target + "/apps", credential.token, 200),
          CloudfoundryApplication[].class, null);
@@ -1040,13 +1047,16 @@ public class Cloudfoundry
     * @return info about available and used services
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
-   public CloudfoundryServices services(String server) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   public CloudfoundryServices services(String server) throws CloudfoundryException, ParsingResponseException,
+      VirtualFileSystemException, IOException
    {
       if (server == null || server.isEmpty())
+      {
          server = authenticator.readTarget();
+      }
       Credential credential = getCredential(server);
       CloudfoundryServices services =
          new CloudfoundryServices(systemServices(credential), provisionedServices(credential));
@@ -1154,10 +1164,11 @@ public class Cloudfoundry
     * @param name name of service to delete
     * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
    public void deleteService(String server, String name) throws ParsingResponseException, CloudfoundryException,
-      IOException
+      VirtualFileSystemException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1549,12 +1560,15 @@ public class Cloudfoundry
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
    }
 
-   private Credential getCredential(String server) throws CloudfoundryException, IOException
+   private Credential getCredential(String server) throws CloudfoundryException, VirtualFileSystemException,
+      IOException
    {
       CloudfoundryCredentials credentials = authenticator.readCredentials();
       String token = credentials.getToken(server);
       if (token == null)
+      {
          throw new CloudfoundryException(200, "Authentication required.\n", "text/plain");
+      }
       return new Credential(server, token);
    }
 

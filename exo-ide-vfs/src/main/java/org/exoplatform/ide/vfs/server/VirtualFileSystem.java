@@ -262,8 +262,8 @@ public interface VirtualFileSystem
     * @param path path of File
     * @param versionId version id for File item. If<code>null</code> content of latest version returned.
     * @return content
-    * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws ItemNotFoundException if <code>path</code> does not exist
+    * @throws InvalidArgumentException if <code>path</code> is not File
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
@@ -291,8 +291,8 @@ public interface VirtualFileSystem
     * @param path path of File
     * @param versionId version id for File item. If<code>null</code> content of latest version returned.
     * @return content response
-    * @throws ItemNotFoundException if <code>id</code> does not exist
-    * @throws InvalidArgumentException if <code>id</code> is not File
+    * @throws ItemNotFoundException if <code>path</code> does not exist
+    * @throws InvalidArgumentException if <code>path</code> is not File
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
