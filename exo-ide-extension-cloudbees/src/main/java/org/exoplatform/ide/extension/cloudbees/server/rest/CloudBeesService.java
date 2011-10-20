@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.cloudbees.server.rest;
 
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 
 import java.net.URL;
@@ -91,8 +90,8 @@ public class CloudBeesService
       @Context UriInfo uriInfo //
    ) throws Exception
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return cloudbees.createApplication(appId, message, vfs, projectId, war);
+      return cloudbees.createApplication(appId, message,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
    }
 
    @Path("apps/update")
@@ -104,8 +103,8 @@ public class CloudBeesService
       @Context UriInfo uriInfo //
    ) throws Exception
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return cloudbees.updateApplication(appId, message, vfs, projectId, war);
+      return cloudbees.updateApplication(appId, message,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
    }
 
    @Path("apps/info")
@@ -113,16 +112,16 @@ public class CloudBeesService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> applicationInfo() throws Exception
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      return cloudbees.applicationInfo(appId, vfs, projectId);
+      return cloudbees.applicationInfo(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId);
    }
 
    @Path("apps/delete")
    @POST
    public void deleteApplication() throws Exception
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      cloudbees.deleteApplication(appId, vfs, projectId);
+      cloudbees.deleteApplication(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId);
    }
 
    @Path("apps/all")
