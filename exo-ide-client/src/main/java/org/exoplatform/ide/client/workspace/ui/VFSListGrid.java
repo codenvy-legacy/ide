@@ -18,13 +18,10 @@
  */
 package org.exoplatform.ide.client.workspace.ui;
 
-import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
-import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -35,39 +32,23 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 public class VFSListGrid extends ListGrid<VirtualFileSystemInfo>
 {
    private final String ID = "ideEntryPointListGrid";
-   
-   private static final String ENTRY_POINT_COLUMN = IDE.PREFERENCES_CONSTANT.entryPointListGridName();
-   
+
    public VFSListGrid()
    {
-      super();
-      
+  //    super();
       setID(ID);
 
-      SafeHtmlCell htmlCell = new SafeHtmlCell();
-      Column<VirtualFileSystemInfo, SafeHtml> entryNameColumn = new Column<VirtualFileSystemInfo, SafeHtml>(htmlCell)
+      Column<VirtualFileSystemInfo, String> entryNameColumn = new Column<VirtualFileSystemInfo, String>(new TextCell())
       {
-         @Override
-         public SafeHtml getValue(final VirtualFileSystemInfo item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return "<span title = \"" + item.getId() + "\">" + item.getId() + "</span>";
-               }
-            };
-            return html;
+         @Override
+         public String getValue(VirtualFileSystemInfo object)
+         {
+            return object.getId();
          }
       };
-      
-      getCellTable().addColumn(entryNameColumn, ENTRY_POINT_COLUMN);
-      getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
-      removeTableHeader();
+      getCellTable().addColumn(entryNameColumn);
    }
-   
+
 }
