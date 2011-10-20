@@ -192,12 +192,7 @@ public class CloudBees
       }
       if (appId == null || appId.isEmpty())
       {
-         appId = detectApplicationId(vfs, projectId);
-         if (appId == null || appId.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
-         }
+         appId = detectApplicationId(vfs, projectId, true);
       }
       java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
@@ -215,12 +210,7 @@ public class CloudBees
    {
       if (appId == null || appId.isEmpty())
       {
-         appId = detectApplicationId(vfs, projectId);
-         if (appId == null || appId.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
-         }
+         appId = detectApplicationId(vfs, projectId, true);
       }
       BeesClient beesClient = getBeesClient();
       ApplicationInfo ainfo = beesClient.applicationInfo(appId);
@@ -231,12 +221,7 @@ public class CloudBees
    {
       if (appId == null || appId.isEmpty())
       {
-         appId = detectApplicationId(vfs, projectId);
-         if (appId == null || appId.isEmpty())
-         {
-            throw new IllegalStateException(
-               "Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
-         }
+         appId = detectApplicationId(vfs, projectId, true);
       }
       BeesClient beesClient = getBeesClient();
       ApplicationDeleteResponse r = beesClient.applicationDelete(appId);
@@ -383,8 +368,8 @@ public class CloudBees
       }
    }
 
-   private String detectApplicationId(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
-      IOException
+   private String detectApplicationId(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
+      throws VirtualFileSystemException, IOException
    {
       String app = null;
       if (vfs != null && projectId != null)
@@ -419,6 +404,10 @@ public class CloudBees
                }
             }
          }
+      }
+      if (failIfCannotDetect && (app == null || app.isEmpty()))
+      {
+         throw new RuntimeException("Not a Cloud Bees application. Please select root folder of Cloud Bees project. ");
       }
       return app;
    }

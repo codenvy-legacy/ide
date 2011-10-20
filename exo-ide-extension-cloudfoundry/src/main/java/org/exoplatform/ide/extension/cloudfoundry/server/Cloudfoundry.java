@@ -244,11 +244,17 @@ public class Cloudfoundry
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
+      {
          throw new IllegalArgumentException("Application name required. ");
+      }
       if ((vfs == null || projectId == null) && war == null)
+      {
          throw new IllegalArgumentException("Project directory or location to WAR file required. ");
+      }
       if (server == null || server.isEmpty())
+      {
          throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
+      }
       Credential credential = getCredential(server);
       return createApplication(credential, app, framework, url, instances, memory, nostart, vfs, projectId, war);
    }
@@ -529,13 +535,13 @@ public class Cloudfoundry
    {
       // XXX NOTE : Rename does not work AT THE MOMENT even from command line tool (vmc) provided by Cloud Foundry.
       // Command 'vmc rename appname newname' HAS NOT any effects for application. 
-      if (app == null || app.isEmpty())
-      {
-         app = detectApplicationName(vfs, projectId, true);
-      }
       if (newname == null || newname.isEmpty())
       {
          throw new IllegalArgumentException("New application name may not be null or empty. ");
+      }
+      if (app == null || app.isEmpty())
+      {
+         app = detectApplicationName(vfs, projectId, true);
       }
       if (server == null || server.isEmpty())
       {
@@ -574,7 +580,9 @@ public class Cloudfoundry
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if ((vfs == null || projectId == null) && war == null)
+      {
          throw new IllegalArgumentException("Project directory or location to WAR file required. ");
+      }
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
@@ -640,8 +648,9 @@ public class Cloudfoundry
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (url == null)
+      {
          throw new IllegalArgumentException("URL for mapping required. ");
-
+      }
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
@@ -702,8 +711,9 @@ public class Cloudfoundry
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (url == null)
+      {
          throw new IllegalArgumentException("URL for unmapping required. ");
-
+      }
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
@@ -752,8 +762,9 @@ public class Cloudfoundry
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       if (memory < 0)
+      {
          throw new IllegalArgumentException("Memory reservation for application may not be negative. ");
-
+      }
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
@@ -837,8 +848,9 @@ public class Cloudfoundry
    {
       Matcher m = INSTANCE_UPDATE_EXPR.matcher(expression);
       if (!m.matches())
+      {
          throw new IllegalArgumentException("Invalid number of instances " + expression + ". ");
-
+      }
       String sign = m.group(1);
       String val = m.group(2);
 
@@ -850,8 +862,10 @@ public class Cloudfoundry
             ? currentInst - Integer.parseInt(val) //
             : currentInst + Integer.parseInt(val);
       if (newInst < 1)
+      {
          throw new IllegalArgumentException("Invalid number of instances " + newInst //
             + ". Must be at least one instance. ");
+      }
       if (currentInst != newInst)
       {
          appInfo.setInstances(newInst);
@@ -1075,7 +1089,9 @@ public class Cloudfoundry
       VirtualFileSystemException, IOException
    {
       if (service == null || service.isEmpty())
+      {
          throw new IllegalArgumentException("Service type required. ");
+      }
       // If application name is null and working directory null or application
       // name cannot be determined in some reasons then not bind new service
       // to any application.
@@ -1101,8 +1117,9 @@ public class Cloudfoundry
             target = available[i];
       }
       if (target == null)
+      {
          throw new IllegalArgumentException("Invalid service type '" + service + "'. ");
-
+      }
       // Generate service name if not specified.
       if (name == null || name.isEmpty())
       {
@@ -1140,9 +1157,13 @@ public class Cloudfoundry
       IOException
    {
       if (name == null || name.isEmpty())
+      {
          throw new IllegalArgumentException("Service name required. ");
+      }
       if (server == null || server.isEmpty())
+      {
          server = authenticator.readTarget();
+      }
       deleteService(getCredential(server), name);
    }
 
@@ -1401,7 +1422,6 @@ public class Cloudfoundry
          {
             throw new IllegalArgumentException("Application name required. ");
          }
-
          String name = detectApplicationName(vfs, projectId, false);
          if (!(name == null || name.isEmpty()))
          {
