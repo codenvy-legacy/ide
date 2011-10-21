@@ -19,22 +19,15 @@
 package org.exoplatform.ide.git.client.remove;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
@@ -53,10 +46,6 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
 
    public static final String ID = "ideRemoveFilesView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    /*Elements IDs*/
    private static final String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
@@ -65,86 +54,34 @@ public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Di
    /**
     *Save changes button.
     */
-   private ImageButton removeButton;
+   @UiField
+   ImageButton removeButton;
 
    /**
     * Cancel button.
     */
-   private ImageButton cancelButton;
+   @UiField
+   ImageButton cancelButton;
 
    /**
     * The grid to view files in index.
     */
-   private IndexFilesGrid indexFilesGrid;
+   @UiField
+   IndexFilesGrid indexFilesGrid;
+
+   interface RemoveFilesViewUiBinder extends UiBinder<Widget, RemoveFilesView>
+   {
+   }
+
+   private static RemoveFilesViewUiBinder uiBinder = GWT.create(RemoveFilesViewUiBinder.class);
 
    public RemoveFilesView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFilesViewTitle(), null, WIDTH, HEIGHT);
+      add(uiBinder.createAndBindUi(this));
 
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setSpacing(10);
-      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
-      Border border = GWT.create(Border.class);
-      border.setWidth("100%");
-      indexFilesGrid = new IndexFilesGrid();
-      indexFilesGrid.setWidth("100%");
-      indexFilesGrid.setHeight(180);
-      border.add(indexFilesGrid);
-      
-      mainLayout.add(border);
-
-      addButtonsLayout(mainLayout);
-
-      add(mainLayout);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + 10 + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      buttonsLayout.setSpacing(5);
-
-      removeButton =
-         createButton(REMOVE_BUTTON_ID, GitExtension.MESSAGES.buttonRemove(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(removeButton);
-      buttonsLayout.add(cancelButton);
-
-      panel.add(buttonsLayout);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
+      removeButton.setButtonId(REMOVE_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**

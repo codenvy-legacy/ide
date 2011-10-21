@@ -18,23 +18,17 @@
  */
 package org.exoplatform.ide.git.client.remote;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * View for adding new remote repository.
@@ -51,10 +45,6 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
 
    public static final String ID = "ideAddRemoteRepositoryView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    /*Elements IDs*/
 
    private static final String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
@@ -68,96 +58,42 @@ public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteReposi
    /**
     * Ok button.
     */
-   private ImageButton okButton;
+   @UiField
+   ImageButton okButton;
 
    /**
     * Cancel button.
     */
-   private ImageButton cancelButton;
+   @UiField
+   ImageButton cancelButton;
 
    /**
     * Remote repository name field.
     */
-   private TextField nameField;
+   @UiField
+   TextInput nameField;
 
    /**
     * Remote repository URL field.
     */
-   private TextField urlField;
+   @UiField
+   TextInput urlField;
+
+   interface AddRemoteRepositoryViewUiBinder extends UiBinder<Widget, AddRemoteRepositoryView>
+   {
+   }
+
+   private static AddRemoteRepositoryViewUiBinder uiBinder = GWT.create(AddRemoteRepositoryViewUiBinder.class);
 
    public AddRemoteRepositoryView(String title)
    {
       super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
-      FlowPanel mainPanel = new FlowPanel();
+      add(uiBinder.createAndBindUi(this));
 
-      nameField = new TextField(NAME_FIELD_ID, GitExtension.MESSAGES.remoteNameField());
-      nameField.setTitleOrientation(TitleOrientation.TOP);
-      nameField.setHeight(22);
-      nameField.setWidth("100%");
-
-      urlField = new TextField(URL_FIELD_ID, GitExtension.MESSAGES.remoteLocationField());
-      urlField.setTitleOrientation(TitleOrientation.TOP);
-      urlField.setHeight(22);
-      urlField.setWidth("100%");
-
-      VerticalPanel fieldPanel = new VerticalPanel();
-      fieldPanel.add(nameField);
-      fieldPanel.add(urlField);
-      fieldPanel.setSpacing(3);
-      mainPanel.add(fieldPanel);
-
-      HorizontalPanel panel = new HorizontalPanel();
-      panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      panel.setHeight("50px");
-
-      addButtonsLayout(panel);
-
-      mainPanel.add(panel);
-      add(mainPanel);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(HorizontalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      buttonsLayout.setSpacing(5);
-
-      okButton =
-         createButton(OK_BUTTON_ID, GitExtension.MESSAGES.buttonOk(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(okButton);
-      buttonsLayout.add(cancelButton);
-      panel.add(buttonsLayout);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
+      nameField.setName(NAME_FIELD_ID);
+      urlField.setName(URL_FIELD_ID);
+      okButton.setButtonId(OK_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**

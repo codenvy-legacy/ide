@@ -1,0 +1,74 @@
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.git.client.remove">
+   <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
+   <ui:style>
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+      
+       .label {
+      	margin-bottom: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+       }
+      	.spacing {
+		margin-top: 10px;
+		margin-bottom: 10px;
+      }
+   </ui:style>
+
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer>
+         <g:DockLayoutPanel unit="PX">
+            <g:north size="20">
+               <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%">
+               </g:CheckBox>
+            </g:north>
+            <g:center>
+               <g:FlowPanel width="100%" height="55%" addStyleNames="{style.spacing}">
+                  <g:Label text="{locale.commitMessageFieldTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
+                  <f:TextAreaInput ui:field="messageField" width="100%" height="100%"></f:TextAreaInput>
+               </g:FlowPanel>
+            </g:center>
+         </g:DockLayoutPanel>
+      </f:layer>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <f:ImageButton ui:field="commitButton" width="90" height="22" text="{locale.buttonCommit}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" imageResource="{resource.cancel}"
+               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+
+   </f:Border>
+</ui:UiBinder>

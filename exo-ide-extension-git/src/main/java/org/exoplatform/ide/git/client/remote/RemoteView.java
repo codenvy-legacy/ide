@@ -20,20 +20,14 @@ package org.exoplatform.ide.git.client.remote;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.shared.Remote;
 
@@ -53,10 +47,6 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
 
    public static final String ID = "ideRemoteView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    /*Elements IDs*/
 
    private static final String ADD_BUTTON_ID = "ideRemoteViewAddButton";
@@ -68,89 +58,41 @@ public class RemoteView extends ViewImpl implements RemotePresenter.Display
    /**
     * Create remote repository button.
     */
-   private ImageButton addButton;
+   @UiField
+   ImageButton addButton;
 
    /**
     * Delete remote repository button.
     */
-   private ImageButton deleteButton;
+   @UiField
+   ImageButton deleteButton;
 
    /**
     * Close button.
     */
-   private ImageButton closeButton;
+   @UiField
+   ImageButton closeButton;
 
    /**
     * Grid with remote repositories.
     */
-   private RemoteGrid remoteGrid;
+   @UiField
+   RemoteGrid remoteGrid;
+
+   interface RemoteViewUiBinder extends UiBinder<Widget, RemoteView>
+   {
+   }
+
+   private static RemoteViewUiBinder uiBinder = GWT.create(RemoteViewUiBinder.class);
 
    public RemoteView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
-
-      FlowPanel vPanel = new FlowPanel();
-      Border border = GWT.create(Border.class);
-      vPanel.add(border);
-
-      remoteGrid = new RemoteGrid();
-      remoteGrid.setSize("100%", "100%");
-      border.add(remoteGrid);
-      border.setMargin(5);
-
-      addButtonsLayout(vPanel);
-      add(vPanel);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(Panel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(50 + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      buttonsLayout.setSpacing(5);
-
-      addButton =
-         createButton(ADD_BUTTON_ID, GitExtension.MESSAGES.buttonAdd(), GitClientBundle.INSTANCE.add(),
-            GitClientBundle.INSTANCE.addDisabled());
-      deleteButton =
-         createButton(DELETE_BUTTON_ID, GitExtension.MESSAGES.buttonDelete(), GitClientBundle.INSTANCE.remove(),
-            GitClientBundle.INSTANCE.removeDisabled());
-      closeButton =
-         createButton(CLOSE_BUTTON_ID, GitExtension.MESSAGES.buttonClose(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(addButton);
-      buttonsLayout.add(deleteButton);
-      buttonsLayout.add(closeButton);
-
-      buttonsLayout.setCellWidth(closeButton, "100%");
-      buttonsLayout.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
-      panel.add(buttonsLayout);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
+      add(uiBinder.createAndBindUi(this));
+      
+      addButton.setButtonId(ADD_BUTTON_ID);
+      deleteButton.setButtonId(DELETE_BUTTON_ID);
+      closeButton.setButtonId(CLOSE_BUTTON_ID);
    }
 
    /**

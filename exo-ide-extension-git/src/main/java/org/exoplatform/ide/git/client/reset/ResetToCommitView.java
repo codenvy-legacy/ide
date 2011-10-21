@@ -19,28 +19,19 @@
 package org.exoplatform.ide.git.client.reset;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.user.client.ui.Image;
-
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.Border;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.RadioItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
@@ -61,86 +52,67 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
 
    public static final String ID = "ideResetToCommitView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    /*Elements IDs*/
 
    private static final String RESET_BUTTON_ID = "ideRevertToCommitViewRevertButton";
 
    private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
 
-   private static final String MODE_ID = "ideRevertToCommitViewMode";
-
    /**
     *Revert button.
     */
-   private ImageButton resetButton;
+   @UiField
+   ImageButton resetButton;
 
    /**
     * Cancel button.
     */
-   private ImageButton cancelButton;
+   @UiField
+   ImageButton cancelButton;
 
    /**
     * Grid with revisions.
     */
-   private RevisionGrid revisionGrid;
+   @UiField
+   RevisionGrid revisionGrid;
 
    /**
     * Mixed mode radio button.
     */
-   private RadioItem mixedMode;
-   
+   @UiField
+   RadioButton mixedMode;
+
    /**
     * Soft mode radio button.
     */
-   private RadioItem softMode;
-   
+   @UiField
+   RadioButton softMode;
+
    /**
     * Hard mode radio button.
     */
-   private RadioItem hardMode;
+   @UiField
+   RadioButton hardMode;
+   
+   interface ResetToCommitViewUiBinder extends UiBinder<Widget, ResetToCommitView>
+   {
+   }
+
+   private static ResetToCommitViewUiBinder uiBinder = GWT.create(ResetToCommitViewUiBinder.class);
 
    public ResetToCommitView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT);
-
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setSpacing(10);
-      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      mainLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-      
-      Border border = GWT.create(Border.class);
-      border.setWidth("100%");
-      revisionGrid = new RevisionGrid();
-      revisionGrid.setWidth("100%");
-      revisionGrid.setHeight(140);
-      border.add(revisionGrid);
-      mainLayout.add(border);
-
-      softMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetSoftTypeTitle());
-      addDescription(softMode,GitExtension.MESSAGES.resetSoftTypeDescription());
-      mixedMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetMixedTypeTitle());
+      add(uiBinder.createAndBindUi(this));
+      // GitExtension.MESSAGES.resetSoftTypeTitle());
+      addDescription(softMode, GitExtension.MESSAGES.resetSoftTypeDescription());
+      // GitExtension.MESSAGES.resetMixedTypeTitle());
       addDescription(mixedMode, GitExtension.MESSAGES.resetMixedTypeDescription());
-      hardMode = new RadioItem(MODE_ID, GitExtension.MESSAGES.resetHardTypeTitle());
+      // GitExtension.MESSAGES.resetHardTypeTitle());
       addDescription(hardMode, GitExtension.MESSAGES.resetHardTypeDescription());
 
-      VerticalPanel modeLayout = new VerticalPanel();
-      modeLayout.setWidth("100%");
-      modeLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      modeLayout.setSpacing(2);
-
-      modeLayout.add(softMode);
-      modeLayout.add(mixedMode);
-      modeLayout.add(hardMode);
-
-      mainLayout.add(modeLayout);
-      addButtonsLayout(mainLayout);
-      add(mainLayout);
+      resetButton.setButtonId(RESET_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
@@ -149,57 +121,12 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
     * @param radioItem radio button
     * @param description description to add
     */
-   private void addDescription(RadioItem radioItem, String description)
+   private void addDescription(RadioButton radioItem, String description)
    {
       Element descElement = DOM.createSpan();
       descElement.setInnerText(description);
       DOM.setStyleAttribute(descElement, "color", "#555");
       radioItem.getElement().appendChild(descElement);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      buttonsLayout.setSpacing(5);
-
-      resetButton =
-         createButton(RESET_BUTTON_ID, GitExtension.MESSAGES.buttonReset(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(resetButton);
-      buttonsLayout.add(cancelButton);
-
-      panel.add(buttonsLayout);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
    }
 
    /**

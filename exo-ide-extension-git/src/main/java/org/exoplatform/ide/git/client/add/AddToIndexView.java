@@ -18,23 +18,18 @@
  */
 package org.exoplatform.ide.git.client.add;
 
-import com.google.gwt.user.client.ui.Image;
-
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
@@ -52,10 +47,6 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
 
    public static final String ID = "ideAddToIndexView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    private static final String ADD_BUTTON_ID = "ideAddToIndexViewAddButton";
 
    private static final String CANCEL_BUTTON_ID = "ideAddToIndexViewCancelButton";
@@ -65,81 +56,32 @@ public class AddToIndexView extends ViewImpl implements AddToIndexPresenter.Disp
    private static final String MESSAGE_FIELD_ID = "ideAddToIndexViewMessageField";
 
    /*Elements titles*/
-
-   private ImageButton addButton;
-
-   private ImageButton cancelButton;
-
-   private CheckboxItem updateField;
-
-   private Label messageField;
+   @UiField
+   ImageButton addButton;
+   
+   @UiField
+   ImageButton cancelButton;
+   
+   @UiField
+   CheckBox updateField;
+   
+   @UiField
+   Label messageField;
+   
+   interface AddToIndexViewUiBinder extends UiBinder<Widget, AddToIndexView>
+   {
+   }
+   
+   private static AddToIndexViewUiBinder uiBinder = GWT.create(AddToIndexViewUiBinder.class);
 
    public AddToIndexView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.addToIndexTitle(), null, WIDTH, HEIGHT);
-
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setSpacing(10);
-
-      messageField = new Label();
-      messageField.setID(MESSAGE_FIELD_ID);
-      messageField.setIsHTML(true);
-      DOM.setStyleAttribute(messageField.getElement(), "padding", "3px");
-      mainLayout.add(messageField);
-
-      updateField = new CheckboxItem(UPDATE_FIELD_ID, GitExtension.MESSAGES.addToIndexUpdateFieldTitle());
-      mainLayout.add(updateField);
-
-      addButtonsLayout(mainLayout);
-
-      add(mainLayout);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-      buttonsLayout.setSpacing(5);
-
-      addButton =
-         createButton(ADD_BUTTON_ID, GitExtension.MESSAGES.buttonAdd(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(addButton);
-      buttonsLayout.add(cancelButton);
-
-      panel.add(buttonsLayout);
-      panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH+"px");
-      return button;
+      add(uiBinder.createAndBindUi(this));
+      messageField.getElement().setId(MESSAGE_FIELD_ID);
+      updateField.setName(UPDATE_FIELD_ID);
+      addButton.setButtonId(ADD_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
