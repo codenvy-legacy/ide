@@ -256,7 +256,6 @@ public class CloudfoundryAuthenticator
 
    private void writeFile(VirtualFileSystem vfs, Item parent, String file, String data) throws VirtualFileSystemException, IOException
    {
-      String user = ConversationState.getCurrent().getIdentity().getUserId();
       try
       {
          Item credentialsFile =
@@ -269,6 +268,7 @@ public class CloudfoundryAuthenticator
          InputStream content = new ByteArrayInputStream(data.getBytes());
          Item credentialsFile = vfs.createFile(parent.getId(), file, MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
+         String user = ConversationState.getCurrent().getIdentity().getUserId();
          acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
          vfs.updateACL(credentialsFile.getId(), acl, true, null);
       }
