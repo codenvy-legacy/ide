@@ -237,8 +237,11 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemRegistry</type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>
             <name>workspaces</name>

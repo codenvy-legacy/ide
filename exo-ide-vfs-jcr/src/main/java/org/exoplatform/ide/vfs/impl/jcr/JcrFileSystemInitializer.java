@@ -29,6 +29,7 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.picocontainer.Startable;
 
 import java.net.URI;
 import java.util.Collection;
@@ -43,20 +44,20 @@ import javax.jcr.RepositoryException;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
+public final class JcrFileSystemInitializer implements Startable
 {
-   private static final Log LOG = ExoLogger.getExoLogger(JcrFileSystemRegistry.class);
+   private static final Log LOG = ExoLogger.getExoLogger(JcrFileSystemInitializer.class);
 
    private final RepositoryService repositoryService;
    private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
-
+   private final VirtualFileSystemRegistry vfsRegistry;
    /** Names of JCR workspaces for which need have access via VFS. */
    private final Set<String> workspaces = new HashSet<String>();
 
-   public JcrFileSystemRegistry(InitParams initParams, RepositoryService repositoryService,
-      MediaType2NodeTypeResolver itemType2NodeTypeResolver)
+   public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
+      MediaType2NodeTypeResolver itemType2NodeTypeResolver, VirtualFileSystemRegistry vfsRegistry)
    {
-      this(repositoryService, itemType2NodeTypeResolver, getWorkspaces(initParams));
+      this(repositoryService, itemType2NodeTypeResolver, getWorkspaces(initParams), vfsRegistry);
    }
 
    private static Set<String> getWorkspaces(InitParams initParams)
@@ -82,20 +83,24 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
       return Collections.emptySet();
    }
 
-   public JcrFileSystemRegistry(InitParams initParams, RepositoryService repositoryService)
+   public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
+      VirtualFileSystemRegistry vfsRegistry)
    {
-      this(initParams, repositoryService, new MediaType2NodeTypeResolver());
+      this(initParams, repositoryService, new MediaType2NodeTypeResolver(), vfsRegistry);
    }
 
-   public JcrFileSystemRegistry(RepositoryService repositoryService, Collection<String> workspaces)
+   public JcrFileSystemInitializer(RepositoryService repositoryService, Collection<String> workspaces,
+      VirtualFileSystemRegistry vfsRegistry)
    {
-      this(repositoryService, new MediaType2NodeTypeResolver(), workspaces);
+      this(repositoryService, new MediaType2NodeTypeResolver(), workspaces, vfsRegistry);
    }
 
-   public JcrFileSystemRegistry(RepositoryService repositoryService,
-      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<String> workspaces)
+   public JcrFileSystemInitializer(RepositoryService repositoryService,
+      MediaType2NodeTypeResolver mediaType2NodeTypeResolver, Collection<String> workspaces,
+      VirtualFileSystemRegistry vfsRegistry)
    {
       this.repositoryService = repositoryService;
+      this.vfsRegistry = vfsRegistry;
       if (mediaType2NodeTypeResolver == null)
       {
          throw new NullPointerException("MediaType2NodeTypeResolver may not be null. ");
@@ -105,27 +110,45 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
       {
          this.workspaces.addAll(workspaces);
       }
-      addProviders();
    }
 
-   private void addProviders()
+   /**
+    * @see org.picocontainer.Startable#start()
+    */
+   @Override
+   public void start()
+   {
+      initializeProviders();
+   }
+
+   /**
+    * @see org.picocontainer.Startable#stop()
+    */
+   @Override
+   public void stop()
+   {
+   }
+
+   void initializeProviders()
    {
       for (String ws : workspaces)
       {
          try
          {
-            registerProvider(ws, new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver, ws, ws));
+            vfsRegistry.registerProvider(ws, new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver,
+               ws, ws));
          }
          catch (VirtualFileSystemException e)
          {
             LOG.error(e.getMessage(), e);
          }
       }
-      // Register default VFS provider.
+      // Register default VFS provider, default VFS uses default workspace of repository.
+      // TODO : need to enable/disable register default JCR VFS with configuration option ??
       try
       {
-         registerProvider("default", new JcrFileSystemProvider(repositoryService, mediaType2NodeTypeResolver, null,
-            "default"));
+         vfsRegistry.registerProvider("default", new JcrFileSystemProvider(repositoryService,
+            mediaType2NodeTypeResolver, null, "default"));
       }
       catch (VirtualFileSystemException e)
       {
@@ -139,7 +162,7 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
       private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
       private final String workspace;
       private final String id;
-
+   
       JcrFileSystemProvider(RepositoryService repositoryService, MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
          String workspace, String id)
       {
@@ -148,7 +171,7 @@ public final class JcrFileSystemRegistry extends VirtualFileSystemRegistry
          this.workspace = workspace;
          this.id = id;
       }
-
+   
       @Override
       public VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException
       {
