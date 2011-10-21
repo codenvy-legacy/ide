@@ -55,10 +55,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +74,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -88,6 +84,22 @@ public class Heroku
    public static final String HEROKU_API = "https://api.heroku.com";
 
    private static final String HEROKU_GIT_REMOTE = "heroku";
+
+   private static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[]{new X509TrustManager()
+   {
+      public java.security.cert.X509Certificate[] getAcceptedIssuers()
+      {
+         return null;
+      }
+
+      public void checkClientTrusted(X509Certificate[] certs, String authType)
+      {
+      }
+
+      public void checkServerTrusted(X509Certificate[] certs, String authType)
+      {
+      }
+   }};
 
    private final HerokuAuthenticator authenticator;
 
@@ -1061,7 +1073,8 @@ public class Heroku
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
     */
-   public String logs(String name, File workDir, int logLines) throws IOException, HerokuException
+   public String logs(String name, File workDir, int logLines) throws IOException, HerokuException,
+      java.security.GeneralSecurityException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -1084,8 +1097,8 @@ public class Heroku
     * @throws IOException
     * @throws HerokuException
     */
-   private String getLogsLocation(HerokuCredentials herokuCredentials, String name, File workDir, int logLines) throws IOException,
-      HerokuException
+   private String getLogsLocation(HerokuCredentials herokuCredentials, String name, File workDir, int logLines)
+      throws IOException, HerokuException
    {
       if (name == null || name.isEmpty())
       {
@@ -1097,26 +1110,30 @@ public class Heroku
       HttpURLConnection http = null;
       try
       {
-         String query = (logLines > 0) ? "&num="+logLines : "";
+         String query = (logLines > 0) ? "&num=" + logLines : "";
          //"logplex" query parameter must be true:
-         URL url = new URL(HEROKU_API + "/apps/" + name + "/logs?logplex=true"+query);
-         System.out.println("Heroku.getLogsLocation()>>>"+url.getQuery());
+         URL url = new URL(HEROKU_API + "/apps/" + name + "/logs?logplex=true" + query);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml, */*");
          authenticate(herokuCredentials, http);
-
          if (http.getResponseCode() != 200)
             throw fault(http);
-
-         BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
-         StringBuilder sb = new StringBuilder();
+         InputStream in = http.getInputStream();
+         BufferedReader r = null;
          String line = null;
-         while ((line = reader.readLine()) != null)
+         try
          {
-            sb.append(line + "\n");
+            r = new BufferedReader(new InputStreamReader(in));
+            line = r.readLine();
          }
-         return sb.toString();
+         finally
+         {
+            if (r != null)
+               r.close();
+            in.close();
+         }
+         return line;
       }
       finally
       {
@@ -1131,54 +1148,46 @@ public class Heroku
     * @throws IOException
     * @throws HerokuException
     */
-   private String logs(String logsLocation) throws IOException, HerokuException
+   private String logs(String logsLocation) throws IOException, HerokuException, java.security.GeneralSecurityException
    {
       // Create a trust manager that does not validate certificate chains
-      TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager()
-      {
-         public java.security.cert.X509Certificate[] getAcceptedIssuers()
-         {
-            return null;
-         }
-
-         public void checkClientTrusted(X509Certificate[] certs, String authType)
-         {
-         }
-
-         public void checkServerTrusted(X509Certificate[] certs, String authType)
-         {
-         }
-      }};
-
-      // Install the all-trusting trust manager
-      SSLContext sc = null;
+      SSLContext sc = SSLContext.getInstance("SSL");
+      sc.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
+      URL url = new URL(logsLocation);
+      HttpURLConnection seccon = null;
       try
       {
-         sc = SSLContext.getInstance("SSL");
-         sc.init(null, trustAllCerts, new java.security.SecureRandom());
+         seccon = (HttpURLConnection)url.openConnection();
+         seccon.setRequestMethod("GET");
+         ((HttpsURLConnection)seccon).setSSLSocketFactory(sc.getSocketFactory());
+         if (seccon.getResponseCode() != 200)
+            throw fault(seccon);
+         InputStream in = seccon.getInputStream();
+         BufferedReader reader = null;
+         try
+         {
+            reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+               sb.append(line);
+               sb.append('\n');
+            }
+            return sb.toString();
+         }
+         finally
+         {
+            if (reader != null)
+               reader.close();
+            in.close();
+         }
       }
-      catch (NoSuchAlgorithmException e)
+      finally
       {
-         e.printStackTrace();
+         if (seccon != null)
+            seccon.disconnect();
       }
-      catch (KeyManagementException e)
-      {
-         e.printStackTrace();
-      }
-     
-      HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-      URL url = new URL(logsLocation);
-      URLConnection con = url.openConnection();
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-      StringBuilder sb = new StringBuilder();
-      String line = null;
-      while ((line = reader.readLine()) != null)
-      {
-         sb.append(line + "\n");
-      }
-      return sb.toString();
    }
 
    /**

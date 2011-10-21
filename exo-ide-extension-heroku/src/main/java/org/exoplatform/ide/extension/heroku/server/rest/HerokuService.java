@@ -59,19 +59,14 @@ public class HerokuService
 {
    @Inject
    private Heroku heroku;
-
    @Inject
    private LocalPathResolver localPathResolver;
-
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-
-   @QueryParam("vfsId")
+   @QueryParam("vfsid")
    private String vfsId;
-
    @QueryParam("projectid")
    private String projectId;
-
    @QueryParam("name")
    private String appName;
 
@@ -113,8 +108,6 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku.createApplication(appName, remote,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -124,8 +117,6 @@ public class HerokuService
    public void appsDestroy() throws HerokuException, IOException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
    }
@@ -137,8 +128,6 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku.applicationInfo(appName, inRawFormat,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -150,8 +139,6 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku.renameApplication(appName, newname,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -163,8 +150,6 @@ public class HerokuService
       LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku
          .getStacks(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -176,8 +161,6 @@ public class HerokuService
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku.stackMigrate(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null, stack);
    }
@@ -186,11 +169,9 @@ public class HerokuService
    @GET
    @Produces(MediaType.TEXT_PLAIN)
    public String logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolveException, VirtualFileSystemException
+      LocalPathResolveException, VirtualFileSystemException, Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       return heroku.logs(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
          logLines);
    }
@@ -203,8 +184,6 @@ public class HerokuService
       LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-      if (vfs == null)
-         throw new VirtualFileSystemException("Virtual file system not initialized");
       final HttpChunkReader chunkReader =
          heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, command);
       return new StreamingOutput()

@@ -142,7 +142,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
       List<Property> properties = new ArrayList<Property>();
@@ -163,7 +163,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    {
       String url = restServiceContext + DESTROY_APPLICATION;
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, loader)
@@ -201,7 +201,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + APPLICATION_INFO;
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Property> properties = new ArrayList<Property>();
@@ -224,7 +224,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       String params = (applicationName != null) ? "name=" + applicationName + "&" : "";
       params = (newName != null) ? "newname=" + newName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Property> properties = new ArrayList<Property>();
@@ -245,7 +245,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
@@ -268,7 +268,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + RUN;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       RakeCommandResult rakeCommandResult = new RakeCommandResult();
@@ -291,7 +291,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + GET_STACKS;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       List<Stack> stackList = new ArrayList<Stack>();
@@ -316,7 +316,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params = (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       StackMigrationResponse stackMigrationResponse = new StackMigrationResponse();
@@ -339,7 +339,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += "num=" + logLines + "&";
-      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsId=" + vfsId + "&": "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&": "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
       
       LogsResponse logsResponse = new LogsResponse();
