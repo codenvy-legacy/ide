@@ -18,24 +18,18 @@
  */
 package org.exoplatform.ide.git.client.pull;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.LinkedHashMap;
@@ -50,15 +44,11 @@ import java.util.LinkedHashMap;
  */
 public class PullView extends ViewImpl implements PullPresenter.Display
 {
-   public static final int HEIGHT = 225;
+   public static final int HEIGHT = 205;
 
    public static final int WIDTH = 510;
 
    public static final String ID = "idePullView";
-
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
 
    private static final String PULL_BUTTON_ID = "idePullViewPullButton";
 
@@ -73,120 +63,49 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    /**
     * Pull button.
     */
-   private ImageButton pullButton;
+   @UiField
+   ImageButton pullButton;
 
    /**
     * Cancel button.
     */
-   private ImageButton cancelButton;
+   @UiField
+   ImageButton cancelButton;
 
    /**
     * Remote repository field.
     */
-   private SelectItemOld remoteField;
+   @UiField
+   SelectItem remoteField;
 
    /**
     * Local branches field
     */
-   private ComboBoxFieldOld localBranchesField;
+   @UiField
+   ComboBoxField localBranchesField;
 
    /**
     * Remote branches field.
     */
-   private ComboBoxFieldOld remoteBranchesField;
+   @UiField
+   ComboBoxField remoteBranchesField;
+   
+   interface PullViewUiBinder extends UiBinder<Widget, PullView>
+   {
+   }
+
+   private static PullViewUiBinder uiBinder = GWT.create(PullViewUiBinder.class);
 
    public PullView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.pullTitle(), null, WIDTH, HEIGHT);
-
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setSpacing(10);
-
-      remoteField = new SelectItemOld(REMOTE_FIELD_ID, GitExtension.MESSAGES.pullRemoteField());
-      remoteField.setWidth(280);
-      mainLayout.add(remoteField);
-      mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
-
-      addRefsLayout(mainLayout);
-
-      addButtonsLayout(mainLayout);
-
-      add(mainLayout);
-   }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-      buttonsLayout.setSpacing(5);
-
-      pullButton =
-         createButton(PULL_BUTTON_ID, GitExtension.MESSAGES.buttonPull(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(pullButton);
-      buttonsLayout.add(cancelButton);
-
-      panel.add(buttonsLayout);
-      panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
-   }
-
-   /**
-    * Create the layout for displaying refs (local and remote ones).
-    * 
-    * @param panel parent panel for refs layout 
-    */
-   private void addRefsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel refsLayout = new HorizontalPanel();
-      refsLayout.setWidth("100%");
-      refsLayout.setSpacing(3);
-
-      localBranchesField = createComboBoxField(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pullLocalBranches());
-
-      Image arrow = new Image(GitClientBundle.INSTANCE.arrow());
-      arrow.setWidth("16px");
-      arrow.setHeight("16px");
-      DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
-
-      remoteBranchesField = createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.pullRemoteBranches());
-
-      refsLayout.add(remoteBranchesField);
-      refsLayout.add(arrow);
-      refsLayout.setCellVerticalAlignment(arrow, HasVerticalAlignment.ALIGN_MIDDLE);
-      refsLayout.add(localBranchesField);
-
-      panel.add(refsLayout);
+      add(uiBinder.createAndBindUi(this));
+      
+      remoteField.setName(REMOTE_FIELD_ID);
+      pullButton.setButtonId(PULL_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      localBranchesField.setName(LOCAL_BRANCHES_FIELD_ID);
+      remoteBranchesField.setName(REMOTE_BRANCHES_FIELD_ID);
    }
 
    /**
@@ -286,25 +205,5 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    public String getRemoteDisplayValue()
    {
       return remoteField.getDisplayValue();
-   }
-
-   /**
-    * Creates combobox field.
-    * 
-    * @param id element's id
-    * @param title element's title
-    * @return {@link ComboBoxField} created combobox
-    */
-   private ComboBoxFieldOld createComboBoxField(String id, String title)
-   {
-      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
-      combobox.setTitleOrientation(TitleOrientation.TOP);
-      combobox.setShowTitle(true);
-      combobox.setTitle(title);
-      combobox.setName(id);
-      combobox.setWidth(210);
-      combobox.setHeight(18);
-      combobox.setPickListHeight(100);
-      return combobox;
    }
 }

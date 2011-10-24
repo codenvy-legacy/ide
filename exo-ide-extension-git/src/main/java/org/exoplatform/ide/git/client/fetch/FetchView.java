@@ -18,25 +18,19 @@
  */
 package org.exoplatform.ide.git.client.fetch;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
 import java.util.LinkedHashMap;
@@ -57,10 +51,6 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
 
    public static final String ID = "ideFetchView";
 
-   private static final int BUTTON_HEIGHT = 22;
-
-   private static final int BUTTON_WIDTH = 90;
-
    private static final String FETCH_BUTTON_ID = "ideFetchViewFetchButton";
 
    private static final String CANCEL_BUTTON_ID = "ideFetchViewCancelButton";
@@ -76,32 +66,44 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    /**
     * Fetch button.
     */
-   private ImageButton fetchButton;
+   @UiField
+   ImageButton fetchButton;
 
    /**
     * Cancel button.
     */
-   private ImageButton cancelButton;
+   @UiField
+   ImageButton cancelButton;
 
    /**
     * Remote repository field.
     */
-   private SelectItemOld remoteField;
+   @UiField
+   SelectItem remoteField;
 
    /**
     * Local branches field.
     */
-   private ComboBoxFieldOld localBranchesField;
+   @UiField
+   ComboBoxField localBranchesField;
 
    /**
     * Remote branches field.
     */
-   private ComboBoxFieldOld remoteBranchesField;
+   @UiField
+   ComboBoxField remoteBranchesField;
 
    /**
     * Remove deleted refs field.
     */
-   private CheckboxItem removeDeletedRefsField;
+   @UiField
+   CheckBox removeDeletedRefsField;
+   
+   interface FetchViewUiBinder extends UiBinder<Widget, FetchView>
+   {
+   }
+
+   private static FetchViewUiBinder uiBinder = GWT.create(FetchViewUiBinder.class);
 
    /**
     * 
@@ -109,103 +111,18 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    public FetchView()
    {
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.fetchTitle(), null, WIDTH, HEIGHT);
-
-      VerticalPanel mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setSpacing(5);
-
-      remoteField = new SelectItemOld(REMOTE_FIELD_ID, GitExtension.MESSAGES.fetchRemoteFieldTitle());
-      remoteField.setWidth(290);
-      mainLayout.add(remoteField);
-      mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
-
-      addRefsLayout(mainLayout);
-
-      removeDeletedRefsField =
-         new CheckboxItem(REMOVE_DELETED_REFS_FIELD_ID, GitExtension.MESSAGES.fetchRemoveDeletedRefsTitle());
-      mainLayout.add(removeDeletedRefsField);
-
-      addButtonsLayout(mainLayout);
-
-      add(mainLayout);
+      add(uiBinder.createAndBindUi(this));
+     
+      remoteField.setName(REMOTE_FIELD_ID);
+      removeDeletedRefsField.setName(REMOVE_DELETED_REFS_FIELD_ID);
+      localBranchesField.setName(LOCAL_BRANCHES_FIELD_ID);
+      remoteBranchesField.setName(REMOTE_BRANCHES_FIELD_ID);
+      
+      fetchButton.setButtonId(FETCH_BUTTON_ID);
+      cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      
    }
-
-   /**
-    * Add buttons to the pointed panel.
-    * 
-    * @param panel
-    */
-   private void addButtonsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTON_HEIGHT + 20 + "px");
-      buttonsLayout.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-      buttonsLayout.setSpacing(5);
-
-      fetchButton =
-         createButton(FETCH_BUTTON_ID, GitExtension.MESSAGES.buttonFetch(), GitClientBundle.INSTANCE.ok(),
-            GitClientBundle.INSTANCE.okDisabled());
-      cancelButton =
-         createButton(CANCEL_BUTTON_ID, GitExtension.MESSAGES.buttonCancel(), GitClientBundle.INSTANCE.cancel(),
-            GitClientBundle.INSTANCE.cancelDisabled());
-
-      buttonsLayout.add(fetchButton);
-      buttonsLayout.add(cancelButton);
-
-      panel.add(buttonsLayout);
-      panel.setCellHorizontalAlignment(buttonsLayout, HasHorizontalAlignment.ALIGN_CENTER);
-   }
-
-   /**
-    * Creates button.
-    * 
-    * @param id button's id
-    * @param title button's title
-    * @param icon button's normal icon
-    * @param disabledIcon button's icon in disabled state
-    * @return {@link ImageButton}
-    */
-   private ImageButton createButton(String id, String title, ImageResource icon, ImageResource disabledIcon)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setImages(new Image(icon), new Image(disabledIcon));
-      button.setHeight(BUTTON_HEIGHT + "px");
-      button.setWidth(BUTTON_WIDTH + "px");
-      return button;
-   }
-
-   /**
-    * Create the layout for displaying refs (local and remote ones).
-    * 
-    * @param panel parent panel for refs layout 
-    */
-   private void addRefsLayout(VerticalPanel panel)
-   {
-      HorizontalPanel refsLayout = new HorizontalPanel();
-      refsLayout.setWidth("100%");
-      refsLayout.setSpacing(3);
-
-      localBranchesField =
-         createComboBoxField(LOCAL_BRANCHES_FIELD_ID, GitExtension.MESSAGES.fetchLocalBranchesTitle());
-
-      Image arrow = new Image(GitClientBundle.INSTANCE.arrow());
-      arrow.setWidth("16px");
-      arrow.setHeight("16px");
-      DOM.setStyleAttribute(arrow.getElement(), "marginTop", "15px");
-
-      remoteBranchesField =
-         createComboBoxField(REMOTE_BRANCHES_FIELD_ID, GitExtension.MESSAGES.fetchRemoteBranchesTitle());
-
-      refsLayout.add(remoteBranchesField);
-      refsLayout.add(arrow);
-      refsLayout.setCellVerticalAlignment(arrow, HasVerticalAlignment.ALIGN_MIDDLE);
-      refsLayout.add(localBranchesField);
-
-      panel.add(refsLayout);
-   }
-
+  
    /**
     * @see org.exoplatform.ide.git.client.fetch.FetchPresenter.Display#getFetchButton()
     */
@@ -312,25 +229,5 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    public String getRemoteDisplayValue()
    {
       return remoteField.getDisplayValue();
-   }
-
-   /**
-    * Creates combobox field.
-    * 
-    * @param id element's id
-    * @param title element's title
-    * @return {@link ComboBoxField} created combobox
-    */
-   private ComboBoxFieldOld createComboBoxField(String id, String title)
-   {
-      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
-      combobox.setTitleOrientation(TitleOrientation.TOP);
-      combobox.setShowTitle(true);
-      combobox.setTitle(title);
-      combobox.setName(id);
-      combobox.setWidth(210);
-      combobox.setHeight(18);
-      combobox.setPickListHeight(100);
-      return combobox;
    }
 }

@@ -1,0 +1,106 @@
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
+   <ui:style>
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+      
+      .floatRight {
+      	float: right;
+      }
+      
+      .labelH {
+      	margin-right: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      }
+      
+      .labelV {
+      	margin-bottom: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      }
+      
+      .spacing {
+      	margin-top: 15px;
+      }
+      
+      .image {
+      	width: 16x;
+      	height: 16px;
+      	margin-top: 24px;
+      	float: left;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+   </ui:style>
+
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer top="0" height="70%">
+         <g:DockLayoutPanel unit="PCT">
+            <g:north size="40">
+               <g:FlowPanel width="100%">
+                  <g:Label text="{locale.pushViewRemoteFieldTitle}" addStyleNames="{style.labelH}" width="40%"></g:Label>
+                  <f:SelectItem ui:field="remoteField" width="55%" addStyleNames="{style.floatRight}"></f:SelectItem>
+               </g:FlowPanel>
+            </g:north>
+            <g:west size="47">
+               <g:FlowPanel>
+                  <g:Label text="{locale.pushViewLocalBranchFieldTitle}" addStyleNames="{style.labelV}" width="100%"></g:Label>
+                  <f:SelectItem ui:field="localBranchesField" width="100%"></f:SelectItem>
+               </g:FlowPanel>
+            </g:west>
+            <g:center>
+               <g:Image resource="{resource.arrow}" styleName="{style.image}">
+               </g:Image>
+            </g:center>
+            <g:east size="47">
+               <g:FlowPanel>
+                  <g:Label text="{locale.pushViewRemoteBranchFieldTitle}" addStyleNames="{style.labelV}" width="100%"></g:Label>
+                  <f:ComboBoxField ui:field="remoteBranchesField" width="100%" height="20px" addStyleNames="{style.floatLeft}"></f:ComboBoxField>
+               </g:FlowPanel>
+            </g:east>
+         </g:DockLayoutPanel>
+      </f:layer>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <f:ImageButton ui:field="pushButton" width="90" height="22" text="{locale.buttonPush}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" imageResource="{resource.cancel}"
+               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+
+   </f:Border>
+</ui:UiBinder>
