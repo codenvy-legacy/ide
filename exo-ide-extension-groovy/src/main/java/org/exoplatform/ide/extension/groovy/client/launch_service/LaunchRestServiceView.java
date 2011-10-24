@@ -23,15 +23,14 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.groovy.client.Images;
@@ -94,13 +93,13 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
 
    private VerticalPanel vLayout;
 
-   private ComboBoxFieldOld pathField;
+   private ComboBoxField pathField;
 
-   private SelectItemOld methodField;
+   private SelectItem methodField;
 
-   private SelectItemOld requestMediaTypeField;
+   private SelectItem requestMediaTypeField;
 
-   private SelectItemOld responseMediaTypeField;
+   private SelectItem responseMediaTypeField;
 
    private WadlParameterEntryListGrid parametersQueryGrid;
 
@@ -178,30 +177,34 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
       form.setSpacing(3);
       form.getElement().setId(ID_FORM);
 
-      pathField = new ComboBoxFieldOld();
-      pathField.setTitleOrientation(TitleOrientation.TOP);
-      pathField.setShowTitle(true);
-      pathField.setTitle("Path:");
+      Label pathLabel = new Label("Path:");
+      pathField = new ComboBoxField();
       pathField.setName(NAME_PATH);
-      pathField.setWidth(483);
-      pathField.setPickListHeight(100);
+      pathField.setWidth(480);
       
 
-      methodField = new SelectItemOld(NAME_METHOD, "Method:");
+      Label methodLabel = new Label("Method:");
+      methodField = new SelectItem();
+      methodField.setName(NAME_METHOD);
       methodField.setWidth(480);
-      methodField.setTitleOrientation(TitleOrientation.TOP);
 
-      requestMediaTypeField = new SelectItemOld(NAME_REQUEST, "Request Media Type:");
+      Label requestMediaTypeLabel = new Label("Request Media Type:");
+      requestMediaTypeField = new SelectItem();
+      requestMediaTypeField.setName(NAME_REQUEST);
       requestMediaTypeField.setWidth(480);
-      requestMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
 
-      responseMediaTypeField = new SelectItemOld(NAME_RESPONSE, "Response Media Type");
+      Label responseMediaTypeLabel = new Label("Response Media Type");
+      responseMediaTypeField = new SelectItem();
+      responseMediaTypeField.setName(NAME_RESPONSE);
       responseMediaTypeField.setWidth(480);
-      responseMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
 
+      form.add(pathLabel);
       form.add(pathField);
+      form.add(methodLabel);
       form.add(methodField);
+      form.add(requestMediaTypeLabel);
       form.add(requestMediaTypeField);
+      form.add(responseMediaTypeLabel);
       form.add(responseMediaTypeField);
 
       form.add(createParametersTabSet());

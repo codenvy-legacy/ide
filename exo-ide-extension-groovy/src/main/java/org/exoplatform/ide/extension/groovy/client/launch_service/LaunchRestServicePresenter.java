@@ -970,15 +970,4 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       return false;
    }
 
-
-
-
-
-
-
-
-
-
-
-
 }
