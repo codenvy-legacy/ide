@@ -20,25 +20,24 @@ package org.exoplatform.ide;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.thoughtworks.selenium.Selenium;
-
 import org.everrest.http.client.HTTPConnection;
 import org.everrest.http.client.HTTPResponse;
 import org.everrest.http.client.ModuleException;
 import org.everrest.http.client.ProtocolNotSuppException;
-import org.exoplatform.ide.utils.InternetExplorerUtil;
-import org.exoplatform.ide.utils.TextUtil;
-import org.exoplatform.ide.utils.WebKitUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,6 +46,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.thoughtworks.selenium.Selenium;
 
 ;
 
@@ -109,6 +110,8 @@ public abstract class BaseTest
 
    public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
+   
+   public static Selenium selenium;
    /**
     * Default workspace URL.
     */
@@ -120,9 +123,9 @@ public abstract class BaseTest
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.valueOf(IDE_SETTINGS
       .getString("selenium.browser.commad"));
 
-   public Selenium selenium()
+   public static Selenium selenium()
    {
-      return session();
+      return selenium;
    }
 
    /**
@@ -139,88 +142,109 @@ public abstract class BaseTest
    public static String REST_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
    
    public static String IDE_WORKSPACE_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   private static WebDriver driver;
    
    //public IDE IDE = new IDE(selenium(), WS_URL);
-   public IDE IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
+   public static IDE IDE; //new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
+   
+//   @Before
+//   public void startSelenium() throws Exception
+//   {
+//      if (beforeClass)
+//         return;
+//
+//      beforeClass = true;
+//      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
+//      //IDE = new IDE(selenium(), WS_URL);
+//      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
+//      
+//      switch (BROWSER_COMMAND)
+//      {
+//         case GOOGLE_CHROME :
+//         case SAFARI :
+//            new WebKitUtil(selenium());
+//            break;
+//
+//         case IE_EXPLORE_PROXY :
+//            new InternetExplorerUtil(selenium());
+//            break;
+//
+//         default :
+//            new TextUtil(selenium());
+//      }
+//
+//      //      testsCounter++;
+//      //      if (testsCounter % maxRunTestsOnOneSession == 1)
+//      //      {
+//      //         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
+//      //         selenium().start();
+//      //         selenium().windowFocus();
+//      //         selenium().windowMaximize();
+//      //         selenium().open(APPLICATION_URL);
+//      //         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+//      //         standaloneLogin(USER_NAME);
+//      //      }
+//      //      
+//      //      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
+//      //      selenium().open(APPLICATION_URL);
+//      //      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
+//
+//      try
+//      {
+//         selenium().windowFocus();
+//         selenium().windowMaximize();
+//         selenium().open(APPLICATION_URL);
+//         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+//
+//         if (isRunIdeUnderPortal())
+//         {
+//            loginInPortal();
+//            selenium().open(APPLICATION_URL);
+//            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+//            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+//            // selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
+//            // selenium().selectFrame("remote_iframe_0");
+//
+//            // selectMainForm()
+//            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
+//            {
+//               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
+//            }
+//            else
+//            {
+//               selenium().selectFrame("relative=top");
+//            }
+//         }
+//         else if (isRunIdeAsStandalone())
+//         {
+//            standaloneLogin(USER_NAME, USER_PASSWORD);
+//         }
+//      }
+//      catch (Exception e)
+//      {
+//         e.printStackTrace();
+//      }
+//   }
+   
    
    @Before
-   public void startSelenium() throws Exception
+   public void start() throws Exception
    {
-      if (beforeClass)
-         return;
-
-      beforeClass = true;
-      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
-      //IDE = new IDE(selenium(), WS_URL);
+      System.setProperty("webdriver.chrome.driver", "/home/vetal/eXo/chromedriver");
+      driver = new FirefoxDriver(); 
+               //new ChromeDriver();
+//      driver.get("http://www.google.com");
+      selenium = new WebDriverBackedSelenium(driver, "http://localhost:8080/site/index.html");
+      selenium.open("http://localhost:8080/site/index.html");
+      selenium.waitForPageToLoad("20000");
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
-      
-      switch (BROWSER_COMMAND)
-      {
-         case GOOGLE_CHROME :
-         case SAFARI :
-            new WebKitUtil(selenium());
-            break;
-
-         case IE_EXPLORE_PROXY :
-            new InternetExplorerUtil(selenium());
-            break;
-
-         default :
-            new TextUtil(selenium());
-      }
-
-      //      testsCounter++;
-      //      if (testsCounter % maxRunTestsOnOneSession == 1)
-      //      {
-      //         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
-      //         selenium().start();
-      //         selenium().windowFocus();
-      //         selenium().windowMaximize();
-      //         selenium().open(APPLICATION_URL);
-      //         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      //         standaloneLogin(USER_NAME);
-      //      }
-      //      
-      //      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
-      //      selenium().open(APPLICATION_URL);
-      //      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
-
-      try
-      {
-         selenium().windowFocus();
-         selenium().windowMaximize();
-         selenium().open(APPLICATION_URL);
-         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-
-         if (isRunIdeUnderPortal())
-         {
-            loginInPortal();
-            selenium().open(APPLICATION_URL);
-            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-            // selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
-            // selenium().selectFrame("remote_iframe_0");
-
-            // selectMainForm()
-            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
-            {
-               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
-            }
-            else
-            {
-               selenium().selectFrame("relative=top");
-            }
-         }
-         else if (isRunIdeAsStandalone())
-         {
-            standaloneLogin(USER_NAME, USER_PASSWORD);
-         }
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      System.out.println("BaseTest.start()" + selenium());
+      standaloneLogin(USER_NAME, USER_PASSWORD);
+      System.out.println("BaseTest.start()" + selenium());
    }
+   
+   
 
    protected void logout() throws Exception
    {
@@ -242,7 +266,7 @@ public abstract class BaseTest
       selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 
-   protected void standaloneLogin(String userName, String password) throws Exception
+   protected static void standaloneLogin(String userName, String password) throws Exception
    {
       waitForElementPresent("//input[@name='j_username']");
       selenium().type("//input[@name='j_username']", userName);
@@ -908,12 +932,13 @@ public abstract class BaseTest
     * @param locator - element locator
     * @throws Exception
     */
-   public void waitForElementPresent(String locator) throws Exception
+   public static void waitForElementPresent(String locator) throws Exception
    {
       long startTime = System.currentTimeMillis();
 
       while (true)
       {
+         System.out.println("BaseTest.waitForElementPresent()" + selenium());
          if (selenium().isElementPresent(locator))
          {
             break;
