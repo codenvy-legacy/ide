@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -88,25 +88,25 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     * Field to show commit date of first commit.
     */
    @UiField
-   TextField comitADate;
+   TextInput comitADate;
 
    /**
     * Field to show commit revision of first commit.
     */
    @UiField
-   TextField comitARevision;
+   TextInput comitARevision;
 
    /**
     * Field to show commit date of second commit.
     */
    @UiField
-   TextField comitBDate;
+   TextInput comitBDate;
 
    /**
     * Field to show commit's revision of second commit.
     */
    @UiField
-   TextField comitBRevision;
+   TextInput comitBRevision;
 
    @UiField
    TableCellElement revisionBTitle;
@@ -178,10 +178,10 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       revisionADate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
       revisionATitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
       
-      comitADate.setHeight(20);
-      comitARevision.setHeight(20);
-      comitBDate.setHeight(20);
-      comitARevision.setHeight(20);
+      comitADate.setHeight("20px");
+      comitARevision.setHeight("20px");
+      comitBDate.setHeight("20px");
+      comitARevision.setHeight("20px");
       createControls();
    }
 
@@ -392,8 +392,8 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       revisionBDate.setAttribute("rowspan", "2");
       revisionBDate.setInnerHTML("<nobr>" + text + "</nobr>");
       revisionBTitle.setInnerHTML("");
-      comitBDate.hide();
-      comitBRevision.hide();
+      comitBDate.setVisible(false);
+      comitBRevision.setVisible(false);
    }
 
    /**
@@ -405,8 +405,8 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
       revisionBDate.setAttribute("rowspan", "0");
       revisionBDate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
       revisionBTitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
-      comitBDate.show();
-      comitBRevision.show();
+      comitBDate.setVisible(true);
+      comitBRevision.setVisible(true);
       DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
       comitADate.setValue(formatter.format(new Date(revisionA.getCommitTime())));
       comitARevision.setValue(revisionA.getId());

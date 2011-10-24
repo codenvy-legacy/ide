@@ -25,49 +25,49 @@
       </g:layer>
       <g:layer top="28px" bottom="0px">
          <g:SplitLayoutPanel>
-            <g:north size="100">
+            <g:north size="150">
                <f:Border margin="5">
                   <f:layer>
-                     <c:RevisionGrid ui:field="revisionGrid"></c:RevisionGrid>
+                     <c:RevisionGrid ui:field="revisionGrid" width="100%"></c:RevisionGrid>
                   </f:layer>
                </f:Border>
             </g:north>
             <g:center>
                <g:FlowPanel>
-                  <f:Border margin="5" borderColor="transparent" height="70">
+                  <f:Border margin="5" borderColor="transparent" height="70px" width="100%">
                      <f:layer>
                         <g:HTMLPanel>
                            <table width="100%">
                               <tr>
                                  <td class="{style.title}" ui:field="revisionADate"></td>
                                  <td>
-                                    <f:TextField ui:field="comitADate" width="100%"></f:TextField>
+                                    <f:TextInput ui:field="comitADate" width="100%"></f:TextInput>
                                  </td>
                                  <td width="40px" rowspan="2" align="center">
                                     <img src="{resource.arrows.getURL}"></img>
                                  </td>
                                  <td class="{style.title}" ui:field="revisionBDate"></td>
                                  <td>
-                                    <f:TextField ui:field="comitBDate" width="100%"></f:TextField>
+                                    <f:TextInput ui:field="comitBDate" width="100%"></f:TextInput>
                                  </td>
                               </tr>
                               <tr>
                                  <td class="{style.title}" ui:field="revisionATitle"></td>
                                  <td>
-                                    <f:TextField ui:field="comitARevision" width="100%"></f:TextField>
+                                    <f:TextInput ui:field="comitARevision" width="100%"></f:TextInput>
                                  </td>
                                  <td class="{style.title}" ui:field="revisionBTitle"></td>
                                  <td>
-                                    <f:TextField ui:field="comitBRevision" width="100%"></f:TextField>
+                                    <f:TextInput ui:field="comitBRevision" width="100%"></f:TextInput>
                                  </td>
                               </tr>
                            </table>
                         </g:HTMLPanel>
                      </f:layer>
                   </f:Border>
-                  <f:Border margin="5">
+                  <f:Border margin="5" height="60%">
                      <f:layer>
-                        <g:SimplePanel ui:field="editorPanel"></g:SimplePanel>
+                        <g:SimplePanel ui:field="editorPanel" width="100%"></g:SimplePanel>
                      </f:layer>
                   </f:Border>
                </g:FlowPanel>
