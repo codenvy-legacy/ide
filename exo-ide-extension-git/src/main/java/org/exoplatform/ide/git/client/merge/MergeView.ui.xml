@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:m="urn:import:org.exoplatform.ide.git.client.merge">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:m="urn:import:org.exoplatform.ide.git.client.merge">
    <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
 
@@ -8,29 +8,39 @@
       .tree {
       	z-index: 0;
       }
+      
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
    </ui:style>
 
    <g:LayoutPanel>
       <g:layer top="0" bottom="40px">
-      <c:Border margin="10">
-         <c:layer>
-            <g:ScrollPanel>
-               <m:RefTree styleName="{style.tree}" ui:field="refTree"></m:RefTree>
-            </g:ScrollPanel>
-         </c:layer>
-      </c:Border>
+         <c:Border margin="15">
+            <c:layer>
+               <g:ScrollPanel>
+                  <m:RefTree styleName="{style.tree}" ui:field="refTree"></m:RefTree>
+               </g:ScrollPanel>
+            </c:layer>
+         </c:Border>
       </g:layer>
-      <g:layer height="40px" bottom="0px">
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="middle">
-            <g:cell horizontalAlignment="right">
-               <c:ImageButton ui:field="mergeButton" width="90" height="22" text="{locale.buttonMerge}"
-                  imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></c:ImageButton>
-            </g:cell>
-            <g:cell horizontalAlignment="left">
-               <c:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}"
-                  imageResource="{resource.cancel}" disabledImageResource="{resource.cancelDisabled}"></c:ImageButton>
-            </g:cell>
-         </g:HorizontalPanel>
+      <g:layer height="22px" bottom="15">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <c:ImageButton ui:field="mergeButton" width="90" height="22" text="{locale.buttonMerge}" addStyleNames="{style.floatLeft}"
+               imageResource="{resource.ok}" disabledImageResource="{resource.okDisabled}"></c:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <c:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" addStyleNames="{style.floatLeft}"
+               imageResource="{resource.cancel}" disabledImageResource="{resource.cancelDisabled}"></c:ImageButton>
+         </g:FlowPanel>
       </g:layer>
    </g:LayoutPanel>
 </ui:UiBinder>
+ 
+                  
+                  
