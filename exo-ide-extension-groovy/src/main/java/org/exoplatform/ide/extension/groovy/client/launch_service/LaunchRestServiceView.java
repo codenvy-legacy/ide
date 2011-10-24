@@ -18,17 +18,6 @@
  */
 package org.exoplatform.ide.extension.groovy.client.launch_service;
 
-import java.util.LinkedHashMap;
-
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.groovy.client.Images;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasValue;
@@ -36,6 +25,18 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
+import org.exoplatform.gwtframework.ui.client.component.TextAreaItem;
+import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
+import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.groovy.client.Images;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -93,13 +94,13 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
 
    private VerticalPanel vLayout;
 
-   private ComboBoxField pathField;
+   private ComboBoxFieldOld pathField;
 
-   private SelectItem methodField;
+   private SelectItemOld methodField;
 
-   private SelectItem requestMediaTypeField;
+   private SelectItemOld requestMediaTypeField;
 
-   private SelectItem responseMediaTypeField;
+   private SelectItemOld responseMediaTypeField;
 
    private WadlParameterEntryListGrid parametersQueryGrid;
 
@@ -177,7 +178,7 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
       form.setSpacing(3);
       form.getElement().setId(ID_FORM);
 
-      pathField = new ComboBoxField();
+      pathField = new ComboBoxFieldOld();
       pathField.setTitleOrientation(TitleOrientation.TOP);
       pathField.setShowTitle(true);
       pathField.setTitle("Path:");
@@ -186,15 +187,15 @@ public class LaunchRestServiceView extends ViewImpl implements LaunchRestService
       pathField.setPickListHeight(100);
       
 
-      methodField = new SelectItem(NAME_METHOD, "Method:");
+      methodField = new SelectItemOld(NAME_METHOD, "Method:");
       methodField.setWidth(480);
       methodField.setTitleOrientation(TitleOrientation.TOP);
 
-      requestMediaTypeField = new SelectItem(NAME_REQUEST, "Request Media Type:");
+      requestMediaTypeField = new SelectItemOld(NAME_REQUEST, "Request Media Type:");
       requestMediaTypeField.setWidth(480);
       requestMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
 
-      responseMediaTypeField = new SelectItem(NAME_RESPONSE, "Response Media Type");
+      responseMediaTypeField = new SelectItemOld(NAME_RESPONSE, "Response Media Type");
       responseMediaTypeField.setWidth(480);
       responseMediaTypeField.setTitleOrientation(TitleOrientation.TOP);
 

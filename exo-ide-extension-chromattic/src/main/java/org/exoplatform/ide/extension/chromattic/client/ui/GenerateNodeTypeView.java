@@ -94,7 +94,6 @@ public class GenerateNodeTypeView extends ViewImpl implements GenerateNodeTypePr
       form.getElement().setId(DYNAMIC_FORM_ID);
       
       formatField.setName(FORMAT_FIELD_ID);
-      formatField.setShowTitle(false);
       
       generateButton.setButtonId(GENERATE_BUTTON_ID);     
       cancelButton.setButtonId(CANCEL_BUTTON_ID);

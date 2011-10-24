@@ -19,19 +19,19 @@
 package org.exoplatform.ide.git.client.pull;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -83,17 +83,17 @@ public class PullView extends ViewImpl implements PullPresenter.Display
    /**
     * Remote repository field.
     */
-   private SelectItem remoteField;
+   private SelectItemOld remoteField;
 
    /**
     * Local branches field
     */
-   private ComboBoxField localBranchesField;
+   private ComboBoxFieldOld localBranchesField;
 
    /**
     * Remote branches field.
     */
-   private ComboBoxField remoteBranchesField;
+   private ComboBoxFieldOld remoteBranchesField;
 
    public PullView()
    {
@@ -104,7 +104,7 @@ public class PullView extends ViewImpl implements PullPresenter.Display
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(10);
 
-      remoteField = new SelectItem(REMOTE_FIELD_ID,GitExtension.MESSAGES.pullRemoteField());
+      remoteField = new SelectItemOld(REMOTE_FIELD_ID, GitExtension.MESSAGES.pullRemoteField());
       remoteField.setWidth(280);
       mainLayout.add(remoteField);
       mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -295,9 +295,9 @@ public class PullView extends ViewImpl implements PullPresenter.Display
     * @param title element's title
     * @return {@link ComboBoxField} created combobox
     */
-   private ComboBoxField createComboBoxField(String id, String title)
+   private ComboBoxFieldOld createComboBoxField(String id, String title)
    {
-      ComboBoxField combobox = new ComboBoxField();
+      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
       combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setShowTitle(true);
       combobox.setTitle(title);

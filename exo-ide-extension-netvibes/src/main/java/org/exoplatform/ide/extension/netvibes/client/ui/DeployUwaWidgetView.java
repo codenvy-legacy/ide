@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
@@ -130,11 +131,11 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private TextField thumbnailField;
 
-   private ComboBoxField languageField;
+   private ComboBoxFieldOld languageField;
 
-   private ComboBoxField categoryField;
+   private ComboBoxFieldOld categoryField;
 
-   private ComboBoxField regionField;
+   private ComboBoxFieldOld regionField;
 
    //Private information
 
@@ -389,9 +390,9 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
     * @param width item's width
     * @return {@link ComboBoxField} created combobox field
     */
-   private ComboBoxField createCombobox(String id, String title, int width)
+   private ComboBoxFieldOld createCombobox(String id, String title, int width)
    {
-      ComboBoxField combobox = new ComboBoxField();
+      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
       combobox.setName(id);
       combobox.setTitle(title);
       combobox.setTitleOrientation(TitleOrientation.TOP);

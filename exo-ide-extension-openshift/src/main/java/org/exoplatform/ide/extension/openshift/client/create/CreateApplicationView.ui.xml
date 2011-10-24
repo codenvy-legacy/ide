@@ -28,7 +28,7 @@
                   <g:Label text="{locale.createApplicationViewTypeField}" height="18px"></g:Label>
                </g:west>
                <g:center>
-                  <f:SelectItem ui:field="typeField" width="100%" height="22px" showTitle="false"></f:SelectItem>
+                  <f:SelectItem ui:field="typeField" width="100%" height="22px"></f:SelectItem>
                </g:center>
             </g:DockLayoutPanel>
             <g:FlowPanel width="100%" height="10px"></g:FlowPanel>

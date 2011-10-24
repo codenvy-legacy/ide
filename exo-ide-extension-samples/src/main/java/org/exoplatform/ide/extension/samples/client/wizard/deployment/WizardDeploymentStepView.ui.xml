@@ -30,7 +30,7 @@
             <g:Label text="{locale.wizardDeploymentPaas}" width="90px" styleName="{resource.css.leftFloat}"></g:Label>
             <g:FlowPanel width="10px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
             <g:SimplePanel styleName="{style.selectAndInputWrapperBox}">
-               <f:SelectItem ui:field="selectPaasField" width="100%" height="22px" showTitle="false"></f:SelectItem>
+               <f:SelectItem ui:field="selectPaasField" width="100%" height="22px"></f:SelectItem>
             </g:SimplePanel>
          </g:FlowPanel>
       </g:layer>
@@ -43,7 +43,7 @@
                   <g:Label text="{locale.cloudFoundryAppTargetField}" height="18px"></g:Label>
                </g:west>
                <g:center>
-                  <f:ComboBoxField ui:field="cloudFoundryTargetField" width="100%" height="22px" showTitle="false"></f:ComboBoxField>
+                  <f:ComboBoxField ui:field="cloudFoundryTargetField" width="100%" height="22px"></f:ComboBoxField>
                </g:center>
             </g:DockLayoutPanel>
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">

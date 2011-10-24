@@ -101,10 +101,8 @@ public class DeployNodeTypeView extends ViewImpl implements DeployNodeTypePresen
       form.getElement().setId(DYNAMIC_FORM_ID);
       
       formatField.setName(FORMAT_FIELD_ID);
-      formatField.setShowTitle(false);
       
       alreadyExistBehaviorField.setName(ALREADY_EXIST_BEHAVIOR_FIELD_ID);
-      alreadyExistBehaviorField.setShowTitle(false);
       
       deployButton.setButtonId(DEPLOY_BUTTON_ID);     
       cancelButton.setButtonId(CANCEL_BUTTON_ID);

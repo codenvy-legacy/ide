@@ -6,21 +6,21 @@
 
    <ui:style>
       .floatLeft {
-      	float: left;
+      float: left;
       }
-      
+
       .floatRight {
-      	float: right;
+      float: right;
       }
-      
+
       .center {
-      	display: block;
-      	margin-left: auto;
-      	margin-right: auto;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       }
-      
+
       .spacing {
-      	margin-bottom: 10px;
+      margin-bottom: 10px;
       }
    </ui:style>
 
@@ -32,8 +32,7 @@
                   <g:Label text="{locale.createAppServerField}" height="18px"></g:Label>
                </g:west>
                <g:center>
-                  <f:ComboBoxField ui:field="serverField" height="18px" pickListWidth="208px" pickListHeight="100" width="100%"
-                     showTitle="false"></f:ComboBoxField>
+                  <f:ComboBoxField ui:field="serverField" height="18px" pickListHeight="100" width="100%"></f:ComboBoxField>
                </g:center>
                <g:east size="90">
                   <g:FlowPanel></g:FlowPanel>
@@ -55,7 +54,7 @@
                   <g:Label text="{locale.createAppTypeField}" height="18px"></g:Label>
                </g:west>
                <g:center>
-                  <f:SelectItem ui:field="typeField" width="100%" height="22px" showTitle="false" name="projectTypeSelectItem"></f:SelectItem>
+                  <f:SelectItem ui:field="typeField" width="100%" height="22px" name="projectTypeSelectItem"></f:SelectItem>
                </g:center>
                <g:east size="90">
                   <g:FlowPanel>
@@ -119,11 +118,11 @@
       </f:layer>
       <f:layer height="30px" bottom="0">
          <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" addStyleNames="{style.floatLeft}" imageResource="{resource.okButton}"
-               disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" addStyleNames="{style.floatLeft}"
+               imageResource="{resource.okButton}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" addStyleNames="{style.floatLeft}" imageResource="{resource.cancelButton}"
-               disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" addStyleNames="{style.floatLeft}"
+               imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
 

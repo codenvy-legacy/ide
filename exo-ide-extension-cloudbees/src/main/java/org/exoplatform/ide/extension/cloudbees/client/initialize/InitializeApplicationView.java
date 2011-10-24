@@ -81,7 +81,6 @@ public class InitializeApplicationView extends ViewImpl implements InitializeApp
       add(uiBinder.createAndBindUi(this));
 
       domainField.setName(DOMAIN_FIELD_ID);
-      domainField.setHeight(22);
       nameField.setName(NAME_FIELD_ID);
       idField.setName(ID_FIELD_ID);
       createButton.setButtonId(CREATE_BUTTON_ID);

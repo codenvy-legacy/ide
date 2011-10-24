@@ -31,8 +31,11 @@
 
             <f:TextField ui:field="nameField" width="100%" title="{ideNavigationLocale.renameItemTo}" height="22px"></f:TextField>
 
-            <f:ComboBoxField ui:field="mimeTypesField" width="100%" title="{ideNavigationLocale.renameItemSelectMimeType}"
-               height="22px"></f:ComboBoxField>
+            <g:cell verticalAlignment="middle" width="100%">
+               <f:Label text="{ideNavigationLocale.renameItemSelectMimeType}" height="18px"></f:Label>
+            </g:cell>
+            
+            <f:ComboBoxField ui:field="mimeTypesField" width="100%" height="22px" pickListHeight="100"></f:ComboBoxField>
 
             <g:cell verticalAlignment="middle" width="100%">
                <f:Label ui:field="warningLabel" height="18px"></f:Label>

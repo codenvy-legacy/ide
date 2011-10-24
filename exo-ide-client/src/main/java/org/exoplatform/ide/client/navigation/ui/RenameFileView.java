@@ -97,9 +97,6 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
       
       nameField.setName(RENAME_FIELD);
       mimeTypesField.setName(MIME_TYPE_FIELD);
-      mimeTypesField.setTitleOrientation(TitleOrientation.TOP);
-      mimeTypesField.setWidth(340);
-      mimeTypesField.setPickListHeight(100);
       renameButton.setButtonId(RENAME_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
       warningLabel.addStyleName(WARNING_MSG_STYLE);
@@ -137,12 +134,12 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
 
    public void disableMimeTypeSelect()
    {
-      mimeTypesField.setDisabled();
+      mimeTypesField.setEnabled(false);
    }
 
    public void enableMimeTypeSelect()
    {
-      mimeTypesField.setEnabled();
+      mimeTypesField.setEnabled(true);
    }
 
    public void setDefaultMimeType(String mimeType)

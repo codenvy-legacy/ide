@@ -7,22 +7,22 @@
 
    <ui:style>
       .label {
-      	margin-right: 5px;
-      	cursor: default;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	font-style: normal;
-      	font-weight: normal;
-      	float: left;
+      margin-right: 5px;
+      cursor: default;
+      font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: normal;
+      float: left;
       }
-      
+
       .floatLeft {
-      	float: left;
-      	margin-left: 10px;
+      float: left;
+      margin-left: 10px;
       }
-      
+
       .floatRight {
-      	float: right;
+      float: right;
       }
    </ui:style>
 
@@ -42,8 +42,7 @@
                <g:Label text="{locale.appsServerLabel}" styleName="{style.label}"></g:Label>
             </g:west>
             <g:center>
-               <f:ComboBoxField ui:field="serverField" height="20px" width="100%" pickListWidth="250px" pickListHeight="100"
-                  titleOrientation="LEFT" name="applicationsTarget"></f:ComboBoxField>
+               <f:ComboBoxField ui:field="serverField" height="20px" width="100%" pickListHeight="100" name="applicationsTarget"></f:ComboBoxField>
             </g:center>
             <g:east size="40">
                <g:FlowPanel width="100%">

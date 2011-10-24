@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.client.navigation.ui;
 
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -136,11 +136,15 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
 
       contentField = createValueField(CONTAINING_TEXT, CONTENT_FIELD);
 
-      mimeTypesField = createSelectField(MIME_TYPE, MIME_TYPE_FIELD);
+      HorizontalPanel mimeTypeHorizotalPanel = new HorizontalPanel();
+      Label mimeTypeLabel = new Label(MIME_TYPE);
+      mimeTypeHorizotalPanel.add(mimeTypeLabel);
+      mimeTypesField = createSelectField(MIME_TYPE_FIELD);
+      mimeTypeHorizotalPanel.add(mimeTypesField);
 
       paramForm.add(pathField);
       paramForm.add(contentField);
-      paramForm.add(mimeTypesField);
+      paramForm.add(mimeTypeHorizotalPanel);
 
       return paramForm;
    }
@@ -155,15 +159,12 @@ public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.cli
       return textField;
    }
 
-   private ComboBoxField createSelectField(String title, String id)
+   private ComboBoxField createSelectField(String id)
    {
       ComboBoxField comboboxField = new ComboBoxField();
       comboboxField.setName(id);
-      comboboxField.setShowTitle(true);
-      comboboxField.setTitle("<nobr>" + title + "</nobr>");
       comboboxField.setWidth(FIELD_WIDTH);
-      comboboxField.setHeight(FIELD_HEIGHT);
-      comboboxField.setTitleOrientation(TitleOrientation.LEFT);
+      comboboxField.setHeight(22);
       return comboboxField;
    }
 

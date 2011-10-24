@@ -30,8 +30,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.component.CheckboxItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.SelectItemOld;
 import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -85,17 +86,17 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
    /**
     * Remote repository field.
     */
-   private SelectItem remoteField;
+   private SelectItemOld remoteField;
 
    /**
     * Local branches field.
     */
-   private ComboBoxField localBranchesField;
+   private ComboBoxFieldOld localBranchesField;
 
    /**
     * Remote branches field.
     */
-   private ComboBoxField remoteBranchesField;
+   private ComboBoxFieldOld remoteBranchesField;
 
    /**
     * Remove deleted refs field.
@@ -114,7 +115,7 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
       mainLayout.setHeight("100%");
       mainLayout.setSpacing(5);
 
-      remoteField = new SelectItem(REMOTE_FIELD_ID, GitExtension.MESSAGES.fetchRemoteFieldTitle());
+      remoteField = new SelectItemOld(REMOTE_FIELD_ID, GitExtension.MESSAGES.fetchRemoteFieldTitle());
       remoteField.setWidth(290);
       mainLayout.add(remoteField);
       mainLayout.setCellVerticalAlignment(remoteField, HasVerticalAlignment.ALIGN_MIDDLE);
@@ -320,9 +321,9 @@ public class FetchView extends ViewImpl implements FetchPresenter.Display
     * @param title element's title
     * @return {@link ComboBoxField} created combobox
     */
-   private ComboBoxField createComboBoxField(String id, String title)
+   private ComboBoxFieldOld createComboBoxField(String id, String title)
    {
-      ComboBoxField combobox = new ComboBoxField();
+      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
       combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setShowTitle(true);
       combobox.setTitle(title);

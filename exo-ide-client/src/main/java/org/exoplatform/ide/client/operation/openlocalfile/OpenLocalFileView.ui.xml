@@ -71,7 +71,7 @@
                      <tr>
                         <td colspan="2">
                            <c:ComboBoxField ui:field="mimeTypesField" name="ideUploadFormMimeTypeField"
-                              pickListHeight="100" showTitle="false" width="100%"></c:ComboBoxField>
+                              pickListHeight="100" width="100%"></c:ComboBoxField>
                         </td>
                      </tr>
 
