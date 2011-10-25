@@ -18,11 +18,16 @@
  */
 package org.exoplatform.ide.extension.netvibes.client.ui;
 
-import java.util.LinkedHashMap;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxFieldOld;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordField;
@@ -31,13 +36,7 @@ import org.exoplatform.gwtframework.ui.client.component.TitleOrientation;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.netvibes.client.Images;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import java.util.LinkedHashMap;
 
 /**
  * View of the deploy UWA widget operation.
@@ -131,11 +130,11 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
 
    private TextField thumbnailField;
 
-   private ComboBoxFieldOld languageField;
+   private ComboBoxField languageField;
 
-   private ComboBoxFieldOld categoryField;
+   private ComboBoxField categoryField;
 
-   private ComboBoxFieldOld regionField;
+   private ComboBoxField regionField;
 
    //Private information
 
@@ -277,9 +276,24 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
       versionField = createTextField(ID_VERSION_FIELD, "Widget version", "", 150);
       keywordsField = createTextField(ID_KEYWORDS_FIELD, "Descriptive keywords (max 6, space separated)", "", 300);
       thumbnailField = createTextField(ID_TUMBNAIL_FIELD, "Thumbnail URL", "", 300);
-      languageField = createCombobox(ID_LANGUAGE_FIELD, "Main language&#42;", 150);
-      categoryField = createCombobox(ID_CATEGORY_FIELD, "Most appropriate category&#42;", 150);
-      regionField = createCombobox(ID_REGION_FIELD, "Most appropriate region&#42;", 150);
+      
+      com.google.gwt.user.client.ui.Label languageLabel = new com.google.gwt.user.client.ui.Label("Main language*");
+      languageField = createCombobox(ID_LANGUAGE_FIELD, 150);
+      VerticalPanel languageVp = new VerticalPanel();
+      languageVp.add(languageLabel);
+      languageVp.add(languageField);
+      
+      com.google.gwt.user.client.ui.Label categoryLabel = new com.google.gwt.user.client.ui.Label("Most appropriate category*");
+      categoryField = createCombobox(ID_CATEGORY_FIELD, 150);
+      VerticalPanel categoryVp = new VerticalPanel();
+      categoryVp.add(categoryLabel);
+      categoryVp.add(categoryField);
+      
+      com.google.gwt.user.client.ui.Label regionLabel = new com.google.gwt.user.client.ui.Label("Most appropriate region*");
+      regionField = createCombobox(ID_REGION_FIELD, 150);
+      VerticalPanel regionVp = new VerticalPanel();
+      regionVp.add(regionLabel);
+      regionVp.add(regionField);
 
       detailsDynamicForm.add(titleField);
       detailsDynamicForm.add(descriptionField);
@@ -287,7 +301,7 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
       hPanel1.setWidth("300px");
       hPanel1.setSpacing(1);
       hPanel1.add(versionField);
-      hPanel1.add(languageField);
+      hPanel1.add(languageVp);
 
       detailsDynamicForm.add(hPanel1);
       detailsDynamicForm.add(keywordsField);
@@ -296,8 +310,8 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
       HorizontalPanel hPanel2 = new HorizontalPanel();
       hPanel2.setWidth("300px");
       hPanel2.setSpacing(1);
-      hPanel2.add(regionField);
-      hPanel2.add(categoryField);
+      hPanel2.add(regionVp);
+      hPanel2.add(categoryVp);
 
       detailsDynamicForm.add(hPanel2);
       detailsDynamicForm.setVisible(false);
@@ -386,16 +400,13 @@ public class DeployUwaWidgetView extends ViewImpl implements DeployUwaWidgetPres
     * Creates form combobox field item.
     * 
     * @param id id of the item
-    * @param title display title of the item
     * @param width item's width
     * @return {@link ComboBoxField} created combobox field
     */
-   private ComboBoxFieldOld createCombobox(String id, String title, int width)
+   private ComboBoxField createCombobox(String id, int width)
    {
-      ComboBoxFieldOld combobox = new ComboBoxFieldOld();
+      ComboBoxField combobox = new ComboBoxField();
       combobox.setName(id);
-      combobox.setTitle(title);
-      combobox.setTitleOrientation(TitleOrientation.TOP);
       combobox.setWidth(width);
       return combobox;
    }

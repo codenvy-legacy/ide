@@ -188,7 +188,7 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
       if (event.getView() instanceof Display) {
          display = null;
       }
-   }   
+   }
    
    /**
     * @see org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputHandler#onPreviewWadlOutput(org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent)

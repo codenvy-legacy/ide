@@ -42,7 +42,7 @@
                <g:Label text="{locale.appsServerLabel}" styleName="{style.label}"></g:Label>
             </g:west>
             <g:center>
-               <f:ComboBoxField ui:field="serverField" height="20px" width="100%" pickListHeight="100" name="applicationsTarget"></f:ComboBoxField>
+               <f:ComboBoxField ui:field="serverField" height="22px" width="100%" pickListHeight="100" name="applicationsTarget"></f:ComboBoxField>
             </g:center>
             <g:east size="40">
                <g:FlowPanel width="100%">
