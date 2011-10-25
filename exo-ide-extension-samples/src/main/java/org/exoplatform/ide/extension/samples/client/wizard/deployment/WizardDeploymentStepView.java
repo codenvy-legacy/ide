@@ -32,7 +32,6 @@ import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
 /**
@@ -153,16 +152,7 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    @Override
    public void setVisibleCloudBeesPanel(boolean visible)
    {
-      if (visible)
-      {
-         cloudBeesPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         cloudBeesPanel.addStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
-      }
-      else
-      {
-         cloudBeesPanel.addStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         cloudBeesPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
-      }
+      cloudBeesPanel.setVisible(visible);
    }
 
    /**
@@ -171,16 +161,7 @@ public class WizardDeploymentStepView extends ViewImpl implements WizardDeployme
    @Override
    public void setVisibleCloudFoundryPanel(boolean visible)
    {
-      if (visible)
-      {
-         cloudFoundryPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         cloudFoundryPanel.addStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
-      }
-      else
-      {
-         cloudFoundryPanel.addStyleName(SamplesClientBundle.INSTANCE.css().hiddenTable());
-         cloudFoundryPanel.removeStyleName(SamplesClientBundle.INSTANCE.css().visibleTable());
-      }
+      cloudFoundryPanel.setVisible(visible);
    }
 
    /**

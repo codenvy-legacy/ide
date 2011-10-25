@@ -37,6 +37,7 @@
 
       <g:layer top="110px" height="100px">
          <!-- CloudFoudry deployment form: show only when CloudFoundry selected from list -->
+         <g:FlowPanel>
          <g:FlowPanel ui:field="cloudFoundryPanel" stylePrimaryName="{resource.css.innerBox}">
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
                <g:west size="90">
@@ -63,9 +64,6 @@
                </g:center>
             </g:DockLayoutPanel>
          </g:FlowPanel>
-      </g:layer>
-         
-      <g:layer top="110px" height="100px">
          <!-- CloudBees deployment form: show only when CloudBees selected from list -->
          <g:FlowPanel ui:field="cloudBeesPanel" stylePrimaryName="{resource.css.innerBox}">
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
@@ -92,6 +90,7 @@
                   <f:TextInput ui:field="cloudBeesIdField" width="100%" height="22px" enabled="false"></f:TextInput>
                </g:center>
             </g:DockLayoutPanel>
+         </g:FlowPanel>
          </g:FlowPanel>
       </g:layer>
       

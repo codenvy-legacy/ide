@@ -108,10 +108,6 @@ public interface SamplesClientBundle extends ClientBundle
       
       String labelSubtitle();
       
-      String visibleTable();
-      
-      String hiddenTable();
-      
       String loginLable();
       
       String leftFloat();
