@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -111,7 +112,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       //
       //      String[] pathParts = path.split("/");
       TreeItem node = tree.getItem(0);
-      if(((Item)node.getUserObject()).getId().equals(id))
+      if (((Item)node.getUserObject()).getId().equals(id))
       {
          return node;
       }
@@ -183,7 +184,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
    private TreeItem createTreeNode(Item item)
    {
-      TreeItem node = new TreeItem(createItemWidget(ImageUtil.getIcon(item.getMimeType()), getTitle(item)));
+      TreeItem node = new TreeItem(createItemWidget(getItemIcon(item), getTitle(item)));
 
       node.setUserObject(item);
       if (item instanceof FolderModel || item instanceof ProjectModel)
@@ -194,11 +195,26 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
 
       String id = item.getId();
       id = id.substring(1);
-      id=id.replaceAll("/", "-");
-      id=id.replaceAll(" ", "_");
+      id = id.replaceAll("/", "-");
+      id = id.replaceAll(" ", "_");
       node.getElement().setId(prefixId + id);
 
       return node;
+   }
+
+   /**
+    * Select icon for item
+    * @param item
+    * @return {@link ImageResource} of item icon
+    */
+   public ImageResource getItemIcon(Item item)
+   {
+      if (item instanceof ProjectModel)
+      {
+         return ProjectResolver.getImageForProject(((ProjectModel)item).getProjectType());
+      }
+      else
+         return ImageUtil.getIcon(item.getMimeType());
    }
 
    private String getTitle(Item item)
@@ -237,7 +253,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          return;
       }
 
-      ItemList<Item> children = (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
+      ItemList<Item> children =
+         (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
       if (tree.getItemCount() == 0)
       {
          TreeItem addItem = createTreeNode(value);

@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.event;
 
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Event is fired to configure build path of the project.
@@ -37,19 +37,19 @@ public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
     */
    public static final GwtEvent.Type<ProjectCreatedHandler> TYPE = new GwtEvent.Type<ProjectCreatedHandler>();
 
-   private FolderModel projectFolder;
+   private ProjectModel project;
    
    /**
     * 
     */
    public ProjectCreatedEvent()
    {
-      this.projectFolder = null;
+      this.project = null;
    }
    
-   public ProjectCreatedEvent(FolderModel projectFolder)
+   public ProjectCreatedEvent(ProjectModel project)
    {
-      this.projectFolder = projectFolder;
+      this.project = project;
    }
    
    /**
@@ -73,8 +73,8 @@ public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
    /**
     * @return the projectLocation
     */
-   public FolderModel getProjectFolder()
+   public ProjectModel getProject()
    {
-      return projectFolder;
+      return project;
    }
 }

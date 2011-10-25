@@ -44,7 +44,7 @@ public class ImageUtil
    {
       images.put(null, IconImageBundle.INSTANCE.defaultFile());
       images.put(Folder.FOLDER_MIME_TYPE, IconImageBundle.INSTANCE.folder());
-      images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.project());
+      images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.defaultProject());
    }
 
    public static void putIcon(String mimeType, ImageResource imageResource)

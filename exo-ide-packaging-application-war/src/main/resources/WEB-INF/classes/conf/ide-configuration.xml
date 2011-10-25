@@ -95,10 +95,6 @@
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
-   
-   <component>
-    <type>org.exoplatform.ide.extension.java.server.JavaProjectArchetype</type>
-   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
@@ -128,14 +124,6 @@
 
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
-   </component>
-   
-    <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyProjectArchetype</type>
    </component>
 
    <component>

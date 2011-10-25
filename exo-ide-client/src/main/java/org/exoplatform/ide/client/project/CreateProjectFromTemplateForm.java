@@ -76,14 +76,14 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
 
    private TextField nameField;
 
-   protected TemplateListGrid<ProjectTemplate> templateListGrid;
+   protected ProjectTemplateListGrid templateListGrid;
 
    protected VerticalPanel layout;
 
    public CreateProjectFromTemplateForm()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), DEFAULT_WIDTH,
-         DEFAULT_HEIGHT);
+         DEFAULT_HEIGHT,false);
 
       layout = new VerticalPanel();
       layout.setWidth("100%");
@@ -91,7 +91,7 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements org.exopl
       layout.setSpacing(10);
       add(layout);
 
-      templateListGrid = new TemplateListGrid<ProjectTemplate>();
+      templateListGrid = new ProjectTemplateListGrid();
       templateListGrid.setWidth("100%");
       templateListGrid.setHeight(200);
       layout.add(templateListGrid);

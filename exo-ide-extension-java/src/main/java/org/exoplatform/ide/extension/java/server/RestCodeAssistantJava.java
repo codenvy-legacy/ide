@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
+import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
+import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
@@ -31,15 +39,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant;
-import org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.framework.server.api.ShortTypeInfo;
-import org.exoplatform.ide.codeassistant.framework.server.api.TypeInfo;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. 

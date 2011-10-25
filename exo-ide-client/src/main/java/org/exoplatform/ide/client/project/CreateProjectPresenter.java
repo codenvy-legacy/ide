@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -33,6 +34,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -79,7 +81,7 @@ public class CreateProjectPresenter
 
       HasClickHandlers getCancelButton();
 
-      void setProjectType(List<String> types);
+      void setProjectType(Set<String> set);
 
       void setProjectName(String name);
 
@@ -125,9 +127,8 @@ public class CreateProjectPresenter
          }
       });
 
-      List<String> list = new ArrayList<String>();
-      list.add("Java Project");
-      setProjectTypes(list);
+     
+      setProjectTypes(ProjectResolver.getProjectsTypes());
    }
 
    public void doCreateProject()
@@ -197,11 +198,11 @@ public class CreateProjectPresenter
    /**
     * Set available types of project
     * 
-    * @param types
+    * @param set
     */
-   public void setProjectTypes(List<String> types)
+   public void setProjectTypes(Set<String> set)
    {
-      display.setProjectType(types);
+      display.setProjectType(set);
    }
    
    /**

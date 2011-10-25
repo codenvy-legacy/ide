@@ -4,8 +4,8 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd" xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
       <key>org.exoplatform.services.log.LogConfigurationInitializer</key>
@@ -141,11 +141,38 @@
             <name>discoverable</name>
             <value>true</value>
          </value-param>
+         <value-param>
+            <name>ws2</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>template-config</name>
+            <value>/ide-home/templates</value>
+         </value-param>
       </init-params>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
    
    <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>dev-monit</value>
+            <value>ws2</value>
+         </values-param>
+      </init-params>
    </component>
 
    <external-component-plugins>
@@ -179,5 +206,41 @@
       </component-plugin>
    </external-component-plugins>
 
+   <external-component-plugins>
+      <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
+      <component-plugin>
+         <name>add.nodeType</name>
+         <set-method>addPlugin</set-method>
+         <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+         <init-params>
+            <values-param>
+               <name>autoCreatedInNewRepository</name>
+               <description>Node types configuration file</description>
+               <value>jar:/conf/vfs-node-types.xml</value>
+            </values-param>
+         </init-params>
+      </component-plugin>
+
+      <component-plugin>
+         <name>add.namespaces</name>
+         <set-method>addPlugin</set-method>
+         <type>org.exoplatform.services.jcr.impl.AddNamespacesPlugin</type>
+         <init-params>
+            <properties-param>
+               <name>namespaces</name>
+               <property name="dc" value="http://purl.org/dc/elements/1.1/" />
+               <property name="gtn" value="http://www.gatein.org/jcr/gatein/1.0/" />
+               <property name="mop" value="http://www.gatein.org/jcr/mop/1.0/" />
+               <property name="app" value="http://www.gatein.org/jcr/application-registry/1.0/" />
+               <property name="tkn" value="http://www.gatein.org/jcr/token/1.0/" />
+               <property name="wsrp" value="http://www.gatein.org/jcr/wsrp/1.0/" />
+               <property name="pc" value="http://www.gatein.org/jcr/pc/1.0/" />
+               <property name="jos" value="http://www.exoplatform.com/jcr-services/organization-service/1.0/" />
+               <property name="exoide" value="http://exoplatform.org/ide/1.2.x/" />
+               <property name="vfs" value="http://exoplatform.org/vfs" />
+            </properties-param>
+         </init-params>
+      </component-plugin>
+   </external-component-plugins>
 
 </configuration>

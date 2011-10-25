@@ -29,7 +29,7 @@ public class ProjectTemplate extends FolderTemplate
 {
 
    private String type;
-   
+
    /**
     * @param type the type to set
     */
@@ -37,7 +37,7 @@ public class ProjectTemplate extends FolderTemplate
    {
       this.type = type;
    }
-   
+
    /**
     * @return the type
     */
@@ -45,4 +45,5 @@ public class ProjectTemplate extends FolderTemplate
    {
       return type;
    }
+
 }

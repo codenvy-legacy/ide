@@ -18,20 +18,21 @@
  */
 package org.exoplatform.ide.client.project;
 
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
-
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
+import org.exoplatform.gwtframework.ui.client.component.TextField;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
+
+import java.util.Set;
 
 
 
@@ -52,7 +53,7 @@ public class CreateProjectForm extends ViewImpl implements Display
    TextField projectName;
    
    @UiField
-   TextField projectType;
+   SelectItem projectType;
    
    @UiField
    ImageButton createButton;
@@ -86,9 +87,9 @@ public class CreateProjectForm extends ViewImpl implements Display
    }
 
    @Override
-   public void setProjectType(List<String> types)
+   public void setProjectType(Set<String> types)
    {
-      projectType.setValue(types.get(0));
+      projectType.setValueMap(types.toArray(new String[0]));
    }
 
    @Override

@@ -28,6 +28,7 @@ import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.services.jcr.RepositoryService;
 
 import java.util.HashSet;
@@ -49,7 +50,7 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(RepositoryService repositoryService, InitParams initParams)
+   public IDEServiceApplication(RepositoryService repositoryService,VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
    {
       String entryPoint = Utils.readValueParam(initParams, "defaultEntryPoint");
       boolean discoverable = Boolean.parseBoolean(Utils.readValueParam(initParams, "discoverable"));
@@ -62,7 +63,7 @@ public class IDEServiceApplication extends Application
       objects.add(new UploadServiceExceptionMapper());
 
       objects.add(new IDEConfigurationService(repositoryService, entryPoint, discoverable, workspace, config));
-      objects.add(new TemplatesRestService(repositoryService, workspace, templateConfig));
+      objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
 
       classes.add(LoopbackContentService.class);
       classes.add(DownloadContentService.class);

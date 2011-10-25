@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommand;
 import org.exoplatform.ide.client.project.event.CreateProjectFromTemplateEvent;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for create project from template command.
@@ -73,6 +74,12 @@ public class CreateProjectFromTemplateControl extends NewFileCommand implements 
          return;
       }
 
+      if(event.getSelectedItems().get(0) instanceof ProjectModel)
+      {
+         folderItemSelected = false;
+         updateEnabling();
+         return;
+      }
       folderItemSelected = true;
       updateEnabling();
    }

@@ -40,6 +40,18 @@ public interface IconImageBundle  extends ClientBundle
    ImageResource folder();
    
    @Source("org/exoplatform/ide/public/images/filetype/project.gif")
-   ImageResource project();
+   ImageResource javaProject();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/ror.png")
+   ImageResource rubyProject();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/spring.png")
+   ImageResource springProject();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/groovy-project.png")
+   ImageResource groovyProject();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
+   ImageResource defaultProject();
 
 }

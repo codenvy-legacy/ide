@@ -85,10 +85,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.java.server.JavaProjectArchetype</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
    </component>
 
@@ -120,14 +116,6 @@
 
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
-   </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyProjectArchetype</type>
    </component>
 
    <component>

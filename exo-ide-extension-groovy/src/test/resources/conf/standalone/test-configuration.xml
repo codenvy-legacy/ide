@@ -114,6 +114,25 @@
       <key>org.exoplatform.ide.codeassistant.framework.server.api.CodeAssistant</key>
       <type>org.exoplatform.ide.codeassistant.framework.server.impl.CodeAssistantJcrImpl</type>
    </component>
+   
+      <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+      <init-params>
+         <values-param>
+            <name>workspaces</name>
+            <value>dev-monit</value>
+            <value>ws</value>
+         </values-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
@@ -128,7 +147,7 @@
          </value-param>
          <value-param>
             <name>workspace</name>
-            <value>production</value>
+            <value>ws</value>
          </value-param>
          <value-param>
             <name>user-config</name>

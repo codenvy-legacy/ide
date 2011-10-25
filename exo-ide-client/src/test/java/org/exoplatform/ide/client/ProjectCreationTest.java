@@ -19,7 +19,9 @@
 package org.exoplatform.ide.client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -107,9 +109,9 @@ public class ProjectCreationTest extends TestCase
       CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName("test");
       presenter.setErrorMessage(new MockErrorMessages());
-      List<String> list = new ArrayList<String>();
-      list.add("Java Project");
-      presenter.setProjectTypes(list);
+      Set<String> set = new HashSet<String>();
+      set.add("Java Project");
+      presenter.setProjectTypes(set);
       presenter.doCreateProject();
       assertEquals(projectName, "test");
    }
@@ -123,9 +125,9 @@ public class ProjectCreationTest extends TestCase
       CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName("test");
       presenter.setErrorMessage(new MockErrorMessages());
-      List<String> list = new ArrayList<String>();
-      list.add("Java Project");
-      presenter.setProjectTypes(list);
+      Set<String> set = new HashSet<String>();
+      set.add("Java Project");
+      presenter.setProjectTypes(set);
       presenter.doCreateProject();
       assertNotNull(getError());
    }
@@ -137,9 +139,9 @@ public class ProjectCreationTest extends TestCase
       CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName(null);
       presenter.setErrorMessage(new MockErrorMessages());
-      List<String> list = new ArrayList<String>();
-      list.add("Java Project");
-      presenter.setProjectTypes(list);
+      Set<String> set = new HashSet<String>();
+      set.add("Java Project");
+      presenter.setProjectTypes(set);
       presenter.doCreateProject();
       assertNotNull(getError());
    }
@@ -151,9 +153,9 @@ public class ProjectCreationTest extends TestCase
       CreateProjectPresenter presenter = new CreateProjectPresenter(eventBus, vfs, display, selectedItems);
       presenter.setProjectName(null);
       presenter.setErrorMessage(new MockErrorMessages());
-      List<String> list = new ArrayList<String>();
-      list.add("Java Project");
-      presenter.setProjectTypes(list);
+      Set<String> set = new HashSet<String>();
+      set.add("Java Project");
+      presenter.setProjectTypes(set);
       presenter.doCreateProject();
       assertNotNull(getError());
    }
@@ -264,7 +266,7 @@ public class ProjectCreationTest extends TestCase
       }
 
       @Override
-      public void setProjectType(List<String> types)
+      public void setProjectType(Set<String> types)
       {
       }
 

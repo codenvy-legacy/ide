@@ -18,45 +18,20 @@
  */
 package org.exoplatform.ide.extension.ruby.client;
 
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.ruby.client.control.CreateRoRProjectControl;
-import org.exoplatform.ide.extension.ruby.client.create.CreateRubyProjectPresenter;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  *
  */
-public class RubyExtension extends Extension implements InitializeServicesHandler
+public class RubyExtension extends Extension
 {
-
-   public static final RubyLocalizationConstants RUBY_CONSTANT = GWT.create(RubyLocalizationConstants.class);
-
-   public static final RubyClientBundle RESOURCES = GWT.create(RubyClientBundle.class);
-
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
    @Override
    public void initialize()
    {
-      IDE.EVENT_BUS.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.getInstance().addControl(new CreateRoRProjectControl());
-      new CreateRubyProjectPresenter(IDE.EVENT_BUS);
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new RubyService(event.getApplicationConfiguration().getContext(), event.getLoader());
-   }
-
 }

@@ -27,7 +27,7 @@
             <g:Label text="{locale.projectName}" styleName="{style.label}"></g:Label>
             <f:TextField ui:field="projectName" width="99%" textItemHeight="18" styleName="{style.spacingFields}"></f:TextField>
             <g:Label text="{locale.projectType}" styleName="{style.label}"></g:Label>
-            <f:TextField ui:field="projectType" width="99%" textItemHeight="18"></f:TextField>
+            <f:SelectItem ui:field="projectType" width="99%" visibleItemCount="1"></f:SelectItem>
             <g:HorizontalPanel height="40" width="100%" spacing="5" styleName="{style.spacing}">
                <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
                   <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageResource="{resource.ok}"

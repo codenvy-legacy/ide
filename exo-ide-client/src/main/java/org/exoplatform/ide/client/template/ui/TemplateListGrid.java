@@ -28,11 +28,11 @@ import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.framework.util.ImageUtil;
 
 /**
  * Created by The eXo Platform SAS .
@@ -80,7 +80,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       }
       else if (template instanceof ProjectTemplate)
       {
-         return IDEImageBundle.INSTANCE.folder();
+         return ProjectResolver.getImageForProject(((ProjectTemplate)template).getType());
       }
       
       return null;
@@ -89,7 +89,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
    /**
     * Create columns.
     */
-   private void initColumns()
+   protected void initColumns()
    {
       //--- icon column -----
       ImageResourceCell iconCell = new ImageResourceCell();
@@ -173,7 +173,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       };
       
       getCellTable().addColumn(entryNameColumn, DESCRIPTION);
-      getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
+      getCellTable().setColumnWidth(entryNameColumn, 60, Unit.PCT);
    }
 
 }

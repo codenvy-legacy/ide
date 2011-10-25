@@ -253,7 +253,8 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    public void onConfigureBuildPath(ProjectCreatedEvent event)
    {
-      getClassPathLocation(event.getProjectFolder());
+      //TODO
+//      getClassPathLocation(event.getProject());
    }
 
    /**

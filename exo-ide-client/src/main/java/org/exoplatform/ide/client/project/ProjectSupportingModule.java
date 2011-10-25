@@ -65,7 +65,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       this.eventBus = eventBus;
       
       IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
-      IDE.getInstance().addControl(new CreateProjectTemplateControl());      
+//      IDE.getInstance().addControl(new CreateProjectTemplateControl());      
       IDE.getInstance().addControl(new NewProjectControl());
       
       eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);

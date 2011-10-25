@@ -37,6 +37,7 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -47,7 +48,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplate;
 import org.exoplatform.ide.client.model.template.FileTemplateList;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.ProjectTemplateList;
 import org.exoplatform.ide.client.model.template.Template;
@@ -61,8 +61,10 @@ import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -163,7 +165,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    private int itemsCreated = 0;
 
-   private FolderModel projectFolder;
+   private ProjectModel projectFolder;
 
    /**
     * The list of templates to display.
@@ -293,33 +295,33 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
     * @param templates - list of templates (folder and file), from which folders and files will be created
     * @param parent - parent folder
     */
-   private void build(List<Template> templates, FolderModel parent)
+   private void build(List<Template> templates, ProjectModel parent)
    {
       if (templates == null || templates.size() == 0)
       {
          return;
       }
 
-      for (Template template : templates)
-      {
-         if (template instanceof FolderTemplate)
-         {
-            FolderTemplate projectTemplate = (FolderTemplate)template;
-
-            FolderModel folder = new FolderModel(projectTemplate.getName(), parent);
-            folderList.add(folder);
-            build(projectTemplate.getChildren(), folder);
-         }
-         else if (template instanceof FileTemplate)
-         {
-            FileTemplate fileTemplate = (FileTemplate)template;
-            FileModel file = createFileFromTemplate(fileTemplate, parent);
-            if (file != null)
-            {
-               fileList.add(file);
-            }
-         }
-      }
+//      for (Template template : templates)
+//      {
+//         if (template instanceof FolderTemplate)
+//         {
+//            FolderTemplate projectTemplate = (FolderTemplate)template;
+//
+//            FolderModel folder = new FolderModel(projectTemplate.getName(), parent);
+//            folderList.add(folder);
+//            build(projectTemplate.getChildren(), folder);
+//         }
+//         else if (template instanceof FileTemplate)
+//         {
+//            FileTemplate fileTemplate = (FileTemplate)template;
+//            FileModel file = createFileFromTemplate(fileTemplate, parent);
+//            if (file != null)
+//            {
+//               fileList.add(file);
+//            }
+//         }
+//      }
    }
 
    private FileModel createFileFromTemplate(FileTemplate fileTemplate, FolderModel parent)
@@ -455,12 +457,47 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       //      FileTemplate classPathTemplate = new FileTemplate(MimeType.APPLICATION_JSON, ".groovyclasspath", "", "", null);
       //      selectedTemplate.getChildren().add(classPathTemplate);
 
-      folderList.clear();
-      projectFolder = new FolderModel(projectName, baseFolder);
-      build(selectedTemplate.getChildren(), projectFolder);
-      //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+      if (selectedTemplate.isDefault())
+      {
+         final IDELoader loader = new IDELoader();
+         try
+         {
+            loader.show();
+            TemplateService.getInstance().createProjectFromTemplate(VirtualFileSystem.getInstance().getInfo().getId(), baseFolder.getId(), projectName, selectedTemplate, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            {
+               
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  loader.hide();
+                  projectFolder = result;
+                  finishProjectCreation();
+               }
 
-      createFolder(projectFolder);
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+            loader.hide();
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+         }
+      }
+      else
+      {
+         //TODO create project from user template
+//         folderList.clear();
+//         projectFolder = new ProjectModel(projectName, baseFolder, selectedTemplate.getType(), null);
+//         build(selectedTemplate.getChildren(), projectFolder);
+//         //      fileList.add(createClasspathFile(baseHref + URL.encodePathSegment(projectName) + "/"));
+//         createFolder((FolderModel)projectFolder);
+      }
    }
 
    /**
@@ -502,11 +539,16 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             Item item = selectedItems.get(0);
 
+            if(item instanceof ProjectModel)
+            {
+               //TODO log error
+               return;
+            }
             if (item instanceof FileModel)
             {
                baseFolder = ((FileModel)item).getParent();
             }
-            else
+            else 
             {
                baseFolder = (FolderModel)item;
             }

@@ -102,7 +102,7 @@ public class ProjectTemplateListUnmarshaller implements Unmarshallable
                projectTemplate.setChildren(parseChildrenListValue(jsonValue.isArray()));
             }
          }
-         else if (key.equals("isDefault"))
+         else if (key.equals("default"))
          {
             if (jsonValue.isBoolean() != null)
             {

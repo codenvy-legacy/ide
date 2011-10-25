@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.template;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.FolderTemplate;
@@ -29,14 +32,25 @@ import org.exoplatform.ide.ProjectTemplate;
 import org.exoplatform.ide.Template;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,16 +58,13 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.Item;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -61,6 +72,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -74,33 +86,43 @@ import javax.ws.rs.core.MediaType;
 @Path("/ide/templates")
 public class TemplatesRestService
 {
+
+   /**
+    * File name filter. Need to filter non "zip" files.
+    */
+   private static FilenameFilter projectsZipFilter = new FilenameFilter()
+   {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+         return name.endsWith(".zip");
+      }
+   };
+
    public static final String FILE_TEMPLATE_FILE = "fileTemplates.js";
-   
+
    public static final String PROJECT_TEMPLATE_FILE = "projectTemplates.js";
-   
+
    public static final String WEBDAV_SCHEME = "jcr-webdav";
 
    public static final String DEF_WS = "dev-monit";
-   
+
    private static Log log = ExoLogger.getLogger(TemplatesRestService.class);
 
-   private final RepositoryService repositoryService;
-
    private String workspace;
-   
+
    private String config = "/ide-home/templates";
 
    private static final String FILE_TEMPLATE = "fileTemplates";
-   
-   private static final String PROJECT_TEMPLATE = "folderTemplates";
-   
-   final JsonParser jsonParser;
 
-   public TemplatesRestService(RepositoryService repositoryService,String workspace, String templateConfig)
+   private static final String PROJECT_TEMPLATE = "folderTemplates";
+
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   public TemplatesRestService(String workspace, String templateConfig, VirtualFileSystemRegistry vfsRegistry)
    {
-      this.jsonParser = new JsonParser();
-      this.repositoryService = repositoryService;
       this.workspace = workspace;
+      this.vfsRegistry = vfsRegistry;
       if (templateConfig != null)
       {
          this.config = templateConfig;
@@ -108,20 +130,22 @@ public class TemplatesRestService
             config = config.substring(0, config.length() - 1);
       }
    }
-   
+
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/list")
-   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException, ParsingResponseException
+   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException,
+      ParsingResponseException
    {
       return getProjectTemplates();
    }
-   
+
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/add")
-   public void addFileTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
+   public void addFileTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException,
+      ParsingResponseException
    {
       JsonValue fileTemplateJsonValue = JsonHelper.parseJson(body);
       String newTemplateName = fileTemplateJsonValue.getElement("name").getStringValue();
@@ -133,16 +157,16 @@ public class TemplatesRestService
             throw new TemplateServiceException("File template " + newTemplateName + " already exists");
          }
       }
-      
+
       //add new file template to existing templates in file
       String templateContent = readTemplates(FILE_TEMPLATE);
       JsonValue templatesJsonValue = JsonHelper.parseJson(templateContent);
       addTemplateToArray(templatesJsonValue, fileTemplateJsonValue);
-      
+
       writeTemplates(FILE_TEMPLATE, templatesJsonValue.toString());
 
    }
-   
+
    /**
     * Add file template list to settings file template file.
     * This method is used only for templates transfer from registry to plain text file.
@@ -158,11 +182,12 @@ public class TemplatesRestService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/add/list")
-   public void addFileTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
+   public void addFileTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException,
+      ParsingResponseException
    {
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
-      
+
       //get array value of existing templates
       String templateContent = readTemplates(FILE_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
@@ -176,18 +201,18 @@ public class TemplatesRestService
          jsonTemplateArray = new ArrayValue();
          jsonValue.addElement("templates", jsonTemplateArray);
       }
-      
+
       Iterator<JsonValue> arrIterator = templatesToAdd.getElements();
       while (arrIterator.hasNext())
       {
          ObjectValue obj = (ObjectValue)arrIterator.next();
          jsonTemplateArray.addElement(obj);
       }
-      
+
       writeTemplates(FILE_TEMPLATE, jsonValue.toString());
 
    }
-   
+
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/list")
@@ -195,38 +220,38 @@ public class TemplatesRestService
    {
       return getFileTemplates();
    }
-   
+
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/file/get")
-   public FileTemplate getFileTemplateByName(@QueryParam("name") String name) throws URISyntaxException, IOException, ParsingResponseException
+   public FileTemplate getFileTemplateByName(@QueryParam("name") String name) throws URISyntaxException, IOException,
+      ParsingResponseException
    {
       return findFileTemplate(name);
    }
-   
+
    @Path("/file/delete")
    @POST
-   public void deleteFileTemplate( 
-      @QueryParam("name") String template 
-   ) throws IOException, URISyntaxException, IllegalStateException, ParsingResponseException
+   public void deleteFileTemplate(@QueryParam("name") String template) throws IOException, URISyntaxException,
+      IllegalStateException, ParsingResponseException
    {
       deleteTemplate(template, FILE_TEMPLATE);
    }
-   
+
    @Path("/project/delete")
    @POST
-   public void deleteProjectTemplate( 
-      @QueryParam("name") String template 
-   ) throws IOException, URISyntaxException, IllegalStateException, ParsingResponseException
+   public void deleteProjectTemplate(@QueryParam("name") String template) throws IOException, URISyntaxException,
+      IllegalStateException, ParsingResponseException
    {
       deleteTemplate(template, PROJECT_TEMPLATE);
    }
-   
+
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/add")
-   public void addProjectTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
+   public void addProjectTemplate(String body) throws IOException, URISyntaxException, TemplateServiceException,
+      ParsingResponseException
    {
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       String newTemplateName = newTemplateJsonValue.getElement("name").getStringValue();
@@ -238,15 +263,15 @@ public class TemplatesRestService
             throw new TemplateServiceException("Project template " + newTemplateName + " already exists");
          }
       }
-      
+
       //add new file template to existing templates in file
       String templateContent = readTemplates(PROJECT_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       addTemplateToArray(jsonValue, newTemplateJsonValue);
-      
+
       writeTemplates(PROJECT_TEMPLATE, jsonValue.toString());
    }
-   
+
    /**
     * Add project template list to settings project template file.
     * This method is used only for templates transfer from registry to plain text file.
@@ -262,11 +287,12 @@ public class TemplatesRestService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/project/add/list")
-   public void addProjectTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException, ParsingResponseException
+   public void addProjectTemplateList(String body) throws IOException, URISyntaxException, TemplateServiceException,
+      ParsingResponseException
    {
       JsonValue newTemplateJsonValue = JsonHelper.parseJson(body);
       ArrayValue templatesToAdd = (ArrayValue)newTemplateJsonValue;
-      
+
       //get array value of existing templates
       String templateContent = readTemplates(PROJECT_TEMPLATE);
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
@@ -280,20 +306,53 @@ public class TemplatesRestService
          jsonTemplateArray = new ArrayValue();
          jsonValue.addElement("templates", jsonTemplateArray);
       }
-      
+
       Iterator<JsonValue> arrIterator = templatesToAdd.getElements();
       while (arrIterator.hasNext())
       {
          ObjectValue obj = (ObjectValue)arrIterator.next();
          jsonTemplateArray.addElement(obj);
       }
-      
+
       writeTemplates(PROJECT_TEMPLATE, jsonValue.toString());
 
    }
-   
+
+   /**
+    * Create new IDE project from predefined tempate
+    * @param vfsId id of VFS
+    * @param name name of new project
+    * @param parentId parent of the project
+    * @param templateName name of the project template
+    * @return created project
+    * @throws VirtualFileSystemException
+    * @throws IOException
+    */
+   @POST
+   @Path("/project/create")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
+      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName)
+      throws VirtualFileSystemException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      Folder projectFolder = vfs.createFolder(parentId, name);
+      InputStream templateStream =
+         Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
+      if (templateStream == null)
+         throw new InvalidArgumentException("Can't find " + templateName + ".zip");
+      vfs.importZip(projectFolder.getId(), templateStream, true);
+      org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
+      if (projectItem instanceof Project)
+      {
+         return (Project)projectItem;
+      }
+      else
+         throw new IllegalStateException("Something other than project was created on" + name);
+   }
+
    //--------- Implementation -----------------------
-   
+
    /**
     * Delete user template, that stored in file.
     * 
@@ -303,8 +362,8 @@ public class TemplatesRestService
     * @throws IllegalStateException
     * @throws ParsingResponseException 
     */
-   private void deleteTemplate(String templateName, String fileTemplateName) throws IOException,
-      IllegalStateException, ParsingResponseException
+   private void deleteTemplate(String templateName, String fileTemplateName) throws IOException, IllegalStateException,
+      ParsingResponseException
    {
       if (templateName == null)
       {
@@ -347,7 +406,7 @@ public class TemplatesRestService
 
       writeTemplates(fileTemplateName, templatesObjValue.toString());
    }
-   
+
    private FileTemplate findFileTemplate(String name) throws IOException, ParsingResponseException
    {
       //get the existing templates
@@ -355,7 +414,7 @@ public class TemplatesRestService
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
       Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
-      
+
       //iterate throw existing templates
       while (arrIterator.hasNext())
       {
@@ -367,27 +426,78 @@ public class TemplatesRestService
       }
       return null;
    }
-   
+
    private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
-      String templateContent = readTemplates(PROJECT_TEMPLATE);
       List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
-      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
-      if (jsonValue.getElement("templates") == null)
-         return projectTemplateList;
-      
-      ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
-      Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+      //      String templateContent = readTemplates(PROJECT_TEMPLATE);
+      //      JsonValue jsonValue = JsonHelper.parseJson(templateContent);
+      //      if (jsonValue.getElement("templates") != null)
+      //      {
+      //         ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
+      //         Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
+      //
+      //         while (arrIterator.hasNext())
+      //         {
+      //            ObjectValue obj = (ObjectValue)arrIterator.next();
+      //            projectTemplateList.add(parseProjectTemplateObject(obj));
+      //         }
+      //      }
 
-      while (arrIterator.hasNext())
+      URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
+      if (url != null)
       {
-         ObjectValue obj = (ObjectValue)arrIterator.next();
-         projectTemplateList.add(parseProjectTemplateObject(obj));
+         File projectsFolder = new File(url.toURI());
+         File[] projects = projectsFolder.listFiles(projectsZipFilter);
+         for (File f : projects)
+         {
+            ZipFile zip = new ZipFile(f);
+            ZipArchiveEntry entry = zip.getEntry(".project");
+            //if zip not contains ".project" file then search in next archive
+            if (entry == null)
+               continue;
+            JsonParser jp = new JsonParser();
+            try
+            {
+               jp.parse(zip.getInputStream(entry));
+               ConvertibleProperty[] array =
+                  (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
+               List<ConvertibleProperty> properties = Arrays.asList(array);
+               String name = f.getName();
+               name = name.substring(0, name.lastIndexOf(".zip"));
+               projectTemplateList.add(createTemplateFromMethaData(properties, name));
+            }
+            catch (JsonException e)
+            {
+               throw new RuntimeException(e.getMessage(), e);
+            }
+
+         }
       }
-      
+
       return projectTemplateList;
    }
-   
+
+   private ProjectTemplate createTemplateFromMethaData(List<ConvertibleProperty> properties, String templateName)
+   {
+      ProjectTemplate template = new ProjectTemplate();
+      template.setDefault(true);
+      template.setName(templateName);
+      for (ConvertibleProperty prop : properties)
+      {
+         String name = prop.getName();
+         if ("vfs:projectType".equals(name))
+         {
+            template.setType(prop.getValue().get(0));
+         }
+         else if ("exoide:projectDescription".equals(name))
+         {
+            template.setDescription(prop.getValue().get(0));
+         }
+      }
+      return template;
+   }
+
    private List<FileTemplate> getFileTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
       String templateContent = readTemplates(FILE_TEMPLATE);
@@ -396,7 +506,7 @@ public class TemplatesRestService
       JsonValue jsonValue = JsonHelper.parseJson(templateContent);
       if (jsonValue.getElement("templates") == null)
          return fileTemplateList;
-      
+
       ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
       Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
 
@@ -405,35 +515,35 @@ public class TemplatesRestService
          ObjectValue obj = (ObjectValue)arrIterator.next();
          fileTemplateList.add(parseFileTemplateObject(obj));
       }
-      
+
       return fileTemplateList;
    }
-   
-   private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
-   {
-      ProjectTemplate projectTemplate = new ProjectTemplate();
-      projectTemplate.setName(obj.getElement("name").getStringValue());
-      projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
-      if (obj.getElement("description") != null)
-      {
-         projectTemplate.setDescription(obj.getElement("description").getStringValue());
-      }
-      if (obj.getElement("type") != null)
-      {
-         projectTemplate.setType(obj.getElement("type").getStringValue());
-      }
-      if (obj.getElement("children") != null)
-      {
-         ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
-         projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
-      }
-      return projectTemplate;
-   }
-   
+
+   //   private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
+   //   {
+   //      ProjectTemplate projectTemplate = new ProjectTemplate();
+   //      projectTemplate.setName(obj.getElement("name").getStringValue());
+   //      projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
+   //      if (obj.getElement("description") != null)
+   //      {
+   //         projectTemplate.setDescription(obj.getElement("description").getStringValue());
+   //      }
+   //      if (obj.getElement("type") != null)
+   //      {
+   //         projectTemplate.setType(obj.getElement("type").getStringValue());
+   //      }
+   //      if (obj.getElement("children") != null)
+   //      {
+   //         ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
+   //         projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
+   //      }
+   //      return projectTemplate;
+   //   }
+
    private List<Template> parseChildrenArrayJsonObject(ArrayValue childrenArray)
    {
       List<Template> childrenTemplates = new ArrayList<Template>();
-      
+
       Iterator<JsonValue> arrIterator = childrenArray.getElements();
       while (arrIterator.hasNext())
       {
@@ -469,7 +579,7 @@ public class TemplatesRestService
       }
       return folderTemplate;
    }
-   
+
    /**
     * Parse file template json object, when get the list of file templates.
     * @param obj
@@ -509,92 +619,79 @@ public class TemplatesRestService
       String userConf = writer.toString();
       return userConf;
    }
-   
+
    //----------read and write templates----------------
-   
+
    protected void writeTemplates(String templateType, String data) throws IOException
    {
-      Session session = null;
       try
       {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         checkConfigNode(repository);
-         session = repository.login(workspace);
-         String templatesSettingsPath = config;
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+         checkConfigNode(vfs);
 
-         javax.jcr.Node userSettings;
+         String id = "";
          try
          {
-            userSettings = (javax.jcr.Node)session.getItem(templatesSettingsPath);
+            Item item = vfs.getItemByPath(config + "/" + templateType, null, PropertyFilter.NONE_FILTER);
+            id = item.getId();
+            vfs.updateContent(id, MediaType.TEXT_PLAIN_TYPE, new ByteArrayInputStream(data.getBytes("UTF-8")), null);
          }
-         catch (PathNotFoundException pnfe)
+         catch (ItemNotFoundException infe)
          {
-            org.exoplatform.ide.Utils.putFolders(session, templatesSettingsPath);
-            userSettings = (javax.jcr.Node)session.getItem(templatesSettingsPath);
+            String parentId = vfs.getItemByPath(config, null, PropertyFilter.NONE_FILTER).getId();
+            vfs.createFile(parentId, templateType, MediaType.TEXT_PLAIN_TYPE,
+               new ByteArrayInputStream(data.getBytes("UTF-8")));
          }
-
-         ExtendedNode fileNode;
-         javax.jcr.Node contentNode;
-         try
-         {
-            fileNode = (ExtendedNode)userSettings.getNode(templateType);
-            contentNode = fileNode.getNode("jcr:content");
-         }
-         catch (PathNotFoundException pnfe)
-         {
-            fileNode = (ExtendedNode)userSettings.addNode(templateType, "nt:file");
-            contentNode = fileNode.addNode("jcr:content", "nt:resource");
-         }
-
-         contentNode.setProperty("jcr:mimeType", "text/plain");
-         contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-         contentNode.setProperty("jcr:data", data);
-
-         session.save();
       }
-      catch (RepositoryException re)
+
+      catch (VirtualFileSystemException e)
       {
-         throw new RuntimeException(re.getMessage(), re);
+         throw new WebApplicationException(e);
       }
-      finally
-      {
-         if (session != null)
-            session.logout();
-      }
+
    }
-   
+
    /**
     * Check is user configuration folder exists.
     * If doesn't exist, than create it.
-    * @param repository
+    * @param vfs2 
     * @throws RepositoryException
+    * @throws VirtualFileSystemException 
     */
-   private void checkConfigNode(ManageableRepository repository) throws RepositoryException
+   private void checkConfigNode(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
-      String _workspace = workspace;
-      if (_workspace == null)
-      {
-         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
-      }
+//      String _workspace = workspace;
+      //      if (_workspace == null)
+      //      {
+      //         _workspace = repository.getConfiguration().getDefaultWorkspaceName();
+      //      }
 
-      Session sys = null;
       try
       {
-         // Create node for users configuration under system session.
-         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-         if (!(sys.itemExists(config)))
-         {
-            org.exoplatform.ide.Utils.putFolders(sys, config);
-            sys.save();
-         }
+         vfs.createFolder(vfs.getInfo().getRoot().getId(), config.substring(1));
       }
-      finally
+      catch (ItemAlreadyExistException e)
       {
-         if (sys != null)
-            sys.logout();
+         //skip exception handling
       }
+      //      Session sys = null;
+      //      try
+      //      {
+      //         // Create node for users configuration under system session.
+      //         sys = ((ManageableRepository)repository).getSystemSession(_workspace);
+      //         if (!(sys.itemExists(config)))
+      //         {
+      //            org.exoplatform.ide.Utils.putFolders(sys, config);
+      //            sys.save();
+      //         }
+      //      }
+      //      finally
+      //      {
+      //         if (sys != null)
+      //            sys.logout();
+      //      }
    }
-   
+
    /**
     * @param templateType - the name of file to read templates (file or folder templates).
     * @return
@@ -602,31 +699,22 @@ public class TemplatesRestService
     */
    protected String readTemplates(String templateType) throws IOException
    {
-      Session session = null;
       try
       {
-         ManageableRepository repository = repositoryService.getCurrentRepository();
-         // Login with current identity. ConversationState.getCurrent(). 
-         session = repository.login(workspace);
          String tokenPath = config + "/" + templateType;
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
 
-         Item item = null;
+         ContentStream contentStream = null;
          try
          {
-            item = session.getItem(tokenPath);
+            contentStream = vfs.getContent(tokenPath, null);
          }
-         catch (PathNotFoundException pnfe)
-         {
-         }
-
-         if (item == null)
+         catch (ItemNotFoundException e)
          {
             return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
          }
 
-         Property property = ((javax.jcr.Node)item).getNode("jcr:content").getProperty("jcr:data");
-         
-         InputStream input = property.getStream();
+         InputStream input = contentStream.getStream();
          if (input == null)
          {
             return "{}";//TODO: small hack add for supporting previos version of IDE. In 1.2 changed structure of user settings
@@ -649,17 +737,13 @@ public class TemplatesRestService
          String data = writer.toString();
          return data;
       }
-      catch (RepositoryException re)
+
+      catch (VirtualFileSystemException e)
       {
-         throw new RuntimeException(re.getMessage(), re);
-      }
-      finally
-      {
-         if (session != null)
-            session.logout();
+         throw new WebApplicationException(e);
       }
    }
-   
+
    /**
     * Add template to "templates" element of <code>templatesJsonValue</code>.
     * <p/>
