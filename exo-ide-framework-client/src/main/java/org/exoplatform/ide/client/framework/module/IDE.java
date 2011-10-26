@@ -78,6 +78,13 @@ public abstract class IDE
    public abstract void addControl(Control<?> control);
    
    /**
+    * Get list of controls.
+    * 
+    * @return
+    */
+   public abstract List<Control> getControls();
+   
+   /**
     * Open {@link View}
     * @param view to open
     */   

@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 
@@ -267,8 +268,9 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          return;
       }
 
-      FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
-
+      //FolderModel rootFolder = (FolderModel)tree.getItem(0).getUserObject();
+      
+      Folder rootFolder = (Folder)tree.getItem(0).getUserObject();
       String rootFolderHref = rootFolder.getPath();
       if (!value.getPath().startsWith(rootFolderHref))
       {
