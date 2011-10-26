@@ -1,0 +1,85 @@
+.cellTreeWidget {
+}
+
+.cellTreeEmptyMessage {
+        padding-left: 16px;
+        font-style: italic;
+}
+
+.cellTreeItem {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    cursor: hand;
+    cursor: pointer;
+        
+    font-family: Verdana,Bitstream Vera Sans,sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.cellTreeItemImage {
+}
+
+.cellTreeItemImageValue {
+}
+
+.cellTreeItemValue {
+        padding-left: 3px;
+        padding-right: 3px;
+        
+        /*
+        ?
+        */
+        height: 14px;
+}
+
+/*
+div:focus { outline: none; }
+*/
+.cellTreeKeyboardSelectedItem {
+  /*  background-color: #ffff00; */
+  /* background-color: #77ff77 !important; */
+  background-color: #d6e9ff !important;
+}
+
+.cellTreeOpenItem {
+        
+}
+
+.cellTreeTopItem {
+/* original values
+  font-weight: bold;
+  color: #4b4a4a;
+  margin-top: 20px;
+  padding: 3px 13px 3px 10px !important;
+*/
+  
+  font-family: Arial Unicode MS,Arial,sans-serif !important;
+  font-size: small !important;        
+  font-weight: normal;
+  margin-top: 2px !important;
+  padding: 2px 2px 2px 2px !important;  
+}
+
+.cellTreeTopItemImage {
+}
+
+.cellTreeTopItemImageValue {
+        border-bottom: none ! important;
+        padding-bottom: 1px;
+}
+
+@sprite .cellTreeSelectedItem {
+        gwt-image: 'cellTreeSelectedBackground';
+        background-color: #d6e9ff !important;
+        color: 000000 !important;
+        height: auto;
+        overflow: auto;
+}
+
+.cellTreeShowMoreButton {
+        padding-left: 16px;
+        outline: none;
+}
