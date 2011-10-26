@@ -16,35 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.server;
 
-import java.util.HashSet;
-import java.util.Set;
+package org.exoplatform.ide.extension.java.shared.ast;
 
-import javax.ws.rs.core.Application;
+import com.google.gwt.json.client.JSONObject;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JavaServiceApplication Mar 30, 2011 10:34:04 AM evgen $
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class JavaServiceApplication extends Application
+
+public class AstItem
 {
 
-   private final Set<Class<?>> classes;
-
-   public JavaServiceApplication()
+   private String type;
+   
+   public AstItem(String type) {
+      this.type = type;
+   }
+   
+   public AstItem(JSONObject itemObject) {
+      init(itemObject);
+   }
+   
+   public void init(JSONObject itemObject)
    {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(RestCodeAssistantJava.class);
-//      classes.add(JavaAppService.class);
+      type = itemObject.get("type").isString().stringValue();
+   }   
+
+   public String getType()
+   {
+      return type;
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
+   public void setType(String type)
    {
-      return classes;
+      this.type = type;
    }
+
 }

@@ -16,35 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.server;
 
-import java.util.HashSet;
-import java.util.Set;
+package org.exoplatform.ide.extension.java.client.project_explorer;
 
-import javax.ws.rs.core.Application;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JavaServiceApplication Mar 30, 2011 10:34:04 AM evgen $
+ * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class JavaServiceApplication extends Application
+
+public class ShowProjectExplorerEvent extends GwtEvent<ShowProjectExplorerHandler>
 {
 
-   private final Set<Class<?>> classes;
+   public static final GwtEvent.Type<ShowProjectExplorerHandler> TYPE = new GwtEvent.Type<ShowProjectExplorerHandler>();
 
-   public JavaServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(RestCodeAssistantJava.class);
-//      classes.add(JavaAppService.class);
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
    @Override
-   public Set<Class<?>> getClasses()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectExplorerHandler> getAssociatedType()
    {
-      return classes;
+      return TYPE;
    }
+
+   @Override
+   protected void dispatch(ShowProjectExplorerHandler handler)
+   {
+      handler.onShowProjectExplorer(this);
+   }
+
 }
