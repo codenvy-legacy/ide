@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -193,10 +194,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          node.addItem("");
       }
 
-      String id = item.getId();
-      id = id.substring(1);
-      id = id.replaceAll("/", "-");
-      id = id.replaceAll(" ", "_");
+      String id = item.getPath();
+      id = Utils.md5(id);
       node.getElement().setId(prefixId + id);
 
       return node;
