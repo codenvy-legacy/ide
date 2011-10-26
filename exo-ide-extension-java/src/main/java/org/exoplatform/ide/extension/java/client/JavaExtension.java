@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerManager;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Java extention for IDE.
@@ -48,7 +48,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-//      new JavaClientService(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
+      new JavaClientService(eventBus, event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -60,9 +60,12 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
       eventBus = IDE.EVENT_BUS;
       eventBus.addHandler(InitializeServicesEvent.TYPE, this);
       
-//      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
-//      IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
-//      new CreateJavaProjectPresenter(eventBus);
+//    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
+//    IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
+//    new CreateJavaProjectPresenter(eventBus);
+      
+      //new ProjectExplorerPresenter();
+      
    }
 
 }

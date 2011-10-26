@@ -56,5 +56,30 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/extension/java/images/cancel_Disabled.png")
    ImageResource cancelButtonDisabled();
+   
+   /*
+    * For Project Explorer
+    */
+   
+   @Source("org/exoplatform/ide/extension/java/images/empty-java-package.png")
+   ImageResource emptyJavaPackage();
+
+   @Source("org/exoplatform/ide/extension/java/images/jar-library.png")
+   ImageResource jarLibrary();   
+
+   @Source("org/exoplatform/ide/extension/java/images/java-class.png")
+   ImageResource javaClass();
+
+   @Source("org/exoplatform/ide/extension/java/images/java-file.png")
+   ImageResource javaFile();
+
+   @Source("org/exoplatform/ide/extension/java/images/java-package.png")
+   ImageResource javaPackage();
+   
+   @Source("org/exoplatform/ide/extension/java/images/java-packages.png")
+   ImageResource javaPackages();
+
+   @Source("org/exoplatform/ide/extension/java/images/libraries.png")
+   ImageResource libraries();
 
 }
