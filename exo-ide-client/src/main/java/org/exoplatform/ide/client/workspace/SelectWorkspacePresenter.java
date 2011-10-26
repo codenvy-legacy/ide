@@ -34,7 +34,6 @@ import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -49,6 +48,7 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;

@@ -32,12 +32,12 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 

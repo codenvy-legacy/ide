@@ -26,8 +26,8 @@ import org.exoplatform.gwtframework.commons.wadl.Request;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.framework.discovery.RestService;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 
 import com.google.gwt.user.client.ui.Image;

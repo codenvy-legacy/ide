@@ -20,6 +20,7 @@ package org.exoplatform.ide.client;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 import com.google.gwt.gadgets.client.DynamicHeightFeature;
 import com.google.gwt.gadgets.client.Gadget;

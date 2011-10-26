@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.Utils;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersHandler;
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
@@ -81,6 +80,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysEvent;
 import org.exoplatform.ide.client.hotkeys.event.RefreshHotKeysHandler;
 import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
