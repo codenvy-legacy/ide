@@ -40,5 +40,6 @@
 
    <!-- Specify the application specific style sheet. -->
    <stylesheet src="IDE.css" />
+   <stylesheet src="CellTree.css" />
 
 </module>

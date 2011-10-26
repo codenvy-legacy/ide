@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -140,8 +141,8 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
                @Override
                protected void onSuccess(FolderModel result)
                {
-                  IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(baseFolder, result));
                   IDE.getInstance().closeView(display.asView().getId());
+                  IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(baseFolder, result));
                }
 
                @Override

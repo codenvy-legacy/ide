@@ -299,6 +299,20 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/file/create_project_template_Disabled.png")
    ImageResource createProjectTemplateDisabled();
 
+   
+   @Source("bundled-images/project-explorer.png")
+   ImageResource projectExplorer();
+   
+   @Source("bundled-images/project-explorer_Disabled.png")
+   ImageResource projectExplorerDisabled();
+
+   
+   @Source("bundled-images/navigator.png")
+   ImageResource navigator();
+   
+   @Source("bundled-images/navigator-disabled.png")
+   ImageResource navigatorDisabled();
+   
    /*
     * HELP
     */

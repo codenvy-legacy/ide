@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -38,13 +39,13 @@ import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.CreateProjectTemplateControl;
 import org.exoplatform.ide.client.project.control.NewProjectControl;
+import org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -73,8 +74,10 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       eventBus.addHandler(MigrateTemplatesEvent.TYPE, this);
       
       new CreateProjectFromTemplatePresenter(eventBus);
-      new CreateProjectTemplatePresenter(eventBus);
-    
+      new CreateProjectTemplatePresenter();
+      
+      //new ProjectExplorerPresenter();
+      new TinyProjectExplorerPresenter();
    }
    
    /**

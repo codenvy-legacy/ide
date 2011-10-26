@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigation.WorkspacePresenter;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -109,7 +109,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof WorkspacePresenter.Display)
+      if (event.getView() instanceof NavigatorPresenter.Display)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();

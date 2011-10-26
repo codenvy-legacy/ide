@@ -18,17 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -56,8 +47,16 @@ import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -115,8 +114,6 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<Template> templateList = new ArrayList<Template>();
@@ -131,13 +128,11 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    
    private boolean isTemplatesMigrated = false;
 
-   public CreateProjectTemplatePresenter(HandlerManager eventBus)
+   public CreateProjectTemplatePresenter()
    {
-      this.eventBus = eventBus;
-      
-      eventBus.addHandler(CreateProjectTemplateEvent.TYPE, this);
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(CreateProjectTemplateEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -283,7 +278,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             addFileToProjectTemplate(fileTemplate);
          }
       };
-      eventBus.fireEvent(new CreateFileFromTemplateEvent(callback, IDE.TEMPLATE_CONSTANT.addFileButton(),
+      IDE.EVENT_BUS.fireEvent(new CreateFileFromTemplateEvent(callback, IDE.TEMPLATE_CONSTANT.addFileButton(),
          IDE.IDE_LOCALIZATION_CONSTANT.addButton()));
    }
 
@@ -383,7 +378,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
             return;
          }
       }
-      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(eventBus)
+      TemplateService.getInstance().addProjectTemplate(projectTemplate, new AsyncRequestCallback<String>(IDE.EVENT_BUS)
       {
 
          @Override
@@ -435,7 +430,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display CreateProjectTemplate must be null"));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display CreateProjectTemplate must be null"));
       }
    }
 
@@ -451,7 +446,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
       }
       else
       {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         IDE.EVENT_BUS.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
          {
             @Override
             public void onTemplatesMigrated()
@@ -465,7 +460,7 @@ public class CreateProjectTemplatePresenter implements CreateProjectTemplateHand
    private void createProjectTemplate()
    {
       templateList = new ArrayList<Template>();
-      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(eventBus)
+      TemplateService.getInstance().getProjectTemplateList(new AsyncRequestCallback<ProjectTemplateList>(IDE.EVENT_BUS)
       {
          @Override
          protected void onSuccess(ProjectTemplateList result)

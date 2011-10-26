@@ -16,21 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.operation.rename;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -51,18 +42,24 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
-import org.exoplatform.ide.client.navigation.event.RenameItemHander;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for renaming file and changing mime-type of file.
@@ -112,8 +109,6 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private static final String SELECT_ITEM_TO_RENAME = "";
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<Item> selectedItems;
@@ -124,16 +119,14 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private FileModel renamedFile;
 
-   public RenameFilePresenter(HandlerManager eventBus)
+   public RenameFilePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(RenameItemEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(RenameItemEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -253,7 +246,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private void completeMove()
    {
-      eventBus.fireEvent(new RefreshBrowserEvent(renamedFile.getParent(), renamedFile));
+      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(renamedFile.getParent(), renamedFile));
 
       closeView();
    }
@@ -313,7 +306,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                protected void onFailure(Throwable exception)
                {
                   exception.printStackTrace();
-                  eventBus
+                  IDE.EVENT_BUS
                      .fireEvent(new ExceptionThrownEvent(exception,
                         "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
                }
@@ -322,12 +315,12 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e,
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Destination path does not exist<br>Folder already has item with same name."));
       }
       catch (Exception e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
 
@@ -357,7 +350,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                      openedFiles.remove(item.getId());
                      openedFiles.put(file.getId(), file);
 
-                     eventBus.fireEvent(new EditorReplaceFileEvent(item, file));
+                     IDE.EVENT_BUS.fireEvent(new EditorReplaceFileEvent(item, file));
                   }
 
                   completeMove();
@@ -366,14 +359,14 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
       }
 
    }
@@ -386,7 +379,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       if (selectedItems == null || selectedItems.isEmpty())
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
          return;
       }
       if (selectedItems.get(0) instanceof FileModel)
@@ -446,7 +439,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display RenameFile must be null"));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display RenameFile must be null"));
       }
    }
 

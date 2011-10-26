@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.uploadzip;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
@@ -31,11 +32,10 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigation.WorkspacePresenter;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Opens upload zip folder dialog window.
@@ -121,7 +121,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof WorkspacePresenter.Display)
+      if (event.getView() instanceof NavigatorPresenter.Display)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();

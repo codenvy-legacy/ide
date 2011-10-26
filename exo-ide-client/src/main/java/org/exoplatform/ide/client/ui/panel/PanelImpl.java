@@ -318,7 +318,7 @@ public class PanelImpl implements Panel, HasViewVisibilityChangedHandler, SetVie
        */
       DOM.setElementAttribute(view.asWidget().getElement(), "panel-id", panelId);
 
-      tab.addTab(view.getId(), view.getIcon(), view.getTitle(), view.asWidget(), view.canBeClosed());
+      tab.addTab(view.getId(), view.getIcon(), "&nbsp;" + view.getTitle() + "&nbsp;", view.asWidget(), view.canBeClosed());
       // add handlers to view
       if (view instanceof HasChangeViewTitleHandler)
       {

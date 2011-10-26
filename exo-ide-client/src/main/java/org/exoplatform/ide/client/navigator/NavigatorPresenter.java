@@ -16,26 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.navigator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -62,6 +51,8 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -93,13 +84,24 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -109,10 +111,10 @@ import java.util.Map;
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
 */
-public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
+public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler
+   ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler
 {
    public interface Display extends IsView
    {
@@ -192,7 +194,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    private String vfsBaseUrl;
 
-   public WorkspacePresenter(HandlerManager eventBus)
+   public NavigatorPresenter(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
       handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
@@ -212,6 +214,8 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       eventBus.addHandler(ViewOpenedEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
 
+      IDE.EVENT_BUS.addHandler(ViewActivatedEvent.TYPE, this);
+
       display = GWT.create(Display.class);
       bindDisplay();
    }
@@ -222,7 +226,7 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       {
          public void onOpen(OpenEvent<Item> event)
          {
-               onFolderOpened((Folder)event.getTarget());
+            onFolderOpened((Folder)event.getTarget());
          }
       });
 
@@ -330,7 +334,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
    {
       //Commented to fix bug with selection of new folder
       //      itemToSelect = null;
-      ItemList<Item> children = (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren() : ((FolderModel)openedFolder).getChildren();
+      ItemList<Item> children =
+         (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren()
+            : ((FolderModel)openedFolder).getChildren();
       if (!children.getItems().isEmpty())
          return;
       foldersToRefresh = new ArrayList<Folder>();
@@ -340,6 +346,16 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
+      if (display == null)
+      {
+         return;
+      }
+
+      if (!display.asView().isActive() && !"ideWorkspaceView".equals(lastNavigatorId))
+      {
+         return;
+      }
+
       if (event.getItemToSelect() != null)
       {
          itemToSelect = event.getItemToSelect().getId();
@@ -450,7 +466,9 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
       eventBus.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
-      List<Item> children = (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder).getChildren().getItems();
+      List<Item> children =
+         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
+            .getChildren().getItems();
       removeSystemItemsFromView(children);
       Collections.sort(children, comparator);
 
@@ -731,6 +749,21 @@ public class WorkspacePresenter implements RefreshBrowserHandler, SwitchVFSHandl
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       this.vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
+   }
+
+   private String lastNavigatorId = null;
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      if ("ideWorkspaceView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
+      {
+         lastNavigatorId = "ideWorkspaceView";
+      }
+      else if ("ideTinyProjectExplorerView".equals(event.getView().getId()) && !event.getView().getId().equals(lastNavigatorId))
+      {
+         lastNavigatorId = "ideTinyProjectExplorerView";
+      }
    }
 
 }

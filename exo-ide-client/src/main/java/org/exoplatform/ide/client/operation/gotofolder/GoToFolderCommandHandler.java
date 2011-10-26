@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.handler;
+package org.exoplatform.ide.client.operation.gotofolder;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -29,11 +29,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.vfs.Folder;
 import org.exoplatform.ide.client.framework.vfs.VirtualFileSystem;
-import org.exoplatform.ide.client.navigation.event.GoToFolderEvent;
-import org.exoplatform.ide.client.navigation.event.GoToFolderHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.ArrayList;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * Created by The eXo Platform SAS .
@@ -46,8 +44,6 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    VfsChangedHandler, EditorActiveFileChangedHandler
 {
 
-   private HandlerManager eventBus;
-
    private String pathToOpen;
 
    private ArrayList<String> pathes;
@@ -58,14 +54,13 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
    
    private static final String RECEIVE_CHILDREN_FAILURE = IDE.ERRORS_CONSTANT.goToFolderReceiveChildrenFailure();
 
-   public GoToFolderCommandHandler(HandlerManager eventBus)
+   public GoToFolderCommandHandler()
    {
-      this.eventBus = eventBus;
+      IDE.getInstance().addControl(new GoToFolderControl());      
 
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      eventBus.addHandler(GoToFolderEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(GoToFolderEvent.TYPE, this);
    }
 
    public void onVfsChanged(VfsChangedEvent event)
@@ -156,7 +151,7 @@ public class GoToFolderCommandHandler implements GoToFolderHandler,
          protected void onFailure(Throwable exception)
          {
             exception.printStackTrace();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_FAILURE));
          }
       });
    }

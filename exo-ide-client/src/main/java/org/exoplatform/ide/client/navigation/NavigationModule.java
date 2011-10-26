@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.client.navigation;
 
-import com.google.gwt.event.shared.HandlerManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -41,10 +44,8 @@ import org.exoplatform.ide.client.navigation.control.CopyItemsCommand;
 import org.exoplatform.ide.client.navigation.control.CutItemsCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadFileCommand;
 import org.exoplatform.ide.client.navigation.control.DownloadZippedFolderCommand;
-import org.exoplatform.ide.client.navigation.control.GoToFolderControl;
 import org.exoplatform.ide.client.navigation.control.PasteItemsCommand;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
-import org.exoplatform.ide.client.navigation.control.RenameItemCommand;
 import org.exoplatform.ide.client.navigation.control.SaveAllFilesCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
@@ -60,18 +61,22 @@ import org.exoplatform.ide.client.navigation.event.CutItemsHandler;
 import org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent;
 import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
-import org.exoplatform.ide.client.navigation.handler.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.PasteItemsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
 import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
+import org.exoplatform.ide.client.operation.gotofolder.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter;
+import org.exoplatform.ide.client.operation.rename.RenameFilePresenter;
+import org.exoplatform.ide.client.operation.rename.RenameFolderPresenter;
+import org.exoplatform.ide.client.operation.rename.RenameItemCommand;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.progress.ProgressPresenter;
@@ -90,10 +95,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -157,14 +159,18 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       IDE.getInstance().addControl(new CutItemsCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new CopyItemsCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new PasteItemsCommand(), Docking.TOOLBAR, false);
+      
       IDE.getInstance().addControl(new RenameItemCommand());
+      new RenameFilePresenter();
+      new RenameFolderPresenter();
 
       //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
       new DeleteItemsPresenter();
 
       IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR, false);
-      IDE.getInstance().addControl(new GoToFolderControl());
+
+      new GoToFolderCommandHandler();
 
       new GetItemURLPresenter();
 
@@ -187,21 +193,18 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new SaveFileCommandHandler(eventBus);
       new SaveFileAsCommandHandler(eventBus);
       new SaveAllFilesCommandHandler(eventBus);
-      new GoToFolderCommandHandler(eventBus);
       new PasteItemsCommandHandler(eventBus, context);
       new FileClosedHandler(eventBus);
 
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
 
-      new WorkspacePresenter(eventBus);
+      new NavigatorPresenter(eventBus);
       new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
 
       new SaveAsTemplatePresenter(eventBus);
       new VersionsListPresenter(eventBus);
-      new RenameFilePresenter(eventBus);
-      new RenameFolderPresenter(eventBus);
 
       new ProgressPresenter();
 

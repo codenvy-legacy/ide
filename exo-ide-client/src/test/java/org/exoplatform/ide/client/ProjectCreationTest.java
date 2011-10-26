@@ -399,6 +399,12 @@ public class ProjectCreationTest extends TestCase
       {
          return null;
       }
+
+      @Override
+      public List<Control> getControls()
+      {
+         return null;
+      }
       
    }
 

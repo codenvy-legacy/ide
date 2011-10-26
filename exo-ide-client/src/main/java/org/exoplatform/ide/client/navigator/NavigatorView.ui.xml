@@ -18,7 +18,7 @@
       <c:layer>
 		<g:ScrollPanel>
 			<n:ItemTree styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="ideNavigatorItemTreeGrid"></n:ItemTree>
-		</g:ScrollPanel>
+		</g:ScrollPanel>		
       </c:layer>
 	</c:Border>
 	

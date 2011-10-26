@@ -16,7 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.ui;
+package org.exoplatform.ide.client.project.tiny_project_explorer;
+
+import java.util.List;
+import java.util.Map;
+
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.ui.ItemTree;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -25,18 +36,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.ui.ItemTree;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -44,11 +43,11 @@ import java.util.Map;
  * @version $
  */
 
-public class WorkspaceViewExtended extends ViewImpl implements
-   org.exoplatform.ide.client.navigation.WorkspacePresenter.Display
+public class TinyProjectExplorerView extends ViewImpl implements
+   org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerPresenter.Display
 {
 
-   public static final String ID = "ideWorkspaceView";
+   public static final String ID = "ideTinyProjectExplorerView";
 
    /**
     * Initial width of this view
@@ -60,20 +59,20 @@ public class WorkspaceViewExtended extends ViewImpl implements
     */
    private static int HEIGHT = 450;
 
-   private static WorkspaceViewExtendedUiBinder uiBinder = GWT.create(WorkspaceViewExtendedUiBinder.class);
+   private static TinyProjectExplorerViewUiBinder uiBinder = GWT.create(TinyProjectExplorerViewUiBinder.class);
 
-   interface WorkspaceViewExtendedUiBinder extends UiBinder<Widget, WorkspaceViewExtended>
+   interface TinyProjectExplorerViewUiBinder extends UiBinder<Widget, TinyProjectExplorerView>
    {
    }
    
    @UiField
    ItemTree treeGrid;
    
-   private static final String TITLE = IDE.NAVIGATION_CONSTANT.workspaceTitle();
+   private static final String TITLE = "Project Explorer";
 
-   public WorkspaceViewExtended()
+   public TinyProjectExplorerView()
    {
-      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
+      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

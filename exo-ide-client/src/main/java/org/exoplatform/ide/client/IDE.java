@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
@@ -112,6 +114,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public IDE()
    {
+      for (int i = 0; i < 10; i++) {
+         System.out.println();
+      }
+      
       new GWTDialogs();
       
       /*
@@ -140,8 +146,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new AskForValueDialog(EVENT_BUS);
 
-      Log.info("Creating IDE form..........");
-      
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(EVENT_BUS, ideForm, controlsRegistration);
 
@@ -272,6 +276,15 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public OutlineItemCreator getOutlineItemCreator(String mimeType)
    {
       return OutlineItemCreatorFactory.getOutlineItemCreator(mimeType);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getControls()
+    */
+   @Override
+   public List<Control> getControls()
+   {
+      return controlsRegistration.getRegisteredControls();
    }
 
 }

@@ -16,21 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.operation.rename;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -49,17 +39,25 @@ import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsRe
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.navigation.event.RenameItemEvent;
-import org.exoplatform.ide.client.navigation.event.RenameItemHander;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for renaming folders and files form.
@@ -92,8 +90,6 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    //   private String itemBaseHref;
@@ -108,16 +104,14 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
 
    private String sourceHref;
 
-   public RenameFolderPresenter(HandlerManager eventBus)
+   public RenameFolderPresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(RenameItemEvent.TYPE, this);
-      eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(EditorFileClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(RenameItemEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -233,7 +227,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
    private void completeMove()
    {
       FolderModel folder = (FolderModel)renamedItem;
-      eventBus.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
+      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(folder.getParent(), renamedItem));
       closeView();
    }
 
@@ -268,18 +262,18 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
       }
       catch (Exception e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
    }
@@ -322,7 +316,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       }
       else
       {
-         eventBus.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
       }
    }
 

@@ -152,8 +152,8 @@ public class CreateProjectPresenter
          eventBus.fireEvent(new ExceptionThrownEvent(errorMessage.cantCreateProjectIfProjectNameNotSet())); //"Project name can't be empty or null"));
          return;
       }
+
       ProjectModel model = new ProjectModel();
-      
       model.setName(display.getProjectName().getValue());
       model.setProjectType(display.getProjectType().getValue());
       model.setParent((FolderModel)selectedItems.get(0));

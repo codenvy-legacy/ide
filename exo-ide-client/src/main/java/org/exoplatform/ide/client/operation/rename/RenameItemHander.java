@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.event;
+package org.exoplatform.ide.client.operation.rename;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -24,12 +24,12 @@ import com.google.gwt.event.shared.EventHandler;
  * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @version @version $Id: $
  */
 
-public interface GoToFolderHandler extends EventHandler
+public interface RenameItemHander extends EventHandler
 {
-
-   void onGoToFolder(GoToFolderEvent event);
+   
+   void onRenameItem(RenameItemEvent event);
 
 }

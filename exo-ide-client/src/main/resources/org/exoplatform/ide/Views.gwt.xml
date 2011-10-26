@@ -27,8 +27,8 @@
       <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.WorkspaceViewExtended">
-      <when-type-is class="org.exoplatform.ide.client.navigation.WorkspacePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.navigator.NavigatorView">
+      <when-type-is class="org.exoplatform.ide.client.navigator.NavigatorPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigation.ui.SearchFilesView">
@@ -139,12 +139,12 @@
       <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.RenameFileView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.RenameFilePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFileView">
+      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.RenameFolderView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFolderView">
+      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFolderPresenter.Display" />
    </replace-with>
    
    <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
@@ -182,9 +182,17 @@
    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">
       <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.operation.uploadfile.UploadFileView">
       <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.project.explorer.ProjectExplorerView">
+      <when-type-is class="org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerView">
+      <when-type-is class="org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerPresenter.Display" />
    </replace-with>
 
 </module>

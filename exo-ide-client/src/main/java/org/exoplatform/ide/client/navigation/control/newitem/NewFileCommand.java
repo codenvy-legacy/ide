@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.navigation.WorkspacePresenter;
+import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -109,7 +109,7 @@ public class NewFileCommand extends SimpleControl implements IDEControl, ViewVis
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof WorkspacePresenter.Display)
+      if (event.getView() instanceof NavigatorPresenter.Display)
       {
          browserSelected = event.getView().isViewVisible();
          updateEnabling();
