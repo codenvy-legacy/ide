@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.tiny_project_explorer;
+package org.exoplatform.ide.client.project.explorer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -210,9 +210,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
       /*
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
-
-      display = GWT.create(Display.class);
-      bindDisplay();
       */
 
    }

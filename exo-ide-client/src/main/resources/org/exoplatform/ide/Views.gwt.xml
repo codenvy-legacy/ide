@@ -191,8 +191,8 @@
       <when-type-is class="org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView">
+      <when-type-is class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter.Display" />
    </replace-with>
 
 </module>

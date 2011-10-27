@@ -22,6 +22,8 @@ package org.exoplatform.ide.client.project.explorer;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -31,6 +33,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import com.google.gwt.event.shared.HandlerManager;
+
 /**
  * 
  * Created by The eXo Platform SAS .
@@ -39,7 +43,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 
-public class ShowProjectExplorerControl extends SimpleControl implements ItemsSelectedHandler, ViewOpenedHandler, ViewClosedHandler
+@RolesAllowed({"administrators", "developers"})
+public class ShowProjectExplorerControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewOpenedHandler, ViewClosedHandler
 {
    
    public static final String ID = "Window/Show View/Project Explorer";
@@ -53,14 +58,20 @@ public class ShowProjectExplorerControl extends SimpleControl implements ItemsSe
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectExplorer(),
-         IDEImageBundle.INSTANCE.projectExplorerDisabled());
-      setEvent(new ShowProjectExplorerEvent());
-      
+      setImages(IDEImageBundle.INSTANCE.projectExplorer(), IDEImageBundle.INSTANCE.projectExplorerDisabled());
+      setEvent(new ShowProjectExplorerEvent());      
+   }
+   
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);      
-   }
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      
+      setEnabled(true);
+      setVisible(true);
+   }    
 
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
@@ -93,6 +104,6 @@ public class ShowProjectExplorerControl extends SimpleControl implements ItemsSe
       if (event.getView() instanceof ProjectExplorerPresenter.Display) {
          setSelected(true);
       }
-   } 
+   }
 
 }

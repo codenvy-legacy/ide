@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.tiny_project_explorer;
+package org.exoplatform.ide.client.project.explorer;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 
 public class TinyProjectExplorerView extends ViewImpl implements
-   org.exoplatform.ide.client.project.tiny_project_explorer.TinyProjectExplorerPresenter.Display
+   org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter.Display
 {
 
    public static final String ID = "ideTinyProjectExplorerView";

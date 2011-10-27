@@ -199,7 +199,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new VersionHistoryCommandHandler(eventBus);
       new RestoreToVersionCommandHandler(eventBus);
 
-      new NavigatorPresenter(eventBus);
+      new NavigatorPresenter();
       new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
       new SearchResultsPresenter(eventBus);
 

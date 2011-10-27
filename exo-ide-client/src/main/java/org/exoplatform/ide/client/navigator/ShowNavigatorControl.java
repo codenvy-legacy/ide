@@ -24,12 +24,12 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerEvent;
+
+import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * 
@@ -40,38 +40,51 @@ import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerEvent;
  */
 
 @RolesAllowed({"administrators", "developers"})
-public class ShowNavigatorControl extends SimpleControl implements ViewOpenedHandler, ViewClosedHandler
+public class ShowNavigatorControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler
 {
-   
+
    public static final String ID = "Window/Show View/Navigator";
 
-//   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlTitle();
-//   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlPrompt();   
-   
+   //   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlTitle();
+   //   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerControlPrompt();   
+
    private static final String TITLE = "Navigator";
-   private static final String PROMPT = "Navigator";   
-   
+
+   private static final String PROMPT = "Navigator";
+
    public ShowNavigatorControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectExplorer(),
-         IDEImageBundle.INSTANCE.projectExplorerDisabled());
-      setEvent(new ShowProjectExplorerEvent());
-      
+      setImages(IDEImageBundle.INSTANCE.navigator(), IDEImageBundle.INSTANCE.navigatorDisabled());
+      setEvent(new ShowNavigatorEvent());
+   }
+
+   @Override
+   public void initialize(HandlerManager eventBus)
+   {
       IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);      
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      
+      setEnabled(true);
+      setVisible(true);
    }
 
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
+      if (event.getView() instanceof NavigatorPresenter.Display) {
+         setSelected(false);
+      }
    }
 
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-   }   
+      if (event.getView() instanceof NavigatorPresenter.Display) {
+         setSelected(true);
+      }
+   }
 
 }

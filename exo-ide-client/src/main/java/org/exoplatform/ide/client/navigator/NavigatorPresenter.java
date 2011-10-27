@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.navigator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.vfs.event.ItemLockResultReceivedEvent;
 import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
@@ -96,9 +94,6 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
@@ -114,7 +109,7 @@ import com.google.gwt.user.client.Timer;
 public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler
+   ConfigurationReceivedSuccessfullyHandler, ViewActivatedHandler, ShowNavigatorHandler
 {
    public interface Display extends IsView
    {
@@ -178,14 +173,6 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    private boolean viewOpened = false;
 
-   private HandlerManager eventBus;
-
-   /**
-    * Used to remove handlers when they are no longer needed.
-    */
-   private Map<GwtEvent.Type<?>, HandlerRegistration> handlerRegistrations =
-      new HashMap<GwtEvent.Type<?>, HandlerRegistration>();
-
    private String itemToSelect;
 
    private List<Folder> foldersToRefresh = new ArrayList<Folder>();
@@ -193,32 +180,47 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private String vfsBaseUrl;
+   
+   private Folder rootFolder;
 
-   public NavigatorPresenter(HandlerManager eventBus)
+   public NavigatorPresenter()
    {
-      this.eventBus = eventBus;
-      handlerRegistrations.put(ViewVisibilityChangedEvent.TYPE,
-         eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this));
-
-      handlerRegistrations.put(RefreshBrowserEvent.TYPE, eventBus.addHandler(RefreshBrowserEvent.TYPE, this));
-      handlerRegistrations.put(ItemUnlockedEvent.TYPE, eventBus.addHandler(ItemUnlockedEvent.TYPE, this));
-      handlerRegistrations.put(ItemLockResultReceivedEvent.TYPE, eventBus.addHandler(ItemLockedEvent.TYPE, this));
-      handlerRegistrations.put(SwitchVFSEvent.TYPE, eventBus.addHandler(SwitchVFSEvent.TYPE, this));
-      handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
-      handlerRegistrations.put(ApplicationSettingsReceivedEvent.TYPE,
-         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
-      handlerRegistrations.put(AddItemTreeIconEvent.TYPE, eventBus.addHandler(AddItemTreeIconEvent.TYPE, this));
-      handlerRegistrations.put(RemoveItemTreeIconEvent.TYPE, eventBus.addHandler(RemoveItemTreeIconEvent.TYPE, this));
-      handlerRegistrations.put(ConfigurationReceivedSuccessfullyEvent.TYPE,
-         eventBus.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this));
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-
+      IDE.EVENT_BUS.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewActivatedEvent.TYPE, this);
+
+      IDE.EVENT_BUS.addHandler(RefreshBrowserEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemUnlockedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(SwitchVFSEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(SelectItemEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(AddItemTreeIconEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+      
+      IDE.EVENT_BUS.addHandler(ShowNavigatorEvent.TYPE, this);
+      
+      IDE.getInstance().addControl(new ShowNavigatorControl());
 
       display = GWT.create(Display.class);
       bindDisplay();
    }
+   
+   @Override
+   public void onShowNavigator(ShowNavigatorEvent event)
+   {
+      if (display != null) {
+         IDE.getInstance().closeView(display.asView().getId());
+         return;
+      }
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+      openRootFolder();
+   }   
 
    public void bindDisplay()
    {
@@ -264,6 +266,23 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
       });
    }
+   
+   private void openRootFolder() {
+      IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+
+      display.getBrowserTree().setValue(rootFolder);
+      display.selectItem(rootFolder.getId());
+      selectedItems = display.getSelectedItems();
+
+      try
+      {
+         onRefreshBrowser(new RefreshBrowserEvent());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }      
+   }
 
    /**
     * Perform actions when folder is closed in browser tree.
@@ -303,7 +322,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          }
 
          selectedItems = display.getSelectedItems();
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
    };
 
@@ -321,7 +340,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
       if (item instanceof File)
       {
-         eventBus.fireEvent(new OpenFileEvent((FileModel)item));
+         IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 
@@ -417,8 +436,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   exception.printStackTrace();
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-                  eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+                  IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
 
                @Override
@@ -463,7 +482,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
 
    private void folderContentReceived(Folder folder)
    {
-      eventBus.fireEvent(new FolderRefreshedEvent(folder));
+      IDE.EVENT_BUS.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);
       //TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
@@ -583,9 +602,9 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       display.getBrowserTree().setValue(null);
       selectedItems.clear();
       selectedItems.clear();
-      eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+      IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
 
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
+      IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       // TODO [IDE-307] check appConfig["entryPoint"] property
       //      final Folder rootFolder = new Folder(event.getEntryPoint());
@@ -602,13 +621,15 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)
             {
-               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-               eventBus.fireEvent(new VfsChangedEvent(result));
+               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(result));
 
                display.asView().setViewVisible();
 
-               eventBus.fireEvent(new ViewVisibilityChangedEvent((View)display));
+               IDE.EVENT_BUS.fireEvent(new ViewVisibilityChangedEvent((View)display));
 
+               rootFolder = result.getRoot();
+               
                display.getBrowserTree().setValue(result.getRoot());
                display.selectItem(result.getRoot().getId());
                selectedItems = display.getSelectedItems();
@@ -630,8 +651,8 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
                itemToSelect = null;
                foldersToRefresh.clear();
 
-               eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
-               eventBus.fireEvent(new VfsChangedEvent(null));
+               IDE.EVENT_BUS.fireEvent(new EnableStandartErrorsHandlingEvent());
+               IDE.EVENT_BUS.fireEvent(new VfsChangedEvent(null));
             }
          });
       }
@@ -640,6 +661,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          e.printStackTrace();
       }
    }
+   
 
    /**
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
@@ -664,26 +686,26 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          // "Ctrl+C" hotkey handling
          if (String.valueOf(keyCode).toUpperCase().equals("C"))
          {
-            eventBus.fireEvent(new CopyItemsEvent());
+            IDE.EVENT_BUS.fireEvent(new CopyItemsEvent());
          }
 
          // "Ctrl+X" hotkey handling         
          else if (String.valueOf(keyCode).toUpperCase().equals("X"))
          {
-            eventBus.fireEvent(new CutItemsEvent());
+            IDE.EVENT_BUS.fireEvent(new CutItemsEvent());
          }
 
          // "Ctrl+V" hotkey handling
          else if (String.valueOf(keyCode).toUpperCase().equals("V"))
          {
-            eventBus.fireEvent(new PasteItemsEvent());
+            IDE.EVENT_BUS.fireEvent(new PasteItemsEvent());
          }
       }
 
       // "Delete" hotkey handling
       else if (keyCode == KeyCodes.KEY_DELETE)
       {
-         eventBus.fireEvent(new DeleteItemEvent());
+         IDE.EVENT_BUS.fireEvent(new DeleteItemEvent());
       }
 
       // "Enter" hotkey handling - impossible to handle Enter key pressing event within the TreeGrid and ListGrid in the SmartGWT 2.2 because of bug when Enter keypress is not caugth. http://code.google.com/p/smartgwt/issues/detail?id=430 
