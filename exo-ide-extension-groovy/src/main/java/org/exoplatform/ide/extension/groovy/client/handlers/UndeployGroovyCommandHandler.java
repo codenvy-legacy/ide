@@ -35,6 +35,7 @@ import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSan
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyUndeployResultReceivedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -45,7 +46,8 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $
  */
 
-public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHandler, UndeployGroovyScriptHandler, UndeployGroovyScriptSandboxHandler, GroovyUndeployResultReceivedHandler
+public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHandler, UndeployGroovyScriptHandler,
+   UndeployGroovyScriptSandboxHandler, GroovyUndeployResultReceivedHandler
 {
 
    private HandlerManager eventBus;
@@ -55,11 +57,11 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
    public UndeployGroovyCommandHandler(HandlerManager eventBus)
    {
       this.eventBus = eventBus;
-      
+
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(UndeployGroovyScriptEvent.TYPE, this);
       eventBus.addHandler(UndeployGroovyScriptSandboxEvent.TYPE, this);
-      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);      
+      eventBus.addHandler(GroovyUndeployResultReceivedEvent.TYPE, this);
    }
 
    /**
@@ -67,31 +69,32 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScript(UndeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().undeploy(activeFile.getId(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
+      GroovyService.getInstance().undeploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
+         activeFile.getProject().getId(), new AsyncRequestCallback<String>()
          {
-            undeploySuccess(result);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            undeployFail(exception, this.getResult());
-         }
-      });
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               undeploySuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               undeployFail(exception, this.getResult());
+            }
+         });
    }
-   
+
    private void undeploySuccess(String href)
    {
-      
+
       String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> undeployed successfully.";
       eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
-//      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
+      //      eventBus.fireEvent(new GroovyUndeployResultReceivedEvent(href));
    }
-   
+
    private void undeployFail(Throwable exc, String href)
    {
       if (exc instanceof ServerException)
@@ -119,21 +122,23 @@ public class UndeployGroovyCommandHandler implements EditorActiveFileChangedHand
     */
    public void onUndeployGroovyScriptSandbox(UndeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().undeploySandbox(activeFile.getId(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
+      GroovyService.getInstance().undeploySandbox(activeFile.getId(),
+         VirtualFileSystem.getInstance().getInfo().getId(), activeFile.getProject().getId(),
+         new AsyncRequestCallback<String>()
          {
-            undeploySuccess(result);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            undeployFail(exception, this.getResult());
-         }
-      });
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               undeploySuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               undeployFail(exception, this.getResult());
+            }
+         });
    }
 
    /**

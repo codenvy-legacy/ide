@@ -83,17 +83,17 @@ public class GroovyServiceImpl extends GroovyService
     * {@inheritDoc}
     */
    @Override
-   public void deploy(String href, AsyncRequestCallback<String> callback)
+   public void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY;
-      deploy(href, deployUrl, callback);
+      deploy(itemId, deployUrl,vfsId, projectId, callback);
    }
 
    @Override
-   public void deploySandbox(String href, AsyncRequestCallback<String> callback)
+   public void deploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       final String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY_SANDBOX;
-      deploy(href, deployUrl, callback);
+      deploy(itemId, deployUrl, vfsId, projectId, callback);
    }
 
    /**
@@ -101,32 +101,32 @@ public class GroovyServiceImpl extends GroovyService
     * @param deployUrl - url to deploy (production or sandbox)
     * @param callback - the callback code which the user has to implement
     */
-   private void deploy(String href, String deployUrl, AsyncRequestCallback<String> callback)
+   private void deploy(String itemId, String deployUrl, String vfsid, String projectid, AsyncRequestCallback<String> callback)
    {
-      callback.setResult(href);
+      callback.setResult(itemId);
       callback.setEventBus(eventBus);
-      final String location = URL.decodePathSegment(href);
-      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).header(HTTPHeader.LOCATION, location).send(callback);
+      deployUrl += "?id=" + itemId + "&vfsid=" + vfsid + "&projectid=" + projectid;
+      AsyncRequest.build(RequestBuilder.POST, deployUrl, loader).send(callback);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void undeploy(String href, AsyncRequestCallback<String> callback)
+   public void undeploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       final String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY;
-      undeploy(href, udeployUrl, callback);
+      undeploy(itemId, udeployUrl, vfsId, projectId, callback);
    }
 
    /**
     * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#undeploySandbox(java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyDeployUndeployCallback)
     */
    @Override
-   public void undeploySandbox(String href, AsyncRequestCallback<String> callback)
+   public void undeploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       final String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY_SANDBOX;
-      undeploy(href, udeployUrl, callback);
+      undeploy(itemId, udeployUrl,vfsId, projectId, callback);
    }
 
    /**
@@ -136,12 +136,12 @@ public class GroovyServiceImpl extends GroovyService
     * @param undeployUrl - undeploy url 
     * @param groovyCallback - the callback code which the user has to implement
     */
-   private void undeploy(String href, String undeployUrl, AsyncRequestCallback<String> callback)
+   private void undeploy(String itemId, String undeployUrl, String vfsid, String projectid, AsyncRequestCallback<String> callback)
    {
-      callback.setResult(href);
+      callback.setResult(itemId);
       callback.setEventBus(eventBus);
-      final String location = URL.decodePathSegment(href);
-      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).header(HTTPHeader.LOCATION, location).send(callback);
+      undeployUrl += "?id=" + itemId + "&vfsid=" + vfsid + "&projectid=" + projectid;
+      AsyncRequest.build(RequestBuilder.POST, undeployUrl, loader).send(callback);
    }
 
    /**

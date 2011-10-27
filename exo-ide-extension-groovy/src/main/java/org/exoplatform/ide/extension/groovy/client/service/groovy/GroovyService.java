@@ -61,10 +61,10 @@ public abstract class GroovyService
    /**
     * Deploy Groovy script.
     * 
-    * @param href - href of source to deploy (encoded)
+    * @param itemId - id of source file to deploy
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploy(String href, AsyncRequestCallback<String> callback);
+   public abstract void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
    
    /**
     * Deploy Groovy script.
@@ -72,7 +72,7 @@ public abstract class GroovyService
     * @param href - href of source to deploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void deploySandbox(String href, AsyncRequestCallback<String> callback);
+   public abstract void deploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
    
    /**
     * Undeploy deployed Groovy script.
@@ -80,7 +80,7 @@ public abstract class GroovyService
     * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploySandbox(String href, AsyncRequestCallback<String> callback);
+   public abstract void undeploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
    
    /**
     * Undeploy deployed Groovy script.
@@ -88,7 +88,7 @@ public abstract class GroovyService
     * @param href - href of source to undeploy (encoded)
     * @param callback - the callback code which the user has to implement
     */
-   public abstract void undeploy(String href, AsyncRequestCallback<String> callback);
+   public abstract void undeploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback);
    
 
    /**
@@ -102,6 +102,7 @@ public abstract class GroovyService
     * with respect to which the classpath location must be found (file or folder)  (encoded)
     * @param callback - handle the results when they are returned from the server
     */
+   @Deprecated
    public abstract void getClassPathLocation(String href, AsyncRequestCallback<ClassPath> callback);
    
    /**

@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandb
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyDeployResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
@@ -71,31 +72,32 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
     */
    public void onDeployGroovyScript(DeployGroovyScriptEvent event)
    {
-      GroovyService.getInstance().deploy(activeFile.getId(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
+      GroovyService.getInstance().deploy(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
+         activeFile.getProject().getId(), new AsyncRequestCallback<String>()
          {
-            deploySuccess(result);
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            deployFailure(this.getResult(), exception);
-         }
-      });
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               deploySuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               deployFailure(this.getResult(), exception);
+            }
+         });
    }
-   
+
    private void deploySuccess(String href)
    {
-      
+
       String outputContent = "<b>" + URL.decodePathSegment(href) + "</b> deployed successfully.";
       eventBus.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.INFO));
       eventBus.fireEvent(new GroovyDeployResultReceivedEvent(href));
    }
-   
+
    private void deployFailure(String href, Throwable exception)
    {
       if (exception instanceof ServerException)
@@ -120,27 +122,28 @@ public class DeployGroovyCommandHandler implements DeployGroovyScriptHandler, De
       event.setException(exception);
       eventBus.fireEvent(event);
    }
-   
+
    /**
     * {@inheritDoc}
     */
    public void onDeployGroovyScriptSandbox(DeployGroovyScriptSandboxEvent event)
    {
-      GroovyService.getInstance().deploySandbox(activeFile.getId(), new AsyncRequestCallback<String>()
-      {
-         
-         @Override
-         protected void onSuccess(String result)
+      GroovyService.getInstance().deploySandbox(activeFile.getId(), VirtualFileSystem.getInstance().getInfo().getId(),
+         activeFile.getProject().getId(), new AsyncRequestCallback<String>()
          {
-            deploySuccess(result);            
-         }
-         
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            deployFailure(this.getResult(), exception);
-         }
-      });
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               deploySuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               deployFailure(this.getResult(), exception);
+            }
+         });
    }
 
 }
