@@ -106,7 +106,7 @@ public class GroovyClassPathUtil
       
       String result = path;
 
-      //Add sybol "#" after workspace name (the second part of the path):
+      //Add symbol "#" after workspace name (the second part of the path):
       if (parts.length > 2)
       {
          //Start path from workspace:

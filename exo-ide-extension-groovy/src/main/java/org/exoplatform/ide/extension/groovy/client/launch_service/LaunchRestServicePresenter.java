@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.groovy.client.launch_service;
 
+import com.google.gwt.http.client.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -518,14 +520,15 @@ public class LaunchRestServicePresenter implements PreviewWadlOutputHandler, Edi
 
          String base = wadlApplication.getResources().getBase();
          String methoPath = display.getPathField().getValue();
-         if (!methoPath.startsWith("/"))
+         String[] parts = methoPath.split("/");
+         String encodedPath = "";
+         //Encode path segments:
+         for (String part : parts)
          {
-            methoPath = "/" + methoPath;
+            encodedPath += (part.isEmpty()) ? "" : URL.encodePathSegment(part) + "/";
          }
-         // TODO research
-         //String fullPath = base.substring(base.lastIndexOf("/")) + methoPath;
-         String fullPath = base + methoPath;
 
+         String fullPath = (base.endsWith("/")) ? base + encodedPath : base + "/" + encodedPath;
 
          GroovyService.getInstance().getOutput(fullPath, display.getMethodField().getValue(), headers, queryParams,
             display.getRequestBody().getValue(), new AsyncRequestCallback<RestServiceOutput>()
