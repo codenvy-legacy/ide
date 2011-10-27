@@ -98,20 +98,9 @@
          <artifactId>exo-gwtframework-commons</artifactId>
          <scope>provided</scope>
       </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
-         <scope>provided</scope>
-      </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>
@@ -314,7 +303,6 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>2.3.0-1</version>
                   <configuration>
                      <runTarget>Shell/Shell.html</runTarget>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.shell.client.model;
 
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 12, 2011 evgen $

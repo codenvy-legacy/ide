@@ -4,14 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.ide.shell.client.commands.CatCommand;
-import org.exoplatform.ide.shell.client.commands.CdCommand;
-import org.exoplatform.ide.shell.client.commands.ClearCommand;
-import org.exoplatform.ide.shell.client.commands.HelpCommand;
-import org.exoplatform.ide.shell.client.commands.LsCommand;
-import org.exoplatform.ide.shell.client.commands.MkdirCommand;
-import org.exoplatform.ide.shell.client.commands.PwdCommand;
-import org.exoplatform.ide.shell.client.commands.RmCommand;
 import org.exoplatform.ide.shell.shared.CLIResource;
 
 import java.util.HashSet;
@@ -33,14 +25,6 @@ public class CloudShell implements EntryPoint
    public void onModuleLoad()
    {
       new ShellInitializer().init();
-      commands.add(new LsCommand());
-      commands.add(new HelpCommand());
-      commands.add(new MkdirCommand());
-      commands.add(new PwdCommand());
-      commands.add(new CdCommand());
-      commands.add(new RmCommand());
-      commands.add(new ClearCommand());
-      commands.add(new CatCommand());
    }
 
    /**

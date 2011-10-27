@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import com.google.gwt.json.client.JSONValue;
-
-import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -33,6 +26,8 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -63,8 +58,6 @@ public class ShellPresenter
 {
    interface Display extends ConsoleWriter
    {
-      HasClickHandlers getClearButton();
-
       HasKeyPressHandlers getKeyPressHandler();
 
       HasKeyDownHandlers getKeyDownHandler();
@@ -128,17 +121,6 @@ public class ShellPresenter
 
    public void bindDisplay()
    {
-      display.getClearButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            display.clearConsole();
-            display.focusInConsole();
-         }
-      });
-
       display.getKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
       {
 

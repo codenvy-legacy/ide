@@ -1,6 +1,6 @@
 [
 {
-    "command": ["jcr man", "jcr cd", "jcr commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr ws", "jcr xpath"],
+    "command": ["jcr man", "jcr cd", "jcr commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr ws", "jcr xpath", "jcr ws login", "jcr ws logout"],
     "path": "/ide/crash/command",
     "method": "POST",
     "description": "To view command help try : [command] -h",

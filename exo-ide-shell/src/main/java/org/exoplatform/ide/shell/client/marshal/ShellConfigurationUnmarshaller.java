@@ -18,17 +18,16 @@
  */
 package org.exoplatform.ide.shell.client.marshal;
 
-import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.gwtframework.commons.rest.copy.UnmarshallerException;
-import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.shell.client.model.ShellConfiguration;
+import org.exoplatform.ide.shell.client.model.UserInfo;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

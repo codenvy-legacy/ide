@@ -12,9 +12,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-   <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.ide.shell.Views' />
-   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
       <!-- Initialise Virtual File System -->
    <inherits name="org.exoplatform.ide.vfs.VFS" />
 

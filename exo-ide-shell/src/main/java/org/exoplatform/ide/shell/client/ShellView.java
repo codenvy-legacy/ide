@@ -18,19 +18,13 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import com.google.gwt.user.client.DOM;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
-
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.ide.shell.client.ShellPresenter;
-import org.exoplatform.ide.shell.client.TermText;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -45,8 +39,6 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
 
    public static final int BUTTON_HEIGHT = 22;
 
-   public ImageButton clearButton;
-
    public TermText termText;
 
    private TextBox textBox;
@@ -55,9 +47,8 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    {
       setWidth("100%");
       setStyleName("shell-container");
-      clearButton = createButton("clearButton", "Clear");
 
-      termText = new TermText(32);
+      termText = new TermText();
       add(termText);
       RootPanel.get().add(this);
       focusInConsole();
@@ -73,24 +64,6 @@ public class ShellView extends FlowPanel implements ShellPresenter.Display
    {
       focusInConsole();
       super.onBrowserEvent(event);
-   }
-
-   private ImageButton createButton(String id, String title)
-   {
-      ImageButton button = new ImageButton(title);
-      button.setButtonId(id);
-      button.setWidth(BUTTON_WIDTH + "px");
-      button.setHeight(BUTTON_HEIGHT + "px");
-      return button;
-   }
-
-   /**
-    * @see org.exoplatform.ide.shell.client.ShellPresenter.Display#getClearButton()
-    */
-   @Override
-   public HasClickHandlers getClearButton()
-   {
-      return clearButton;
    }
 
    /**

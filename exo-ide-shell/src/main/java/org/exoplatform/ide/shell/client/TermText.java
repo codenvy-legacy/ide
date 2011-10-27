@@ -58,19 +58,10 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
    private boolean isFocused = false;
 
-   /** . */
-   private int height;
-
-   TermText(int height)
+   TermText()
    {
       super(Document.get().createElement("pre"));
-
-      //
-      if (height <= 0)
-      {
-         throw new IllegalArgumentException("Cannot give a non positive height");
-      }
-
+      
       //
       addMouseDownHandler(new MouseDownHandler()
       {
@@ -112,7 +103,6 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
       this.state = new StringBuilder();
       this.on = false;
       this.buffer = new StringBuilder();
-      this.height = height;
    }
 
    @Override
@@ -226,16 +216,22 @@ final class TermText extends FocusWidget implements KeyDownHandler, KeyPressHand
 
    void printPrompt()
    {
-      String path = Environment.get().getCurrentFolder().getPath();
-
-      if (!path.equals("/"))
+      String path = "";
+      if (Environment.get().getCurrentFolder() != null)
       {
-//         path = path.substring(0, path.lastIndexOf("/"));
-         path = path.substring(path.lastIndexOf("/") + 1, path.length());
+
+         path = Environment.get().getCurrentFolder().getPath();
+         if (!path.equals("/"))
+         {
+            path = path.substring(path.lastIndexOf("/") + 1, path.length());
+         }
+
+         path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
       }
-      //      if (Environment.get().getValue(EnvironmentVariables.ENTRY_POINT).endsWith(path + "/"))
-      //         path = "/";
-      path = Environment.get().getValue(EnvironmentVariables.USER_NAME) + ":" + path;
+      else
+      {
+         path = Environment.get().getValue(EnvironmentVariables.USER_NAME);
+      }
       state.append(path + "$ ");
    }
 
