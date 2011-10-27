@@ -50,7 +50,6 @@ import org.exoplatform.ide.client.navigation.control.SaveAllFilesCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateCommand;
 import org.exoplatform.ide.client.navigation.control.SaveFileCommand;
-import org.exoplatform.ide.client.navigation.control.SearchFilesCommand;
 import org.exoplatform.ide.client.navigation.control.newitem.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFileCommandMenuGroup;
 import org.exoplatform.ide.client.navigation.control.newitem.NewFilePopupMenuControl;
@@ -77,6 +76,8 @@ import org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter
 import org.exoplatform.ide.client.operation.rename.RenameFilePresenter;
 import org.exoplatform.ide.client.operation.rename.RenameFolderPresenter;
 import org.exoplatform.ide.client.operation.rename.RenameItemCommand;
+import org.exoplatform.ide.client.operation.search.SearchFilesPresenter;
+import org.exoplatform.ide.client.operation.search.SearchResultsPresenter;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.progress.ProgressPresenter;
@@ -167,7 +168,10 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       //eventBus.fireEvent(new RegisterControlEvent(new DeleteItemCommand(), DockTarget.TOOLBAR));
       new DeleteItemsPresenter();
 
-      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);
+      new SearchFilesPresenter();
+      new SearchResultsPresenter();
+      
+      
       IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR, false);
 
       new GoToFolderCommandHandler();
@@ -200,9 +204,7 @@ public class NavigationModule implements CopyItemsHandler, CutItemsHandler, Item
       new RestoreToVersionCommandHandler(eventBus);
 
       new NavigatorPresenter();
-      new SearchFilesPresenter(eventBus, selectedItems, entryPoint);
-      new SearchResultsPresenter(eventBus);
-
+      
       new SaveAsTemplatePresenter(eventBus);
       new VersionsListPresenter(eventBus);
 

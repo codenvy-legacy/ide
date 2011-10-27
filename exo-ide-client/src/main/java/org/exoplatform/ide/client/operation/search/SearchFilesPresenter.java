@@ -16,20 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.operation.search;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -38,8 +35,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.navigation.event.SearchFilesEvent;
-import org.exoplatform.ide.client.navigation.event.SearchFilesHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.SearchResultReceivedEvent;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
@@ -47,9 +42,12 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -82,23 +80,19 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
 
    private Display display;
 
-   private List<Item> selectedItems;
+   private List<Item> selectedItems = new ArrayList<Item>();
 
    private String entryPoint;
 
-   private HandlerManager eventBus;
-
-   public SearchFilesPresenter(HandlerManager eventBus, List<Item> selectedItems, String entryPoint)
+   public SearchFilesPresenter()
    {
-      this.eventBus = eventBus;
-      this.selectedItems = selectedItems;
-      this.entryPoint = entryPoint;
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(VfsChangedEvent.TYPE, this);
-      eventBus.addHandler(SearchFilesEvent.TYPE, this);
-      eventBus.addHandler(ViewOpenedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.getInstance().addControl(new SearchFilesCommand(), Docking.TOOLBAR, false);      
+      
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(SearchFilesEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -183,21 +177,21 @@ public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandl
                protected void onSuccess(List<Item> result)
                {
                   folder.getChildren().setItems(result);
-                  eventBus.fireEvent(new SearchResultReceivedEvent(folder));
+                  IDE.EVENT_BUS.fireEvent(new SearchResultReceivedEvent(folder));
                   IDE.getInstance().closeView(display.asView().getId());
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
                }
             });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
       }
    }
 

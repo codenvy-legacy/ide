@@ -31,12 +31,12 @@
       <when-type-is class="org.exoplatform.ide.client.navigator.NavigatorPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.SearchFilesView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.navigation.ui.SearchResultsViewExtended">
-      <when-type-is class="org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.operation.search.SearchResultsViewExtended">
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.properties.PropertiesView">

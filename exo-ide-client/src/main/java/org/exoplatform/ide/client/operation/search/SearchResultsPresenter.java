@@ -16,16 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation;
+package org.exoplatform.ide.client.operation.search;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Timer;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -44,9 +39,13 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS.
@@ -70,20 +69,17 @@ ViewClosedHandler, SearchResultReceivedHandler
 
    }
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private List<Item> selectedItems;
 
    private FolderModel searchResult;
 
-   public SearchResultsPresenter(HandlerManager eventBus)
+   public SearchResultsPresenter()
    {
-      this.eventBus = eventBus;
-      eventBus.addHandler(SearchResultReceivedEvent.TYPE, this);
-      eventBus.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(SearchResultReceivedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -186,7 +182,7 @@ ViewClosedHandler, SearchResultReceivedHandler
       Item item = selectedItems.get(0);
       if (item instanceof File)
       {
-         eventBus.fireEvent(new OpenFileEvent((FileModel)item));
+         IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
       }
    }
 
@@ -216,7 +212,7 @@ ViewClosedHandler, SearchResultReceivedHandler
          }
          
          selectedItems = display.getSelectedItems();
-         eventBus.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
+         IDE.EVENT_BUS.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView().getId()));
       }
    };
 

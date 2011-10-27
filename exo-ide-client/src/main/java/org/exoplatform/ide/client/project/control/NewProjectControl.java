@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.client.project.control;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectEvent;
 import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.List;
 
 import com.google.gwt.event.shared.HandlerManager;
 
@@ -45,7 +44,6 @@ public class NewProjectControl extends SimpleControl implements IDEControl
    private static final String PROMPT = "Create new project";
    
    private List<Item> selectedItems;
-   
 
    public NewProjectControl()
    {
@@ -161,8 +159,5 @@ public class NewProjectControl extends SimpleControl implements IDEControl
       setVisible(true);
       setEnabled(true);
    }
-
-
- 
 
 }

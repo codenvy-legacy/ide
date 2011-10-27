@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.ui;
+package org.exoplatform.ide.client.operation.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -40,7 +40,7 @@ import java.util.List;
  * @version $
  */
 
-public class SearchResultsViewExtended extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchResultsPresenter.Display
+public class SearchResultsViewExtended extends ViewImpl implements org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display
 {
    
    private static final String ID = "ideSearchResultView";

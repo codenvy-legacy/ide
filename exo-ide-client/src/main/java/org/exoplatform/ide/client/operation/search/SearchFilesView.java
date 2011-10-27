@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.ui;
+package org.exoplatform.ide.client.operation.search;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $Id:   $
  *
  */
-public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.navigation.SearchFilesPresenter.Display
+public class SearchFilesView extends ViewImpl implements org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display
 {
    
    private static final String ID = "ideSearchView";
