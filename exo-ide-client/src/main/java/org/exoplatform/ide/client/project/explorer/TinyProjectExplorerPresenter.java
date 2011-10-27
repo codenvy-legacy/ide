@@ -102,6 +102,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 /**
  * Created by The eXo Platform SAS.
@@ -114,7 +115,7 @@ import com.google.gwt.user.client.Timer;
 public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SwitchVFSHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewOpenedHandler, ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler,
-   ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler
+   ConfigurationReceivedSuccessfullyHandler, ShowProjectExplorerHandler, ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler
 {
    public interface Display extends IsView
    {
@@ -187,6 +188,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
    private List<Item> navigatorSelectedItems = new ArrayList<Item>();
 
    private String vfsBaseUrl;
+   
+   private ProjectModel openedProject;
 
    public TinyProjectExplorerPresenter()
    {
@@ -207,13 +210,13 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       IDE.EVENT_BUS.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.EVENT_BUS.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(OpenProjectEvent.TYPE, this);
 
       /*
       handlerRegistrations.put(SelectItemEvent.TYPE, eventBus.addHandler(SelectItemEvent.TYPE, this));
       */
-
    }
-
+   
    @Override
    public void onShowProjectExplorer(ShowProjectExplorerEvent event)
    {
@@ -233,6 +236,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       }
 
       display.getBrowserTree().setValue(navigatorSelectedItems.get(0));
+      display.asView().setTitle("&nbsp;" + navigatorSelectedItems.get(0).getName() + "&nbsp;");
       display.selectItem(navigatorSelectedItems.get(0).getId());
       selectedItems = display.getSelectedItems();
 
@@ -810,6 +814,37 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       {
          lastNavigatorId = "ideTinyProjectExplorerView";
       }
+   }
+
+   @Override
+   public void onOpenProject(OpenProjectEvent event)
+   {
+      if (display == null) {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();         
+      }
+      
+      if (openedProject != null) {
+         if (openedProject.getId().equals(event.getProject().getId())) {
+            return;
+         }
+      }
+      
+      openedProject = new ProjectModel(event.getProject());
+      display.getBrowserTree().setValue(null);
+      display.getBrowserTree().setValue(openedProject);
+      display.asView().setTitle("&nbsp;" + openedProject.getName() + "&nbsp;");
+      display.selectItem(openedProject.getId());
+      selectedItems = display.getSelectedItems();
+      
+      navigatorSelectedItems.clear();
+      navigatorSelectedItems.add(openedProject);
+      
+      Folder folder = (Folder)navigatorSelectedItems.get(0);
+      foldersToRefresh.clear();
+      foldersToRefresh.add(folder);
+      refreshNextFolder();
    }
 
 }

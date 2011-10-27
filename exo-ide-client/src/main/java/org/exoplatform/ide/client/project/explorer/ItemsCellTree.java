@@ -22,7 +22,6 @@ package org.exoplatform.ide.client.project.explorer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -40,7 +39,6 @@ import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.CellTree.Resources;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
@@ -72,7 +70,6 @@ public class ItemsCellTree extends Composite
 //         sb.appendHtmlConstant("</div>");
          
          sb.appendEscaped(text);
-         
       }
 
       @Override

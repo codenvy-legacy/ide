@@ -62,6 +62,7 @@ import org.exoplatform.ide.client.navigation.event.CopyItemsEvent;
 import org.exoplatform.ide.client.navigation.event.CutItemsEvent;
 import org.exoplatform.ide.client.navigation.event.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
+import org.exoplatform.ide.client.project.explorer.OpenProjectEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -337,10 +338,13 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       }
 
       Item item = selectedItems.get(0);
-
       if (item instanceof File)
       {
          IDE.EVENT_BUS.fireEvent(new OpenFileEvent((FileModel)item));
+      }
+      else if (item instanceof ProjectModel)
+      {
+         IDE.EVENT_BUS.fireEvent(new OpenProjectEvent((ProjectModel)item));
       }
    }
 
@@ -374,7 +378,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
       {
          return;
       }
-
+      
       if (event.getItemToSelect() != null)
       {
          itemToSelect = event.getItemToSelect().getId();
@@ -403,11 +407,11 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SwitchVFSHandl
          if (selectedItems.size() > 0)
          {
             Item item = selectedItems.get(0);
+            
             if (item instanceof FileModel)
             {
                foldersToRefresh.add(((FileModel)item).getParent());
-            }
-            else if (item instanceof Folder)
+            } else if (item instanceof Folder && !(item instanceof ProjectModel))
             {
                foldersToRefresh.add((Folder)item);
             }

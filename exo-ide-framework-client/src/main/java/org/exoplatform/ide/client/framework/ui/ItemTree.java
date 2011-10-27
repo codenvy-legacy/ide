@@ -55,6 +55,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    private String id;
 
    private String prefixId;
+   
+   private boolean expandProjects = true;
 
    public ItemTree()
    {
@@ -69,6 +71,16 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       getElement().setId(id);
       this.prefixId = prefixId;
+   }
+
+   public boolean isExpandProjects()
+   {
+      return expandProjects;
+   }
+
+   public void setExpandProjects(boolean expandProjects)
+   {
+      this.expandProjects = expandProjects;
    }
 
    protected Widget createItemWidget(ImageResource icon, String text)
@@ -187,14 +199,14 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    private TreeItem createTreeNode(Item item)
    {
       TreeItem node = new TreeItem(createItemWidget(getItemIcon(item), getTitle(item)));
-
       node.setUserObject(item);
-      if (item instanceof FolderModel || item instanceof ProjectModel)
-      {
-         // TODO fix this 
+      
+      if (item instanceof FolderModel) {
          node.addItem("");
+      } else if (item instanceof ProjectModel && expandProjects) {
+         node.addItem("");         
       }
-
+      
       String id = item.getPath();
       id = Utils.md5(id);
       node.getElement().setId(prefixId + id);
@@ -290,7 +302,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       {
          e.printStackTrace();
       }
-
    }
 
    /**
