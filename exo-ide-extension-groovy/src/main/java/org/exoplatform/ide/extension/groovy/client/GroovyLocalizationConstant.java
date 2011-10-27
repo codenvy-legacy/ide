@@ -57,4 +57,8 @@ public interface GroovyLocalizationConstant extends Messages
    /*
     * Controls
     */
+   
+   
+   @Key("groovy.classpath.file.create.error")
+   String classpathCreationError();
 }

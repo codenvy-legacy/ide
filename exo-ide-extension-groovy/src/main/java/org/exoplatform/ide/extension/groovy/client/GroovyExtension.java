@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.extension.groovy.client;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
@@ -59,21 +61,16 @@ import org.exoplatform.ide.extension.groovy.client.handlers.UndeployGroovyComman
 import org.exoplatform.ide.extension.groovy.client.handlers.ValidateGroovyCommandHandler;
 import org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter;
 import org.exoplatform.ide.extension.groovy.client.launch_service.LaunchRestServicePresenter;
-import org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputEvent;
-import org.exoplatform.ide.extension.groovy.client.launch_service.PreviewWadlOutputHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyServiceImpl;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedEvent;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.RestServiceOutputReceivedHandler;
 import org.exoplatform.ide.extension.groovy.client.service.wadl.WadlServiceImpl;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Image;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -82,8 +79,8 @@ import com.google.gwt.user.client.ui.Image;
  */
 
 public class GroovyExtension extends Extension implements RestServiceOutputReceivedHandler, SetAutoloadHandler,
-   InitializeServicesHandler, ApplicationSettingsReceivedHandler,
-   EditorActiveFileChangedHandler, PreviewGroovyTemplateHandler, ViewClosedHandler
+   InitializeServicesHandler, ApplicationSettingsReceivedHandler, EditorActiveFileChangedHandler,
+   PreviewGroovyTemplateHandler, ViewClosedHandler
 {
 
    private HandlerManager eventBus;
@@ -109,7 +106,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    private PreviewForm previewForm;
 
    public static final GroovyLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(GroovyLocalizationConstant.class);
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
     */
@@ -127,19 +124,23 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       IDE.getInstance().addControl(new RunGroovyServiceCommand(), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new DeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
       IDE.getInstance().addControl(new UndeployGroovySandboxCommand(eventBus), Docking.TOOLBAR, true);
-      
+
       new LaunchRestServicePresenter();
-      
+
       IDE.getInstance().addControl(new PreviewGroovyTemplateControl(), Docking.TOOLBAR, true);
 
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE,
+         eventBus.addHandler(RestServiceOutputReceivedEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(SetAutoloadEvent.TYPE, this));
-      
+
       //handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewWadlOutputEvent.TYPE, this));
-      
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
-      handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
+
+      handlerRegistrations.put(InitializeServicesEvent.TYPE,
+         eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this));
+      handlerRegistrations.put(InitializeServicesEvent.TYPE,
+         eventBus.addHandler(ApplicationSettingsReceivedEvent.TYPE, this));
+      handlerRegistrations
+         .put(InitializeServicesEvent.TYPE, eventBus.addHandler(PreviewGroovyTemplateEvent.TYPE, this));
       handlerRegistrations.put(InitializeServicesEvent.TYPE, eventBus.addHandler(ViewClosedEvent.TYPE, this));
 
       new RunGroovyServiceCommandHandler(eventBus);
@@ -201,29 +202,27 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    public void onSetAutoload(SetAutoloadEvent event)
    {
       //TODO
-//      Property jcrContentProperty =
-//         GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
-//      Property autoloadProperty =
-//         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
-//      autoloadProperty.setValue("" + event.isAutoload());
-//
-//      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
-//         new ItemPropertiesCallback()
-//         {
-//            @Override
-//            protected void onSuccess(Item result)
-//            {
-//               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
-//            }
-//         });
+      //      Property jcrContentProperty =
+      //         GroovyPropertyUtil.getProperty(activeFile.getProperties(), ItemProperty.JCR_CONTENT);
+      //      Property autoloadProperty =
+      //         GroovyPropertyUtil.getProperty(jcrContentProperty.getChildProperties(), ItemProperty.EXO_AUTOLOAD);
+      //      autoloadProperty.setValue("" + event.isAutoload());
+      //
+      //      VirtualFileSystem.getInstance().saveProperties(activeFile, lockTokens.get(activeFile.getHref()),
+      //         new ItemPropertiesCallback()
+      //         {
+      //            @Override
+      //            protected void onSuccess(Item result)
+      //            {
+      //               eventBus.fireEvent(new ItemPropertiesSavedEvent(result));
+      //            }
+      //         });
    }
-
-
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      if(previewOpened)
+      if (previewOpened)
       {
          IDE.getInstance().closeView(PreviewForm.ID);
          previewOpened = false;
@@ -243,7 +242,6 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
       lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
-
    /**
     * @see org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateHandler#onPreviewGroovyTemplate(org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateEvent)
     */
@@ -256,13 +254,9 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
          previewForm = new PreviewForm();
          previewForm.setIcon(new Image(GroovyClientBundle.INSTANCE.preview()));
       }
-      //decode url before encoding all url as parameter
-      //because we need to path file href as parameter,
-      //that's why all characters that are not valid for a URL component have been escaped
-      String href = URL.decodePathSegment(activeFile.getLinkByRelation(Link.REL_CONTENT).getHref());
-      //encode file href to path it as parameter in URL
-      href = URL.encodePathSegment(href);
-      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + href);
+
+      previewForm.showPreview(configuration.getContext() + "/ide/gtmpl/render?url=" + activeFile.getId() + "&vfsid="
+         + VirtualFileSystem.getInstance().getInfo().getId());
 
       if (previewOpened)
       {
@@ -283,7 +277,7 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
    {
       if (previewForm == null)
          return;
-      
+
       if (event.getView().getId().equals(previewForm.getId()))
       {
          previewOpened = false;

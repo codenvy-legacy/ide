@@ -56,6 +56,8 @@ public class ProjectTemplateTest extends BaseTest
    private SecurityContext securityContext;
 
    private VirtualFileSystem vfs;
+   
+   protected final String BASE_URI = "http://localhost";
 
    @Before
    public void setUp() throws Exception
@@ -116,7 +118,7 @@ public class ProjectTemplateTest extends BaseTest
       String rootId = vfs.getInfo().getRoot().getId();
       ContainerResponse cres =
          launcher.service("POST", "/ide/templates/project/create?vfsid=dev-monit&name=testProj&parentId=" + rootId
-            + "&templateName=SpringDemoProject", "", headers, null, null, ctx);
+            + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Item item = (Item)cres.getEntity();
       Assert.assertTrue(item instanceof Project);

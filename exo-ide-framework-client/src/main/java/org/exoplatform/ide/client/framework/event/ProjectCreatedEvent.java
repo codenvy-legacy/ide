@@ -67,7 +67,7 @@ public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
    @Override
    protected void dispatch(ProjectCreatedHandler handler)
    {
-      handler.onConfigureBuildPath(this);
+      handler.onProjectCreated(this);
    }
 
    /**

@@ -18,22 +18,22 @@
  */
 package org.exoplatform.ide.extension.groovy.client.jar;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.Border;
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.tab.TabPanel;
-import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
-import org.exoplatform.ide.extension.groovy.shared.Jar;
-import org.exoplatform.ide.extension.groovy.shared.Attribute;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.component.Border;
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
+import org.exoplatform.gwtframework.ui.client.util.ImageFactory;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
+import org.exoplatform.ide.extension.groovy.shared.Attribute;
+import org.exoplatform.ide.extension.groovy.shared.Jar;
 
 /**
  * Created by The eXo Platform SAS .
@@ -127,7 +127,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       
       Image jarsIcon = new Image(GroovyClientBundle.INSTANCE.jarLibrary());
       jarsTabPanel.addTab("jarList", jarsIcon, "JAR Libraries", b1, false);
-      jarsTabPanel.selectTab(0);
+//      jarsTabPanel.selectTab(0);
 
       attributesListGrid = new AttributesListGrid();
       attributesListGrid.setSize("100%", "100%");
@@ -139,7 +139,7 @@ org.exoplatform.ide.extension.groovy.client.jar.AvailableDependenciesPresenter.D
       
       Image attributesIcon = ImageFactory.getImage("properties");
       propertiesTabPanel.addTab("properties", attributesIcon, "Attributes", b2, false);
-      propertiesTabPanel.selectTab(0);
+//      propertiesTabPanel.selectTab(0);
       
       okButton.setButtonId(OK_BUTTON_ID);
    }

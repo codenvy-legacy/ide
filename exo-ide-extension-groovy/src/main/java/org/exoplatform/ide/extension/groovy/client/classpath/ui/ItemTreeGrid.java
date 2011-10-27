@@ -23,8 +23,11 @@ import java.util.List;
 
 import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -169,7 +172,13 @@ public class ItemTreeGrid<T extends Item> extends org.exoplatform.gwtframework.u
       ImageResource icon;
       try
       {
-         icon = (item instanceof FolderModel) ? GroovyClientBundle.INSTANCE.folder() : IDE.getInstance().getEditor(item.getMimeType()).getIcon();
+
+         if (item instanceof FolderModel)
+            icon = GroovyClientBundle.INSTANCE.folder();
+         else if (item instanceof FileModel)
+            icon = IDE.getInstance().getEditor(item.getMimeType()).getIcon();
+         else
+            icon = ProjectResolver.getImageForProject(((ProjectModel)item).getProjectType());
       }
       catch (EditorNotFoundException e)
       {

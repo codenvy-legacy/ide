@@ -34,5 +34,5 @@ public interface ProjectCreatedHandler extends EventHandler
     * 
     * @param event
     */
-   void onConfigureBuildPath(ProjectCreatedEvent event);
+   void onProjectCreated(ProjectCreatedEvent event);
 }

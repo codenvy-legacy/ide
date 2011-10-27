@@ -35,6 +35,7 @@ import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -73,7 +74,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Providers;
 
 /**
  * This REST service is used for getting and storing templates
@@ -319,7 +323,7 @@ public class TemplatesRestService
    }
 
    /**
-    * Create new IDE project from predefined tempate
+    * Create new IDE project from predefined template
     * @param vfsId id of VFS
     * @param name name of new project
     * @param parentId parent of the project
@@ -332,10 +336,18 @@ public class TemplatesRestService
    @Path("/project/create")
    @Produces(MediaType.APPLICATION_JSON)
    public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName)
+      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName, @Context Providers providers)
       throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      
+      ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
+      RequestContext context = null;
+      if (contextResolver != null)
+      {
+         context = contextResolver.getContext(RequestContext.class);
+      }
+      
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context);
       Folder projectFolder = vfs.createFolder(parentId, name);
       InputStream templateStream =
          Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
@@ -348,7 +360,7 @@ public class TemplatesRestService
          return (Project)projectItem;
       }
       else
-         throw new IllegalStateException("Something other than project was created on" + name);
+         throw new IllegalStateException("Something other than project was created on " + name);
    }
 
    //--------- Implementation -----------------------

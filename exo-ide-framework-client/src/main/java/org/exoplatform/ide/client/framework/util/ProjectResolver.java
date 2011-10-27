@@ -48,6 +48,7 @@ public class ProjectResolver
          types.put("Spring", IconImageBundle.INSTANCE.springProject());
          types.put("Java Web", IconImageBundle.INSTANCE.javaProject());
          types.put("Chromattic", IconImageBundle.INSTANCE.groovyProject());
+         types.put("REST Groovy", IconImageBundle.INSTANCE.groovyProject());
          types.put("Static Web", IconImageBundle.INSTANCE.defaultProject());
       }
    }

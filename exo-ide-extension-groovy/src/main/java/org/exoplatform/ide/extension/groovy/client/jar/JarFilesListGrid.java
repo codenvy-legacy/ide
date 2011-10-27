@@ -73,7 +73,7 @@ public class JarFilesListGrid extends ListGrid<Jar>
       getCellTable().addColumn(entryNameColumn, ENTRY_POINT_COLUMN);
       getCellTable().setColumnWidth(entryNameColumn, 100, Unit.PCT);
 
-      removeTableHeader();
+//      removeTableHeader();
    }
 
 }

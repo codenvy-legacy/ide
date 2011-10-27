@@ -6,38 +6,39 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.groovy.client.GroovyLocalizationConstant"></ui:with>
 
    <ui:style>
-      .pathTreeGrid {
-      	z-index: 0;
-      	width: 100%;
-      	height: 250px;
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
       }
       
-      .pathTreeGridContainer {
-      	border: 1px solid #a7abb4;
-      	z-index: 0;
-      	width: 100%;
-      	height: 100%;
+      .left-float {
+      	float: left;
       }
+      .zIndex{
+	z-index: 0;
+
+	}
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
-      <f:layer>
-         <g:VerticalPanel spacing="3" horizontalAlignment="center">
-            <g:HorizontalPanel width="100%" height="100%" spacing="0">
-               <g:cell verticalAlignment="middle">
-                  <g:ScrollPanel styleName="{style.pathTreeGridContainer}">
-                     <h:ItemTreeGrid styleName="{style.pathTreeGrid}" ui:field="pathTreeGrid"></h:ItemTreeGrid>
-                  </g:ScrollPanel>
-               </g:cell>
-            </g:HorizontalPanel>
-
-            <g:HorizontalPanel height="40px" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-               <f:ImageButton ui:field="okButton" width="90" height="22px" text="{locale.okButton}" imageResource="{resource.okButton}"
-                  disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="cancelButton" width="90" height="22px" text="{locale.cancelButton}"
-                  imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
-            </g:HorizontalPanel>
-         </g:VerticalPanel>
+      <f:layer top="0" bottom="40px">
+         <f:Border>
+            <f:layer>
+               <g:ScrollPanel>
+                  <h:ItemTreeGrid width="100%" height="100%" ui:field="pathTreeGrid" addStyleNames="{style.zIndex}" ></h:ItemTreeGrid>
+               </g:ScrollPanel>
+            </f:layer>
+         </f:Border>
+      </f:layer>
+      <f:layer bottom="0" height="30px">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <f:ImageButton ui:field="okButton" width="90" height="22px" text="{locale.okButton}" imageResource="{resource.okButton}"
+               disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.left-float}"></f:ImageButton>
+            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22px" text="{locale.cancelButton}"
+               imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}" addStyleNames="{style.left-float}"></f:ImageButton>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 

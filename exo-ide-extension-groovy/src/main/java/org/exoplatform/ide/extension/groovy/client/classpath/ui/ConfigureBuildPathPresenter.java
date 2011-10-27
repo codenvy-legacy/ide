@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -45,26 +44,28 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathUtil;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathHandler;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
-import org.exoplatform.ide.extension.groovy.client.service.groovy.marshal.ClassPath;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Presenter for configuring class path file.
@@ -76,6 +77,11 @@ import java.util.Map;
 public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSourceToBuildPathHandler,
    ConfigurationReceivedSuccessfullyHandler, ItemsSelectedHandler, EditorFileOpenedHandler, VfsChangedHandler
 {
+   /**
+    * 
+    */
+   private static final String GROOVYCLASSPATH = ".groovyclasspath";
+
    public interface Display extends IsView
    {
       /**
@@ -121,6 +127,14 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
 
    }
 
+   private static final Set<String> projectTypes = new HashSet<String>();
+
+   static
+   {
+      projectTypes.add("Chromattic");
+      projectTypes.add("REST Groovy");
+   }
+
    /**
     * Display.
     */
@@ -155,7 +169,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     * Opened file in editor.
     */
    private Map<String, FileModel> openedFiles;
-   
+
    private VirtualFileSystemInfo vfsInfo;
 
    /**
@@ -230,12 +244,11 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
       });
    }
 
-   
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    /**
     * Do remove the source(s).
     * 
@@ -249,117 +262,154 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.event.ProjectCreatedHandler.groovy.event.ConfigureBuildPathHandler#onConfigureBuildPath(org.exoplatform.ide.client.framework.event.ProjectCreatedEvent.groovy.event.ConfigureBuildPathEvent)
+    * @see org.exoplatform.ide.client.framework.event.ProjectCreatedHandler.groovy.event.ConfigureBuildPathHandler#onProjectCreated(org.exoplatform.ide.client.framework.event.ProjectCreatedEvent.groovy.event.ConfigureBuildPathEvent)
     */
-   public void onConfigureBuildPath(ProjectCreatedEvent event)
+   public void onProjectCreated(ProjectCreatedEvent event)
    {
-      //TODO
-//      getClassPathLocation(event.getProject());
+      if (event.getProject() == null)
+      {
+         getClassPathLocation(null);
+         return;
+      }
+      if (projectTypes.contains(event.getProject().getProjectType()))
+      {
+         getClassPathLocation(event.getProject());
+      }
    }
 
    /**
     * Get classpath file.
     * 
-    * @param parent - folder of project (encoded)
+    * @param projectModel - folder of project (encoded)
     * @return {@link File} classpath file
     */
-   private FileModel createClasspathFile(FolderModel parent)
+   private FileModel createClasspathFile(ProjectModel projectModel)
    {
-      String path = GroovyClassPathUtil.formPathFromHref(parent.getPath(), restContext);
+      String path = GroovyClassPathUtil.formPathFromHref(projectModel.getPath(), restContext);
       GroovyClassPathEntry projectClassPathEntry = GroovyClassPathEntry.build(EnumSourceType.DIR.getValue(), path);
       List<GroovyClassPathEntry> groovyClassPathEntries = new ArrayList<GroovyClassPathEntry>();
       groovyClassPathEntries.add(projectClassPathEntry);
       String content = GroovyClassPathUtil.getClassPathJSON(groovyClassPathEntries);
       String contentType = MimeType.APPLICATION_JSON;
-      FileModel newFile = new FileModel(".groovyclasspath", contentType, content, parent);
+      FolderModel projectFolder = new FolderModel(projectModel);
+      FileModel newFile = new FileModel(GROOVYCLASSPATH, contentType, content, projectFolder);
       return newFile;
    }
 
    /**
     * Get the location of classpath file.
     */
-   private void getClassPathLocation(FolderModel projectFolder)
+   private void getClassPathLocation(ProjectModel projectModel)
    {
-      if (projectFolder != null)
+      if (projectModel != null)
       {
-         final FileModel classpath = createClasspathFile(projectFolder);
-         try
-         {
-            VirtualFileSystem.getInstance().createFile(
-               projectFolder,
-               new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(
-                  classpath))
-               {
-
-                  @Override
-                  protected void onSuccess(FileModel result)
-                  {
-                     classPathFile(result);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-         }
+         checkClassPath(projectModel);
       }
       else
       {
 
          if (selectedItem == null)
             return;
-         GroovyService.getInstance().getClassPathLocation(selectedItem.getId(), new AsyncRequestCallback<ClassPath>()
+         ProjectModel project = null;
+         if (selectedItem instanceof FileModel)
          {
+            project = ((FileModel)selectedItem).getProject();
+         }
+         else if (selectedItem instanceof FolderModel)
+         {
+            project = ((FolderModel)selectedItem).getProject();
+         }
+         else if (selectedItem instanceof ProjectModel)
+         {
+            checkClassPath((ProjectModel)selectedItem);
+         }
 
-            @Override
-            protected void onSuccess(ClassPath result)
-            {
-               //TODO
-               //               classPathFile(result.getLocation());
-            }
+         if (project == null)
+            return;
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
-            }
-         });
+         checkClassPath(project);
       }
    }
 
-   private void getFileProperties(FileModel file)
+   /**
+    * @param project
+    */
+   private void checkClassPath(final ProjectModel project)
    {
+      if (!projectTypes.contains(project.getProjectType()))
+      {
+         //TODO
+         return;
+      }
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(file.getLinkByRelation(Link.REL_SELF).getHref(), new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(file))
-         {
-            
-            @Override
-            protected void onSuccess(FileModel result)
+         VirtualFileSystem.getInstance().getChildren(
+            project,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<List<Item>>(
+               new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
-               if (!(result instanceof FileModel))
-                  return;
 
-               getFileContent((FileModel)result);
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  for (Item i : result)
+                  {
+                     if (i.getName().equals(GROOVYCLASSPATH))
+                     {
+                        classPathFile((FileModel)i);
+                        return;
+                     }
+                  }
+                  // classpath not found
+                  createClassPathFile(project);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+                  Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
+               }
+            });
       }
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         Dialogs.getInstance().showError("Classpath settings not found.<br> Probably you are not in project.");
+      }
+   }
+
+   /**
+    * @param projectModel
+    */
+   private void createClassPathFile(ProjectModel projectModel)
+   {
+      final FileModel classpath = createClasspathFile(projectModel);
+      try
+      {
+         VirtualFileSystem.getInstance().createFile(
+            projectModel,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<FileModel>(new FileUnmarshaller(
+               classpath))
+            {
+
+               @Override
+               protected void onSuccess(FileModel result)
+               {
+                  classPathFile(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Dialogs.getInstance().showError(GroovyExtension.LOCALIZATION_CONSTANT.classpathCreationError());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         Dialogs.getInstance().showError(GroovyExtension.LOCALIZATION_CONSTANT.classpathCreationError());
       }
    }
 
@@ -416,16 +466,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
                @Override
                protected void onSuccess(FileModel result)
                {
-                  if (classPathFile.getId().equals(result.getId()))
-                  {
-                     closeView();
-                     if (openedFiles != null && openedFiles.containsKey(classPathFile.getId()))
-                     {
-                        eventBus.fireEvent(new EditorReplaceFileEvent(openedFiles.get(classPathFile.getId()),
-                           classPathFile));
-                     }
-                  }
-
+                  closeView();
                }
 
                @Override
@@ -553,11 +594,11 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
          display = GWT.create(Display.class);
          bindDisplay();
       }
-      
+
       IDE.getInstance().openView(display.asView());
-      
+
       display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
-      getFileProperties(file);
+      getFileContent(file);
    }
 }

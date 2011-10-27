@@ -28,6 +28,7 @@ import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
+import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.services.jcr.RepositoryService;
 
@@ -69,7 +70,10 @@ public class IDEServiceApplication extends Application
       classes.add(DownloadContentService.class);
       
       objects.add(new RemoteFileServiceExceptionMapper());
+      
       classes.add(RemoteFileService.class);
+      
+      objects.add(classes.add(RequestContextResolver.class));
       
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
