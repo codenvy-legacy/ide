@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.event.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.event.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -123,8 +122,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
 
       List<GroovyClassPathEntry> getSelectedItems();
 
-      void setCurrentRepository(String repository);
-
    }
 
    private static final Set<String> projectTypes = new HashSet<String>();
@@ -154,11 +151,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     * REST context.
     */
    private String restContext;
-
-   /**
-    * Current entry point.
-    */
-   private String currentEntryPoint;
 
    /**
     * Selected items in browser tree.
@@ -562,26 +554,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
    public void onVfsChanged(VfsChangedEvent event)
    {
       //TODO  check changes here:
-      currentEntryPoint = (event.getVfsInfo() != null) ? event.getVfsInfo().getId() : null;
       vfsInfo = event.getVfsInfo();
-      if (display != null)
-      {
-         display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
-      }
-   }
-
-   private String getRepositoryFromEntryPoint(String entryPoint)
-   {
-      if (entryPoint == null)
-         return null;
-      String context = restContext + GroovyClassPathUtil.WEBDAV_CONTEXT;
-      int index = entryPoint.indexOf(context);
-      String path = (index >= 0) ? entryPoint.substring(index + context.length()) : null;
-      if (path == null)
-         return null;
-      path = path.startsWith("/") ? path.substring(1) : path;
-      index = path.indexOf("/");
-      return (index >= 0) ? path.substring(0, index) : null;
    }
 
    /**
@@ -597,7 +570,6 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
 
       IDE.getInstance().openView(display.asView());
 
-      display.setCurrentRepository(getRepositoryFromEntryPoint(currentEntryPoint));
       display.getClassPathEntryListGrid().setValue(new ArrayList<GroovyClassPathEntry>());
       getFileContent(file);
    }
