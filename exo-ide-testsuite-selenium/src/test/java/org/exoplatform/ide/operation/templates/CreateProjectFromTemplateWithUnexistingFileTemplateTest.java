@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.ModuleException;
-import org.everrest.http.client.ProtocolNotSuppException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
-import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -32,8 +28,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Test for creating project from template.
@@ -89,10 +83,6 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @AfterClass
@@ -106,35 +96,8 @@ public class CreateProjectFromTemplateWithUnexistingFileTemplateTest extends Bas
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
 
-      HTTPConnection connection;
-      URL url;
-      try
-      {
-         url = new URL(BASE_URL);
-         connection = Utils.getConnection(url);
-         connection.Delete(templateUrl);
-      }
-      catch (MalformedURLException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ProtocolNotSuppException e)
-      {
-         e.printStackTrace();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
+      //TODO delete template
    }
 
    /**

@@ -21,16 +21,14 @@ package org.exoplatform.ide.operation.netvibes;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Test for netvibes documentation frame.
@@ -98,10 +96,6 @@ public class NetvibesDocumentationTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

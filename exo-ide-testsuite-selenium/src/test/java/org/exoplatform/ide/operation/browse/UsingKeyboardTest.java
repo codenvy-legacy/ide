@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.EnumBrowserCommand;
@@ -187,10 +186,6 @@ public class UsingKeyboardTest extends BaseTest
          VirtualFileSystemUtils.put(TEST_FILE_PATH, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + TEST_FILE);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

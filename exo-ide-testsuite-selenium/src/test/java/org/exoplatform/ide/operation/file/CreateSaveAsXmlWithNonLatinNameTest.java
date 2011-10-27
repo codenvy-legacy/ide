@@ -20,18 +20,16 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -176,10 +174,10 @@ public class CreateSaveAsXmlWithNonLatinNameTest extends BaseTest
     */
    private void checkFileExists(String fileUrl, String fileContent) throws Exception
    {
-      HTTPResponse response = VirtualFileSystemUtils.get(fileUrl);
+      Response response = VirtualFileSystemUtils.get(fileUrl);
       assertEquals(200, response.getStatusCode());
       //code mirror adds one more newline at the end of file
-      assertEquals(fileContent + "\n", response.getText());
+      assertEquals(fileContent + "\n", response.getData());
    }
 
    /**

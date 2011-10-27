@@ -20,7 +20,6 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -56,10 +55,6 @@ public class CursorPositionStatusBarTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    //IDE-154
@@ -68,16 +63,15 @@ public class CursorPositionStatusBarTest extends BaseTest
    {
       IDE.WORKSPACE.waitForRootItem();
 
-      IDE.WORKSPACE.selectItem(URL + TEST_FOLDER + "/");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      IDE.WORKSPACE.selectItem("/" + TEST_FOLDER);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
       IDE.EDITOR.waitTabPresent(0);
       IDE.NAVIGATION.saveFileAs(FILE_1);
 
-      //      IDE.WORKSPACE.waitForRootItem();
-
-      assertEquals("1 : 1", selenium().getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      waitForLoaderDissapeared();
+      
+      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       //click on editor
       IDE.EDITOR.clickOnEditor();
@@ -90,7 +84,7 @@ public class CursorPositionStatusBarTest extends BaseTest
 
       IDE.selectMainFrame();
       //chek position in status bar 
-      assertEquals("1 : 7", selenium().getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      assertEquals("1 : 7", IDE.STATUSBAR.getCursorPosition());
 
       // change cursor position
       for (int i = 0; i < 6; i++)
@@ -108,24 +102,24 @@ public class CursorPositionStatusBarTest extends BaseTest
       IDE.selectMainFrame();
 
       //		check status bar
-      assertEquals("7 : 8", selenium().getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      assertEquals("7 : 8", IDE.STATUSBAR.getCursorPosition());
 
       //	Create Css
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
-      Thread.sleep(TestConstants.SLEEP);
-
+      IDE.EDITOR.waitTabPresent(0);
+      
       // selectMainFrame();
       IDE.EDITOR.selectTab(0);
 
       //TODO fix problem see issue IDE -713
       //		check status bar
-      assertEquals("7 : 8", selenium().getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      assertEquals("7 : 8", IDE.STATUSBAR.getStatusbarText());
       //	refresh
       refresh();
 
       waitForElementPresent("//td[@class='exo-statusText-table-middle']/nobr[text()='1 : 1']");
       //			check status bar
-      assertEquals("1 : 1", selenium().getText("//td[@class='exo-statusText-table-middle']/nobr"));
+      assertEquals("1 : 1", IDE.STATUSBAR.getStatusbarText());
       IDE.EDITOR.closeFile(0);
    }
 
@@ -137,10 +131,6 @@ public class CursorPositionStatusBarTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

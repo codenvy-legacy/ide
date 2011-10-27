@@ -55,7 +55,6 @@ public class OutlineWithSeveralOpenedFilesTest extends BaseTest
    public void tearDown()
    {
       deleteCookies();
-      cleanRegistry();
    }
 
    //Check, that Outline tab correctly works, when we

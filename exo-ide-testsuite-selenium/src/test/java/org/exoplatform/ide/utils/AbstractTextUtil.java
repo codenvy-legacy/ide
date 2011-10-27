@@ -41,7 +41,7 @@ public abstract class AbstractTextUtil
    protected AbstractTextUtil(Selenium selenium)
    {
       instance = this;
-      this.selenium = selenium;
+      AbstractTextUtil.selenium = selenium;
    }
 
    /**

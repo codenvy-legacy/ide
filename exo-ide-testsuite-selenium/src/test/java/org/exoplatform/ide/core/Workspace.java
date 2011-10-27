@@ -36,13 +36,13 @@ public class Workspace extends AbstractTestModule
 
    /**
     * Select item in workspace tree
-    * @param itemHref Href of item
+    * @param path item's
     * <h1>Folder href MUST ends with "/"</h1>
     */
-   public void selectItem(String itemHref) throws Exception
+   public void selectItem(String path) throws Exception
    {
-      waitForItem(itemHref);
-      selenium().clickAt(getItemId(itemHref), "0");
+      waitForItem(path);
+      selenium().clickAt(getItemId(path), "1,1");
    }
 
    /**
@@ -56,32 +56,27 @@ public class Workspace extends AbstractTestModule
       waitForRootItem();
       //wait for select root folder (fix foc cloud-ide assembly)
       Thread.sleep(TestConstants.ANIMATION_PERIOD * 60);
-      selectItem(IDE().getWorkspaceURL());
+      //selectItem(IDE().getWorkspaceURL());
+      selectItem("/");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    public void waitForRootItem() throws Exception
    {
-      System.out.println("\r\n\r\nwaiting for ITEM >>> [" + IDE().getWorkspaceURL() +"]\r\n\r\n");
-      String locator = getItemId(IDE().getWorkspaceURL());
-      System.out.println("\r\n\r\nWORKSPACE URL LOCATOR [ " + locator + " ]\r\n\r\n");
-      waitForElementPresent(locator);
+      waitForElementPresent(getItemId("/"));
    }
-   
+
    /**
-    * Generate item id 
-    * @param href of item 
+    * Generate item id.
+    * @param path item's path 
     * @return id of item
     */
-   public String getItemId(String href) throws Exception
+   public String getItemId(String path) throws Exception
    {
-//      String itemId = href.substring(BaseTest.WS_URL.length());
-//      if (itemId.endsWith("/"))
-//         itemId = itemId.substring(0, itemId.length() - 1);
-//      itemId = itemId.replaceAll("/", "-");
-//      itemId = itemId.replaceAll(" ", "_");
-//      return TREE_PREFIX_ID + itemId;      
-      return TREE_PREFIX_ID + Utils.md5(href);
+      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
+      String itemId = (path.startsWith("/")) ? path : "/" + path;
+      itemId = Utils.md5(itemId);
+      return TREE_PREFIX_ID + itemId;
    }
 
    public void doubleClickOnFolder(String folderURL) throws Exception
@@ -141,28 +136,28 @@ public class Workspace extends AbstractTestModule
       String locator = "//div[@id='" + getItemId(folderHref) + "']/table/tbody/tr/td[1]/img";
       System.out.println("Locator [" + locator + "]");
 
-      selenium().clickAt(locator, "0");
+      selenium().clickAt(locator, "1,1");
       Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
    }
 
    /**
     * Wait for item present in workspace tree
-    * @param itemHref Href of the item
+    * @param path item's path
     * @throws Exception 
     */
-   public void waitForItem(String itemHref) throws Exception
+   public void waitForItem(String path) throws Exception
    {
-      waitForElementPresent(getItemId(itemHref));
+      waitForElementPresent(getItemId(path));
    }
 
    /**
     * Wait for item not present in workspace tree
-    * @param itemHref Href of the item
+    * @param path item's path
     * @throws Exception 
     */
-   public void waitForItemNotPresent(String itemHref) throws Exception
+   public void waitForItemNotPresent(String path) throws Exception
    {
-      waitForElementNotPresent(getItemId(itemHref));
+      waitForElementNotPresent(getItemId(path));
    }
 
 }

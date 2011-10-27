@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -68,10 +67,6 @@ public class RESTServiceCreateTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @AfterClass
@@ -82,10 +77,6 @@ public class RESTServiceCreateTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

@@ -24,19 +24,20 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.everrest.http.client.CookieModule;
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
 import org.everrest.http.client.ModuleException;
-import org.everrest.http.client.NVPair;
-import org.everrest.http.client.ProtocolNotSuppException;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,32 +51,44 @@ public class Utils
 {
    public static final String COMMAND = "/ide/groovy/";
 
-   public static HTTPConnection getConnection(URL url) throws ProtocolNotSuppException
+   public static HttpURLConnection getConnection(URL url) throws IOException
    {
-      HTTPConnection connection = new HTTPConnection(url);
+      login();
+
+      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
       connection.setAllowUserInteraction(false);
-      connection.removeModule(CookieModule.class);
-      connection.addBasicAuthorization(AuthScope.ANY_REALM, BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
       return connection;
    }
 
    private static int changeServiceState(String baseUrl, String restContext, String location, String state)
-      throws IOException, ModuleException
+      throws IOException
    {
-      URL url = new URL(baseUrl + restContext + COMMAND + state);
-      HTTPConnection connection = getConnection(url);
-      NVPair[] headers = new NVPair[2];
-      headers[0] = new NVPair("Location", location);
-      headers[1] = new NVPair(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED);
-      HTTPResponse response = connection.Post(url.getFile(), "", headers);
-      return response.getStatusCode();
+      int status = -1;
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(baseUrl + restContext + COMMAND + state);
+         connection = getConnection(url);
+         connection.setRequestMethod("POST");
+         connection.setRequestProperty("location", location);
+         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+         status = connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
    }
 
    public static HttpClient getHttpClient()
    {
       HttpClient client = new HttpClient();
       client.getParams().setAuthenticationPreemptive(true);
-      Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest. USER_NAME, BaseTest.USER_PASSWORD);
+      Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
       client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
          defaultcreds);
       return client;
@@ -89,8 +102,7 @@ public class Utils
     * @throws ModuleException 
     * @throws IOException 
     */
-   public static int undeployService(String baseUrl, String restContext, String location) throws IOException,
-      ModuleException
+   public static int undeployService(String baseUrl, String restContext, String location) throws IOException
    {
       return changeServiceState(baseUrl, restContext, location, "undeploy");
    }
@@ -103,8 +115,7 @@ public class Utils
     * @throws ModuleException 
     * @throws IOException 
     */
-   public static int deployService(String baseUrl, String restContext, String location) throws IOException,
-      ModuleException
+   public static int deployService(String baseUrl, String restContext, String location) throws IOException
    {
       return changeServiceState(baseUrl, restContext, location, "deploy");
    }
@@ -126,64 +137,18 @@ public class Utils
    }
 
    /**
-    * Encode names of folder and filed in href
-    * (need to get correct if of item in navigatin tree).
-    * @param href
-    * @return
-    */
-   private static String encodeHref(String href)
-   {
-      String segment = href.substring(BaseTest.ENTRY_POINT_URL.length());
-      if (segment.startsWith("/"))
-      {
-         segment = segment.substring(1);
-      }
-      if (segment.endsWith("/"))
-      {
-         segment = segment.substring(0, segment.length() - 1);
-      }
-      String[] pathSegments = segment.split("/");
-      String encoded = BaseTest.ENTRY_POINT_URL;
-      if (encoded.endsWith("/"))
-      {
-         encoded = encoded.substring(0, encoded.length() - 1);
-      }
-      for (int i = 0; i < pathSegments.length; i++)
-      {
-         pathSegments[i] = IDE.getInstance().getSelenium().getEval("encodeURIComponent('" + pathSegments[i] + "')");
-         encoded += "/" + pathSegments[i];
-      }
-      if (href.endsWith("/"))
-      {
-         encoded += "/";
-      }
-      return encoded;
-   }
-
-   /**
     * Encode URL(Add /IDE/ to path) string in md5 hash 
     * @param href to encode
     * @return md5 hash of string
     */
    public static String md5(String href)
    {
-      //encode href
-      String encoded = encodeHref(href);
       MessageDigest m;
       try
       {
          m = MessageDigest.getInstance("MD5");
          m.reset();
-         //add /IDE/ path segment to URL be equals with client URL 
-
-         if (BaseTest.isRunIdeAsShell() || href.startsWith(BaseTest.BASE_URL + "IDE/"))
-         {
-            m.update(encoded.getBytes());
-         }
-         else
-         {
-            m.update((BaseTest.BASE_URL + "IDE/" + encoded.substring(BaseTest.BASE_URL.length())).getBytes());
-         }
+         m.update(href.getBytes());
 
          byte[] digest = m.digest();
          BigInteger bigInt = new BigInteger(1, digest);
@@ -201,7 +166,6 @@ public class Utils
          fail();
       }
       return "";
-
    }
 
    /**
@@ -234,6 +198,77 @@ public class Utils
       }
       return "";
 
+   }
+
+   private static void login() throws IOException
+   {
+      if (CookieHandler.getDefault() == null)
+         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+
+      if (isLogged())
+         return;
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)new URL(BaseTest.LOGIN_URL).openConnection();
+         http.setRequestMethod("POST");
+         http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+         http.setDoOutput(true);
+         OutputStream output = http.getOutputStream();
+         output.write(("j_username=" + BaseTest.USER_NAME + "&j_password=" + BaseTest.USER_PASSWORD).getBytes());
+         output.close();
+         http.getResponseCode();
+      }
+      catch (MalformedURLException e)
+      {
+         e.printStackTrace();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         http.disconnect();
+      }
+   }
+
+   private static boolean isLogged()
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)new URL(BaseTest.APPLICATION_URL).openConnection();
+         http.setRequestMethod("GET");
+         http.getResponseCode();
+
+         InputStream in = http.getInputStream();
+         BufferedReader reader = null;
+         reader = new BufferedReader(new InputStreamReader(in));
+         StringBuilder sb = new StringBuilder();
+
+         String line = null;
+         while ((line = reader.readLine()) != null)
+         {
+            sb.append(line);
+            sb.append('\n');
+         }
+         in.close();
+         return !sb.toString().contains("loginForm");
+      }
+      catch (MalformedURLException e)
+      {
+         e.printStackTrace();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         http.disconnect();
+      }
+      return false;
    }
 
 }

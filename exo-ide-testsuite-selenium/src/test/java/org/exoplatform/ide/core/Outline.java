@@ -195,7 +195,7 @@ public class Outline extends AbstractTestModule
          if (index == row)
          {
             selenium().doubleClickAt(
-               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "0");
+               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "1,1");
             break;
          }
       };
@@ -208,7 +208,7 @@ public class Outline extends AbstractTestModule
     */
    public void doubleClickItem(String label) throws Exception
    {
-      selenium().doubleClickAt("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[text() = '" + label + "']", "0");
+      selenium().doubleClickAt("xpath=(//div[@id='" + Locators.TREE_ID + "']//span[text() = '" + label + "']", "1,1");
    }
 
    @Deprecated
@@ -249,7 +249,7 @@ public class Outline extends AbstractTestModule
          if (index == rowNumber)
          {
             selenium().clickAt(
-               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "0");
+               "xpath=(//div[@id='" + Locators.TREE_ID + "']//div[@class='gwt-Label'])[position()=" + i + "]", "1,1");
             break;
          }
       }
@@ -356,7 +356,7 @@ public class Outline extends AbstractTestModule
     */
    public void selectItem(String name) throws Exception
    {
-      selenium().clickAt("//div[@id='" + Locators.TREE_ID + "']//span[contains(text(), '" + name + "')]", "0");
+      selenium().clickAt("//div[@id='" + Locators.TREE_ID + "']//span[contains(text(), '" + name + "')]", "1,1");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 

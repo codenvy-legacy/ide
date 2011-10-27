@@ -21,7 +21,6 @@ package org.exoplatform.ide.downloadfiles;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -71,10 +70,6 @@ public class DownloadFileToLocalDriveTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @Test
@@ -115,10 +110,6 @@ public class DownloadFileToLocalDriveTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

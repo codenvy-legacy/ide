@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -68,7 +69,8 @@ public class Navigation extends AbstractTestModule
          if (index == rowNumber)
          {
             selenium().clickAt(
-               "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]", "0");
+               "xpath=(//div[@id='" + NAVIGATION_TREE + "']//div[@class='ide-Tree-label'])[position()=" + i + "]",
+               "1,1");
             break;
          }
       }
@@ -129,13 +131,15 @@ public class Navigation extends AbstractTestModule
 
    /**
     * Generate item id 
-    * @param href of item 
+    * @param path item's name 
     * @return id of item
     */
-   public String getItemId(String href) throws Exception
+   public String getItemId(String path) throws Exception
    {
-      System.out.println(TREE_PREFIX_ID + Utils.md5(href));
-      return TREE_PREFIX_ID + Utils.md5(href);
+      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
+      String itemId = (path.startsWith("/")) ? path : "/" + path;
+      itemId = Utils.md5(itemId);
+      return TREE_PREFIX_ID + itemId;
    }
 
    public String getItemIdSearch(String href) throws Exception
@@ -150,7 +154,7 @@ public class Navigation extends AbstractTestModule
     */
    public void selectItemInSearchTree(String itemHref) throws Exception
    {
-      selenium().clickAt(getItemIdSearch(itemHref), "0");
+      selenium().clickAt(getItemIdSearch(itemHref), "1,1");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
@@ -198,7 +202,7 @@ public class Navigation extends AbstractTestModule
     */
    public void assertItemNotVisible(String itemHref) throws Exception
    {
-     
+
       String id = getItemId(itemHref);
       if (selenium().isElementPresent(id))
       {

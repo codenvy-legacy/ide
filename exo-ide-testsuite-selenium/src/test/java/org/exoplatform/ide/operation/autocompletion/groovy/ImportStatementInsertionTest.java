@@ -85,7 +85,7 @@ public class ImportStatementInsertionTest extends BaseTest
       goToLine(14);
       IDE.EDITOR.typeTextIntoEditor(0, "B");
       IDE.CODEASSISTANT.openForm();
-      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "");
+      selenium().clickAt(getErrorCorrectionListItemLocator("Base64"), "1,1");
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_ENTER);
       Thread.sleep(TestConstants.SLEEP);
 

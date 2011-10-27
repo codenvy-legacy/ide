@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -54,10 +53,6 @@ public class RESTServiceDeployWrongTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -103,10 +98,6 @@ public class RESTServiceDeployWrongTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

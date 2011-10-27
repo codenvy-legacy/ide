@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.upload;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -53,10 +52,6 @@ public class UploadToFolderWithSpacesTest extends BaseTest
          VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -100,10 +95,6 @@ public class UploadToFolderWithSpacesTest extends BaseTest
          VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

@@ -20,7 +20,6 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -117,7 +116,7 @@ public class SearchInRootFolderTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown() throws IOException, ModuleException
+   public static void tearDown() throws IOException
    {
       VirtualFileSystemUtils.delete(WS_URL + folder1Name);
       VirtualFileSystemUtils.delete(WS_URL + folder2Name);

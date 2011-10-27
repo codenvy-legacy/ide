@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -61,27 +60,17 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    @After
    public void tearDown()
    {
-      cleanRegistry();
       deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

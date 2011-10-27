@@ -21,7 +21,6 @@ package org.exoplatform.ide.project.classpath;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -85,11 +84,6 @@ public class UseOfClasspathEntriesTest extends BaseTest
          e.printStackTrace();
          fail("Can't create project structure");
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-         fail("Can't create project structure");
-      }
    }
 
    @AfterClass
@@ -101,10 +95,6 @@ public class UseOfClasspathEntriesTest extends BaseTest
          VirtualFileSystemUtils.delete(WORKSPACE_URL + PROJECT_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

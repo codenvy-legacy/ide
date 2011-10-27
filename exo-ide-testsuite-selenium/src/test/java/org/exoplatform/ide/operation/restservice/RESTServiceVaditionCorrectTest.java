@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -65,10 +64,6 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @Test
@@ -95,10 +90,6 @@ public class RESTServiceVaditionCorrectTest extends BaseTest
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

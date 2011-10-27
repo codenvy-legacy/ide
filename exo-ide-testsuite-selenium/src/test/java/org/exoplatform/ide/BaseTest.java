@@ -19,37 +19,29 @@
 package org.exoplatform.ide;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
-import org.everrest.http.client.ProtocolNotSuppException;
+import com.thoughtworks.selenium.Selenium;
+
+import org.exoplatform.ide.utils.TextUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ResourceBundle;
-
-import com.thoughtworks.selenium.Selenium;
-
-;
 
 /**
  * Created by The eXo Platform SAS.
@@ -94,31 +86,32 @@ public abstract class BaseTest
 
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
+   protected static String LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
+
    public static final String REST_CONTEXT = IDE_SETTINGS.getString("ide.rest.context");
 
    public static final String REPO_NAME = IDE_SETTINGS.getString("ide.repository.name");
 
    public static final String WEBDAV_CONTEXT = IDE_SETTINGS.getString("ide.webdav.context");
 
-
    //this two variables add after change in URL IDE
    public static String REST_CONTEXT_IDE = IDE_SETTINGS.getString("ide.rest.contenxt.ide");
 
-   public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
-   
+   public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
+      + "/";
+
    public static String WS_URL_IDE = ENTRY_POINT_URL_IDE + WS_NAME + "/";
 
    public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
-   
    public static Selenium selenium;
+
    /**
     * Default workspace URL.
     */
    public static final String WS_URL = ENTRY_POINT_URL + WS_NAME + "/";
 
    protected static final String REGISTER_IN_PORTAL = BASE_URL + "portal/private";
-   
 
    protected static final EnumBrowserCommand BROWSER_COMMAND = EnumBrowserCommand.valueOf(IDE_SETTINGS
       .getString("selenium.browser.commad"));
@@ -138,113 +131,76 @@ public abstract class BaseTest
    private static int testsCounter = 0;
 
    private static boolean beforeClass = false;
-   
-   public static String REST_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
-   
-   public static String IDE_WORKSPACE_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/";
+
+   public static String REST_WORKSPACE_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/";
+
+   public static String IDE_WORKSPACE_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+      + WS_NAME + "/";
 
    private static WebDriver driver;
-   
-   //public IDE IDE = new IDE(selenium(), WS_URL);
-   public static IDE IDE; //new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
-   
-//   @Before
-//   public void startSelenium() throws Exception
-//   {
-//      if (beforeClass)
-//         return;
-//
-//      beforeClass = true;
-//      startSeleniumSession(SELENIUM_HOST, Integer.parseInt(SELENIUM_PORT), BROWSER_COMMAND.toString(), BASE_URL);
-//      //IDE = new IDE(selenium(), WS_URL);
-//      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
-//      
-//      switch (BROWSER_COMMAND)
-//      {
-//         case GOOGLE_CHROME :
-//         case SAFARI :
-//            new WebKitUtil(selenium());
-//            break;
-//
-//         case IE_EXPLORE_PROXY :
-//            new InternetExplorerUtil(selenium());
-//            break;
-//
-//         default :
-//            new TextUtil(selenium());
-//      }
-//
-//      //      testsCounter++;
-//      //      if (testsCounter % maxRunTestsOnOneSession == 1)
-//      //      {
-//      //         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 1");
-//      //         selenium().start();
-//      //         selenium().windowFocus();
-//      //         selenium().windowMaximize();
-//      //         selenium().open(APPLICATION_URL);
-//      //         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-//      //         standaloneLogin(USER_NAME);
-//      //      }
-//      //      
-//      //      System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CASE 2");
-//      //      selenium().open(APPLICATION_URL);
-//      //      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);         
-//
-//      try
-//      {
-//         selenium().windowFocus();
-//         selenium().windowMaximize();
-//         selenium().open(APPLICATION_URL);
-//         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-//
-//         if (isRunIdeUnderPortal())
-//         {
-//            loginInPortal();
-//            selenium().open(APPLICATION_URL);
-//            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-//            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-//            // selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
-//            // selenium().selectFrame("remote_iframe_0");
-//
-//            // selectMainForm()
-//            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
-//            {
-//               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
-//            }
-//            else
-//            {
-//               selenium().selectFrame("relative=top");
-//            }
-//         }
-//         else if (isRunIdeAsStandalone())
-//         {
-//            standaloneLogin(USER_NAME, USER_PASSWORD);
-//         }
-//      }
-//      catch (Exception e)
-//      {
-//         e.printStackTrace();
-//      }
-//   }
-   
-   
+
+   public static IDE IDE;
+
    @Before
    public void start() throws Exception
    {
-      System.setProperty("webdriver.chrome.driver", "/home/vetal/eXo/chromedriver");
-      driver = new FirefoxDriver(); 
-               //new ChromeDriver();
-//      driver.get("http://www.google.com");
-      selenium = new WebDriverBackedSelenium(driver, "http://localhost:8080/site/index.html");
-      selenium.open("http://localhost:8080/site/index.html");
-      selenium.waitForPageToLoad("20000");
+      if (beforeClass)
+         return;
+
+      beforeClass = true;
+
+      //Choose browser Web driver:
+      switch (BROWSER_COMMAND)
+      {
+         case GOOGLE_CHROME :
+            driver = new ChromeDriver();
+            break;
+         case IE_EXPLORE_PROXY :
+            driver = new InternetExplorerDriver();
+            break;
+         default :
+            driver = new FirefoxDriver();
+      }
+      
+      selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
+      
       IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
-      System.out.println("BaseTest.start()" + selenium());
-      standaloneLogin(USER_NAME, USER_PASSWORD);
-      System.out.println("BaseTest.start()" + selenium());
+      new TextUtil(selenium());
+
+      try
+      {
+         selenium().windowFocus();
+         selenium().windowMaximize();
+         selenium().open(APPLICATION_URL);
+         selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+
+         if (isRunIdeUnderPortal())
+         {
+            loginInPortal();
+            selenium().open(APPLICATION_URL);
+            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
+
+            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
+            {
+               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
+            }
+            else
+            {
+               selenium().selectFrame("relative=top");
+            }
+         }
+         else if (isRunIdeAsStandalone())
+         {
+            standaloneLogin(USER_NAME, USER_PASSWORD);
+         }
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
    }
-   
-   
 
    protected void logout() throws Exception
    {
@@ -262,7 +218,7 @@ public abstract class BaseTest
 
    private void standaloneLogout() throws Exception
    {
-      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "");
+      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "1,1");
       selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
    }
 
@@ -288,22 +244,8 @@ public abstract class BaseTest
    @AfterClass
    public static void stopSelenium()
    {
-      //      if (testsCounter % maxRunTestsOnOneSession == 0)
-      //      {
-      //         selenium().stop();
-      //      }
-
       closeSeleniumSession();
       beforeClass = false;
-      //      try
-      //      {
-      //         standaloneLogout();
-      //      }
-      //      catch (Exception e)
-      //      {
-      //         // TODO Auto-generated catch block
-      //         e.printStackTrace();
-      //      }
    }
 
    /**
@@ -355,7 +297,7 @@ public abstract class BaseTest
 
       SaveFileUtils.checkSaveAsDialogAndSave(name, true);
    }
-   
+
    protected void saveCurrentFile() throws Exception
    {
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
@@ -661,9 +603,9 @@ public abstract class BaseTest
        }
     }*/
 
-   protected static void cleanRegistry()
+   /* TODO protected static void cleanRegistry()
    {
-      HTTPConnection connection;
+      HttpURLConnection connection;
       URL url;
       try
       {
@@ -692,7 +634,7 @@ public abstract class BaseTest
          e.printStackTrace();
       }
    }
-
+   */
    @AfterClass
    public static void killFireFox()
    {
@@ -1030,6 +972,7 @@ public abstract class BaseTest
       IDE_HOST = host;
       BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
       APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
+      LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
       ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
       ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
    }

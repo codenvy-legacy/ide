@@ -79,7 +79,6 @@ public abstract class AbstractHotkeysTest extends BaseTest
    @After
    public void tearDown()
    {
-      cleanRegistry();
       deleteCookies();
    }
 

@@ -17,7 +17,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -53,10 +52,6 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + TEST_FOLDER + "/" + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -134,10 +129,6 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

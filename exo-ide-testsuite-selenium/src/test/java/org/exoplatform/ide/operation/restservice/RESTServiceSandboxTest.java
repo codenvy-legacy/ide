@@ -20,9 +20,6 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -31,6 +28,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -55,14 +54,9 @@ public class RESTServiceSandboxTest extends BaseTest
    {
       try
       {
-         cleanRegistry();
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -124,10 +118,6 @@ public class RESTServiceSandboxTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

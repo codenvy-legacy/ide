@@ -23,8 +23,8 @@ import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,14 +39,14 @@ public class DeleteFolderTest extends BaseTest
 
    private final static String FOLDER_NAME_MENU = "deleteFolderMenuTest";
 
-   private final String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final static String URL_TOOLBAR = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME_TOOLBAR;
 
-   private final String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
+   private final static String URL_MENU = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/" + FOLDER_NAME_MENU;
 
-   @Before
-   public void setUp()
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
@@ -67,17 +67,17 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromToolbar() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(URL_TOOLBAR + "/");
+      IDE.WORKSPACE.waitForItem("/" + FOLDER_NAME_TOOLBAR);
 
       //select folder
-      IDE.WORKSPACE.selectItem(URL_TOOLBAR + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_TOOLBAR);
       //run delete
       IDE.NAVIGATION.deleteSelectedItems();
       //chek create form
       //chek Disappear Form
-      chekDisappearDeleteItemForm();
+      checkDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.NAVIGATION.assertItemNotVisible(URL_TOOLBAR + "/");
+      IDE.NAVIGATION.assertItemNotVisible("/"+ FOLDER_NAME_TOOLBAR);
       assertEquals(404, VirtualFileSystemUtils.get(URL_TOOLBAR).getStatusCode());
    }
 
@@ -89,21 +89,22 @@ public class DeleteFolderTest extends BaseTest
    @Test
    public void testDeleteFolderFromMainMenu() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(URL_MENU + "/");
+      
+      IDE.WORKSPACE.waitForItem("/"+ FOLDER_NAME_MENU);
 
       //select folder
-      IDE.WORKSPACE.selectItem(URL_MENU + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_MENU);
       //run command through menicommands
       //delete item
       IDE.NAVIGATION.deleteSelectedItems();
       //and chek delete
-      chekDisappearDeleteItemForm();
+      checkDisappearDeleteItemForm();
       //chek Disappear in menu of navigator
-      IDE.NAVIGATION.assertItemNotVisible(URL_MENU + FOLDER_NAME_MENU + "/");
+      IDE.NAVIGATION.assertItemNotVisible("/"+ FOLDER_NAME_MENU);
       assertEquals(404, VirtualFileSystemUtils.get(URL_MENU).getStatusCode());
    }
 
-   public void chekDisappearDeleteItemForm()
+   public void checkDisappearDeleteItemForm()
    {
       assertFalse(selenium().isElementPresent("//div[@view-id=\"ideDeleteItemsView\"]"));
       assertFalse(selenium().isElementPresent("//div[@class=\"Caption\"]/span[\"IDE\"]"));
@@ -114,8 +115,8 @@ public class DeleteFolderTest extends BaseTest
       assertFalse(selenium().isElementPresent("ideDeleteItemFormCancelButton"));
    }
 
-   @After
-   public void tearDown()
+   @AfterClass
+   public static void tearDown()
    {
       try
       {

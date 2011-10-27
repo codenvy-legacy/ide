@@ -42,12 +42,6 @@ public class CreateProjectTemplateTest extends BaseTest
 
    private String gadgetFileName = "SampleGadget.xml";
 
-   @After
-   public void tearDown()
-   {
-      cleanRegistry();
-   }
-
    @Test
    public void testCreateProjectTemplate() throws Exception
    {

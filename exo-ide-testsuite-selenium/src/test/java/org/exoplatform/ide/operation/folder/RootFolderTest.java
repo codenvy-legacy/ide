@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.operation.folder;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
@@ -51,19 +49,20 @@ public class RootFolderTest extends BaseTest
    @Test
    public void testRootFolder() throws Exception
    {
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
+      
       IDE.WORKSPACE.selectRootItem();
 
       //create folder
       IDE.NAVIGATION.createFolder(folderName);
 
       //check new folder appeared in navigation tree
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemVisible("/" + folderName );
       //refresh workspace folder
       IDE.WORKSPACE.selectRootItem();
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       //check new folder is present in navigation tree
-      IDE.NAVIGATION.assertItemVisible(WS_URL + folderName + "/");
+      IDE.NAVIGATION.assertItemVisible("/" + folderName);
    }
 
    @After
@@ -74,10 +73,6 @@ public class RootFolderTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + URLEncoder.encode(folderName, "UTF-8"));
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

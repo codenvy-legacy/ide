@@ -140,7 +140,7 @@ public class CreateProjectTemplate extends AbstractTestModule
     */
    public void selectItemInTree(String name) throws InterruptedException
    {
-      selenium().clickAt("//div[@class='ide-Tree-label' and text()='" + name + "']", "");
+      selenium().clickAt("//div[@class='ide-Tree-label' and text()='" + name + "']", "1,1");
       Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
    

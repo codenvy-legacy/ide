@@ -201,7 +201,7 @@ public class ClasspathProject extends AbstractTestModule
       String locator =
          "//div[@id=\"" + CHOOSE_SOURCE_TREE_ID + "\"]//div[@class=\"ide-Tree-label\" and contains(text(), \"" + title
             + "\")]";
-      selenium().clickAt(locator, "0");
+      selenium().clickAt(locator, "1,1");
    }
 
    /**

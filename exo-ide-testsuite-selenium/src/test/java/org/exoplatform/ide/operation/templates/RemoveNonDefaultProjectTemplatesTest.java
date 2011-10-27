@@ -66,12 +66,6 @@ public class RemoveNonDefaultProjectTemplatesTest extends BaseTest
 //      }
    }
    
-   @AfterClass
-   public static void tearDown()
-   {
-//      cleanRegistry();
-   }
-   
    
    /**
     * Test added to Ignore, because we don't use registry service.

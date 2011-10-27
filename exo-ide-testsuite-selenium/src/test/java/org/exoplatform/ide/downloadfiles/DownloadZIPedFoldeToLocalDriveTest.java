@@ -21,7 +21,6 @@ package org.exoplatform.ide.downloadfiles;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -76,10 +75,6 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
          VirtualFileSystemUtils.put(RANDOM_STRING_TXT.getBytes(), MimeType.TEXT_PLAIN, URL + FILE_NAME + ".txt");
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -205,10 +200,6 @@ public class DownloadZIPedFoldeToLocalDriveTest extends BaseTest
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

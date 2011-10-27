@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -29,6 +26,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -60,10 +59,6 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -103,10 +98,6 @@ public class FileNotClosingAfterSaveAsTest extends BaseTest
             + "/" + FOLDER_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

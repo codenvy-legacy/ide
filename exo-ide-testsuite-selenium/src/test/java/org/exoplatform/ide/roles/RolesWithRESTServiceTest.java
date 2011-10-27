@@ -20,7 +20,6 @@ package org.exoplatform.ide.roles;
 
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -55,10 +54,6 @@ public class RolesWithRESTServiceTest extends BaseTest
          VirtualFileSystemUtils.delete(URL+FILE1);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

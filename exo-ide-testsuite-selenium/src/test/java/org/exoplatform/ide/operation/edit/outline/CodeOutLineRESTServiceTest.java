@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -65,10 +64,6 @@ public class CodeOutLineRESTServiceTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
    
    @After
@@ -79,10 +74,6 @@ public class CodeOutLineRESTServiceTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

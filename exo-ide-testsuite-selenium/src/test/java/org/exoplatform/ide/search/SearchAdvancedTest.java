@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.search;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -114,7 +113,7 @@ public class SearchAdvancedTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown() throws IOException, ModuleException
+   public static void tearDown() throws IOException
    {
       VirtualFileSystemUtils.delete(WS_URL + googleGadgetFileName);
    }

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -64,10 +63,6 @@ public class EditFileInWysiwygEditorTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -118,7 +113,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //------ 5 ---------------
       //click on button Table in CK editor
-      selenium().clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "");
+      selenium().clickAt("//td[@class='cke_top']//a[contains(@class, 'cke_button_table')]", "1,1");
       Thread.sleep(TestConstants.SLEEP);
 
       //check Table Properties dialog window appeared
@@ -396,10 +391,6 @@ public class EditFileInWysiwygEditorTest extends BaseTest
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

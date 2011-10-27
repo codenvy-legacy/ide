@@ -19,9 +19,6 @@
 
 package org.exoplatform.ide.paas.cloudfoundry;
 
-import java.io.File;
-import java.net.URL;
-
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -31,10 +28,12 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Utils;
+
+import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * 
@@ -46,37 +45,50 @@ import org.exoplatform.ide.Utils;
 
 public abstract class CloudFoundryTest extends BaseTest
 {
-   
-   public static void resetMockService() {
-      try {
+
+   public static void resetMockService()
+   {
+      HttpURLConnection connection = null;
+      try
+      {
          String logoutURL = BASE_URL + REST_CONTEXT + "/ide/cloudfoundry/logout";
-         // "http://localhost:8080/" + 
-         
+
          URL url = new URL(logoutURL);
-         HTTPConnection connection = Utils.getConnection(url);
-         HTTPResponse response = connection.Post(url.getFile());
-         System.out.println("STATUS > " + response.getStatusCode());          
-      } catch (Exception e) {
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         System.out.println("STATUS > " + connection.getResponseCode());
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
-      }      
-   }   
-   
-   public void uploadResource(String resource, String destination) {
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+   }
+
+   public void uploadResource(String resource, String destination)
+   {
       System.out.println("REQUEST TO UPLOAD RESOURCE!");
       System.out.println("RESOURCE [" + resource + "]");
       System.out.println("DESTINATION [" + destination + "]");
-      
-      try {
+
+      try
+      {
          File f = new File("src/test/resources/org/exoplatform/ide/paas/cloudfoundry/java-spring-project.zip");
-         
+
          String postURL = BASE_URL + REST_CONTEXT + "/ide/upload/folder/";
          System.out.println("> POST [" + postURL + "]");
-         
+
          PostMethod filePost = new PostMethod(postURL);
          //System.out.println("LOCATION [" + WS_URL + TEST_FOLDER + "/java-spring-project.zip" + "]");
          //String location = "http://localhost:8080/rest/private/ide/upload/folder/";
          String location = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + destination;
-         
+
          Part[] parts = {
             //new StringPart("location", WS_URL + TEST_FOLDER + "/java-spring-project.zip"),
             new StringPart("location", location),
@@ -84,35 +96,30 @@ public abstract class CloudFoundryTest extends BaseTest
             //http://localhost:8080/IDE/rest/private/jcr/repository/dev-monit/aa/WhatsNewPopup.zip
             //http://localhost:8080/IDE/rest/private/jcr/repository/dev-monit/cloudfoundry-test-application-info/java-spring-project.zip
             //http://localhost:8080/IDE/rest/private/jcr/repository/dev-monit/cloudfoundry-test-application-info
-            
+
             new FilePart("file", f)
-            //new StringPart("Cookie", cookie)
+         //new StringPart("Cookie", cookie)
             };
          filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost.getParams()));
          //HttpClient client = Utils.getHttpClient();
-         
+
          HttpClient client = new HttpClient();
          client.getParams().setAuthenticationPreemptive(true);
-         Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest. USER_NAME, BaseTest.USER_PASSWORD);
+         Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
          client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
             defaultcreds);
-         
+
          int status = client.executeMethod(filePost);
          System.out.println("\r\n\r\n\r\nUPLOAD ZIP STATUS > " + status + "\r\n\r\n\r\n");
          System.out.println("MESSAGE > " + filePost.getStatusText());
          System.out.println("BODY > " + filePost.getResponseBodyAsString());
-         
-      } catch (Exception e) {
+
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
-      
-      
-      
-      
-      
-      
-      
-      
+
    }
 
 }

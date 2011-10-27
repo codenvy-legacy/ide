@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -104,16 +103,11 @@ public class CreateProjectFromTemplateTest extends BaseTest
    @After
    public void tearDown()
    {
-//      cleanRegistry();
       try
       {
          VirtualFileSystemUtils.delete(PROJECT_FOLDER_URL + PROJECT_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -126,11 +120,6 @@ public class CreateProjectFromTemplateTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    /**

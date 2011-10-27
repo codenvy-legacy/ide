@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,6 +27,8 @@ import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -64,10 +63,6 @@ public class CodeOutLineGroovyTest extends BaseTest
             + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

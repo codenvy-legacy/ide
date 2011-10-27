@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -65,13 +64,6 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       + "<items><file><template-file-name>Groovy%20REST%20Service</template-file-name>"
       + "<file-name>Main.groovy</file-name></file><file><template-file-name>Sample%20Template</template-file-name>"
       + "<file-name>Index.html</file-name></file></items></folder></items></folder></items></template>";
-   
-   @After
-   public void tearDown()
-   {
-      cleanRegistry();
-   }
-   
    
    //IDE-163:Remove non-default file templates
    /**
@@ -190,10 +182,6 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
    
    private void putFileTemplateWithProjectTemplateToRegistry()
@@ -206,10 +194,6 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
          VirtualFileSystemUtils.put(PROJECT_TEMPLATE_XML.getBytes(), templateUrl + "/?createIfNotExist=true");
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

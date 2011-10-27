@@ -20,9 +20,6 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.UUID;
-
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -32,6 +29,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.UUID;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -146,8 +145,9 @@ public class CutFileTest extends BaseTest
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1)
-         .getStatusCode());
+      assertEquals(404, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_1 + "/" + FILE_NAME_1
+
+      ).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FILE_NAME_1).getStatusCode());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
@@ -165,7 +165,7 @@ public class CutFileTest extends BaseTest
       final String oldText = IDE.EDITOR.getTextFromCodeEditor(0);
 
       IDE.NAVIGATION.saveFile();
-      
+
       IDE.EDITOR.closeFile(0);
 
       IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(WS_URL + FILE_NAME_1, false);

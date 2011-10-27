@@ -20,7 +20,6 @@ package org.exoplatform.ide.versioning;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -70,10 +69,6 @@ public class RestoreVersionTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

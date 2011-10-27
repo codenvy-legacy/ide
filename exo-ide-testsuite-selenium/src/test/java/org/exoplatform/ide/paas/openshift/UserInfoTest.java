@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.paas.openshift;
 
-import java.net.URL;
+import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -30,7 +28,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by The eXo Platform SAS .
@@ -39,160 +38,162 @@ import static org.junit.Assert.assertEquals;
  * @version $
  */
 
-public class UserInfoTest extends BaseTest {
+public class UserInfoTest extends BaseTest
+{
 
-	private static final String TEST_FOLDER = UserInfoTest.class
-			.getSimpleName();
+   private static final String TEST_FOLDER = UserInfoTest.class.getSimpleName();
 
-	@Before
-	public void setUp() throws Exception {
-		try {
-			VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+   @Before
+   public void setUp() throws Exception
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
 
-		try {
-			VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+      try
+      {
+         VirtualFileSystemUtils.mkcol(WS_URL + TEST_FOLDER);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
-	@After
-	public void tearDown() {
-		try {
-			VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+   @After
+   public void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
 
-	private void resetServices() throws Exception {
-		String resetGitServiceURL = BASE_URL + REST_CONTEXT
-				+ "/ide/git-repo/reset";
-		System.out.println("reset URL1 > [" + resetGitServiceURL + "]");
+   private void resetServices() throws Exception
+   {
+      HttpURLConnection connection = null;
+      HttpURLConnection connection2 = null;
+      try
+      {
+         String resetGitServiceURL = BASE_URL + REST_CONTEXT + "/ide/git-repo/reset";
+         URL url = new URL(resetGitServiceURL);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         connection.getResponseCode();
 
-		URL url1 = new URL(resetGitServiceURL);
-		HTTPConnection connection1 = Utils.getConnection(url1);
-		HTTPResponse response1 = connection1.Post(url1.getFile());
-		System.out.println("STATUS1 > " + response1.getStatusCode());
+         String resetExpressServiceURL = BASE_URL + REST_CONTEXT + "/ide/openshift/express/reset";
+         url = new URL(resetExpressServiceURL);
+         connection2 = Utils.getConnection(url);
+         connection2.setRequestMethod("POST");
+         connection2.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+         if (connection2 != null)
+         {
+            connection.disconnect();
+         }
+      }
+   }
 
-		String resetExpressServiceURL = BASE_URL + REST_CONTEXT
-				+ "/ide/openshift/express/reset";
-		System.out.println("reset URL2 > [" + resetExpressServiceURL + "]");
+   /**
+    * Test added to Ignore, because at the moment he is in progress of develop.
+    * 
+    * @throws Exception
+    */
+   @Ignore
+   @Test
+   public void testShowUserInfo() throws Exception
+   {
+      resetServices();
 
-		URL url2 = new URL(resetExpressServiceURL);
-		HTTPConnection connection2 = Utils.getConnection(url2);
-		HTTPResponse response2 = connection2.Post(url2.getFile());
-		System.out.println("STATUS2 > " + response2.getStatusCode());
+      /*
+       * Wait while IDE has been successfully initialized.
+       */
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
+      Thread.sleep(1000);
 
-	}
+      /*
+       * Clear Output
+       */
+      IDE.OUTPUT.clearOutputIfIsOpened();
 
-	/**
-	 * Test added to Ignore, because at the moment he is in progress of develop.
-	 * 
-	 * @throws Exception
-	 */
-	@Ignore
-	@Test
-	public void testShowUserInfo() throws Exception {
-		resetServices();
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.createFolder("application-1");
 
-		/*
-		 * Wait while IDE has been successfully initialized.
-		 */
-		IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-		Thread.sleep(1000);
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.NAVIGATION.createFolder("application-2");
 
-		/*
-		 * Clear Output
-		 */
-		IDE.OUTPUT.clearOutputIfIsOpened();
+      /*
+       * Create test domain "dd1"
+       */
+      IDE.OPENSHIFT.createDomain("dd1");
 
-		IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-		IDE.NAVIGATION.createFolder("application-1");
+      /*
+       * Create application "app1"
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/application-1/");
+      IDE.OPENSHIFT.createApplication("app1");
 
-		IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
-		IDE.NAVIGATION.createFolder("application-2");
+      /*
+       * Create application "app2"
+       */
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/application-2/");
+      IDE.OPENSHIFT.createApplication("app2");
 
-		/*
-		 * Create test domain "dd1"
-		 */
-		IDE.OPENSHIFT.createDomain("dd1");
+      IDE.OPENSHIFT.USER_INFO.openUserInformationWindow();
 
-		/*
-		 * Create application "app1"
-		 */
-		IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/application-1/");
-		IDE.OPENSHIFT.createApplication("app1");
+      assertEquals("an4ous@bigmir.net", IDE.OPENSHIFT.USER_INFO.getLogin());
+      assertEquals("dd1", IDE.OPENSHIFT.USER_INFO.getDomain());
 
-		/*
-		 * Create application "app2"
-		 */
-		IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/application-2/");
-		IDE.OPENSHIFT.createApplication("app2");
+      IDE.OPENSHIFT.USER_INFO.selectApplication("app1");
 
-		IDE.OPENSHIFT.USER_INFO.openUserInformationWindow();
+      assertEquals("Name", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1, 1));
+      assertEquals("app1", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1, 2));
 
-		assertEquals("an4ous@bigmir.net", IDE.OPENSHIFT.USER_INFO.getLogin());
-		assertEquals("dd1", IDE.OPENSHIFT.USER_INFO.getDomain());
+      assertEquals("Type", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2, 1));
+      assertEquals("rack-1.1", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2, 2));
 
-		IDE.OPENSHIFT.USER_INFO.selectApplication("app1");
+      assertEquals("Public URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(3, 1));
+      assertEquals("http://app1-dd1.rhcloud.com/", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(3, 2));
 
-		assertEquals("Name", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1,
-				1));
-		assertEquals("app1", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1,
-				2));
+      assertEquals("Git URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 1));
+      assertEquals("ssh://04fc0584021b4a9da8d95cd6383b12e4@app1-dd1.rhcloud.com/~/git/app1.git/",
+         IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 2));
 
-		assertEquals("Type", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2,
-				1));
-		assertEquals("rack-1.1", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(2, 2));
+      assertEquals("Creation time", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(5, 1));
+      assertEquals("1970 Jan 1 03:00:00", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(5, 2));
 
-		assertEquals("Public URL", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(3, 1));
-		assertEquals("http://app1-dd1.rhcloud.com/", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(3, 2));
+      IDE.OPENSHIFT.USER_INFO.selectApplication("app2");
 
-		assertEquals("Git URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(
-				4, 1));
-		assertEquals(
-				"ssh://04fc0584021b4a9da8d95cd6383b12e4@app1-dd1.rhcloud.com/~/git/app1.git/",
-				IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 2));
+      assertEquals("Name", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1, 1));
+      assertEquals("app2", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1, 2));
 
-		assertEquals("Creation time", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(5, 1));
-		assertEquals("1970 Jan 1 03:00:00", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(5, 2));
+      assertEquals("Type", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2, 1));
+      assertEquals("rack-1.1", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2, 2));
 
-		IDE.OPENSHIFT.USER_INFO.selectApplication("app2");
+      assertEquals("Public URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(3, 1));
+      assertEquals("http://app2-dd1.rhcloud.com/", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(3, 2));
 
-		assertEquals("Name", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1,
-				1));
-		assertEquals("app2", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(1,
-				2));
+      assertEquals("Git URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 1));
+      assertEquals("ssh://04fc0584021b4a9da8d95cd6383b12e4@app2-dd1.rhcloud.com/~/git/app2.git/",
+         IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 2));
 
-		assertEquals("Type", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(2,
-				1));
-		assertEquals("rack-1.1", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(2, 2));
-
-		assertEquals("Public URL", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(3, 1));
-		assertEquals("http://app2-dd1.rhcloud.com/", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(3, 2));
-
-		assertEquals("Git URL", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(
-				4, 1));
-		assertEquals(
-				"ssh://04fc0584021b4a9da8d95cd6383b12e4@app2-dd1.rhcloud.com/~/git/app2.git/",
-				IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(4, 2));
-
-		assertEquals("Creation time", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(5, 1));
-		assertEquals("1970 Jan 1 03:00:00", IDE.OPENSHIFT.USER_INFO
-				.getTextFromAppInfoTble(5, 2));
-	}
+      assertEquals("Creation time", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(5, 1));
+      assertEquals("1970 Jan 1 03:00:00", IDE.OPENSHIFT.USER_INFO.getTextFromAppInfoTble(5, 2));
+   }
 
 }

@@ -20,7 +20,6 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.SaveFileUtils;
@@ -58,27 +57,17 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    @After
    public void tearDown()
    {
-      cleanRegistry();
       deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.paas.heroku.core;
 
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.core.AbstractTestModule;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -34,42 +33,56 @@ import java.net.URL;
  */
 public class Heroku extends AbstractTestModule
 {
-  public interface Messages
-  {
-     String LOGED_IN = "[INFO] Logged in Heroku successfully.";
-     
-     String DELETED = "[INFO] Application is successfully deleted on Heroku.";
-     
-     String KEYS_DEPLOYED = "[INFO] Public keys are successfully deployed on Heroku.";
-     
-     String LOGIN = "test@test.com";
-     
-     String PASSWORD = "test";
-  }
-  
-  public final SwitchAccount SWITCH_ACCOUNT = new SwitchAccount();
-  
-  public final CreateApplication CREATE_APP = new CreateApplication();
-  
-  public final DeleteApplication DELETE_APP = new DeleteApplication();
-  
-  public final RenameApplication RENAME_APP = new RenameApplication();
-  
-  public final ApplicationInfo APP_INFO = new ApplicationInfo();
-  
-  public final Rake RAKE = new Rake();
-  
-  public static final int logout() throws Exception
-  {
-     URL url = new URL(BaseTest.BASE_URL);
-     HTTPConnection connection = Utils.getConnection(url);
-     HTTPResponse response = connection.Post(BaseTest.REST_CONTEXT + "/ide/heroku/logout");
-     return response.getStatusCode();
-  }
-  
-  public void deployPublicKey() throws Exception
-  {
-     IDE().MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.Heroku.HEROKU, MenuCommands.PaaS.Heroku.DEPLOY_PUBLIC_KEY);
-  }
-  
+   public interface Messages
+   {
+      String LOGED_IN = "[INFO] Logged in Heroku successfully.";
+
+      String DELETED = "[INFO] Application is successfully deleted on Heroku.";
+
+      String KEYS_DEPLOYED = "[INFO] Public keys are successfully deployed on Heroku.";
+
+      String LOGIN = "test@test.com";
+
+      String PASSWORD = "test";
+   }
+
+   public final SwitchAccount SWITCH_ACCOUNT = new SwitchAccount();
+
+   public final CreateApplication CREATE_APP = new CreateApplication();
+
+   public final DeleteApplication DELETE_APP = new DeleteApplication();
+
+   public final RenameApplication RENAME_APP = new RenameApplication();
+
+   public final ApplicationInfo APP_INFO = new ApplicationInfo();
+
+   public final Rake RAKE = new Rake();
+
+   public static final int logout() throws Exception
+   {
+      HttpURLConnection connection = null;
+      int status = -1;
+      try
+      {
+         URL url = new URL("http", BaseTest.IDE_HOST, BaseTest.IDE_PORT, BaseTest.REST_CONTEXT + "/ide/heroku/logout");
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
+   }
+
+   public void deployPublicKey() throws Exception
+   {
+      IDE().MENU.runCommand(MenuCommands.PaaS.PAAS, MenuCommands.PaaS.Heroku.HEROKU,
+         MenuCommands.PaaS.Heroku.DEPLOY_PUBLIC_KEY);
+   }
+
 }

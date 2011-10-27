@@ -20,7 +20,6 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -64,10 +63,6 @@ public class CookiesTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @Test
@@ -76,16 +71,15 @@ public class CookiesTest extends BaseTest
       //wait
       IDE.WORKSPACE.waitForRootItem();
       //select
-      IDE.WORKSPACE
-         .selectItem(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/");
+      IDE.WORKSPACE.selectRootItem();
       //refresh
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForRootItem();
+      IDE.WORKSPACE.waitForItem(TEST_FOLDER);
       //select and open file
-      IDE.WORKSPACE.selectItem(URL);
+      IDE.WORKSPACE.selectItem(TEST_FOLDER);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FILE_NAME, false);
+      IDE.WORKSPACE.waitForItem(TEST_FOLDER + "/" + FILE_NAME);
+      IDE.WORKSPACE.doubleClickOnFile(TEST_FOLDER + "/" + FILE_NAME);
 
       //Chek cookies
       String[] cookies = selenium().getCookie().split("; ");
@@ -115,10 +109,5 @@ public class CookiesTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
-
 }

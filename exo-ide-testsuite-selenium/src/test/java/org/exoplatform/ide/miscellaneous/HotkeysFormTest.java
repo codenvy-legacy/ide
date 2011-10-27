@@ -21,6 +21,8 @@ package org.exoplatform.ide.miscellaneous;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.google.gwt.editor.client.Editor.Ignore;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Templates;
@@ -45,8 +47,7 @@ public class HotkeysFormTest extends AbstractHotkeysTest
    @Test
    public void testFormAndButtons() throws Exception
    {
-      //TODO 1 step not work, shold be fix call hotkey form; see issue 729
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.WORKSPACE.waitForRootItem();
       //----- 1 ------------
       //Call "Customize Hotkeys" window
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);

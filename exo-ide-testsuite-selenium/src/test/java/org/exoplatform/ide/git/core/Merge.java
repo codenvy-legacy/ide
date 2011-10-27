@@ -127,7 +127,7 @@ public class Merge extends AbstractTestModule
 
    public void selectReference(String name)
    {
-      selenium().clickAt("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(text(), '" + name + "')]", "0");
+      selenium().clickAt("//div[@id='" + Locators.REF_TREE_ID + "']//div[contains(text(), '" + name + "')]", "1,1");
    }
 
    public void doubleClickReference(String name)

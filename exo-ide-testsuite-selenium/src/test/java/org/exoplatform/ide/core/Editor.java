@@ -98,7 +98,7 @@ public class Editor extends AbstractTestModule
    public void selectTab(int tabIndex) throws Exception
    {
       selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table",
-         "");
+         "1,1");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 

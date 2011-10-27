@@ -20,12 +20,11 @@ package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
 
-
-import org.everrest.http.client.HTTPResponse;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -153,14 +152,14 @@ public class CopyFoldersAndFilesTest extends BaseTest
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FOLDER_1_2).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY).getStatusCode());
 
-      final HTTPResponse fileResponse1 = VirtualFileSystemUtils.get(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
-      assertEquals(200, fileResponse1.getStatusCode());
-      assertEquals(RANDOM_CONTENT_2, new String(fileResponse1.getData()));
+      Response response = VirtualFileSystemUtils.get(WS_URL + FOLDER_1 + "/" + FILE_GROOVY);
+      assertEquals(200, response.getStatusCode());
+      assertEquals(RANDOM_CONTENT_2, response.getData());
 
-      final HTTPResponse fileResponse2 =
+      response =
          VirtualFileSystemUtils.get(WS_URL + FOLDER_2 + "/" + FOLDER_1 + "/" + FILE_GROOVY);
-      assertEquals(200, fileResponse2.getStatusCode());
-      assertEquals(RANDOM_CONTENT_2, new String(fileResponse2.getData()));
+      assertEquals(200, response.getStatusCode());
+      assertEquals(RANDOM_CONTENT_2, response.getData());
    }
 
 }

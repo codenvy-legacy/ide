@@ -46,7 +46,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
    @After
    public void tearDown()
    {
-      cleanRegistry();
       deleteCookies();
    }
 

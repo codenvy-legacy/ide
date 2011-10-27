@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -28,7 +27,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -60,10 +58,6 @@ public class BigTemplateTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.GOOGLE_GADGET, URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -119,14 +113,9 @@ public class BigTemplateTest extends BaseTest
    {
       try
       {
-         cleanRegistry();
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

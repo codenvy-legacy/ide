@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.operation.netvibes;
 
-import org.everrest.http.client.ModuleException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -26,7 +28,6 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -100,10 +101,6 @@ public class DeployNetvibesWidgetTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -411,10 +408,6 @@ public class DeployNetvibesWidgetTest extends BaseTest
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

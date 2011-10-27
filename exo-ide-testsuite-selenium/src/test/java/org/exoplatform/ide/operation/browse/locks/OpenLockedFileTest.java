@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -61,10 +60,6 @@ public class OpenLockedFileTest extends LockFileAbstract
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @After
@@ -75,10 +70,6 @@ public class OpenLockedFileTest extends LockFileAbstract
          VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

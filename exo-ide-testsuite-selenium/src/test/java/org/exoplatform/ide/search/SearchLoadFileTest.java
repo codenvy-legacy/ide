@@ -20,9 +20,6 @@ package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -32,6 +29,8 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -62,10 +61,6 @@ public class SearchLoadFileTest extends BaseTest
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -203,7 +198,7 @@ public class SearchLoadFileTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown() throws IOException, ModuleException
+   public static void tearDown() throws IOException
    {
       VirtualFileSystemUtils.delete(WS_URL + TEST_FOLDER);
    }

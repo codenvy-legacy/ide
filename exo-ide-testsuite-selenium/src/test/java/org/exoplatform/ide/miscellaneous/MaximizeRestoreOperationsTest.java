@@ -27,9 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Locators;
@@ -42,6 +39,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * IDE-97:One-click maximize/restore for editor and actions view.
@@ -88,10 +87,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
    
    @AfterClass
@@ -102,10 +97,6 @@ public class MaximizeRestoreOperationsTest extends BaseTest
          VirtualFileSystemUtils.delete(URL);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -510,7 +501,7 @@ public class MaximizeRestoreOperationsTest extends BaseTest
          "//div[@class=\"exoIconButtonPanelOver\" and @id=\"exoIDEToolbar\"]//div[@title=\"" + "Hide Properties" + "\"]";
 //      selenium().mouseDownAt(hoverLocator, "");
 //      selenium().mouseUpAt(hoverLocator, "");
-      selenium().clickAt(hoverLocator, "");
+      selenium().clickAt(hoverLocator, "1,1");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       try

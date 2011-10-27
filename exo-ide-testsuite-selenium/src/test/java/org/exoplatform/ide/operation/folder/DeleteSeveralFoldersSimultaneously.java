@@ -20,13 +20,9 @@ package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -72,22 +68,18 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @Ignore
    @Test
    public void testDeleteSeveralFoldersSimultaneously() throws Exception
    {
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME_1 + "/");
-      IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.waitForItem("/" + FOLDER_NAME_1);
+      IDE.WORKSPACE.doubleClickOnFolder("/" + FOLDER_NAME_1);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_1);
       selenium().controlKeyDown();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_2 + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_2);
       selenium().controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator
@@ -96,9 +88,9 @@ public class DeleteSeveralFoldersSimultaneously extends BaseTest
       //      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.File.DELETE, true);
       //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.File.DELETE, false);
 
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_1 + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_1);
       selenium().controlKeyDown();
-      IDE.WORKSPACE.selectItem(WS_URL + FOLDER_NAME_3 + "/");
+      IDE.WORKSPACE.selectItem("/" + FOLDER_NAME_3);
       selenium().controlKeyUp();
 
       // TODO After of capability select the few elements in IDE navigator

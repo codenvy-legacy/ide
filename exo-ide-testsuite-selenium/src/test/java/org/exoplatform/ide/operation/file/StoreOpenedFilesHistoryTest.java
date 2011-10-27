@@ -93,7 +93,6 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       }
 
       deleteCookies();
-      cleanRegistry();
    }
 
    //IDE-66

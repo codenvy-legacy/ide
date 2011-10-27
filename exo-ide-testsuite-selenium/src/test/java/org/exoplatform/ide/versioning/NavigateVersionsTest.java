@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.versioning;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -31,6 +27,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -71,14 +70,9 @@ public class NavigateVersionsTest extends BaseTest
    {
       try
       {
-         cleanRegistry();
          VirtualFileSystemUtils.mkcol(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -101,13 +95,9 @@ public class NavigateVersionsTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
-    @Test
+   @Test
    public void testNavigateOlderVersion() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
@@ -442,7 +432,7 @@ public class NavigateVersionsTest extends BaseTest
       IDE.VERSIONS.checkTextOnVersionPanel(version1Text + version2Text + version3Text + version4Text + version5Text);
    }
 
-    @Test
+   @Test
    public void testNavigateNewerVersionWithSave() throws Exception
    {
       refresh();

@@ -53,7 +53,7 @@ public class DeletingFilesTest extends BaseTest
    private static String XML_FILE_NAME = "newXMLFile.xml";
 
    private static String TEXT_FILE_NAME = "newTxtFile.txt";
-   
+
    private static String CUR_TIME = String.valueOf(System.currentTimeMillis());
 
    private final static String STORAGE_URL = WS_URL + FOLDER_NAME + "/";
@@ -81,7 +81,8 @@ public class DeletingFilesTest extends BaseTest
          VirtualFileSystemUtils.put(PATH + HTML_FILE_NAME, MimeType.TEXT_HTML, HTML_FILE_URL);
          VirtualFileSystemUtils.put(PATH + GROOVY_FILE_NAME, MimeType.GROOVY_SERVICE, GROOVY_FILE_URL);
          VirtualFileSystemUtils.put(PATH + GOOGLE_GADGET_FILE_NAME, MimeType.GOOGLE_GADGET, GOOGLE_GADGET_FILE_URL);
-         VirtualFileSystemUtils.put(PATH + JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, JAVA_SCRIPT_FILE_URL);
+         VirtualFileSystemUtils
+            .put(PATH + JAVA_SCRIPT_FILE_NAME, MimeType.APPLICATION_JAVASCRIPT, JAVA_SCRIPT_FILE_URL);
          VirtualFileSystemUtils.put(PATH + XML_FILE_NAME, MimeType.APPLICATION_XML, XML_FILE_URL);
          VirtualFileSystemUtils.put(PATH + TEXT_FILE_NAME, MimeType.TEXT_PLAIN, TEXT_FILE_URL);
       }
@@ -90,7 +91,7 @@ public class DeletingFilesTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -110,7 +111,7 @@ public class DeletingFilesTest extends BaseTest
    {
       IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
       IDE.WORKSPACE.doubleClickOnFolder(WS_URL + FOLDER_NAME + "/");
-      
+
       IDE.WORKSPACE.doubleClickOnFile(GROOVY_FILE_URL);
       IDE.NAVIGATION.deleteSelectedItems();
       assertEquals(404, VirtualFileSystemUtils.get(GROOVY_FILE_URL).getStatusCode());

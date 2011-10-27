@@ -20,19 +20,14 @@ package org.exoplatform.ide.operation.templates;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Templates;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Create file from template.
@@ -276,8 +271,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.EDITOR.closeFile(0);
 
       //check file created on server
-      HTTPResponse response = VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + fileName);
-      assertEquals(200, response.getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER + "/" + fileName).getStatusCode());
    }
    
 }

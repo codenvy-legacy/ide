@@ -601,7 +601,7 @@ public class CloudHerokuTest_
    */
    public static void selectElementInTree(String url) throws Exception
    {
-      selenium.clickAt(THREE_PREFIX_FOR_MD5 + md5old(url), "0");
+      selenium.clickAt(THREE_PREFIX_FOR_MD5 + md5old(url), "1,1");
    }
 
    //method for checking of initialize the git repository

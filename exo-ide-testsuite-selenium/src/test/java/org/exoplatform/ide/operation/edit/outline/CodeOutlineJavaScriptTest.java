@@ -18,14 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.Locators;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -33,6 +27,8 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Test Code Outline panel for javascript file.
@@ -75,10 +71,6 @@ public class CodeOutlineJavaScriptTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_JAVASCRIPT, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

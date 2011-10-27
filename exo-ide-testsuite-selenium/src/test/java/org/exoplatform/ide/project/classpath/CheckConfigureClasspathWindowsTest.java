@@ -20,15 +20,13 @@ package org.exoplatform.ide.project.classpath;
 
 import static org.junit.Assert.assertEquals;
 
-
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.core.Templates;
 import org.junit.After;
 import org.junit.Before;
@@ -78,10 +76,6 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
    }
 
    @After
@@ -96,20 +90,12 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
 
       try
       {
          VirtualFileSystemUtils.delete(WORKSPACE_URL + CREATED_PROJECT_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }
@@ -293,10 +279,9 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
        */
       final String expectedContent =
          "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/" + FOLDER_NAME + "/\"}]}";
-      HTTPResponse response = VirtualFileSystemUtils.get(WORKSPACE_URL + PROJECT_NAME + "/" + ".groovyclasspath");
-      final String content = new String(response.getData());
+      Response response = VirtualFileSystemUtils.get(WORKSPACE_URL + PROJECT_NAME + "/" + ".groovyclasspath");
 
-      assertEquals(expectedContent, content);
+      assertEquals(expectedContent, response.getData());
    }
 
    /**
@@ -335,11 +320,10 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       // Check .groovyclasspath file
       final String expectedContent =
          "{\"entries\":[{\"kind\":\"dir\", \"path\":\"" + WS_NAME + "#/" + CREATED_PROJECT_NAME + "/" + "\"}]}";
-      HTTPResponse response =
+      Response response =
          VirtualFileSystemUtils.get(WORKSPACE_URL + CREATED_PROJECT_NAME + "/" + ".groovyclasspath");
-      final String content = new String(response.getData());
 
-      assertEquals(expectedContent, content);
+      assertEquals(expectedContent, response.getData());
    }
 
 }

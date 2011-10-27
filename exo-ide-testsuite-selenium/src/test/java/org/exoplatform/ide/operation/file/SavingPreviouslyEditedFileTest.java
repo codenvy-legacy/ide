@@ -20,18 +20,15 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * IDE-13:Saving previously edited file.
@@ -122,9 +119,9 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       //----- 5 ------------
       //Go to server window and check that the files created on the server
       assertEquals(200, VirtualFileSystemUtils.get(URL + FOLDER_NAME).getStatusCode());
-      HTTPResponse response = VirtualFileSystemUtils.get(URL + FOLDER_NAME + "/" + FILE_NAME);
+      Response response = VirtualFileSystemUtils.get(URL + FOLDER_NAME + "/" + FILE_NAME);
       assertEquals(200, response.getStatusCode());
-      assertEquals(DEFAULT_XML_CONTENT + "\n", response.getText());
+      assertEquals(DEFAULT_XML_CONTENT + "\n", response.getData());
 
       //----- 6 ------------
       //Go back to gadget window, do some changes in "Content" panel, click "Save" button.

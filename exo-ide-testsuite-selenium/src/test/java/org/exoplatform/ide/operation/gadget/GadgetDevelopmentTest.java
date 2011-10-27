@@ -21,11 +21,8 @@ package org.exoplatform.ide.operation.gadget;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -54,7 +51,7 @@ public class GadgetDevelopmentTest extends BaseTest
       + "/" + FOLDER_NAME + "/";
 
    @BeforeClass
-   public static void setUp() throws IOException, ModuleException
+   public static void setUp() throws IOException
    {
       VirtualFileSystemUtils.mkcol(URL);
    }
@@ -98,9 +95,8 @@ public class GadgetDevelopmentTest extends BaseTest
    }
 
    @AfterClass
-   public static void tearDown() throws IOException, ModuleException
+   public static void tearDown() throws IOException
    {
-      cleanRegistry();
       VirtualFileSystemUtils.delete(URL);
    }
 

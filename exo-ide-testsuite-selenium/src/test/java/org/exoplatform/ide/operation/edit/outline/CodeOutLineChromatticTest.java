@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import java.io.IOException;
-
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,6 +27,8 @@ import org.exoplatform.ide.core.Outline.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a> 
@@ -61,10 +60,6 @@ public class CodeOutLineChromatticTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.CHROMATTIC_DATA_OBJECT, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

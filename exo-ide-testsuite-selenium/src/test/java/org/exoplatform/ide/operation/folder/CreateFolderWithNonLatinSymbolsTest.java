@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
@@ -53,16 +52,16 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
       // Create folder with Cyrillic name
       IDE.NAVIGATION.createFolder(FOLDER_NAME);
-      IDE.WORKSPACE.waitForItem(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItem("/" + FOLDER_NAME);
       //Check in repository
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8")).getStatusCode());
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME + "/");
+      IDE.NAVIGATION.assertItemVisible("/" + FOLDER_NAME);
 
       IDE.NAVIGATION.deleteSelectedItems();
       
-      IDE.WORKSPACE.waitForItemNotPresent(WS_URL + FOLDER_NAME + "/");
+      IDE.WORKSPACE.waitForItemNotPresent("/" + FOLDER_NAME);
       
-      IDE.NAVIGATION.assertItemNotVisible(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8") + "/");
+      IDE.NAVIGATION.assertItemNotVisible("/" + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
    }
 
    @AfterClass
@@ -73,10 +72,6 @@ public class CreateFolderWithNonLatinSymbolsTest extends BaseTest
          VirtualFileSystemUtils.delete(WS_URL + URLEncoder.encode(FOLDER_NAME, "UTF-8"));
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

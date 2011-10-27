@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.operation.upload;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -76,11 +75,6 @@ public class OpenFileByPathTest extends BaseTest
       {
          e.printStackTrace();
       }
-      catch (ModuleException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    @Test
@@ -91,9 +85,9 @@ public class OpenFileByPathTest extends BaseTest
 
       // open folder
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/");
-      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER + "/");
-      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER + "/");
+      IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER);
+      IDE.NAVIGATION.assertItemVisible(WS_URL + TEST_FOLDER);
+      IDE.WORKSPACE.selectItem(WS_URL + TEST_FOLDER);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
       IDE.WORKSPACE.waitForItem(WS_URL + TEST_FOLDER + "/" + FILE_NAME);
 
@@ -187,10 +181,6 @@ public class OpenFileByPathTest extends BaseTest
          VirtualFileSystemUtils.delete(URL + TEST_FOLDER);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

@@ -25,14 +25,17 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.everrest.http.client.HTTPConnection;
-import org.everrest.http.client.HTTPResponse;
-import org.everrest.http.client.ModuleException;
-import org.everrest.http.client.NVPair;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.copy.HTTPMethod;
+import org.exoplatform.ide.core.Response;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -44,41 +47,48 @@ public class VirtualFileSystemUtils
 {
 
    public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl)
-      throws IOException, ModuleException
+      throws IOException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
+      HttpURLConnection connection = Utils.getConnection(url);
       String data = Utils.readFileAsString(filePath);
-      NVPair[] headers = new NVPair[3];
-      headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, mimeType);
-      headers[1] = new NVPair(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length()));
-      headers[2] = new NVPair(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
-      HTTPResponse response = connection.Put(url.getFile(), data, headers);
-      return response.getStatusCode();
+      connection.setRequestMethod(HTTPMethod.PUT);
+      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
+      connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length()));
+      connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
+      connection.setDoOutput(true);
+      OutputStream output = connection.getOutputStream();
+      output.write(data.getBytes());
+      output.close();
+      return connection.getResponseCode();
    }
 
-   public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException,
-      ModuleException
+   public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
-      NVPair[] headers = new NVPair[3];
-      headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, mimeType);
-      headers[1] = new NVPair(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length));
-      headers[2] = new NVPair(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
-      HTTPResponse response = connection.Put(url.getFile(), data, headers);
-      return response.getStatusCode();
+      HttpURLConnection connection = Utils.getConnection(url);
+      connection.setRequestMethod(HTTPMethod.PUT);
+      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
+      connection.setRequestProperty(HTTPHeader.CONTENT_LENGTH, String.valueOf(data.length));
+      connection.setRequestProperty(HTTPHeader.CONTENT_NODETYPE, contentNodeType);
+      connection.setDoOutput(true);
+      OutputStream output = connection.getOutputStream();
+      output.write(data);
+      output.close();
+      return connection.getResponseCode();
    }
 
-   public static int put(byte[] data, String storageUrl) throws IOException, ModuleException
+   public static int put(byte[] data, String storageUrl) throws IOException
    {
       URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
-      NVPair[] headers = new NVPair[1];
-      headers[0] = new NVPair(HTTPHeader.CONTENT_TYPE, "application/xml");
-      HTTPResponse response = connection.Put(url.getFile(), data, headers);
-      return response.getStatusCode();
-
+      HttpURLConnection connection = Utils.getConnection(url);
+      connection.setRequestMethod(HTTPMethod.PUT);
+      connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/xml");
+      connection.setDoOutput(true);
+      OutputStream output = connection.getOutputStream();
+      output.write(data);
+      output.close();
+      return connection.getResponseCode();
    }
 
    /**
@@ -89,7 +99,7 @@ public class VirtualFileSystemUtils
     * @throws IOException
     * @throws ModuleException
     */
-   public static int put(byte[] data, String mimeType, String storageUrl) throws IOException, ModuleException
+   public static int put(byte[] data, String mimeType, String storageUrl) throws IOException
    {
       return put(data, mimeType, TestConstants.NodeTypes.NT_RESOURCE, storageUrl);
    }
@@ -102,7 +112,7 @@ public class VirtualFileSystemUtils
     * @throws IOException
     * @throws ModuleException
     */
-   public static int put(String filePath, String mimeType, String storageUrl) throws IOException, ModuleException
+   public static int put(String filePath, String mimeType, String storageUrl) throws IOException
    {
       return put(filePath, mimeType, TestConstants.NodeTypes.NT_RESOURCE, storageUrl);
    }
@@ -113,14 +123,25 @@ public class VirtualFileSystemUtils
     * @throws IOException
     * @throws ModuleException
     */
-   public static int delete(String storageUrl) throws IOException, ModuleException
+   public static int delete(String storageUrl) throws IOException
    {
-      System.out.println("DELETE RESOURCE [" + storageUrl + "]");
-      
-      URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
-      HTTPResponse response = connection.Delete(url.getFile());
-      return response.getStatusCode();
+      int status = -1;
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(storageUrl);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.DELETE);
+         status = connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
    }
 
    /**
@@ -129,13 +150,42 @@ public class VirtualFileSystemUtils
     * @throws IOException
     * @throws ModuleException
     */
-   public static HTTPResponse get(String storageUrl) throws IOException, ModuleException
+   public static Response get(String storageUrl) throws IOException
    {
-      System.out.println("GET on > " + storageUrl);
       URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
-      HTTPResponse response = connection.Get(url.getFile());
-      return response;
+      HttpURLConnection connection = null;
+      int status = -1;
+      String data = "";
+      try
+      {
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod(HTTPMethod.GET);
+         status = connection.getResponseCode();
+         InputStream in = connection.getInputStream();
+         BufferedReader reader = null;
+         reader = new BufferedReader(new InputStreamReader(in));
+         StringBuilder sb = new StringBuilder();
+
+         String line = null;
+         while ((line = reader.readLine()) != null)
+         {
+            sb.append(line);
+            sb.append('\n');
+         }
+         data = sb.toString();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return new Response(status, data);
    }
 
    /**
@@ -144,12 +194,26 @@ public class VirtualFileSystemUtils
     * @throws IOException
     * @throws ModuleException
     */
-   public static int mkcol(String storageUrl) throws IOException, ModuleException
+   public static int mkcol(String storageUrl) throws IOException
    {
-      URL url = new URL(storageUrl);
-      HTTPConnection connection = Utils.getConnection(url);
-      HTTPResponse response = connection.MkCol(url.getFile());
-      return response.getStatusCode();
+      int status = -1;
+      HttpURLConnection connection = null;
+      try
+      {
+         URL url = new URL(storageUrl);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("GET");
+         connection.setRequestProperty("X-HTTP-Method-Override", "MKCOL");
+         status = connection.getResponseCode();
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
+      return status;
    }
 
    public static int upoadZipFolder(String zipPath, String storageUrl) throws HttpException, IOException

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import org.everrest.http.client.ModuleException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -62,10 +61,6 @@ public class CodeOutLineRubyTest extends BaseTest
          VirtualFileSystemUtils.put(filePath, MimeType.APPLICATION_RUBY, "nt:resource", URL + FILE_NAME);
       }
       catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      catch (ModuleException e)
       {
          e.printStackTrace();
       }

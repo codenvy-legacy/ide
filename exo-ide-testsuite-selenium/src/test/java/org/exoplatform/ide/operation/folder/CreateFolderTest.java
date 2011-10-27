@@ -27,8 +27,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import java.net.URLEncoder;
-
 /**
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
@@ -37,9 +35,7 @@ import java.net.URLEncoder;
 public class CreateFolderTest extends BaseTest
 {
 
-   private static String FOLDER_NAME_TOOLBAR = CreateFolderTest.class.getSimpleName();
-
-   private static String FOLDER_NAME_DEFOLT = "New Folder";
+   private static String FOLDER_NAME_DEFAULT = "New Folder";
 
    /**
     * Test to create folder using main menu (TestCase IDE-3).
@@ -50,17 +46,19 @@ public class CreateFolderTest extends BaseTest
    public void testCreateFolder() throws Exception
    {
       IDE.WORKSPACE.waitForRootItem();
-      
+
       //run command for create folder
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
+
       //create folder
       selenium().click("ideCreateFolderFormCreateButton");
       Thread.sleep(2000);
       //check disapear menu after create of folder
       assertFalse(selenium().isElementPresent("//div[@view-id='ideCreateFolderForm']"));
       //check folder in tread menu
-      IDE.NAVIGATION.assertItemVisible(WS_URL + FOLDER_NAME_DEFOLT + "/");
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + URLEncoder.encode("New Folder", "UTF-8")).getStatusCode());
+      IDE.NAVIGATION.assertItemVisible("/" + FOLDER_NAME_DEFAULT);
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + FOLDER_NAME_DEFAULT.replace(" ", "%20"))
+         .getStatusCode());
    }
 
    /**
@@ -71,8 +69,7 @@ public class CreateFolderTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_TOOLBAR);
-         VirtualFileSystemUtils.delete(WS_URL + URLEncoder.encode("New Folder", "UTF-8"));
+         VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_DEFAULT.replace(" ", "%20"));
       }
       catch (Exception e)
       {
