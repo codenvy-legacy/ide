@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project;
+package org.exoplatform.ide.client.project.create;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -155,8 +155,6 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    protected Display display;
 
-   protected HandlerManager eventBus;
-
    private List<FileModel> fileList = new ArrayList<FileModel>();
 
    private List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
@@ -183,14 +181,12 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
 
    private boolean isTemplatesMigrated = false;
 
-   public CreateProjectFromTemplatePresenter(HandlerManager eventBus)
+   public CreateProjectFromTemplatePresenter()
    {
-      this.eventBus = eventBus;
-
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(TemplatesMigratedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(CreateProjectFromTemplateEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.EVENT_BUS.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    /**
@@ -357,7 +353,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception,
+                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
                }
             });
@@ -365,7 +361,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       catch (RequestException e)
       {
          e.printStackTrace();
-         eventBus.fireEvent(new ExceptionThrownEvent(e,
+         IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e,
             "Service is not deployed.<br>Resource already exist.<br>Parent folder not found."));
       }
    }
@@ -433,7 +429,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    protected void deleteTemplate(final ProjectTemplate template)
    {
       TemplateService.getInstance().deleteProjectTemplate(template.getName(),
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>(eventBus)
+         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>(IDE.EVENT_BUS)
          {
             @Override
             protected void onSuccess(String result)
@@ -478,7 +474,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                protected void onFailure(Throwable exception)
                {
                   loader.hide();
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
          }
@@ -486,7 +482,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
          {
             e.printStackTrace();
             loader.hide();
-            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            IDE.EVENT_BUS.fireEvent(new ExceptionThrownEvent(e));
          }
       }
       else
@@ -507,8 +503,8 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    {
       IDE.getInstance().closeView(Display.ID);
 
-      eventBus.fireEvent(new RefreshBrowserEvent(baseFolder, projectFolder));
-      eventBus.fireEvent(new ProjectCreatedEvent(projectFolder));
+      IDE.EVENT_BUS.fireEvent(new RefreshBrowserEvent(baseFolder, projectFolder));
+      IDE.EVENT_BUS.fireEvent(new ProjectCreatedEvent(projectFolder));
    }
 
    @Override
@@ -520,7 +516,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
       }
       else
       {
-         eventBus.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
+         IDE.EVENT_BUS.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
          {
             @Override
             public void onTemplatesMigrated()
@@ -603,7 +599,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
    private void refreshTemplateList()
    {
       TemplateService.getInstance().getProjectTemplateList(
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<ProjectTemplateList>(eventBus)
+         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<ProjectTemplateList>(IDE.EVENT_BUS)
          {
             @Override
             protected void onSuccess(ProjectTemplateList result)
@@ -616,7 +612,7 @@ public class CreateProjectFromTemplatePresenter implements CreateProjectFromTemp
                }
                //get all file templates to create from them files
                TemplateService.getInstance().getFileTemplateList(
-                  new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(eventBus)
+                  new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<FileTemplateList>(IDE.EVENT_BUS)
                   {
 
                      @Override

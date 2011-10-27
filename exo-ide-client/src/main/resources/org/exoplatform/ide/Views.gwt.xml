@@ -79,8 +79,8 @@
       <when-type-is class="org.exoplatform.ide.client.edit.GoToLinePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.CreateProjectFromTemplateForm">
-      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectFromTemplateForm">
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
@@ -151,8 +151,8 @@
       <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.project.CreateProjectTemplateView">
-      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectTemplatePresenter.Display" />
+   <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectTemplateView">
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectTemplatePresenter.Display" />
    </replace-with>
    
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
@@ -175,8 +175,8 @@
       <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.client.project.CreateProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.CreateProjectPresenter.Display"/>
+   <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectForm">
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">

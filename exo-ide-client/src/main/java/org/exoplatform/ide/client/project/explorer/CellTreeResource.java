@@ -33,10 +33,6 @@ public interface CellTreeResource extends CellTree.Resources
    @Source({CellTree.Style.DEFAULT_CSS, "CustomizedCellTree.css"})
    CellTreeStyle cellTreeStyle();
    
-//   @Source("eXoStyle/skin/default/images/listGrid/header.png")
-//   @ImageOptions(repeatStyle=RepeatStyle.Horizontal)
-//   ImageResource header();
-   
    /**
     * An image indicating an open branch.
     */

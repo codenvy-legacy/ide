@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project;
+package org.exoplatform.ide.client.project.create;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version @version $Id: $
  */
 
-public class CreateProjectFromTemplateForm extends ViewImpl implements org.exoplatform.ide.client.project.CreateProjectFromTemplatePresenter.Display
+public class CreateProjectFromTemplateForm extends ViewImpl implements org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display
 {
 
    public static final int DEFAULT_HEIGHT = 300;

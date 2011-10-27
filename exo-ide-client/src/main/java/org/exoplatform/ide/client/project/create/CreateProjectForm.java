@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project;
+package org.exoplatform.ide.client.project.create;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -30,7 +30,6 @@ import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
 
 import java.util.Set;
 
@@ -41,8 +40,9 @@ import java.util.Set;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public class CreateProjectForm extends ViewImpl implements Display
+public class CreateProjectForm extends ViewImpl implements org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display
 {
+   
    private static final int WIDTH = 370;
 
    private static final int HEIGHT = 210;

@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.project.control.CreateProjectFromTemplateControl;
 import org.exoplatform.ide.client.project.control.NewProjectControl;
+import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
+import org.exoplatform.ide.client.project.create.CreateProjectTemplatePresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
@@ -72,7 +74,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       
       eventBus.addHandler(MigrateTemplatesEvent.TYPE, this);
       
-      new CreateProjectFromTemplatePresenter(eventBus);
+      new CreateProjectFromTemplatePresenter();
       new CreateProjectTemplatePresenter();
       
       //new ProjectExplorerPresenter();

@@ -20,7 +20,6 @@ package org.exoplatform.ide.client;
 
 import java.util.List;
 
-import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.dialog.GWTDialogs;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -30,7 +29,6 @@ import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
-import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.download.DownloadForm;
@@ -61,12 +59,12 @@ import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
-import org.exoplatform.ide.client.project.CreateProjectPresenter;
-import org.exoplatform.ide.client.project.CreateProjectPresenter.Display;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
+import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.event.CreateProjectEvent;
 import org.exoplatform.ide.client.project.event.CreateProjectHandler;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
+import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
@@ -169,12 +167,19 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new PreferencesModule(EVENT_BUS);
       new HotKeyManagementModule(EVENT_BUS);
       
+      /*
+       * What is this???
+       */
       EVENT_BUS.addHandler(CreateProjectEvent.TYPE, new CreateProjectHandler()
       {
          @Override
          public void onCreateProject(CreateProjectEvent event)
          {
-            new CreateProjectPresenter(EVENT_BUS, VirtualFileSystem.getInstance(), (Display)GWT.create(CreateProjectPresenter.Display.class), context.getSelectedItems());
+            new CreateProjectPresenter(
+               EVENT_BUS,
+               VirtualFileSystem.getInstance(), 
+               (org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display)GWT.create(org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display.class),
+               context.getSelectedItems());
          }
       });
       
