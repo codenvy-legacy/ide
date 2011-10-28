@@ -39,13 +39,15 @@ import javax.ws.rs.core.Application;
  */
 public class VirtualFileSystemApplication extends Application
 {
-   private final Set<Object> singletons = new HashSet<Object>();
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+   private final Set<Object> singletons;
+   private final Set<Class<?>> classes;
 
    public VirtualFileSystemApplication()
    {
-      singletons.add(classes.add(VirtualFileSystemFactory.class));
-      singletons.add(classes.add(RequestContextResolver.class));
+      classes = new HashSet<Class<?>>(2);
+      classes.add(VirtualFileSystemFactory.class);
+      classes.add(RequestContextResolver.class);
+      singletons = new HashSet<Object>(9);
       singletons.add(new ConstraintExceptionMapper());
       singletons.add(new InvalidArgumentExceptionMapper());
       singletons.add(new LockExceptionMapper());
