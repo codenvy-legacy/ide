@@ -53,10 +53,11 @@ public abstract class GroovyService
     * Validate Groovy script.
     * 
     * @param file - the file to validate
+    * @param vfsid 
     * @param fileContent - file content
     * @param groovyCallback - callback to handler response from server
     */
-   public abstract void validate(FileModel file, AsyncRequestCallback<FileModel> callback);
+   public abstract void validate(FileModel file, String vfsid, AsyncRequestCallback<FileModel> callback);
    
    /**
     * Deploy Groovy script.

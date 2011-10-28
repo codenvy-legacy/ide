@@ -41,6 +41,7 @@ import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEve
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.event.GroovyValidateResultReceivedEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
@@ -151,7 +152,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
 
    public void onValidateGroovyScript(ValidateGroovyScriptEvent event)
    {
-      GroovyService.getInstance().validate(activeFile, new AsyncRequestCallback<FileModel>()
+      GroovyService.getInstance().validate(activeFile, VirtualFileSystem.getInstance().getInfo().getId(), new AsyncRequestCallback<FileModel>()
       {
          
          @Override

@@ -28,6 +28,7 @@ import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.impl.core.NodeImpl;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.junit.Assert;
@@ -55,7 +56,7 @@ public class TestGroovyTemplateRender extends Base
 {
    private Node testGroovyDeploy;
    
-   private Node scriptFile;
+   private NodeImpl scriptFile;
 
    private Node script;
    
@@ -74,7 +75,7 @@ public class TestGroovyTemplateRender extends Base
       super.setUp();
       resourceNumber = binder.getSize();
       testGroovyDeploy = root.addNode("testRoot", "nt:unstructured");
-      scriptFile = testGroovyDeploy.addNode("script", "nt:file");
+      scriptFile = (NodeImpl)testGroovyDeploy.addNode("script", "nt:file");
       script = scriptFile.addNode("jcr:content", "nt:resource");
       script.setProperty("jcr:mimeType", "application/x-chromattic+groovy");
       script.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -117,7 +118,7 @@ public class TestGroovyTemplateRender extends Base
       HttpServletResponse httpServletResponse = new MockHttpServletResponse();
       ctx.put(HttpServletResponse.class, httpServletResponse);
       ctx.put(SecurityContext.class, adminSecurityContext);
-      ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?url=/jcr/db1/ws/testRoot/script", "", headers, GTMPL.getBytes(), null, ctx);
+      ContainerResponse cres = launcher.service("GET", "/ide/gtmpl/render?vfsid=ws&id=" + scriptFile.getIdentifier(), "", headers, GTMPL.getBytes(), null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertTrue(cres.getEntity().toString().contains("Hello root"));
    }

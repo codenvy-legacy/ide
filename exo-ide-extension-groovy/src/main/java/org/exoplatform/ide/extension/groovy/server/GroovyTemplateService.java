@@ -18,26 +18,21 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+
 import groovy.servlet.ServletBinding;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import groovy.text.TemplateEngine;
-
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import javax.jcr.LoginException;
-import javax.jcr.NoSuchWorkspaceException;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +45,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS.
@@ -61,24 +55,17 @@ import javax.ws.rs.core.UriInfo;
 public class GroovyTemplateService
 {
 
-   /** See {@link RepositoryService}. */
-   private RepositoryService repositoryService;
-
-   private ThreadLocalSessionProviderService sessionProviderService;
-
-   private String WEBDAV_CONTEXT = "jcr";
+   private VirtualFileSystemRegistry vfsRegistry;
 
    /**
     * Underlying template engine used to evaluate template source files.
     */
-
    private TemplateEngine engine = new SimpleTemplateEngine();
 
-   public GroovyTemplateService(RepositoryService repositoryService,
-      ThreadLocalSessionProviderService sessionProviderService)
+   public GroovyTemplateService(VirtualFileSystemRegistry vfsRegistry)
    {
-      this.repositoryService = repositoryService;
-      this.sessionProviderService = sessionProviderService;
+      this.vfsRegistry = vfsRegistry;
+
    }
 
    @POST
@@ -98,35 +85,28 @@ public class GroovyTemplateService
    @GET
    @Path("/render")
    @Produces(MediaType.TEXT_HTML)
-   public Response render(@Context ServletContext context, @Context HttpServletRequest request,
-      @Context HttpServletResponse response, @Context UriInfo uriInfo, @QueryParam("url") String gtmplUrl)
-      throws CompilationFailedException, ClassNotFoundException, IOException, LoginException, NoSuchWorkspaceException,
-      RepositoryException, RepositoryConfigurationException
+   public Response render(@Context ServletContext context, 
+                          @Context HttpServletRequest request,
+                          @Context HttpServletResponse response, 
+                          @QueryParam("vfsid") String vfsid,
+                          @QueryParam("id") String id)
+      throws CompilationFailedException, ClassNotFoundException, IOException, VirtualFileSystemException
    {
-      Reader reader = new InputStreamReader(getGtmplContent(uriInfo.getBaseUri().toASCIIString(), gtmplUrl));
+      Reader reader = new InputStreamReader(getGtmplContent(vfsid, id));
       Template template = engine.createTemplate(reader);
       ServletBinding binding = new ServletBinding(request, response, context);
       String render = template.make(binding.getVariables()).toString();
       return Response.ok(render, MediaType.TEXT_HTML).build();
    }
 
-   private InputStream getGtmplContent(String baseUri, String gtmplUrl) throws LoginException,
-      NoSuchWorkspaceException, RepositoryException, RepositoryConfigurationException
+   private InputStream getGtmplContent(String vfsid, String id) throws VirtualFileSystemException
    {
-      baseUri += "/" + WEBDAV_CONTEXT + "/";
-      String[] elements = new String[3];
-      String path = gtmplUrl.substring(baseUri.length());
-      elements[0] = path.substring(0, path.indexOf('/'));
-      path = path.substring(path.indexOf('/') + 1);
-      elements[1] = path.substring(0, path.indexOf('/'));
-      elements[2] = path.substring(path.indexOf('/') + 1);
-      Session ses =
-         sessionProviderService.getSessionProvider(null).getSession(elements[1],
-            repositoryService.getRepository(elements[0]));
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      if (id == null || id.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
 
-      Node script = ((Node)ses.getItem("/" + elements[2])).getNode("jcr:content");
-      InputStream is = script.getProperty("jcr:data").getStream();
-      return is;
-
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      return vfs.getContent(id).getStream();
    }
 }

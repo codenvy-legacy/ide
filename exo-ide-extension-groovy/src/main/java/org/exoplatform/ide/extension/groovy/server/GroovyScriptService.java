@@ -23,21 +23,31 @@ import org.everrest.core.ResourceBinder;
 import org.everrest.core.ResourcePublicationException;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.ResourceBinderImpl;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.resource.AbstractResourceDescriptor;
 import org.everrest.groovy.ResourceId;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codeassistant.framework.server.utils.ClassPathFileNotFoundException;
 import org.exoplatform.ide.codeassistant.framework.server.utils.DependentResources;
+import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyClassPath;
 import org.exoplatform.ide.codeassistant.framework.server.utils.GroovyScriptServiceUtil;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.extension.groovy.shared.Jar;
-import org.exoplatform.ide.groovy.GroovyResourcePublisher;
 import org.exoplatform.ide.groovy.GroovyScript2RestLoader;
 import org.exoplatform.ide.groovy.NodeScriptKey;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.jcr.ext.resource.jcr.Handler;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -51,25 +61,20 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -89,37 +94,43 @@ public class GroovyScriptService extends GroovyScript2RestLoader
 
    public static final String GROOVY_CLASSPATH = ".groovyclasspath";
 
+   private VirtualFileSystemRegistry vfsRegistry;
+
    /**
     * Resource live time. Resource will be expired after this if it is deployed
     * by user under 'developer' role.
     */
    int resourceLiveTime = 60 * 15 * 1000;
 
-   public GroovyScriptService(ResourceBinder binder, GroovyScriptInstantiator groovyScriptInstantiator,
-      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      ConfigurationManager configurationManager, Handler jcrUrlHandler, InitParams params)
+   public GroovyScriptService(VirtualFileSystemRegistry vfsRegistry, ResourceBinder binder,
+      GroovyScriptInstantiator groovyScriptInstantiator, RepositoryService repositoryService,
+      ThreadLocalSessionProviderService sessionProviderService, ConfigurationManager configurationManager,
+      Handler jcrUrlHandler, InitParams params)
    {
       super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
          jcrUrlHandler, params);
+      this.vfsRegistry = vfsRegistry;
    }
 
-   public GroovyScriptService(ResourceBinder binder, GroovyScriptInstantiator groovyScriptInstantiator,
-      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      ConfigurationManager configurationManager, RegistryService registryService,
-      GroovyResourcePublisher groovyPublisher, Handler jcrUrlHandler, InitParams params)
-   {
-      super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
-         registryService, groovyPublisher, jcrUrlHandler, params);
-   }
-
-   public GroovyScriptService(ResourceBinder binder, GroovyScriptInstantiator groovyScriptInstantiator,
-      RepositoryService repositoryService, ThreadLocalSessionProviderService sessionProviderService,
-      ConfigurationManager configurationManager, RegistryService registryService, Handler jcrUrlHandler,
-      InitParams params)
-   {
-      super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
-         registryService, jcrUrlHandler, params);
-   }
+   //   public GroovyScriptService(VirtualFileSystemRegistry vfsRegistry, ResourceBinder binder,
+   //      GroovyScriptInstantiator groovyScriptInstantiator, RepositoryService repositoryService,
+   //      ThreadLocalSessionProviderService sessionProviderService, ConfigurationManager configurationManager,
+   //      RegistryService registryService, GroovyResourcePublisher groovyPublisher, Handler jcrUrlHandler, InitParams params)
+   //   {
+   //      super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
+   //         registryService, groovyPublisher, jcrUrlHandler, params);
+   //      this.vfsRegistry = vfsRegistry;
+   //   }
+   //
+   //   public GroovyScriptService(VirtualFileSystemRegistry vfsRegistry, ResourceBinder binder,
+   //      GroovyScriptInstantiator groovyScriptInstantiator, RepositoryService repositoryService,
+   //      ThreadLocalSessionProviderService sessionProviderService, ConfigurationManager configurationManager,
+   //      RegistryService registryService, Handler jcrUrlHandler, InitParams params)
+   //   {
+   //      super(binder, groovyScriptInstantiator, repositoryService, sessionProviderService, configurationManager,
+   //         registryService, jcrUrlHandler, params);
+   //      this.vfsRegistry = vfsRegistry;
+   //   }
 
    /**
     * Validate groovy script.
@@ -127,102 +138,76 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param location location of groovy script
     * @param inputStream script for validation
     * @return {@link Response}
+    * @throws RepositoryConfigurationException 
+    * @throws RepositoryException 
+    * @throws JsonException 
     */
    @POST
    @Path("/validate-script")
-   public Response validate(@Context UriInfo uriInfo, @HeaderParam("location") String location, InputStream inputStream)
+   public Response validate(@QueryParam("vfsid") String vfsid,
+                            @QueryParam("name") String name,
+                            @QueryParam("projectid") String projectid, 
+                            InputStream inputStream) throws VirtualFileSystemException,
+      RepositoryException, RepositoryConfigurationException, JsonException
    {
-      //Get name from script location:
-      String name =
-         (location != null && location.length() > 0) ? location.substring(location.lastIndexOf("/") + 1) : "";
-      //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources = GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
-      if (dependentResources != null)
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      if (projectid != null)
       {
-         return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
-            dependentResources.getFileSources());
+         DependentResources dependentResources = getDependentResources(projectid, vfs);
+         if (dependentResources != null)
+         {
+            return super.validateScript(name, inputStream, dependentResources.getFolderSources(),
+               dependentResources.getFileSources());
+         }
+         else
+         {
+            return super.validateScript(name, inputStream, Collections.<String> emptyList(),
+               Collections.<String> emptyList());
+         }
       }
       return super
          .validateScript(name, inputStream, Collections.<String> emptyList(), Collections.<String> emptyList());
    }
 
    /**
-    * Get the groovy classpath location file, 
-    * which is proper for pointed item's location.
-    * The groovy classpath location is in response body,
-    * if not found, then status 404.
-    * 
-    * @param uriInfo request URI information
-    * @param location item's location
-    * @return {@link Response}
-    */
-   @GET
-   @Path("/classpath-location")
-   @Produces("text/plain")
-   public String getClassPathLocation(@HeaderParam("location") String location)
-   {
-      location = location.startsWith("/") ? location.substring(1) : location;
-      try
-      {
-         Session session = GroovyScriptServiceUtil.getSession(repositoryService);
-         Node rootNode = session.getRootNode();
-         Node node = rootNode.getNode(location);
-         Node classpathNode = findClassPathNode(node);
-         if (classpathNode != null)
-         {
-            String classpathLocation =
-               classpathNode.getPath().startsWith("/") ? classpathNode.getPath() : "/" + classpathNode.getPath();
-            return classpathLocation;
-         }
-         else
-         {
-            throw new ClassPathFileNotFoundException("Groovy classpath file not found.");
-         }
-      }
-      catch (RepositoryException e)
-      {
-         throw new WebApplicationException(e, createErrorResponse(e, 500));
-      }
-      catch (ClassPathFileNotFoundException e)
-      {
-         throw new WebApplicationException(e, createErrorResponse(e, 404));
-      }
-   }
-
-   /**
-    * Find class path file's node by name step by step going upper in node hierarchy.
-    * 
-    * @param node node, in what child nodes to find class path file
-    * @return {@link Node} found jcr node
+    * @param projectid
+    * @param inputStream
+    * @param vfs
+    * @param name
+    * @param classpath
+    * @return 
+    * @throws ItemNotFoundException
+    * @throws InvalidArgumentException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    * @throws JsonException
     * @throws RepositoryException
+    * @throws RepositoryConfigurationException
     */
-   private Node findClassPathNode(Node node) throws RepositoryException
+   private DependentResources getDependentResources(String projectid, VirtualFileSystem vfs)
+      throws org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException, JsonException, RepositoryException,
+      RepositoryConfigurationException
    {
-      if (node == null)
-         return null;
-      //Get all child node that end with ".groovyclasspath"
-      NodeIterator nodeIterator = node.getNodes("*" + GROOVY_CLASSPATH);
-      while (nodeIterator.hasNext())
+      List<Item> chldrs = vfs.getChildren(projectid, -1, 0, PropertyFilter.NONE_FILTER).getItems();
+      for (int i = 0; i < chldrs.size(); i++)
       {
-         Node childNode = nodeIterator.nextNode();
-         //The first found groovy class path file will be returned:
-         if (GROOVY_CLASSPATH.equals(childNode.getName()))
-            return childNode;
+         Item item = chldrs.get(i);
+         if (GROOVY_CLASSPATH.equals(item.getName()))
+         {
+            JsonParser jsonParser = new JsonParser();
+            jsonParser.parse(vfs.getContent(item.getId()).getStream());
+            JsonValue jsonValue = jsonParser.getJsonObject();
+            GroovyClassPath classPath = ObjectBuilder.createObject(GroovyClassPath.class, jsonValue);
+            String repositoryName =
+               (repositoryService.getCurrentRepository() != null) ? repositoryService.getCurrentRepository()
+                  .getConfiguration().getName() : repositoryService.getDefaultRepository().getConfiguration().getName();
+            return new DependentResources(repositoryName, classPath);
+         }
       }
-      try
-      {
-         //Go upper to find class path file:   
-         Node parentNode = node.getParent();
-         return findClassPathNode(parentNode);
-      }
-      catch (ItemNotFoundException e)
-      {
-         return null;
-      }
-      catch (AccessDeniedException e)
-      {
-         return null;
-      }
+      return null;
    }
 
    /**
@@ -231,15 +216,23 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param security security context
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws VirtualFileSystemException 
     * @throws RepositoryException 
     */
    @POST
    @Path("/deploy-sandbox")
    @RolesAllowed({"developers"})
-   public Response deployInSandbox(@HeaderParam("location") String location, @Context SecurityContext security,
-      MultivaluedMap<String, String> properties)
+   public Response deployInSandbox(@QueryParam("vfsid") String vfsid, @QueryParam("id") String id,
+      @Context SecurityContext security, MultivaluedMap<String, String> properties) throws VirtualFileSystemException
    {
-      return sandboxLoader(location, true, security, properties);
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      if (id == null || id.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
+
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      File script = (File)vfs.getItem(id, PropertyFilter.NONE_FILTER);
+      return sandboxLoader(script.getPath(), vfsid, true, security, properties);
    }
 
    /**
@@ -248,14 +241,22 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param security security context
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
+    * @throws VirtualFileSystemException 
     */
    @POST
    @Path("/undeploy-sandbox")
    @RolesAllowed({"developers"})
-   public Response undeployFromSandox(@HeaderParam("location") String location, @Context SecurityContext security,
-      MultivaluedMap<String, String> properties)
+   public Response undeployFromSandox(@QueryParam("vfsid") String vfsid, @QueryParam("id") String id,
+      @Context SecurityContext security, MultivaluedMap<String, String> properties) throws VirtualFileSystemException
    {
-      return sandboxLoader(location, false, security, properties);
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      if (id == null || id.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
+
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      File script = (File)vfs.getItem(id, PropertyFilter.NONE_FILTER);
+      return sandboxLoader(script.getPath(), vfsid, false, security, properties);
    }
 
    /**
@@ -266,27 +267,34 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
     * @throws RepositoryException 
+    * @throws VirtualFileSystemException 
+    * @throws RepositoryConfigurationException 
+    * @throws JsonException 
     * @throws IOException 
     */
    @POST
    @Path("/deploy")
    @RolesAllowed({"administrators"})
-   public Response deploy(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      MultivaluedMap<String, String> properties) throws RepositoryException
+   public Response deploy(@QueryParam("id") String id, @QueryParam("vfsid") String vfsid,
+      @QueryParam("projectid") String projectid, MultivaluedMap<String, String> properties) throws RepositoryException,
+      VirtualFileSystemException, JsonException, RepositoryConfigurationException
    {
-      location = location.startsWith("/") ? location.substring(1) : location;
-      //Get dependent resources from classpath file if exist:
-      DependentResources dependentResources = GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      if (id == null || id.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
+
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      File script = (File)vfs.getItem(id, PropertyFilter.NONE_FILTER);
+      DependentResources dependentResources = getDependentResources(projectid, vfs);
       //TODO method of getting current repository and workspace
       String repositoryName = repositoryService.getCurrentRepository().getConfiguration().getName();
-      String workspaceName = RepositoryDiscoveryService.getEntryPoint();
-
       if (dependentResources != null)
       {
-         return super.load(repositoryName, workspaceName, location, true, dependentResources.getFolderSources(),
+         return super.load(repositoryName, vfsid, script.getPath(), true, dependentResources.getFolderSources(),
             dependentResources.getFileSources(), properties);
       }
-      return super.load(repositoryName, workspaceName, location, true, Collections.<String> emptyList(),
+      return super.load(repositoryName, vfsid, script.getPath(), true, Collections.<String> emptyList(),
          Collections.<String> emptyList(), properties);
    }
 
@@ -296,20 +304,29 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @param properties optional properties to be applied to loaded resource
     * @return {@link Response}
     * @throws RepositoryException 
+    * @throws VirtualFileSystemException 
+    * @throws PermissionDeniedException 
+    * @throws ItemNotFoundException 
     */
    @POST
    @Path("/undeploy")
    @RolesAllowed({"administrators"})
-   public Response undeploy(@Context UriInfo uriInfo, @HeaderParam("location") String location,
-      MultivaluedMap<String, String> properties) throws RepositoryException
+   public Response undeploy(@QueryParam("id") String id, @QueryParam("vfsid") String vfsid,
+      MultivaluedMap<String, String> properties) throws RepositoryException, ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException
    {
-      location = location.startsWith("/") ? location.substring(1) : location;
+      //Get name from script location:
+      if (vfsid == null || vfsid.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+      if (id == null || id.isEmpty())
+         throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
+
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      File script = (File)vfs.getItem(id, PropertyFilter.NONE_FILTER);
       //TODO method of getting current repository and workspace
       String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
-      String workspace = RepositoryDiscoveryService.getEntryPoint();
-
-      return super.load(repository, workspace, location, false, Collections.<String> emptyList(),
-         Collections.<String> emptyList(), properties);
+      return super.load(repository, vfsid, script.getPath().replaceFirst("/", ""), false,
+         Collections.<String> emptyList(), Collections.<String> emptyList(), properties);
    }
 
    /**
@@ -320,7 +337,7 @@ public class GroovyScriptService extends GroovyScript2RestLoader
     * @return {@link Response}
     * @throws RepositoryException 
     */
-   private Response sandboxLoader(String location, boolean state, SecurityContext security,
+   private Response sandboxLoader(String location, String vfsid, boolean state, SecurityContext security,
       MultivaluedMap<String, String> properties)
    {
       location = location.startsWith("/") ? location.substring(1) : location;
@@ -342,10 +359,10 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       {
          //TODO method of getting current repository and workspace
          String repository = repositoryService.getCurrentRepository().getConfiguration().getName();
-         String workspace = RepositoryDiscoveryService.getEntryPoint();
-         ses = repositoryService.getCurrentRepository().login(workspace);
-         Node script = ((Node)ses.getItem("/" + location)).getNode("jcr:content");
-         ResourceId key = new NodeScriptKey(repository, workspace, script);
+         //         String workspace = RepositoryDiscoveryService.getEntryPoint();
+         //         ses = repositoryService.getCurrentRepository().login(workspace);
+         //         Node script = ((Node)ses.getItem("/" + location)).getNode("jcr:content");
+         ResourceId key = new NodeScriptKey(repository, vfsid, location);
          ObjectFactory<AbstractResourceDescriptor> resource = groovyPublisher.getResource(key);
          if (resource != null)
          {
@@ -378,11 +395,11 @@ public class GroovyScriptService extends GroovyScript2RestLoader
                GroovyScriptServiceUtil.getDependentResource(location, repositoryService);
             if (dependentResources != null)
             {
-               return load(repository, workspace, location, true, dependentResources.getFolderSources(),
+               return load(repository, vfsid, location, true, dependentResources.getFolderSources(),
                   dependentResources.getFileSources(), properties);
             }
 
-            return load(repository, workspace, location, true, Collections.<String> emptyList(),
+            return load(repository, vfsid, location, true, Collections.<String> emptyList(),
                Collections.<String> emptyList(), properties);
             //  groovyPublisher.publishPerRequest(script.getProperty("jcr:data").getStream(), key, properties, createSourceFolders(dependentResources.getFolderSources()), createSourceFiles(dependentResources.getFileSources()));
          }
@@ -414,18 +431,6 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
    }
 
-   /**
-    * Create response to send with error message.
-    * 
-    * @param t thrown exception
-    * @param status http status
-    * @return {@link Response} response with error
-    */
-   protected Response createErrorResponse(Throwable t, int status)
-   {
-      return Response.status(status).entity(t.getMessage()).type("text/plain").build();
-   }
-
    /*
     * Get list of JAR files includes attributes from META-INF/MANIFEST.MF
     */
@@ -442,9 +447,8 @@ public class GroovyScriptService extends GroovyScript2RestLoader
       }
       catch (Exception e)
       {
-         System.out.println("Exception > " + e.getMessage());
-         e.printStackTrace();
-         return createErrorResponse(e, Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+         LOG.error(e.getMessage(), e);
+         return Response.status(500).entity(e.getMessage()).type("text/plain").build();
       }
    }
 

@@ -86,7 +86,7 @@ public class GroovyServiceImpl extends GroovyService
    public void deploy(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       String deployUrl = restServiceContext + SERVICE_PATH + DEPLOY;
-      deploy(itemId, deployUrl,vfsId, projectId, callback);
+      deploy(itemId, deployUrl, vfsId, projectId, callback);
    }
 
    @Override
@@ -101,7 +101,8 @@ public class GroovyServiceImpl extends GroovyService
     * @param deployUrl - url to deploy (production or sandbox)
     * @param callback - the callback code which the user has to implement
     */
-   private void deploy(String itemId, String deployUrl, String vfsid, String projectid, AsyncRequestCallback<String> callback)
+   private void deploy(String itemId, String deployUrl, String vfsid, String projectid,
+      AsyncRequestCallback<String> callback)
    {
       callback.setResult(itemId);
       callback.setEventBus(eventBus);
@@ -126,7 +127,7 @@ public class GroovyServiceImpl extends GroovyService
    public void undeploySandbox(String itemId, String vfsId, String projectId, AsyncRequestCallback<String> callback)
    {
       final String udeployUrl = restServiceContext + SERVICE_PATH + UNDEPLOY_SANDBOX;
-      undeploy(itemId, udeployUrl,vfsId, projectId, callback);
+      undeploy(itemId, udeployUrl, vfsId, projectId, callback);
    }
 
    /**
@@ -136,7 +137,8 @@ public class GroovyServiceImpl extends GroovyService
     * @param undeployUrl - undeploy url 
     * @param groovyCallback - the callback code which the user has to implement
     */
-   private void undeploy(String itemId, String undeployUrl, String vfsid, String projectid, AsyncRequestCallback<String> callback)
+   private void undeploy(String itemId, String undeployUrl, String vfsid, String projectid,
+      AsyncRequestCallback<String> callback)
    {
       callback.setResult(itemId);
       callback.setEventBus(eventBus);
@@ -148,17 +150,16 @@ public class GroovyServiceImpl extends GroovyService
     * @see org.exoplatform.ide.client.module.groovy.service.groovy.GroovyService#validate(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.client.module.groovy.service.groovy.GroovyValidateCallback)
     */
    @Override
-   public void validate(FileModel file, AsyncRequestCallback<FileModel> callback)
+   public void validate(FileModel file, String vfsid, AsyncRequestCallback<FileModel> callback)
    {
-      String url = restServiceContext + SERVICE_PATH + VALIDATE;
-
+      String url =
+               restServiceContext + SERVICE_PATH + VALIDATE + "?vfsid=" + vfsid + "&name=" + file.getName();//TODO:file name need for unsaved file
+      if (file.getProject() != null)
+         url +=  "&projectid="+ file.getProject().getId(); 
       callback.setResult(file);
       callback.setEventBus(eventBus);
-
-      final String location = URL.decodePathSegment(file.getId());
-
       AsyncRequest.build(RequestBuilder.POST, url, loader).header(HTTPHeader.CONTENT_TYPE, "script/groovy")
-         .header(HTTPHeader.LOCATION, location).data(file.getContent()).send(callback);
+         .data(file.getContent()).send(callback);
    }
 
    /**

@@ -95,11 +95,12 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
 
    private IDEConfiguration configuration;
 
-   private Map<String, String> lockTokens;
+   //TODO: currently not use lock
+  // private Map<String, String> lockTokens;
 
    //need for http://jira.exoplatform.org/browse/IDE-347
    //undeploy service on cancel 
-   private boolean undeployOnCancel = false;
+//   private boolean undeployOnCancel = false;
 
    private boolean previewOpened = false;
 
