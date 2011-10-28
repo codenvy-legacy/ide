@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jbosscache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:jboss:jbosscache-core:config:3.1">
+
+   <locking useLockStriping="false" concurrencyLevel="500" lockParentForChildInsertRemove="false"
+      lockAcquisitionTimeout="20000" />
+
+   <loaders passivation="false" shared="true">
+      <!-- All the data of the JCR locks needs to be loaded at startup -->
+ 	  <preload>
+	     <node fqn="/" />
+	  </preload>  
+      <!--
+			For another cache-loader class you should use another template with
+			cache-loader specific parameters
+		-->
+      <loader class="org.exoplatform.services.jcr.impl.core.lock.jbosscache.JDBCCacheLoader" async="false" fetchPersistentState="false"
+         ignoreModifications="false" purgeOnStartup="false">
+         <properties>
+            cache.jdbc.table.name=${jbosscache-cl-cache.jdbc.table.name}
+            cache.jdbc.table.create=${jbosscache-cl-cache.jdbc.table.create}
+            cache.jdbc.table.drop=${jbosscache-cl-cache.jdbc.table.drop}
+            cache.jdbc.table.primarykey=${jbosscache-cl-cache.jdbc.table.primarykey}
+            cache.jdbc.fqn.column=${jbosscache-cl-cache.jdbc.fqn.column}
+            cache.jdbc.fqn.type=${jbosscache-cl-cache.jdbc.fqn.type}
+            cache.jdbc.node.column=${jbosscache-cl-cache.jdbc.node.column}
+            cache.jdbc.node.type=${jbosscache-cl-cache.jdbc.node.type}
+            cache.jdbc.parent.column=${jbosscache-cl-cache.jdbc.parent.column}
+            cache.jdbc.datasource=${jbosscache-cl-cache.jdbc.datasource}
+			</properties>
+      </loader>
+   </loaders>
+</jbosscache>
