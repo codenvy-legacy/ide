@@ -36,8 +36,8 @@ public class GitApplication extends Application
 
    public GitApplication()
    {
-      singletons.add(classes.add(GitService.class));
-      singletons.add(classes.add(RequestContextResolver.class));
+      classes.add(GitService.class);
+      classes.add(RequestContextResolver.class);
       classes.add(GitRepoService.class);
       singletons.add(new GitExceptionMapper());
    }

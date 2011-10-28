@@ -73,7 +73,7 @@ public class IDEServiceApplication extends Application
       
       classes.add(RemoteFileService.class);
       
-      objects.add(classes.add(RequestContextResolver.class));
+      objects.add(RequestContextResolver.class);
       
       classes.add(RestConversationState.class);
       classes.add(UploadService.class);
