@@ -12,6 +12,10 @@
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
+   </component>
 
    <component>
       <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
