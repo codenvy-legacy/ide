@@ -20,7 +20,6 @@ package org.exoplatform.ide.shell.server;
 
 import org.everrest.core.ComponentLifecycleScope;
 import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonHandler;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.impl.resource.AbstractResourceDescriptorImpl;
