@@ -554,10 +554,17 @@ public abstract class JenkinsClient
             throw fault(http);
          return new HttpStream(http);
       }
-      finally
+      catch (IOException e)
       {
          if (http != null)
             http.disconnect();
+         throw e;
+      }
+      catch (JenkinsException e)
+      {
+         if (http != null)
+            http.disconnect();
+         throw e;
       }
    }
 
