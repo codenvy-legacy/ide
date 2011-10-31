@@ -1216,12 +1216,12 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, boolean)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, Boolean)
     */
    @Path("import/{parentId}")
    public void importZip(@PathParam("parentId") String parentId, //
       InputStream in, //
-      @QueryParam("overwrite") boolean overwrite //
+      @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
    ) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException, IOException
    {
       Session ses = session();
@@ -1454,6 +1454,10 @@ public class JcrFileSystem implements VirtualFileSystem
       links.put(Link.REL_CONTENT, //
          new Link(createURI("content", id), Link.REL_CONTENT, file.getMediaType().toString()));
 
+      links.put(Link.REL_CONTENT_BY_PATH, //
+         new Link(createURI("contentbypath", null, "path", file.getPath()), Link.REL_CONTENT_BY_PATH, file
+            .getMediaType().toString()));
+
       links.put(Link.REL_VERSION_HISTORY, //
          new Link(createURI("version-history", id), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
 
@@ -1476,44 +1480,40 @@ public class JcrFileSystem implements VirtualFileSystem
 
    private Map<String, Link> createFolderLinks(FolderData folder) throws VirtualFileSystemException
    {
-      Map<String, Link> links = createBaseLinks(folder);
+      Map<String, Link> links = createBaseFolderLinks(folder);
       String id = folder.getId();
 
-      links.put(Link.REL_CHILDREN, //
-         new Link(createURI("children", id), //
-            Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FOLDER, //
-         new Link(createURI("folder", id, "name", "[name]"), //
-            Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FILE, //
-         new Link(createURI("file", id, "name", "[name]"), //
-            Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
-
       links.put(Link.REL_CREATE_PROJECT, //
-         new Link(createURI("project", id, "name", "[name]", "type", "[type]"), //
-            Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
+         new Link(createURI("project", id, "name", "[name]", "type", "[type]"), Link.REL_CREATE_PROJECT,
+            MediaType.APPLICATION_JSON));
 
       return links;
    }
 
    private Map<String, Link> createProjectLinks(ProjectData project) throws VirtualFileSystemException
    {
-      Map<String, Link> links = createBaseLinks(project);
-      String id = project.getId();
+      return createBaseFolderLinks(project);
+   }
+
+   private Map<String, Link> createBaseFolderLinks(FolderData folder) throws VirtualFileSystemException
+   {
+      Map<String, Link> links = createBaseLinks(folder);
+      String id = folder.getId();
 
       links.put(Link.REL_CHILDREN, //
-         new Link(createURI("children", id), //
-            Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
+         new Link(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
-         new Link(createURI("folder", id, "name", "[name]"), //
-            Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
+         new Link(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FILE, //
-         new Link(createURI("file", id, "name", "[name]"), //
-            Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
+         new Link(createURI("file", id, "name", "[name]"), Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
+
+      links.put(Link.REL_EXPORT, //
+         new Link(createURI("export", id), Link.REL_EXPORT, "application/zip"));
+
+      links.put(Link.REL_IMPORT, //
+         new Link(createURI("import", id), Link.REL_IMPORT, "application/zip"));
 
       return links;
    }

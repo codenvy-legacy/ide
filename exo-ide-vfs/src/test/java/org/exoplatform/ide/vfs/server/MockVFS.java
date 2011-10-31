@@ -450,7 +450,7 @@ public class MockVFS implements VirtualFileSystem
    }
 
    @Override
-   public void importZip(String parentId, InputStream in, boolean overwrite) throws ItemNotFoundException,
+   public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
    {
    }

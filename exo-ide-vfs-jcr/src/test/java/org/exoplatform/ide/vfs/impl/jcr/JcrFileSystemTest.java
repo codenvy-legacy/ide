@@ -275,6 +275,13 @@ public abstract class JcrFileSystemTest extends TestCase
          assertEquals(UriBuilder.fromPath(SERVICE_URI).path("content").path(file.getId()).build().toString(),
             link.getHref());
 
+         link = links.get(Link.REL_CONTENT_BY_PATH);
+         assertNotNull("'" + Link.REL_CONTENT_BY_PATH + "' link not found. ", link);
+         assertEquals(file.getMimeType(), link.getType());
+         assertEquals(Link.REL_CONTENT_BY_PATH, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("contentbypath").queryParam("path", file.getPath()).build()
+            .toString(), link.getHref());
+
          link = links.get(Link.REL_CURRENT_VERSION);
          assertNotNull("'" + Link.REL_CURRENT_VERSION + "' link not found. ", link);
          assertEquals(MediaType.APPLICATION_JSON, link.getType());
@@ -360,6 +367,20 @@ public abstract class JcrFileSystemTest extends TestCase
                UriBuilder.fromPath(SERVICE_URI).path("project").path(item.getId()).queryParam("name", "[name]")
                   .queryParam("type", "[type]").build().toString(), link.getHref());
          }
+
+         link = links.get(Link.REL_EXPORT);
+         assertNotNull("'" + Link.REL_EXPORT + "' link not found. ", link);
+         assertEquals("application/zip", link.getType());
+         assertEquals(Link.REL_EXPORT, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("export").path(item.getId()).build().toString(),
+            link.getHref());
+
+         link = links.get(Link.REL_IMPORT);
+         assertNotNull("'" + Link.REL_IMPORT + "' link not found. ", link);
+         assertEquals("application/zip", link.getType());
+         assertEquals(Link.REL_IMPORT, link.getRel());
+         assertEquals(UriBuilder.fromPath(SERVICE_URI).path("import").path(item.getId()).build().toString(),
+            link.getHref());
       }
    }
 

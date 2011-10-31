@@ -29,11 +29,14 @@ public class Link
    public static String REL_CREATE_PROJECT = "create-project";
    public static String REL_CREATE_FOLDER = "create-folder";
    public static String REL_CREATE_FILE = "create-file";
+   public static String REL_EXPORT = "export";
+   public static String REL_IMPORT = "import";
 
    // File
    public static String REL_CURRENT_VERSION = "current-version";
    public static String REL_VERSION_HISTORY = "version-history";
    public static String REL_CONTENT = "content";
+   public static String REL_CONTENT_BY_PATH = "content-by-path";
    public static String REL_UNLOCK = "unlock";
    public static String REL_LOCK = "lock";
 

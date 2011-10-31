@@ -267,8 +267,8 @@ public interface VirtualFileSystem
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException if any other errors occur
     */
-   ContentStream getContent(String path, String versionId) throws ItemNotFoundException,
-      InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+   ContentStream getContent(String path, String versionId) throws ItemNotFoundException, InvalidArgumentException,
+      PermissionDeniedException, VirtualFileSystemException;
 
    /**
     * Get binary content of File.
@@ -688,7 +688,8 @@ public interface VirtualFileSystem
     * 
     * @param parentId id of folder to unzip
     * @param in ZIP content
-    * @param overwrite overwrite or not existing files
+    * @param overwrite overwrite or not existing files. If such parameters is not specified then behavior is
+    *           implementation specific
     * @throws ItemNotFoundException if <code>parentId</code> does not exist
     * @throws InvalidArgumentException if <code>parentId</code> item is not a Folder
     * @throws PermissionDeniedException if user which perform operation has no permissions to do it
@@ -698,6 +699,6 @@ public interface VirtualFileSystem
    @POST
    @Path("import")
    @Consumes("application/zip")
-   public void importZip(String parentId, InputStream in, boolean overwrite) throws ItemNotFoundException,
+   public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException,
       InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException;
 }
