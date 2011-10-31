@@ -796,42 +796,42 @@ public class JcrFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
       }
 
-      StringBuilder sql = new StringBuilder();
-      sql.append("SELECT * FROM nt:resource");
-
+      List<String> where = null;
+      String nodeType = null;
       if (query != null)
       {
-         List<String> where = new ArrayList<String>();
-
+         nodeType = query.getFirst("nodeType");
+         where = new ArrayList<String>();
          String path = query.getFirst("path");
          if (path != null && path.length() > 0)
          {
             where.add("jcr:path LIKE '" + path + "/%'");
          }
-
          String text = query.getFirst("text");
          if (text != null && text.length() > 0)
          {
             where.add("CONTAINS(*, '" + text + "')");
          }
-
          String mediaType = query.getFirst("mediaType");
          if (mediaType != null && mediaType.length() > 0)
          {
             where.add("jcr:mimeType = '" + mediaType + "'");
          }
-
-         if (where.size() > 0)
+      }
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT * FROM ");
+      sql.append((nodeType != null && nodeType.length() > 0) ? nodeType : "nt:resource");
+      if (where != null && where.size() > 0)
+      {
+         sql.append(" WHERE ");
+         for (int i = 0; i < where.size(); i++)
          {
-            sql.append(" WHERE ");
-            for (int i = 0; i < where.size(); i++)
-            {
-               if (i > 0)
-                  sql.append(" AND ");
-               sql.append(where.get(i));
-            }
+            if (i > 0)
+               sql.append(" AND ");
+            sql.append(where.get(i));
          }
       }
+
       //System.out.println(">>>>> SQL: " + sql.toString());
 
       Session ses = session();
