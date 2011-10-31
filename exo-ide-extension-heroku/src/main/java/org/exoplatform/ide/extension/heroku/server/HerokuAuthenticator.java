@@ -18,16 +18,36 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
 import org.exoplatform.ws.frameworks.json.impl.JsonException;
 import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * Heroku API authenticator.
@@ -35,8 +55,48 @@ import java.net.URL;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class HerokuAuthenticator
+public class HerokuAuthenticator
 {
+   private final VirtualFileSystemRegistry vfsRegistry;
+   private final String workspace;
+   private String config = "/ide-home/users/";
+
+   public HerokuAuthenticator(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
+   {
+      this(vfsRegistry, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
+   }
+
+   protected HerokuAuthenticator(VirtualFileSystemRegistry vfsRegistry, String workspace, String config)
+   {
+      this.vfsRegistry = vfsRegistry;
+      this.workspace = workspace;
+      if (config != null)
+      {
+         if (!(config.startsWith("/")))
+         {
+            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
+         }
+         this.config = config;
+         if (!this.config.endsWith("/"))
+         {
+            this.config += "/";
+         }
+      }
+   }
+
+   private static String readValueParam(InitParams initParams, String paramName)
+   {
+      if (initParams != null)
+      {
+         ValueParam vp = initParams.getValueParam(paramName);
+         if (vp != null)
+         {
+            return vp.getValue();
+         }
+      }
+      return null;
+   }
+
    /**
     * Obtain heroku API key and store it somewhere (it is dependent to implementation) for next usage. Key should be
     * used by {@link #authenticate(HttpURLConnection)} instead of password for any request to heroku service.
@@ -47,7 +107,8 @@ public abstract class HerokuAuthenticator
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException if any i/o errors occurs
     */
-   public final void login(String email, String password) throws HerokuException, IOException, ParsingResponseException
+   public final void login(String email, String password) throws HerokuException, ParsingResponseException,
+      IOException, VirtualFileSystemException
    {
       HttpURLConnection http = null;
       try
@@ -106,14 +167,93 @@ public abstract class HerokuAuthenticator
     * 
     * @see #login(String, String)
     */
-   public final void logout()
+   public final void logout() throws VirtualFileSystemException, IOException
    {
       removeCredentials();
    }
 
-   protected abstract HerokuCredentials readCredentials() throws IOException;
+   public HerokuCredentials readCredentials() throws VirtualFileSystemException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String keyPath = config + user + "/heroku/heroku-credentials";
+      ContentStream content = null;
+      InputStream in = null;
+      BufferedReader r = null;
+      try
+      {
+         content = vfs.getContent(keyPath, null);
+         in = content.getStream();
+         r = new BufferedReader(new InputStreamReader(in));
+         String email = r.readLine();
+         String apiKey = r.readLine();
+         return new HerokuCredentials(email, apiKey);
+      }
+      catch (ItemNotFoundException e)
+      {
+      }
+      finally
+      {
+         if (r != null)
+         {
+            r.close();
+         }
+         if (in != null)
+         {
+            in.close();
+         }
+      }
+      return null;
+   }
 
-   protected abstract void writeCredentials(HerokuCredentials credentials) throws IOException;
+   public void writeCredentials(HerokuCredentials credentials) throws VirtualFileSystemException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      Item heroku = getConfigParent(vfs);
+      try
+      {
+         Item credentialsFile =
+            vfs.getItemByPath(heroku.getPath() + "/heroku-credentials", null, PropertyFilter.NONE_FILTER);
+         InputStream newcontent =
+            new ByteArrayInputStream((credentials.getEmail() + "\n" + credentials.getApiKey()).getBytes());
+         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         InputStream content =
+            new ByteArrayInputStream((credentials.getEmail() + "\n" + credentials.getApiKey()).getBytes());
+         Item credentialsFile =
+            vfs.createFile(heroku.getId(), "heroku-credentials", MediaType.TEXT_PLAIN_TYPE, content);
+         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
+         String user = ConversationState.getCurrent().getIdentity().getUserId();
+         acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
+         vfs.updateACL(credentialsFile.getId(), acl, true, null);
+      }
+   }
 
-   protected abstract void removeCredentials();
+   public void removeCredentials() throws VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String keyPath = config + user + "/heroku/heroku-credentials";
+      Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);
+      vfs.delete(credentialsFile.getId(), null);
+   }
+
+   private Item getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
+   {
+      String user = ConversationState.getCurrent().getIdentity().getUserId();
+      String cloudFoundryPath = config + user + "/heroku";
+      VirtualFileSystemInfo info = vfs.getInfo();
+      Item heroku = null;
+      try
+      {
+         heroku = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
+      }
+      catch (ItemNotFoundException e)
+      {
+         heroku = vfs.createFolder(info.getRoot().getId(), cloudFoundryPath.substring(1));
+      }
+      return heroku;
+   }
 }

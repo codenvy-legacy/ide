@@ -22,6 +22,9 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -34,12 +37,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
-import org.exoplatform.ws.frameworks.json.JsonHandler;
-import org.exoplatform.ws.frameworks.json.JsonParser;
-import org.exoplatform.ws.frameworks.json.impl.JsonDefaultHandler;
-import org.exoplatform.ws.frameworks.json.impl.JsonException;
-import org.exoplatform.ws.frameworks.json.impl.JsonParserImpl;
-import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -59,6 +57,7 @@ import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -119,16 +118,21 @@ public class Heroku
     * @param password password
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public void login(String email, String password) throws HerokuException, IOException, ParsingResponseException
+   public void login(String email, String password) throws HerokuException, ParsingResponseException, IOException,
+      VirtualFileSystemException
    {
       authenticator.login(email, password);
    }
 
    /**
     * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
+    * 
+    * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public void logout()
+   public void logout() throws VirtualFileSystemException, IOException
    {
       authenticator.logout();
    }
@@ -139,8 +143,9 @@ public class Heroku
     * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public void addSshKey() throws IOException, HerokuException
+   public void addSshKey() throws HerokuException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -148,7 +153,7 @@ public class Heroku
       addSshKey(herokuCredentials);
    }
 
-   private void addSshKey(HerokuCredentials herokuCredentials) throws IOException, HerokuException
+   private void addSshKey(HerokuCredentials herokuCredentials) throws HerokuException, IOException
    {
       final String host = "heroku.com";
       SshKey publicKey = keyProvider.getPublicKey(host);
@@ -194,9 +199,10 @@ public class Heroku
     * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for
     *           current user removed
     * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
-   public void removeSshKey(String keyName) throws IOException, HerokuException
+   public void removeSshKey(String keyName) throws HerokuException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -204,7 +210,7 @@ public class Heroku
       removeSshKey(herokuCredentials, keyName);
    }
 
-   private void removeSshKey(HerokuCredentials herokuCredentials, String keyName) throws IOException, HerokuException
+   private void removeSshKey(HerokuCredentials herokuCredentials, String keyName) throws HerokuException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -236,9 +242,10 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, IOException,
-      ParsingResponseException
+   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, ParsingResponseException,
+      IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -328,8 +335,9 @@ public class Heroku
     * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public void removeAllSshKeys() throws IOException, HerokuException
+   public void removeAllSshKeys() throws HerokuException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -337,7 +345,7 @@ public class Heroku
       removeAllSshKeys(herokuCredentials);
    }
 
-   private void removeAllSshKeys(HerokuCredentials herokuCredentials) throws IOException, HerokuException
+   private void removeAllSshKeys(HerokuCredentials herokuCredentials) throws HerokuException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -374,9 +382,10 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public Map<String, String> createApplication(String name, String remote, File workDir) throws IOException,
-      HerokuException, ParsingResponseException
+   public Map<String, String> createApplication(String name, String remote, File workDir) throws HerokuException,
+      ParsingResponseException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -385,7 +394,7 @@ public class Heroku
    }
 
    private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote,
-      File workDir) throws IOException, HerokuException, ParsingResponseException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (remote == null || remote.isEmpty())
          remote = HEROKU_GIT_REMOTE;
@@ -487,8 +496,10 @@ public class Heroku
     *           case <code>name</code> parameter must be not <code>null</code>
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public void destroyApplication(String name, File workDir) throws IOException, HerokuException
+   public void destroyApplication(String name, File workDir) throws HerokuException, IOException,
+      VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -541,9 +552,10 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public Map<String, String> applicationInfo(String name, boolean inRawFormat, File workDir) throws IOException,
-      HerokuException, ParsingResponseException
+   public Map<String, String> applicationInfo(String name, boolean inRawFormat, File workDir) throws HerokuException,
+      ParsingResponseException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -552,7 +564,7 @@ public class Heroku
    }
 
    private Map<String, String> applicationInfo(HerokuCredentials herokuCredentials, String name, boolean inRawFormat,
-      File workDir) throws IOException, HerokuException, ParsingResponseException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -655,9 +667,10 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public Map<String, String> renameApplication(String name, String newname, File workDir) throws IOException,
-      HerokuException, ParsingResponseException
+   public Map<String, String> renameApplication(String name, String newname, File workDir) throws HerokuException,
+      ParsingResponseException, IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -666,7 +679,7 @@ public class Heroku
    }
 
    private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname,
-      File workDir) throws IOException, HerokuException, ParsingResponseException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (newname == null || newname.isEmpty())
          throw new IllegalStateException("New name may not be null or empty string. ");
@@ -751,9 +764,10 @@ public class Heroku
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
+    * @throws VirtualFileSystemException
     */
-   public List<Stack> getStacks(String name, File workDir) throws IOException, HerokuException,
-      ParsingResponseException
+   public List<Stack> getStacks(String name, File workDir) throws HerokuException, ParsingResponseException,
+      IOException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -783,16 +797,24 @@ public class Heroku
          if (http.getResponseCode() != 200)
             throw fault(http);
 
-         JsonParser jsonParser = new JsonParserImpl();
-         JsonHandler handler = new JsonDefaultHandler();
-         jsonParser.parse(http.getInputStream(), handler);
-         java.util.Iterator<JsonValue> iterator = handler.getJsonObject().getElements();
+         InputStream input = http.getInputStream();
+         Iterator<JsonValue> stackElementsIterator;
+         try
+         {
+            JsonParser parser = new JsonParser();
+            parser.parse(input);
+            stackElementsIterator = parser.getJsonObject().getElements();
+         }
+         finally
+         {
+            input.close();
+         }
 
          //Parse JSON response body. Example:
          //[{"requested":true,"name":"aspen-mri-1.8.6","current":false,"beta":false}, ... ]
-         while (iterator.hasNext())
+         while (stackElementsIterator.hasNext())
          {
-            JsonValue jsonStack = iterator.next();
+            JsonValue jsonStack = stackElementsIterator.next();
             String stackName = jsonStack.getElement("name").getStringValue();
             boolean current = jsonStack.getElement("current").getBooleanValue();
             boolean requested = jsonStack.getElement("requested").getBooleanValue();
@@ -824,8 +846,10 @@ public class Heroku
     * @return {@link String} output of the migration operation
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws VirtualFileSystemException
     */
-   public String stackMigrate(String name, File workDir, String stack) throws IOException, HerokuException
+   public byte[] stackMigrate(String name, File workDir, String stack) throws HerokuException, IOException,
+      VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -833,8 +857,8 @@ public class Heroku
       return stackMigrate(herokuCredentials, name, workDir, stack);
    }
 
-   private String stackMigrate(HerokuCredentials herokuCredentials, String name, File workDir, String stack)
-      throws IOException, HerokuException
+   private byte[] stackMigrate(HerokuCredentials herokuCredentials, String name, File workDir, String stack)
+      throws HerokuException, IOException
    {
       if (stack == null || stack.isEmpty())
          throw new IllegalStateException("Stack can not be null or empty string. ");
@@ -870,14 +894,18 @@ public class Heroku
          if (http.getResponseCode() != 200)
             throw fault(http);
 
-         BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
-         StringBuilder sb = new StringBuilder();
-         String line = null;
-         while ((line = reader.readLine()) != null)
+         InputStream input = http.getInputStream();
+         int length = http.getContentLength();
+         byte[] text;
+         try
          {
-            sb.append(line + "\n");
+            text = readBody(input, length);
          }
-         return sb.toString();
+         finally
+         {
+            input.close();
+         }
+         return text;
       }
       finally
       {
@@ -893,8 +921,10 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
+    * @throws VirtualFileSystemException
     */
-   public List<String> listApplications() throws IOException, HerokuException, ParsingResponseException
+   public List<String> listApplications() throws HerokuException, ParsingResponseException, IOException,
+      VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -902,8 +932,8 @@ public class Heroku
       return listApplications(herokuCredentials);
    }
 
-   private List<String> listApplications(HerokuCredentials herokuCredentials) throws IOException, HerokuException,
-      ParsingResponseException
+   private List<String> listApplications(HerokuCredentials herokuCredentials) throws HerokuException,
+      ParsingResponseException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -976,8 +1006,10 @@ public class Heroku
     * @return LazyHttpChunkReader to read result of running command
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException if any i/o occurs
+    * @throws VirtualFileSystemException
     */
-   public HttpChunkReader run(String name, File workDir, String command) throws IOException, HerokuException
+   public HttpChunkReader run(String name, File workDir, String command) throws HerokuException, IOException,
+      VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -986,7 +1018,7 @@ public class Heroku
    }
 
    private HttpChunkReader run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
-      throws IOException, HerokuException
+      throws HerokuException, IOException
    {
       if (command == null || command.isEmpty())
          throw new IllegalStateException("Command is not defined. ");
@@ -1072,9 +1104,10 @@ public class Heroku
     * @return {@link String} logs content
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
+    * @throws VirtualFileSystemException
     */
-   public String logs(String name, File workDir, int logLines) throws IOException, HerokuException,
-      java.security.GeneralSecurityException
+   public byte[] logs(String name, File workDir, int logLines) throws HerokuException, IOException,
+      VirtualFileSystemException, java.security.GeneralSecurityException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -1098,7 +1131,7 @@ public class Heroku
     * @throws HerokuException
     */
    private String getLogsLocation(HerokuCredentials herokuCredentials, String name, File workDir, int logLines)
-      throws IOException, HerokuException
+      throws HerokuException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1119,19 +1152,20 @@ public class Heroku
          authenticate(herokuCredentials, http);
          if (http.getResponseCode() != 200)
             throw fault(http);
-         InputStream in = http.getInputStream();
+
+         InputStream input = http.getInputStream();
          BufferedReader r = null;
          String line = null;
          try
          {
-            r = new BufferedReader(new InputStreamReader(in));
+            r = new BufferedReader(new InputStreamReader(input));
             line = r.readLine();
          }
          finally
          {
             if (r != null)
                r.close();
-            in.close();
+            input.close();
          }
          return line;
       }
@@ -1148,7 +1182,7 @@ public class Heroku
     * @throws IOException
     * @throws HerokuException
     */
-   private String logs(String logsLocation) throws IOException, HerokuException, java.security.GeneralSecurityException
+   private byte[] logs(String logsLocation) throws HerokuException, IOException, java.security.GeneralSecurityException
    {
       // Create a trust manager that does not validate certificate chains
       SSLContext sc = SSLContext.getInstance("SSL");
@@ -1162,26 +1196,18 @@ public class Heroku
          ((HttpsURLConnection)seccon).setSSLSocketFactory(sc.getSocketFactory());
          if (seccon.getResponseCode() != 200)
             throw fault(seccon);
-         InputStream in = seccon.getInputStream();
-         BufferedReader reader = null;
+         InputStream input = seccon.getInputStream();
+         int length = seccon.getContentLength();
+         byte[] logs;
          try
          {
-            reader = new BufferedReader(new InputStreamReader(in));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null)
-            {
-               sb.append(line);
-               sb.append('\n');
-            }
-            return sb.toString();
+            logs = readBody(input, length);
          }
          finally
          {
-            if (reader != null)
-               reader.close();
-            in.close();
+            input.close();
          }
+         return logs;
       }
       finally
       {
@@ -1272,35 +1298,21 @@ public class Heroku
          else
          {
             int length = http.getContentLength();
-
-            if (length > 0)
-            {
-               byte[] b = new byte[length];
-               for (int point = -1, off = 0; (point = errorStream.read(b, off, length - off)) > 0; off += point) //
-               ;
-               String message = new String(b);
-               //On invalid credentials the login form is sent (HTML).
-               //Check body contains action with login path and element with id "login".
-               error =
-                  (HTTPStatus.NOT_FOUND == http.getResponseCode() && (message.contains("action=\"/login\"") || message
-                     .contains("id=\"login\""))) ? new HerokuException(HTTPStatus.BAD_REQUEST,
-                     "Authentication failed.", MediaType.TEXT_PLAIN) : new HerokuException(http.getResponseCode(),
-                     message, http.getContentType());
-            }
-            else if (length == 0)
+            byte[] body = readBody(errorStream, length);
+            if (body.length == 0)
             {
                error = new HerokuException(http.getResponseCode(), null, null);
             }
             else
             {
-               // Unknown length of response.
-               ByteArrayOutputStream bout = new ByteArrayOutputStream();
-               byte[] b = new byte[1024];
-               int point = -1;
-               while ((point = errorStream.read(b)) != -1)
-                  bout.write(b, 0, point);
+               String message = new String(body);
+               //On invalid credentials the login form is sent (HTML).
+               //Check body contains action with login path and element with id "login".
                error =
-                  new HerokuException(http.getResponseCode(), new String(bout.toByteArray()), http.getContentType());
+                  (HTTPStatus.NOT_FOUND == http.getResponseCode() && (message.contains("action=\"/login\"") || message
+                     .contains("id=\"login\""))) //
+                     ? new HerokuException(HTTPStatus.BAD_REQUEST, "Authentication failed.", MediaType.TEXT_PLAIN) //
+                     : new HerokuException(http.getResponseCode(), message, http.getContentType());
             }
          }
       }
@@ -1310,5 +1322,26 @@ public class Heroku
             errorStream.close();
       }
       return error;
+   }
+
+   private static byte[] readBody(InputStream input, int contentLength) throws IOException
+   {
+      if (contentLength > 0)
+      {
+         byte[] b = new byte[contentLength];
+         for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
+         ;
+         return b;
+      }
+      else if (contentLength < 0)
+      {
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         byte[] buf = new byte[1024];
+         int point = -1;
+         while ((point = input.read(buf)) != -1)
+            bout.write(buf, 0, point);
+         return bout.toByteArray();
+      }
+      return new byte[0];
    }
 }

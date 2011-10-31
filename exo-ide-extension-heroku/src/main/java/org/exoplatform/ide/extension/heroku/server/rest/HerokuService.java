@@ -73,14 +73,15 @@ public class HerokuService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws HerokuException, IOException, ParsingResponseException
+   public void login(Map<String, String> credentials) throws HerokuException, IOException, ParsingResponseException,
+      VirtualFileSystemException
    {
       heroku.login(credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
    @POST
-   public void logout()
+   public void logout() throws IOException, VirtualFileSystemException
    {
       heroku.logout();
    }
@@ -89,14 +90,14 @@ public class HerokuService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public List<HerokuKey> keysList(@QueryParam("long") boolean inLongFormat) throws HerokuException, IOException,
-      ParsingResponseException
+      ParsingResponseException, VirtualFileSystemException
    {
       return heroku.listSshKeys(inLongFormat);
    }
 
    @Path("keys/add")
    @POST
-   public void keysAdd() throws HerokuException, IOException
+   public void keysAdd() throws HerokuException, IOException, VirtualFileSystemException
    {
       heroku.addSshKey();
    }
@@ -157,7 +158,7 @@ public class HerokuService
    @Path("apps/stack-migrate")
    @POST
    @Produces(MediaType.TEXT_PLAIN)
-   public String stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
+   public byte[] stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
@@ -168,7 +169,7 @@ public class HerokuService
    @Path("apps/logs")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public String logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
+   public byte[] logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
       LocalPathResolveException, VirtualFileSystemException, Exception
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
