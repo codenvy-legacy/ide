@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.PreviewForm;
@@ -69,7 +68,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -235,12 +233,13 @@ public class GroovyExtension extends Extension implements RestServiceOutputRecei
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
+    /* TODO currently not use lock
+     if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
 
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");*/
    }
 
    /**
