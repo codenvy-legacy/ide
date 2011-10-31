@@ -197,15 +197,11 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.heroku.server.JcrHerokuAuthenticator</type>
+      <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator</type>
       <init-params>
          <value-param>
             <name>workspace</name>
             <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
          </value-param>
       </init-params>
    </component>
