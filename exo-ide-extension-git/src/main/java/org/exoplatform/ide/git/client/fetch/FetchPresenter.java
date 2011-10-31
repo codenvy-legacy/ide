@@ -25,9 +25,10 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -221,26 +223,38 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().fetch(vfs.getId(), projectId, remoteName, new String[]{refs}, removeDeletedRefs,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      try
+      {
+         GitClientService.getInstance().fetch(vfs.getId(), project, remoteName, new String[]{refs}, removeDeletedRefs,
+            new AsyncRequestCallback<String>()
             {
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
-               IDE.getInstance().closeView(display.asView().getId());
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.fetchFail(remoteUrl);
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception, remoteUrl);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e, remoteUrl);
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   private void handleError(Throwable t, String remoteUrl)
+   {
+      String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.fetchFail(remoteUrl);
+      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    /**

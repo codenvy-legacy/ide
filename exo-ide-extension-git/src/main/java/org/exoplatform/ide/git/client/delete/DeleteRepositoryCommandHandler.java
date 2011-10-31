@@ -90,16 +90,16 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     */
    public void doDeleteRepository()
    {
-      final String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      if (workDir == null || workDir.isEmpty())
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      if (projectId == null || projectId.isEmpty())
          return;
-      GitClientService.getInstance().deleteWorkDir(vfs.getId(), workDir, new AsyncRequestCallback<String>()
+      GitClientService.getInstance().deleteWorkDir(vfs.getId(), projectId, new AsyncRequestCallback<String>()
       {
          @Override
          protected void onSuccess(String result)
          {
             eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-            String href = URL.decode(workDir);
+            String href = URL.decode(projectId);
             //TODO to fix this with encoding symbol "@"
             href = href.replaceAll("@", "%40");
             eventBus.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));

@@ -25,67 +25,67 @@ package org.exoplatform.ide.git.client;
  */
 public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
-   
+
    //BUTTONS
-   
+
    @Key("button.add")
    String buttonAdd();
-   
+
    @Key("button.cancel")
    String buttonCancel();
-   
+
    @Key("button.create")
    String buttonCreate();
-   
+
    @Key("button.checkout")
    String buttonCheckout();
-   
+
    @Key("button.delete")
    String buttonDelete();
-   
+
    @Key("button.close")
    String buttonClose();
 
    @Key("button.clone")
    String buttonClone();
-   
+
    @Key("button.commit")
    String buttonCommit();
-   
+
    @Key("button.reset")
    String buttonReset();
-   
+
    @Key("button.remove")
    String buttonRemove();
-   
+
    @Key("button.init")
    String buttonInit();
-   
+
    @Key("button.fetch")
    String buttonFetch();
-   
+
    @Key("button.ok")
    String buttonOk();
-   
+
    @Key("button.push")
    String buttonPush();
-   
+
    @Key("button.pull")
    String buttonPull();
 
    @Key("button.merge")
    String buttonMerge();
-   
+
    //MESSAGES
    @Key("messages.not_git_repository")
    String notGitRepository();
 
    @Key("messages.selected_items_fail")
    String selectedItemsFail();
-   
+
    @Key("messages.workspace_selected")
    String selectedWorkace();
-   
+
    @Key("messages.add_success")
    String addSuccess();
 
@@ -178,37 +178,83 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("messages.status_failed")
    String statusFailed();
-   
+
    @Key("messages.selected_remote_fail")
    String selectRemoteRepositoryFail();
-   
+
    @Key("messages.delete_remote_repository.title")
    String deleteRemoteRepositoryTitle();
-   
+
    @Key("messages.delete_remote_repository.question")
    String deleteRemoteRepositoryQuestion(String remote);
-   
+
    @Key("messages.delete_repository.question")
    String deleteGitRepositoryQuestion(String repository);
-   
+
    @Key("messages.delete_repository.title")
    String deleteGitRepositoryTitle();
-   
+
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
-   
+
    //Unmarshaller Errors
    @Key("merge.unmarshal.failed")
    String mergeUnmarshallerFailed();
-   
+
    //----InitRequestHandler
-   
+
    @Key("init.started")
    String initStarted(String repo);
-   
+
    @Key("init.finished")
    String initFinished(String repo);
-   
+
+   //----CloneRequestHandler-------------
+
+   @Key("clone.started")
+   String cloneStarted(String projectName, String remoteName);
+
+   @Key("clone.finished")
+   String cloneFinished(String projectName, String remoteUri);
+
+   //----PushRequestHandler
+
+   @Key("push.started")
+   String pushStarted(String projectName, String localBranch, String remoteBranch);
+
+   @Key("push.finished")
+   String pushFinished(String projectName, String localBranch, String remoteBranch);
+
+   //----PullRequestHandler
+   @Key("pull.started")
+   String pullStarted(String projectName, String remoteBranch, String localBrach);
+
+   @Key("pull.finished")
+   String pullFinished(String projectName, String remoteBranch, String localBrach);
+
+   //----FetchRequestHandler
+   @Key("fetch.started")
+   String fetchStarted(String projectName, String remoteBranch, String localBrach);
+
+   @Key("fetch.finished")
+   String fetchFinished(String projectName, String remoteBranch, String localBrach);
+
+   //----AddRequestHandler
+
+   @Key("add.started")
+   String addStarted(String projectName);
+
+   @Key("add.finished")
+   String addFinished(String projectName);
+
+   //----CommitRequestHandler
+
+   @Key("commit.started")
+   String commitStarted(String projectName);
+
+   @Key("commit.finished")
+   String commitFinished(String projectName);
+
    //----VIEWS------------------------------------------------------------------
 
    //Add
@@ -220,222 +266,222 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("view.add_to_index.file")
    String addToIndexFile(String file);
-   
+
    @Key("view.add_to_index.update_field_title")
    String addToIndexUpdateFieldTitle();
-   
+
    @Key("view.add_to_index.title")
    String addToIndexTitle();
-   
+
    //Branch
-   
+
    @Key("view.branch.grid.name_column")
    String branchGridNameColumn();
-   
+
    @Key("view.branch.ceate_new")
    String branchCreateNew();
-   
+
    @Key("view.branch.type_new")
    String branchTypeNew();
-   
+
    @Key("view.branch.delete")
    String branchDelete();
-   
+
    @Key("view.branch.delete_ask")
    String branchDeleteAsk(String name);
-   
+
    @Key("view.branch.title")
    String branchTitle();
-   
+
    //Clone
    @Key("view.clone.title")
    String cloneTitle();
-   
+
    @Key("view.clone.workdir_field_title")
    String cloneWorkdirFieldTitle();
-   
+
    @Key("view.clone.remote_uri_field_title")
    String cloneRemoteUriFieldTitle();
-   
+
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
-   
+
    //Commit
-   
+
    @Key("view.commit.commit_message")
    String commitMessage(String revision, String time);
-   
+
    @Key("view.commit.commit_user")
    String commitUser(String user);
-   
+
    @Key("view.commit.title")
    String commitTitle();
-   
+
    @Key("view.commit.message_field_title")
    String commitMessageFieldTitle();
-   
+
    @Key("view.commit.all_field_title")
    String commitAllFieldTitle();
-   
+
    @Key("view.commit.grid.date")
    String commitGridDate();
-   
+
    @Key("view.commit.grid.commiter")
    String commitGridCommiter();
-   
+
    @Key("view.commit.grid.comment")
    String commitGridComment();
-   
+
    @Key("view.push.title")
    String pushViewTitle();
-   
+
    @Key("view.push.remote.field")
    String pushViewRemoteFieldTitle();
-   
+
    @Key("view.push.local_branch.field")
    String pushViewLocalBranchFieldTitle();
-   
+
    @Key("view.push.remote_branch.field")
    String pushViewRemoteBranchFieldTitle();
 
    //Reset
    @Key("view.reset.files.title")
    String resetFilesViewTitle();
-   
+
    @Key("view.reset.commit.title")
    String resetCommitViewTitle();
-   
+
    @Key("view.reset.soft.type.title")
    String resetSoftTypeTitle();
-   
+
    @Key("view.reset.soft.type.description")
    String resetSoftTypeDescription();
-   
+
    @Key("view.reset.mixed.type.title")
    String resetMixedTypeTitle();
-   
+
    @Key("view.reset.mixed.type.description")
    String resetMixedTypeDescription();
-   
+
    @Key("view.reset.hard.type.title")
    String resetHardTypeTitle();
-   
+
    @Key("view.reset.hard.type.description")
    String resetHardTypeDescription();
 
    //Remove
    @Key("view.remove.files.grid.title")
    String removeFilesGridTitle();
-   
+
    @Key("view.remove.files.title")
    String removeFilesViewTitle();
-   
+
    //Create
-   
+
    @Key("view.create.title")
    String createTitle();
-   
+
    @Key("view.create.workdir.field.title")
    String createWorkdirFieldTitle();
-   
+
    @Key("view.create.bare.field.title")
    String createBareFieldTitle();
-   
+
    //Fetch
    @Key("view.fetch.title")
    String fetchTitle();
-   
+
    @Key("view.fetch.remote.field.title")
    String fetchRemoteFieldTitle();
-   
+
    @Key("view.fetch.remote.branches.title")
    String fetchRemoteBranchesTitle();
-   
+
    @Key("view.fetch.local.branches.title")
    String fetchLocalBranchesTitle();
-   
+
    @Key("view.fetch.remove.deleted.refs.title")
    String fetchRemoveDeletedRefsTitle();
-      
+
    //Remote
    @Key("view.remotes.title")
    String remotesViewTitle();
-   
+
    @Key("view.remote.name.field")
    String remoteNameField();
-   
+
    @Key("view.remote.location.field")
    String remoteLocationField();
-   
+
    @Key("view.remote.grid.name.field")
    String remoteGridNameField();
-   
+
    @Key("view.remote.grid.location.field")
    String remoteGridLocationField();
- 
+
    //History
    @Key("view.history.diff.index.state")
    String historyDiffIndexState();
-   
+
    @Key("view.history.diff.tree.state")
    String historyDiffTreeState();
-   
+
    @Key("view.history.nothing.to.display")
    String historyNothingToDisplay();
-   
+
    @Key("view.history.title")
    String historyTitle();
-   
+
    @Key("view.history.project.changes.button.title")
    String historyProjectChangesButtonTitle();
-   
+
    @Key("view.history.resource.changes.button.title")
    String historyResourceChangesButtonTitle();
-   
+
    @Key("view.history.diff.with.index.button.title")
    String historyDiffWithIndexButtonTitle();
-   
+
    @Key("view.history.diff.with.work.tree.button.title")
    String historyDiffWithWorkTree();
-   
+
    @Key("view.history.diff.with.prev.version.button.title")
    String historyDiffWithPrevVerson();
-   
+
    @Key("view.history.revision.title")
    String historyViewRevisionTitle();
-   
+
    @Key("view.history.date.title")
    String historyViewDateTitle();
-   
+
    @Key("view.history.refresh.button.title")
    String refreshRevisionListButtonTitle();
-   
+
    //Pull
    @Key("view.pull.title")
    String pullTitle();
-   
+
    @Key("view.pull.remote.field.title")
    String pullRemoteField();
-   
+
    @Key("view.pull.remote.branches.title")
    String pullRemoteBranches();
-   
+
    @Key("view.pull.local.branches.title")
    String pullLocalBranches();
-   
+
    //Merge
    @Key("view.merge.title")
    String mergeTitle();
-   
+
    @Key("merged.commits")
    String mergedCommits(String commits);
-   
+
    @Key("merged.new.head")
    String mergedNewHead(String newHead);
 
    @Key("merged.conflicts")
    String mergedConflicts(String conflicts);
-   
+
    /*Controls*/
    @Key("control.add.id")
    String addControlId();
@@ -472,7 +518,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.commit.prompt")
    String commitControlPrompt();
-   
+
    @Key("control.delete.id")
    String deleteControlId();
 
@@ -481,7 +527,7 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.delete.prompt")
    String deleteControlPrompt();
-   
+
    @Key("control.fetch.id")
    String fetchControlId();
 
@@ -499,16 +545,16 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.init.prompt")
    String initControlPrompt();
-   
+
    @Key("control.merge.id")
    String mergeControlId();
-   
+
    @Key("control.merge.title")
    String mergeControlTitle();
-   
+
    @Key("control.merge.prompt")
    String mergeControlPrompt();
-   
+
    @Key("control.pull.id")
    String pullControlId();
 
@@ -589,5 +635,5 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.status.prompt")
    String statusControlPrompt();
-   
+
 }

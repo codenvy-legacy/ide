@@ -491,34 +491,46 @@ public class SelectLocationPresenter implements SelectLocationHandler, ViewClose
    private void cloneRepository(Repository repo)
    {
       //TODO
-      String projectId  = selectedItems.get(0).getId();
+      ProjectModel projectId = ((ItemContext)selectedItems.get(0)).getProject();
       String remoteUri = repo.getUrl();
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";
       }
 
-      GitClientService.getInstance().cloneRepository(vfs.getId(), projectId, remoteUri, null,
-         new org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().cloneRepository(vfs.getId(), projectId, remoteUri, null,
+            new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-               Folder folder = (Folder)selectedItems.get(0);
-               eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                     : GitExtension.MESSAGES.cloneFailed();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+                  Folder folder = (Folder)selectedItems.get(0);
+                  eventBus.fireEvent(new RefreshBrowserEvent(getFoldersToRefresh(folder), folder));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e);
+      }
+   }
+
+   private void handleError(Throwable t)
+   {
+      String errorMessage =
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
+      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    /**

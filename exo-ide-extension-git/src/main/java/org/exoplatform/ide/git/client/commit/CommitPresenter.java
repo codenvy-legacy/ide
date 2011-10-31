@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.commit;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,7 +31,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -38,8 +40,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Date;
 
@@ -174,34 +178,43 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
     */
    private void doCommit()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
       
-      GitClientService.getInstance().commit(vfs.getId(), projectId, message, all, new AsyncRequestCallback<Revision>()
+      Revision revision = new Revision(null, message, 0, null);
+      try
       {
-         @Override
-         protected void onSuccess(Revision result)
+         GitClientService.getInstance().commit(vfs.getId(), project, message, all, new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(revision))
          {
-            DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
-            String date = formatter.format(new Date(result.getCommitTime()));
-            String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
-            message +=
-               (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
-                  .getName().length() > 0) ? " " +GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
-            eventBus.fireEvent(new OutputEvent(message, Type.INFO));
-            eventBus.fireEvent(new RefreshBrowserEvent());
-         }
+            @Override
+            protected void onSuccess(Revision result)
+            {
+               DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+               String date = formatter.format(new Date(result.getCommitTime()));
+               String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
+               message +=
+                  (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
+                     .getName().length() > 0) ? " " +GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
+               eventBus.fireEvent(new OutputEvent(message, Type.INFO));
+               eventBus.fireEvent(new RefreshBrowserEvent());
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : GitExtension.MESSAGES.commitFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String errorMessage =
+                  (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                     : GitExtension.MESSAGES.commitFailed();
+               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
       IDE.getInstance().closeView(display.asView().getId());
    }
 }

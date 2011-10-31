@@ -25,9 +25,9 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -38,6 +38,7 @@ import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -219,33 +220,46 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
     */
    public void doPush()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+
       final String remote = display.getRemoteValue().getValue();
       String localBranch = display.getLocalBranchesValue().getValue();
       String remoteBranch = display.getRemoteBranchesValue().getValue();
 
-      GitClientService.getInstance().push(vfs.getId(), projectId, new String[]{localBranch + ":" + remoteBranch}, remote, false,
-         new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+      try
+      {
+         GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch}, remote,
+            false, new org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String>()
             {
-               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               String errorMessage =
-                  (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.pushFail();
-               eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e);
+      }
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   private void handleError(Throwable t)
+   {
+      String errorMessage =
+               (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
+            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+
+   }
    /**
     * @see org.exoplatform.ide.git.client.remote.HasBranchesPresenter#onRemotesReceived(java.util.List)
     */

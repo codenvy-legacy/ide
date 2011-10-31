@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -31,7 +32,7 @@ import org.exoplatform.ide.git.shared.Revision;
  * @version $Id:  Mar 31, 2011 11:15:57 AM anya $
  *
  */
-public class RevisionUnmarshaller extends JSONUmarshaller
+public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
 {
 
    /**
@@ -51,12 +52,12 @@ public class RevisionUnmarshaller extends JSONUmarshaller
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
-   public void unmarshal(Response response) throws UnmarshallerException
+   public void unmarshal(Response response)
    {
-      JavaScriptObject json = build(response.getText());
+      JSONValue json = JSONParser.parseStrict(response.getText());
       if (json == null)
          return;
-      JSONObject revisionObject = new JSONObject(json).isObject();
+      JSONObject revisionObject = json.isObject();
       if (revisionObject == null)
          return;
 
@@ -86,5 +87,14 @@ public class RevisionUnmarshaller extends JSONUmarshaller
          GitUser gitUser = new GitUser(name, email);
          revision.setCommitter(gitUser);
       }
+   }
+
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    */
+   @Override
+   public Revision getPayload()
+   {
+      return revision;
    }
 }

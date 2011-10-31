@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.pull;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -39,6 +41,7 @@ import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -207,7 +210,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
       display.enablePullButton(false);
-      
+
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
@@ -258,26 +261,38 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      GitClientService.getInstance().pull(vfs.getId(), projectId, refs, remoteName, new AsyncRequestCallback<String>()
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      try
       {
-
-         @Override
-         protected void onSuccess(String result)
+         GitClientService.getInstance().pull(vfs.getId(), project, refs, remoteName, new AsyncRequestCallback<String>()
          {
-            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
-            IDE.getInstance().closeView(display.asView().getId());
-            eventBus.fireEvent(new RefreshBrowserEvent());
-         }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.pullFail(remoteUrl);
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+            @Override
+            protected void onSuccess(String result)
+            {
+               eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+               IDE.getInstance().closeView(display.asView().getId());
+               eventBus.fireEvent(new RefreshBrowserEvent());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception, remoteUrl);
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e, remoteUrl);
+      }
+   }
+
+   private void handleError(Throwable t, String remoteUrl)
+   {
+      String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pullFail(remoteUrl);
+      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
 }

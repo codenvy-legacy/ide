@@ -31,6 +31,7 @@ import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -69,20 +70,21 @@ public abstract class GitClientService
     * Add changes to Git index (temporary storage).
     * 
     * @param vfsId virtual file system id
-    * @param projectid project's id (root of GIT repository)
+    * @param project project (root of GIT repository)
     * @param update if <code>true</code> then never stage new files, but stage modified new contents of tracked files
     * and remove files from the index if the corresponding files in the working tree have been removed 
     * @param filePattern pattern of the files to be added, default is "." (all files are added)
     * @param callback callback
+    * @throws RequestException 
     */
-   public abstract void add(String vfsId, String projectid, boolean update, String[] filePattern,
-      AsyncRequestCallback<String> callback);
+   public abstract void add(String vfsId, ProjectModel project, boolean update, String[] filePattern,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Fetch changes from remote repository to local one.
     * 
     * @param vfsId virtual file system id
-     * @param projectid project's id (root of GIT repository)
+     * @param project project root of GIT repository
     * @param remote remote repository's name
     * @param refspec  list of refspec to fetch.
     * <p>
@@ -95,9 +97,10 @@ public abstract class GitClientService
     * </ul>
     * @param removeDeletedRefs if <code>true</code> then delete removed refs from local repository
     * @param callback callback
+    * @throws RequestException
     */
-   public abstract void fetch(String vfsId, String projectid, String remote, String[] refspec, boolean removeDeletedRefs,
-      AsyncRequestCallback<String> callback);
+   public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec, boolean removeDeletedRefs,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Get the list of the branches.
@@ -241,9 +244,10 @@ public abstract class GitClientService
     * </ul>
     * @param remote remote remote repository's name
     * @param callback callback
+    * @throws RequestException
     */
-   public abstract void pull(String vfsId, String projectid, String refSpec, String remote,
-      AsyncRequestCallback<String> callback);
+   public abstract void pull(String vfsId, ProjectModel project, String refSpec, String remote,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Push changes from local repository to remote one.
@@ -256,21 +260,23 @@ public abstract class GitClientService
     * an ancestor of the local ref used to overwrite it. If <code>true</code> disables the check. 
     * This can cause the remote repository to lose commits
     * @param callback callback
+    * @throws RequestException 
     */
-   public abstract void push(String vfsId, String projectid, String[] refSpec, String remote, boolean force,
-      AsyncRequestCallback<String> callback);
+   public abstract void push(String vfsId, ProjectModel project, String[] refSpec, String remote, boolean force,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Clones one remote repository to local one.
     * 
     * @param vfsId virtual file system id
-    * @param projectid project's id (root of GIT repository)  
+    * @param project project (root of GIT repository)  
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
     * @param callback callback
+    * @throws RequestException 
     */
-   public abstract void cloneRepository(String vfsId, String projectid, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback);
+   public abstract void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository.
@@ -278,13 +284,14 @@ public abstract class GitClientService
     * by callback in <code>onSuccess(Revision result)</code>.
     * 
     * @param vfsId virtual file system id
-    * @param projectid project's id (root of GIT repository)
+    * @param project project (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
     * @param callback callback
+    * @throws RequestException 
     */
-   public abstract void commit(String vfsId, String projectid, String message, boolean all,
-      AsyncRequestCallback<Revision> callback);
+   public abstract void commit(String vfsId, ProjectModel project, String message, boolean all,
+      org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback<Revision> callback) throws RequestException;
 
    /**
     * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.

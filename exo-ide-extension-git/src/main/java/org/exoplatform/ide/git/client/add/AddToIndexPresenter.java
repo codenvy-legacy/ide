@@ -23,9 +23,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -35,6 +36,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -176,32 +178,46 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       if (selectedItems == null || selectedItems.size() <= 0)
          return;
       boolean update = display.getUpdateValue().getValue();
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
       String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
       pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
       String[] filePatterns =
          (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
 
-      GitClientService.getInstance().add(vfs.getId(), projectId, update, filePatterns, new AsyncRequestCallback<String>()
+      try
       {
-         @Override
-         protected void onSuccess(String result)
-         {
-            eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-            eventBus.fireEvent(new RefreshBrowserEvent());
-         }
+         GitClientService.getInstance().add(vfs.getId(), project, update, filePatterns,
+            new AsyncRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  eventBus.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                  eventBus.fireEvent(new RefreshBrowserEvent());
+               }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            String errorMessage =
-               (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                  : GitExtension.MESSAGES.addFailed();
-            eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-         }
-      });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         handleError(e);
+      }
 
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   private void handleError(Throwable t)
+   {
+      String errorMessage =
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
+      eventBus.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+
    }
 }
