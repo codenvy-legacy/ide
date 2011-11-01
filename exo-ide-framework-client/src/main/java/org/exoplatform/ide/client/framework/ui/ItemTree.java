@@ -207,10 +207,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
          node.addItem("");         
       }
       
-      String id = item.getPath();
-      id = Utils.md5(id);
-      node.getElement().setId(prefixId + id);
-
+      node.getElement().setId(prefixId + Utils.md5(item.getPath()));
       return node;
    }
 
