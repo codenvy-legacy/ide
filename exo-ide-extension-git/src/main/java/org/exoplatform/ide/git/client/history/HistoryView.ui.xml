@@ -44,7 +44,7 @@
                                     <f:TextInput ui:field="comitADate" width="100%"></f:TextInput>
                                  </td>
                                  <td width="40px" rowspan="2" align="center">
-                                    <img src="{resource.arrows.getURL}"></img>
+                                    <g:Image resource="{resource.arrows}"></g:Image>
                                  </td>
                                  <td class="{style.title}" ui:field="revisionBDate"></td>
                                  <td>

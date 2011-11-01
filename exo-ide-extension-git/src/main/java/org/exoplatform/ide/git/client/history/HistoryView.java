@@ -402,7 +402,7 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    @Override
    public void displayCompareVersion(Revision revisionA, Revision revisionB)
    {
-      revisionBDate.setAttribute("rowspan", "0");
+      revisionBDate.setAttribute("rowspan", "1");
       revisionBDate.setInnerText(GitExtension.MESSAGES.historyViewDateTitle());
       revisionBTitle.setInnerText(GitExtension.MESSAGES.historyViewRevisionTitle());
       comitBDate.setVisible(true);
