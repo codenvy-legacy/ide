@@ -98,21 +98,7 @@
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-         <exclusions>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>xstream</groupId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-test</artifactId>
-         <scope>test</scope>
-      </dependency>
+
    </dependencies>
 
    <build>
@@ -252,6 +238,21 @@
                      <artifactId>xstream</artifactId>
                   </exclusion>
                </exclusions>
+            </dependency>
+            <dependency>
+               <groupId>org.everrest</groupId>
+               <artifactId>everrest-integration-exo</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <artifactId>xstream</artifactId>
+                     <groupId>xstream</groupId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+            <dependency>
+               <groupId>org.everrest</groupId>
+               <artifactId>everrest-test</artifactId>
+               <scope>test</scope>
             </dependency>
 
             <!--DELETE -->
