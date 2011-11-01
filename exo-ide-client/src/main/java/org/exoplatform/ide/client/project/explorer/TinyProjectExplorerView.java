@@ -72,7 +72,7 @@ public class TinyProjectExplorerView extends ViewImpl implements
 
    public TinyProjectExplorerView()
    {
-      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
+      super(ID, "information", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 

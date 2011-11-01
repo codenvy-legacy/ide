@@ -37,11 +37,11 @@ import com.google.gwt.event.shared.HandlerManager;
 @RolesAllowed({"administrators", "developers"})
 public class NewProjectControl extends SimpleControl implements IDEControl
 {
-   public static final String ID = "File/New/Project";
+   public static final String ID = "Project/New/Empty Project...";
    
-    private static final String TITLE = "Create new project";
+    private static final String TITLE = "Empty Project...";
    
-   private static final String PROMPT = "Create new project";
+   private static final String PROMPT = "Create Empty Project...";
    
    private List<Item> selectedItems;
 
@@ -51,7 +51,7 @@ public class NewProjectControl extends SimpleControl implements IDEControl
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new CreateProjectEvent());
-      setImages(IDEImageBundle.INSTANCE.createFromTemplate(),IDEImageBundle.INSTANCE.createFromTemplateDisabled());
+      setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
       setGroup(0);
    }
      

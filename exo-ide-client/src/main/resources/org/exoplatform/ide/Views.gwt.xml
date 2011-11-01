@@ -195,4 +195,8 @@
       <when-type-is class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">
+      <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display" />
+   </replace-with>
+
 </module>

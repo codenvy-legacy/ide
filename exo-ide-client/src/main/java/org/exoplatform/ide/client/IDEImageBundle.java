@@ -300,11 +300,32 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource createProjectTemplateDisabled();
 
    
-   @Source("bundled-images/project-explorer.png")
+   @Source("bundled-images/projects/project-explorer.png")
    ImageResource projectExplorer();
    
-   @Source("bundled-images/project-explorer_Disabled.png")
+   @Source("bundled-images/projects/project-explorer-disabled.png")
    ImageResource projectExplorerDisabled();
+
+   
+   @Source("bundled-images/projects/open-project.png")
+   ImageResource openProject();
+   
+   @Source("bundled-images/projects/open-project-disabled.png")
+   ImageResource openProjectDisabled();
+   
+
+   @Source("bundled-images/projects/project-opened.png")
+   ImageResource projectOpened();
+   
+   @Source("bundled-images/projects/project-opened-disabled.png")
+   ImageResource projectOpenedDisabled();
+
+   
+   @Source("bundled-images/projects/new-project.png")
+   ImageResource newProject();
+   
+   @Source("bundled-images/projects/new-project-disabled.png")
+   ImageResource newProjectDisabled();
 
    
    @Source("bundled-images/navigator.png")
@@ -312,6 +333,8 @@ public interface IDEImageBundle extends ClientBundle
    
    @Source("bundled-images/navigator-disabled.png")
    ImageResource navigatorDisabled();
+   
+   
    
    /*
     * HELP

@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.project.control.NewProjectControl;
 import org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter;
 import org.exoplatform.ide.client.project.create.CreateProjectTemplatePresenter;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
@@ -79,6 +80,9 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       
       //new ProjectExplorerPresenter();
       new TinyProjectExplorerPresenter();
+      
+      new ShowProjectsPresenter();
+      
    }
    
    /**

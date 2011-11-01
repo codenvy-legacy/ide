@@ -40,9 +40,10 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 @RolesAllowed({"administrators", "developers"})
 public class CreateProjectFromTemplateControl extends NewFileCommand implements ItemsSelectedHandler
 {
+   
    private boolean folderItemSelected = true;
 
-   public static final String ID = "File/New/Create Project From Template...";
+   public static final String ID = "Project/New/From Template...";
    
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
    

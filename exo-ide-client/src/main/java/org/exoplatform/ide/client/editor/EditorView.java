@@ -339,7 +339,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
                + Images.Editor.READONLY_FILE + "\" />" : "";
 
       mainHint = (isReadOnly) ? FILE_IS_READ_ONLY : mainHint;
-      String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "</span>";
+      String title = "<span title=\"" + mainHint + "\">" + readonlyImage + "&nbsp;" + fileName + "&nbsp;</span>";
 
       return title;
    }

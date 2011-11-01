@@ -193,7 +193,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
 
    public TinyProjectExplorerPresenter()
    {
-      IDE.getInstance().addControl(new ShowProjectExplorerControl(), Docking.TOOLBAR, false);
+      //IDE.getInstance().addControl(new ShowProjectExplorerControl(), Docking.TOOLBAR, false);
+      IDE.getInstance().addControl(new ShowProjectExplorerControl());
 
       IDE.EVENT_BUS.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
@@ -837,6 +838,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Swit
       display.asView().setTitle("&nbsp;" + openedProject.getName() + "&nbsp;");
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
+      
+      IDE.EVENT_BUS.fireEvent(new ProjectOpenedEvent(event.getProject()));
       
       navigatorSelectedItems.clear();
       navigatorSelectedItems.add(openedProject);

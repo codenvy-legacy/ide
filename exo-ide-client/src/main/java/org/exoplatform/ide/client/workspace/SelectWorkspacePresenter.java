@@ -77,11 +77,6 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
    {
 
       /*
-       * Id of Select Workspace View
-       */
-      String ID = "ideSelectWorkspaceView";
-
-      /*
        * Returns Workspace list grid
        */
       ListGridItem<VirtualFileSystemInfo> getWorkspaceListGrid();
@@ -268,7 +263,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       {
          public void onClick(ClickEvent arg0)
          {
-            IDE.getInstance().closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -382,7 +377,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
                }
                else
                {
-                  IDE.getInstance().closeView(Display.ID);
+                  IDE.getInstance().closeView(display.asView().getId());
                }
             }
 
@@ -475,7 +470,7 @@ public class SelectWorkspacePresenter implements EditorFileOpenedHandler, Editor
       if (display != null)
       {
          workingWorkspace = selectedWorkspace.getId();
-         IDE.getInstance().closeView(Display.ID);
+         IDE.getInstance().closeView(display.asView().getId());
          eventBus.fireEvent(new SwitchVFSEvent(selectedWorkspace.getId()));
       }
    }
