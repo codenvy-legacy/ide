@@ -72,7 +72,10 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
          JSONValue val = JSONParser.parseLenient(response.getText());
          JSONObject object = val.isObject();
          ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
-         String mimeType = object.get(MIME_TYPE).isString().stringValue();
+         String mimeType = null;
+         if(object.get(MIME_TYPE).isString() != null)
+          mimeType = object.get(MIME_TYPE).isString().stringValue();
+
 
          if (type == ItemType.FOLDER)
          {
