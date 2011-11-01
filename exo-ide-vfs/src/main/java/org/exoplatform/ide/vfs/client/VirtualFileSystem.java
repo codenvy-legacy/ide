@@ -155,7 +155,8 @@ public class VirtualFileSystem
       //callback.setEventBus(eventBus);
       //callback.setPayload(unmarshaller);
       String param = "propertyFilter=" + PropertyFilter.ALL;
-      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param).send(
+         callback);
    }
 
    /**
@@ -282,7 +283,7 @@ public class VirtualFileSystem
     * @param callback
     * @throws RequestException
     */
-   public void move(Item source, String destination, String lockToken, AsyncRequestCallback<StringBuilder> callback)
+   public void move(Item source, String destination, String lockToken, AsyncRequestCallback<ItemWrapper> callback)
       throws RequestException
    {
       //TODO check with locks
@@ -295,11 +296,34 @@ public class VirtualFileSystem
       AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
+   /**
+    * @param item item to rename
+    * @param mediaType media type to change (may be <code>null</code> in case of just renaming operation)
+    * @param newname new name of the item (may be <code>null</code> in case of just changing media type)
+    * @param lockToken lock token
+    * @param callback  callback user has to implement to handle response
+    * @throws RequestException
+    */
    public void rename(Item item, String mediaType, String newname, String lockToken,
-      AsyncRequestCallback<StringBuilder> callback) throws Exception
+      AsyncRequestCallback<ItemWrapper> callback) throws RequestException
    {
+      String url = item.getLinkByRelation(Link.REL_RENAME).getHref();
+      url = URL.decode(url);
+      url =
+         (mediaType != null && !mediaType.isEmpty()) ? url.replace("[mediaType]", mediaType) : url.replace(
+            "mediaType=[mediaType]", "");
+      url =
+         (newname != null && !newname.isEmpty()) ? url.replace("[newname]", newname) : url.replace("newname=[newname]",
+            "");
 
-      throw new Exception("Method \"rename\" is not implemented");
+      if (ItemType.FILE == item.getItemType() && ((FileModel)item).isLocked())
+      {
+         url = url.replace("[lockToken]", ((FileModel)item).getLock().getLockToken());
+      }
+      
+      url = url.replace("?&", "?");
+      url = url.replaceAll("&&", "&");
+      AsyncRequest.build(RequestBuilder.POST, url).send(callback);
    }
 
    /**
@@ -391,4 +415,20 @@ public class VirtualFileSystem
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_FORM_URLENCODED).data(data).send(callback);
    }
 
+   /**
+    * Update item's properties.
+    * 
+    * @param item item to update with properties
+    * @param lockToken lock token
+    * @param callback callback user has to implement to handle response
+    * @throws RequestException
+    */
+   public void updateItem(Item item, String lockToken, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = item.getLinkByRelation(Link.REL_SELF).getHref();
+      url += (lockToken != null) ? "?lockToken=" + lockToken : "";
+      AsyncRequest.build(RequestBuilder.POST, url)
+         .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(item.getProperties()).toString())
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
 }

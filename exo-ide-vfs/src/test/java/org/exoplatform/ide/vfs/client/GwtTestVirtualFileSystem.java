@@ -31,6 +31,7 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -383,10 +384,10 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
       FileModel file = new FileModel();
       file.getLinks().put(Link.REL_MOVE,
          new Link("/rest/vfs/mock/move/" + Random.nextInt(), Link.REL_MOVE, "*/*"));
-      VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<StringBuilder>()
+      VirtualFileSystem.getInstance().move(file, "destination", "lockToken", new AsyncRequestCallback<ItemWrapper>()
       {
          @Override
-         protected void onSuccess(StringBuilder result)
+         protected void onSuccess(ItemWrapper result)
          {
             finishTest();
          }

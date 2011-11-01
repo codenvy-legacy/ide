@@ -43,10 +43,11 @@ import org.exoplatform.ide.client.navigation.event.PasteItemsHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -265,14 +266,14 @@ public class PasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedH
       try
       {
          VirtualFileSystem.getInstance().move(item, folderToPaste.getId(), lockTokens.get(item.getId()),
-            new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
             {
 
                @Override
-               protected void onSuccess(StringBuilder result)
+               protected void onSuccess(ItemWrapper result)
                {
                   //TODO
-                  moveComplete(result.toString(), item);
+                  moveComplete(result.getItem().getId(), item);
                   //                  eventBus.fireEvent(new MoveCompleteEvent(result.getItem(), result.getOldHref()));
                }
 

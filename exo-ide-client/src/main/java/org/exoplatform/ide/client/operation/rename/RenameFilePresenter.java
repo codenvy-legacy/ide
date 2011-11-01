@@ -18,10 +18,18 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback;
@@ -43,23 +51,15 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.LocationUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for renaming file and changing mime-type of file.
@@ -234,9 +234,11 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    protected void rename()
    {
       FileModel file = (FileModel)selectedItems.get(0);
-      final String newName = display.getItemNameField().getValue();
+      String newName = display.getItemNameField().getValue();
+      newName = (file.getName().equals(newName)) ? null : newName;
 
       String newMimeType = display.getMimeType().getValue();
+      newMimeType = (file.getMimeType().equals(newMimeType)) ? null : newMimeType;
       if (newMimeType != null && newMimeType.length() > 0)
       {
          file.setMimeType(newMimeType);
@@ -293,13 +295,13 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       try
       {
          VirtualFileSystem.getInstance().rename(file, newMimeType, newName, lockTokens.get(file.getId()),
-            new AsyncRequestCallback<StringBuilder>(new LocationUnmarshaller(new StringBuilder()))
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
             {
 
                @Override
-               protected void onSuccess(StringBuilder result)
+               protected void onSuccess(ItemWrapper itemWrapper)
                {
-                  itemMoved(file, result.toString());
+                  itemMoved(file, itemWrapper.getItem().getPath());
                }
 
                @Override
@@ -334,16 +336,16 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    {
       try
       {
-         VirtualFileSystem.getInstance().getItemByLocation(newFileLocation,
-            new AsyncRequestCallback<FileModel>(new FileUnmarshaller(new FileModel()))
+         VirtualFileSystem.getInstance().getItemByPath(newFileLocation,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
             {
 
                @Override
-               protected void onSuccess(FileModel result)
+               protected void onSuccess(ItemWrapper result)
                {
-                  renamedFile = (FileModel)result;
-                  result.setParent(item.getParent());
-                  FileModel file = (FileModel)result;
+                  renamedFile = (FileModel)result.getItem();
+                  FileModel file = (FileModel)result.getItem();
+                  file.setParent(item.getParent());
                   if (openedFiles.containsKey(item.getId()))
                   {
                      file.setContent(openedFiles.get(item.getId()).getContent());

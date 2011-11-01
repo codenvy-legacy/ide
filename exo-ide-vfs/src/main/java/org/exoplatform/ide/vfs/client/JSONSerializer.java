@@ -90,20 +90,23 @@ public abstract class JSONSerializer<O>
          if (typename.equals(BooleanProperty.class.getName()))
          {
             JSONObject target = new JSONObject();
-            target.put(source.getName(), BOLEAN_SERIALIZER.fromCollection(source.getValue()));
+            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
+            target.put("value", BOLEAN_SERIALIZER.fromCollection(source.getValue()));
             return target;
          }
          if (typename.equals(StringProperty.class.getName()))
          {
             JSONObject target = new JSONObject();
-            target.put(source.getName(), STRING_SERIALIZER.fromCollection(source.getValue()));
+            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
+            target.put("value", STRING_SERIALIZER.fromCollection(source.getValue()));
             return target;
 
          }
          if (typename.equals(NumberProperty.class.getName()))
          {
             JSONObject target = new JSONObject();
-            target.put(source.getName(), NUMBER_SERIALIZER.fromCollection(source.getValue()));
+            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
+            target.put("value", NUMBER_SERIALIZER.fromCollection(source.getValue()));
             return target;
          }
          throw new JSONException("Not found JSONSerializer for type " + typename);
