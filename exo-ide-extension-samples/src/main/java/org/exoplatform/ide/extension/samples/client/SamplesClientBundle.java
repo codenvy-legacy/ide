@@ -88,6 +88,9 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/images/project.png")
    ImageResource welcomeProject();
    
+   @Source("org/exoplatform/ide/extension/samples/images/convertToProject.png")
+   ImageResource convertToProject();
+   
    public interface Style extends CssResource
    {
       String table();

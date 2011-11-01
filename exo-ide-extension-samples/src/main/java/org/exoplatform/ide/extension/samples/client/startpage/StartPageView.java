@@ -62,6 +62,12 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    Image samplesImage;
    
    @UiField
+   Button convertLink;
+   
+   @UiField
+   Image convertImage;
+   
+   @UiField
    Button projectLink;
    
    FlowPanel flowPanel;
@@ -88,6 +94,15 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    public HasClickHandlers getProjectLink()
    {
       return projectLink;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getConvertLink()
+    */
+   @Override
+   public HasClickHandlers getConvertLink()
+   {
+      return convertLink;
    }
 
 }

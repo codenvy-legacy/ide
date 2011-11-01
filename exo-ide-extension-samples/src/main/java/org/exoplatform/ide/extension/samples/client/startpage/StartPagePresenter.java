@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.HandlerManager;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.event.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -47,6 +48,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       HasClickHandlers getSamplesLink();
       
       HasClickHandlers getProjectLink();
+      
+      HasClickHandlers getConvertLink();
    }
    
    private HandlerManager eventBus;
@@ -78,6 +81,16 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          public void onClick(ClickEvent event)
          {
             eventBus.fireEvent(new ShowWizardEvent());
+         }
+      });
+      
+      display.getConvertLink().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            eventBus.fireEvent(new ConvertToProjectEvent());
          }
       });
    }

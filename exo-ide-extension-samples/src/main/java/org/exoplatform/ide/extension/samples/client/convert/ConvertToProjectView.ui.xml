@@ -1,0 +1,90 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:t="urn:import:org.exoplatform.ide.client.framework.ui">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
+
+   <ui:style>
+      .label {
+      	margin-right: 5px;
+      	cursor: default;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      	float: left;
+      }
+      
+      .buttons {
+      	display: block;
+      	margin-left: 10px;
+      	margin-right: 10px;
+      }
+      
+      .floatRight {
+      	float: right;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
+      
+      .space {
+      	margin: 10px;
+      }
+   </ui:style>
+
+   <f:Border borderColor="transparent">
+      <f:layer>
+         <g:FlowPanel stylePrimaryName="{resource.css.topBox}">
+            <g:Label ui:field="stepTitle" styleName="{resource.css.labelTitle}"></g:Label>
+            <g:Label ui:field="stepDescription" styleName="{resource.css.labelDescription}"></g:Label>
+         </g:FlowPanel>
+      </f:layer>
+
+      <f:layer top="65" bottom="50">
+         <g:FlowPanel styleName="{style.space}">
+            <f:Border ui:field="step1Layout" height="99%">
+               <f:layer>
+                  <g:ScrollPanel>
+                     <t:ItemTree ui:field="browserTree" prefixId="navigation-" styleName="{resource.css.itemsTree}"></t:ItemTree>
+                  </g:ScrollPanel>
+               </f:layer>
+            </f:Border>
+            <g:FlowPanel ui:field="step2Layout" height="60px">
+               <g:DockLayoutPanel width="100%" height="50%" unit="PX">
+                  <g:west size="120">
+                     <f:Label text="Project name:" styleName="{style.label}"></f:Label>
+                  </g:west>
+                  <g:center>
+                     <f:TextInput ui:field="projectName" width="100%" height="20px"></f:TextInput>
+                  </g:center>
+               </g:DockLayoutPanel>
+
+               <g:DockLayoutPanel width="100%" height="50%" unit="PX">
+                  <g:west size="120">
+                     <f:Label text="Project type:" styleName="{style.label}"></f:Label>
+                  </g:west>
+                  <g:center>
+                     <f:SelectItem ui:field="projectType" width="99%" visibleItemCount="1" height="20px"></f:SelectItem>
+                  </g:center>
+               </g:DockLayoutPanel>
+            </g:FlowPanel>
+         </g:FlowPanel>
+      </f:layer>
+
+      <f:layer height="22px" bottom="20">
+         <g:FlowPanel styleName="{style.buttons}">
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancel}"
+               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <f:ImageButton ui:field="convertButton" width="90" height="22" text="{locale.convertButton}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.nextButton}" imageResource="{resource.next}"
+               disabledImageResource="{resource.nextDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatRight}"></g:FlowPanel>
+            <f:ImageButton ui:field="backButton" width="90" height="22" text="{locale.backButton}" imageResource="{resource.back}"
+               disabledImageResource="{resource.backDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
+</ui:UiBinder> 

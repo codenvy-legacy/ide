@@ -72,6 +72,13 @@
                            <g:Label text="{locale.projectText}"></g:Label>
                         </g:VerticalPanel>
                      </g:HorizontalPanel>
+                      <g:HorizontalPanel verticalAlignment="middle" height="auto">
+                        <g:Image ui:field="convertImage" resource="{resource.convertToProject}"></g:Image>
+                        <g:VerticalPanel spacing="3" horizontalAlignment="left" width="100%">
+                           <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
+                           <g:Label text="{locale.convertText}"></g:Label>
+                        </g:VerticalPanel>
+                     </g:HorizontalPanel>
                   </g:HorizontalPanel>
 
                </g:FlowPanel>

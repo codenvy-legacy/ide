@@ -56,6 +56,9 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("button.login")
    String loginButton();
    
+   @Key("button.convert")
+   String convertButton();
+   
    /*
     * WelcomeView
     */
@@ -82,6 +85,12 @@ public interface SamplesLocalizationConstant extends Messages
    
    @Key("welcome.project.text")
    String projectText();
+   
+   @Key("welcome.convert.title")
+   String convertTitle();
+   
+   @Key("welcome.convert.text")
+   String convertText();
    
    /*
     * SelectLocationView
@@ -227,6 +236,30 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("wizard.location.text")
    String wizardLocationText();
    
+   /*
+    * Convert to project view
+    */
+   @Key("convert.location.title")
+   String convertLocationTitle();
+   
+   @Key("convert.location.text")
+   String convertLocationText();
+   
+   @Key("convert.project.name")
+   String convertProjectName();
+   
+   @Key("convert.project.type")
+   String convertProjectType();
+   
+   @Key("convert.properties.title")
+   String convertPropertiesTitle();
+   
+   @Key("convert.properties.text")
+   String convertPropertiesText();
+   
+   @Key("convert.name.exists")
+   String convertNameExists(String name);
+
    /*
     * CreateApplicationPresenter
     */

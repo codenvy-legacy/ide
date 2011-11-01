@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter;
 import org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter;
@@ -75,6 +76,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new StartPagePresenter(eventBus);
       new SelectLocationPresenter(eventBus);
       new ShowSamplesPresenter(eventBus);
+      new ConvertToProjectPresenter();
       
       WizardSourceStepPresenter wizardSourceStep = new WizardSourceStepPresenter(eventBus);
       WizardLocationStepPresenter wizardLocationStep = new WizardLocationStepPresenter(eventBus);

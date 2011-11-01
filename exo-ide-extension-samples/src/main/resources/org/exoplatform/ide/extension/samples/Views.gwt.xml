@@ -23,37 +23,41 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.load.ShowSamplesView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.load.ShowSamplesPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.location.SelectLocationView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.location.SelectLocationPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.samples.client.paas.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display" />
    </replace-with>
-   
+
+   <replace-with class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter.Display" />
+   </replace-with>
+
 </module>
