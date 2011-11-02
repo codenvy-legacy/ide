@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.groovy.client.GroovyExtension;
@@ -65,7 +66,7 @@ public class ChooseSourcePathView extends ViewImpl implements ChooseSourcePathPr
     * Tree for displaying items.
     */
    @UiField
-   ItemTreeGrid<Item> pathTreeGrid;
+   ItemTree pathTreeGrid;
    
    
    public static final int WIDTH = 450;

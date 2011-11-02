@@ -480,7 +480,7 @@ public class ConfigureBuildPathPresenter implements ProjectCreatedHandler, AddSo
     */
    private void doAddPath()
    {
-      new ChooseSourcePathPresenter(eventBus, (FolderModel)vfsInfo.getRoot());
+      new ChooseSourcePathPresenter(eventBus, vfsInfo);
    }
 
    /**

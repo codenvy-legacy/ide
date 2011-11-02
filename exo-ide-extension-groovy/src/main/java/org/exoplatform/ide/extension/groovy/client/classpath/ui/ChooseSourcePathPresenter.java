@@ -35,14 +35,16 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.extension.groovy.client.classpath.EnumSourceType;
 import org.exoplatform.ide.extension.groovy.client.classpath.GroovyClassPathEntry;
-import org.exoplatform.ide.extension.groovy.client.classpath.Workspace;
 import org.exoplatform.ide.extension.groovy.client.classpath.ui.event.AddSourceToBuildPathEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,17 +106,16 @@ public class ChooseSourcePathPresenter
     */
    private HandlerManager eventBus;
 
-   
-   private FolderModel root;
+   private VirtualFileSystemInfo vfs;
 
    /**
     * @param eventBus handler manager
     * @param restContext REST context
     */
-   public ChooseSourcePathPresenter(HandlerManager eventBus, FolderModel root)
+   public ChooseSourcePathPresenter(HandlerManager eventBus, VirtualFileSystemInfo vfs)
    {
       this.eventBus = eventBus;
-      this.root = root;
+      this.vfs = vfs;
 
       if (display == null)
       {
@@ -125,8 +126,7 @@ public class ChooseSourcePathPresenter
       IDE.getInstance().openView(display.asView());
 
       display.enableOkButtonState(false);
-      display.getItemsTree().setValue(root);
-//      getWorkspaces();
+      display.getItemsTree().setValue(vfs.getRoot());
    }
 
    /**
@@ -139,9 +139,9 @@ public class ChooseSourcePathPresenter
 
          public void onOpen(OpenEvent<Item> event)
          {
-            if (event.getTarget() instanceof FolderModel)
+            if (event.getTarget() instanceof Folder)
             {
-               getFolderContent((FolderModel)event.getTarget());
+               getFolderContent((Folder)event.getTarget());
             }
          }
       });
@@ -192,7 +192,7 @@ public class ChooseSourcePathPresenter
       //Check workspace is among selected:
       for (Item item : selectedItems)
       {
-         if (item instanceof Workspace)
+         if (item.getId().equals(vfs.getRoot().getId()))
          {
             display.enableOkButtonState(false);
             return;
@@ -206,7 +206,7 @@ public class ChooseSourcePathPresenter
     * 
     * @param folder
     */
-   private void getFolderContent(final FolderModel folder)
+   private void getFolderContent(final Folder folder)
    {
       try
       {
@@ -219,17 +219,32 @@ public class ChooseSourcePathPresenter
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  folder.getChildren().setItems(result);
+                  if (folder instanceof FolderModel)
+                  {
+                     ((FolderModel)folder).getChildren().getItems().clear();
+                     ((FolderModel)folder).getChildren().getItems().addAll(result);
+                  }
+                  else if (folder instanceof ProjectModel)
+                  {
+                     ((ProjectModel)folder).getChildren().getItems().clear();
+                     ((ProjectModel)folder).getChildren().getItems().addAll(result);
+                  }
                   for (Item i : result)
                   {
-                     if (i.getItemType() == ItemType.FILE)
+                     if (i instanceof ItemContext)
                      {
-                        ((FileModel)i).setParent(folder);
+                        ((ItemContext)i).setParent(new FolderModel(folder));
                      }
-                     else
+
+                     if (folder instanceof ProjectModel)
                      {
-                        ((FolderModel)i).setParent(folder);
+                        ((ItemContext)i).setProject((ProjectModel)folder);
                      }
+                     else if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
+                     {
+                        ((ItemContext)i).setProject(((ItemContext)folder).getProject());
+                     }
+
                   }
                   display.getItemsTree().setValue(folder);
                }
@@ -251,29 +266,6 @@ public class ChooseSourcePathPresenter
    }
 
    /**
-    * Get the list of available workspaces. 
-    */
-   private void getWorkspaces()
-   {
-//      DiscoveryService.getInstance().getEntryPoints(new DiscoveryCallback()
-//      {
-//         @Override
-//         protected void onSuccess(List<EntryPoint> result)
-//         {
-//            FolderModel root = new FolderModel();
-//            root.getChildren().setItems(new ArrayList<Item>());
-//            for (EntryPoint entryPoint : result)
-//            {
-//               Workspace workspace = new Workspace(entryPoint.getHref());
-////               workspace.setIcon(Images.ClassPath.WORKSPACE);
-//               root.getChildren().getItems().add(workspace);
-//            }
-//            display.getItemsTree().setValue(root);
-//         }
-//      });
-   }
-
-   /**
     * Add chosen source to class path.
     */
    private void addSourceToBuildPath()
@@ -281,7 +273,7 @@ public class ChooseSourcePathPresenter
       List<GroovyClassPathEntry> classPathEntries = new ArrayList<GroovyClassPathEntry>();
       for (Item item : display.getSelectedItems())
       {
-         String path = item.getPath();//GroovyClassPathUtil.formPathFromHref(item.getHref(), restContext);
+         String path = vfs.getId() + "#" + item.getPath();
          String kind = (item instanceof FileModel) ? EnumSourceType.FILE.getValue() : EnumSourceType.DIR.getValue();
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(kind, path);
          classPathEntries.add(groovyClassPathEntry);
