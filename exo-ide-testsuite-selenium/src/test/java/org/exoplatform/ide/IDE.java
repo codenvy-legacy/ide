@@ -54,6 +54,8 @@ import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.Workspace;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
 
 /**
  * 
@@ -68,6 +70,8 @@ public class IDE
 
    private Selenium selenium;
 
+   private WebDriver driver;
+
    private static IDE instance;
 
    public static IDE getInstance()
@@ -75,14 +79,14 @@ public class IDE
       return instance;
    }
 
-   public IDE(Selenium selenium, String workspaceURL)
+   public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
-      System.out.println("\r\n\r\n\r\n\r\n" +
-      		"Initializing IDE ( Selenium )\r\n" +
-      		"Workspace URL > " + workspaceURL + "\r\n\r\n\r\n");
-      
+      System.out.println("\r\n\r\n\r\n\r\n" + "Initializing IDE ( Selenium )\r\n" + "Workspace URL > " + workspaceURL
+         + "\r\n\r\n\r\n");
+
       this.selenium = selenium;
       this.workspaceURL = workspaceURL;
+      this.driver = driver;
       instance = this;
    }
 
@@ -91,74 +95,79 @@ public class IDE
       return selenium;
    }
 
+   public WebDriver driver()
+   {
+      return driver;
+   }
+
    public Menu MENU = new Menu();
-   
+
    public Toolbar TOOLBAR = new Toolbar();
 
    public Editor EDITOR = new Editor();
-   
+
    public Outline OUTLINE = new Outline();
-   
+
    public Navigation NAVIGATION = new Navigation();
-   
+
    public Perspective PERSPECTIVE = new Perspective();
-   
+
    public CodeAssistant CODEASSISTANT = new CodeAssistant();
-   
+
    public Preview PREVIEW = new Preview();
-   
+
    public SaveAs SAVE_AS = new SaveAs();
-   
+
    public WarningDialog WARNING_DIALOG = new WarningDialog();
 
    public ErrorDialog ERROR_DIALOG = new ErrorDialog();
-   
+
    public AskDialog ASK_DIALOG = new AskDialog();
-   
+
    public AskForValueDialog ASK_FOR_VALUE_DIALOG = new AskForValueDialog();
-   
+
    public InformationDialog INFORMATION_DIALOG = new InformationDialog();
-   
+
    public Statusbar STATUSBAR = new Statusbar();
-   
+
    public SelectWorkspace SELECT_WORKSPACE = new SelectWorkspace();
-   
+
    public Workspace WORKSPACE = new Workspace();
-   
+
    public GoToLine GOTOLINE = new GoToLine();
-   
+
    public Upload UPLOAD = new Upload();
-   
+
    public FindReplace FINDREPLACE = new FindReplace();
-   
+
    public Templates TEMPLATES = new Templates();
-   
+
    public SaveAsTemplate SAVE_AS_TEMPLATE = new SaveAsTemplate();
-   
+
    public RESTService REST_SERVICE = new RESTService();
-   
+
    public Search SEARCH = new Search();
-   
+
    public Output OUTPUT = new Output();
-   
+
    public Properties PROPERTIES = new Properties();
-   
+
    public ClasspathProject CLASSPATH_PROJECT = new ClasspathProject();
-   
-   public Versions VERSIONS = new Versions(); 
-   
+
+   public Versions VERSIONS = new Versions();
+
    public CreateProjectTemplate PROJECT_TEMPLATE = new CreateProjectTemplate();
-   
+
    public Folder FOLDER = new Folder();
-   
+
    public RenameDialog RENAME_DIALOG = new RenameDialog();
-   
+
    public org.exoplatform.ide.git.core.GIT GIT = new org.exoplatform.ide.git.core.GIT(selenium);
-   
+
    public Heroku HEROKU = new Heroku();
-   
+
    public OpenShift OPENSHIFT = new OpenShift();
-   
+
    public Project PROJECT = new Project();
 
    /**
@@ -171,14 +180,16 @@ public class IDE
     */
    public void selectMainFrame()
    {
-      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
-      {
-         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-      }
-      else
-      {
-         selenium.selectFrame("relative=top");
-      }
+      WebDriver driver = ((WebDriverBackedSelenium)selenium).getWrappedDriver();
+      driver.switchTo().defaultContent();
+//      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
+//      {
+//         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
+//      }
+//      else
+//      {
+//         selenium.selectFrame("relative=top");
+//      }
    }
 
    private String workspaceURL;

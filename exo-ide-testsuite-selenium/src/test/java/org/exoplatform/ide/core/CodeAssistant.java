@@ -24,6 +24,11 @@ import static org.junit.Assert.assertTrue;
 import java.awt.event.KeyEvent;
 
 import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -32,7 +37,7 @@ import org.exoplatform.ide.TestConstants;
  */
 public class CodeAssistant extends AbstractTestModule
 {
-   
+
    public interface Locators
    {
       /**
@@ -56,13 +61,13 @@ public class CodeAssistant extends AbstractTestModule
     * @param text - text to type
     * @throws Exception
     */
-   public  void typeToInput(String text) throws Exception
+   public void typeToInput(String text) throws Exception
    {
       selenium().typeKeys(CodeAssistant.Locators.INPUT, text);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
-   public  void typeToInput(String text, boolean clearInput) throws Exception
+   public void typeToInput(String text, boolean clearInput) throws Exception
    {
       if (clearInput)
          clearInput();
@@ -78,7 +83,7 @@ public class CodeAssistant extends AbstractTestModule
    {
       assertTrue(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
    }
-   
+
    public void checkElementNotPresent(String elementTitle)
    {
       assertFalse(selenium().isElementPresent(Locators.PANEL + "//div[text()='" + elementTitle + "']"));
@@ -89,7 +94,7 @@ public class CodeAssistant extends AbstractTestModule
     * @param row Number of rows to move down
     * @throws InterruptedException
     */
-   public  void moveCursorDown(int row) throws InterruptedException
+   public void moveCursorDown(int row) throws InterruptedException
    {
       Thread.sleep(TestConstants.SLEEP_SHORT);
       for (int i = 0; i < row; i++)
@@ -114,10 +119,10 @@ public class CodeAssistant extends AbstractTestModule
    public void closeForm()
    {
       selenium().keyPressNative("" + KeyEvent.VK_ESCAPE);
-      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
-         + "\"); value == null", "5000");
+      selenium().waitForCondition(
+         "var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID + "\"); value == null", "5000");
    }
-   
+
    /**
     *Press Enter key to close form and paste selected item in to the editor 
     */
@@ -132,13 +137,18 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void openForm() throws Exception
    {
-      IDE().EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
-      selenium().waitForCondition("var value = selenium.browserbot.findElementOrNull(\"" + Locators.PANEL_ID
-         + "\"); value != null", "10000");
-      assertTrue(selenium().isElementPresent(Locators.PANEL_ID));
-      selenium().focus(Locators.INPUT);
+      IDE().EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
+      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            return d.findElement(By.id(Locators.PANEL_ID)) != null;
+         }
+      });
    }
-   
+
    public void checkDocFormPresent()
    {
       assertTrue(selenium().isElementPresent(Locators.JAVADOC_DIV));

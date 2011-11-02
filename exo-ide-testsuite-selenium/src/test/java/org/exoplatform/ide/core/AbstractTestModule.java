@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.WebDriver;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -41,6 +42,11 @@ public abstract class AbstractTestModule
       return IDE.getInstance().getSelenium();
    }
 
+   protected WebDriver driver()
+   {
+      return IDE.getInstance().driver();
+   }
+
    protected IDE IDE()
    {
       return IDE.getInstance();
@@ -50,7 +56,7 @@ public abstract class AbstractTestModule
    {
       waitForElementPresent(locator, TestConstants.TIMEOUT);
    }
-   
+
    /**
     * Wait while element present.
     * 
@@ -166,7 +172,7 @@ public abstract class AbstractTestModule
    {
       waitForElementNotPresent(locator, TestConstants.TIMEOUT);
    }
-   
+
    /**
     * Wait while element not present.
     * 

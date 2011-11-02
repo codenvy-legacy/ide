@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 
 import com.thoughtworks.selenium.Selenium;
 
-import org.exoplatform.ide.utils.TextUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -138,7 +137,7 @@ public abstract class BaseTest
    public static String IDE_WORKSPACE_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/"
       + WS_NAME + "/";
 
-   private static WebDriver driver;
+   protected static WebDriver driver;
 
    public static IDE IDE;
 
@@ -165,8 +164,7 @@ public abstract class BaseTest
       
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
       
-      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/");
-      new TextUtil(selenium());
+      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
 
       try
       {
@@ -638,17 +636,18 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-      try
-      {
-         if (System.getProperty("os.name").equals("Linux"))
-         {
-            Runtime.getRuntime().exec("killall firefox");
-         }
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      driver.close();
+//      try
+//      {
+//         if (System.getProperty("os.name").equals("Linux"))
+//         {
+//            Runtime.getRuntime().exec("killall firefox");
+//         }
+//      }
+//      catch (IOException e)
+//      {
+//         e.printStackTrace();
+//      }
    }
 
    //   public enum IdeAddress {

@@ -22,12 +22,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.TestConstants;
+import org.openqa.selenium.By;
+
 import java.awt.Robot;
 import java.awt.event.InputEvent;
-
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.core.Outline.Locators;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 
 /**
  * 
@@ -58,9 +57,9 @@ public class Editor extends AbstractTestModule
       String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
 
       String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
-      
+
       String DESIGN_BUTTON_LOCATOR = "//div[@id='DesignButtonID']";
-      
+
       String SOURCE_BUTTON_LOCATOR = "//div[@id='SourceButtonID']/span";
    }
 
@@ -311,8 +310,9 @@ public class Editor extends AbstractTestModule
       }
       else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
       {
-         if (newFileName != null && !newFileName.isEmpty()) {
-            IDE().ASK_FOR_VALUE_DIALOG.setValue(newFileName);            
+         if (newFileName != null && !newFileName.isEmpty())
+         {
+            IDE().ASK_FOR_VALUE_DIALOG.setValue(newFileName);
          }
          IDE().ASK_FOR_VALUE_DIALOG.clickOkButton();
       }
@@ -524,7 +524,7 @@ public class Editor extends AbstractTestModule
    public void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.EDITOR_BODY_LOCATOR, text);
+//      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.EDITOR_BODY_LOCATOR, text);
       IDE().selectMainFrame();
    }
 
@@ -555,27 +555,32 @@ public class Editor extends AbstractTestModule
     * @param tabIndex begins from 0
     */
    public void selectIFrameWithEditor(int tabIndex) throws Exception
-   {     
-      String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
+   {
       
-      int size = selenium().getXpathCount(iFrameWithEditorLocator).intValue();
+      
+      String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
+
+      
+      
+      int size = driver().findElements(By.xpath(iFrameWithEditorLocator)).size();
       if (size <= 0)
          return;
 
       if (size == 1)
       {
-         selenium().selectFrame(iFrameWithEditorLocator);
+         driver().switchTo().frame(driver().findElement(By.xpath(iFrameWithEditorLocator)));
+//         selenium().selectFrame(iFrameWithEditorLocator);
          Thread.sleep(TestConstants.ANIMATION_PERIOD);
-         return;         
+         return;
       }
       else
       {
          for (int i = 1; i <= size; i++)
          {
-            if (selenium().isVisible(
-               "xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]"))
+            if (driver().findElement(By.xpath(iFrameWithEditorLocator + "[position()=" + i + "]")).isDisplayed())
             {
-               selenium().selectFrame("xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]");
+//               selenium().selectFrame("xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]");
+               driver().switchTo().frame(driver().findElement(By.xpath(iFrameWithEditorLocator + "[position()=" + i + "]")));
                Thread.sleep(TestConstants.ANIMATION_PERIOD);
                return;
             }
@@ -639,8 +644,8 @@ public class Editor extends AbstractTestModule
          selenium().altKeyDown();
       }
 
-      selenium().keyDown("//", String.valueOf(keyCode));
-      selenium().keyUp("//", String.valueOf(keyCode));
+      selenium().keyDown("//body", String.valueOf(keyCode));
+      selenium().keyUp("//body", String.valueOf(keyCode));
 
       if (isCtrl)
       {
@@ -665,7 +670,7 @@ public class Editor extends AbstractTestModule
       waitForElementPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
-   
+
    /**
     * Wait while tab disappears in editor 
     * @param tabIndex - index of tab, starts at 0
@@ -673,7 +678,8 @@ public class Editor extends AbstractTestModule
     */
    public void waitTabNotPresent(int tabIndex) throws Exception
    {
-      waitForElementNotPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table");
+      waitForElementNotPresent("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]"
+         + "/table");
    }
 
    public void waitEditorFileOpened() throws Exception
@@ -681,8 +687,10 @@ public class Editor extends AbstractTestModule
       /*
        * click for element to clear it's text
        */
-      selenium().click("debug-editor-active-file-url");
-      Thread.sleep(1);
+      //webdriver don't alloy click to invisible elements!!! 
+      //      selenium().click("debug-editor-active-file-url");
+
+      //      Thread.sleep(1);
       waitForElementTextIsNotEmpty("debug-editor-active-file-url");
    }
 
@@ -697,7 +705,7 @@ public class Editor extends AbstractTestModule
       String locator =
          "//div[@panel-id='editor' and @tab-index='" + tabIndex
             + "']//table[@class='cke_editor']//td[@class='cke_contents']/iframe";
-      
+
       assertTrue(selenium().isElementPresent(locator));
       //assertTrue(selenium().isVisible(locator));
    }
@@ -713,19 +721,21 @@ public class Editor extends AbstractTestModule
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
       assertTrue(selenium().isElementPresent(locator));
-      assertTrue(selenium().isVisible(locator));      
+      assertTrue(selenium().isVisible(locator));
    }
-   
+
    /**
     * Determines whether specified tab opened in Editor.
     * 
     * @param tabIndex index of tab, starts at 0
     * @return
     */
-   public boolean isTabOpened(int tabIndex) {
-//      String locator = "//div[@panel-id='editor' and @is-panel='true']//tabe[@id='editor-panel-switcher']" +
-//      		"//table[@class='gwt-DecoratedTabBar']/tbody/tr/td/[@tab-bar-index='" + tabIndex +  "']";
-      String locator = "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']/tbody/tr/td[@tab-bar-index='0']";
+   public boolean isTabOpened(int tabIndex)
+   {
+      //      String locator = "//div[@panel-id='editor' and @is-panel='true']//tabe[@id='editor-panel-switcher']" +
+      //      		"//table[@class='gwt-DecoratedTabBar']/tbody/tr/td/[@tab-bar-index='" + tabIndex +  "']";
+      String locator =
+         "//div[@panel-id='editor' and @is-panel='true']//table[@id='editor-panel-switcher']//table[@class='gwt-DecoratedTabBar']/tbody/tr/td[@tab-bar-index='0']";
       return selenium().isElementPresent(locator);
    }
 
@@ -754,11 +764,10 @@ public class Editor extends AbstractTestModule
    public void clickSourceButton() throws Exception
    {
       assertTrue("Button 'Source' is absent!", selenium().isElementPresent(Locators.SOURCE_BUTTON_LOCATOR));
-      selenium().keyPress(Locators.SOURCE_BUTTON_LOCATOR, "\\13");   // hack to simulate click as described for GWT ToogleButton in the http://code.google.com/p/selenium/issues/detail?id=542
+      selenium().keyPress(Locators.SOURCE_BUTTON_LOCATOR, "\\13"); // hack to simulate click as described for GWT ToogleButton in the http://code.google.com/p/selenium/issues/detail?id=542
       Thread.sleep(TestConstants.SLEEP);
    }
-   
-   
+
    /**
     * Click on Design button at the bottom of editor.
     * 
@@ -769,13 +778,14 @@ public class Editor extends AbstractTestModule
       assertTrue("Button 'Design' is absent!", selenium().isElementPresent(Locators.DESIGN_BUTTON_LOCATOR));
       selenium().keyPress(Locators.DESIGN_BUTTON_LOCATOR, "\\13");
       Thread.sleep(TestConstants.SLEEP);
-   }   
+   }
 
    public void selectCkEditorIframe(int tabIndex)
    {
       String divIndex = String.valueOf(tabIndex);
-      selenium().selectFrame("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-         + "//table[@class='cke_editor']//iframe");
+      selenium().selectFrame(
+         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+            + "//table[@class='cke_editor']//iframe");
    }
 
    /**
@@ -795,19 +805,21 @@ public class Editor extends AbstractTestModule
          //  assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
          //   + "//table[@class='cke_editor']//td[@class='cke_contents']/iframe"));
 
-         assertTrue(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//table[@class='cke_editor']//textarea"));
+         assertTrue(selenium().isElementPresent(
+            "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+               + "//table[@class='cke_editor']//textarea"));
 
-         assertFalse(selenium().isElementPresent("//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//table[@class='cke_editor']//iframe"));
+         assertFalse(selenium().isElementPresent(
+            "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
+               + "//table[@class='cke_editor']//iframe"));
       }
       else
       {
-         assertFalse(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex
-            + "]//table[@class='cke_editor']//textarea"));
+         assertFalse(selenium().isElementPresent(
+            "//div[@class='tabSetContainer']/div/div[" + divIndex + "]//table[@class='cke_editor']//textarea"));
 
          assertTrue(selenium().isElementPresent("//div[@class='tabSetContainer']/div/div[" + divIndex + "]//iframe"));
       }
    }
-   
+
 }
