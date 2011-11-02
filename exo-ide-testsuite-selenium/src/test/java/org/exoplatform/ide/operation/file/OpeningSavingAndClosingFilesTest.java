@@ -28,6 +28,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -270,26 +271,25 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       // changeGoogleGadgetFile
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.typeTextIntoEditor(1, "Change file");
-      //Don't work IDE.EDITOR.pressEnter();
-      IDE.EDITOR.runHotkeyWithinEditor(1, false, false, 13);
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.ENTER.toString());
       assertEquals(IDE.EDITOR.getTabTitle(1), GADGET_FILE_NAME + " *");
 
       // changeHTMLFile
       IDE.EDITOR.selectTab(3);
       IDE.EDITOR.typeTextIntoEditor(3, "Change file");
-      IDE.EDITOR.runHotkeyWithinEditor(3, false, false, 13);
+      IDE.EDITOR.typeTextIntoEditor(3, Keys.ENTER.toString());
       assertEquals(IDE.EDITOR.getTabTitle(3), HTML_FILE_NAME + " *");
 
       // changeJavaScriptFile
       IDE.EDITOR.selectTab(4);
       IDE.EDITOR.typeTextIntoEditor(4, "Change file");
-      IDE.EDITOR.runHotkeyWithinEditor(4, false, false, 13);
+      IDE.EDITOR.typeTextIntoEditor(4, Keys.ENTER.toString());
       assertEquals(IDE.EDITOR.getTabTitle(4), JS_FILE_NAME + " *");
 
       // changeXMLFile
       IDE.EDITOR.selectTab(6);
       IDE.EDITOR.typeTextIntoEditor(6, "Change file");
-      IDE.EDITOR.runHotkeyWithinEditor(6, false, false, 13);
+      IDE.EDITOR.typeTextIntoEditor(6, Keys.ENTER.toString());
       assertEquals(IDE.EDITOR.getTabTitle(6), XML_FILE_NAME + " *");
 
    }

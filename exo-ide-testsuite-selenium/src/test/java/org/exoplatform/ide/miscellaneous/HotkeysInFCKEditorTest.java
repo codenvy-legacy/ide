@@ -30,8 +30,8 @@ import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 /**
@@ -133,7 +133,7 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       //Press Ctrl+S to check file saving
       //check tab title is marked by *
       assertEquals(GOOGLE_GADGET_FILE + " *", IDE.EDITOR.getTabTitle(0));
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, KeyEvent.VK_S);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "s");
       Thread.sleep(TestConstants.SLEEP);
       //check tab title is not marked by *
       assertEquals(GOOGLE_GADGET_FILE, IDE.EDITOR.getTabTitle(0));
@@ -317,8 +317,8 @@ public class HotkeysInFCKEditorTest extends AbstractHotkeysTest
       IDE.WORKSPACE.doubleClickOnFile(WS_URL + FOLDER_NAME + "/" + GOOGLE_GADGET_FILE);
       IDE.EDITOR.clickDesignButton();
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_N);
-
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+      
       checkCreateFileFromTemplateFormAndClose();
    }
 

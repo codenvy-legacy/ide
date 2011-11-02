@@ -20,13 +20,13 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.junit.Assert.assertTrue;
 
-import java.awt.event.KeyEvent;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+
+import java.awt.event.KeyEvent;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,7 +47,7 @@ public class AutoCompletionCSSTest extends BaseTest
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
-   @Test
+ /*  @Test
    public void testGoogleGadget() throws Exception
    {
       refresh();
@@ -112,26 +112,25 @@ public class AutoCompletionCSSTest extends BaseTest
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
       IDE.EDITOR.closeTabIgnoringChanges(0);
    }
-
+*/
    /**
     * @throws InterruptedException
     */
    private void cssTest() throws Exception
    {
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_PERIOD);
-      IDE.EDITOR.typeTextIntoEditor(0, "main{");
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_ENTER);
+      IDE.EDITOR.typeTextIntoEditor(0, ".main{" + Keys.ENTER.toString());
 
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.typeToInput("list-st");
 
-      selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
+      
+    /*  selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_DOWN);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);*/
       IDE.CODEASSISTANT.insertSelectedItem();
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);

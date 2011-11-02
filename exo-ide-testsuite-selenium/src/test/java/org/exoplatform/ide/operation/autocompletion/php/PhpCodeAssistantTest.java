@@ -29,8 +29,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.awt.event.KeyEvent;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -75,7 +74,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpLocalVarAndParameters() throws Exception
    {
       goToLine(19);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$a");
       IDE.CODEASSISTANT.checkElementPresent("$go:String");
@@ -88,7 +87,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpObjectThis() throws Exception
    {
       goToLine(21);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
       IDE.CODEASSISTANT.checkElementPresent("AA");
@@ -100,7 +99,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpClassSelf() throws Exception
    {
       goToLine(20);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$p2:Handler");
       IDE.CODEASSISTANT.checkElementPresent("f2($a)");
@@ -111,7 +110,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpVariableClass() throws Exception
    {
       goToLine(28);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("f2($a)");
       IDE.CODEASSISTANT.closeForm();
@@ -121,7 +120,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpVarStaticClass() throws Exception
    {
       goToLine(29);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
       IDE.CODEASSISTANT.checkElementPresent("AA");
@@ -133,7 +132,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpStaticClass() throws Exception
    {
       goToLine(30);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$sp2:ArrayList");
       IDE.CODEASSISTANT.checkElementPresent("AA");
@@ -145,7 +144,7 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpRootConstAndVars() throws Exception
    {
       goToLine(31);
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_END);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.checkElementPresent("$t:SimpleClass1");
       IDE.CODEASSISTANT.checkElementPresent("t");

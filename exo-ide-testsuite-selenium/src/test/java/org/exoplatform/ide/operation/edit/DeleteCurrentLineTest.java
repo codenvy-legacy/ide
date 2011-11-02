@@ -27,6 +27,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -123,7 +124,7 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 2 -----------
       //Press "Ctrl+D" keys.
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
 
@@ -138,7 +139,7 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 4 -----------
       //Press "Ctrl+D"
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_6 + Lines.LINE_7;
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
@@ -175,8 +176,8 @@ public class DeleteCurrentLineTest extends BaseTest
 
       //----- 9 -----------
       //Press "Ctrl+D" keys
-      IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
-
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "d");
+      
       IDE.EDITOR.selectTab(0);
 
       IDE.EDITOR.selectTab(1);
@@ -184,7 +185,7 @@ public class DeleteCurrentLineTest extends BaseTest
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
 
-      IDE.EDITOR.runHotkeyWithinEditor(1, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "d");
       waitForElementPresent(WAIT_APPEAR_STATUSBAR);
       assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
       assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));

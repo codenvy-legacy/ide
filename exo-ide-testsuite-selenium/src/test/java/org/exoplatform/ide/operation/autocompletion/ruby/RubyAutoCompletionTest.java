@@ -27,6 +27,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -109,7 +110,7 @@ public class RubyAutoCompletionTest extends BaseTest
       
       IDE.EDITOR.typeTextIntoEditor(0, "M");
       //this method fix problem of returning cursor in codeeditor before character "M"
-      IDE.EDITOR.runHotkeyWithinEditor(0, false, false, 35);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.checkElementPresent("MDA");

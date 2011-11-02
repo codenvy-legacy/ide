@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -53,6 +54,8 @@ public class Editor extends AbstractTestModule
       String CK_EDITOR = "//table[@class='cke_editor']";
 
       String EDITOR_TABSET_LOCATOR = "//div[@panel-id='editor']";
+
+      String EDITOR_TAB_LOCATOR = "//div[@panel-id='editor' and @view-id='editor-%s' ]";
 
       String DEBUG_EDITOR_ACTIVE_FILE_URL = "debug-editor-active-file-url";
 
@@ -96,7 +99,7 @@ public class Editor extends AbstractTestModule
     */
    public void selectTab(int tabIndex) throws Exception
    {
-      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + String.valueOf(tabIndex) + "]" + "/table",
+      selenium().clickAt("//div[@panel-id='editor']//td[@tab-bar-index=" + tabIndex + "]" + "/table",
          "1,1");
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
@@ -524,29 +527,20 @@ public class Editor extends AbstractTestModule
    public void typeTextIntoEditor(int tabIndex, String text) throws Exception
    {
       selectIFrameWithEditor(tabIndex);
-//      AbstractTextUtil.getInstance().typeTextToEditor(TestConstants.EDITOR_BODY_LOCATOR, text);
+      driver().switchTo().activeElement().sendKeys(text);
       IDE().selectMainFrame();
    }
 
    /**
+    * Get the locator of content panel.
     * 
-    * @param tabIndex begins from 0
+    * 
+    * @param tabIndex starts from 0
     * @return content panel locator 
     */
    public String getContentPanelLocator(int tabIndex)
    {
-      return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
-
-      //      //      String divIndex = String.valueOf(tabIndex + 2);
-      //      if (BROWSER_COMMAND.equals(EnumBrowserCommand.IE_EXPLORE_PROXY))
-      //      {
-      //         return "//div[@class='tabSetContainer']/div[" + tabIndex + "]";
-      //      }
-      //      else
-      //      {
-      //         return "//div[@panel-id='editor' and @tab-index='" + tabIndex + "' ]";
-      //         //         return "//div[@class='tabSetContainer']/div/div[" + divIndex + "]";
-      //      }
+      return String.format(Locators.EDITOR_TAB_LOCATOR, tabIndex);
    }
 
    /**
@@ -556,36 +550,9 @@ public class Editor extends AbstractTestModule
     */
    public void selectIFrameWithEditor(int tabIndex) throws Exception
    {
-      
-      
       String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
-
-      
-      
-      int size = driver().findElements(By.xpath(iFrameWithEditorLocator)).size();
-      if (size <= 0)
-         return;
-
-      if (size == 1)
-      {
-         driver().switchTo().frame(driver().findElement(By.xpath(iFrameWithEditorLocator)));
-//         selenium().selectFrame(iFrameWithEditorLocator);
-         Thread.sleep(TestConstants.ANIMATION_PERIOD);
-         return;
-      }
-      else
-      {
-         for (int i = 1; i <= size; i++)
-         {
-            if (driver().findElement(By.xpath(iFrameWithEditorLocator + "[position()=" + i + "]")).isDisplayed())
-            {
-//               selenium().selectFrame("xpath=(" + iFrameWithEditorLocator + ")[position()=" + i + "]");
-               driver().switchTo().frame(driver().findElement(By.xpath(iFrameWithEditorLocator + "[position()=" + i + "]")));
-               Thread.sleep(TestConstants.ANIMATION_PERIOD);
-               return;
-            }
-         }
-      }
+      WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
+      driver().switchTo().frame(editorFrame);
    }
 
    /**
@@ -619,45 +586,6 @@ public class Editor extends AbstractTestModule
       String text = selenium().getText("//body");
       IDE().selectMainFrame();
       return text;
-   }
-
-   /**
-    * Run hot key within editor. 
-    * 
-    * This method used for running hotkeys for editor, such as ctrl+z, ctrl+a, ctrl+s and so on.
-    * 
-    * @param tabIndex index of tab
-    * @param isCtrl is control key used
-    * @param isAlt is alt key used
-    * @param keyCode virtual code of key (code of key on keyboard)
-    */
-   public void runHotkeyWithinEditor(int tabIndex, boolean isCtrl, boolean isAlt, int keyCode) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-
-      if (isCtrl)
-      {
-         selenium().controlKeyDown();
-      }
-      if (isAlt)
-      {
-         selenium().altKeyDown();
-      }
-
-      selenium().keyDown("//body", String.valueOf(keyCode));
-      selenium().keyUp("//body", String.valueOf(keyCode));
-
-      if (isCtrl)
-      {
-         selenium().controlKeyUp();
-      }
-      if (isAlt)
-      {
-         selenium().altKeyUp();
-      }
-
-      IDE().selectMainFrame();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
    }
 
    /**

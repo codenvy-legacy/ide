@@ -27,6 +27,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Test to check, that autocomplete form
@@ -69,7 +70,7 @@ public class GroovyClassMethodsCompletionTest extends BaseTest
       /*
        * 4. Call autocomplete form.
        */
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_SPACE);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
       Thread.sleep(TestConstants.SLEEP);
       assertTrue(selenium().isElementPresent(CodeAssistant.Locators.PANEL_ID));
 

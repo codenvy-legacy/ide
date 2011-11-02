@@ -55,7 +55,6 @@ import org.exoplatform.ide.core.Workspace;
 import org.exoplatform.ide.paas.heroku.core.Heroku;
 import org.exoplatform.ide.paas.openshift.core.OpenShift;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 
 /**
  * 
@@ -180,16 +179,7 @@ public class IDE
     */
    public void selectMainFrame()
    {
-      WebDriver driver = ((WebDriverBackedSelenium)selenium).getWrappedDriver();
-      driver.switchTo().defaultContent();
-//      if (selenium.isElementPresent("//div[@id='eXo-IDE-container']"))
-//      {
-//         selenium.selectFrame("//div[@id='eXo-IDE-container']//iframe");
-//      }
-//      else
-//      {
-//         selenium.selectFrame("relative=top");
-//      }
+      driver().switchTo().defaultContent();
    }
 
    private String workspaceURL;

@@ -28,6 +28,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -102,7 +103,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       //delete some tags in groovy template file
       for (int i = 0; i < 7; i++)
       {
-         IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 68);
+         IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       }
       
       Thread.sleep(TestConstants.SLEEP);

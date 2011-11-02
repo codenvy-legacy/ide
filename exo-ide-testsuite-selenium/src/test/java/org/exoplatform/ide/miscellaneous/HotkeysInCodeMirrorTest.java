@@ -26,6 +26,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.After;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * IDE-156:HotKeys customization.
@@ -247,8 +248,8 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //Create JavaScript file and press Ctrl+Space
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
 
-     IDE.EDITOR.runHotkeyWithinEditor(0, true, false, 32);
-
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);   
+      
       //check autocomplete form appears
       assertTrue(selenium().isElementPresent("//td/div[@class='gwt-Label']"));
 

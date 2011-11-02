@@ -28,6 +28,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -147,7 +148,7 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       Thread.sleep(TestConstants.SLEEP);
       //press Ctrl+S
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_S);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "s");
       //check, that Save As dialog window appeared
       Thread.sleep(1000);
       SaveFileUtils.checkSaveAsDialog(true);
@@ -226,14 +227,14 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
       IDE.EDITOR.selectTab(2);
 
       //press Alt+N
-      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
-
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
+      
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
@@ -242,13 +243,13 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //select first tab
       IDE.EDITOR.selectTab(0);
-      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ALT.toString() + "n");
       Thread.sleep(TestConstants.SLEEP);
 
       checkCreateFileFromTemplateFormAndClose();
       //press Ctrl+H
-      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
-
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
+      
       //check new html file created
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(3));
       //IDE.EDITOR.closeUnsavedFileAndDoNotSave(3);
@@ -257,13 +258,13 @@ public class HotkeysCustomizationTest extends AbstractHotkeysTest
 
       //select second tab
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.runHotkeyWithinEditor(2, false, true, java.awt.event.KeyEvent.VK_N);
-
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
+      
       checkCreateFileFromTemplateFormAndClose();
 
       //press Ctrl+H
-      IDE.EDITOR.runHotkeyWithinEditor(2, true, false, java.awt.event.KeyEvent.VK_H);
-
+      IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
+      
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       //check new html file created

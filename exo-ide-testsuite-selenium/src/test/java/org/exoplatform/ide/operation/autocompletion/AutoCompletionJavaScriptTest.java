@@ -25,6 +25,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -255,7 +256,7 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       assertTrue(textAfter.split("b").length >= 2);
 
       // remove created text
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       IDE.EDITOR.pressEnter();
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }
@@ -275,11 +276,11 @@ public class AutoCompletionJavaScriptTest extends BaseTest
       IDE.CODEASSISTANT.closeForm();
 
       // remove created text
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
-
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
-
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      
       IDE.EDITOR.pressEnter();
       selenium().keyPressNative("" + java.awt.event.KeyEvent.VK_UP);
    }

@@ -28,6 +28,7 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.utils.AbstractTextUtil;
 import org.junit.AfterClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
@@ -79,7 +80,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z);//Press Ctrl+Z
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "z");
       //Thread.sleep(TestConstants.SLEEP);
       currentText = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals("1", currentText);
@@ -126,7 +127,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
       //Thread.sleep(TestConstants.SLEEP);
       currentText = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals("123", currentText);
@@ -159,7 +160,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Y);//Press Ctrl+Y
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
       //Thread.sleep(TestConstants.SLEEP);
       currentText = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals("a12", currentText);
@@ -196,7 +197,7 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
       IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_Z); //Press Ctrl+Z
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "z");
       currentText = IDE.EDITOR.getTextFromCodeEditor(0);
       assertEquals("12", currentText);
 

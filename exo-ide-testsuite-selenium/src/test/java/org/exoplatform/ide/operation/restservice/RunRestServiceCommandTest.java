@@ -33,6 +33,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
 
@@ -184,7 +185,7 @@ public class RunRestServiceCommandTest extends BaseTest
       //fix file
       IDE.EDITOR.clickOnEditor(0);
 
-      IDE.EDITOR.runHotkeyWithinEditor(0, true, false, java.awt.event.KeyEvent.VK_D);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
       Thread.sleep(TestConstants.SLEEP);
 
       //---- 6 -----------------

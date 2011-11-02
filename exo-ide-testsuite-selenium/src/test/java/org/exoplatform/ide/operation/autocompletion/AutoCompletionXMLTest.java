@@ -26,6 +26,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -44,7 +45,7 @@ public class AutoCompletionXMLTest extends BaseTest
       String text =IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
 
-     IDE.EDITOR.runHotkeyWithinEditor(0, false, false, KeyEvent.VK_HOME);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString());
       Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       //      selenium().keyDown("//body[@class='editbox']", "\\35");
      IDE.EDITOR.pressEnter();
