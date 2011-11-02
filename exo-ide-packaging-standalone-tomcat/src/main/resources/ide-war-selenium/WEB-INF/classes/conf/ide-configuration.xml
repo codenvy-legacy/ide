@@ -66,10 +66,6 @@
    </component>
    
    <component>
-     <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemApplication</type>
-   </component>
-   
-   <component>
      <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
    
@@ -122,14 +118,6 @@
       <type>org.exoplatform.ide.testframework.server.MockApplication</type>
    </component>
    
-   <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyServiceApplication</type>
-   </component>
-   
-    <component>
-      <type>org.exoplatform.ide.extension.ruby.server.RubyProjectArchetype</type>
-   </component>
-   
     <component>
       <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
    </component>
@@ -137,19 +125,18 @@
    <component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.RestSecurityTokenGenerator</type>
    </component>
-   
 
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptService</type>
   </component>
   
-  <component>
+   <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
 
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
-   <component>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
